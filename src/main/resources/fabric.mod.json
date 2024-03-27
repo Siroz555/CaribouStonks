@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"id": "caribou-stonks",
+	"version": "${version}",
+	"name": "CaribouStonks",
+	"description": "The French Hypixel Skyblock Mod",
+	"authors": [
+		"Siroz555"
+	],
+	"license": "CC0-1.0",
+	"icon": "assets/caribou-stonks/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"fr.siroz.cariboustonks.CaribouStonks"
+		]
+	},
+	"mixins": [
+		"caribou-stonks.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.7",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
