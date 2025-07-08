@@ -18,7 +18,7 @@ final class NearestWarp {
     private Warp targetWarp;
     private long lastTargetWarpTime;
 
-    public NearestWarp() {
+    NearestWarp() {
         this.targetWarp = null;
         this.lastTargetWarpTime = 0;
     }

@@ -13,11 +13,11 @@ class GriffinBurrow {
     public int enchantParticle;
     public int critMagicParticle;
 
-    public GriffinBurrow(BlockPos pos) {
+    GriffinBurrow(BlockPos pos) {
         this(pos, -1, false, 0, 0, 0);
     }
 
-    public GriffinBurrow(BlockPos pos, int type, boolean found, int critParticle, int enchantParticle, int critMagicParticle) {
+    GriffinBurrow(BlockPos pos, int type, boolean found, int critParticle, int enchantParticle, int critMagicParticle) {
         this.pos = pos;
         this.type = type;
         this.found = found;
