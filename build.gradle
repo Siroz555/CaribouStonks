@@ -1,0 +1,145 @@
+plugins {
+	id 'fabric-loom' version '1.10-SNAPSHOT'
+	id 'checkstyle'
+}
+
+version = "${project.mod_version}+${project.minecraft_version}"
+group = project.maven_group
+
+repositories {
+	flatDir {
+		dirs 'libs'
+	}
+
+	maven {
+		name = "Maven Central"
+		url = "https://repo.maven.apache.org/maven2"
+	}
+
+	maven {
+		name = "Xander Maven"
+		url = "https://maven.isxander.dev/releases"
+
+		content {
+			includeGroup "dev.isxander"
+			includeGroup "org.quiltmc.parsers"
+		}
+	}
+
+	exclusiveContent {
+		forRepository {
+			maven {
+				url = "https://maven.azureaaron.net/releases"
+			}
+		}
+
+		filter {
+			includeGroup "net.azureaaron"
+		}
+	}
+
+	exclusiveContent {
+		forRepository {
+			maven {
+				url = "https://maven.terraformersmc.com"
+			}
+		}
+
+		filter {
+			includeGroup "com.terraformersmc"
+		}
+	}
+
+	exclusiveContent {
+		forRepository {
+			maven {
+				url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
+			}
+		}
+
+		filter {
+			includeGroup("me.djtheredstoner")
+		}
+	}
+}
+
+dependencies {
+	testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
+
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// YetAnotherConfigLib (https://github.com/isXander/YetAnotherConfigLib)
+	include modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}")
+
+	// Hypixel Mod API (https://github.com/AzureAaron/hm-api)
+	include modImplementation("net.azureaaron:hm-api:${project.hm_api_version}")
+
+	// ModMenu (https://github.com/TerraformersMC/ModMenu)
+	modCompileOnly "com.terraformersmc:modmenu:${modmenu_version}"
+
+	// DevAuth - DEVELOPMENT ONLY (https://github.com/DJtheRedstoner/DevAuth)
+	modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
+}
+
+test {
+	useJUnitPlatform()
+}
+
+loom {
+	runs {
+		client {
+			if (System.getenv('GITHUB_ACTIONS') != 'true') {
+				property("devauth.configDir", file(".devauth").absolutePath)
+			}
+		}
+	}
+}
+
+fabricApi {
+	configureTests {
+		createSourceSet = true
+		modId = "cariboustonks-test"
+		enableGameTests = false
+		eula = true
+	}
+}
+
+base {
+	archivesName = project.archives_base_name
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": inputs.properties.version
+	}
+}
+
+checkstyle {
+	toolVersion = "10.20.2"
+	configFile = rootProject.file("checkstyle.xml")
+	sourceSets = [sourceSets.main]
+	ignoreFailures = false
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+	it.options.encoding = "UTF-8"
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+	from("LICENSE") {
+		rename {
+			"${it}_${base.archivesName.get()}"
+		}
+	}
+}

@@ -1,0 +1,45 @@
+# Build directories
+build/
+out/
+output/
+bin/
+libs/
+classes/
+.gradle/
+
+# Fabric
+run/
+
+# Data generated while running Minecraft
+.devauth/*
+!.devauth/config.toml
+logs/
+mods/
+
+# eclipse
+*.launch
+
+# Siroz
+dev/
+docs/
+
+# idea
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+.settings/
+.vscode/
+.classpath
+.project
+
+# macos
+*.DS_Store
+
+# java
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr

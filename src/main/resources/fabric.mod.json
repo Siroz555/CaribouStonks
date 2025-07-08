@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "cariboustonks",
+  "version": "${version}",
+  "name": "CaribouStonks",
+  "description": "Siroz555's Mod – Hypixel SkyBlock Fabric Mod",
+  "authors": [
+    "Siroz555"
+  ],
+  "contact": {
+    "sources": "https://github.com/Siroz555/CaribouStonks",
+    "issues": "https://github.com/Siroz555/CaribouStonks/issues"
+  },
+  "license": "LGPL-3.0",
+  "icon": "assets/cariboustonks/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "fr.siroz.cariboustonks.CaribouStonks"
+    ],
+    "modmenu": [
+      "fr.siroz.cariboustonks.config.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "cariboustonks.mixins.json"
+  ],
+  "depends": {
+    "java": ">=21",
+    "minecraft": "~1.21.5",
+    "fabricloader": ">=0.16.10",
+    "fabric-api": ">=0.123.0+1.21.5"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.modrinth": "https://modrinth.com/mod/cariboustonks"
+      },
+      "update_checker": true
+    }
+  }
+}

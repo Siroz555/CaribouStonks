@@ -1,0 +1,41 @@
+{
+  "required": true,
+  "package": "fr.siroz.cariboustonks.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ChatHudMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "DownloadingTerrainScreenMixin",
+    "DrawContextMixin",
+    "EntityRendererMixin",
+    "GameMenuScreenMixin",
+    "GameRendererMixin",
+    "HandledScreenMixin",
+    "HeldItemRendererMixin",
+    "InGameHudMixin",
+    "InGameOverlayRendererMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "MessageHandlerMixin",
+    "MinecraftClientMixin",
+    "MouseMixin",
+    "PingMeasurerMixin",
+    "RenderPipelinesMixin",
+    "ScreenMixin",
+    "ScreenHandlerMixin",
+    "SignEditScreenMixin",
+    "TitleScreenMixin",
+    "TutorialManagerMixin",
+    "WorldRendererMixin",
+    "accessors.ChatHudAccessor",
+    "accessors.FrustumInvoker",
+    "accessors.HandledScreenAccessor",
+    "accessors.MessageHandlerAccessor",
+    "accessors.OrderedTextTooltipComponentAccessor",
+    "accessors.PlayerListHudAccessor",
+    "accessors.WorldRendererAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

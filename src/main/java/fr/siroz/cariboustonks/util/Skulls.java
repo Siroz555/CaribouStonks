@@ -1,0 +1,16 @@
+package fr.siroz.cariboustonks.util;
+
+import net.minecraft.item.ItemStack;
+
+@SuppressWarnings("checkstyle:LineLength")
+public final class Skulls {
+
+	public static final ItemStack UBIK_CUBE;
+
+	private Skulls() {
+	}
+
+	static {
+		UBIK_CUBE = ItemUtils.createSkull("ewogICJ0aW1lc3RhbXAiIDogMTczMTQyODAxMDM3NywKICAicHJvZmlsZUlkIiA6ICI1OTgyOWY1ZGY3MmM0ZmFlOTBmOGVhYmM0MjFjMzJkYiIsCiAgInByb2ZpbGVOYW1lIiA6ICJQZXBwZXJEcmlua2VyIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzMyMDU0NGQxNmNmMDg4NzY5MTJjY2EwODhiZDg1NWMzYzNiZTMxM2NiMDg3ZTg1MzhhMTVhMmExNzc1MzJlYTciCiAgICB9CiAgfQp9");
+	}
+}
