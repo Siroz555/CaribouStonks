@@ -382,6 +382,7 @@ public final class HypixelDataSource { // TODO clean up & docs
 
 			int fixedEnchants = 0;
 			int fixedEssences = 0;
+			int fixedShards = 0;
 
 			for (String bazaarProductId : bazaarData.keySet()) {
 				if (!skyBlockItems.containsKey(bazaarProductId)) {
@@ -394,6 +395,15 @@ public final class HypixelDataSource { // TODO clean up & docs
 							skyBlockItems.put(bazaarProductId, apiFixer.createEssence(bazaarProductId));
 							fixedEssences++;
 
+						} else if (apiFixer.isShard(bazaarProductId)) {
+							SkyBlockItem shard = apiFixer.createShard(bazaarProductId);
+							if (shard != null) {
+								skyBlockItems.put(bazaarProductId, shard);
+								fixedShards++;
+							} else {
+								CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create {} Shard! Not registered in ModDataSource.",
+										bazaarProductId);
+							}
 						} else {
 							CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to fix {}. Not identified!",
 									bazaarProductId);
@@ -404,8 +414,8 @@ public final class HypixelDataSource { // TODO clean up & docs
 				}
 			}
 
-			CaribouStonks.LOGGER.info("[HypixelDataSource] Fixed {} enchants and {} essences from Bazaar to SkyBlock Items",
-					fixedEnchants, fixedEssences);
+			CaribouStonks.LOGGER.info("[HypixelDataSource] Fixed {} enchants, {} essences and {} Shards from Bazaar to SkyBlock Items",
+					fixedEnchants, fixedEssences, fixedShards);
 		}
 	}
 }

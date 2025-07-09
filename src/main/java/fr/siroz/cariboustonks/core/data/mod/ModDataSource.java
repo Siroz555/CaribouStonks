@@ -75,6 +75,18 @@ public final class ModDataSource {
 		return enchantmentsError;
 	}
 
+	public @Nullable SkyBlockAttribute getAttributeBySkyBlockId(@Nullable String skyBlockId) {
+		if (skyBlockId == null || skyBlockId.isEmpty() || skyBlockAttributes.isEmpty()) return null;
+
+		for (SkyBlockAttribute attribute : skyBlockAttributes) {
+			if (attribute.skyBlockApiId().equals(skyBlockId)) {
+				return attribute;
+			}
+		}
+
+		return null;
+	}
+
 	public @Nullable SkyBlockAttribute getAttributeById(@Nullable String id) {
 		if (id == null || id.isEmpty() || skyBlockAttributes.isEmpty()) return null;
 

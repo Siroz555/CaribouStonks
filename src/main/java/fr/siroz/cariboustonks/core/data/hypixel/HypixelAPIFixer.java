@@ -1,16 +1,20 @@
 package fr.siroz.cariboustonks.core.data.hypixel;
 
+import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.data.mod.SkyBlockAttribute;
 import fr.siroz.cariboustonks.util.Rarity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jetbrains.annotations.Nullable;
 
 final class HypixelAPIFixer {
 
 	public static final Pattern MINION_PATTERN = Pattern.compile("^[A-Z_]+_GENERATOR_\\d+$");
 	public static final Pattern ENCHANTMENT_PATTERN = Pattern.compile("^ENCHANTMENT_[A-Z_]+_\\d+$");
 	public static final Pattern ESSENCE_PATTERN = Pattern.compile("^ESSENCE_[A-Z]+$");
+	public static final Pattern SHARD_PATTERN = Pattern.compile("^SHARD_[A-Z]+(_[A-Z]+)*$");
 
 	HypixelAPIFixer() {
 	}
@@ -38,6 +42,11 @@ final class HypixelAPIFixer {
 		return matcher.matches();
 	}
 
+	public boolean isShard(@NotNull String inputId) {
+		Matcher matcher = SHARD_PATTERN.matcher(inputId);
+		return matcher.matches();
+	}
+
 	public @NotNull SkyBlockItem createEnchant(@NotNull String skyBlockIdEnchantment) {
 		String material = "ENCHANTED_BOOK";
 		String name = getEnchantName(skyBlockIdEnchantment);
@@ -49,6 +58,19 @@ final class HypixelAPIFixer {
 		String material = "SKULL_ITEM";
 		String name = getEssenceName(skyBlockIdEssence);
 		return new SkyBlockItem(skyBlockIdEssence, material, name, Rarity.MYTHIC);
+	}
+
+	// TODO : Récupérer les textures des HEAD, mais vu qu'elles ne sont pas dispo dans l'API..
+	public @Nullable SkyBlockItem createShard(@NotNull String skyBlockIdShard) {
+		SkyBlockAttribute attribute = CaribouStonks.core().getModDataSource().getAttributeBySkyBlockId(skyBlockIdShard);
+		if (attribute != null) {
+			String material = "PRISMARINE_SHARD";
+			String name = attribute.name() + " (" + attribute.id() + ")";
+			Rarity tier = attribute.getRarityFromId();
+			return new SkyBlockItem(skyBlockIdShard, material, name, tier);
+		}
+
+		return null;
 	}
 
 	/**

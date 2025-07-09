@@ -6,21 +6,22 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
 public enum Rarity implements NameableEnum {
-    UNKNOWN(0, Formatting.GRAY),
-	COMMON(1, Formatting.WHITE),
-	UNCOMMON(2, Formatting.GREEN),
-	RARE(3, Formatting.BLUE),
-	EPIC(4, Formatting.DARK_PURPLE),
-	LEGENDARY(5, Formatting.GOLD),
-	SPECIAL(6, Formatting.RED),
-	VERY_SPECIAL(7, Formatting.RED),
-	MYTHIC(8, Formatting.LIGHT_PURPLE),
-	DIVINE(9, Formatting.AQUA),
-	ULTIMATE(10, Formatting.DARK_RED),
+	UNKNOWN(' ', 0, Formatting.GRAY),
+	COMMON('C', 1, Formatting.WHITE),
+	UNCOMMON('U', 2, Formatting.GREEN),
+	RARE('R', 3, Formatting.BLUE),
+	EPIC('E', 4, Formatting.DARK_PURPLE),
+	LEGENDARY('L', 5, Formatting.GOLD),
+	SPECIAL(' ', 6, Formatting.RED),
+	VERY_SPECIAL(' ', 7, Formatting.RED),
+	MYTHIC('M', 8, Formatting.LIGHT_PURPLE),
+	DIVINE('D', 9, Formatting.AQUA),
+	ULTIMATE(' ', 10, Formatting.DARK_RED),
 	;
 
 	private static final Rarity[] VALUES = values();
 
+	private final char code;
 	private final int power;
 	private final int color;
 	private final Formatting formatting;
@@ -28,7 +29,8 @@ public enum Rarity implements NameableEnum {
 	private final float g;
 	private final float b;
 
-	Rarity(int power, Formatting formatting) {
+	Rarity(char code, int power, Formatting formatting) {
+		this.code = code;
 		this.power = power;
 		//noinspection DataFlowIssue
 		this.color = formatting.getColorValue();
@@ -48,6 +50,21 @@ public enum Rarity implements NameableEnum {
 		}
 
 		return UNKNOWN;
+	}
+
+	public static Rarity fromCode(char code) {
+		char upper = Character.toUpperCase(code);
+		for (Rarity rarity : VALUES) {
+			if (rarity.code == upper) {
+				return rarity;
+			}
+		}
+
+		return UNKNOWN;
+	}
+
+	public char getCode() {
+		return code;
 	}
 
 	public int getPower() {
