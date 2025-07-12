@@ -34,6 +34,8 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
     - Forge: Reminder when a forge item is completed.
     - Enchanted Cloak: Reminders when a boost is ready.
 
+- KeyShortcut: Link Keybinds to commands to be executed.
+
 **Vanilla**
 
 - Hide the loading screen when changing the world.
