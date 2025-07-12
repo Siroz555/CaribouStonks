@@ -51,6 +51,9 @@ public class UIAndVisualsConfig {
 
 		@SerialEntry
 		public boolean gyrokineticWand = false;
+
+		@SerialEntry
+		public boolean etherWarp = false;
 	}
 
 	public static class ColoredEnchantment {

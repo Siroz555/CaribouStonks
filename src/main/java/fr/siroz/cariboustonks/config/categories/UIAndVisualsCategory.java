@@ -221,9 +221,18 @@ public class UIAndVisualsCategory extends AbstractCategory {
 						.name(Text.literal("Overlay").formatted(Formatting.BOLD))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Gyrokinetic Wand"))
+								.name(Text.literal("Show Etherwarp Teleport Target"))
 								.description(OptionDescription.of(
-										Text.literal("Display an Overlay for the Gyrokinetic Wand.")))
+										Text.literal("Shows the block you will teleport to with the Etherwarp Transmission ability.")))
+								.binding(defaults.uiAndVisuals.overlay.etherWarp,
+										() -> current.uiAndVisuals.overlay.etherWarp,
+										newValue -> current.uiAndVisuals.overlay.etherWarp = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Show Gyrokinetic Wand Radius"))
+								.description(OptionDescription.of(
+										Text.literal("Display an Overlay for the Gyrokinetic Wand radius.")))
 								.binding(defaults.uiAndVisuals.overlay.gyrokineticWand,
 										() -> current.uiAndVisuals.overlay.gyrokineticWand,
 										newValue -> current.uiAndVisuals.overlay.gyrokineticWand = newValue)

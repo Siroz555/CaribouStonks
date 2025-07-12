@@ -14,7 +14,6 @@ import fr.siroz.cariboustonks.feature.garden.MouseLockFeature;
 import fr.siroz.cariboustonks.feature.garden.pest.PestFinderFeature;
 import fr.siroz.cariboustonks.feature.hunting.FishingNetPlacementFeature;
 import fr.siroz.cariboustonks.feature.item.ColoredEnchantmentFeature;
-import fr.siroz.cariboustonks.feature.item.GyrokineticOverlayFeature;
 import fr.siroz.cariboustonks.feature.item.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
@@ -36,6 +35,8 @@ import fr.siroz.cariboustonks.feature.ui.hud.DayHud;
 import fr.siroz.cariboustonks.feature.ui.hud.FpsHud;
 import fr.siroz.cariboustonks.feature.ui.hud.PingHud;
 import fr.siroz.cariboustonks.feature.ui.hud.TpsHud;
+import fr.siroz.cariboustonks.feature.ui.overlay.EtherWarpOverlayFeature;
+import fr.siroz.cariboustonks.feature.ui.overlay.GyrokineticOverlayFeature;
 import fr.siroz.cariboustonks.feature.waypoints.WaypointFeature;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -75,7 +76,6 @@ public final class Features {
 		registerFeature(new FishingNetPlacementFeature());
 		// Item
 		registerFeature(new ColoredEnchantmentFeature());
-		registerFeature(new GyrokineticOverlayFeature());
 		registerFeature(new ScrollableTooltipFeature());
 		registerFeature(new TooltipDecoratorFeature());
 		// KeyShortcut
@@ -100,6 +100,9 @@ public final class Features {
 		registerFeature(new PingHud());
 		registerFeature(new TpsHud());
 		registerFeature(new DayHud());
+		// UI - Overlays
+		registerFeature(new EtherWarpOverlayFeature());
+		registerFeature(new GyrokineticOverlayFeature());
 		// Waypoint
 		registerFeature(new WaypointFeature());
 		// Misc
