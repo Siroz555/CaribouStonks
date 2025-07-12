@@ -48,9 +48,7 @@ public class ColoredEnchantmentFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& (ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.showMaxEnchants
-				|| ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.showGoodEnchants);
+		return SkyBlockAPI.isOnSkyBlock();
 	}
 
 	@Nullable
