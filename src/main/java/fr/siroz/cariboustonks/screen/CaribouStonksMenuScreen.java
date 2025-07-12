@@ -96,7 +96,7 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 		GridWidget.Adder footerAdder = footerGridWidget.createAdder(2);
 
 		footerAdder.add(ButtonWidget.builder(Text.literal("Modrinth"),
-						ConfirmLinkScreen.opening(this, "https://modrinth.com/"))
+						ConfirmLinkScreen.opening(this, "https://modrinth.com/mod/cariboustonks"))
 				.build());
 
 		footerAdder.add(ButtonWidget.builder(Text.literal("GitHub"),
