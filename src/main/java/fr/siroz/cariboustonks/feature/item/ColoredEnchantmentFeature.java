@@ -58,6 +58,7 @@ public class ColoredEnchantmentFeature extends Feature {
 		if (itemStack == null || itemStack.isEmpty()) return null;
 		if (loreComponent == null || loreComponent.lines().isEmpty()) return null;
 		if (!isEnabled()) return null;
+		if (!showMaxEnchants() && !showGoodEnchants()) return null;
 
 		NbtCompound enchantments = ItemUtils.getCustomData(itemStack).getCompoundOrEmpty("enchantments");
 		if (enchantments.isEmpty()) {
