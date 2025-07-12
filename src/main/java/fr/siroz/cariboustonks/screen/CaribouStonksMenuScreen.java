@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.screen;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.feature.stonks.search.StonksSearchScreen;
+import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
 import fr.siroz.cariboustonks.screen.reminders.ReminderScreen;
 import fr.siroz.cariboustonks.screen.waypoints.WaypointScreen;
 import net.minecraft.client.font.TextRenderer;
@@ -74,11 +75,11 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
-		ButtonWidget keybinds = ButtonWidget.builder(Text.literal("Keybinds"), button -> {
-				})
+		ButtonWidget keybinds = ButtonWidget.builder(Text.literal("Key Shortcuts"),
+						button -> openScreen(KeyShortcutScreen.create(this)))
+				.tooltip(Tooltip.of(Text.literal("Link Keybinds to commands to be executed.")))
 				.width(HALF_BUTTON_WIDTH)
 				.build();
-		keybinds.active = false;
 		adder.add(keybinds);
 
 		// LINE #4

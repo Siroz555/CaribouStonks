@@ -17,6 +17,7 @@ import fr.siroz.cariboustonks.feature.item.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.feature.item.GyrokineticOverlayFeature;
 import fr.siroz.cariboustonks.feature.item.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
+import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.feature.misc.HighlightMobFeature;
 import fr.siroz.cariboustonks.feature.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.feature.misc.StopPickobulusAbilityFeature;
@@ -77,6 +78,8 @@ public final class Features {
 		registerFeature(new GyrokineticOverlayFeature());
 		registerFeature(new ScrollableTooltipFeature());
 		registerFeature(new TooltipDecoratorFeature());
+		// KeyShortcut
+		registerFeature(new KeyShortcutFeature());
 		// Pet
 		registerFeature(new SelectedPetHighlightFeature());
 		// Reminders
