@@ -55,7 +55,7 @@ public class AuctionLowestBinTooltipFeature extends Feature implements Container
         if (genericDataSource.hasLowestBin(key)) {
 
             Optional<Double> lowestBin = genericDataSource.getLowestBin(key);
-            if (lowestBin.isEmpty()) {
+            if (lowestBin.isEmpty() || lowestBin.get() <= 0) {
                 lines.add(Text.literal("Auction API error.").formatted(Formatting.RED));
                 return;
             }
