@@ -21,7 +21,16 @@ public class MiscConfig {
 	public boolean stopPickobulusAbilityOnDynamic = false;
 
 	@SerialEntry
+	public Compatibility compatibility = new Compatibility();
+
+	@SerialEntry
 	public PartyCommands partyCommands = new PartyCommands();
+
+	public static class Compatibility {
+
+		@SerialEntry
+		public boolean reiSearchBarCalculator = false;
+	}
 
 	public static class PartyCommands {
 

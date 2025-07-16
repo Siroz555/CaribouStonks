@@ -19,6 +19,7 @@ import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.feature.misc.HighlightMobFeature;
 import fr.siroz.cariboustonks.feature.misc.PartyCommandFeature;
+import fr.siroz.cariboustonks.feature.misc.REISearchBarCalculatorFeature;
 import fr.siroz.cariboustonks.feature.misc.StopPickobulusAbilityFeature;
 import fr.siroz.cariboustonks.feature.pet.SelectedPetHighlightFeature;
 import fr.siroz.cariboustonks.feature.reminders.BoosterCookieReminderFeature;
@@ -108,6 +109,7 @@ public final class Features {
 		// Misc
 		registerFeature(new HighlightMobFeature());
 		registerFeature(new PartyCommandFeature());
+		registerFeature(new REISearchBarCalculatorFeature());
 		registerFeature(new StopPickobulusAbilityFeature());
 
 		CaribouStonks.LOGGER.info("{} features are now loaded and ready", getFeatures().size());

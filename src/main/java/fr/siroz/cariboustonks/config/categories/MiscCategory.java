@@ -71,6 +71,21 @@ public class MiscCategory extends AbstractCategory {
 								newValue -> current.misc.stopPickobulusAbilityOnDynamic = newValue)
 						.controller(this::createBooleanController)
 						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Text.literal("Other Mods").formatted(Formatting.BOLD))
+						.collapsed(false)
+						.description(OptionDescription.of(
+								Text.literal("Features of mods other than CaribouStonks.")))
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("RoughlyEnoughItems Calculator"))
+								.description(OptionDescription.of(
+										Text.literal("Allows you to have a calculator in the RoughlyEnoughItems Search Bar.")))
+								.binding(defaults.misc.compatibility.reiSearchBarCalculator,
+										() -> current.misc.compatibility.reiSearchBarCalculator,
+										newValue -> current.misc.compatibility.reiSearchBarCalculator = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.build())
                 .group(OptionGroup.createBuilder()
                         .name(Text.literal("Party Commands").formatted(Formatting.BOLD))
                         .collapsed(false)
