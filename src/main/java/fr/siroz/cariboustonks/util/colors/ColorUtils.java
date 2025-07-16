@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.util.colors;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -7,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.Color;
 
 public final class ColorUtils {
+
+	public static final Codec<Color> COLOR_CODEC = Codec.INT.xmap(argb -> new Color(argb, true), Color::getRGB);
 
 	private ColorUtils() {
 	}
