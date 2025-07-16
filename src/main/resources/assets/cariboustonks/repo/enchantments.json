@@ -1,5 +1,10 @@
 [
   {
+    "id": "absorb",
+    "name": "Absorb",
+    "maxLevel": 10
+  },
+  {
     "id": "angler",
     "name": "Angler",
     "maxLevel": 6,
@@ -9,6 +14,11 @@
     "id": "aqua_affinity",
     "name": "Aqua Affinity",
     "maxLevel": 1
+  },
+  {
+    "id": "arcane",
+    "name": "Arcane",
+    "maxLevel": 5
   },
   {
     "id": "bane_of_arthropods",
@@ -191,6 +201,11 @@
     "id": "flame",
     "name": "Flame",
     "maxLevel": 2
+  },
+  {
+    "id": "forest_pledge",
+    "name": "Forest Pledge",
+    "maxLevel": 5
   },
   {
     "id": "fortune",
@@ -438,6 +453,11 @@
     "goodLevel": 4
   },
   {
+    "id": "scuba",
+    "name": "Scuba",
+    "maxLevel": 5
+  },
+  {
     "id": "sharpness",
     "name": "Sharpness",
     "maxLevel": 7,
@@ -485,6 +505,11 @@
     "maxLevel": 6
   },
   {
+    "id": "stealth",
+    "name": "Stealth",
+    "maxLevel": 1
+  },
+  {
     "id": "strong_mana",
     "name": "Strong Mana",
     "maxLevel": 10,
@@ -502,7 +527,7 @@
   },
   {
     "id": "syphon",
-    "name": "Syphon",
+    "name": "Drain",
     "maxLevel": 5,
     "goodLevel": 4
   },
