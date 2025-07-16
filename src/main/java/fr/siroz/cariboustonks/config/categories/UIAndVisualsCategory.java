@@ -9,6 +9,7 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.screen.HudConfigScreen;
+import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -113,10 +114,22 @@ public class UIAndVisualsCategory extends AbstractCategory {
 										newValue -> current.uiAndVisuals.coloredEnchantment.showMaxEnchants = newValue)
 								.controller(this::createBooleanController)
 								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Show max Enchantments in Rainbow"))
+								.description(OptionDescription.of(
+										Text.literal("Change the color of maxed enchantments to an" + SPACE),
+										AnimationUtils.applyRainbow("animated Rainbow gradient o/"),
+										Text.literal("(As an example)").formatted(Formatting.GRAY, Formatting.ITALIC)))
+								.binding(defaults.uiAndVisuals.coloredEnchantment.maxEnchantsRainbow,
+										() -> current.uiAndVisuals.coloredEnchantment.maxEnchantsRainbow,
+										newValue -> current.uiAndVisuals.coloredEnchantment.maxEnchantsRainbow = newValue)
+								.controller(this::createBooleanController)
+								.build())
 						.option(Option.<Color>createBuilder()
 								.name(Text.literal("Max Enchantments Color"))
 								.description(OptionDescription.of(
-										Text.literal("Change the color for the max Enchantments.")))
+										Text.literal("Change the color for the max Enchantments."),
+										Text.literal(SPACE + "Warning: If the Rainbow is activated, the color will not be applied.").formatted(Formatting.YELLOW)))
 								.binding(defaults.uiAndVisuals.coloredEnchantment.maxEnchantsColor,
 										() -> current.uiAndVisuals.coloredEnchantment.maxEnchantsColor,
 										newValue -> current.uiAndVisuals.coloredEnchantment.maxEnchantsColor = newValue)

@@ -62,6 +62,9 @@ public class UIAndVisualsConfig {
 		public boolean showMaxEnchants = false;
 
 		@SerialEntry
+		public boolean maxEnchantsRainbow = false;
+
+		@SerialEntry
 		public Color maxEnchantsColor = Color.RED;
 
 		@SerialEntry

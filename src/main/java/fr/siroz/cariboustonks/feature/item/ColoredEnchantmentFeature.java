@@ -10,6 +10,7 @@ import fr.siroz.cariboustonks.event.ItemRenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.RomanNumeralUtils;
+import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.component.type.LoreComponent;
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 /**
@@ -48,7 +50,7 @@ public class ColoredEnchantmentFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock();
+		return SkyBlockAPI.isOnSkyBlock() && (showGoodEnchants() || showMaxEnchants());
 	}
 
 	@Nullable
@@ -86,6 +88,7 @@ public class ColoredEnchantmentFeature extends Feature {
 			return null;
 		}
 
+		boolean applied = false;
 		List<Text> lines = loreComponent.lines().stream()
 				.map(this::recursiveCopy)
 				.collect(Collectors.toList());
@@ -95,15 +98,33 @@ public class ColoredEnchantmentFeature extends Feature {
 			if (showMaxEnchants() && !maxEnchantmentColors.isEmpty()
 					&& maxEnchantmentColors.keySet().stream().anyMatch(line.getString()::contains)
 			) {
-				for (Text currentText : line.getSiblings()) {
-					String enchant = currentText.getString().trim();
+				if (maxEnchantsRainbow()) {
+					ListIterator<Text> iterator = line.getSiblings().listIterator();
+					while (iterator.hasNext()) {
+						Text currentText = iterator.next();
+						String enchant = currentText.getString().trim();
 
-					//noinspection DataFlowIssue
-					if (maxEnchantmentColors.containsKey(enchant)
-							&& currentText.getStyle().getColor().getRgb() == Formatting.BLUE.getColorValue()
-					) {
-						((MutableText) currentText).withColor(maxEnchantmentColors.getInt(enchant));
-						maxEnchantmentColors.removeInt(enchant);
+						//noinspection DataFlowIssue
+						if (maxEnchantmentColors.containsKey(enchant)
+								&& currentText.getStyle().getColor().getRgb() == Formatting.BLUE.getColorValue()
+						) {
+							iterator.set(AnimationUtils.applyRainbow(enchant));
+							maxEnchantmentColors.removeInt(enchant);
+							applied = true;
+						}
+					}
+				} else {
+					for (Text currentText : line.getSiblings()) {
+						String enchant = currentText.getString().trim();
+
+						//noinspection DataFlowIssue
+						if (maxEnchantmentColors.containsKey(enchant)
+								&& currentText.getStyle().getColor().getRgb() == Formatting.BLUE.getColorValue()
+						) {
+							((MutableText) currentText).withColor(maxEnchantmentColors.getInt(enchant));
+							maxEnchantmentColors.removeInt(enchant);
+							applied = true;
+						}
 					}
 				}
 			}
@@ -120,12 +141,18 @@ public class ColoredEnchantmentFeature extends Feature {
 					) {
 						((MutableText) currentText).withColor(goodEnchantmentColors.getInt(enchant));
 						goodEnchantmentColors.removeInt(enchant);
+						applied = true;
 					}
 				}
 			}
 		}
 
-		return new LoreComponent(lines);
+		// Le flag permet de s'assurer qu'il y a eu au moins un ou plusieurs changements
+		if (applied) {
+			return new LoreComponent(lines);
+		}
+
+		return null;
 	}
 
 	private boolean showMaxEnchants() {
@@ -138,6 +165,10 @@ public class ColoredEnchantmentFeature extends Feature {
 
 	private Color maxEnchantsColor() {
 		return ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.maxEnchantsColor;
+	}
+
+	private boolean maxEnchantsRainbow() {
+		return ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.maxEnchantsRainbow;
 	}
 
 	private Color goodEnchantsColor() {
