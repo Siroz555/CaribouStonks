@@ -59,8 +59,12 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
 - Create and customize Waypoints.
 - Display a Waypoint in the world when a player shares its position.
 - Color and change the colors of enchantments on Items, according to their levels
+- Colored Enchantments
+    - Change the color of enchantments according to their levels.
+    - Single color or with animated rainbow effect.
 - Display a colored border around Tooltip items according to rarity.
 - Overlay
+    - Etherwarp Teleport Target display.
     - Gyrokinetic Wand radius display.
 - HUDs
     - Fps HUD
@@ -110,6 +114,7 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
 - Highlight entities (/highlighter)
 - Stop the Pickobulus Ability on Private Island
 - Party Commands (!warp, !coords, !dice, ..)
+- RoughlyEnoughItems (REI) Search Bar Calculator
 
 ### Credits & Open Source Software
 
