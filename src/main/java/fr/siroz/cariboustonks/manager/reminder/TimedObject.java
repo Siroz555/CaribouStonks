@@ -20,21 +20,4 @@ import java.time.Instant;
  * @param type           the type of the object, used to determine its behavior upon expiration
  */
 public record TimedObject(String id, String message, Instant expirationTime, String type) {
-
-    // SURCHARGE : Si "replaceIfExists" dans le ReminderManger avec la méthode addObject,
-    // il peut y avoir un expirationTime différent, donc la queue peut voir "2x" le même record
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TimedObject that = (TimedObject) o;
-        return id.equalsIgnoreCase(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
 }

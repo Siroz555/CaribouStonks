@@ -85,6 +85,7 @@ public final class ReminderManager implements Manager {
 		if (objectSet.containsKey(obj.id())) {
             if (replaceIfExists) {
                 queue.removeIf(o -> o.id().equals(obj.id()));
+				objectSet.remove(obj.id());
             } else {
                 return;
             }
@@ -94,9 +95,9 @@ public final class ReminderManager implements Manager {
         objectSet.put(obj.id(), obj);
         if (DeveloperTools.isInDevelopment()) {
             if (replaceIfExists) {
-                CaribouStonks.LOGGER.info("[Reminder] Updated {}", obj.id());
+                CaribouStonks.LOGGER.info("[ReminderManager] Updated {}", obj.id());
             } else {
-                CaribouStonks.LOGGER.info("[Reminder] Added {}", obj.id());
+                CaribouStonks.LOGGER.info("[ReminderManager] Added {}", obj.id());
             }
         }
     }
