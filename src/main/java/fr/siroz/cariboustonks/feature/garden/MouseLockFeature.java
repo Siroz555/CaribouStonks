@@ -59,7 +59,7 @@ public final class MouseLockFeature extends Feature implements KeyBindRegistrati
 		if (locked) {
 			locked = false;
 			Client.sendMessageWithPrefix(
-					Text.literal("La sourie n'est plus bloqué du a un changement de monde").formatted(Formatting.RED));
+					Text.literal("The mouse is no longer blocked due to a server change.").formatted(Formatting.RED));
 		}
 	}
 
