@@ -107,7 +107,6 @@ public final class AttributeAPI {
 		return attribute != null ? attribute.skyBlockApiId() : fallback;
 	}
 
-	@Deprecated
 	public static int getShardsUntilMax(Rarity rarity, int level) {
 		if (level == MAX_LEVEL) return 0;
 

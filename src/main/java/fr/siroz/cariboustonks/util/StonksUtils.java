@@ -163,6 +163,23 @@ public final class StonksUtils {
 	}
 
 	/**
+	 * Converts a {@link String} into a {@code int} or return the default value if the conversion fails.
+	 *
+	 * @param s            the string to convert
+	 * @param defaultValue the default value
+	 * @return the int represented by the string or the default value
+	 */
+	public static int toInt(@Nullable String s, int defaultValue) {
+		if (s == null) return defaultValue;
+
+		try {
+			return Integer.parseInt(s);
+		} catch (Exception ignored) {
+			return defaultValue;
+		}
+	}
+
+	/**
 	 * The median is the central value of a sorted list. It is less sensitive to extreme values than the means.
 	 *
 	 * @param values the values

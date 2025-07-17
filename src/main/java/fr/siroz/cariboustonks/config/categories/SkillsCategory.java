@@ -113,9 +113,9 @@ public class SkillsCategory extends AbstractCategory {
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Attribute Informations"))
-								.available(false)
 								.description(OptionDescription.of(
-										Text.literal("Show some Informations in the Hunting Box or Attribute Menu, related to Shards.")))
+										Text.literal("Show some Informations in the Hunting Box or Attribute Menu, related to Shards."),
+										Text.literal("Allows you to add the number of missing Shards and display the total price to max it out.")))
 								.binding(defaults.hunting.attributeInfos,
 										() -> current.hunting.attributeInfos,
 										newValue -> current.hunting.attributeInfos = newValue)
