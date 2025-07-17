@@ -15,7 +15,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +52,8 @@ public final class AttributeAPI {
 	public static String getSkyBlockApiIdFromNewShard(@NotNull String fallback, ItemStack item, List<Text> lines) {
 		Screen currentScreen = MinecraftClient.getInstance().currentScreen;
 		if (!fallback.isEmpty() || currentScreen == null) return fallback;
-		if (!item.isOf(Items.PLAYER_HEAD)) return fallback; // pas sûr de cette verification là, à voir
+		// Certaines shards ne sont pas des PLAYER_HEAD
+		//if (!item.isOf(Items.PLAYER_HEAD)) return fallback; // pas sûr de cette verification là, à voir
 
 		String title = currentScreen.getTitle().getString();
 		switch (title) {
