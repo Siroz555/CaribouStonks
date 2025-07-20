@@ -40,8 +40,7 @@ public final class ItemUtils {
 
 	private static final String ITEM_ID = "id";
 	private static final String ITEM_UUID = "uuid";
-	private static final Pattern ABILITY
-			= Pattern.compile("ability:\\s+(?<ability>[\\w\\s]+?)\\s+right\\s+click", Pattern.CASE_INSENSITIVE);
+	private static final Pattern ABILITY = Pattern.compile("Ability: (?<name>.*?) *");
 
 	private static final Map<String, Rarity> LORE_RARITIES = Map.of(
 			"ULTIMATE", Rarity.ULTIMATE,
@@ -239,7 +238,7 @@ public final class ItemUtils {
 
 	public static @Nullable String getAbility(@NotNull ItemStack stack) {
 		Matcher abilityMatcher = getLoreLineIfMatch(stack, ABILITY);
-		return abilityMatcher != null ? abilityMatcher.group("ability") : null;
+		return abilityMatcher != null ? abilityMatcher.group("name") : null;
 	}
 
 	public static List<ItemStack> getArmor(@NotNull LivingEntity entity) {
