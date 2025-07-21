@@ -21,20 +21,21 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
 
 **General**
 
+- KeyShortcut: Link Keybinds to commands to be executed.
+
 - Stonks
     - Configure display of item prices in Tooltips.
     - Graphical representation of an item's price trend, quantity, and other information. (BETA)
     - Search engine for all SkyBlock items.
     - KeyBind to find an item.
     - Bazaar: Press ENTER to validate the last input.
+    - /stonks {item} Command: Display prices and other information simply anywhere.
 
 - Reminders
     - Chocolate Factory: Reminders when the number of chocolates reaches the limit.
     - Split or Steal: Reminder when the Ubik's Cube is ready.
     - Forge: Reminder when a forge item is completed.
     - Enchanted Cloak: Reminders when a boost is ready.
-
-- KeyShortcut: Link Keybinds to commands to be executed.
 
 **Vanilla**
 
@@ -116,6 +117,15 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
 - Stop the Pickobulus Ability on Private Island
 - Party Commands (!warp, !coords, !dice, ..)
 - RoughlyEnoughItems (REI) Search Bar Calculator
+
+**Commands**
+
+- /cariboustonks (Main mod Screen)
+- /sendCoords > Share your current position.
+- /highlighter > Highlight a specific entity in the world.
+- /stonks > Display prices and other information simply anywhere.
+
+---
 
 ### Credits & Open Source Software
 

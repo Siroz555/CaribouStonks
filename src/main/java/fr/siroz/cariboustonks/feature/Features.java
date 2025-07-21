@@ -28,6 +28,7 @@ import fr.siroz.cariboustonks.feature.reminders.ChocolateLimitReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.EnchantedCloakReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.ForgeReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.UbikCubeReminderFeature;
+import fr.siroz.cariboustonks.feature.stonks.StonksCommandFeature;
 import fr.siroz.cariboustonks.feature.stonks.StonksFeature;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.auction.AuctionLowestBinTooltipFeature;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
@@ -91,6 +92,7 @@ public final class Features {
 		registerFeature(new ForgeReminderFeature());
 		registerFeature(new UbikCubeReminderFeature());
 		// Stonks
+		registerFeature(new StonksCommandFeature());
 		registerFeature(new StonksFeature());
 		registerFeature(new BazaarPriceTooltipFeature(1));
 		registerFeature(new AuctionLowestBinTooltipFeature(2));

@@ -43,7 +43,7 @@ public final class CommandManager implements Manager {
 						.executes(StonksUtils.openScreen(() -> HudConfigScreen.create(null))));
 
 		LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(builder);
-		dispatcher.register(ClientCommandManager.literal("stonks").redirect(node));
+		//dispatcher.register(ClientCommandManager.literal("caribou").redirect(node));
 		dispatcher.register(ClientCommandManager.literal("cs").redirect(node));
 	}
 }

@@ -17,8 +17,10 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -210,6 +212,11 @@ public final class HypixelDataSource { // TODO clean up & docs
 		}
 
 		return new ObjectArrayList<>(skyBlockItems.values());
+	}
+
+	@Contract(" -> new")
+	public @NotNull Set<String> getSkyBlockItemsIds() {
+		return new HashSet<>(skyBlockItems.keySet());
 	}
 
 	/**
