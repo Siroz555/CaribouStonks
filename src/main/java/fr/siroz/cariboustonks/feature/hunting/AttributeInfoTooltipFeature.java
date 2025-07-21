@@ -212,7 +212,7 @@ public class AttributeInfoTooltipFeature extends Feature implements ContainerMat
 	}
 
 	private void addTotalCost(List<Text> lines, int required, String skyBlockApiId) {
-		if (hypixelDataSource.hasBazaarItem(skyBlockApiId)) {
+		if (required > 0 && hypixelDataSource.hasBazaarItem(skyBlockApiId)) {
 			Optional<Product> product = hypixelDataSource.getBazaarItem(skyBlockApiId);
 			if (product.isEmpty()) {
 				lines.add(Text.literal("Bazaar item error.").formatted(Formatting.RED));
