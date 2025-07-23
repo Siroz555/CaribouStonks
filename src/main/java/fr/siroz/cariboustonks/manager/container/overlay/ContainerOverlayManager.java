@@ -11,8 +11,6 @@ import fr.siroz.cariboustonks.mixin.accessors.HandledScreenAccessor;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectRBTreeMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -24,7 +22,9 @@ import net.minecraft.screen.slot.Slot;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Credits to the Skyblocker Team (<a href="https://github.com/SkyblockerMod/Skyblocker">GitHub Skyblocker</a>)
@@ -34,7 +34,7 @@ public final class ContainerOverlayManager implements Manager {
 
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-	private final Object2ObjectMap<Feature, ContainerOverlay> containerOverlayMap = new Object2ObjectOpenHashMap<>();
+	private final Map<Feature, ContainerOverlay> containerOverlayMap = new HashMap<>();
 	private ContainerOverlay currentContainerOverlay = null;
 	private List<ColorHighlight> highlights;
 
@@ -79,7 +79,7 @@ public final class ContainerOverlayManager implements Manager {
 	}
 
 	private void onScreen(@NotNull GenericContainerScreen screen) {
-		for (Object2ObjectMap.Entry<Feature, ContainerOverlay> overlay : containerOverlayMap.object2ObjectEntrySet()) {
+		for (Map.Entry<Feature, ContainerOverlay> overlay : containerOverlayMap.entrySet()) {
 			if (overlay.getKey().isEnabled()) {
 				if (overlay.getKey() instanceof ContainerMatcherTrait trait && trait.matches(screen)) {
 					currentContainerOverlay = overlay.getValue();
