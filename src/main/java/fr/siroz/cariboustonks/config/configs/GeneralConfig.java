@@ -50,6 +50,9 @@ public class GeneralConfig {
 
 		@SerialEntry
 		public boolean showAllDataInInfoScreen = false;
+
+		@SerialEntry
+		public boolean showAllDataInStonksCommand = false;
 	}
 
 	public static class Reminders {

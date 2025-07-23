@@ -163,7 +163,15 @@ public class GeneralCategory extends AbstractCategory {
 										newValue -> current.general.stonks.bazaarSignEditEnterValidation = newValue)
 								.controller(this::createBooleanController)
 								.build())
-						.option(LabelOption.create(Text.literal("| Stonks Screen").formatted(Formatting.BOLD)))
+						.option(LabelOption.create(Text.literal("| Stonks Screen & Commands").formatted(Formatting.BOLD)))
+						.option(ButtonOption.createBuilder()
+								.name(Text.literal("/stonks Command"))
+								.text(Text.literal("/stonks <iem>"))
+								.action((screen, option) -> {})
+								.description(OptionDescription.of(
+										Text.literal("Use /stonks to display prices and other information simply anywhere."),
+										Text.literal(SPACE + "Only works for Bazaar Items at the moment").formatted(Formatting.YELLOW, Formatting.ITALIC)))
+								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Show gradiant in Graph Screen").append(BETA))
 								.description(OptionDescription.of(
@@ -180,6 +188,15 @@ public class GeneralCategory extends AbstractCategory {
 								.binding(defaults.general.stonks.showAllDataInInfoScreen,
 										() -> current.general.stonks.showAllDataInInfoScreen,
 										newValue -> current.general.stonks.showAllDataInInfoScreen = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Show all data in the /stonks Command").append(BETA))
+								.description(OptionDescription.of(
+										Text.literal("Show in the /stonks Command, all calculated data.")))
+								.binding(defaults.general.stonks.showAllDataInStonksCommand,
+										() -> current.general.stonks.showAllDataInStonksCommand,
+										newValue -> current.general.stonks.showAllDataInStonksCommand = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.build())

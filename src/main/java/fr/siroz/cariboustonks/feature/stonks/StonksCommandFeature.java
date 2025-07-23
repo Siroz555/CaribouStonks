@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.data.algo.BazaarItemAnalytics;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.SkyBlockItem;
@@ -160,16 +161,18 @@ public class StonksCommandFeature extends Feature implements CommandRegistration
 					.append(Text.literal(" insta-sells in 7d").formatted(Formatting.DARK_GRAY))
 			);
 
-			source.sendFeedback(Text.empty());
+			if (ConfigManager.getConfig().general.stonks.showAllDataInStonksCommand) {
+				source.sendFeedback(Text.empty());
 
-			double spreadPercentage = BazaarItemAnalytics.spreadPercentage(product);
-			double orderImbalancePercentage = BazaarItemAnalytics.orderImbalancePercentage(product);
-			source.sendFeedback(Text.literal("Spreed: ").formatted(Formatting.RED)
-					.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(spreadPercentage) + " %").withColor(Colors.RED.asInt()))
-					.append(Text.literal(" | ").formatted(Formatting.GRAY))
-					.append(Text.literal("Imbalance: ").formatted(Formatting.DARK_PURPLE))
-					.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(orderImbalancePercentage) + " %").withColor(Colors.PURPLE.asInt()))
-			);
+				double spreadPercentage = BazaarItemAnalytics.spreadPercentage(product);
+				double orderImbalancePercentage = BazaarItemAnalytics.orderImbalancePercentage(product);
+				source.sendFeedback(Text.literal("Spreed: ").formatted(Formatting.RED)
+						.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(spreadPercentage) + " %").withColor(Colors.RED.asInt()))
+						.append(Text.literal(" | ").formatted(Formatting.GRAY))
+						.append(Text.literal("Imbalance: ").formatted(Formatting.DARK_PURPLE))
+						.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(orderImbalancePercentage) + " %").withColor(Colors.PURPLE.asInt()))
+				);
+			}
 
 			source.sendFeedback(Text.literal(SEPARATOR).formatted(Formatting.RED));
 		}
