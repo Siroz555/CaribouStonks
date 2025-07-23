@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.feature.pet;
+package fr.siroz.cariboustonks.feature.ui;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
