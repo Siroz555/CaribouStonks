@@ -7,8 +7,7 @@ import com.mojang.serialization.JsonOps;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.mod.SkyBlockAttribute;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import it.unimi.dsi.fastutil.objects.ObjectReferencePair;
 import net.minecraft.component.ComponentHolder;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
@@ -31,8 +30,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -42,16 +42,16 @@ public final class ItemUtils {
 	private static final String ITEM_UUID = "uuid";
 	private static final Pattern ABILITY = Pattern.compile("Ability: (?<name>.*?) *");
 
-	private static final Map<String, Rarity> LORE_RARITIES = Map.of(
-			"ULTIMATE", Rarity.ULTIMATE,
-			"DIVINE", Rarity.DIVINE,
-			"MYTHIC", Rarity.MYTHIC,
-			"SPECIAL", Rarity.SPECIAL,
-			"LEGENDARY", Rarity.LEGENDARY,
-			"EPIC", Rarity.EPIC,
-			"RARE", Rarity.RARE,
-			"UNCOMMON", Rarity.UNCOMMON,
-			"COMMON", Rarity.COMMON
+	private static final List<ObjectReferencePair<String, Rarity>> LORE_RARITIES = List.of(
+			ObjectReferencePair.of("ULTIMATE", Rarity.ULTIMATE),
+			ObjectReferencePair.of("DIVINE", Rarity.DIVINE),
+			ObjectReferencePair.of("MYTHIC", Rarity.MYTHIC),
+			ObjectReferencePair.of("SPECIAL", Rarity.SPECIAL),
+			ObjectReferencePair.of("LEGENDARY", Rarity.LEGENDARY),
+			ObjectReferencePair.of("EPIC", Rarity.EPIC),
+			ObjectReferencePair.of("RARE", Rarity.RARE),
+			ObjectReferencePair.of("UNCOMMON", Rarity.UNCOMMON),
+			ObjectReferencePair.of("COMMON", Rarity.COMMON)
 	);
 	private static final Int2ReferenceOpenHashMap<Rarity> CACHE_RARITIES = new Int2ReferenceOpenHashMap<>();
 
@@ -222,9 +222,9 @@ public final class ItemUtils {
 		List<Text> lore = getLore(stack);
 		String[] tooltipStr = lore.stream().map(Text::getString).toArray(String[]::new);
 
-		for (String rarityString : LORE_RARITIES.keySet()) {
-			if (Arrays.stream(tooltipStr).anyMatch(line -> line.contains(rarityString))) {
-				Rarity rarity = LORE_RARITIES.get(rarityString);
+		for (ObjectReferencePair<String, Rarity> loreToRarity : LORE_RARITIES) {
+			if (Arrays.stream(tooltipStr).anyMatch(line -> line.contains(loreToRarity.left()))) {
+				Rarity rarity = loreToRarity.right();
 				if (rarity != null) {
 					CACHE_RARITIES.put(hashCode, rarity);
 					return rarity;
