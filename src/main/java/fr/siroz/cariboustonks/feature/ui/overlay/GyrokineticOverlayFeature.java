@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
-import fr.siroz.cariboustonks.util.render.WorldRenderer;
+import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
@@ -14,7 +14,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
-public class GyrokineticOverlayFeature extends Feature implements WorldRenderer {
+public class GyrokineticOverlayFeature extends Feature implements WorldRendererProvider {
 
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 

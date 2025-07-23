@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.position.Position;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
-import fr.siroz.cariboustonks.util.render.WorldRenderer;
+import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -13,7 +13,7 @@ import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-final class PestFinderRenderer implements WorldRenderer {
+final class PestFinderRenderer implements WorldRendererProvider {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 

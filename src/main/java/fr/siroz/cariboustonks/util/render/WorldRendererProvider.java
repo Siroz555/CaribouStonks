@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
  * An interface representing a world renderer that allows implementing classes to perform custom rendering logic
  * during the world rendering process.
  */
-public interface WorldRenderer {
+public interface WorldRendererProvider {
 
     /**
 	 * Performs custom rendering logic during the world rendering process.

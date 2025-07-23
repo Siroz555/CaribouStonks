@@ -4,13 +4,13 @@ import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.position.Position;
-import fr.siroz.cariboustonks.util.render.WorldRenderer;
+import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-final class HotspotRadarRenderer implements WorldRenderer {
+final class HotspotRadarRenderer implements WorldRendererProvider {
 
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 

@@ -3,10 +3,10 @@ package fr.siroz.cariboustonks.feature.fishing;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
-import fr.siroz.cariboustonks.util.render.WorldRenderer;
+import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
-class HotspotRenderer implements WorldRenderer {
+class HotspotRenderer implements WorldRendererProvider {
 
 	private static final Color BOBBER_IN = Colors.GREEN.withAlpha(0.25F);
 	private static final Color BOBBER_OUT = Colors.RED.withAlpha(0.25F);

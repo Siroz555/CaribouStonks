@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.manager.waypoint;
 
 import fr.siroz.cariboustonks.manager.waypoint.options.IconOption;
 import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
-import fr.siroz.cariboustonks.util.render.WorldRenderer;
+import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
@@ -15,13 +15,13 @@ import net.minecraft.util.math.Vec3d;
  * The {@code WaypointRenderer} class is responsible for rendering {@link Waypoint} instances in the game world.
  *
  * @see Waypoint
- * @see WorldRenderer
+ * @see WorldRendererProvider
  * @see TextOption
  * @see IconOption
  * @see WorldRenderContext
  * @see WorldRenderUtils
  */
-public final class WaypointRenderer implements WorldRenderer {
+public final class WaypointRenderer implements WorldRendererProvider {
 
 	private final Waypoint waypoint;
 

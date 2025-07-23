@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
-import fr.siroz.cariboustonks.util.render.WorldRenderer;
+import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class WaypointFeature extends Feature implements WorldRenderer {
+public final class WaypointFeature extends Feature implements WorldRendererProvider {
 
     private static final Path WAYPOINT_PATH = CaribouStonks.CONFIG_DIR.resolve("waypoints.json");
 

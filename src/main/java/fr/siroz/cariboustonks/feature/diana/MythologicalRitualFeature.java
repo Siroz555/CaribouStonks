@@ -18,7 +18,7 @@ import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.position.Position;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
-import fr.siroz.cariboustonks.util.render.WorldRenderer;
+import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
 
 @ApiStatus.Experimental
 public final class MythologicalRitualFeature extends Feature
-		implements KeyBindRegistration, CommandRegistration, WorldRenderer { // TODO
+		implements KeyBindRegistration, CommandRegistration, WorldRendererProvider { // TODO
 
 	static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 

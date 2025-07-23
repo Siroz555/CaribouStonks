@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
-import fr.siroz.cariboustonks.util.render.WorldRenderer;
+import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import java.util.Set;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -20,7 +20,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 
-public class EtherWarpOverlayFeature extends Feature implements WorldRenderer {
+public class EtherWarpOverlayFeature extends Feature implements WorldRendererProvider {
 
 	// Rajouter un petit Zoom quand le target est good comme en 1.8, en reprenant le code du ZoomFeature
 	// en ayant un event lié entre ces 2 features ?

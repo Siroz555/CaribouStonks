@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.feature.garden.pest;
 
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
-import fr.siroz.cariboustonks.util.render.WorldRenderer;
+import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import fr.siroz.cariboustonks.util.shape.Cuboid;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-final class PlotInfestedRenderer implements WorldRenderer {
+final class PlotInfestedRenderer implements WorldRendererProvider {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
