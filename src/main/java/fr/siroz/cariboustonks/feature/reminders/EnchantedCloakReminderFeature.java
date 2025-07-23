@@ -109,8 +109,8 @@ public final class EnchantedCloakReminderFeature extends Feature implements Remi
 		CHOCOLATE_FACTORY("Chocolate Factory", Text.literal("Chocolate Factory").formatted(Formatting.GOLD)),
 		PET_TRAINING("Pet Training", Text.literal("Pet Training").formatted(Formatting.LIGHT_PURPLE)),
 		PET_SITTER("Pet Sitter", Text.literal("Pet Sitter").formatted(Formatting.RED)),
-		AGING_ITEMS("Aging items", Text.literal("Aging Items").formatted(Formatting.YELLOW)),
-		FORGE("Forge", Text.literal("Forge").formatted(Formatting.GOLD)),
+		AGING_ITEMS("Aging Items", Text.literal("Aging Items").formatted(Formatting.YELLOW)),
+		FORGE("Forges", Text.literal("Forge").formatted(Formatting.GOLD)),
 		;
 
 		private final String id;
