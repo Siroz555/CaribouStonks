@@ -1,5 +1,7 @@
 # CaribouStonks
 
+[![modrinth](https://img.shields.io/badge/dynamic/json?color=00AF5C&label=Downloads&prefix=+%20&query=downloads&url=https://api.modrinth.com/v2/project/fraWWQSJ&logo=modrinth)](https://modrinth.com/mod/cariboustonks)
+
 Siroz555's Mod – Fabric mod for Hypixel SkyBlock on the latest Minecraft version.
 
 Minecraft Version: **1.21.5**
