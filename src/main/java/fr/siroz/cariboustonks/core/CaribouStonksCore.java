@@ -42,6 +42,8 @@ public final class CaribouStonksCore {
 
 		TickScheduler.getInstance().runRepeating(SkyBlockAPI::update, 3, TimeUnit.SECONDS);
 
+		new UpdateChecker();
+
 		ClientPlayConnectionEvents.DISCONNECT.register((_handler, _client) -> onDisconnect());
 
 		this.jsonFileService = new JsonFileService();
@@ -136,7 +138,7 @@ public final class CaribouStonksCore {
 		if (shouldSendChat) {
 			if (!REPORTED_CRASHES.contains(crashSignature)) { // Vérifier si ce crash a déjà été reporté
 				Client.sendErrorMessage("CaribouStonks error: "
-								+ type.getName() + " '" + niceName + "' was crashed in " + reason, shouldSendNotification);
+						+ type.getName() + " '" + niceName + "' was crashed in " + reason, shouldSendNotification);
 			}
 		}
 
