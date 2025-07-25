@@ -3,8 +3,7 @@ package fr.siroz.cariboustonks.manager.hud;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.Manager;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
+import java.util.ArrayList;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -12,9 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 /**
- * Manages and handles the registration and rendering of HUD elements within the game.
- * The class integrates with the HUD layer system to display custom elements above the
- * game's status effects layer.
+ * Manages and handles the registration and rendering of HUD elements within the game
+ * with the Fabric Rendering (v1) HUD API
  * <p>
  * This manager retrieves HUD elements from features implementing {@link HudProvider} and stores them
  * in an internal list for rendering during each frame. The rendering logic ensures all registered
@@ -22,11 +20,7 @@ import java.util.List;
  */
 public final class HudManager implements Manager {
 
-	private final ObjectList<Hud> hudList = new ObjectArrayList<>();
-
-	public HudManager() {
-		// TODO : MORE DOCS
-	}
+	private final List<Hud> hudList = new ArrayList<>();
 
 	@Override
 	public void register(@NotNull Feature feature) {
