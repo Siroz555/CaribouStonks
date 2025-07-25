@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.command.CommandManager;
 import fr.siroz.cariboustonks.manager.container.overlay.ContainerOverlayManager;
 import fr.siroz.cariboustonks.manager.container.tooltip.ContainerTooltipAppenderManager;
+import fr.siroz.cariboustonks.manager.glowing.GlowingManager;
 import fr.siroz.cariboustonks.manager.hud.HudManager;
 import fr.siroz.cariboustonks.manager.keybinds.KeyBindManager;
 import fr.siroz.cariboustonks.manager.network.NetworkManager;
@@ -35,6 +36,7 @@ public final class Managers {
         register(new ContainerOverlayManager());
         register(new ContainerTooltipAppenderManager());
         register(new HudManager());
+		register(new GlowingManager());
     }
 
     /**

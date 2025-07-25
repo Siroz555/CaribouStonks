@@ -4,18 +4,17 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.command.CommandRegistration;
 import fr.siroz.cariboustonks.manager.command.argument.EntityIdArgumentType;
+import fr.siroz.cariboustonks.manager.glowing.EntityGlowProvider;
 import fr.siroz.cariboustonks.util.Client;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
@@ -29,20 +28,20 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-@ApiStatus.Experimental
-public class HighlightMobFeature extends Feature implements CommandRegistration {
+@ApiStatus.Experimental // TODO on voit a travers les blocks les entities lul - en 1.21.7/8 c'est FIX
+public class HighlightMobFeature extends Feature implements CommandRegistration, EntityGlowProvider {
 
-	private final Object2IntMap<Entity> cachedEntities = new Object2IntOpenHashMap<>();
 	private EntityType<?> currentEntityTypeGlow = null;
 
 	public HighlightMobFeature() {
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register(this::onClientChangeWorld);
-		ClientTickEvents.END_WORLD_TICK.register(client -> this.cachedEntities.clear());
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && currentEntityTypeGlow != null;
+		return SkyBlockAPI.isOnSkyBlock()
+				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
+				&& currentEntityTypeGlow != null;
 	}
 
 	@EventHandler(event = "ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE")
@@ -90,29 +89,12 @@ public class HighlightMobFeature extends Feature implements CommandRegistration 
 		);
 	}
 
-	public int getGlowColorOrDefault(Entity entity, int defaultColor) {
-		if (!isEnabled()) return defaultColor;
-		return cachedEntities.getOrDefault(entity, defaultColor);
-	}
-
-	public boolean hasOrComputeGlowColor(Entity entity) {
-		if (!isEnabled()) return false;
-		if (cachedEntities.containsKey(entity)) return true;
-
-		int color = getMobGlow(entity);
-		if (color != 0) {
-			cachedEntities.put(entity, color);
-			return true;
-		}
-
-		return false;
-	}
-
-	private int getMobGlow(Entity entity) {
+	@Override
+	public int getEntityGlowColor(@NotNull Entity entity) {
 		if (currentEntityTypeGlow != null && currentEntityTypeGlow == entity.getType()) {
 			return ConfigManager.getConfig().misc.highlighterColor.getRGB();
 		}
 
-		return 0;
+		return DEFAULT;
 	}
 }
