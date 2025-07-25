@@ -2,11 +2,11 @@ package fr.siroz.cariboustonks.manager.keybinds;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.crash.CrashType;
-import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.event.CustomScreenEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.Manager;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.screen.slot.Slot;
@@ -37,7 +37,7 @@ public final class KeyBindManager implements Manager {
 
 	@ApiStatus.Internal
 	public KeyBindManager() {
-		TickScheduler.getInstance().runRepeating(this::triggerKeyBinds, 1);
+		ClientTickEvents.END_CLIENT_TICK.register(_client -> this.triggerKeyBinds());
 		CustomScreenEvents.KEY_PRESSED.register(this::handleKeyPressed);
 	}
 
@@ -95,6 +95,7 @@ public final class KeyBindManager implements Manager {
 	 * handling "first press" behavior, where certain key binds should only
 	 * trigger once per key press cycle.
 	 */
+	@EventHandler(event = "ClientTickEvents.END_CLIENT_TICK")
 	private void triggerKeyBinds() {
 		checkAllKeyBinds(keyBind -> {
 			if (keyBind.isFirstPress()) {
