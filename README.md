@@ -52,6 +52,7 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
     - Change the size.
     - Change the positions.
     - Change the Swing Duration.
+- Mutes Vanilla Sounds (Enderman, Phantom)
 
 **UI & Visuals**
 
