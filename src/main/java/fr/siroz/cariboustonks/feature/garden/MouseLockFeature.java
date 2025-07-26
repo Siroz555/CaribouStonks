@@ -37,7 +37,7 @@ public final class MouseLockFeature extends Feature implements KeyBindRegistrati
 
 	@Override
 	public @NotNull List<KeyBind> registerKeyBinds() {
-		return List.of(new KeyBind("Lock Mouse", GLFW.GLFW_KEY_MINUS, true, this::updateLockState));
+		return List.of(new KeyBind("Garden Lock Mouse", GLFW.GLFW_KEY_MINUS, true, this::updateLockState));
 	}
 
 	@Override
