@@ -19,6 +19,7 @@ import fr.siroz.cariboustonks.feature.item.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.feature.misc.HighlightMobFeature;
+import fr.siroz.cariboustonks.feature.misc.MuteVanillaSoundFeature;
 import fr.siroz.cariboustonks.feature.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.feature.misc.REISearchBarCalculatorFeature;
 import fr.siroz.cariboustonks.feature.misc.StopPickobulusAbilityFeature;
@@ -111,6 +112,7 @@ public final class Features {
 		registerFeature(new WaypointFeature());
 		// Misc
 		registerFeature(new HighlightMobFeature());
+		registerFeature(new MuteVanillaSoundFeature());
 		registerFeature(new PartyCommandFeature());
 		registerFeature(new REISearchBarCalculatorFeature());
 		registerFeature(new StopPickobulusAbilityFeature());

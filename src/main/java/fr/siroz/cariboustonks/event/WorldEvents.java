@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.event;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.sound.SoundEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,8 +23,25 @@ public final class WorldEvents {
 		}
 	});
 
+	/**
+	 * Called when the client receives a Sound
+	 */
+	public static final Event<SoundCancellable> SOUND_CANCELLABLE = EventFactory.createArrayBacked(SoundCancellable.class, listeners -> sound -> {
+		for (SoundCancellable listener : listeners) {
+			if (listener.onSound(sound)) {
+				return true;
+			}
+		}
+		return false;
+	});
+
 	@FunctionalInterface
 	public interface Join {
 		void onJoinWorld(@NotNull ClientWorld world);
+	}
+
+	@FunctionalInterface
+	public interface SoundCancellable {
+		boolean onSound(@NotNull SoundEvent sound);
 	}
 }

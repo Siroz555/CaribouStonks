@@ -5,6 +5,7 @@
   "client": [
     "ChatHudMixin",
     "ClientPlayNetworkHandlerMixin",
+    "ClientWorldMixin",
     "DownloadingTerrainScreenMixin",
     "DrawContextMixin",
     "EntityRendererMixin",
@@ -27,8 +28,8 @@
     "TitleScreenMixin",
     "TutorialManagerMixin",
     "WorldRendererMixin",
-    "accessors.ConfigClassHandlerImplAccessor",
     "accessors.ChatHudAccessor",
+    "accessors.ConfigClassHandlerImplAccessor",
     "accessors.FrustumInvoker",
     "accessors.HandledScreenAccessor",
     "accessors.MessageHandlerAccessor",

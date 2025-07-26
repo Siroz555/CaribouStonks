@@ -161,6 +161,29 @@ public class VanillaCategory extends AbstractCategory {
 										.step(0.01f))
 								.build())
 						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Text.literal("Sound").formatted(Formatting.BOLD))
+						.description(OptionDescription.of(Text.literal("Mutes Vanilla Sounds.")))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Mute Enderman"))
+								.description(OptionDescription.of(
+										Text.literal("Mute the Scream & Stare sounds from Enderman.")))
+								.binding(defaults.vanilla.sound.muteEnderman,
+										() -> current.vanilla.sound.muteEnderman,
+										newValue -> current.vanilla.sound.muteEnderman = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Mute Phantom"))
+								.description(OptionDescription.of(
+										Text.literal("Mute sounds from Phantoms.")))
+								.binding(defaults.vanilla.sound.mutePhantom,
+										() -> current.vanilla.sound.mutePhantom,
+										newValue -> current.vanilla.sound.mutePhantom = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.build())
 				.build();
 	}
 }

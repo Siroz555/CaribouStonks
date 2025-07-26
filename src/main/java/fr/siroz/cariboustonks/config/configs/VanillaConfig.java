@@ -20,6 +20,9 @@ public class VanillaConfig {
 	@SerialEntry
 	public ItemModelCustomization itemModelCustomization = new ItemModelCustomization();
 
+	@SerialEntry
+	public Sound sound = new Sound();
+
 	public static class Overlay {
 
 		@SerialEntry
@@ -72,5 +75,14 @@ public class VanillaConfig {
 			@SerialEntry
 			public float zRotation = 0f;
 		}
+	}
+
+	public static class Sound {
+
+		@SerialEntry
+		public boolean muteEnderman = false;
+
+		@SerialEntry
+		public boolean mutePhantom = false;
 	}
 }
