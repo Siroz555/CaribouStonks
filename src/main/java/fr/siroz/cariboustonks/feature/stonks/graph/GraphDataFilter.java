@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.stonks.graph;
 
 import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
-import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -45,7 +44,7 @@ public interface GraphDataFilter {
 	 * @param granularity the temporal granularity
 	 * @return a new list of filtered prices
 	 */
-	static List<ItemPrice> filterData(@NotNull ObjectList<ItemPrice> prices, @NotNull Granularity granularity) {
+	static List<ItemPrice> filterData(@NotNull List<ItemPrice> prices, @NotNull Granularity granularity) {
 		Instant now = Instant.now();
 		// ChronoUnit.WEEKS -> UnsupportedTemporalTypeException: Unsupported unit: Weeks
 		// parce que c'est des Instant..

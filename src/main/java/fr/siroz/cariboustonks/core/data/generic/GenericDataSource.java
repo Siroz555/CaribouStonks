@@ -11,10 +11,6 @@ import fr.siroz.cariboustonks.util.http.Http;
 import fr.siroz.cariboustonks.util.http.HttpResponse;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import org.apache.http.client.HttpResponseException;
 import org.jetbrains.annotations.ApiStatus;
@@ -25,6 +21,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +31,7 @@ public final class GenericDataSource {
 
 	// Price History Mapping (NEU API)
 	private static final String NEU_PRICE_HISTORY_URL = "http://pricehistory.notenoughupdates.org/";
-	private final Object2ObjectMap<String, GraphCacheEntry> graphCache = new Object2ObjectOpenHashMap<>();
+	private final Map<String, GraphCacheEntry> graphCache = new HashMap<>();
 	public static final Duration CACHE_EXPIRATION_PRICE_HISTORY = Duration.ofMinutes(30);
 
 	// Liste des items à l'Auction (NEU API)
@@ -70,7 +68,7 @@ public final class GenericDataSource {
 		return Optional.of(lowestBinsNEU.getDouble(key.getNeuId()));
 	}
 
-	public CompletableFuture<ObjectList<ItemPrice>> loadGraphData(@NotNull ItemLookupKey key) {
+	public CompletableFuture<List<ItemPrice>> loadGraphData(@NotNull ItemLookupKey key) {
 		if (key.isNull()) {
 			return CompletableFuture.completedFuture(null);
 		}
@@ -86,7 +84,7 @@ public final class GenericDataSource {
 	}
 
 	@Contract("_ -> new")
-	private @NotNull CompletableFuture<ObjectList<ItemPrice>> fetchGraphData(@NotNull ItemLookupKey key) {
+	private @NotNull CompletableFuture<List<ItemPrice>> fetchGraphData(@NotNull ItemLookupKey key) {
 		return CompletableFuture.supplyAsync(() -> {
 			try (HttpResponse response = Http.request(NEU_PRICE_HISTORY_URL + "?item=" + key.getNeuId())) {
 				if (!response.success()) {
@@ -98,7 +96,7 @@ public final class GenericDataSource {
 					throw new IllegalStateException("Json is null or empty");
 				}
 
-				ObjectList<ItemPrice> result = new ObjectArrayList<>();
+				List<ItemPrice> result = new ArrayList<>();
 				for (Map.Entry<String, JsonElement> element : json.entrySet()) {
 					try {
 						Instant instant = Instant.parse(element.getKey());

@@ -9,8 +9,6 @@ import fr.siroz.cariboustonks.feature.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.LoadingDisplay;
@@ -24,6 +22,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -65,11 +65,11 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 	private CompletableFuture<List<ItemSummary>> loadItems() {
 		try {
 			HypixelDataSource hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
-			ObjectList<SkyBlockItem> itemList = hypixelDataSource.getSkyBlockItems(); // HypixelDataException
+			List<SkyBlockItem> itemList = hypixelDataSource.getSkyBlockItems(); // HypixelDataException
 
 			return CompletableFuture.supplyAsync(() -> {
 
-				ObjectList<ItemSummary> itemSummaries = new ObjectArrayList<>(itemList.size());
+				List<ItemSummary> itemSummaries = new ArrayList<>(itemList.size());
 				for (SkyBlockItem item : itemList) {
 					String skyBlockId = item.getSkyBlockId();
 					Formatting formatting = item.getTier().getFormatting();
@@ -84,7 +84,7 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 			});
 		} catch (HypixelDataException exception) {
 			StonksUtils.showFatalErrorScreen(Text.literal("Unable to load items!"), exception.getMessageText());
-			return CompletableFuture.completedFuture(ObjectList.of());
+			return CompletableFuture.completedFuture(Collections.emptyList());
 		}
 	}
 

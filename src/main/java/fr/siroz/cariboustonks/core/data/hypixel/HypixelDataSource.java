@@ -15,8 +15,7 @@ import fr.siroz.cariboustonks.util.http.Http;
 import fr.siroz.cariboustonks.util.http.HttpResponse;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -188,7 +187,7 @@ public final class HypixelDataSource { // TODO clean up & docs
 	 * ou à la récupération des données depuis l'API SkyBlock d'Hypixel.
 	 * Si de tels problèmes sont détectés, ou si la liste interne des items SkyBlock est vide,
 	 * une exception {@link HypixelDataException} est levée avec un message d'erreur approprié.
-	 * Sinon, elle retourne une nouvelle liste {@link ObjectList} contenant tous les items SkyBlock
+	 * Sinon, elle retourne une nouvelle liste {@link List} contenant tous les items SkyBlock
 	 * actuellement enregistrés.
 	 *
 	 * @return une liste des SkyBlock items.
@@ -198,7 +197,7 @@ public final class HypixelDataSource { // TODO clean up & docs
 	 */
 	@NotNull
 	@Unmodifiable
-	public ObjectList<SkyBlockItem> getSkyBlockItems() throws HypixelDataException {
+	public List<SkyBlockItem> getSkyBlockItems() throws HypixelDataException {
 		if (modDataSource.isItemsMappingError()) {
 			throw new HypixelDataException(Text.of("Unable to map SkyBlock Items into Minecraft."));
 		}
@@ -211,7 +210,7 @@ public final class HypixelDataSource { // TODO clean up & docs
 			throw new HypixelDataException(Text.of("No SkyBlock Items is registered."));
 		}
 
-		return new ObjectArrayList<>(skyBlockItems.values());
+		return new ArrayList<>(skyBlockItems.values());
 	}
 
 	@Contract(" -> new")

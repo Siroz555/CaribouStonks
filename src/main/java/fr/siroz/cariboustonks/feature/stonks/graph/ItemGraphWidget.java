@@ -8,17 +8,6 @@ import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import fr.siroz.cariboustonks.util.render.GuiRenderUtils;
 import fr.siroz.cariboustonks.util.render.gui.Point;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -26,10 +15,19 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.awt.Color;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 /**
  * TODO - C'est un bordel monumentale lul. Ça marche, mais c'est beaucoup trop brouillon pour le moment coté code -_-
@@ -42,7 +40,7 @@ public class ItemGraphWidget extends AbstractItemStonksWidget {
 	private Type type = Type.AUCTION;
 	private Instant lastUpdateTime;
 
-	private final ObjectList<ItemPrice> rawData = new ObjectArrayList<>();
+	private final List<ItemPrice> rawData = new ArrayList<>();
 	private Map<Point, ItemPrice> graphData;
 	private List<ItemPrice> prices;
 
@@ -51,7 +49,7 @@ public class ItemGraphWidget extends AbstractItemStonksWidget {
 	private double minPrice;
 	private double maxPrice;
 
-	public ItemGraphWidget(@NotNull ObjectList<ItemPrice> neuData, int width, int height) {
+	public ItemGraphWidget(@NotNull List<ItemPrice> neuData, int width, int height) {
 		super(width, height);
 
 		this.granularity = GraphDataFilter.Granularity.DAY;
