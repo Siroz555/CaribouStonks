@@ -9,6 +9,7 @@ import fr.siroz.cariboustonks.core.data.algo.BazaarItemAnalytics;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.SkyBlockItem;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.command.CommandRegistration;
 import fr.siroz.cariboustonks.util.Client;
@@ -28,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class StonksCommandFeature extends Feature implements CommandRegistration {
 
-	// TODO :: Implémentation pour les Auctions Items
+	// SIROZ-NOTE :: Implémentation pour les Auctions Items
 
 	private static final String SEPARATOR = "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
 
@@ -40,7 +41,7 @@ public class StonksCommandFeature extends Feature implements CommandRegistration
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return SkyBlockAPI.isOnSkyBlock();
 	}
 
 	@Override

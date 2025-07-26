@@ -30,8 +30,7 @@ public class StonksFeature extends Feature implements KeyBindRegistration {
 
 	@Override
 	public @NotNull List<KeyBind> registerKeyBinds() {
-		KeyBind stonksKeyBind = new KeyBind("Stonks Item", GLFW.GLFW_KEY_K, this::onKeyPressed);
-		return List.of(stonksKeyBind);
+		return List.of(new KeyBind("Stonks Item", GLFW.GLFW_KEY_K, this::onKeyPressed));
 	}
 
 	private void onKeyPressed(Screen screen, Slot slot) {
@@ -51,13 +50,13 @@ public class StonksFeature extends Feature implements KeyBindRegistration {
 			String neuIdError = neuId.isEmpty() ? "EMPTY" : neuId;
 			String hypixelSkyBlockIdError = hypixelSkyBlockId.isEmpty() ? "EMPTY" : hypixelSkyBlockId;
 
-			Client.sendErrorMessage("Unable to identify the item " + stack.getName().getString(), false);
+			Client.sendErrorMessage("Unable to identify item " + stack.getName().getString(), false);
 			if (DeveloperTools.isInDevelopment()) {
 				String extra = "(id: " + neuIdError + " | skyBlockApiId: " + hypixelSkyBlockIdError + ")";
 				Client.sendMessage(Text.literal(extra).formatted(Formatting.DARK_GRAY));
 			}
 
-			CaribouStonks.LOGGER.error("[StonksFeature] Unable to identify the ItemStack IDs. Minecraft ItemStack: " +
+			CaribouStonks.LOGGER.error("[StonksFeature] Unable to identify ItemStack IDs. Minecraft ItemStack: " +
 							"{} NEU ID: {}, Hypixel SkyBlock API ID: {}",
 					stack.getName().getString(), neuIdError, hypixelSkyBlockIdError);
 		} else {

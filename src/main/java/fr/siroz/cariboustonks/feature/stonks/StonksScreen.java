@@ -11,7 +11,6 @@ import fr.siroz.cariboustonks.feature.stonks.info.ItemInformationWidget;
 import fr.siroz.cariboustonks.feature.stonks.search.StonksSearchScreen;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.LoadingDisplay;
@@ -36,6 +35,7 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -50,7 +50,7 @@ public class StonksScreen extends CaribousStonksScreen {
 
 	private ItemInformationWidget itemInformationWidget;
 	private ItemGraphWidget itemGraphWidget;
-	private ObjectList<ItemPrice> graphData = null;
+	private List<ItemPrice> graphData = null;
 	private Product bazaarItem = null;
 
 	private volatile boolean notFound = false;
