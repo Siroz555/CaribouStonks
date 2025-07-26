@@ -1,13 +1,13 @@
 name: Bug Report
 description: Create a bug report
-labels: [ bug ]
+labels: [bug]
 body:
   - type: textarea
     id: the-bug
     attributes:
-      label: The Bug
-      description: 'What you expected to see? What you actually saw? Please provide the steps to reproduce the bug.'
-      placeholder: Bug?
+      label: What happened?
+      description: What you expected to see? What you actually saw? Please provide the steps to reproduce the bug.
+      placeholder: A bug happened!
     validations:
       required: true
   - type: dropdown
@@ -23,7 +23,7 @@ body:
     id: cariboustonks-version
     attributes:
       label: CaribouStonks Version
-      description: 'What version of CaribouStonks are you running?'
+      description: What version of CaribouStonks are you running?
       placeholder: ex. CaribouStonks-0.4.2+1.21.5.jar
     validations:
       required: true
@@ -38,13 +38,13 @@ body:
     id: logs
     attributes:
       label: Log output
-      description: 'You can upload a client log file by dragging and dropping it into this section. (latest.log or a crash report file) You can paste your log file on this website: https://mclo.gs (Critical information e.g. IP addresses or folder path, are automatically hidden)'
+      description: 'You can upload a client log file (ex. latest.log) by dragging and dropping it into this section. You can also paste your log file on this website: https://mclo.gs and share the link!'
     validations:
       required: false
   - type: textarea
     id: other
     attributes:
       label: Other
-      description: 'Please include other helpful information below'
+      description: Please include other helpful information below
     validations:
       required: false
