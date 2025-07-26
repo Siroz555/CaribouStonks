@@ -1,0 +1,53 @@
+name: Crash Report
+description: Create a crash report
+labels: [crash]
+body:
+  - type: dropdown
+    id: minecraft-version
+    attributes:
+      label: Minecraft Version
+      description: Minecraft Version
+      options:
+        - "1.21.5"
+    validations:
+      required: true
+  - type: input
+    id: cariboustonks-version
+    attributes:
+      label: CaribouStonks Version
+      description: What version of CaribouStonks are you running?
+      placeholder: ex. CaribouStonks-0.4.2+1.21.5.jar
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Reproduction Steps
+      description: Provide information on how to reproduce the crash.
+      placeholder: |
+        1. Go in the Garden
+        2. Find a pest
+        3. Crash :c
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Crash Report file and latest.log
+      description: 'Upload your crash report file and latest.log as an attachment to this issue (drag-and-drop). You can also paste your file on this website: https://mclo.gs/ and share the link!'
+      placeholder: |
+        ---- Minecraft Crash Report ----
+        // Don't be sad, have a hug! <3
+        
+        Time: 2025-08-26 10:17:42
+        Description: Unexpected error
+        
+        java.lang.StackOverflowError: ...
+      render: shell
+  - type: textarea
+    id: other
+    attributes:
+      label: Other
+      description: Please include other helpful information below
+    validations:
+      required: false
