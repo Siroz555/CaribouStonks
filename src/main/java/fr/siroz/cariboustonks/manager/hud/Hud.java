@@ -9,6 +9,9 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Abstract base class representing a configurable HUD.
+ *
+ * @see TextHud
+ * @see MultiElementHud
  */
 public abstract class Hud {
 

@@ -11,6 +11,50 @@ import org.jetbrains.annotations.NotNull;
  * Interface to be implemented by features that provide a HUD.
  * <p>
  * Implementations are responsible for supplying a specific {@link Hud} instance.
+ * <p>
+ * <h2>Implementation</h2>
+ * For {@link TextHud} usage:
+ * <pre>{@code
+ * private final Hud hud;
+ *
+ * public ClassConstructorFeature() {
+ * 	this.hud = new TextHud(
+ * 			Text.literal("Default Text"),
+ * 			this::getLines,
+ * 			ConfigManager.getConfig().x.hud,
+ * 			20,
+ * 			64);
+ * }
+ * private Text getText() {
+ * 	return Text.literal("Hud Text: " + getValue());
+ * }
+ * }</pre>
+ * For {@link MultiElementHud} usage:
+ * <pre>{@code
+ * private final HudElementBuilder builder;
+ * private final Hud hud;
+ *
+ * public ClassConstructorFeature() {
+ * 	this.builder = new HudElementBuilder();
+ * 	this.hud = new MultiElementHud(
+ * 			this::isEnabled,
+ * 			this.getDefault(),
+ * 			this::getLines,
+ * 			ConfigManager.getConfig().x.hud,
+ * 			50,
+ * 			64);
+ * }
+ * private List<? extends HudElement> getLines() {
+ * 	builder.clear();
+ * 	builder.appendTitle(TITLE)
+ * 		.appendSpace()
+ * 		.appendLine(Text.literal("Test 1"))
+ * 		.appendTableRow(Text.of("Col 1"), Text.of("Col 2"), Text.of("Col 3"))
+ * 		.appendIconLine(Items.DIAMOND.getDefaultItemStack(), Text.literal("Item))
+ * 		.appendLine(Text.literal("Test 2"));
+ * 	return builder.build();
+ * }
+ * }</pre>
  */
 public interface HudProvider {
 
