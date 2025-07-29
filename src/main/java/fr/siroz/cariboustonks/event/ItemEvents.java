@@ -7,6 +7,9 @@ import org.jetbrains.annotations.NotNull;
 
 public final class ItemEvents {
 
+	private ItemEvents() {
+	}
+
 	/**
 	 * Called when a {@link ItemStack} is set in the player inventory slot.
 	 */
