@@ -11,6 +11,7 @@ import fr.siroz.cariboustonks.feature.stonks.tooltips.auction.AuctionTooltipPric
 import fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar.BazaarTooltipPriceType;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.screen.CaribouStonksMenuScreen;
+import fr.siroz.cariboustonks.screen.HudConfigScreen;
 import fr.siroz.cariboustonks.util.Client;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
@@ -32,6 +33,11 @@ public class GeneralCategory extends AbstractCategory {
 						.name(Text.literal("CaribouStonks Menu"))
 						.text(Text.literal("Open"))
 						.action((screen, opt) -> MinecraftClient.getInstance().setScreen(new CaribouStonksMenuScreen()))
+						.build())
+				.option(ButtonOption.createBuilder()
+						.name(Text.literal("Change HUD positions"))
+						.text(Text.literal("Open"))
+						.action((screen, opt) -> MinecraftClient.getInstance().setScreen(HudConfigScreen.create(screen)))
 						.build())
 				.option(Option.<Boolean>createBuilder()
 						.name(Text.literal("Check for updates"))
