@@ -4,7 +4,7 @@ package fr.siroz.cariboustonks.manager.hud;
  * Implementations provide getters and setters for interactive manipulation
  * of HUDs, allowing dynamic updates in configuration changes.
  */
-public interface HudPosition {
+public interface HudConfig {
 
 	int x();
 

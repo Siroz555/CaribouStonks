@@ -20,11 +20,11 @@ public final class TextHud extends Hud {
 	public TextHud(
 			@NotNull Text defaultText,
 			@NotNull Supplier<Text> textSupplier,
-			@NotNull HudPosition hudPosition,
+			@NotNull HudConfig hudConfig,
 			int defaultX,
 			int defaultY
 	) {
-		super(hudPosition, defaultX, defaultY);
+		super(() -> true, hudConfig, defaultX, defaultY);
 		this.defaultText = defaultText;
 		this.textSupplier = textSupplier;
 	}
@@ -47,7 +47,7 @@ public final class TextHud extends Hud {
 	@Override
 	public void renderHud(DrawContext context, RenderTickCounter tickCounter) {
 		if (shouldRender()) {
-			render(textSupplier.get(), context, hudPosition.x(), hudPosition.y(), hudPosition.scale());
+			render(textSupplier.get(), context, hudConfig.x(), hudConfig.y(), hudConfig.scale());
 		}
 	}
 

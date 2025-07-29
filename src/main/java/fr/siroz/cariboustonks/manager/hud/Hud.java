@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.manager.hud;
 
 import fr.siroz.cariboustonks.mixin.accessors.PlayerListHudAccessor;
+import java.util.function.Supplier;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
@@ -13,20 +14,22 @@ public abstract class Hud {
 
 	protected static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-	protected final HudPosition hudPosition;
+	private final Supplier<Boolean> enabled;
+	protected final HudConfig hudConfig;
 	private final int defaultX;
 	private final int defaultY;
 	private int x;
 	private int y;
 	private float scale;
 
-	protected Hud(@NotNull HudPosition hudPosition, int defaultX, int defaultY) {
-		this.hudPosition = hudPosition;
+	protected Hud(@NotNull Supplier<Boolean> enabled, @NotNull HudConfig hudConfig, int defaultX, int defaultY) {
+		this.enabled = enabled;
+		this.hudConfig = hudConfig;
 		this.defaultX = defaultX;
 		this.defaultY = defaultY;
-		this.x = hudPosition.x();
-		this.y = hudPosition.y();
-		this.scale = hudPosition.scale();
+		this.x = hudConfig.x();
+		this.y = hudConfig.y();
+		this.scale = hudConfig.scale();
 	}
 
 	public int x() {
@@ -58,10 +61,10 @@ public abstract class Hud {
 	public abstract int height();
 
 	public boolean apply() {
-		boolean changed = x != hudPosition.x() || y != hudPosition.y() || scale != hudPosition.scale();
-		hudPosition.setX(x);
-		hudPosition.setY(y);
-		hudPosition.setScale(scale);
+		boolean changed = x != hudConfig.x() || y != hudConfig.y() || scale != hudConfig.scale();
+		hudConfig.setX(x);
+		hudConfig.setY(y);
+		hudConfig.setScale(scale);
 
 		return changed;
 	}
@@ -72,10 +75,11 @@ public abstract class Hud {
 		scale = 1f;
 	}
 
-	protected boolean shouldRender() { // TODO - TAB isVisible correct ? normalement oui
-		return !CLIENT.getDebugHud().shouldShowDebugHud()
-				&& !((PlayerListHudAccessor) CLIENT.inGameHud.getPlayerListHud()).isVisible()
-				&& hudPosition.shouldRender();
+	protected boolean shouldRender() {
+		return hudConfig.shouldRender()
+				&& enabled.get()
+				&& !CLIENT.getDebugHud().shouldShowDebugHud()
+				&& !((PlayerListHudAccessor) CLIENT.inGameHud.getPlayerListHud()).isVisible();
 	}
 
 	public abstract void renderScreen(DrawContext context);

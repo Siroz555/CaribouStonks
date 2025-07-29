@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.config.configs;
 
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
-import fr.siroz.cariboustonks.manager.hud.HudPosition;
+import fr.siroz.cariboustonks.manager.hud.HudConfig;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 import java.awt.Color;
@@ -116,7 +116,7 @@ public class UIAndVisualsConfig {
 		public boolean enabled = false;
 	}
 
-	public static class PingHud implements HudPosition {
+	public static class PingHud implements HudConfig {
 
 		@SerialEntry
 		public boolean enabled = false;
@@ -166,7 +166,7 @@ public class UIAndVisualsConfig {
 		}
 	}
 
-	public static class FPSHud implements HudPosition {
+	public static class FPSHud implements HudConfig {
 
 		@SerialEntry
 		public boolean enabled = false;
@@ -216,7 +216,7 @@ public class UIAndVisualsConfig {
 		}
 	}
 
-	public static class TpsHud implements HudPosition {
+	public static class TpsHud implements HudConfig {
 
 		@SerialEntry
 		public boolean enabled = false;
@@ -266,7 +266,7 @@ public class UIAndVisualsConfig {
 		}
 	}
 
-	public static class DayHud implements HudPosition {
+	public static class DayHud implements HudConfig {
 
 		@SerialEntry
 		public boolean enabled = false;
