@@ -53,7 +53,7 @@ public class TooltipDecoratorFeature extends Feature {
 			TextRenderer textRenderer,
 			List<TooltipComponent> components
 	) {
-		if (checkPlayerAndWorldIsNull()) return;
+		if (CLIENT.player == null || CLIENT.world == null) return;
 		if (!isEnabled()) return;
 		if (itemStack == null || itemStack.isEmpty()) return;
 

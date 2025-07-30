@@ -64,13 +64,7 @@ public final class MouseLockFeature extends Feature implements KeyBindRegistrati
 	}
 
 	private void updateLockState() {
-		if (!isEnabled()) {
-			return;
-		}
-
-		if (checkPlayerAndWorldIsNull()) {
-			return;
-		}
+		if (!isEnabled()) return;
 
 		locked = !locked;
 		Text extra = Text.literal(" (/cariboustonks lockMouse)").formatted(Formatting.GRAY, Formatting.ITALIC);
