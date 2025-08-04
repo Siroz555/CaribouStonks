@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.config.categories;
 
 import dev.isxander.yacl3.api.ConfigCategory;
+import dev.isxander.yacl3.api.LabelOption;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
@@ -116,6 +117,7 @@ public class VanillaCategory extends AbstractCategory {
 										newValue -> current.vanilla.itemModelCustomization.ignoreMiningEffects = newValue)
 								.controller(this::createBooleanController)
 								.build())
+						.option(LabelOption.create(Text.literal("| Main Hand").formatted(Formatting.BOLD)))
 						.option(Option.<Float>createBuilder()
 								.name(Text.literal("Size"))
 								.description(OptionDescription.of(
@@ -156,6 +158,51 @@ public class VanillaCategory extends AbstractCategory {
 								.binding(defaults.vanilla.itemModelCustomization.mainHand.z,
 										() -> current.vanilla.itemModelCustomization.mainHand.z,
 										newValue -> current.vanilla.itemModelCustomization.mainHand.z = newValue)
+								.controller(opt -> FloatSliderControllerBuilder.create(opt)
+										.range(-1.0f, 1.0f)
+										.step(0.01f))
+								.build())
+						.option(LabelOption.create(Text.literal("| Off Hand").formatted(Formatting.BOLD)))
+						.option(Option.<Float>createBuilder()
+								.name(Text.literal("Size"))
+								.description(OptionDescription.of(
+										Text.literal("Size of item in hand.")))
+								.binding(defaults.vanilla.itemModelCustomization.offHand.scale,
+										() -> current.vanilla.itemModelCustomization.offHand.scale,
+										newValue -> current.vanilla.itemModelCustomization.offHand.scale = newValue)
+								.controller(opt -> FloatSliderControllerBuilder.create(opt)
+										.range(0.1f, 4f)
+										.step(0.1f))
+								.build())
+						.option(Option.<Float>createBuilder()
+								.name(Text.literal("Position X"))
+								.description(OptionDescription.of(
+										Text.literal("The X position of the item in hand.")))
+								.binding(defaults.vanilla.itemModelCustomization.offHand.x,
+										() -> current.vanilla.itemModelCustomization.offHand.x,
+										newValue -> current.vanilla.itemModelCustomization.offHand.x = newValue)
+								.controller(opt -> FloatSliderControllerBuilder.create(opt)
+										.range(-1.0f, 1.0f)
+										.step(0.01f))
+								.build())
+						.option(Option.<Float>createBuilder()
+								.name(Text.literal("Position Y"))
+								.description(OptionDescription.of(
+										Text.literal("The Y position of the item in hand.")))
+								.binding(defaults.vanilla.itemModelCustomization.offHand.y,
+										() -> current.vanilla.itemModelCustomization.offHand.y,
+										newValue -> current.vanilla.itemModelCustomization.offHand.y = newValue)
+								.controller(opt -> FloatSliderControllerBuilder.create(opt)
+										.range(-1.0f, 1.0f)
+										.step(0.01f))
+								.build())
+						.option(Option.<Float>createBuilder()
+								.name(Text.literal("Position Z"))
+								.description(OptionDescription.of(
+										Text.literal("The Z position of the item in hand.")))
+								.binding(defaults.vanilla.itemModelCustomization.offHand.z,
+										() -> current.vanilla.itemModelCustomization.offHand.z,
+										newValue -> current.vanilla.itemModelCustomization.offHand.z = newValue)
 								.controller(opt -> FloatSliderControllerBuilder.create(opt)
 										.range(-1.0f, 1.0f)
 										.step(0.01f))

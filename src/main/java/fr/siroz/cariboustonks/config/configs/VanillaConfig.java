@@ -50,7 +50,7 @@ public class VanillaConfig {
 		public CustomHand mainHand = new CustomHand();
 
 		@SerialEntry
-		public CustomHand offHand = new CustomHand(); // pas utilisé, le jour ou Hypixel l'utilisera
+		public CustomHand offHand = new CustomHand();
 
 		public static class CustomHand {
 
