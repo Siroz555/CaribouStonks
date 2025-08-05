@@ -102,6 +102,11 @@ public final class ModDataSource {
 	public @Nullable SkyBlockAttribute getAttributeByShardName(@Nullable String name) {
 		if (name == null || name.isEmpty() || skyBlockAttributes.isEmpty()) return null;
 
+		// Support SkyBlock 0.23.3 | "Shard" a été rajouté après le nom de la shard
+		// Si je rajoute "Shard" dans chaque nom dans le fichier attributes.json, l'Hunting Box bug
+		// et il faut re-check le container pour double check bref...
+		name = name.replace(" Shard", "");
+
 		for (SkyBlockAttribute attribute : skyBlockAttributes) {
 			if (attribute.shardName().equals(name)) {
 				return attribute;

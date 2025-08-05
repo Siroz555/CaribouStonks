@@ -66,8 +66,8 @@
     "skyBlockApiId": "SHARD_CHILL"
   },
   {
-    "name": "Monster Bait",
-    "shardName": "Sea Archer",
+    "name": "Creature Fisher",
+    "shardName": "Bogged",
     "id": "C14",
     "skyBlockApiId": "SHARD_SEA_ARCHER"
   },
@@ -648,6 +648,12 @@
     "skyBlockApiId": "SHARD_GECKO"
   },
   {
+    "name": "Shop",
+    "shardName": "Hummingbird",
+    "id": "R64",
+    "skyBlockApiId": "SHARD_HUMMINGBIRD"
+  },
+  {
     "name": "Earth Elemental",
     "shardName": "Terra",
     "id": "E1",
@@ -1042,5 +1048,11 @@
     "shardName": "Starborn",
     "id": "L44",
     "skyBlockApiId": "SHARD_STARBORN"
+  },
+  {
+    "name": "Bayou Biter",
+    "shardName": "Titanoboa",
+    "id": "L47",
+    "skyBlockApiId": "SHARD_TITANOBOA"
   }
 ]
