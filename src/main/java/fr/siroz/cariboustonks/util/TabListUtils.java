@@ -1,7 +1,8 @@
 package fr.siroz.cariboustonks.util;
 
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.event.TabListEvents;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.event.HudEvents;
 import fr.siroz.cariboustonks.mixin.accessors.PlayerListHudAccessor;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.MinecraftClient;
@@ -86,7 +87,9 @@ public final class TabListUtils {
             }
 
             STRING_TAB.addAll(stringLines);
-            TabListEvents.UPDATE.invoker().onUpdate(STRING_TAB);
+            if (SkyBlockAPI.isOnSkyBlock()) {
+				HudEvents.TAB_LIST_UPDATE.invoker().onUpdate(STRING_TAB);
+			}
         } catch (Exception ignored) {
         }
     }

@@ -79,7 +79,7 @@ public final class StonksUtils {
 	public static void initUtilities() {
 		WorldRenderUtils.initRenderUtilities();
 		AnimationUtils.initAnimationUtilities();
-		TickScheduler.getInstance().runRepeating(StonksUtils::updateUtilities, 3, TimeUnit.SECONDS);
+		TickScheduler.getInstance().runRepeating(StonksUtils::updateUtilities, 1, TimeUnit.SECONDS);
 	}
 
 	/**

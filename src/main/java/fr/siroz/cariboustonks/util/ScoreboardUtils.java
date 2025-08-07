@@ -1,5 +1,7 @@
 package fr.siroz.cariboustonks.util;
 
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.event.HudEvents;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.scoreboard.ScoreHolder;
@@ -78,6 +80,9 @@ public final class ScoreboardUtils {
             }
 
             STRING_SCOREBOARD.addAll(stringLines);
+			if (SkyBlockAPI.isOnSkyBlock()) {
+				HudEvents.SCOREBOARD_UPDATE.invoker().onUpdate(STRING_SCOREBOARD);
+			}
         } catch (Exception ignored) {
         }
     }

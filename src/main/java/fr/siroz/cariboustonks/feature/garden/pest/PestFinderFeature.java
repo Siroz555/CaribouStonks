@@ -4,14 +4,13 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
+import fr.siroz.cariboustonks.event.HudEvents;
 import fr.siroz.cariboustonks.event.InteractionEvents;
 import fr.siroz.cariboustonks.event.NetworkEvents;
-import fr.siroz.cariboustonks.event.TabListEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;
-import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,7 +45,7 @@ public final class PestFinderFeature extends Feature {
 		WorldEvents.JOIN.register(world -> this.reset());
 		InteractionEvents.LEFT_CLICK_AIR.register(this::onLeftClickAir);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
-		TabListEvents.UPDATE.register(this::onTabListUpdate);
+		HudEvents.TAB_LIST_UPDATE.register(this::onTabListUpdate);
 		WorldRenderEvents.AFTER_TRANSLUCENT.register(this::render);
 	}
 
@@ -134,7 +133,7 @@ public final class PestFinderFeature extends Feature {
 	}
 
 	@EventHandler(event = "TabListEvents.UPDATE")
-	private void onTabListUpdate(@NotNull ObjectList<String> lines) {
+	private void onTabListUpdate(@NotNull List<String> lines) {
 		if (!isEnabled()) return;
 		if (!highlightInfestedPlots()) return;
 
