@@ -11,8 +11,10 @@ import fr.siroz.cariboustonks.manager.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.manager.reminder.ReminderManager;
 import fr.siroz.cariboustonks.manager.reminder.TimedObject;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.util.Skulls;
+import fr.siroz.cariboustonks.util.HeadTextures;
+import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.render.notification.Notification;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +33,10 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
             .append(Text.literal(" or ").formatted(Formatting.WHITE))
             .append(Text.literal("Steal").formatted(Formatting.RED));
 
+	private final ItemStack ubikCube;
+
     public UbikCubeReminderFeature() {
+		this.ubikCube = ItemUtils.createSkull(HeadTextures.UBIK_CUBE);
         ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
     }
 
@@ -52,7 +57,7 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
         return ReminderDisplay.of(
                 Text.literal("Ubik's Cube").formatted(Formatting.RED, Formatting.BOLD, Formatting.UNDERLINE),
                 SPLIT_OR_STEAL_TEXT,
-				Skulls.UBIK_CUBE
+				ubikCube
         );
     }
 
@@ -65,7 +70,7 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
 
         Notification.show(Text.literal("Ubik's Cube !\n").formatted(Formatting.GOLD, Formatting.BOLD)
                         .append(Text.literal("Ready to play ").formatted(Formatting.GREEN))
-                        .append(SPLIT_OR_STEAL_TEXT), Skulls.UBIK_CUBE);
+                        .append(SPLIT_OR_STEAL_TEXT), ubikCube);
     }
 
     private void onChatMessage(@NotNull Text text) {
