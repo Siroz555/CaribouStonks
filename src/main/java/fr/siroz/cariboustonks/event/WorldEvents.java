@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.event;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.sound.SoundEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +36,12 @@ public final class WorldEvents {
 		return false;
 	});
 
+	public static final Event<ArmorStandRemoved> ARMORSTAND_REMOVED = EventFactory.createArrayBacked(ArmorStandRemoved.class, listeners -> (armorStand) -> {
+		for (ArmorStandRemoved listener : listeners) {
+			listener.onRemove(armorStand);
+		}
+	});
+
 	@FunctionalInterface
 	public interface Join {
 		void onJoinWorld(@NotNull ClientWorld world);
@@ -43,5 +50,10 @@ public final class WorldEvents {
 	@FunctionalInterface
 	public interface SoundCancellable {
 		boolean onSound(@NotNull SoundEvent sound);
+	}
+
+	@FunctionalInterface
+	public interface ArmorStandRemoved {
+		void onRemove(@NotNull ArmorStandEntity armorStand);
 	}
 }

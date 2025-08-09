@@ -9,6 +9,7 @@ import fr.siroz.cariboustonks.manager.hud.HudManager;
 import fr.siroz.cariboustonks.manager.keybinds.KeyBindManager;
 import fr.siroz.cariboustonks.manager.network.NetworkManager;
 import fr.siroz.cariboustonks.manager.reminder.ReminderManager;
+import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
 import fr.siroz.cariboustonks.manager.waypoint.WaypointManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import org.jetbrains.annotations.ApiStatus;
@@ -37,6 +38,7 @@ public final class Managers {
         register(new ContainerTooltipAppenderManager());
         register(new HudManager());
 		register(new GlowingManager());
+		register(new SlayerManager());
     }
 
     /**
