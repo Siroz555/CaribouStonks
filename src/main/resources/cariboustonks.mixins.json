@@ -8,6 +8,7 @@
     "ClientWorldMixin",
     "DownloadingTerrainScreenMixin",
     "DrawContextMixin",
+    "EntityRenderDispatcherMixin",
     "EntityRendererMixin",
     "GameMenuScreenMixin",
     "GameRendererMixin",

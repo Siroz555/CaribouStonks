@@ -48,6 +48,8 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
     - Hide fire on the screen.
     - Hide armor above inventory-hotbar.
     - Hide food above inventory-hotbar.
+- Mobs:
+    - Hide fire on entities
 - Customize display of items on hand:
     - Change the size.
     - Change the positions.

@@ -18,6 +18,9 @@ public class VanillaConfig {
 	public Overlay overlay = new Overlay();
 
 	@SerialEntry
+	public Mob mob = new Mob();
+
+	@SerialEntry
 	public ItemModelCustomization itemModelCustomization = new ItemModelCustomization();
 
 	@SerialEntry
@@ -84,5 +87,11 @@ public class VanillaConfig {
 
 		@SerialEntry
 		public boolean mutePhantom = false;
+	}
+
+	public static class Mob {
+
+		@SerialEntry
+		public boolean hideFireOnEntities = false;
 	}
 }

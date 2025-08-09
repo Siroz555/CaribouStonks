@@ -84,6 +84,21 @@ public class VanillaCategory extends AbstractCategory {
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
+						.name(Text.literal("Mobs").formatted(Formatting.BOLD))
+						.description(OptionDescription.of(
+								Text.literal("Mobs-related settings")))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Hide fire on entities"))
+								.description(OptionDescription.of(
+										Text.literal("Prevents fire on entities from being rendered. For example, for the Flaming Spiders in Crimson Isle.")))
+								.binding(defaults.vanilla.mob.hideFireOnEntities,
+										() -> current.vanilla.mob.hideFireOnEntities,
+										newValue -> current.vanilla.mob.hideFireOnEntities = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Customize display of items on hand").formatted(Formatting.BOLD))
 						.description(OptionDescription.of(
 								Text.literal("Change the appearance of items in the hand and apply transformations.")))
