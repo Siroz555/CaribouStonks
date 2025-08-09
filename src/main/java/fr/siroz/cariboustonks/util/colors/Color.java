@@ -211,6 +211,20 @@ public class Color {
 		return "#" + String.format("%08x", ((r << 24) | (g << 16) | (b << 8) | a));
 	}
 
+	/**
+	 * Transforme la couleur en {@link java.awt.Color}.
+	 *
+	 * @return {@link java.awt.Color}
+	 */
+	@Contract(value = " -> new", pure = true)
+	public @NotNull java.awt.Color toAwtColor() {
+		int ra = Math.max(0, Math.min(255, this.r));
+		int ga = Math.max(0, Math.min(255, this.g));
+		int ba = Math.max(0, Math.min(255, this.b));
+		int aa = Math.max(0, Math.min(255, this.a));
+		return new java.awt.Color(ra, ga, ba, aa);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (!(o instanceof Color color)) {

@@ -10,6 +10,7 @@ import fr.siroz.cariboustonks.config.configs.ForagingConfig;
 import fr.siroz.cariboustonks.config.configs.GeneralConfig;
 import fr.siroz.cariboustonks.config.configs.HuntingConfig;
 import fr.siroz.cariboustonks.config.configs.MiscConfig;
+import fr.siroz.cariboustonks.config.configs.SlayerConfig;
 import fr.siroz.cariboustonks.config.configs.UIAndVisualsConfig;
 import fr.siroz.cariboustonks.config.configs.VanillaConfig;
 
@@ -29,6 +30,9 @@ public class Config {
 
     @SerialEntry
     public CombatConfig combat = new CombatConfig();
+
+	@SerialEntry
+	public SlayerConfig slayer = new SlayerConfig();
 
     @SerialEntry
     public ForagingConfig foraging = new ForagingConfig();

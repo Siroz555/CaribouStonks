@@ -106,6 +106,26 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
     - Guess Hotspot: Predict the location of the nearest hotspot
     - Highlight Hotspot: A colored circle appears if your bobber is within the hotspot radius.
 
+**Slayers**
+
+- Slayer Boss Cocooned Warning (BETA): Show a Title and play a Sound when your Slayer Boss is cocooned.
+- Spawn Alerts for Boss or Minibosses.
+- Highlight Boss or Minibosses with a configurable glow color.
+- Statistics Breakdown: Displays a message to show:
+    - Spawn Time
+    - Kill Time
+    - Total Time
+- Statistics Average: Displays a message to show:
+    - Spawn Avg
+    - Kill Avg
+    - Boss/h
+    - EXP/h
+    - RNGMeter/h
+
+- Tarantula Broodfather (Tier V):
+    - Highlight Cocoon Eggs summoned by the Boss with a configurable glow color.
+    - Show lines from your Cursor to the Cocoon Eggs.
+
 **Events**
 
 - Mythological Ritual (BETA)

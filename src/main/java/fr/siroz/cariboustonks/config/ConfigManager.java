@@ -9,6 +9,7 @@ import fr.siroz.cariboustonks.config.categories.EventsCategory;
 import fr.siroz.cariboustonks.config.categories.GeneralCategory;
 import fr.siroz.cariboustonks.config.categories.MiscCategory;
 import fr.siroz.cariboustonks.config.categories.SkillsCategory;
+import fr.siroz.cariboustonks.config.categories.SlayerCategory;
 import fr.siroz.cariboustonks.config.categories.UIAndVisualsCategory;
 import fr.siroz.cariboustonks.config.categories.VanillaCategory;
 import fr.siroz.cariboustonks.core.json.adapters.CodecTypeAdapter;
@@ -92,6 +93,7 @@ public final class ConfigManager {
 					.category(new UIAndVisualsCategory(defaults, config).create())
 					.category(new ChatCategory(defaults, config).create())
 					.category(new SkillsCategory(defaults, config).create())
+					.category(new SlayerCategory(defaults, config).create())
 					.category(new EventsCategory(defaults, config).create())
 					.category(new MiscCategory(defaults, config).create())
 					.category(new VanillaCategory(defaults, config).create());

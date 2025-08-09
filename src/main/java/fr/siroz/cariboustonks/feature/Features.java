@@ -28,6 +28,10 @@ import fr.siroz.cariboustonks.feature.reminders.ChocolateLimitReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.EnchantedCloakReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.ForgeReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.UbikCubeReminderFeature;
+import fr.siroz.cariboustonks.feature.slayer.HighlightSlayerMobFeature;
+import fr.siroz.cariboustonks.feature.slayer.SlayerCocoonedWarningFeature;
+import fr.siroz.cariboustonks.feature.slayer.SlayerStatsFeature;
+import fr.siroz.cariboustonks.feature.slayer.boss.TarantulaBossFeature;
 import fr.siroz.cariboustonks.feature.stonks.StonksCommandFeature;
 import fr.siroz.cariboustonks.feature.stonks.StonksFeature;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.auction.AuctionLowestBinTooltipFeature;
@@ -42,6 +46,7 @@ import fr.siroz.cariboustonks.feature.ui.hud.TpsHud;
 import fr.siroz.cariboustonks.feature.ui.overlay.EtherWarpOverlayFeature;
 import fr.siroz.cariboustonks.feature.ui.overlay.GyrokineticOverlayFeature;
 import fr.siroz.cariboustonks.feature.waypoints.WaypointFeature;
+import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -92,6 +97,13 @@ public final class Features {
 		registerFeature(new EnchantedCloakReminderFeature());
 		registerFeature(new ForgeReminderFeature());
 		registerFeature(new UbikCubeReminderFeature());
+		// Slayer
+		SlayerManager slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
+		registerFeature(new HighlightSlayerMobFeature(slayerManager));
+		registerFeature(new SlayerCocoonedWarningFeature(slayerManager));
+		registerFeature(new SlayerStatsFeature());
+		// Slayer - Boss
+		registerFeature(new TarantulaBossFeature(slayerManager));
 		// Stonks
 		registerFeature(new StonksCommandFeature());
 		registerFeature(new StonksFeature());
