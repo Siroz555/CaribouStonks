@@ -18,6 +18,7 @@
     "InGameOverlayRendererMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
+    "LivingEntityRendererMixin",
     "MessageHandlerMixin",
     "MinecraftClientMixin",
     "MouseMixin",

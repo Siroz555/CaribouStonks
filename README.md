@@ -44,6 +44,7 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
 - Hide the loading screen when changing the world.
 - Hide Toast tutorials at the top of the screen.
 - Stop the cursor reset position between GUIs.
+- Display your own Nametag in F3.
 - Overlay:
     - Hide fire on the screen.
     - Hide armor above inventory-hotbar.

@@ -50,6 +50,15 @@ public class VanillaCategory extends AbstractCategory {
 								newValue -> current.vanilla.stopCursorResetPosition = newValue)
 						.controller(this::createBooleanController)
 						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Text.literal("Display your own Nametag in F3"))
+						.description(OptionDescription.of(
+								Text.literal("Allows you to display your Nametag in F3 above your player.")))
+						.binding(defaults.vanilla.displayOwnNametagUsername,
+								() -> current.vanilla.displayOwnNametagUsername,
+								newValue -> current.vanilla.displayOwnNametagUsername = newValue)
+						.controller(this::createBooleanController)
+						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Overlay").formatted(Formatting.BOLD))
 						.description(OptionDescription.of(
