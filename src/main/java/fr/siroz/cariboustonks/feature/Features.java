@@ -19,7 +19,6 @@ import fr.siroz.cariboustonks.feature.item.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.feature.misc.HighlightMobFeature;
-import fr.siroz.cariboustonks.feature.misc.MuteVanillaSoundFeature;
 import fr.siroz.cariboustonks.feature.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.feature.misc.REISearchBarCalculatorFeature;
 import fr.siroz.cariboustonks.feature.misc.StopPickobulusAbilityFeature;
@@ -45,6 +44,7 @@ import fr.siroz.cariboustonks.feature.ui.hud.PingHud;
 import fr.siroz.cariboustonks.feature.ui.hud.TpsHud;
 import fr.siroz.cariboustonks.feature.ui.overlay.EtherWarpOverlayFeature;
 import fr.siroz.cariboustonks.feature.ui.overlay.GyrokineticOverlayFeature;
+import fr.siroz.cariboustonks.feature.vanilla.MuteVanillaSoundFeature;
 import fr.siroz.cariboustonks.feature.waypoints.WaypointFeature;
 import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
 import org.jetbrains.annotations.Contract;
@@ -124,10 +124,11 @@ public final class Features {
 		registerFeature(new WaypointFeature());
 		// Misc
 		registerFeature(new HighlightMobFeature());
-		registerFeature(new MuteVanillaSoundFeature());
 		registerFeature(new PartyCommandFeature());
 		registerFeature(new REISearchBarCalculatorFeature());
 		registerFeature(new StopPickobulusAbilityFeature());
+		// Vanilla
+		registerFeature(new MuteVanillaSoundFeature());
 
 		CaribouStonks.LOGGER.info("{} features are now loaded and ready", getFeatures().size());
     }
