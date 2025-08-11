@@ -41,7 +41,6 @@ final class UpdateChecker {
 	private static final String MODRINTH_VERSION_CHECKER_URL = "https://api.modrinth.com/v2/project/fraWWQSJ/version?loaders=[%22fabric%22]&game_versions=";
 
 	private static final Version MOD_VERSION = CaribouStonks.MOD_CONTAINER.getMetadata().getVersion();
-	private static final String MC_VERSION = SharedConstants.getGameVersion().getId();
 	private static final Comparator<Version> COMPARATOR = Version::compareTo;
 
 	private ModrinthVersionInfo newestModrinthVersionInfo = null;
@@ -54,8 +53,9 @@ final class UpdateChecker {
 
 	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STARTED")
 	private void checkUpdateOnModrinth() {
+		final String mcVersion = SharedConstants.getGameVersion().getId();
 		CompletableFuture.runAsync(() -> {
-			try (HttpResponse response = Http.request(MODRINTH_VERSION_CHECKER_URL + "[%22" + MC_VERSION + "%22]")) {
+			try (HttpResponse response = Http.request(MODRINTH_VERSION_CHECKER_URL + "[%22" + mcVersion + "%22]")) {
 				if (!response.success()) {
 					CaribouStonks.LOGGER.warn("[CaribouStonks UpdateChecker] Unable to fetch Modrinth API, code: {}", response.statusCode());
 					return;
