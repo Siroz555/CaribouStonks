@@ -54,6 +54,7 @@ public class SkillsCategory extends AbstractCategory {
                         .collapsed(false)
                         .option(ButtonOption.createBuilder()
                                 .name(Text.literal("Locking the camera during farming"))
+								.text(Text.literal("/lockMouse"))
                                 .description(OptionDescription.of(
                                         Text.literal("Allows you to block the movements of the mouse during farming."),
                                         Text.literal(SPACE + "Use /lockMouse or go to KeyBinds Options.")))
