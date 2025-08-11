@@ -10,6 +10,7 @@ public final class RenderEvents {
 	private RenderEvents() {
 	}
 
+	@OnlySkyBlock
 	public static final Event<AllowRenderEntity> ALLOW_RENDER_ENTITY = EventFactory.createArrayBacked(AllowRenderEntity.class, listeners -> entity -> {
 		for (AllowRenderEntity listener : listeners) {
 			if (!listener.allowRenderEntity(entity)) {

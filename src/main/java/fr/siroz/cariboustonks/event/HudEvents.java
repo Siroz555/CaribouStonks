@@ -15,6 +15,7 @@ public final class HudEvents {
 	 * <p>
 	 * The update is triggered every second
 	 */
+	@OnlySkyBlock
 	public static final Event<TabListUpdate> TAB_LIST_UPDATE = EventFactory.createArrayBacked(TabListUpdate.class, listeners -> lines -> {
 		for (TabListUpdate listener : listeners) {
 			listener.onUpdate(lines);
@@ -26,6 +27,7 @@ public final class HudEvents {
 	 * <p>
 	 * The update is triggered every second
 	 */
+	@OnlySkyBlock
 	public static final Event<ScoreboardUpdate> SCOREBOARD_UPDATE = EventFactory.createArrayBacked(ScoreboardUpdate.class, listeners -> lines -> {
 		for (ScoreboardUpdate listener : listeners) {
 			listener.onUpdate(lines);

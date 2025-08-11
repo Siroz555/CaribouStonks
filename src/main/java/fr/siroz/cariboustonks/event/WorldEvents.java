@@ -27,6 +27,7 @@ public final class WorldEvents {
 	/**
 	 * Called when the client receives a Sound
 	 */
+	@OnlySkyBlock
 	public static final Event<AllowSound> ALLOW_SOUND = EventFactory.createArrayBacked(AllowSound.class, listeners -> sound -> {
 		boolean allowSound = true;
 		for (AllowSound listener : listeners) {
@@ -35,6 +36,7 @@ public final class WorldEvents {
 		return allowSound;
 	});
 
+	@OnlySkyBlock
 	public static final Event<ArmorStandRemoved> ARMORSTAND_REMOVED = EventFactory.createArrayBacked(ArmorStandRemoved.class, listeners -> (armorStand) -> {
 		for (ArmorStandRemoved listener : listeners) {
 			listener.onRemove(armorStand);

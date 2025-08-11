@@ -13,6 +13,7 @@ public final class ItemEvents {
 	/**
 	 * Called when a {@link ItemStack} is set in the player inventory slot.
 	 */
+	@OnlySkyBlock
 	public static final Event<Pickup> PICKUP = EventFactory.createArrayBacked(Pickup.class, listeners -> (slot, stack) -> {
 		for (Pickup listener : listeners) {
 			listener.onPickup(slot, stack);
