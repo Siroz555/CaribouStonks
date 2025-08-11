@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.core.scheduler;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.util.Ticks;
 import it.unimi.dsi.fastutil.ints.AbstractInt2ObjectMap;
@@ -231,7 +232,11 @@ public final class TickScheduler {
 				task.run();
 
 				if (taskType == TaskType.REPEATING) {
-					instance.scheduleTask(this, instance.currentTick + interval);
+					if (MinecraftClient.getInstance() != null && !RenderSystem.isOnRenderThread()) {
+						MinecraftClient.getInstance().send(() -> instance.scheduleTask(this, instance.currentTick + interval));
+					} else {
+						instance.scheduleTask(this, instance.currentTick + interval);
+					}
 				}
 			}
 		}
