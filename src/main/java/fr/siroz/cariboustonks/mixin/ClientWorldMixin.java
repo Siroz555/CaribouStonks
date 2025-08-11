@@ -18,7 +18,7 @@ public abstract class ClientWorldMixin {
 	@Inject(method = "playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZJ)V", at = @At("HEAD"), cancellable = true)
 	private void cariboustonks$cancelSoundEvents(CallbackInfo ci, @Local(argsOnly = true) SoundEvent soundEvent) {
 		if (SkyBlockAPI.isOnSkyBlock()) {
-			if (WorldEvents.SOUND_CANCELLABLE.invoker().onSound(soundEvent)) {
+			if (!WorldEvents.ALLOW_SOUND.invoker().allowSound(soundEvent)) {
 				ci.cancel();
 			}
 		}

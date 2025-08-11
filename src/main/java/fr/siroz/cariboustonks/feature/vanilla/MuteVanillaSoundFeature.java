@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public class MuteVanillaSoundFeature extends Feature {
 
 	public MuteVanillaSoundFeature() {
-		WorldEvents.SOUND_CANCELLABLE.register(this::onSound);
+		WorldEvents.ALLOW_SOUND.register(this::allowSound);
 	}
 
 	@Override
@@ -20,21 +20,21 @@ public class MuteVanillaSoundFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock();
 	}
 
-	@EventHandler(event = "WorldEvents.SOUND_CANCELLABLE")
-	private boolean onSound(@NotNull SoundEvent soundEvent) {
-		if (!isEnabled()) return false;
+	@EventHandler(event = "WorldEvents.ALLOW_SOUND_CANCELLABLE")
+	private boolean allowSound(@NotNull SoundEvent soundEvent) {
+		if (!isEnabled()) return true;
 
 		if ((soundEvent.id().equals(SoundEvents.ENTITY_ENDERMAN_SCREAM.id())
 				|| soundEvent.id().equals(SoundEvents.ENTITY_ENDERMAN_STARE.id()))
 				&& ConfigManager.getConfig().vanilla.sound.muteEnderman) {
-			return true;
+			return false;
 		}
 
 		if (soundEvent.id().getPath().startsWith("entity.phantom")
 				&& ConfigManager.getConfig().vanilla.sound.mutePhantom) {
-			return true;
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 }

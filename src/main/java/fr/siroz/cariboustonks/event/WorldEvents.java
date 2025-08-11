@@ -27,13 +27,12 @@ public final class WorldEvents {
 	/**
 	 * Called when the client receives a Sound
 	 */
-	public static final Event<SoundCancellable> SOUND_CANCELLABLE = EventFactory.createArrayBacked(SoundCancellable.class, listeners -> sound -> {
-		for (SoundCancellable listener : listeners) {
-			if (listener.onSound(sound)) {
-				return true;
-			}
+	public static final Event<AllowSound> ALLOW_SOUND = EventFactory.createArrayBacked(AllowSound.class, listeners -> sound -> {
+		boolean allowSound = true;
+		for (AllowSound listener : listeners) {
+			allowSound &= listener.allowSound(sound);
 		}
-		return false;
+		return allowSound;
 	});
 
 	public static final Event<ArmorStandRemoved> ARMORSTAND_REMOVED = EventFactory.createArrayBacked(ArmorStandRemoved.class, listeners -> (armorStand) -> {
@@ -48,8 +47,8 @@ public final class WorldEvents {
 	}
 
 	@FunctionalInterface
-	public interface SoundCancellable {
-		boolean onSound(@NotNull SoundEvent sound);
+	public interface AllowSound {
+		boolean allowSound(@NotNull SoundEvent sound);
 	}
 
 	@FunctionalInterface

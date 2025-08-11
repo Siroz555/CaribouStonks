@@ -10,17 +10,18 @@ public final class RenderEvents {
 	private RenderEvents() {
 	}
 
-	public static final Event<RenderEntity> RENDER_ENTITY_CANCELLABLE = EventFactory.createArrayBacked(RenderEntity.class, listeners -> entity -> {
-		for (RenderEntity listener : listeners) {
-			if (listener.onRenderEntity(entity)) {
-				return true;
+	public static final Event<AllowRenderEntity> ALLOW_RENDER_ENTITY = EventFactory.createArrayBacked(AllowRenderEntity.class, listeners -> entity -> {
+		for (AllowRenderEntity listener : listeners) {
+			if (!listener.allowRenderEntity(entity)) {
+				return false;
 			}
 		}
-		return false;
+		return true;
 	});
 
 	@FunctionalInterface
-	public interface RenderEntity {
-		boolean onRenderEntity(@NotNull Entity entity);
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	public interface AllowRenderEntity {
+		boolean allowRenderEntity(@NotNull Entity entity);
 	}
 }

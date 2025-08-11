@@ -41,7 +41,7 @@ public class ScrollableTooltipFeature extends Feature {
 
 	public ScrollableTooltipFeature() {
 		CustomScreenEvents.CLOSE.register(screen -> reset());
-		MouseEvents.MOUSE_SCROLL.register(this::onMouseScroll);
+		MouseEvents.ALLOW_MOUSE_SCROLL.register(this::allowMouseScroll);
 		ItemRenderEvents.TOOLTIP_TRACKER.register(this::onTooltipTracker);
 	}
 
@@ -64,11 +64,11 @@ public class ScrollableTooltipFeature extends Feature {
 		currentTooltips = null;
 	}
 
-	@EventHandler(event = "MouseEvents.MOUSE_SCROLL")
-	private boolean onMouseScroll(double horizontal, double vertical) {
-		boolean stopScroll = false;
+	@EventHandler(event = "MouseEvents.ALLOW_MOUSE_SCROLL")
+	private boolean allowMouseScroll(double horizontal, double vertical) {
+		boolean allowScroll = true;
 		if (!isEnabled()) {
-			return stopScroll;
+			return allowScroll;
 		}
 
 		if (InputUtil.isKeyPressed(CLIENT.getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
@@ -99,7 +99,7 @@ public class ScrollableTooltipFeature extends Feature {
 			scrollRight();
 		}
 
-		return stopScroll;
+		return allowScroll;
 	}
 
 	private boolean isReverseScroll() {

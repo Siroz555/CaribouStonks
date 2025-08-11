@@ -80,7 +80,7 @@ public abstract class MouseMixin {
 
 	@Inject(method = "onMouseScroll", at = @At("HEAD"), cancellable = true)
 	private void cariboustonks$trackWheel(long window, double horizontal, double vertical, CallbackInfo ci) {
-		if (MouseEvents.MOUSE_SCROLL.invoker().onMouseScroll(horizontal, vertical)) {
+		if (!MouseEvents.ALLOW_MOUSE_SCROLL.invoker().allowMouseScroll(horizontal, vertical)) {
 			ci.cancel();
 		}
 	}

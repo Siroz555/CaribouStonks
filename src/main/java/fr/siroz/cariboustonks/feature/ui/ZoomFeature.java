@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.feature.ui;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.MouseEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.keybinds.KeyBind;
@@ -31,7 +32,7 @@ public final class ZoomFeature extends Feature implements KeyBindRegistration {
     public ZoomFeature() {
         this.zoomKeyBind = new KeyBind("Zoom", GLFW.GLFW_KEY_C, true);
         this.currentZoomMultiplier = ZOOM_MULTIPLIER;
-        MouseEvents.MOUSE_SCROLL.register(this::onMouseScroll);
+        MouseEvents.ALLOW_MOUSE_SCROLL.register(this::allowMouseScroll);
     }
 
     @Override
@@ -61,9 +62,10 @@ public final class ZoomFeature extends Feature implements KeyBindRegistration {
         currentZoomMultiplier = ZOOM_MULTIPLIER;
     }
 
-    private boolean onMouseScroll(double horizontal, double vertical) {
-        if (!isZooming()) return false;
-        if (!ConfigManager.getConfig().uiAndVisuals.zoom.mouseScrolling) return false;
+	@EventHandler(event = "MouseEvents.ALLOW_MOUSE_SCROLL")
+    private boolean allowMouseScroll(double horizontal, double vertical) {
+        if (!isZooming()) return true;
+        if (!ConfigManager.getConfig().uiAndVisuals.zoom.mouseScrolling) return true;
 
         if (vertical > 0) {
 			decreaseZoom();
@@ -71,7 +73,7 @@ public final class ZoomFeature extends Feature implements KeyBindRegistration {
 			increaseZoom();
 		}
 
-        return true;
+        return false;
     }
 
     private void decreaseZoom() {

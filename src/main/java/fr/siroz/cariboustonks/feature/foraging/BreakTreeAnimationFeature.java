@@ -23,7 +23,7 @@ public class BreakTreeAnimationFeature extends Feature {
 	);
 
 	public BreakTreeAnimationFeature() {
-		RenderEvents.RENDER_ENTITY_CANCELLABLE.register(this::onRenderEntity);
+		RenderEvents.ALLOW_RENDER_ENTITY.register(this::allowRenderEntity);
 	}
 
 	@Override
@@ -33,11 +33,11 @@ public class BreakTreeAnimationFeature extends Feature {
 				&& ConfigManager.getConfig().foraging.hideTreeBreakAnimation;
 	}
 
-	@EventHandler(event = "RenderEvents.RENDER_ENTITY")
-	private boolean onRenderEntity(@NotNull Entity entity) {
-		if (!isEnabled()) return false;
-		if (!(entity instanceof DisplayEntity.BlockDisplayEntity blockDisplayEntity)) return false;
+	@EventHandler(event = "RenderEvents.ALLOW_RENDER_ENTITY")
+	private boolean allowRenderEntity(@NotNull Entity entity) {
+		if (!isEnabled()) return true;
+		if (!(entity instanceof DisplayEntity.BlockDisplayEntity blockDisplayEntity)) return true;
 
-		return treeBlocks.contains(blockDisplayEntity.getBlockState().getBlock());
+		return !treeBlocks.contains(blockDisplayEntity.getBlockState().getBlock());
 	}
 }

@@ -16,7 +16,7 @@ public abstract class EntityRendererMixin {
 	@Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
 	private void cariboustonks$shouldRenderEntity(Entity entity, Frustum frustum, double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {
 		if (SkyBlockAPI.isOnSkyBlock()) {
-			if (RenderEvents.RENDER_ENTITY_CANCELLABLE.invoker().onRenderEntity(entity)) {
+			if (!RenderEvents.ALLOW_RENDER_ENTITY.invoker().allowRenderEntity(entity)) {
 				cir.setReturnValue(false);
 			}
 		}

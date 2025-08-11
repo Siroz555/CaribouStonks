@@ -14,18 +14,18 @@ public final class MouseEvents {
 	/**
 	 * Called when the mouse wheel is scrolling
 	 */
-	public static final Event<MouseScroll> MOUSE_SCROLL = EventFactory.createArrayBacked(MouseScroll.class, listeners -> (horizontal, vertical) -> {
-		// Ne retourne pas directement le premier listener.
-		for (MouseScroll listener : listeners) {
-			if (listener.onMouseScroll(horizontal, vertical)) {
-				return true;
+	public static final Event<AllowMouseScroll> ALLOW_MOUSE_SCROLL = EventFactory.createArrayBacked(AllowMouseScroll.class, listeners -> (horizontal, vertical) -> {
+		for (AllowMouseScroll listener : listeners) {
+			if (!listener.allowMouseScroll(horizontal, vertical)) {
+				return false;
 			}
 		}
-		return false;
+		return true;
 	});
 
 	@FunctionalInterface
-	public interface MouseScroll {
-		boolean onMouseScroll(double horizontal, double vertical);
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	public interface AllowMouseScroll {
+		boolean allowMouseScroll(double horizontal, double vertical);
 	}
 }
