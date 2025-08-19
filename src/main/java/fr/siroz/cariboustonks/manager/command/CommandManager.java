@@ -26,9 +26,8 @@ public final class CommandManager implements Manager {
 
 	@Override
 	public void register(@NotNull Feature feature) {
-		if (feature instanceof CommandRegistration commandRegistration) {
-			ClientCommandRegistrationCallback.EVENT.register(commandRegistration::register);
-		}
+		feature.getComponent(CommandComponent.class)
+				.ifPresent(cc -> ClientCommandRegistrationCallback.EVENT.register((d, _ra) -> cc.register(d)));
 	}
 
 	private void registerModCommand(

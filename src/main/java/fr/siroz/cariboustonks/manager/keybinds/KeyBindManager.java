@@ -43,24 +43,25 @@ public final class KeyBindManager implements Manager {
 
 	@Override
 	public void register(@NotNull Feature feature) {
-		if (!(feature instanceof KeyBindRegistration keyBindRegistration)) {
-			return;
-		}
+		feature.getComponent(KeyBindComponent.class)
+				.ifPresent(keyBindComponent -> register(feature, keyBindComponent));
+	}
 
+	@EventHandler(event = "CustomScreenEvents.KEY_PRESSED")
+	private void handleKeyPressed(Screen screen, int keyCode, int scanCode, @NotNull Slot slot) {
+		triggerKeyBindsInScreen(screen, keyCode, scanCode, slot);
+	}
+
+	private void register(Feature feature, KeyBindComponent keyBindComponent) {
 		try {
 			keyBinds.putIfAbsent(feature, new LinkedList<>());
-			keyBinds.get(feature).addAll(keyBindRegistration.registerKeyBinds());
+			keyBinds.get(feature).addAll(keyBindComponent.keyBinds());
 		} catch (Exception ex) {
 			CaribouStonks.LOGGER.error(
 					"[KeyBindManager] Failed to register KeyBinds in {}", feature.getClass().getName(), ex);
 		}
 
 		enableFeatureKeyBinds(feature);
-	}
-
-	@EventHandler(event = "CustomScreenEvents.KEY_PRESSED")
-	private void handleKeyPressed(Screen screen, int keyCode, int scanCode, @NotNull Slot slot) {
-		triggerKeyBindsInScreen(screen, keyCode, scanCode, slot);
 	}
 
 	/**

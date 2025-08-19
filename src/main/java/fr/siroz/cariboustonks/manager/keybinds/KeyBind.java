@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  * {@code Fabric API} does not provide an API in this way, hence the existence of this internal KeyBind API.
  *
  * <h2>Usage Examples</h2>
- * With {@link KeyBindRegistration} interface:
+ * With {@link KeyBindComponent} interface:
  * <h3>Simple</h3>
  * <pre>{@code
  * @Override
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
  * }
  * }</pre>
  *
- * @see KeyBindRegistration
+ * @see KeyBindComponent
  */
 public class KeyBind {
 
