@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks;
 
-import com.mojang.logging.LogUtils;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.CaribouStonksCore;
 import fr.siroz.cariboustonks.util.DeveloperTools;
@@ -18,6 +17,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.function.Supplier;
@@ -27,7 +27,7 @@ import java.util.function.Supplier;
  */
 public final class CaribouStonks implements ClientModInitializer {
 
-	public static final Logger LOGGER = LogUtils.getLogger();
+	public static final Logger LOGGER = LoggerFactory.getLogger("CaribouStonks");
 
 	public static final String NAMESPACE = "cariboustonks";
 	public static final ModContainer MOD_CONTAINER = FabricLoader.getInstance().getModContainer(NAMESPACE).orElseThrow();
