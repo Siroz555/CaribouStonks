@@ -42,8 +42,6 @@ import java.util.regex.Pattern;
 @ApiStatus.Experimental
 public final class MythologicalRitualFeature extends Feature implements WorldRendererProvider { // TODO
 
-	static final MinecraftClient CLIENT = MinecraftClient.getInstance();
-
 	private static final Pattern GRIFFIN_BURROW_DUG = Pattern.compile(
 			"(?<message>You dug out a Griffin Burrow!|You finished the Griffin burrow chain!) \\((?<index>\\d)/4\\)");
 	private static final Pattern INQUISITOR_FOUND_PATTERN = Pattern.compile(".* You dug out a Minos Inquisitor!");

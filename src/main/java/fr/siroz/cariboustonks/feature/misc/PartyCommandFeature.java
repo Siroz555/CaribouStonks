@@ -16,7 +16,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +24,6 @@ import java.util.regex.Pattern;
 
 public class PartyCommandFeature extends Feature {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 	private static final Cooldown COOLDOWN = Cooldown.of(750, TimeUnit.MILLISECONDS);
 
 	public PartyCommandFeature() {

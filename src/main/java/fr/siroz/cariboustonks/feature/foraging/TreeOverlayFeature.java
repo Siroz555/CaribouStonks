@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.item.ItemStack;
@@ -25,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class TreeOverlayFeature extends Feature {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 	private static final int DISTANCE_TO_TREE_INFO_IN_BLOCKS = 10;
 	private static final Set<String> AXES = Set.of(
 			"ROOKIE_AXE",

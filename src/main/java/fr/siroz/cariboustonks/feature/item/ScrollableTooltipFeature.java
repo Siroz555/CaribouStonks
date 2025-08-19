@@ -10,7 +10,6 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.mixin.accessors.OrderedTextTooltipComponentAccessor;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import fr.siroz.cariboustonks.util.cooldown.Cooldown;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.util.InputUtil;
@@ -26,8 +25,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ScrollableTooltipFeature extends Feature {
-
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
 	private static final Cooldown COOLDOWN = Cooldown.of(100, TimeUnit.MILLISECONDS);
 	private static final int SCROLL_AMOUNT = 10;

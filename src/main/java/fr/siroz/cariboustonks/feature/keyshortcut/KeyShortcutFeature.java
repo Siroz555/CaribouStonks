@@ -16,14 +16,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-@ApiStatus.Experimental
 public class KeyShortcutFeature extends Feature {
-
-	// NOTE-ME: A vérifier avec Spark mais en Solo no problemo
 
 	private static final Path SHORTCUTS_PATH = CaribouStonks.CONFIG_DIR.resolve("shortcuts.json");
 	private static final long COOLDOWN = 500;

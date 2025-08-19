@@ -13,7 +13,6 @@ import fr.siroz.cariboustonks.feature.fishing.radar.HotspotRadarFeature;
 import fr.siroz.cariboustonks.util.PositionUtils;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.projectile.FishingBobberEntity;
@@ -31,7 +30,6 @@ import java.util.concurrent.TimeUnit;
 
 public class HotspotFeature extends Feature {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 	private static final double DISTANCE_TO_HOTSPOT_IN_BLOCKS = 10;
 
 	private final HotspotRenderer renderer;

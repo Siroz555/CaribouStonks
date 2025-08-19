@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.world.border.WorldBorder;
 import org.jetbrains.annotations.NotNull;
@@ -16,8 +15,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LowHealthWarningFeature extends Feature {
-
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
 	private static final Pattern HEALTH_ACTION_BAR_PATTERN = Pattern.compile(
 			"§[6c](?<health>[\\d,]+)/(?<max>[\\d,]+)❤ *(?<healing>\\+§c([\\d,]+). *)?");
