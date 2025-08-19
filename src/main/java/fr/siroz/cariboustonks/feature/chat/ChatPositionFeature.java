@@ -1,7 +1,5 @@
 package fr.siroz.cariboustonks.feature.chat;
 
-import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.UIAndVisualsConfig;
@@ -9,7 +7,7 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.diana.MythologicalRitualFeature;
-import fr.siroz.cariboustonks.manager.command.CommandRegistration;
+import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
@@ -20,7 +18,6 @@ import fr.siroz.cariboustonks.util.cooldown.Cooldown;
 import fr.siroz.cariboustonks.util.position.Position;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChatPositionFeature extends Feature implements CommandRegistration {
+public class ChatPositionFeature extends Feature {
 
 	private static final Pattern SIMPLE_COORDS_PATTERN = Pattern.compile(
 			"(?<playerName>.*): (?<x>-?[0-9]+) (?<y>[0-9]+) (?<z>-?[0-9]+)");
@@ -51,22 +48,21 @@ public class ChatPositionFeature extends Feature implements CommandRegistration 
 
 	public ChatPositionFeature() {
 		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
+
+		addComponent(CommandComponent.class, dispatcher -> {
+			dispatcher.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
+					.then(ClientCommandManager.literal("sharePosition")
+							.executes(context -> shareCurrentPosition(context.getSource())))
+			);
+			dispatcher.register(ClientCommandManager.literal("sendCoords")
+					.executes(context -> shareCurrentPosition(context.getSource())));
+		});
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& ConfigManager.getConfig().uiAndVisuals.sharedPositionWaypoint.enabled;
-	}
-
-	@Override
-	public void register(@NotNull CommandDispatcher<FabricClientCommandSource> dispatcher, @NotNull CommandRegistryAccess _ra) {
-		dispatcher.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
-				.then(ClientCommandManager.literal("sharePosition")
-						.executes(context -> shareCurrentPosition(context.getSource())))
-		);
-		dispatcher.register(ClientCommandManager.literal("sendCoords")
-				.executes(context -> shareCurrentPosition(context.getSource())));
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
@@ -115,7 +111,7 @@ public class ChatPositionFeature extends Feature implements CommandRegistration 
 					.append(Text.literal("Command on cooldown!").formatted(Formatting.RED)));
 		}
 
-		return Command.SINGLE_SUCCESS;
+		return 1;
 	}
 
 	private void createWaypoint(String playerName, String x, String y, String z) {

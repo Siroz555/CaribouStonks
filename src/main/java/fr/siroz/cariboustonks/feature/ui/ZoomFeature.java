@@ -5,11 +5,9 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.MouseEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.keybinds.KeyBind;
-import fr.siroz.cariboustonks.manager.keybinds.KeyBindRegistration;
-import org.jetbrains.annotations.NotNull;
+import fr.siroz.cariboustonks.manager.keybinds.KeyBindComponent;
+import java.util.Collections;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.List;
 
 /**
  * Provides zoom functionality triggered by a user-defined keybind.
@@ -19,7 +17,7 @@ import java.util.List;
  * <b>Note:</b> The main logic for visual transformation may be handled in
  * {@code Mixin >} {@link fr.siroz.cariboustonks.mixin.GameRendererMixin}
  */
-public final class ZoomFeature extends Feature implements KeyBindRegistration {
+public final class ZoomFeature extends Feature {
 
     private static final double ZOOM_MULTIPLIER = 0.30D;
     private static final double ZOOM_STEP = 0.05D;
@@ -33,17 +31,14 @@ public final class ZoomFeature extends Feature implements KeyBindRegistration {
         this.zoomKeyBind = new KeyBind("Zoom", GLFW.GLFW_KEY_C, true);
         this.currentZoomMultiplier = ZOOM_MULTIPLIER;
         MouseEvents.ALLOW_MOUSE_SCROLL.register(this::allowMouseScroll);
+
+		addComponent(KeyBindComponent.class, () -> Collections.singletonList(zoomKeyBind));
     }
 
     @Override
     public boolean isEnabled() {
         // Ignore isOnSkyBlock
         return ConfigManager.getConfig().uiAndVisuals.zoom.enabled;
-    }
-
-    @Override
-    public @NotNull List<KeyBind> registerKeyBinds() {
-        return List.of(zoomKeyBind);
     }
 
     public boolean isZooming() {

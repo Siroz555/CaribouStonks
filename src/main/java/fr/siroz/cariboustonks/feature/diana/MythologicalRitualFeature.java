@@ -1,17 +1,15 @@
 package fr.siroz.cariboustonks.feature.diana;
 
-import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
-import fr.siroz.cariboustonks.manager.command.CommandRegistration;
+import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.manager.keybinds.KeyBind;
 import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.keybinds.KeyBindRegistration;
+import fr.siroz.cariboustonks.manager.keybinds.KeyBindComponent;
 import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.colors.Color;
@@ -19,14 +17,13 @@ import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.position.Position;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
 import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
+import java.util.Collections;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -43,8 +40,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @ApiStatus.Experimental
-public final class MythologicalRitualFeature extends Feature
-		implements KeyBindRegistration, CommandRegistration, WorldRendererProvider { // TODO
+public final class MythologicalRitualFeature extends Feature implements WorldRendererProvider { // TODO
 
 	static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
@@ -70,6 +66,21 @@ public final class MythologicalRitualFeature extends Feature
 		ClientReceiveMessageEvents.GAME.register(this::onChatMessage);
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((client, world) -> onWorldChange());
 		WorldRenderEvents.AFTER_TRANSLUCENT.register(this::render);
+
+		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
+				.then(ClientCommandManager.literal("resetDiana")
+						.executes(context -> {
+							onWorldChange();
+							context.getSource().sendFeedback(CaribouStonks.prefix().get()
+									.append(Text.literal("Diana reset success.").formatted(Formatting.GREEN)));
+							return 1;
+						})
+				)
+		));
+
+		addComponent(KeyBindComponent.class, () -> Collections.singletonList(
+				new KeyBind("Warp Diana", GLFW.GLFW_KEY_F, true, nearestWarp::warpToNearestWarp)
+		));
 	}
 
 	@Override
@@ -91,25 +102,6 @@ public final class MythologicalRitualFeature extends Feature
 					.append(Text.literal(" found an Inquisitor!").formatted(Formatting.GREEN, Formatting.BOLD)));
 			Client.playSound(SoundEvents.ENTITY_WITHER_SHOOT, 1f, 1f);
 		}
-	}
-
-	@Override
-	public @NotNull List<KeyBind> registerKeyBinds() {
-		return List.of(new KeyBind("Warp Diana", GLFW.GLFW_KEY_F, true, nearestWarp::warpToNearestWarp));
-	}
-
-	@Override
-	public void register(@NotNull CommandDispatcher<FabricClientCommandSource> dispatcher, @NotNull CommandRegistryAccess registryAccess) {
-		dispatcher.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
-				.then(ClientCommandManager.literal("resetDiana")
-						.executes(context -> {
-							onWorldChange();
-							context.getSource().sendFeedback(CaribouStonks.prefix().get()
-									.append(Text.literal("Diana reset success.").formatted(Formatting.GREEN)));
-							return Command.SINGLE_SUCCESS;
-						})
-				)
-		);
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package fr.siroz.cariboustonks.feature.stonks;
 
-import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
@@ -11,7 +9,7 @@ import fr.siroz.cariboustonks.core.data.hypixel.SkyBlockItem;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.command.CommandRegistration;
+import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.Symbols;
@@ -19,15 +17,13 @@ import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.CommandSource;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import org.jetbrains.annotations.NotNull;
 
-public class StonksCommandFeature extends Feature implements CommandRegistration {
+public class StonksCommandFeature extends Feature {
 
 	// SIROZ-NOTE :: Implémentation pour les Auctions Items
 
@@ -37,6 +33,12 @@ public class StonksCommandFeature extends Feature implements CommandRegistration
 
 	public StonksCommandFeature() {
 		this.hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
+
+		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal("stonks")
+				.then(ClientCommandManager.argument("item", StringArgumentType.greedyString())
+						.suggests((context, builder) -> CommandSource.suggestMatching(hypixelDataSource.getSkyBlockItemsIds(), builder))
+						.executes(context -> handle(context.getSource(), StringArgumentType.getString(context, "item"))))
+		));
 	}
 
 	@Override
@@ -44,16 +46,8 @@ public class StonksCommandFeature extends Feature implements CommandRegistration
 		return SkyBlockAPI.isOnSkyBlock();
 	}
 
-	@Override
-	public void register(@NotNull CommandDispatcher<FabricClientCommandSource> dispatcher, @NotNull CommandRegistryAccess _ra) {
-		dispatcher.register(ClientCommandManager.literal("stonks")
-				.then(ClientCommandManager.argument("item", StringArgumentType.greedyString())
-						.suggests((context, builder) -> CommandSource.suggestMatching(hypixelDataSource.getSkyBlockItemsIds(), builder))
-						.executes(context -> handle(context.getSource(), StringArgumentType.getString(context, "item")))));
-	}
-
 	private int handle(FabricClientCommandSource source, String item) {
-		int result = Command.SINGLE_SUCCESS;
+		int result = 1;
 
 		if (hypixelDataSource.isBazaarInUpdate()) {
 			source.sendFeedback(Text.literal("Bazaar is currently updating.. Retry in few seconds.").formatted(Formatting.RED));

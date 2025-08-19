@@ -5,11 +5,12 @@ import fr.siroz.cariboustonks.core.data.item.ItemLookupKey;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.manager.keybinds.KeyBind;
-import fr.siroz.cariboustonks.manager.keybinds.KeyBindRegistration;
+import fr.siroz.cariboustonks.manager.keybinds.KeyBindComponent;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
+import java.util.Collections;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
@@ -19,18 +20,17 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.List;
+public class StonksFeature extends Feature {
 
-public class StonksFeature extends Feature implements KeyBindRegistration {
+	public StonksFeature() {
+		addComponent(KeyBindComponent.class, () -> Collections.singletonList(
+				new KeyBind("Stonks Item", GLFW.GLFW_KEY_K, this::onKeyPressed)
+		));
+	}
 
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock();
-	}
-
-	@Override
-	public @NotNull List<KeyBind> registerKeyBinds() {
-		return List.of(new KeyBind("Stonks Item", GLFW.GLFW_KEY_K, this::onKeyPressed));
 	}
 
 	private void onKeyPressed(Screen screen, Slot slot) {
