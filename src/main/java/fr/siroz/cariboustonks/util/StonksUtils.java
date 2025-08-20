@@ -107,19 +107,6 @@ public final class StonksUtils {
 		return COLOR_CODE_PATTERN.matcher(input).replaceAll("");
 	}
 
-	public static int convertHotbarToSlotIndex(int hotbarIndex) {
-		if (hotbarIndex < 0 || hotbarIndex > 8) return -1;
-
-		return 36 + hotbarIndex;
-	}
-
-	public static boolean isEdgeSlot(int slotId, int rows) {
-		if (slotId < 0 || slotId >= rows * 9) return false;
-		int row = slotId / 9;
-		int col = slotId % 9;
-		return col == 0 || col == 8 || row == 0 || row == rows - 1;
-	}
-
 	/**
 	 * Vérifie si le client est connecté à Hypixel.
 	 *

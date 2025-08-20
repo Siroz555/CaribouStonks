@@ -225,7 +225,7 @@ public final class DeveloperTools {
 			int id = 0;
 			for (ArmorStandEntity armorStand : armorStands) {
 				ARMORSTANDS_TEXTURED.put(armorStand, id);
-				Iterable<ItemStack> equippedItems = InventoryUtils.getArmor(armorStand);
+				Iterable<ItemStack> equippedItems = InventoryUtils.getArmorFromEntity(armorStand);
 
 				context.getSource().sendFeedback(CaribouStonks.prefix().get()
 						.append(Text.literal("Head texture #" + id + ": ")));
