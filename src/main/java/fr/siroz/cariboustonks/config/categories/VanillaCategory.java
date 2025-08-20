@@ -51,9 +51,9 @@ public class VanillaCategory extends AbstractCategory {
 						.controller(this::createBooleanController)
 						.build())
 				.option(Option.<Boolean>createBuilder()
-						.name(Text.literal("Display your own Nametag in F3"))
+						.name(Text.literal("Display your own Nametag in F5"))
 						.description(OptionDescription.of(
-								Text.literal("Allows you to display your Nametag in F3 above your player.")))
+								Text.literal("Allows you to display your Nametag in F5 above your player.")))
 						.binding(defaults.vanilla.displayOwnNametagUsername,
 								() -> current.vanilla.displayOwnNametagUsername,
 								newValue -> current.vanilla.displayOwnNametagUsername = newValue)
