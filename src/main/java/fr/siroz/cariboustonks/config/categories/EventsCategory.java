@@ -125,7 +125,7 @@ public class EventsCategory extends AbstractCategory {
                                 .controller(this::createBooleanController)
                                 .build())
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Nearest Warp").append(BETA))
+                                .name(Text.literal("Nearest Warp"))
                                 .description(OptionDescription.of(
                                         Text.literal("Teleport to the Warp nearest to Guess Burrow")))
                                 .binding(defaults.events.mythologicalRitual.nearestWarp,
@@ -143,6 +143,24 @@ public class EventsCategory extends AbstractCategory {
                                         newValue -> current.events.mythologicalRitual.shareInquisitor = newValue)
                                 .controller(this::createBooleanController)
                                 .build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Highlight Inquisitors"))
+								.description(OptionDescription.of(
+										Text.literal("Highlight the Inquisitor entity with a custom glow color.")))
+								.binding(defaults.events.mythologicalRitual.highlightInquisitor,
+										() -> current.events.mythologicalRitual.highlightInquisitor,
+										newValue -> current.events.mythologicalRitual.highlightInquisitor = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Color>createBuilder()
+								.name(Text.literal("Highlight Inquisitors Color"))
+								.description(OptionDescription.of(
+										Text.literal("If Highlight Inquisitors is enabled, set the entity glow color.")))
+								.binding(defaults.events.mythologicalRitual.highlightInquisitorColor,
+										() -> current.events.mythologicalRitual.highlightInquisitorColor,
+										newValue -> current.events.mythologicalRitual.highlightInquisitorColor = newValue)
+								.controller(ColorControllerBuilder::create)
+								.build())
                         .build())
                 .build();
     }

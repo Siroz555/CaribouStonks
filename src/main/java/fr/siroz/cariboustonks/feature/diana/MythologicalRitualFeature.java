@@ -6,6 +6,7 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.manager.command.CommandComponent;
+import fr.siroz.cariboustonks.manager.glowing.EntityGlowProvider;
 import fr.siroz.cariboustonks.manager.keybinds.KeyBind;
 import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.feature.Feature;
@@ -23,6 +24,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -40,11 +42,12 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @ApiStatus.Experimental
-public final class MythologicalRitualFeature extends Feature implements WorldRendererProvider { // TODO
+public final class MythologicalRitualFeature extends Feature implements EntityGlowProvider, WorldRendererProvider { // TODO
 
 	private static final Pattern GRIFFIN_BURROW_DUG = Pattern.compile(
 			"(?<message>You dug out a Griffin Burrow!|You finished the Griffin burrow chain!) \\((?<index>\\d)/4\\)");
 	private static final Pattern INQUISITOR_FOUND_PATTERN = Pattern.compile(".* You dug out a Minos Inquisitor!");
+	private static final String INQUISITOR_NAME = "Minos Inquisitor";
 
 	private final GriffinBurrowParticleFinder particleFinder;
 	private final GuessBurrow guessBurrow;
@@ -100,6 +103,17 @@ public final class MythologicalRitualFeature extends Feature implements WorldRen
 					.append(Text.literal(" found an Inquisitor!").formatted(Formatting.GREEN, Formatting.BOLD)));
 			Client.playSound(SoundEvents.ENTITY_WITHER_SHOOT, 1f, 1f);
 		}
+	}
+
+	@Override
+	public int getEntityGlowColor(@NotNull Entity entity) {
+		if (ConfigManager.getConfig().events.mythologicalRitual.highlightInquisitor
+				&& entity.getName().getString().equals(INQUISITOR_NAME)
+		) {
+			return ConfigManager.getConfig().events.mythologicalRitual.highlightInquisitorColor.getRGB();
+		}
+
+		return DEFAULT;
 	}
 
 	@Override

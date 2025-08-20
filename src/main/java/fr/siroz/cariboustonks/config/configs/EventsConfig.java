@@ -48,5 +48,11 @@ public class EventsConfig {
 
         @SerialEntry
         public boolean shareInquisitor = false;
+
+		@SerialEntry
+		public boolean highlightInquisitor = false;
+
+		@SerialEntry
+		public Color highlightInquisitorColor = Color.RED;
     }
 }

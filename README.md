@@ -131,11 +131,12 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
 
 **Events**
 
-- Mythological Ritual (BETA)
+- Mythological Ritual
     - Guess Burrow: Waypoint that predicts the location of a Burrow (like 1.8).
     - Burrow Particle Finder: Display a Waypoint according to the type of Burrow nearby.
     - Line to the closest Burrow.
-    - Nearest Warp. (BETA)
+    - Nearest Warp.
+    - Highlight Inquisitors with a configurable glow color.
 
 **Misc**
 
