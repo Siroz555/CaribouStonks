@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.mod.SkyBlockAttribute;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectReferencePair;
+import java.util.Objects;
 import net.minecraft.component.ComponentHolder;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
@@ -258,6 +259,7 @@ public final class ItemUtils {
 		if (profile == null) return "";
 
 		return profile.properties().get("textures").stream()
+				.filter(Objects::nonNull)
 				.map(Property::value)
 				.findFirst()
 				.orElse("");
