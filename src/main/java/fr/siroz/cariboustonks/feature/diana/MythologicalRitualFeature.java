@@ -17,7 +17,6 @@ import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.position.Position;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
 import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
-import java.util.Collections;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -34,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
