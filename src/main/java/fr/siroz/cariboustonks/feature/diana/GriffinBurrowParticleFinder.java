@@ -28,6 +28,8 @@ final class GriffinBurrowParticleFinder {
 
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
+	private static final String ANCESTRAL_SPADE_ITEM_ID = "ANCESTRAL_SPADE";
+
 	private static final Cache<BlockPos, BlockPos> DUG_BURROWS_CACHE = CacheBuilder.newBuilder()
 			.expireAfterWrite(Duration.ofMinutes(1))
 			.build();
@@ -149,7 +151,7 @@ final class GriffinBurrowParticleFinder {
 
 	public void handleInteractBlock(PlayerEntity player, Hand hand, BlockPos pos) {
 		ItemStack stack = player.getStackInHand(hand);
-		if (!ItemUtils.getSkyBlockItemId(stack).equals("ANCESTRAL_SPADE")) {
+		if (!ItemUtils.getSkyBlockItemId(stack).equals(ANCESTRAL_SPADE_ITEM_ID)) {
 			return;
 		}
 

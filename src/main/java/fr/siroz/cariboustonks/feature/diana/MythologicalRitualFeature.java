@@ -5,6 +5,7 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
+import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.manager.glowing.EntityGlowProvider;
 import fr.siroz.cariboustonks.manager.keybinds.KeyBind;
@@ -18,12 +19,11 @@ import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.position.Position;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
 import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
+import java.util.regex.Matcher;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -41,13 +41,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+// TODO
+//  C'est en peu trop le bordel, mais tout marche bien, quelques ajustements a faire.
+//  Ce code est vraiment vite-fait lors des derniers tests, juste a tout séparer et a faire au propre.
+//  Le "onDiana" state marche mais c'est vraiment pas l'idéal, il faudrait check le Mayor de facon générale
+//  a l'initialisation du client et de set correctement les checks.
+//  Il faudra aussi check si ce unique Ghost Burrow reste a chaque session encore même avec les patch.
+
 @ApiStatus.Experimental
-public final class MythologicalRitualFeature extends Feature implements EntityGlowProvider, WorldRendererProvider { // TODO
+public final class MythologicalRitualFeature extends Feature implements EntityGlowProvider, WorldRendererProvider {
 
 	private static final Pattern GRIFFIN_BURROW_DUG = Pattern.compile(
 			"(?<message>You dug out a Griffin Burrow!|You finished the Griffin burrow chain!) \\((?<index>\\d)/4\\)");
 	private static final Pattern INQUISITOR_FOUND_PATTERN = Pattern.compile(".* You dug out a Minos Inquisitor!");
-	private static final String INQUISITOR_NAME = "Minos Inquisitor";
+	private static final String INQUISITOR_ENTITY_NAME = "Minos Inquisitor";
 
 	private final GriffinBurrowParticleFinder particleFinder;
 	private final GuessBurrow guessBurrow;
@@ -64,14 +71,13 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 		this.nearestWarp = new NearestWarp();
 
 		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
-		ClientReceiveMessageEvents.GAME.register(this::onChatMessage);
-		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((client, world) -> onWorldChange());
+		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((client, world) -> resetAndClear());
 		WorldRenderEvents.AFTER_TRANSLUCENT.register(this::render);
 
 		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
 				.then(ClientCommandManager.literal("resetDiana")
 						.executes(context -> {
-							onWorldChange();
+							resetAndClear();
 							context.getSource().sendFeedback(CaribouStonks.prefix().get()
 									.append(Text.literal("Diana reset success.").formatted(Formatting.GREEN)));
 							return 1;
@@ -88,9 +94,7 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() == IslandType.HUB
-				&& ConfigManager.getConfig().events.mythologicalRitual.enabled
-				&& CLIENT.world != null
-				&& CLIENT.player != null;
+				&& ConfigManager.getConfig().events.mythologicalRitual.enabled;
 	}
 
 	public void onPlayerFoundInquisitor(@Nullable String playerName) {
@@ -108,7 +112,7 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 	@Override
 	public int getEntityGlowColor(@NotNull Entity entity) {
 		if (ConfigManager.getConfig().events.mythologicalRitual.highlightInquisitor
-				&& entity.getName().getString().equals(INQUISITOR_NAME)
+				&& entity.getName().getString().equals(INQUISITOR_ENTITY_NAME)
 		) {
 			return ConfigManager.getConfig().events.mythologicalRitual.highlightInquisitorColor.getRGB();
 		}
@@ -118,6 +122,8 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 
 	@Override
 	public void render(WorldRenderContext context) {
+		if (CLIENT.player == null || CLIENT.world == null) return;
+
 		if (isGuessEnabled() && guessWaypoint != null) {
 			guessWaypoint.getRenderer().render(context);
 		}
@@ -134,7 +140,7 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 
 		if (guessWaypoint != null && burrows.isEmpty()) {
 			WorldRenderUtils.renderLineFromCursor(context, guessWaypoint.getPosition().toVec3d(), Colors.YELLOW, 1f);
-		} else if (!burrows.isEmpty() && MinecraftClient.getInstance().player != null) {
+		} else if (!burrows.isEmpty() && CLIENT.player != null) {
 
 			Vec3d closest = null;
 			double minDistanceSquared = Double.MAX_VALUE;
@@ -144,7 +150,7 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 					.toList();
 
 			for (Vec3d pos : positions) {
-				double distanceSquared = MinecraftClient.getInstance().player.getPos().squaredDistanceTo(pos);
+				double distanceSquared = CLIENT.player.getPos().squaredDistanceTo(pos);
 
 				if (distanceSquared < minDistanceSquared) {
 					minDistanceSquared = distanceSquared;
@@ -162,21 +168,20 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 		}
 	}
 
-	private void onWorldChange() {
-		guessBurrow.reset();
-		onDiana = false;
-		guessWaypoint = null;
-		burrows.clear();
-		particleFinder.onWorldChange();
-		nearestWarp.reset();
-	}
-
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
 	private void onMessage(@NotNull Text text) {
 		if (!isEnabled()) {
 			return;
 		}
 
-		if (INQUISITOR_FOUND_PATTERN.matcher(text.getString()).matches()) {
+		Matcher burrowDugMatcher = GRIFFIN_BURROW_DUG.matcher(text.getString());
+		if (burrowDugMatcher.matches()) {
+			onDiana = true;
+			particleFinder.onChatMessage();
+		}
+
+		Matcher inquisitorFoundMatcher = INQUISITOR_FOUND_PATTERN.matcher(text.getString());
+		if (inquisitorFoundMatcher.matches()) {
 			if (CLIENT.player != null) {
 				Client.sendMessageWithPrefix(Text.literal("You found an Inquisitor!").formatted(Formatting.GREEN, Formatting.BOLD));
 				Client.showTitle(Text.literal("/K").formatted(Formatting.DARK_RED, Formatting.OBFUSCATED)
@@ -193,15 +198,13 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 		}
 	}
 
-	private void onChatMessage(Text text, boolean overlay) {
-		if (!isEnabled()) {
-			return;
-		}
-
-		if (GRIFFIN_BURROW_DUG.matcher(text.getString()).matches()) {
-			onDiana = true;
-			particleFinder.onChatMessage();
-		}
+	private void resetAndClear() {
+		guessBurrow.reset();
+		onDiana = false;
+		guessWaypoint = null;
+		burrows.clear();
+		particleFinder.onWorldChange();
+		nearestWarp.reset();
 	}
 
 	boolean isGuessEnabled() {
