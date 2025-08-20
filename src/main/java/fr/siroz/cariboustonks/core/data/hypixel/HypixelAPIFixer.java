@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.core.data.hypixel;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.mod.SkyBlockAttribute;
-import fr.siroz.cariboustonks.util.Rarity;
+import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;

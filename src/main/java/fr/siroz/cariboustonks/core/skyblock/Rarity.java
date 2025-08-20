@@ -1,11 +1,12 @@
-package fr.siroz.cariboustonks.util;
+package fr.siroz.cariboustonks.core.skyblock;
 
-import dev.isxander.yacl3.api.NameableEnum;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
-public enum Rarity implements NameableEnum {
+/**
+ * Represents SkyBlock's Rarity
+ */
+public enum Rarity {
 	UNKNOWN(' ', 0, Formatting.GRAY),
 	COMMON('C', 1, Formatting.WHITE),
 	UNCOMMON('U', 2, Formatting.GREEN),
@@ -25,9 +26,6 @@ public enum Rarity implements NameableEnum {
 	private final int power;
 	private final int color;
 	private final Formatting formatting;
-	private final float r;
-	private final float g;
-	private final float b;
 
 	Rarity(char code, int power, Formatting formatting) {
 		this.code = code;
@@ -35,12 +33,9 @@ public enum Rarity implements NameableEnum {
 		//noinspection DataFlowIssue
 		this.color = formatting.getColorValue();
 		this.formatting = formatting;
-		this.r = ((color >> 16) & 0xFF) / 255f;
-		this.g = ((color >> 8) & 0xFF) / 255f;
-		this.b = (color & 0xFF) / 255f;
 	}
 
-	public static Rarity getRarity(@Nullable String name) {
+	public static Rarity fromName(@Nullable String name) {
 		if (name == null) return UNKNOWN;
 
 		for (Rarity rarity : VALUES) {
@@ -77,22 +72,5 @@ public enum Rarity implements NameableEnum {
 
 	public Formatting getFormatting() {
 		return formatting;
-	}
-
-	public float r() {
-		return r;
-	}
-
-	public float g() {
-		return g;
-	}
-
-	public float b() {
-		return b;
-	}
-
-	@Override
-	public Text getDisplayName() {
-		return Text.of(name());
 	}
 }

@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.core.data.mod;
 
-import fr.siroz.cariboustonks.util.Rarity;
+import fr.siroz.cariboustonks.core.skyblock.Rarity;
 
 public record SkyBlockAttribute(
 		String name,

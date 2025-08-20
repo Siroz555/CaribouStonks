@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.data.hypixel;
 
 import com.google.gson.JsonObject;
-import fr.siroz.cariboustonks.util.Rarity;
+import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +36,7 @@ public final class SkyBlockItem {
 		if (jsonItem.has("tier")) {
 			tierString = jsonItem.get("tier").getAsString();
 		}
-		this.tier = Rarity.getRarity(tierString);
+		this.tier = Rarity.fromName(tierString);
 
 		if (jsonItem.has("skin") && this.material.equals("SKULL_ITEM")) {
 			JsonObject skin = jsonItem.get("skin").getAsJsonObject();
