@@ -10,12 +10,9 @@ import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectReferencePair;
 import net.minecraft.component.ComponentHolder;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.component.type.ProfileComponent;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -239,13 +236,6 @@ public final class ItemUtils {
 	public static @Nullable String getAbility(@NotNull ItemStack stack) {
 		Matcher abilityMatcher = getLoreLineIfMatch(stack, ABILITY);
 		return abilityMatcher != null ? abilityMatcher.group("name") : null;
-	}
-
-	public static List<ItemStack> getArmor(@NotNull LivingEntity entity) {
-		return AttributeModifierSlot.ARMOR.getSlots().stream()
-				.filter(slot -> slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
-				.map(entity::getEquippedStack)
-				.toList();
 	}
 
 	public static @NotNull ItemStack createSkull(@NotNull String textureB64) {
