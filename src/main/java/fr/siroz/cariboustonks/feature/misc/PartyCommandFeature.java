@@ -11,6 +11,8 @@ import fr.siroz.cariboustonks.manager.network.NetworkManager;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.position.Position;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -22,7 +24,9 @@ import java.util.regex.Pattern;
 
 public class PartyCommandFeature extends Feature {
 
+	private static final List<String> MAGIC_8BALL_ANSWERS = new ArrayList<>();
 	private static final long COOLDOWN_MS = 750L;
+
 	private long lastActionMs = 0L;
 
 	public PartyCommandFeature() {
@@ -81,6 +85,11 @@ public class PartyCommandFeature extends Feature {
 			String message = matcher.group(2) + " rolled a " + roll + "." + extra;
 			Client.sendChatMessage("/pc " + message);
 		}),
+		EIGHT_BALL(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !8ball"), cmd -> cmd.magic8Ball, matcher -> {
+			int r = new Random().nextInt(MAGIC_8BALL_ANSWERS.size());
+			String selected = MAGIC_8BALL_ANSWERS.get(r);
+			Client.sendChatMessage("/pc " + selected);
+		}),
 		CF(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !cf"), cmd -> cmd.coinFlip, matcher -> {
 			if (new Random().nextBoolean()) {
 				Client.sendChatMessage("/pc HEADS!");
@@ -116,5 +125,36 @@ public class PartyCommandFeature extends Feature {
 		public Consumer<Matcher> getAction() {
 			return action;
 		}
+	}
+
+	static {
+		MAGIC_8BALL_ANSWERS.add("It is certain.");
+		MAGIC_8BALL_ANSWERS.add("It is decidedly so.");
+		MAGIC_8BALL_ANSWERS.add("Without a doubt.");
+		MAGIC_8BALL_ANSWERS.add("Yes – definitely.");
+		MAGIC_8BALL_ANSWERS.add("You may rely on it.");
+		MAGIC_8BALL_ANSWERS.add("As I see it, yes.");
+		MAGIC_8BALL_ANSWERS.add("Most likely.");
+		MAGIC_8BALL_ANSWERS.add("Outlook good.");
+		MAGIC_8BALL_ANSWERS.add("Yes.");
+		MAGIC_8BALL_ANSWERS.add("No.");
+		MAGIC_8BALL_ANSWERS.add("Reply hazy, try again.");
+		MAGIC_8BALL_ANSWERS.add("Ask again later.");
+		MAGIC_8BALL_ANSWERS.add("Better not tell you now.");
+		MAGIC_8BALL_ANSWERS.add("Concentrate and ask again.");
+		MAGIC_8BALL_ANSWERS.add("Don't count on it.");
+		MAGIC_8BALL_ANSWERS.add("My reply is no.");
+		MAGIC_8BALL_ANSWERS.add("My sources say no.");
+		MAGIC_8BALL_ANSWERS.add("Outlook not so good.");
+		MAGIC_8BALL_ANSWERS.add("Very doubtful.");
+		MAGIC_8BALL_ANSWERS.add("Absolutely not.");
+		MAGIC_8BALL_ANSWERS.add("Absolutely yes.");
+		MAGIC_8BALL_ANSWERS.add("If you believe hard enough.");
+		MAGIC_8BALL_ANSWERS.add("The stars say no.");
+		MAGIC_8BALL_ANSWERS.add("The stars say yes.");
+		MAGIC_8BALL_ANSWERS.add("Try again after coffee.");
+		MAGIC_8BALL_ANSWERS.add("404: answer not found.");
+		MAGIC_8BALL_ANSWERS.add("Sheesh... maybe.");
+		MAGIC_8BALL_ANSWERS.add("Waw! Definitely.");
 	}
 }

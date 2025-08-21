@@ -148,10 +148,9 @@ public class MiscCategory extends AbstractCategory {
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Magic 8 Ball (!8ball)"))
-								.available(false)
 								.description(OptionDescription.of(
 										Text.literal("'!8ball'").formatted(Formatting.AQUA, Formatting.BOLD),
-										Text.literal(SPACE + "Okay?")))
+										Text.literal(SPACE + "Yes? No? Maybe? (or anything else)")))
 								.binding(defaults.misc.partyCommands.magic8Ball,
 										() -> current.misc.partyCommands.magic8Ball,
 										newValue -> current.misc.partyCommands.magic8Ball = newValue)
