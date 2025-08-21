@@ -97,16 +97,19 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 				&& ConfigManager.getConfig().events.mythologicalRitual.enabled;
 	}
 
-	public void onPlayerFoundInquisitor(@Nullable String playerName) {
+	public boolean onPlayerFoundInquisitor(@Nullable String playerName) {
 		if (!isEnabled() || !onDiana) {
-			return;
+			return false;
 		}
 
 		if (playerName != null && !playerName.contains(CLIENT.getSession().getUsername())) {
 			Client.sendMessageWithPrefix(Text.literal(playerName).formatted(Formatting.YELLOW, Formatting.BOLD)
 					.append(Text.literal(" found an Inquisitor!").formatted(Formatting.GREEN, Formatting.BOLD)));
 			Client.playSound(SoundEvents.ENTITY_WITHER_SHOOT, 1f, 1f);
+			return true;
 		}
+
+		return false;
 	}
 
 	@Override

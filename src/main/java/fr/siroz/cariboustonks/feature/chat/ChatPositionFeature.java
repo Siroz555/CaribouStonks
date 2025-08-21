@@ -125,8 +125,11 @@ public class ChatPositionFeature extends Feature {
 			int positionZ = Integer.parseInt(z);
 			Position position = Position.of(positionX, positionY, positionZ);
 
+			boolean foundInquisitor = CaribouStonks.features().getFeature(MythologicalRitualFeature.class)
+					.onPlayerFoundInquisitor(playerName);
+
 			UIAndVisualsConfig.SharedPositionWaypoint config = ConfigManager.getConfig().uiAndVisuals.sharedPositionWaypoint;
-			int showTime = config.showTime;
+			int showTime = foundInquisitor ? 60 : config.showTime;
 			Color color = config.rainbow ? Colors.RAINBOW : Color.fromInt(config.color.getRGB());
 
 			Text waypointName = playerName.isEmpty()
@@ -142,8 +145,6 @@ public class ChatPositionFeature extends Feature {
 							.withDistance(true)
 							.build())
 					.buildAndRegister();
-
-			CaribouStonks.features().getFeature(MythologicalRitualFeature.class).onPlayerFoundInquisitor(playerName);
 		} catch (Exception ex) { // NumberFormatException
 			CaribouStonks.LOGGER.error("[ChatPositionFeature] Unable to create waypoint", ex);
 		}
