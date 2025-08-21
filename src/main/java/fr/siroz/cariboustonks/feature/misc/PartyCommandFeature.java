@@ -10,10 +10,8 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.network.NetworkManager;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import fr.siroz.cariboustonks.util.cooldown.Cooldown;
 import fr.siroz.cariboustonks.util.position.Position;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import net.minecraft.text.Text;
@@ -24,7 +22,8 @@ import java.util.regex.Pattern;
 
 public class PartyCommandFeature extends Feature {
 
-	private static final Cooldown COOLDOWN = Cooldown.of(750, TimeUnit.MILLISECONDS);
+	private static final long COOLDOWN_MS = 750L;
+	private long lastActionMs = 0L;
 
 	public PartyCommandFeature() {
 		ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
@@ -42,19 +41,29 @@ public class PartyCommandFeature extends Feature {
 		String input = StonksUtils.stripColor(text.getString());
 		if (!input.startsWith("Party >")) return;
 		if (CLIENT.player == null || CLIENT.world == null) return;
-		if (!COOLDOWN.test()) return;
 
 		for (PartyCommand command : PartyCommand.values()) {
 			if (command.getConfig().test(ConfigManager.getConfig().misc.partyCommands)) {
 				Matcher matcher = command.getPattern().matcher(input);
 				if (matcher.find()) {
-					try {
-						command.getAction().accept(matcher);
-					} catch (Exception ex) {
-						CaribouStonks.LOGGER.error("[PartyCommandFeature] Unable to handle {}", command.name(), ex);
+					long now = System.currentTimeMillis();
+					if (now - lastActionMs < COOLDOWN_MS) {
+						break;
 					}
+
+					sendCommand(command, matcher);
+					lastActionMs = now;
+					break;
 				}
 			}
+		}
+	}
+
+	private void sendCommand(PartyCommand command, Matcher matcher) {
+		try {
+			command.getAction().accept(matcher);
+		} catch (Exception ex) {
+			CaribouStonks.LOGGER.error("[PartyCommandFeature] Unable to handle {}", command.name(), ex);
 		}
 	}
 
