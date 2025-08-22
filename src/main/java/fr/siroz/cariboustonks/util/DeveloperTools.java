@@ -6,6 +6,8 @@ import com.mojang.serialization.JsonOps;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.json.GsonProvider;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.event.NetworkEvents;
+import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.Texture;
@@ -13,6 +15,9 @@ import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.List;
+import java.time.Instant;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -25,9 +30,11 @@ import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.BuiltinRegistries;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -35,6 +42,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 public final class DeveloperTools {
@@ -44,6 +52,8 @@ public final class DeveloperTools {
 	private static final Object2IntOpenHashMap<ArmorStandEntity> ARMORSTANDS_TEXTURED = new Object2IntOpenHashMap<>();
 	private static final RegistryWrapper.WrapperLookup LOOKUP = BuiltinRegistries.createWrapperLookup();
 
+	private static boolean dumpSound = false;
+
 	private DeveloperTools() {
 	}
 
@@ -51,6 +61,7 @@ public final class DeveloperTools {
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _ra) -> dispatcher.register(
 				ClientCommandManager.literal(CaribouStonks.NAMESPACE)
 						.then(ClientCommandManager.literal("devtools")
+								.then(dumpSoundCommand())
 								.then(dumpHeldItemSimpleCommand())
 								.then(dumpHeldItemCommand())
 								.then(dumpArmorStandHeadTextures()))
@@ -72,6 +83,8 @@ public final class DeveloperTools {
 				}
 			});
 			WorldRenderEvents.AFTER_TRANSLUCENT.register(DeveloperTools::debugRender);
+			WorldEvents.ALLOW_SOUND.register(DeveloperTools::onSound);
+			NetworkEvents.PLAY_SOUND_PACKET.register(DeveloperTools::onSoundPacket);
 		}
 	}
 
@@ -175,6 +188,31 @@ public final class DeveloperTools {
 
 	// ----------------- DUMP COMMANDS -----------------
 
+	private static boolean onSound(@NotNull SoundEvent soundEvent) {
+		if (dumpSound) {
+			String soundId = soundEvent.id().getPath();
+			String time = TimeUtils.formatInstant(Instant.now(), TimeUtils.TIME_HH_MM_SS);
+			Client.sendMessage(Text.literal("(Client) " + time + " :: " + soundId));
+		}
+		return true;
+	}
+
+	private static void onSoundPacket(PlaySoundS2CPacket packet) {
+		if (dumpSound) {
+			String soundId = packet.getSound().value().id().getPath();
+			String time = TimeUtils.formatInstant(Instant.now(), TimeUtils.TIME_HH_MM_SS);
+			String pitch = BigDecimal.valueOf(packet.getPitch())
+					.setScale(3, RoundingMode.DOWN)
+					.stripTrailingZeros()
+					.toPlainString();
+			String volume = BigDecimal.valueOf(packet.getVolume())
+					.setScale(3, RoundingMode.DOWN)
+					.stripTrailingZeros()
+					.toPlainString();
+			Client.sendMessage(Text.literal("(Server) " + time + " :: " + soundId + " Pitch: " + pitch + " Volume: " + volume));
+		}
+	}
+
 	private static LiteralArgumentBuilder<FabricClientCommandSource> dumpHeldItemSimpleCommand() {
 		return ClientCommandManager.literal("dumpHeldItemSimple").executes(context -> {
 
@@ -238,6 +276,14 @@ public final class DeveloperTools {
 				id++;
 			}
 
+			return Command.SINGLE_SUCCESS;
+		});
+	}
+
+	private static LiteralArgumentBuilder<FabricClientCommandSource> dumpSoundCommand() {
+		return ClientCommandManager.literal("dumpSound").executes(context -> {
+			dumpSound = !dumpSound;
+			context.getSource().sendFeedback(CaribouStonks.prefix().get().append(Text.literal("Dump sound: " + dumpSound)));
 			return Command.SINGLE_SUCCESS;
 		});
 	}
