@@ -40,9 +40,7 @@ public final class ChocolateLimitReminderFeature
 
 	private static final Pattern CHOCOLATE_PATTERN = Pattern.compile("^([\\d,]+) Chocolate$");
 	private static final Pattern CHOCOLATE_SECOND_PATTERN = Pattern.compile("([\\d,.]+) Chocolate per second");
-	private static final Pattern TIME_TOWER_ACTIVE_PATTERN = Pattern.compile("Status: (ACTIVE)");
 
-	private static final int TIME_TOWER_SLOT = 39;
 	private static final int CHOCOLATE_SLOT = 13;
 	private static final int COCOA_BEAM_SLOT = 45;
 	private static final long MAX_CHOCOLATE = 60_000_000_000L; // TODO
@@ -132,22 +130,15 @@ public final class ChocolateLimitReminderFeature
 			Duration duration = Duration.ofSeconds(secondsToReachTotal);
 			Instant expirationTime = Instant.now().plus(duration);
 			limitTime = expirationTime;
+			TimedObject timedObject = new TimedObject(
+					"cf::limit",
+					"empty",
+					expirationTime,
+					reminderType());
 
-			String timeTower = ItemUtils.getConcatenatedLore(slots.get(TIME_TOWER_SLOT));
-			Matcher timeTowerActiveMatcher = TIME_TOWER_ACTIVE_PATTERN.matcher(timeTower);
-
-			// Vérifier que la Time Tower n'est pas actif avant de la rajouter dans le ReminderManager
-			if (!timeTowerActiveMatcher.find()) {
-				TimedObject timedObject = new TimedObject(
-						"cf::limit",
-						"empty",
-						expirationTime,
-						reminderType());
-
-				CaribouStonks.managers()
-						.getManager(ReminderManager.class)
-						.addTimedObject(timedObject, true);
-			}
+			CaribouStonks.managers()
+					.getManager(ReminderManager.class)
+					.addTimedObject(timedObject, true);
 		}
 
 		return List.of();
