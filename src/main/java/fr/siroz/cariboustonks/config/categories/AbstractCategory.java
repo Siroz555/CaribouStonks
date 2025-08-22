@@ -8,9 +8,11 @@ import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.KeybindsScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import org.jetbrains.annotations.Nullable;
 
 abstract class AbstractCategory {
 
@@ -27,6 +29,10 @@ abstract class AbstractCategory {
     }
 
     public abstract ConfigCategory create();
+
+	protected void openScreen(@Nullable Screen screen) {
+		MinecraftClient.getInstance().setScreen(screen);
+	}
 
 	public ButtonOption shortcutToKeybindsOptions() {
 		return ButtonOption.createBuilder()

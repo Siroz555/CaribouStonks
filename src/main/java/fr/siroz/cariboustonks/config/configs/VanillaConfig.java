@@ -80,6 +80,17 @@ public class VanillaConfig {
 
 			@SerialEntry
 			public float zRotation = 0f;
+
+			public CustomHand copyFrom(CustomHand other) {
+				this.x = other.x;
+				this.y = other.y;
+				this.z = other.z;
+				this.scale = other.scale;
+				this.xRotation = other.xRotation;
+				this.yRotation = other.yRotation;
+				this.zRotation = other.zRotation;
+				return this;
+			}
 		}
 	}
 

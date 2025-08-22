@@ -10,6 +10,10 @@ import net.minecraft.text.Text;
 
 public abstract class CaribousStonksScreen extends Screen {
 
+	protected static final Text CONFIRM_SCREEN_UNSAVED_CHANGE = Text.literal("Unsaved Changes");
+	protected static final Text CONFIRM_SCREEN_PROMPT = Text.literal("Are you sure you want to exit this screen? Any changes will not be saved!");
+	protected static final Text CONFIRM_SCREEN_QUIT_MESSAGE = Text.literal("Quit & Discard Changes");
+
 	protected CaribousStonksScreen(Text title) {
 		super(title);
 	}
