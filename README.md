@@ -7,7 +7,7 @@ Siroz555's Mod – Fabric mod for Hypixel SkyBlock on the latest Minecraft versi
 Minecraft Version: **1.21.5**
 
 The main features are Bazaar/Auctions price displays on items, a graphical representation of prices over time,
-in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
+in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 ### Installation
 
@@ -26,7 +26,7 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
 - KeyShortcut: Link Keybinds to commands to be executed.
 
 - Stonks
-    - Configure display of item prices in Tooltips.
+    - Configure the display of item prices in Tooltips.
     - Graphical representation of an item's price trend, quantity, and other information. (BETA)
     - Search engine for all SkyBlock items.
     - KeyBind to find an item.
@@ -103,7 +103,7 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
     - Hide the entities forming the Tree Break Animation.
 
 - Hunting
-    - Display Shard prices in Hunting Box, Attribute Menu and Fusion Machine.
+    - Display Shard prices in Hunting Box, Attribute Menu, and Fusion Machine.
     - Display the number of missing Shards and the price to max it out. 
 
 - Fishing
@@ -134,7 +134,7 @@ in-game Zoom, Scrollable Tooltips, Reminders and general SkyBlock Qol features.
 
 - Mythological Ritual
     - Guess Burrow: Waypoint that predicts the location of a Burrow (like 1.8).
-    - Burrow Particle Finder: Display a Waypoint according to the type of Burrow nearby.
+    - Burrow Particle Finder: Displays a Waypoint according to the type of Burrow nearby.
     - Line to the closest Burrow.
     - Nearest Warp.
     - Highlight Inquisitors with a configurable glow color.
