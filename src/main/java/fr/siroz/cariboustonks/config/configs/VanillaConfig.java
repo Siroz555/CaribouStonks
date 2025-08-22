@@ -97,6 +97,9 @@ public class VanillaConfig {
 	public static class Sound {
 
 		@SerialEntry
+		public boolean mutePlayerFall = false;
+
+		@SerialEntry
 		public boolean muteEnderman = false;
 
 		@SerialEntry

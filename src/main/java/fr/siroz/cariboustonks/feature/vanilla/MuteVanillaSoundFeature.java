@@ -16,6 +16,9 @@ import org.jetbrains.annotations.NotNull;
 public class MuteVanillaSoundFeature extends Feature {
 
 	private static final Map<Predicate<Identifier>, Supplier<Boolean>> SOUND_RULES = Map.of(
+			id -> id.equals(SoundEvents.ENTITY_PLAYER_SMALL_FALL.id()) || id.equals(SoundEvents.ENTITY_PLAYER_BIG_FALL.id()),
+			() -> ConfigManager.getConfig().vanilla.sound.mutePlayerFall,
+
 			id -> id.equals(SoundEvents.ENTITY_ENDERMAN_SCREAM.id()) || id.equals(SoundEvents.ENTITY_ENDERMAN_STARE.id()),
 			() -> ConfigManager.getConfig().vanilla.sound.muteEnderman,
 
@@ -32,7 +35,7 @@ public class MuteVanillaSoundFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock();
 	}
 
-	@EventHandler(event = "WorldEvents.ALLOW_SOUND_CANCELLABLE")
+	@EventHandler(event = "WorldEvents.ALLOW_SOUND")
 	private boolean allowSound(@NotNull SoundEvent soundEvent) {
 		if (!isEnabled()) return true;
 
