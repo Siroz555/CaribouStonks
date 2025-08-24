@@ -188,7 +188,7 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 			if (CLIENT.player != null) {
 				Client.sendMessageWithPrefix(Text.literal("You found an Inquisitor!").formatted(Formatting.GREEN, Formatting.BOLD));
 				Client.showTitle(Text.empty().append(Text.literal("/K").formatted(Formatting.DARK_RED, Formatting.OBFUSCATED))
-								.append(Text.literal(" INQUISITOR ").formatted(Formatting.RED))
+								.append(Text.literal(" Inquisitor ").formatted(Formatting.RED, Formatting.BOLD))
 								.append(Text.literal("/K").formatted(Formatting.DARK_RED, Formatting.OBFUSCATED)),
 						1, 80, 20);
 				Client.playSound(SoundEvents.ENTITY_WITHER_SPAWN, 0.8f, 1.5f);
