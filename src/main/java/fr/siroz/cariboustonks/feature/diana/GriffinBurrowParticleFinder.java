@@ -159,5 +159,9 @@ final class GriffinBurrowParticleFinder {
 		if (burrows.containsKey(pos)) {
 			lastDugParticleBurrow = pos;
 		}
+
+		if (lastDugParticleBurrow == null) {
+			mythologicalRitual.onBurrowDug(pos);
+		}
 	}
 }
