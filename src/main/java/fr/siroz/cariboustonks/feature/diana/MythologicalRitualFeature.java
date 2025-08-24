@@ -115,7 +115,7 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 	@Override
 	public int getEntityGlowColor(@NotNull Entity entity) {
 		if (ConfigManager.getConfig().events.mythologicalRitual.highlightInquisitor
-				&& entity.getName().getString().equals(INQUISITOR_ENTITY_NAME)
+				&& entity.getName().getString().contains(INQUISITOR_ENTITY_NAME)
 		) {
 			return ConfigManager.getConfig().events.mythologicalRitual.highlightInquisitorColor.getRGB();
 		}
@@ -187,7 +187,7 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 		if (inquisitorFoundMatcher.matches()) {
 			if (CLIENT.player != null) {
 				Client.sendMessageWithPrefix(Text.literal("You found an Inquisitor!").formatted(Formatting.GREEN, Formatting.BOLD));
-				Client.showTitle(Text.literal("/K").formatted(Formatting.DARK_RED, Formatting.OBFUSCATED)
+				Client.showTitle(Text.empty().append(Text.literal("/K").formatted(Formatting.DARK_RED, Formatting.OBFUSCATED))
 								.append(Text.literal(" INQUISITOR ").formatted(Formatting.RED))
 								.append(Text.literal("/K").formatted(Formatting.DARK_RED, Formatting.OBFUSCATED)),
 						1, 80, 20);
