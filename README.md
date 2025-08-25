@@ -137,6 +137,8 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Burrow Particle Finder: Displays a Waypoint according to the type of Burrow nearby.
     - Line to the closest Burrow.
     - Nearest Warp.
+    - Share Inquisitors.
+    - Inquisitor Share from other players.
     - Highlight Inquisitors with a configurable glow color.
 
 **Misc**
@@ -153,6 +155,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - /highlighter > Highlight a specific entity in the world.
 - /stonks > Display prices and other information simply anywhere.
 - /cariboustonks heldItemView <mainHand/offHand>: Customize the appearance of Held Item.
+- /cariboustonks resetDiana: Reset Mythological Ritual Waypoints.
 
 ---
 

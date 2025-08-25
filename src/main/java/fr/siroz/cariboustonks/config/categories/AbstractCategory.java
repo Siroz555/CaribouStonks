@@ -44,11 +44,14 @@ abstract class AbstractCategory {
 	}
 
     public BooleanControllerBuilder createBooleanController(Option<Boolean> opt) {
-        //return BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true);
         return BooleanControllerBuilder.create(opt).formatValue(b -> b
 				? Text.literal("Enabled").formatted(Formatting.GREEN)
 				: Text.literal("Disabled").formatted(Formatting.RED));
     }
+
+	public BooleanControllerBuilder createYesNoController(Option<Boolean> opt) {
+		return BooleanControllerBuilder.create(opt).yesNoFormatter().coloured(true);
+	}
 
 	public IntegerSliderControllerBuilder createIntegerPercentController(Option<Integer> opt, int max) {
 		return IntegerSliderControllerBuilder.create(opt)

@@ -13,12 +13,13 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 final class GuessBurrow {
 
 	private final MythologicalRitualFeature mythologicalRitual;
 	private final ParticlePathPredictor predictor;
-	private long lastUsedSpade = 0;
+	private long lastSpadeUsed = 0;
 
 	GuessBurrow(MythologicalRitualFeature mythologicalRitual) {
 		this.mythologicalRitual = mythologicalRitual;
@@ -30,17 +31,18 @@ final class GuessBurrow {
 
 	void reset() {
 		predictor.reset();
-		lastUsedSpade = 0;
+		lastSpadeUsed = 0;
 	}
 
-	private ActionResult onUseItem(PlayerEntity player, World world, Hand hand) {
+	@EventHandler(event = "UseItemCallback.EVENT")
+	private ActionResult onUseItem(@NotNull PlayerEntity player, World world, Hand hand) {
 		ItemStack item = player.getStackInHand(hand);
 		if (mythologicalRitual.isEnabled()
 				&& mythologicalRitual.isGuessEnabled()
 				&& ItemUtils.getSkyBlockItemId(item).equals("ANCESTRAL_SPADE")
 		) {
 			predictor.reset();
-			lastUsedSpade = System.currentTimeMillis();
+			lastSpadeUsed = System.currentTimeMillis();
 		}
 
 		return ActionResult.PASS;
@@ -53,7 +55,7 @@ final class GuessBurrow {
 		}
 
 		long currentTime = System.currentTimeMillis();
-		if (currentTime - lastUsedSpade > 3000) {
+		if (currentTime - lastSpadeUsed > 3000) {
 			return;
 		}
 

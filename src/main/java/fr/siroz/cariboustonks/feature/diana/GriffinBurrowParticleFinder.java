@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.feature.diana;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
@@ -23,13 +24,13 @@ import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 final class GriffinBurrowParticleFinder {
 
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
 	private static final String ANCESTRAL_SPADE_ITEM_ID = "ANCESTRAL_SPADE";
-
 	private static final Cache<BlockPos, BlockPos> DUG_BURROWS_CACHE = CacheBuilder.newBuilder()
 			.expireAfterWrite(Duration.ofMinutes(1))
 			.build();
@@ -37,7 +38,9 @@ final class GriffinBurrowParticleFinder {
 	private final MythologicalRitualFeature mythologicalRitual;
 
 	private final Map<BlockPos, GriffinBurrow> burrows = new HashMap<>();
+
 	private BlockPos lastDugParticleBurrow = null;
+	private BlockPos pendingBurrow = null;
 
 	GriffinBurrowParticleFinder(MythologicalRitualFeature mythologicalRitual) {
 		this.mythologicalRitual = mythologicalRitual;
@@ -47,25 +50,19 @@ final class GriffinBurrowParticleFinder {
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
 	}
 
-	public void onWorldChange() {
-		burrows.clear();
-		DUG_BURROWS_CACHE.invalidateAll();
-		lastDugParticleBurrow = null;
-	}
-
+	@EventHandler(event = "AttackBlockCallback.EVENT")
 	private ActionResult onAttackBlock(PlayerEntity player, World world, Hand hand, BlockPos pos, Direction direction) {
 		return onInteractBlock(player, hand, pos);
 	}
 
-	private ActionResult onUseBlock(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
+	@EventHandler(event = "UseBlockCallback.EVENT")
+	private ActionResult onUseBlock(PlayerEntity player, World world, Hand hand, @NotNull BlockHitResult hitResult) {
 		return onInteractBlock(player, hand, hitResult.getBlockPos());
 	}
 
 	private ActionResult onInteractBlock(PlayerEntity player, Hand hand, BlockPos pos) {
-		if (mythologicalRitual.isEnabled()
-				&& mythologicalRitual.isParticleFinderEnabled()
-				&& CLIENT.world != null
-				&& CLIENT.world.getBlockState(pos).isOf(Blocks.GRASS_BLOCK)
+		if (mythologicalRitual.isEnabled() && mythologicalRitual.isParticleFinderEnabled()
+				&& CLIENT.world != null && CLIENT.world.getBlockState(pos).isOf(Blocks.GRASS_BLOCK)
 		) {
 			handleInteractBlock(player, hand, pos);
 		}
@@ -74,10 +71,9 @@ final class GriffinBurrowParticleFinder {
 	}
 
 	@SuppressWarnings("checkstyle:CyclomaticComplexity")
+	@EventHandler(event = "NetworkEvents.PARTICLE_RECEIVED_PACKET")
 	private void onParticleReceived(ParticleS2CPacket particle) {
-		if (!mythologicalRitual.isEnabled() || !mythologicalRitual.isParticleFinderEnabled()) {
-			return;
-		}
+		if (!mythologicalRitual.isEnabled() || !mythologicalRitual.isParticleFinderEnabled()) return;
 
 		BlockPos position = BlockPos.ofFloored(particle.getX(), particle.getY(), particle.getZ()).down();
 		if (CLIENT.world == null || !CLIENT.world.getBlockState(position).isOf(Blocks.GRASS_BLOCK)) {
@@ -136,32 +132,53 @@ final class GriffinBurrowParticleFinder {
 		}
 	}
 
-	public void onChatMessage() {
+	void resetAndClear() {
+		burrows.clear();
+		DUG_BURROWS_CACHE.invalidateAll();
+		lastDugParticleBurrow = null;
+		pendingBurrow = null;
+	}
+
+	void handleGriffinBurrowDugMessage() {
 		if (!mythologicalRitual.isParticleFinderEnabled()) return;
-		if (lastDugParticleBurrow != null) {
-			// Retire le burrow car il peut être placé au même endroit (rare, plus rare qu'un Inquisitor).
-			burrows.remove(lastDugParticleBurrow);
-			DUG_BURROWS_CACHE.put(lastDugParticleBurrow, lastDugParticleBurrow);
-			// Le burrow est dug
-			mythologicalRitual.onBurrowDug(lastDugParticleBurrow);
-			// Reset
-			lastDugParticleBurrow = null;
+
+		BlockPos burrow = lastDugParticleBurrow;
+		if (burrow != null) {
+			if (!commitBurrowDug(burrow, false)) {
+				pendingBurrow = burrow;
+			}
 		}
 	}
 
-	public void handleInteractBlock(PlayerEntity player, Hand hand, BlockPos pos) {
+	private void handleInteractBlock(@NotNull PlayerEntity player, Hand hand, BlockPos pos) {
 		ItemStack stack = player.getStackInHand(hand);
 		if (!ItemUtils.getSkyBlockItemId(stack).equals(ANCESTRAL_SPADE_ITEM_ID)) {
 			return;
 		}
 
-		// Vérification si le block de grass intéragit fait partie des Burrow détectés
+		if (pos.equals(pendingBurrow)) {
+			pendingBurrow = null;
+			commitBurrowDug(pos, true);
+			return;
+		}
+
 		if (burrows.containsKey(pos)) {
 			lastDugParticleBurrow = pos;
 		}
+	}
 
-		if (lastDugParticleBurrow == null) {
-			mythologicalRitual.onBurrowDug(pos);
+	private boolean commitBurrowDug(BlockPos pos, boolean ignoreFound) {
+		GriffinBurrow burrow = burrows.get(pos);
+		if (burrow == null || (!burrow.isFound() && !ignoreFound)) {
+			return false;
 		}
+
+		burrows.remove(lastDugParticleBurrow);
+		DUG_BURROWS_CACHE.put(lastDugParticleBurrow, lastDugParticleBurrow);
+		// Reset
+		lastDugParticleBurrow = null;
+		// Le burrow est dug
+		mythologicalRitual.onBurrowDug(burrow.getPos());
+		return true;
 	}
 }

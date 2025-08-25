@@ -32,7 +32,8 @@ public class EventsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Enable Mythological Ritual"))
 								.description(OptionDescription.of(
-										Text.literal("Global activation of all Mythological Ritual settings.")))
+										Text.literal("Global activation of all Mythological Ritual settings."),
+										Text.literal(SPACE + "An issue? Use: /cariboustonks resetDiana").formatted(Formatting.YELLOW)))
 								.binding(defaults.events.mythologicalRitual.enabled,
 										() -> current.events.mythologicalRitual.enabled,
 										newValue -> current.events.mythologicalRitual.enabled = newValue)
@@ -81,7 +82,8 @@ public class EventsCategory extends AbstractCategory {
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Burrow Particle Finder"))
                                 .description(OptionDescription.of(
-                                        Text.literal("Display a Waypoint according to the type of Burrow nearby.")))
+                                        Text.literal("Display a Waypoint according to the type of Burrow nearby."),
+										Text.literal(SPACE + "An issue? Use: /cariboustonks resetDiana").formatted(Formatting.YELLOW)))
                                 .binding(defaults.events.mythologicalRitual.burrowParticleFinder,
                                         () -> current.events.mythologicalRitual.burrowParticleFinder,
                                         newValue -> current.events.mythologicalRitual.burrowParticleFinder = newValue)
@@ -114,35 +116,25 @@ public class EventsCategory extends AbstractCategory {
                                         newValue -> current.events.mythologicalRitual.burrowParticleFinderTreasureColor = newValue)
                                 .controller(ColorControllerBuilder::create)
                                 .build())
-						.option(LabelOption.create(Text.literal("| Qol").formatted(Formatting.BOLD)))
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Line to closest Burrow"))
-                                .description(OptionDescription.of(
-                                        Text.literal("Display a line from the mouse cursor to the nearest Burrow.")))
-                                .binding(defaults.events.mythologicalRitual.lineToClosestBurrow,
-                                        () -> current.events.mythologicalRitual.lineToClosestBurrow,
-                                        newValue -> current.events.mythologicalRitual.lineToClosestBurrow = newValue)
-                                .controller(this::createBooleanController)
-                                .build())
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Nearest Warp"))
-                                .description(OptionDescription.of(
-                                        Text.literal("Teleport to the Warp nearest to Guess Burrow")))
-                                .binding(defaults.events.mythologicalRitual.nearestWarp,
-                                        () -> current.events.mythologicalRitual.nearestWarp,
-                                        newValue -> current.events.mythologicalRitual.nearestWarp = newValue)
-                                .controller(this::createBooleanController)
-                                .build())
 						.option(LabelOption.create(Text.literal("| Inquisitor").formatted(Formatting.BOLD)))
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Text.literal("Share Inquisitors"))
-                                .description(OptionDescription.of(
-                                        Text.literal("When you have an Inquisitor and you're in a Party, allows you to share it with other players.")))
-                                .binding(defaults.events.mythologicalRitual.shareInquisitor,
-                                        () -> current.events.mythologicalRitual.shareInquisitor,
-                                        newValue -> current.events.mythologicalRitual.shareInquisitor = newValue)
-                                .controller(this::createBooleanController)
-                                .build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Share Inquisitors"))
+								.description(OptionDescription.of(
+										Text.literal("When you have an Inquisitor and you're in a Party, allows you to share it with other players.")))
+								.binding(defaults.events.mythologicalRitual.shareInquisitor,
+										() -> current.events.mythologicalRitual.shareInquisitor,
+										newValue -> current.events.mythologicalRitual.shareInquisitor = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Inquisitor Share from other players"))
+								.description(OptionDescription.of(
+										Text.literal("When other players share an Inquisitor with you, a Waypoint will appear with a Message and a Sound.")))
+								.binding(defaults.events.mythologicalRitual.acceptInquisitorShare,
+										() -> current.events.mythologicalRitual.acceptInquisitorShare,
+										newValue -> current.events.mythologicalRitual.acceptInquisitorShare = newValue)
+								.controller(this::createBooleanController)
+								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Highlight Inquisitors"))
 								.description(OptionDescription.of(
@@ -160,6 +152,62 @@ public class EventsCategory extends AbstractCategory {
 										() -> current.events.mythologicalRitual.highlightInquisitorColor,
 										newValue -> current.events.mythologicalRitual.highlightInquisitorColor = newValue)
 								.controller(ColorControllerBuilder::create)
+								.build())
+						.option(LabelOption.create(Text.literal("| Nearest Warp").formatted(Formatting.BOLD)))
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.literal("Nearest Warp"))
+                                .description(OptionDescription.of(
+                                        Text.literal("Teleport to the Warp nearest to Guess Burrow")))
+                                .binding(defaults.events.mythologicalRitual.nearestWarp,
+                                        () -> current.events.mythologicalRitual.nearestWarp,
+                                        newValue -> current.events.mythologicalRitual.nearestWarp = newValue)
+                                .controller(this::createBooleanController)
+                                .build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Allows Warp to Crypt"))
+								.description(OptionDescription.of(
+										Text.literal("If Nearest Warp is enabled, allows you to teleport to the Crypt Warp.")))
+								.binding(defaults.events.mythologicalRitual.warpToCrypt,
+										() -> current.events.mythologicalRitual.warpToCrypt,
+										newValue -> current.events.mythologicalRitual.warpToCrypt = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Allows Warp to Dark Auction"))
+								.description(OptionDescription.of(
+										Text.literal("If Nearest Warp is enabled, allows you to teleport to the Dark Auction Warp.")))
+								.binding(defaults.events.mythologicalRitual.warpToDarkAuction,
+										() -> current.events.mythologicalRitual.warpToDarkAuction,
+										newValue -> current.events.mythologicalRitual.warpToDarkAuction = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Allows Warp to Wizard"))
+								.description(OptionDescription.of(
+										Text.literal("If Nearest Warp is enabled, allows you to teleport to the Wizard Warp.")))
+								.binding(defaults.events.mythologicalRitual.warpToWizard,
+										() -> current.events.mythologicalRitual.warpToWizard,
+										newValue -> current.events.mythologicalRitual.warpToWizard = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Allows Warp to Stonks"))
+								.description(OptionDescription.of(
+										Text.literal("If Nearest Warp is enabled, allows you to teleport to the Stonks Warp.")))
+								.binding(defaults.events.mythologicalRitual.warpToStonks,
+										() -> current.events.mythologicalRitual.warpToStonks,
+										newValue -> current.events.mythologicalRitual.warpToStonks = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(LabelOption.create(Text.literal("| Qol").formatted(Formatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Line to closest Burrow"))
+								.description(OptionDescription.of(
+										Text.literal("Display a line from the mouse cursor to the nearest Burrow.")))
+								.binding(defaults.events.mythologicalRitual.lineToClosestBurrow,
+										() -> current.events.mythologicalRitual.lineToClosestBurrow,
+										newValue -> current.events.mythologicalRitual.lineToClosestBurrow = newValue)
+								.controller(this::createBooleanController)
 								.build())
                         .build())
                 .build();

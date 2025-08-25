@@ -126,7 +126,7 @@ public class ChatPositionFeature extends Feature {
 			Position position = Position.of(positionX, positionY, positionZ);
 
 			boolean foundInquisitor = CaribouStonks.features().getFeature(MythologicalRitualFeature.class)
-					.onPlayerFoundInquisitor(playerName);
+					.onPlayerFoundInquisitor(playerName, position);
 
 			UIAndVisualsConfig.SharedPositionWaypoint config = ConfigManager.getConfig().uiAndVisuals.sharedPositionWaypoint;
 			int showTime = foundInquisitor ? 60 : config.showTime;

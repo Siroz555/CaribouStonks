@@ -46,8 +46,23 @@ public class EventsConfig {
         @SerialEntry
         public boolean nearestWarp = false;
 
+		@SerialEntry
+		public boolean warpToCrypt = false;
+
+		@SerialEntry
+		public boolean warpToDarkAuction = true;
+
+		@SerialEntry
+		public boolean warpToWizard = true;
+
+		@SerialEntry
+		public boolean warpToStonks = false;
+
         @SerialEntry
         public boolean shareInquisitor = false;
+
+		@SerialEntry
+		public boolean acceptInquisitorShare = true;
 
 		@SerialEntry
 		public boolean highlightInquisitor = false;

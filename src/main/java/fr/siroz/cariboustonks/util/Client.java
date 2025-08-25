@@ -128,6 +128,13 @@ public final class Client {
 	}
 
 	/**
+	 * Clears the currently displayed title and subtitle.
+	 */
+	public static void clearTitleAndSubtitle() {
+		if (CLIENT.player != null && CLIENT.inGameHud != null) CLIENT.inGameHud.clearTitle();
+	}
+
+	/**
 	 * Afficher un {@code Title}.
 	 * <p>
 	 * {@code Safe Client null}

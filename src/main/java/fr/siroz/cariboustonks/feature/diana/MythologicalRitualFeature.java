@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.feature.diana;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
@@ -19,7 +20,6 @@ import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.position.Position;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
 import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
-import java.util.regex.Matcher;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -30,25 +30,22 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.concurrent.TimeUnit;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// TODO
-//  C'est en peu trop le bordel, mais tout marche bien, quelques ajustements a faire.
-//  Ce code est vraiment vite-fait lors des derniers tests, juste a tout séparer et a faire au propre.
-//  Le "onDiana" state marche mais c'est vraiment pas l'idéal, il faudrait check le Mayor de facon générale
-//  a l'initialisation du client et de set correctement les checks.
-//  Il faudra aussi check si ce unique Ghost Burrow reste a chaque session encore même avec les patch.
+// TODO : Refactor & Clean up
+//  Séparer par feature? Priorité sur la détection du Mythological Ritual et virer le #onDiana pour être
+//  remplacé par un Mayor Util.
 
-@ApiStatus.Experimental
 public final class MythologicalRitualFeature extends Feature implements EntityGlowProvider, WorldRendererProvider {
 
 	private static final Pattern GRIFFIN_BURROW_DUG = Pattern.compile(
@@ -59,16 +56,21 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 	private final GriffinBurrowParticleFinder particleFinder;
 	private final GuessBurrow guessBurrow;
 	private final NearestWarp nearestWarp;
+	private final KeyBind nearestWarpKeyBind;
 
 	private final Map<BlockPos, Waypoint> burrows = new HashMap<>();
+	@Nullable
 	private Waypoint guessWaypoint;
+	@Nullable
+	private Position currentInquisitorPosition;
 
 	private boolean onDiana = false;
 
 	public MythologicalRitualFeature() {
 		this.particleFinder = new GriffinBurrowParticleFinder(this);
 		this.guessBurrow = new GuessBurrow(this);
-		this.nearestWarp = new NearestWarp();
+		this.nearestWarp = new NearestWarp(this);
+		this.nearestWarpKeyBind = new KeyBind("Warp Diana", GLFW.GLFW_KEY_F, true, nearestWarp::warpToNearestWarp);
 
 		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((client, world) -> resetAndClear());
@@ -79,15 +81,13 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 						.executes(context -> {
 							resetAndClear();
 							context.getSource().sendFeedback(CaribouStonks.prefix().get()
-									.append(Text.literal("Diana reset success.").formatted(Formatting.GREEN)));
+									.append(Text.literal("Diana reset successfully.").formatted(Formatting.GREEN)));
 							return 1;
 						})
 				)
 		));
 
-		addComponent(KeyBindComponent.class, () -> Collections.singletonList(
-				new KeyBind("Warp Diana", GLFW.GLFW_KEY_F, true, nearestWarp::warpToNearestWarp)
-		));
+		addComponent(KeyBindComponent.class, () -> Collections.singletonList(nearestWarpKeyBind));
 	}
 
 	@Override
@@ -97,12 +97,16 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 				&& ConfigManager.getConfig().events.mythologicalRitual.enabled;
 	}
 
-	public boolean onPlayerFoundInquisitor(@Nullable String playerName) {
+	public boolean onPlayerFoundInquisitor(@Nullable String playerName, @NotNull Position position) {
 		if (!isEnabled() || !onDiana) {
 			return false;
 		}
 
-		if (playerName != null && !playerName.contains(CLIENT.getSession().getUsername())) {
+		if (playerName != null && !playerName.contains(CLIENT.getSession().getUsername()) && isAcceptInquisitorShareEnabled()) {
+			currentInquisitorPosition = position;
+			nearestWarp.onInquisitor();
+			TickScheduler.getInstance().runLater(() -> currentInquisitorPosition = null, 60, TimeUnit.SECONDS);
+
 			Client.sendMessageWithPrefix(Text.literal(playerName).formatted(Formatting.YELLOW, Formatting.BOLD)
 					.append(Text.literal(" found an Inquisitor!").formatted(Formatting.GREEN, Formatting.BOLD)));
 			Client.playSound(SoundEvents.ENTITY_WITHER_SHOOT, 1f, 1f);
@@ -135,6 +139,19 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 			for (Waypoint waypoint : burrows.values()) {
 				waypoint.getRenderer().render(context);
 			}
+		}
+
+		if (currentInquisitorPosition != null && isAcceptInquisitorShareEnabled()) {
+			double distance = context.camera().getPos().distanceTo(currentInquisitorPosition.toVec3d());
+			float scale = Math.max((float) distance / 5, 1);
+			WorldRenderUtils.renderText(context,
+					Text.empty().append(Text.literal("/K").formatted(Formatting.DARK_RED, Formatting.OBFUSCATED))
+							.append(Text.literal(" Inquisitor ").formatted(Formatting.RED, Formatting.BOLD))
+							.append(Text.literal("/K").formatted(Formatting.DARK_RED, Formatting.OBFUSCATED)),
+					currentInquisitorPosition.toVec3d().add(0, 5, 0),
+					scale,
+					true
+			);
 		}
 
 		if (!ConfigManager.getConfig().events.mythologicalRitual.lineToClosestBurrow) {
@@ -180,34 +197,23 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 		Matcher burrowDugMatcher = GRIFFIN_BURROW_DUG.matcher(text.getString());
 		if (burrowDugMatcher.matches()) {
 			onDiana = true;
-			particleFinder.onChatMessage();
+			particleFinder.handleGriffinBurrowDugMessage();
 		}
 
 		Matcher inquisitorFoundMatcher = INQUISITOR_FOUND_PATTERN.matcher(text.getString());
 		if (inquisitorFoundMatcher.matches()) {
-			if (CLIENT.player != null) {
-				Client.sendMessageWithPrefix(Text.literal("You found an Inquisitor!").formatted(Formatting.GREEN, Formatting.BOLD));
-				Client.showTitle(Text.empty().append(Text.literal("/K").formatted(Formatting.DARK_RED, Formatting.OBFUSCATED))
-								.append(Text.literal(" Inquisitor ").formatted(Formatting.RED, Formatting.BOLD))
-								.append(Text.literal("/K").formatted(Formatting.DARK_RED, Formatting.OBFUSCATED)),
-						1, 80, 20);
-				Client.playSound(SoundEvents.ENTITY_WITHER_SPAWN, 0.8f, 1.5f);
+			Client.sendMessageWithPrefix(Text.literal("You found an Inquisitor!").formatted(Formatting.GREEN, Formatting.BOLD));
+			Client.showTitle(Text.empty().append(Text.literal("/K").formatted(Formatting.DARK_RED, Formatting.OBFUSCATED))
+							.append(Text.literal(" Inquisitor ").formatted(Formatting.RED, Formatting.BOLD))
+							.append(Text.literal("/K").formatted(Formatting.DARK_RED, Formatting.OBFUSCATED)),
+					1, 80, 20);
+			Client.playSound(SoundEvents.ENTITY_WITHER_SPAWN, 0.8f, 1.5f);
 
-				if (ConfigManager.getConfig().events.mythologicalRitual.shareInquisitor) {
-					Position position = Position.of(CLIENT.player.getPos());
-					Client.sendChatMessage("/pc " + position.asChatCoordinates());
-				}
+			if (CLIENT.player != null && ConfigManager.getConfig().events.mythologicalRitual.shareInquisitor) {
+				Position position = Position.of(CLIENT.player.getPos());
+				Client.sendChatMessage("/pc " + position.asChatCoordinates());
 			}
 		}
-	}
-
-	private void resetAndClear() {
-		guessBurrow.reset();
-		onDiana = false;
-		guessWaypoint = null;
-		burrows.clear();
-		particleFinder.onWorldChange();
-		nearestWarp.reset();
 	}
 
 	boolean isGuessEnabled() {
@@ -218,10 +224,14 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 		return ConfigManager.getConfig().events.mythologicalRitual.burrowParticleFinder;
 	}
 
-	void onBurrowGuess(Vec3d location) {
+	String getNearestWarpBoundKeyLocalized() {
+		return nearestWarpKeyBind.getKeyBinding().getBoundKeyLocalizedText().getString();
+	}
+
+	void onBurrowGuess(@Nullable Vec3d location) {
 		if (location == null) return;
 
-		Position position = Position.of((int) location.getX(), (int) location.getY(), (int) location.getZ());
+		Position position = Position.of(location);
 
 		guessWaypoint = Waypoint.builder(position)
 				.textOption(TextOption.builder()
@@ -237,14 +247,9 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 		}
 	}
 
-	void onBurrowDetected(GriffinBurrow burrow) {
-		if (burrow == null) {
-			return;
-		}
-
-		if (burrows.containsKey(burrow.getPos())) {
-			return;
-		}
+	void onBurrowDetected(@Nullable GriffinBurrow burrow) {
+		if (burrow == null) return;
+		if (burrows.containsKey(burrow.getPos())) return;
 
 		Position position = Position.of(burrow.getPos());
 		Waypoint waypoint = switch (burrow.getBurrowType()) {
@@ -273,17 +278,29 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 		};
 
 		if (waypoint != null) {
-			if (CLIENT.player != null) {
-				CLIENT.player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 0.8f, 1f);
-			}
-
+			Client.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 0.8f, 1f);
 			burrows.putIfAbsent(burrow.getPos(), waypoint);
 		}
 	}
 
 	void onBurrowDug(BlockPos pos) {
 		burrows.remove(pos);
+		// "Useless" je pense depuis le patch du ParticleFinder
 		burrows.remove(new BlockPos(pos.getX(), pos.getY() + 1, pos.getZ()));
 		burrows.remove(new BlockPos(pos.getX(), pos.getY() - 1, pos.getZ()));
+	}
+
+	private boolean isAcceptInquisitorShareEnabled() {
+		return ConfigManager.getConfig().events.mythologicalRitual.acceptInquisitorShare;
+	}
+
+	private void resetAndClear() {
+		guessBurrow.reset();
+		onDiana = false;
+		guessWaypoint = null;
+		burrows.clear();
+		particleFinder.resetAndClear();
+		nearestWarp.reset();
+		currentInquisitorPosition = null;
 	}
 }
