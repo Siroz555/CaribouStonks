@@ -172,7 +172,7 @@ public class GeneralCategory extends AbstractCategory {
 						.option(LabelOption.create(Text.literal("| Stonks Screen & Commands").formatted(Formatting.BOLD)))
 						.option(ButtonOption.createBuilder()
 								.name(Text.literal("/stonks Command"))
-								.text(Text.literal("/stonks <iem>"))
+								.text(Text.literal("/stonks <item>"))
 								.action((screen, option) -> {})
 								.description(OptionDescription.of(
 										Text.literal("Use /stonks to display prices and other information simply anywhere."),

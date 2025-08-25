@@ -84,7 +84,7 @@ public class VanillaCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Hiding food above inventory"))
+								.name(Text.literal("Hide food above inventory"))
 								.description(OptionDescription.of(
 										Text.literal("Hides the food level displayed above the inventory.")))
 								.binding(defaults.vanilla.overlay.hideFoodOverlay,
@@ -133,7 +133,7 @@ public class VanillaCategory extends AbstractCategory {
 								.action((screen, opt) -> openScreen(HeldItemViewConfigScreen.create(screen, Hand.OFF_HAND)))
 								.build())
 						.option(Option.<Integer>createBuilder()
-								.name(Text.literal("Duration of Swing animation"))
+								.name(Text.literal("Duration of Swing Animation"))
 								.description(OptionDescription.of(
 										Text.literal("Duration of item swing animation. 6 is the default/vanilla time.")))
 								.binding(defaults.vanilla.itemModelCustomization.swingDuration,

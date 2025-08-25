@@ -60,7 +60,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 **UI & Visuals**
 
-- Highlight selected Pet
+- Highlight selected Pet in the Pet Menu.
 - Create & highlight favorite contacts in the Abiphone Menu
 - Zoom KeyBind (default to C).
 - Scrollable tooltips.

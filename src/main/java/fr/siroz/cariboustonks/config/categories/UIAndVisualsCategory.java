@@ -39,7 +39,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 						.controller(this::createBooleanController)
 						.build())
 				.option(Option.<Boolean>createBuilder()
-						.name(Text.literal("Highlight Selected Pet"))
+						.name(Text.literal("Highlight Selected Pet in the Pet Menu"))
 						.description(OptionDescription.of(
 								Text.literal("Highlight the current equipped pet in the Pet's Menu.")))
 						.binding(defaults.uiAndVisuals.highlightSelectedPet,
@@ -155,7 +155,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
-						.name(Text.literal("Coloring tooltip borders on items").formatted(Formatting.BOLD))
+						.name(Text.literal("Coloring Tooltip Borders on Items").formatted(Formatting.BOLD))
 						.description(OptionDescription.of(
 								Text.literal("Control the coloring of tooltip borders on items, according to their rarity.")))
 						.collapsed(false)
