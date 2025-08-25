@@ -52,7 +52,7 @@ final class NearestWarp {
 		if (System.currentTimeMillis() - lastTargetWarpTime < 5000) return;
 
 		lastTargetWarpTime = System.currentTimeMillis();
-		Client.sendChatMessage("/warp " + targetWarp.toString());
+		Client.sendChatMessage("/warp " + targetWarp.toString(), true);
 		Client.clearTitleAndSubtitle();
 		targetWarp = null;
 	}
