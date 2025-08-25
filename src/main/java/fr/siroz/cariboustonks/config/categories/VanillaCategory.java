@@ -156,6 +156,15 @@ public class VanillaCategory extends AbstractCategory {
 						.description(OptionDescription.of(Text.literal("Mutes Vanilla Sounds.")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Mute Lightning"))
+								.description(OptionDescription.of(
+										Text.literal("Mute the Lightning Thunder and Lightning Impact sounds.")))
+								.binding(defaults.vanilla.sound.muteLightning,
+										() -> current.vanilla.sound.muteLightning,
+										newValue -> current.vanilla.sound.muteLightning = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Mute Player Fall"))
 								.description(OptionDescription.of(
 										Text.literal("Mute sounds from player fall.")))

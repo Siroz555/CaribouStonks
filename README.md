@@ -56,7 +56,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Change the positions.
     - Change the Swing Duration.
     - _Customization Screen & /cariboustonks heldItemView <mainHand/offHand>_
-- Mutes Vanilla Sounds (Enderman, Phantom)
+- Mutes Vanilla Sounds (Lightning, Player Fall, Enderman, Phantom)
 
 **UI & Visuals**
 

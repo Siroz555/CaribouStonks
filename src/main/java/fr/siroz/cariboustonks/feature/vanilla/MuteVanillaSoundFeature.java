@@ -16,6 +16,9 @@ import org.jetbrains.annotations.NotNull;
 public class MuteVanillaSoundFeature extends Feature {
 
 	private static final Map<Predicate<Identifier>, Supplier<Boolean>> SOUND_RULES = Map.of(
+			id -> id.equals(SoundEvents.ENTITY_LIGHTNING_BOLT_IMPACT.id()) || id.equals(SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER.id()),
+			() -> ConfigManager.getConfig().vanilla.sound.muteLightning,
+
 			id -> id.equals(SoundEvents.ENTITY_PLAYER_SMALL_FALL.id()) || id.equals(SoundEvents.ENTITY_PLAYER_BIG_FALL.id()),
 			() -> ConfigManager.getConfig().vanilla.sound.mutePlayerFall,
 
