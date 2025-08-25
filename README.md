@@ -55,7 +55,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Change the size.
     - Change the positions.
     - Change the Swing Duration.
-    - _Customization Screen & /cariboustonks heldItemView <mainHand/offHand>_
+    - _Customization Screen & /cariboustonks heldItemCustomization <mainHand/offHand>_
 - Mutes Vanilla Sounds (Lightning, Player Fall, Enderman, Phantom)
 
 **UI & Visuals**
@@ -154,7 +154,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - /sendCoords > Share your current position.
 - /highlighter > Highlight a specific entity in the world.
 - /stonks > Display prices and other information simply anywhere.
-- /cariboustonks heldItemView <mainHand/offHand>: Customize the appearance of Held Item.
+- /cariboustonks heldItemCustomization <mainHand/offHand>: Customize the appearance of Held Item.
 - /cariboustonks resetDiana: Reset Mythological Ritual Waypoints.
 
 ---

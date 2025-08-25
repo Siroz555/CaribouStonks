@@ -45,7 +45,7 @@ public final class CommandManager implements Manager {
 						.executes(StonksUtils.openScreen(() -> HudConfigScreen.create(null))))
 				.then(ClientCommandManager.literal("heldItemCustomization")
 						.executes(context -> {
-							context.getSource().sendError(Text.literal("Use /cariboustonks heldItemView <mainHand/offHand>"));
+							context.getSource().sendError(Text.literal("Use /cariboustonks heldItemCustomization <mainHand/offHand>"));
 							return 1;
 						})
 						.then(ClientCommandManager.literal("mainHand")
