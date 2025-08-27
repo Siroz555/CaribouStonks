@@ -105,7 +105,7 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 		if (playerName != null && !playerName.contains(CLIENT.getSession().getUsername()) && isAcceptInquisitorShareEnabled()) {
 			currentInquisitorPosition = position;
 			nearestWarp.onInquisitor();
-			TickScheduler.getInstance().runLater(() -> currentInquisitorPosition = null, 60, TimeUnit.SECONDS);
+			TickScheduler.getInstance().runLater(() -> currentInquisitorPosition = null, 30, TimeUnit.SECONDS);
 
 			Client.sendMessageWithPrefix(Text.literal(playerName).formatted(Formatting.YELLOW, Formatting.BOLD)
 					.append(Text.literal(" found an Inquisitor!").formatted(Formatting.GREEN, Formatting.BOLD)));
