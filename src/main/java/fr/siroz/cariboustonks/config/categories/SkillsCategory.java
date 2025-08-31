@@ -28,6 +28,19 @@ public class SkillsCategory extends AbstractCategory {
                         .description(OptionDescription.of(
                                 Text.literal("Combat-related Settings")))
                         .collapsed(false)
+						/*.option(LabelOption.create(Text.literal("| Cocooned Mobs").formatted(Formatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Cocooned Warning"))
+								.description(OptionDescription.of(
+										Text.literal("Allows you to be alerted when you kill a mob and it is cocooned."),
+										Text.literal("Note: The alert is triggered only for reforging Bloodshot on the Primordial Belt. (Shriveled Cornea Reforge Stone)").formatted(Formatting.YELLOW),
+										Text.literal("See the “Slayer” section for features related to the Primordial Belt for Slayers.").formatted(Formatting.ITALIC)))
+								.binding(defaults.combat.cocoonedMob.cocoonedWarning,
+										() -> current.combat.cocoonedMob.cocoonedWarning,
+										newValue -> current.combat.cocoonedMob.cocoonedWarning = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(LabelOption.create(Text.empty()))*/
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Low Health Warning"))
                                 .description(OptionDescription.of(

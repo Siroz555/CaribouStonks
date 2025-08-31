@@ -66,6 +66,11 @@ public final class SkyBlockAPI {
 		return false;
 	}
 
+	/**
+	 * Retrieves the current SkyBlock Area where the player is from the Scoreboard.
+	 *
+	 * @return an {@link Optional} containing the area name
+	 */
 	public static @NotNull Optional<String> getArea() {
 		return Optional.ofNullable(ScoreboardUtils.getIslandArea());
 	}
