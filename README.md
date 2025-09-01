@@ -2,12 +2,17 @@
 
 [![modrinth](https://img.shields.io/badge/dynamic/json?color=00AF5C&label=Downloads&prefix=+%20&query=downloads&url=https://api.modrinth.com/v2/project/fraWWQSJ&logo=modrinth)](https://modrinth.com/mod/cariboustonks)
 
-Siroz555's Mod – Fabric mod for Hypixel SkyBlock on the latest Minecraft version.
-
-Minecraft Version: **1.21.5**
+Siroz555's Mod – Fabric mod for Hypixel SkyBlock on the latest versions of Minecraft
 
 The main features are Bazaar/Auctions price displays on items, a graphical representation of prices over time,
 in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
+
+**Supported versions**
+
+| Version             |                     Status | Notes                                                               |
+|---------------------|---------------------------:|---------------------------------------------------------------------|
+| **1.21.7 / 1.21.8** | ✅ **Latest (recommended)** | Full support: new features, performance improvements and bug fixes. |
+| **1.21.5**          | ⚠️ **Maintained (legacy)** | Still maintained: features from latest and bug fixes                |
 
 ### Installation
 
@@ -104,7 +109,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Hunting
     - Display Shard prices in Hunting Box, Attribute Menu, and Fusion Machine.
-    - Display the number of missing Shards and the price to max it out. 
+    - Display the number of missing Shards and the price to max it out.
 
 - Fishing
     - Guess Hotspot: Predict the location of the nearest hotspot
@@ -156,6 +161,14 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - /stonks > Display prices and other information simply anywhere.
 - /cariboustonks heldItemCustomization <mainHand/offHand>: Customize the appearance of Held Item.
 - /cariboustonks resetDiana: Reset Mythological Ritual Waypoints.
+
+---
+
+### Release & Update Policy
+
+* Major features → shipped on the **master** branch first.
+* Bug fixes → backported to 1.21.5 when safe.
+* Small QoL features may be added to both branches.
 
 ---
 
