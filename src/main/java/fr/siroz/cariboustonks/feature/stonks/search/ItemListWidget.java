@@ -9,12 +9,14 @@ import fr.siroz.cariboustonks.feature.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.colors.Color;
+import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.LoadingDisplay;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.input.KeyCodes;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -235,11 +237,11 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 
 			String displayName = item.name();
 			String name = item.hypixelSkyBlockId();
-			int color = item.color().getColorValue() == null ? -1 : item.color().getColorValue();
+			Color color = item.color().getColorValue() == null ? Colors.WHITE : Color.fromFormatting(item.color());
 
-			context.drawTextWithShadow(this.client.textRenderer, displayName, x + 32 + 3, y + 1, color);
+			context.drawTextWithShadow(this.client.textRenderer, displayName, x + 32 + 3, y + 1, color.asInt());
 			int x1 = x + 32 + 3;
-			context.drawTextWithShadow(this.client.textRenderer, name, x1, y + 9 + 3, -8355712);
+			context.drawTextWithShadow(this.client.textRenderer, name, x1, y + 9 + 3, Color.fromHexString("#7f7f80").asInt());
 
 			//context.drawItem(item.icon(), x + 7, y + 7);
 
@@ -247,10 +249,10 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 				context.fill(x, y, x + 32, y + 32, -1601138544);
 				int x2 = mouseX - x;
 				if (x2 < 32) {
-					context.drawGuiTexture(RenderLayer::getGuiTextured, ItemListWidget.HIGHLIGHTED_TEXTURE, x, y, 32, 32);
+					context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ItemListWidget.HIGHLIGHTED_TEXTURE, x, y, 32, 32);
 				} else {
 					context.drawItem(item.icon(), x + 7, y + 7);
-					context.drawGuiTexture(RenderLayer::getGuiTextured, ItemListWidget.TEXTURE, x, y, 32, 32);
+					context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ItemListWidget.TEXTURE, x, y, 32, 32);
 				}
 			} else {
 				context.drawItem(item.icon(), x + 7, y + 7);
@@ -313,12 +315,12 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 
 			int x1 = (this.client.currentScreen.width - this.client.textRenderer.getWidth(LOADING_LIST_TEXT)) / 2;
 			int y1 = y + (entryHeight - 9) / 2;
-			context.drawTextWithShadow(this.client.textRenderer, LOADING_LIST_TEXT, x1, y1, -1);
+			context.drawTextWithShadow(this.client.textRenderer, LOADING_LIST_TEXT, x1, y1,  Colors.WHITE.asInt());
 
 			String string = LoadingDisplay.get(Util.getMeasuringTimeMs());
 			int x2 = (this.client.currentScreen.width - this.client.textRenderer.getWidth(string)) / 2;
 			int y2 = y1 + 9;
-			context.drawTextWithShadow(this.client.textRenderer, string, x2, y2, -8355712);
+			context.drawTextWithShadow(this.client.textRenderer, string, x2, y2, Colors.GRAY.asInt());
 		}
 
 		public Text getNarration() {

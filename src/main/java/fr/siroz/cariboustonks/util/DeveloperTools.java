@@ -71,14 +71,14 @@ public final class DeveloperTools {
 
 		if (isInDevelopment()) {
 			GameVersion version = SharedConstants.getGameVersion();
-			CaribouStonks.LOGGER.warn("Debug mode enabled ({}) {}", version.getName(), DeveloperTools.isSnapshot() ? "(Snapshot)" : "");
+			CaribouStonks.LOGGER.warn("Debug mode enabled ({}) {}", version.name(), DeveloperTools.isSnapshot() ? "(Snapshot)" : "");
 
 			ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
 				if (client.player != null && DeveloperTools.isInDevelopment()) {
 					Text snapShot = DeveloperTools.isSnapshot()
 							? Text.literal(" (Snapshot)").formatted(Formatting.DARK_RED) : Text.empty();
 					client.player.sendMessage(CaribouStonks.prefix().get()
-							.append(Text.literal("Debug mode enabled (" + version.getName() + ")").formatted(Formatting.RED)
+							.append(Text.literal("Debug mode enabled (" + version.name() + ")").formatted(Formatting.RED)
 									.append(snapShot)), false);
 				}
 			});
@@ -90,12 +90,12 @@ public final class DeveloperTools {
 
 	public static boolean isInDevelopment() {
 		return FabricLoader.getInstance().isDevelopmentEnvironment()
-				|| !SharedConstants.getGameVersion().isStable()
+				|| !SharedConstants.getGameVersion().stable()
 				|| SYSTEM_DEBUG;
 	}
 
 	public static boolean isSnapshot() {
-		return !SharedConstants.getGameVersion().isStable();
+		return !SharedConstants.getGameVersion().stable();
 	}
 
 	public static RegistryWrapper.WrapperLookup getRegistryLookup() {
@@ -122,7 +122,7 @@ public final class DeveloperTools {
 
 	private static void debugRender(WorldRenderContext context) {
 		WorldRenderUtils.renderText(context,
-				Text.of("CaribouStonks " + SharedConstants.getGameVersion().getName()),
+				Text.of("CaribouStonks " + SharedConstants.getGameVersion().name()),
 				new Vec3d(-1.5, 69, 25.5), 1.3f,
 				true);
 

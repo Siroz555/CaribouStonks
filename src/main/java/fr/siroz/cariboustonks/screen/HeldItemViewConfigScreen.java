@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.VanillaConfig;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
+import fr.siroz.cariboustonks.util.render.GuiRenderUtils;
 import fr.siroz.cariboustonks.util.render.gui.DoubleSliderWidget;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.ScreenPos;
@@ -156,7 +157,8 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 		ScreenRect dimensions = getEffectiveDimensions(this.width, this.height);
 
 		context.enableScissor(dimensions.getLeft(), dimensions.getTop(), dimensions.getRight(), dimensions.getBottom());
-		this.applyBlur();
+		GuiRenderUtils.enableBlurScissor(dimensions.getLeft(), dimensions.getTop(), dimensions.width(), dimensions.height());
+		this.applyBlur(context);
 		this.renderDarkening(context);
 		context.disableScissor();
 

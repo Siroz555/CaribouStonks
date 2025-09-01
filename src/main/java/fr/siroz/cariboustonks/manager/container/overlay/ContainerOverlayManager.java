@@ -16,8 +16,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -50,32 +51,52 @@ public final class ContainerOverlayManager implements Manager {
 		}
 	}
 
-	public void markHighlightsDirty() {
-		highlights = null;
-	}
-
 	@EventHandler(event = "ScreenEvents.BEFORE_INIT")
 	private void onScreenBeforeInit(MinecraftClient _client, Screen screen, int _scaledWidth, int _scaledHeight) {
 		if (SkyBlockAPI.isOnSkyBlock() && screen instanceof GenericContainerScreen genericContainerScreen) {
-			ScreenEvents.afterRender(screen).register((_screen, drawContext, _mouseX, _mouseY, _tickDelta) -> {
-				// Global
-				drawGlobal(drawContext);
-				// Highlights
-				MatrixStack matrices = drawContext.getMatrices();
-				matrices.push();
-				matrices.translate(
-						((HandledScreenAccessor) genericContainerScreen).getX(),
-						((HandledScreenAccessor) genericContainerScreen).getY(),
-						300
-				);
-				drawHighlights(drawContext, genericContainerScreen, genericContainerScreen.getScreenHandler().slots);
-				matrices.pop();
-			});
 			ScreenEvents.remove(screen).register(_screen -> clearScreen());
 			onScreen(genericContainerScreen);
 		} else {
 			clearScreen();
 		}
+	}
+
+	public void markHighlightsDirty() {
+		highlights = null;
+	}
+
+	public void draw(DrawContext context, HandledScreen<GenericContainerScreenHandler> handledScreen, List<Slot> slots) {
+		if (currentContainerOverlay == null) {
+			return;
+		}
+
+		int screenWidth = CLIENT.getWindow().getScaledWidth();
+		int screenHeight = CLIENT.getWindow().getScaledHeight();
+		try {
+			currentContainerOverlay.render(context, screenWidth, screenHeight, 0, 0);
+		} catch (Throwable throwable) {
+			CaribouStonks.core().reportCrash(CrashType.CONTAINER,
+					currentContainerOverlay.getClass().getSimpleName(),
+					currentContainerOverlay.getClass().getName(),
+					"render", throwable
+			);
+		}
+
+		context.getMatrices().pushMatrix();
+		context.getMatrices().translate(((HandledScreenAccessor) handledScreen).getX(), ((HandledScreenAccessor) handledScreen).getY());
+
+		if (highlights == null) {
+			highlights = currentContainerOverlay.content(
+					slotMap(slots.subList(0, handledScreen.getScreenHandler().getRows() * 9))
+			);
+		}
+
+		for (ColorHighlight highlight : highlights) {
+			Slot slot = slots.get(highlight.slot());
+			context.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, highlight.color().asInt());
+		}
+
+		context.getMatrices().popMatrix();
 	}
 
 	private void onScreen(@NotNull GenericContainerScreen screen) {
@@ -96,39 +117,6 @@ public final class ContainerOverlayManager implements Manager {
 		if (currentContainerOverlay != null) {
 			currentContainerOverlay.reset();
 			currentContainerOverlay = null;
-		}
-	}
-
-	private void drawGlobal(DrawContext context) {
-		if (currentContainerOverlay != null) {
-			int screenWidth = CLIENT.getWindow().getScaledWidth();
-			int screenHeight = CLIENT.getWindow().getScaledHeight();
-			try {
-				currentContainerOverlay.render(context, screenWidth, screenHeight, 0, 0);
-			} catch (Throwable throwable) {
-				CaribouStonks.core().reportCrash(CrashType.CONTAINER,
-						currentContainerOverlay.getClass().getSimpleName(),
-						currentContainerOverlay.getClass().getName(),
-						"render", throwable
-				);
-			}
-		}
-	}
-
-	private void drawHighlights(DrawContext context, GenericContainerScreen genericContainerScreen, List<Slot> slots) {
-		if (currentContainerOverlay == null) {
-			return;
-		}
-
-		if (highlights == null) {
-			highlights = currentContainerOverlay.content(
-					slotMap(slots.subList(0, genericContainerScreen.getScreenHandler().getRows() * 9))
-			);
-		}
-
-		for (ColorHighlight highlight : highlights) {
-			Slot slot = slots.get(highlight.slot());
-			context.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, highlight.color().asInt());
 		}
 	}
 

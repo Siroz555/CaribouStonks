@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.manager.hud.element.HudTableRow;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
@@ -82,9 +81,8 @@ public final class MultiElementHud extends Hud {
 	}
 
 	private void render(@NotNull List<? extends HudElement> elements, @NotNull DrawContext context, int x, int y, float scale) {
-		MatrixStack matrices = context.getMatrices();
-		matrices.push();
-		matrices.scale(scale, scale, 0);
+		context.getMatrices().pushMatrix();
+		context.getMatrices().scale(scale, scale);
 
 		// Récupère le nombre max de columns uniquement pour les HudTableRow
 		// SIROZ-NOTE: Supprimer les cells pour les elements qui en on pas besoin
@@ -136,6 +134,6 @@ public final class MultiElementHud extends Hud {
 			}
 		}
 
-		matrices.pop();
+		context.getMatrices().popMatrix();
 	}
 }

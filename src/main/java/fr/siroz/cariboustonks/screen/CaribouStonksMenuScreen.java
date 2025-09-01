@@ -7,6 +7,7 @@ import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
 import fr.siroz.cariboustonks.screen.reminders.ReminderScreen;
 import fr.siroz.cariboustonks.screen.waypoints.WaypointScreen;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -15,7 +16,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.StringVisitable;
@@ -129,7 +129,7 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 
 	@Override
 	public void onRender(DrawContext context, int mouseX, int mouseY, float delta) {
-		this.renderBackground(context, mouseX, mouseY, delta);
+		//this.renderBackground(context, mouseX, mouseY, delta);
         /*RenderSystem.enableBlend();
         context.drawTexture(BACKGROUND_TEXTURE,
                 0, 0, 0, 0, 0, width, height, width, height);
@@ -161,7 +161,7 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 			int iconY = y - 13;
 
 			context.drawTextWithShadow(textRenderer, orderedText, x, y, this.getTextColor());
-			context.drawTexture(RenderLayer::getGuiTextured, icon, iconX, iconY, 0, 0, 32, 32, 32, 32);
+			context.drawTexture(RenderPipelines.GUI_TEXTURED, icon, iconX, iconY, 0, 0, 32, 32, 32, 32);
 		}
 
 		private OrderedText trim(Text text, int width) {

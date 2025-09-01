@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.util.render.notification;
 import fr.siroz.cariboustonks.CaribouStonks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.toast.Toast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.item.ItemStack;
@@ -33,7 +33,7 @@ public class StonksToast implements Toast {
 
 	@Override
 	public void draw(DrawContext context, TextRenderer renderer, long startTime) {
-		context.drawGuiTexture(RenderLayer::getGuiTextured, TEXTURE, 0, 0, getWidth(), getHeight());
+		context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, getWidth(), getHeight());
 
 		int y = (getHeight() - getInnerContentsHeight()) / 2;
 		drawMessage(context, y);

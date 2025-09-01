@@ -83,6 +83,6 @@ public abstract class CaribousStonksScreen extends Screen {
 
 	@Override
 	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-		applyBlur();
+		applyBlur(context);
 	}
 }

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(DownloadingTerrainScreen.class)
 public abstract class DownloadingTerrainScreenMixin {
 
-	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
+	@Inject(method = {"render", "renderBackground"}, at = @At("HEAD"), cancellable = true)
 	private void cariboustonks$hideDownloadingTerrainScreen(CallbackInfo ci) {
 		if (ConfigManager.getConfig().vanilla.hideWorldLoadingScreen) {
 			ci.cancel();

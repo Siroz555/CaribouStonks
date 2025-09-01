@@ -53,7 +53,7 @@ final class UpdateChecker {
 
 	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STARTED")
 	private void checkUpdateOnModrinth() {
-		final String mcVersion = SharedConstants.getGameVersion().getId();
+		final String mcVersion = SharedConstants.getGameVersion().id();
 		CompletableFuture.runAsync(() -> {
 			try (HttpResponse response = Http.request(MODRINTH_VERSION_CHECKER_URL + "[%22" + mcVersion + "%22]")) {
 				if (!response.success()) {

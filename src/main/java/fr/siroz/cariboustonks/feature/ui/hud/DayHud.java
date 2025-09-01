@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.manager.hud.Hud;
 import fr.siroz.cariboustonks.manager.hud.HudProvider;
 import fr.siroz.cariboustonks.manager.hud.TextHud;
 import it.unimi.dsi.fastutil.Pair;
-import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -38,7 +38,7 @@ public class DayHud extends Feature implements HudProvider {
 
 	@Override
 	public @NotNull Pair<Identifier, Identifier> getAttachLayerAfter() {
-		return Pair.of(IdentifiedLayer.STATUS_EFFECTS, HUD_ID);
+		return Pair.of(VanillaHudElements.STATUS_EFFECTS, HUD_ID);
 	}
 
 	@Override

@@ -12,9 +12,7 @@ import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import org.joml.Matrix4f;
 
 import java.awt.Color;
 import java.util.List;
@@ -71,11 +69,9 @@ public class TooltipDecoratorFeature extends Feature {
 	}
 
 	private void drawBorder(DrawContext context, int x, int y, int width, int height, Pair<Integer, Integer> colors) {
-		MatrixStack matrices = context.getMatrices();
-		matrices.push();
-		Matrix4f matrix4f = matrices.peek().getPositionMatrix();
+		context.getMatrices().pushMatrix();
 
-		GuiRenderUtils.drawGradientRect(context, matrix4f,
+		GuiRenderUtils.drawGradientRect(context,
 				400,
 				x - 3,
 				y - 3 + 1,
@@ -83,7 +79,7 @@ public class TooltipDecoratorFeature extends Feature {
 				y + height + 3 - 1,
 				colors.left(), colors.right());
 
-		GuiRenderUtils.drawGradientRect(context, matrix4f,
+		GuiRenderUtils.drawGradientRect(context,
 				400,
 				x + width + 2,
 				y - 3 + 1,
@@ -91,7 +87,7 @@ public class TooltipDecoratorFeature extends Feature {
 				y + height + 3 - 1,
 				colors.left(), colors.right());
 
-		GuiRenderUtils.drawGradientRect(context, matrix4f,
+		GuiRenderUtils.drawGradientRect(context,
 				400,
 				x - 3,
 				y - 3,
@@ -99,7 +95,7 @@ public class TooltipDecoratorFeature extends Feature {
 				y - 3 + 1,
 				colors.left(), colors.left());
 
-		GuiRenderUtils.drawGradientRect(context, matrix4f,
+		GuiRenderUtils.drawGradientRect(context,
 				400,
 				x - 3,
 				y + height + 2,
@@ -107,6 +103,6 @@ public class TooltipDecoratorFeature extends Feature {
 				y + height + 3,
 				colors.right(), colors.right());
 
-		matrices.pop();
+		context.getMatrices().popMatrix();
 	}
 }

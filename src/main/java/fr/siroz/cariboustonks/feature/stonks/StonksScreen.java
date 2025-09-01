@@ -12,6 +12,7 @@ import fr.siroz.cariboustonks.feature.stonks.search.StonksSearchScreen;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.LoadingDisplay;
 import net.minecraft.client.gui.screen.Screen;
@@ -21,7 +22,6 @@ import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.SimplePositioningWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenTexts;
@@ -156,7 +156,7 @@ public class StonksScreen extends CaribousStonksScreen {
 
 		// ListWidget background texture
 		context.drawTexture(
-				RenderLayer::getGuiTextured,
+				RenderPipelines.GUI_TEXTURED,
 				MENU_LIST_BACKGROUND_TEXTURE,
 				getBackgroundX(), getBackgroundY(),
 				(float) getBackgroundRight(),
@@ -168,7 +168,7 @@ public class StonksScreen extends CaribousStonksScreen {
 
 		// ListWidget separators textures - header
 		context.drawTexture(
-				RenderLayer::getGuiTextured,
+				RenderPipelines.GUI_TEXTURED,
 				Screen.INWORLD_HEADER_SEPARATOR_TEXTURE,
 				getBackgroundX(),
 				getBackgroundY() - 2,
@@ -181,7 +181,7 @@ public class StonksScreen extends CaribousStonksScreen {
 
 		// ListWidget separators textures - footer
 		context.drawTexture(
-				RenderLayer::getGuiTextured,
+				RenderPipelines.GUI_TEXTURED,
 				Screen.INWORLD_FOOTER_SEPARATOR_TEXTURE,
 				getBackgroundX(),
 				getBackgroundBottom(),

@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.manager.hud;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,10 +51,9 @@ public final class TextHud extends Hud {
 	}
 
 	private void render(Text text, @NotNull DrawContext context, int x, int y, float scale) {
-		MatrixStack matrices = context.getMatrices();
-		matrices.push();
-		matrices.scale(scale, scale, 0);
+		context.getMatrices().pushMatrix();
+		context.getMatrices().scale(scale, scale);
 		context.drawText(CLIENT.textRenderer, text, (int) (x / scale), (int) (y / scale), Colors.WHITE.asInt(), false);
-		matrices.pop();
+		context.getMatrices().popMatrix();
 	}
 }

@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.Manager;
 import java.util.ArrayList;
-import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,9 +52,7 @@ public final class HudManager implements Manager {
 		Hud hud = provider.getHud();
 		hudList.add(hud);
 
-		HudLayerRegistrationCallback.EVENT.register(wrapper -> wrapper.attachLayerAfter(
-				afterThis, identifier, hud::renderHud
-		));
+		HudElementRegistry.attachElementAfter(afterThis, identifier, hud::renderHud);
 	}
 
 	public List<Hud> getHudList() {

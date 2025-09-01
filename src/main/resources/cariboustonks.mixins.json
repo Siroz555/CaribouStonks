@@ -23,6 +23,7 @@
     "MinecraftClientMixin",
     "MouseMixin",
     "PingMeasurerMixin",
+    "PostEffectPassMixin",
     "RenderPipelinesMixin",
     "ScreenHandlerMixin",
     "ScreenMixin",

@@ -231,7 +231,7 @@ public final class Client {
 			}
 
 			if (message.startsWith("/")) {
-				CLIENT.player.networkHandler.sendCommand(message.substring(1));
+				CLIENT.player.networkHandler.sendChatCommand(message.substring(1));
 			} else {
 				CLIENT.player.networkHandler.sendChatMessage(message);
 			}

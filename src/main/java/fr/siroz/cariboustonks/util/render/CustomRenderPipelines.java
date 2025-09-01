@@ -16,6 +16,8 @@ public final class CustomRenderPipelines {
 
 	@ApiStatus.Internal
 	public static void init() {
+		Renderer.getInstance().excludePipelineFromBatching(CIRCLE);
+		Renderer.getInstance().excludePipelineFromBatching(CIRCLE_THROUGH_BLOCKS);
 	}
 
 	// ---------- WORLD ----------

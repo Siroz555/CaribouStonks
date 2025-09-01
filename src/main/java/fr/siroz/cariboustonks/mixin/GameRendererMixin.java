@@ -1,12 +1,10 @@
 package fr.siroz.cariboustonks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderSystem;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.feature.ui.ZoomFeature;
-import fr.siroz.cariboustonks.screen.HeldItemViewConfigScreen;
+import fr.siroz.cariboustonks.util.render.GuiRenderUtils;
+import fr.siroz.cariboustonks.util.render.Renderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import org.spongepowered.asm.mixin.Final;
@@ -30,6 +28,11 @@ public abstract class GameRendererMixin {
 	@Unique
 	private final ZoomFeature zoomFeature = CaribouStonks.features().getFeature(ZoomFeature.class);
 
+	@Inject(method = "close", at = @At("TAIL"))
+	private void cariboustonks$onGameRendererClose(CallbackInfo ci) {
+		Renderer.getInstance().close();
+	}
+
 	@ModifyReturnValue(method = "getFov", at = @At("RETURN"))
 	private float cariboustonks$changeFov(float fov) {
 		if (zoomFeature.isZooming()) {
@@ -49,10 +52,8 @@ public abstract class GameRendererMixin {
 		return fov;
 	}
 
-	@Inject(method = "method_68478", at = @At("TAIL"))
-	private static void cariboustonks$enableScissorForConfigScreen(CallbackInfo ci, @Local(argsOnly = true) RenderPass renderPass) {
-		if (MinecraftClient.getInstance().currentScreen instanceof HeldItemViewConfigScreen) {
-			renderPass.enableScissor(RenderSystem.SCISSOR_STATE);
-		}
+	@Inject(method = "renderBlur", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/PostEffectProcessor;render(Lnet/minecraft/client/gl/Framebuffer;Lnet/minecraft/client/util/ObjectAllocator;)V", shift = At.Shift.AFTER))
+	private void cariboustonks$onBlurRendered(CallbackInfo ci) {
+		GuiRenderUtils.disableBlurScissor();
 	}
 }

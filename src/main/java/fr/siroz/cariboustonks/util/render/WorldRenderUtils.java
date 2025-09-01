@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.util.render;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
@@ -9,14 +10,13 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
-import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -35,16 +35,11 @@ import java.util.Objects;
 
 /**
  * <b>3D</b> renderings in the world.
- * <p>
- * Credits to the Skyblocker Team (<a href="https://github.com/SkyblockerMod/Skyblocker">GitHub Skyblocker</a>),
- * Wynntils Team (<a href="https://github.com/Wynntils/Wynntils">GitHub Wynntils</a>) and other mods
- * for helping me lay a foundation and better understand the latest version of the renderings.
  */
 @SuppressWarnings("checkstyle:linelength")
 public final class WorldRenderUtils {
 
 	private static final Identifier TRANSLUCENT_DRAW = CaribouStonks.identifier("translucent_draw");
-	private static final BufferAllocator ALLOCATOR = new BufferAllocator(1536); // 256
 	private static final int MAX_BUILD_HEIGHT = 300;
 
 	private WorldRenderUtils() {
@@ -53,21 +48,8 @@ public final class WorldRenderUtils {
 	@ApiStatus.Internal
 	public static void initRenderUtilities() {
 		CustomRenderPipelines.init();
-		CustomRenderLayers.init();
 		WorldRenderEvents.AFTER_TRANSLUCENT.addPhaseOrdering(Event.DEFAULT_PHASE, TRANSLUCENT_DRAW);
-		WorldRenderEvents.AFTER_TRANSLUCENT.register(TRANSLUCENT_DRAW, WorldRenderUtils::drawTranslucent);
-	}
-
-	/**
-	 * This is called after all {@link WorldRenderEvents#AFTER_TRANSLUCENT} listeners have been called
-	 * so that we can draw all remaining render layers.
-	 * <p>
-	 * Source: Skyblocker
-	 */
-	private static void drawTranslucent(@NotNull WorldRenderContext context) {
-		VertexConsumerProvider.Immediate immediate = (VertexConsumerProvider.Immediate) context.consumers();
-		assert immediate != null;
-		immediate.draw();
+		WorldRenderEvents.AFTER_TRANSLUCENT.register(TRANSLUCENT_DRAW, _ctx -> Renderer.getInstance().executeDraws());
 	}
 
 	/**
@@ -164,16 +146,13 @@ public final class WorldRenderUtils {
 
 		float xOffset = -textRenderer.getWidth(text) / 2f;
 
-		VertexConsumerProvider.Immediate vertex = VertexConsumerProvider.immediate(ALLOCATOR);
+		TextRenderer.TextLayerType textLayerType = throughBlocks ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL;
 
-		textRenderer.draw(text, xOffset, offsetY,
-				0xFFFFFFFF, false,
-				matrix4f, vertex,
-				throughBlocks ? TextRenderer.TextLayerType.SEE_THROUGH : TextRenderer.TextLayerType.NORMAL,
-				0,
+		textRenderer.draw(text, xOffset, offsetY, 0xFFFFFFFF, false,
+				matrix4f, context.consumers(), textLayerType, 0,
 				LightmapTextureManager.MAX_LIGHT_COORDINATE);
 
-		vertex.draw();
+		((VertexConsumerProvider.Immediate) Objects.requireNonNull(context.consumers())).draw();
 	}
 
 	/**
@@ -246,10 +225,8 @@ public final class WorldRenderUtils {
 		matrix4f.translate((float) dx, (float) dy, (float) dz)
 				.rotate(camera.getRotation());
 
-		VertexConsumerProvider.Immediate consumers = (VertexConsumerProvider.Immediate) context.consumers();
-		RenderLayer layer = throughBlocks ? CustomRenderLayers.getTextureThroughBlocks(texture) : CustomRenderLayers.getTexture(texture);
-		assert consumers != null;
-		VertexConsumer buffer = consumers.getBuffer(layer);
+		RenderPipeline pipeline = throughBlocks ? CustomRenderPipelines.TEXTURE_THROUGH_BLOCKS : CustomRenderPipelines.TEXTURE;
+		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline, MinecraftClient.getInstance().getTextureManager().getTexture(texture).getGlTextureView());
 
 		float[] colorComponents = color.asFloatComponents();
 
@@ -268,8 +245,6 @@ public final class WorldRenderUtils {
 		buffer.vertex(matrix4f, (float) renderOffset.getX() + width, (float) renderOffset.getY(), (float) renderOffset.getZ())
 				.texture(1 + textureWidth, 1 + textureHeight)
 				.color(colorComponents[0], colorComponents[1], colorComponents[2], alpha);
-
-		consumers.draw(layer);
 	}
 
 	/**
@@ -312,10 +287,8 @@ public final class WorldRenderUtils {
 
 		matrix4f.translate((float) -cameraPos.x, (float) -cameraPos.y, (float) -cameraPos.z);
 
-		VertexConsumerProvider.Immediate consumers = (VertexConsumerProvider.Immediate) context.consumers();
-		RenderLayer layer = throughBlocks ? CustomRenderLayers.CIRCLES_THROUGH_BLOCKS : CustomRenderLayers.CIRCLES;
-		assert consumers != null;
-		VertexConsumer buffer = consumers.getBuffer(layer);
+		RenderPipeline pipeline = throughBlocks ? CustomRenderPipelines.CIRCLE_THROUGH_BLOCKS : CustomRenderPipelines.CIRCLE;
+		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline);
 
 		// 5% du rayon (0.05) | min : 0.01f (trop faible) | max : 0.95 (la quasi-totalité du cercle)
 		thicknessPercent = Math.max(0.01f, Math.min(thicknessPercent, 0.95f));
@@ -360,8 +333,6 @@ public final class WorldRenderUtils {
 			buffer.vertex(matrix4f, outerX, outerY, outerZ).color(color.r, color.g, color.b, color.a);
 			buffer.vertex(matrix4f, innerX, innerY, innerZ).color(color.r, color.g, color.b, color.a);
 		}
-
-		consumers.draw(layer);
 	}
 
 	/**
@@ -388,14 +359,12 @@ public final class WorldRenderUtils {
 	) {
 		Matrix4f matrix4f = new Matrix4f();
 		Vec3d cameraPos = context.camera().getPos();
-		Vec3d centerTop = center.add(0, thickness, 0);
+		Vec3d centerTopPos = center.add(0, thickness, 0);
 
 		matrix4f.translate((float) -cameraPos.x, (float) -cameraPos.y, (float) -cameraPos.z);
 
-		VertexConsumerProvider.Immediate consumers = (VertexConsumerProvider.Immediate) context.consumers();
-		RenderLayer layer = throughBlocks ? CustomRenderLayers.CIRCLES_THROUGH_BLOCKS : CustomRenderLayers.CIRCLES;
-		assert consumers != null;
-		VertexConsumer buffer = consumers.getBuffer(layer);
+		RenderPipeline pipeline = throughBlocks ? CustomRenderPipelines.CIRCLE_THROUGH_BLOCKS : CustomRenderPipelines.CIRCLE;
+		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline);
 
 		for (int i = 0; i <= segments; i++) {
 			double angle = 2 * Math.PI * i / segments;
@@ -408,11 +377,9 @@ public final class WorldRenderUtils {
 			float xUpper = (float) (center.x + radius * cos);
 			float zUpper = (float) (center.z + radius * sin);
 
-			buffer.vertex(matrix4f, xUpper, (float) centerTop.y, zUpper).color(color.r, color.g, color.b, color.a);
+			buffer.vertex(matrix4f, xUpper, (float) centerTopPos.y, zUpper).color(color.r, color.g, color.b, color.a);
 			buffer.vertex(matrix4f, xLower, (float) center.y, zLower).color(color.r, color.g, color.b, color.a);
 		}
-
-		consumers.draw(layer);
 	}
 
 	/**
@@ -437,17 +404,13 @@ public final class WorldRenderUtils {
 
 		matrix4f.translate((float) -cameraPos.x, (float) -cameraPos.y, (float) -cameraPos.z);
 
-		VertexConsumerProvider.Immediate consumers = (VertexConsumerProvider.Immediate) context.consumers();
-		RenderLayer layer = throughBlocks ? CustomRenderLayers.QUADS_THROUGH_BLOCKS : CustomRenderLayers.QUADS;
-		assert consumers != null;
-		VertexConsumer buffer = consumers.getBuffer(layer);
+		RenderPipeline pipeline = throughBlocks ? CustomRenderPipelines.QUADS_THROUGH_BLOCKS : RenderPipelines.DEBUG_QUADS;
+		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline);
 
 		for (int i = 0; i < 4; i++) {
 			buffer.vertex(matrix4f, (float) points[i].getX(), (float) points[i].getY(), (float) points[i].getZ())
 					.color(colorComponents[0], colorComponents[1], colorComponents[2], alpha);
 		}
-
-		consumers.draw(layer);
 	}
 
 	/**
@@ -538,8 +501,8 @@ public final class WorldRenderUtils {
 			float alpha,
 			boolean throughBlocks
 	) {
-		MatrixStack matrices = context.matrixStack();
-		Vec3d camera = context.camera().getPos();
+		MatrixStack matrixStack = context.matrixStack();
+		Vec3d cameraPos = context.camera().getPos();
 		boolean rainbow = false;
 		if (color == Colors.RAINBOW) {
 			rainbow = true;
@@ -547,18 +510,17 @@ public final class WorldRenderUtils {
 			color = Color.fromInt(colorInt);
 		}
 
-		assert matrices != null;
-		matrices.push();
-		matrices.translate(-camera.x, -camera.y, -camera.z);
+		assert matrixStack != null;
+		matrixStack.push();
+		matrixStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
 
-		VertexConsumerProvider consumers = context.consumers();
-		assert consumers != null;
-		VertexConsumer buffer = consumers.getBuffer(throughBlocks ? CustomRenderLayers.FILLED_THROUGH_BLOCKS : CustomRenderLayers.FILLED);
+		RenderPipeline pipeline = throughBlocks ? CustomRenderPipelines.FILLED_THROUGH_BLOCKS : RenderPipelines.DEBUG_FILLED_BOX;
+		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline);
 
 		float[] colorComponents = color.asFloatComponents();
-		VertexRendering.drawFilledBox(matrices, buffer, minX, minY, minZ, maxX, maxY, maxZ, colorComponents[0], colorComponents[1], colorComponents[2], rainbow ? 1f : alpha);
+		VertexRendering.drawFilledBox(matrixStack, buffer, minX, minY, minZ, maxX, maxY, maxZ, colorComponents[0], colorComponents[1], colorComponents[2], rainbow ? 1f : alpha);
 
-		matrices.pop();
+		matrixStack.pop();
 	}
 
 	/**
@@ -574,17 +536,17 @@ public final class WorldRenderUtils {
 			@NotNull Color color
 	) {
 		if (FrustumUtils.isVisible(position.getX(), position.getY(), position.getZ(), position.getX() + 1, MAX_BUILD_HEIGHT, position.getZ() + 1)) {
-			MatrixStack stack = context.matrixStack();
+			MatrixStack matrixStack = context.matrixStack();
 			Vec3d cameraPos = context.camera().getPos();
 
-			assert stack != null;
-			stack.push();
+			assert matrixStack != null;
+			matrixStack.push();
 
 			double dx = position.getX() - cameraPos.x;
 			double dy = position.getY() - cameraPos.y;
 			double dz = position.getZ() - cameraPos.z;
 
-			stack.translate(dx, dy, dz);
+			matrixStack.translate(dx, dy, dz);
 
 			int colorInt;
 			if (color == Colors.RAINBOW) {
@@ -598,7 +560,7 @@ public final class WorldRenderUtils {
 
 			// VertexConsumerProvider.Immediate > BufferAllocator de 256? | drawCurrentLayer (bach)
 			BeaconBlockEntityRenderer.renderBeam(
-					stack,
+					matrixStack,
 					Objects.requireNonNull(context.consumers()),
 					BeaconBlockEntityRenderer.BEAM_TEXTURE,
 					context.tickCounter().getTickProgress(true),
@@ -611,7 +573,7 @@ public final class WorldRenderUtils {
 					0.25f // 0.33f
 			);
 
-			stack.pop();
+			matrixStack.pop();
 		}
 	}
 
@@ -655,23 +617,20 @@ public final class WorldRenderUtils {
 			boolean throughBlocks
 	) {
 		if (FrustumUtils.isVisible(box)) {
-			MatrixStack matrices = context.matrixStack();
-			Vec3d camera = context.camera().getPos();
+			MatrixStack matrixStack = context.matrixStack();
+			Vec3d cameraPos = context.camera().getPos();
 			float[] colorComponents = color.asFloatComponents();
 
-			assert matrices != null;
-			matrices.push();
-			matrices.translate(-camera.getX(), -camera.getY(), -camera.getZ());
+			assert matrixStack != null;
+			matrixStack.push();
+			matrixStack.translate(-cameraPos.getX(), -cameraPos.getY(), -cameraPos.getZ());
 
-			VertexConsumerProvider.Immediate consumers = (VertexConsumerProvider.Immediate) context.consumers();
-			RenderLayer layer = throughBlocks ? CustomRenderLayers.getLinesThroughBlocks(lineWidth) : CustomRenderLayers.getLines(lineWidth);
+			RenderPipeline pipeline = throughBlocks ? CustomRenderPipelines.LINES_THROUGH_BLOCKS : RenderPipelines.LINES;
+			BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline, lineWidth);
 
-			assert consumers != null;
-			VertexConsumer buffer = consumers.getBuffer(layer);
-			VertexRendering.drawBox(matrices, buffer, box, colorComponents[0], colorComponents[1], colorComponents[2], alpha);
+			VertexRendering.drawBox(matrixStack, buffer, box, colorComponents[0], colorComponents[1], colorComponents[2], alpha);
 
-			consumers.draw(layer);
-			matrices.pop();
+			matrixStack.pop();
 		}
 	}
 
@@ -691,19 +650,17 @@ public final class WorldRenderUtils {
 			float lineWidth,
 			boolean throughBlocks
 	) {
+		MatrixStack matrixStack = context.matrixStack();
 		Vec3d cameraPos = context.camera().getPos();
-		MatrixStack stack = context.matrixStack();
 
-		assert stack != null;
-		stack.push();
-		stack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+		assert matrixStack != null;
+		matrixStack.push();
+		matrixStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
 
-		MatrixStack.Entry entry = stack.peek();
+		MatrixStack.Entry entry = matrixStack.peek();
 
-		VertexConsumerProvider.Immediate consumers = (VertexConsumerProvider.Immediate) context.consumers();
-		RenderLayer layer = throughBlocks ? CustomRenderLayers.getLinesThroughBlocks(lineWidth) : CustomRenderLayers.getLines(lineWidth);
-		assert consumers != null;
-		VertexConsumer buffer = consumers.getBuffer(layer);
+		RenderPipeline pipeline = throughBlocks ? CustomRenderPipelines.LINES_THROUGH_BLOCKS : RenderPipelines.LINES;
+		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline, lineWidth);
 
 		for (int i = 0; i < points.length; i++) {
 			Vec3d nextPoint = points[i + 1 == points.length ? i - 1 : i + 1];
@@ -717,8 +674,7 @@ public final class WorldRenderUtils {
 					.normal(entry, normalVec);
 		}
 
-		consumers.draw(layer);
-		stack.pop();
+		matrixStack.pop();
 	}
 
 	/**
@@ -735,19 +691,17 @@ public final class WorldRenderUtils {
 			@NotNull Color color,
 			float lineWidth
 	) {
+		MatrixStack matrixStack = context.matrixStack();
 		Vec3d cameraPos = context.camera().getPos();
-		MatrixStack stack = context.matrixStack();
 
-		assert stack != null;
-		stack.push();
-		stack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+		assert matrixStack != null;
+		matrixStack.push();
+		matrixStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
 
-		MatrixStack.Entry entry = stack.peek();
+		MatrixStack.Entry entry = matrixStack.peek();
 
-		VertexConsumerProvider.Immediate consumers = (VertexConsumerProvider.Immediate) context.consumers();
-		RenderLayer layer = CustomRenderLayers.getLines(lineWidth);
-		assert consumers != null;
-		VertexConsumer buffer = consumers.getBuffer(layer);
+		RenderPipeline pipeline = CustomRenderPipelines.LINES_THROUGH_BLOCKS;
+		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline, lineWidth);
 
 		// Devant la caméra
 		Vec3d cameraPoint = cameraPos.add(Vec3d.fromPolar(context.camera().getPitch(), context.camera().getYaw()));
@@ -764,8 +718,7 @@ public final class WorldRenderUtils {
 				.color(color.r, color.g, color.b, color.a)
 				.normal(entry, normal);
 
-		consumers.draw(layer);
-		stack.pop();
+		matrixStack.pop();
 	}
 
 	/**

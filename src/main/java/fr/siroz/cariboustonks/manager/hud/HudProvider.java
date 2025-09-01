@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.manager.hud;
 
 import it.unimi.dsi.fastutil.Pair;
-import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
-import net.fabricmc.fabric.api.client.rendering.v1.LayeredDrawerWrapper;
-import net.minecraft.client.gui.LayeredDrawer;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,7 +63,7 @@ public interface HudProvider {
 	 * The render condition of the layer being attached to.
 	 * <p>
 	 * {@code Identifier <L>}: the identifier of the layer to add the new layer after.
-	 * See {@link IdentifiedLayer} for a list of built-in identifiers.
+	 * See {@link VanillaHudElements} for a list of built-in identifiers.
 	 * <p>
 	 * {@code Identifier <R>}: the layer to add. {@code Unique} identifier for the HUD from {@link #getHud()}.
 	 * <p>
@@ -75,7 +75,7 @@ public interface HudProvider {
 	 *     return Pair.of(IdentifiedLayer.STATUS_EFFECTS, HUD_ID);
 	 * }
 	 * }</pre>
-	 * See {@link LayeredDrawerWrapper#attachLayerAfter(Identifier, Identifier, LayeredDrawer.Layer)}
+	 * See {@link HudElementRegistry#attachElementAfter(Identifier, Identifier, HudElement)}
 	 *
 	 * @return a pair of identifiers
 	 */
