@@ -1,22 +1,21 @@
 package fr.siroz.cariboustonks.feature.garden.pest;
 
 import fr.siroz.cariboustonks.util.colors.Colors;
+import fr.siroz.cariboustonks.util.render.Renderer;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
 import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import fr.siroz.cariboustonks.util.shape.Cuboid;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +23,9 @@ import java.util.List;
 import java.util.Optional;
 
 final class PlotInfestedRenderer implements WorldRendererProvider {
+
+	// TODO - Le rendu des plots est a refaire, changements de dernière minutes pour la 1.21.7/8 :c
+	//  Avoir directement dans le utils une méthode pour avec multi-options
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
@@ -87,14 +89,12 @@ final class PlotInfestedRenderer implements WorldRendererProvider {
         double cameraY = cameraPos.y;
         double cameraZ = cameraPos.z;
 
-        VertexConsumerProvider.Immediate consumers = (VertexConsumerProvider.Immediate) context.consumers();
-        assert consumers != null;
+		BufferBuilder buffer = Renderer.getInstance().getBuffer(RenderPipelines.DEBUG_LINE_STRIP, 1.5f);
 
-        VertexConsumer vertexConsumer = consumers.getBuffer(RenderLayer.getDebugLineStrip(1.0F));
-
-        MatrixStack matrices = context.matrixStack();
-        assert matrices != null;
-        Matrix4f matrix4f = matrices.peek().getPositionMatrix();
+        MatrixStack stack = context.matrixStack();
+        assert stack != null;
+		stack.push();
+		MatrixStack.Entry entry = stack.peek();
 
         for (int id : pestFinderFeature.getInfestedPlots()) {
             Optional<Plot> plotOptional = getPlot(id);
@@ -124,29 +124,29 @@ final class PlotInfestedRenderer implements WorldRendererProvider {
 
             for (int i = 0; i <= PLOT_SIZE; i += PLOT_SIZE) {
                 for (int j = 0; j <= PLOT_SIZE; j += PLOT_SIZE) {
-                    vertexConsumer.vertex(matrix4f, chunkMinX + i, y1, chunkMinZ + j).color(1.0F, 0.0F, 0.0F, 0.0F);
-                    vertexConsumer.vertex(matrix4f, chunkMinX + i, y1, chunkMinZ + j).color(1.0F, 0.0F, 0.0F, 0.5F);
-                    vertexConsumer.vertex(matrix4f, chunkMinX + i, y2, chunkMinZ + j).color(1.0F, 0.0F, 0.0F, 0.5F);
-                    vertexConsumer.vertex(matrix4f, chunkMinX + i, y2, chunkMinZ + j).color(1.0F, 0.0F, 0.0F, 0.0F);
+					float x = chunkMinX + i;
+					float z = chunkMinZ + j;
+					buffer.vertex(entry, x, y1, z).color(1.0F, 0.0F, 0.0F, 0.0F).normal(entry, x, y1, z);
+					buffer.vertex(entry, x, y1, z).color(1.0F, 0.0F, 0.0F, 0.5F).normal(entry, x, y1, z);
+					buffer.vertex(entry, x, y2, z).color(1.0F, 0.0F, 0.0F, 0.5F).normal(entry, x, y2, z);
+					buffer.vertex(entry, x, y2, z).color(1.0F, 0.0F, 0.0F, 0.0F).normal(entry, x, y2, z);
                 }
             }
 
             for (int i = MIN_PLOT_Y; i <= MAX_PLOT_Y + 1; i += 2) {
                 float y = (float) ((double) i - cameraY);
                 int color = i % 8 == 0 ? GREEN : YELLOW;
-                vertexConsumer.vertex(matrix4f, chunkMinX, y, chunkMinZ).color(1.0F, 1.0F, 0.0F, 0.0F);
-                vertexConsumer.vertex(matrix4f, chunkMinX, y, chunkMinZ).color(color);
-                vertexConsumer.vertex(matrix4f, chunkMinX, y, chunkMinZ + PLOT_SIZE).color(color);
-                vertexConsumer.vertex(matrix4f, chunkMinX + PLOT_SIZE, y, chunkMinZ + PLOT_SIZE).color(color);
-                vertexConsumer.vertex(matrix4f, chunkMinX + PLOT_SIZE, y, chunkMinZ).color(color);
-                vertexConsumer.vertex(matrix4f, chunkMinX, y, chunkMinZ).color(color);
-                vertexConsumer.vertex(matrix4f, chunkMinX, y, chunkMinZ).color(1.0F, 1.0F, 0.0F, 0.0F);
+				buffer.vertex(entry, chunkMinX, y, chunkMinZ).color(1.0F, 1.0F, 0.0F, 0.0F).normal(entry, chunkMinX, y, chunkMinZ);
+				buffer.vertex(entry, chunkMinX, y, chunkMinZ).color(color).normal(entry, chunkMinX, y, chunkMinZ);
+				buffer.vertex(entry, chunkMinX, y, chunkMinZ + PLOT_SIZE).color(color).normal(entry, chunkMinX, y, chunkMinZ + PLOT_SIZE);
+				buffer.vertex(entry, chunkMinX + PLOT_SIZE, y, chunkMinZ + PLOT_SIZE).color(color).normal(entry, chunkMinX + PLOT_SIZE, y, chunkMinZ + PLOT_SIZE);
+				buffer.vertex(entry, chunkMinX + PLOT_SIZE, y, chunkMinZ).color(color).normal(entry, chunkMinX + PLOT_SIZE, y, chunkMinZ);
+				buffer.vertex(entry, chunkMinX, y, chunkMinZ).color(color).normal(entry, chunkMinX, y, chunkMinZ);
+				buffer.vertex(entry, chunkMinX, y, chunkMinZ).color(1.0F, 1.0F, 0.0F, 0.0F).normal(entry, chunkMinX, y, chunkMinZ);
             }
-
-            //consumers.draw();
         }
 
-        consumers.draw();
+		stack.pop();
     }
 
     public record Plot(int id, Cuboid cuboid, Vec3d center) {
