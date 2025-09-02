@@ -13,7 +13,7 @@ public class CombatConfig {
 	public static class CocoonedMob {
 
 		@SerialEntry
-		public boolean cocoonedWarning = true;
+		public boolean cocoonedWarning = false;
 
 		@SerialEntry
 		public boolean cocoonedWarningTitle = true;

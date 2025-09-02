@@ -118,7 +118,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 **Slayers**
 
-- Slayer Boss Cocooned Warning (BETA): Show a Title and play a Sound when your Slayer Boss is cocooned.
+- Slayer Boss Cocooned Warning: Show a Title and play a Sound when your Slayer Boss is cocooned.
 - Spawn Alerts for Boss or Minibosses.
 - Highlight Boss or Minibosses with a configurable glow color.
 - Statistics Breakdown: Displays a message to show:

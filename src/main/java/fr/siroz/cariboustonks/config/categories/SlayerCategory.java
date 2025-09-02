@@ -26,7 +26,8 @@ public class SlayerCategory extends AbstractCategory {
 				.option(Option.<Boolean>createBuilder()
 						.name(Text.literal("Slayer Boss Cocooned Warning"))
 						.description(OptionDescription.of(
-								Text.literal("Show a Title and play a Sound when your Slayer Boss is cocooned!")))
+								Text.literal("Show a Title and play a Sound when your Slayer Boss is cocooned!"),
+								Text.literal(SPACE + "[!] For Minibosses, see Skills > Combat > Cocooned Mobs").formatted(Formatting.YELLOW)))
 						.binding(defaults.slayer.slayerBossCocoonedWarning,
 								() -> current.slayer.slayerBossCocoonedWarning,
 								newValue -> current.slayer.slayerBossCocoonedWarning = newValue)

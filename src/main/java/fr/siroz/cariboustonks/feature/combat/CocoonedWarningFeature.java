@@ -9,7 +9,9 @@ import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.feature.slayer.SlayerCocoonedWarningFeature;
 import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
+import fr.siroz.cariboustonks.manager.slayer.SlayerType;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
@@ -70,7 +72,11 @@ public class CocoonedWarningFeature extends Feature implements WorldRendererProv
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& canBeTriggered
-				&& !slayerManager.isInQuest()
+				// --start-- Pour détecter les cocoons depuis les Slayers Minibosses
+				//&& !slayerManager.isInQuest()
+				&& !slayerManager.isInQuestWithBoss(SlayerType.SPIDER)
+				&& !SlayerCocoonedWarningFeature.isCocoonedBoss()
+				// --end--
 				&& ConfigManager.getConfig().combat.cocoonedMob.cocoonedWarning;
 	}
 

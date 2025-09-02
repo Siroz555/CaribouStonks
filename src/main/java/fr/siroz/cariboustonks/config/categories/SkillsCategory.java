@@ -52,7 +52,9 @@ public class SkillsCategory extends AbstractCategory {
 								.description(OptionDescription.of(
 										Text.literal("Allows you to be alerted when your mob is Cocooned."),
 										Text.literal(SPACE),
-										Text.literal("Note: The alert is triggered only for the Bloodshot on the Primordial Belt (Shriveled Cornea Reforge Stone)").formatted(Formatting.YELLOW)))
+										Text.literal("The alert is triggered for:"),
+										Text.literal(" - Bloodshot on the Primordial Belt").formatted(Formatting.GOLD),
+										Text.literal(" - Slayer Minibosses").formatted(Formatting.RED)))
 								.binding(defaults.combat.cocoonedMob.cocoonedWarning,
 										() -> current.combat.cocoonedMob.cocoonedWarning,
 										newValue -> current.combat.cocoonedMob.cocoonedWarning = newValue)
