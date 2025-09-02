@@ -24,10 +24,9 @@ public class SlayerCategory extends AbstractCategory {
 				.name(Text.literal("Slayers"))
 				.tooltip(Text.literal("Slayers-related Settings"))
 				.option(Option.<Boolean>createBuilder()
-						.name(Text.literal("Slayer Boss Cocooned Warning").append(BETA))
+						.name(Text.literal("Slayer Boss Cocooned Warning"))
 						.description(OptionDescription.of(
-								Text.literal("Show a Title and play a Sound when your Slayer Boss is cocooned!"),
-								Text.literal(SPACE + "This is a BETA feature, can only work with Slayer Boss for now.").formatted(Formatting.GOLD)))
+								Text.literal("Show a Title and play a Sound when your Slayer Boss is cocooned!")))
 						.binding(defaults.slayer.slayerBossCocoonedWarning,
 								() -> current.slayer.slayerBossCocoonedWarning,
 								newValue -> current.slayer.slayerBossCocoonedWarning = newValue)

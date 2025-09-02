@@ -28,19 +28,6 @@ public class SkillsCategory extends AbstractCategory {
                         .description(OptionDescription.of(
                                 Text.literal("Combat-related Settings")))
                         .collapsed(false)
-						/*.option(LabelOption.create(Text.literal("| Cocooned Mobs").formatted(Formatting.BOLD)))
-						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Cocooned Warning"))
-								.description(OptionDescription.of(
-										Text.literal("Allows you to be alerted when you kill a mob and it is cocooned."),
-										Text.literal("Note: The alert is triggered only for reforging Bloodshot on the Primordial Belt. (Shriveled Cornea Reforge Stone)").formatted(Formatting.YELLOW),
-										Text.literal("See the “Slayer” section for features related to the Primordial Belt for Slayers.").formatted(Formatting.ITALIC)))
-								.binding(defaults.combat.cocoonedMob.cocoonedWarning,
-										() -> current.combat.cocoonedMob.cocoonedWarning,
-										newValue -> current.combat.cocoonedMob.cocoonedWarning = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(LabelOption.create(Text.empty()))*/
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.literal("Low Health Warning"))
                                 .description(OptionDescription.of(
@@ -59,6 +46,45 @@ public class SkillsCategory extends AbstractCategory {
                                         newValue -> current.combat.lowHealthWarning.lowHealthWarningThreshold = newValue)
                                 .controller(opt -> createIntegerPercentController(opt, 50))
                                 .build())
+						.option(LabelOption.create(Text.literal("| Cocooned Mobs").formatted(Formatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Cocooned Warning"))
+								.description(OptionDescription.of(
+										Text.literal("Allows you to be alerted when your mob is Cocooned."),
+										Text.literal(SPACE),
+										Text.literal("Note: The alert is triggered only for the Bloodshot on the Primordial Belt (Shriveled Cornea Reforge Stone)").formatted(Formatting.YELLOW)))
+								.binding(defaults.combat.cocoonedMob.cocoonedWarning,
+										() -> current.combat.cocoonedMob.cocoonedWarning,
+										newValue -> current.combat.cocoonedMob.cocoonedWarning = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Cocooned Warning Title"))
+								.description(OptionDescription.of(
+										Text.literal("When your mob is Cocooned, show a Title on the screen.")))
+								.binding(defaults.combat.cocoonedMob.cocoonedWarningTitle,
+										() -> current.combat.cocoonedMob.cocoonedWarningTitle,
+										newValue -> current.combat.cocoonedMob.cocoonedWarningTitle = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Cocooned Warning Sound"))
+								.description(OptionDescription.of(
+										Text.literal("When your mob is Cocooned, play a Sound.")))
+								.binding(defaults.combat.cocoonedMob.cocoonedWarningSound,
+										() -> current.combat.cocoonedMob.cocoonedWarningSound,
+										newValue -> current.combat.cocoonedMob.cocoonedWarningSound = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Cocooned Warning Waypoint Beam"))
+								.description(OptionDescription.of(
+										Text.literal("When your mob is Cocooned, show a Waypoint Beam.")))
+								.binding(defaults.combat.cocoonedMob.cocoonedWarningBeam,
+										() -> current.combat.cocoonedMob.cocoonedWarningBeam,
+										newValue -> current.combat.cocoonedMob.cocoonedWarningBeam = newValue)
+								.controller(this::createYesNoController)
+								.build())
                         .build())
                 .group(OptionGroup.createBuilder()
                         .name(Text.literal("Farming - Garden").formatted(Formatting.BOLD))

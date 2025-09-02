@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.feature.chat.ChatColorationFeature;
 import fr.siroz.cariboustonks.feature.chat.ChatPositionFeature;
 import fr.siroz.cariboustonks.feature.chat.CopyChatMessageFeature;
+import fr.siroz.cariboustonks.feature.combat.CocoonedWarningFeature;
 import fr.siroz.cariboustonks.feature.combat.LowHealthWarningFeature;
 import fr.siroz.cariboustonks.feature.diana.MythologicalRitualFeature;
 import fr.siroz.cariboustonks.feature.fishing.HotspotFeature;
@@ -63,11 +64,13 @@ public final class Features {
 
     public Features() {
 		CaribouStonks.LOGGER.info("[FeatureManager] Loading..");
+		SlayerManager slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
         // Chat
 		registerFeature(new ChatColorationFeature());
         registerFeature(new ChatPositionFeature());
 		registerFeature(new CopyChatMessageFeature());
 		// Combat
+		registerFeature(new CocoonedWarningFeature(slayerManager));
 		registerFeature(new LowHealthWarningFeature());
 		// Events
 		registerFeature(new MythologicalRitualFeature());
@@ -98,7 +101,6 @@ public final class Features {
 		registerFeature(new ForgeReminderFeature());
 		registerFeature(new UbikCubeReminderFeature());
 		// Slayer
-		SlayerManager slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
 		registerFeature(new HighlightSlayerMobFeature(slayerManager));
 		registerFeature(new SlayerCocoonedWarningFeature(slayerManager));
 		registerFeature(new SlayerStatsFeature());

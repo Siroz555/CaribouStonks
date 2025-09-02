@@ -14,6 +14,15 @@ public class CombatConfig {
 
 		@SerialEntry
 		public boolean cocoonedWarning = true;
+
+		@SerialEntry
+		public boolean cocoonedWarningTitle = true;
+
+		@SerialEntry
+		public boolean cocoonedWarningSound = true;
+
+		@SerialEntry
+		public boolean cocoonedWarningBeam = false;
 	}
 
 	public static class LowHealthWarning {

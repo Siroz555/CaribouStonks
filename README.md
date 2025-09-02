@@ -96,6 +96,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 **Skills**
 
 - Combat
+    - Cocooned Warning: Allows you to be alerted when your mob is Cocooned.
     - Low health warning: Display a red screen when your health is low.
 
 - Farming | Garden
