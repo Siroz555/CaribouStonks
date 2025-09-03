@@ -118,7 +118,7 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 
 	@Override
 	public int getEntityGlowColor(@NotNull Entity entity) {
-		if (ConfigManager.getConfig().events.mythologicalRitual.highlightInquisitor
+		if (onDiana && ConfigManager.getConfig().events.mythologicalRitual.highlightInquisitor
 				&& entity.getName().getString().contains(INQUISITOR_ENTITY_NAME)
 		) {
 			return ConfigManager.getConfig().events.mythologicalRitual.highlightInquisitorColor.getRGB();
