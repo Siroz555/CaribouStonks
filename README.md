@@ -91,6 +91,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 **Skills**
 
 - Combat
+    - Cocooned Warning: Allows you to be alerted when your mob is Cocooned.
     - Low health warning: Display a red screen when your health is low.
 
 - Farming | Garden
@@ -104,15 +105,15 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Hunting
     - Display Shard prices in Hunting Box, Attribute Menu, and Fusion Machine.
-    - Display the number of missing Shards and the price to max it out. 
+    - Display the number of missing Shards and the price to max it out.
 
 - Fishing
-    - Guess Hotspot: Predict the location of the nearest hotspot
+    - Guess Hotspot: Predict the location of the nearest hotspot.
     - Highlight Hotspot: A colored circle appears if your bobber is within the hotspot radius.
 
 **Slayers**
 
-- Slayer Boss Cocooned Warning (BETA): Show a Title and play a Sound when your Slayer Boss is cocooned.
+- Slayer Boss Cocooned Warning: Show a Title and play a Sound when your Slayer Boss is cocooned.
 - Spawn Alerts for Boss or Minibosses.
 - Highlight Boss or Minibosses with a configurable glow color.
 - Statistics Breakdown: Displays a message to show:

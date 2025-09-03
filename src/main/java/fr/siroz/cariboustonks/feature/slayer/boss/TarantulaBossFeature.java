@@ -102,7 +102,15 @@ public class TarantulaBossFeature extends Feature implements WorldRendererProvid
 	}
 
 	private boolean isTarantulaBossEgg(@NotNull ArmorStandEntity as) {
-		return as.hasStackEquipped(EquipmentSlot.HEAD)
-				&& ItemUtils.getHeadTexture(as.getEquippedStack(EquipmentSlot.HEAD)).equals(HeadTextures.TARANTULA_COCOON);
+		if (as.isCustomNameVisible() || !as.hasStackEquipped(EquipmentSlot.HEAD)) {
+			return false;
+		}
+
+		String headTexture = ItemUtils.getHeadTexture(as.getEquippedStack(EquipmentSlot.HEAD));
+		if (headTexture.isBlank()) {
+			return false;
+		}
+
+		return headTexture.equals(HeadTextures.TARANTULA_COCOON);
 	}
 }
