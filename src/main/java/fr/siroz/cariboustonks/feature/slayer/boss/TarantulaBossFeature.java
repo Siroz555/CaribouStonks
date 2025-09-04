@@ -39,7 +39,7 @@ public class TarantulaBossFeature extends Feature implements WorldRendererProvid
 	private final Set<ArmorStandEntity> bossEggs = new HashSet<>();
 
 	public TarantulaBossFeature() {
-		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);;
+		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((_mc, _world) -> this.bossEggs.clear());
 		SkyBlockEvents.SLAYER_BOSS_DEATH.register((_type, _tier, _startTime) -> this.bossEggs.clear());
 		WorldRenderEvents.AFTER_TRANSLUCENT.register(this::render);

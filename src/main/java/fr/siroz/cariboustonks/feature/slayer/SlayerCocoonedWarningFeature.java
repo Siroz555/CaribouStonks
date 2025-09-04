@@ -27,7 +27,7 @@ public class SlayerCocoonedWarningFeature extends Feature {
 	private static boolean cocoonedBoss = false;
 
 	public SlayerCocoonedWarningFeature() {
-		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);;
+		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((_c, _w) -> cocoonedBoss = false);
 		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
 	}
