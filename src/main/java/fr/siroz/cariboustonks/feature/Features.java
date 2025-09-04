@@ -47,7 +47,6 @@ import fr.siroz.cariboustonks.feature.ui.overlay.EtherWarpOverlayFeature;
 import fr.siroz.cariboustonks.feature.ui.overlay.GyrokineticOverlayFeature;
 import fr.siroz.cariboustonks.feature.vanilla.MuteVanillaSoundFeature;
 import fr.siroz.cariboustonks.feature.waypoints.WaypointFeature;
-import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -64,13 +63,12 @@ public final class Features {
 
     public Features() {
 		CaribouStonks.LOGGER.info("[FeatureManager] Loading..");
-		SlayerManager slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
         // Chat
 		registerFeature(new ChatColorationFeature());
         registerFeature(new ChatPositionFeature());
 		registerFeature(new CopyChatMessageFeature());
 		// Combat
-		registerFeature(new CocoonedWarningFeature(slayerManager));
+		registerFeature(new CocoonedWarningFeature());
 		registerFeature(new LowHealthWarningFeature());
 		// Events
 		registerFeature(new MythologicalRitualFeature());
@@ -101,11 +99,11 @@ public final class Features {
 		registerFeature(new ForgeReminderFeature());
 		registerFeature(new UbikCubeReminderFeature());
 		// Slayer
-		registerFeature(new HighlightSlayerMobFeature(slayerManager));
-		registerFeature(new SlayerCocoonedWarningFeature(slayerManager));
+		registerFeature(new HighlightSlayerMobFeature());
+		registerFeature(new SlayerCocoonedWarningFeature());
 		registerFeature(new SlayerStatsFeature());
 		// Slayer - Boss
-		registerFeature(new TarantulaBossFeature(slayerManager));
+		registerFeature(new TarantulaBossFeature());
 		// Stonks
 		registerFeature(new StonksCommandFeature());
 		registerFeature(new StonksFeature());

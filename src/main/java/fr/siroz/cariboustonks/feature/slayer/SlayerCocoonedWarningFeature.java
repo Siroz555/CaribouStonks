@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.feature.slayer;
 
+import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -25,8 +26,8 @@ public class SlayerCocoonedWarningFeature extends Feature {
 
 	private static boolean cocoonedBoss = false;
 
-	public SlayerCocoonedWarningFeature(SlayerManager slayerManager) {
-		this.slayerManager = slayerManager;
+	public SlayerCocoonedWarningFeature() {
+		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);;
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((_c, _w) -> cocoonedBoss = false);
 		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
 	}

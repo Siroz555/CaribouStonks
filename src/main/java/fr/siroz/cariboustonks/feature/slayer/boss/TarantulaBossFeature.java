@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.feature.slayer.boss;
 
+import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
@@ -37,8 +38,8 @@ public class TarantulaBossFeature extends Feature implements WorldRendererProvid
 	private final SlayerManager slayerManager;
 	private final Set<ArmorStandEntity> bossEggs = new HashSet<>();
 
-	public TarantulaBossFeature(SlayerManager slayerManager) {
-		this.slayerManager = slayerManager;
+	public TarantulaBossFeature() {
+		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);;
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((_mc, _world) -> this.bossEggs.clear());
 		SkyBlockEvents.SLAYER_BOSS_DEATH.register((_type, _tier, _startTime) -> this.bossEggs.clear());
 		WorldRenderEvents.AFTER_TRANSLUCENT.register(this::render);
