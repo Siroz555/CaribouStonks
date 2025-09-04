@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.feature.slayer;
 
+import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.SlayerConfig;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -13,8 +14,8 @@ public class HighlightSlayerMobFeature extends Feature implements EntityGlowProv
 
 	private final SlayerManager slayerManager;
 
-	public HighlightSlayerMobFeature(SlayerManager slayerManager) {
-		this.slayerManager = slayerManager;
+	public HighlightSlayerMobFeature() {
+		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
 	}
 
 	@Override
