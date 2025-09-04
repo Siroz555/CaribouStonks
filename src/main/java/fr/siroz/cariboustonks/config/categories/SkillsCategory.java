@@ -50,11 +50,11 @@ public class SkillsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Cocooned Warning"))
 								.description(OptionDescription.of(
-										Text.literal("Allows you to be alerted when your mob is Cocooned."),
-										Text.literal(SPACE),
-										Text.literal("The alert is triggered for:"),
-										Text.literal(" - Bloodshot on the Primordial Belt").formatted(Formatting.GOLD),
-										Text.literal(" - Slayer Minibosses").formatted(Formatting.RED)))
+										Text.literal("Allows you to be alerted when a mob is Cocooned."),
+										Text.literal(SPACE + "The alert is triggered for:").formatted(Formatting.UNDERLINE),
+										Text.literal(SPACE + " - Bloodshot on the Primordial Belt").formatted(Formatting.GOLD),
+										Text.literal(" - Slayer Minibosses").formatted(Formatting.RED),
+										Text.literal(SPACE + "Note: In rare cases, other players' cocoons that are too close to you may be detected.").formatted(Formatting.YELLOW)))
 								.binding(defaults.combat.cocoonedMob.cocoonedWarning,
 										() -> current.combat.cocoonedMob.cocoonedWarning,
 										newValue -> current.combat.cocoonedMob.cocoonedWarning = newValue)
@@ -63,7 +63,7 @@ public class SkillsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Cocooned Warning Title"))
 								.description(OptionDescription.of(
-										Text.literal("When your mob is Cocooned, show a Title on the screen.")))
+										Text.literal("When a mob is Cocooned, show a Title on the screen.")))
 								.binding(defaults.combat.cocoonedMob.cocoonedWarningTitle,
 										() -> current.combat.cocoonedMob.cocoonedWarningTitle,
 										newValue -> current.combat.cocoonedMob.cocoonedWarningTitle = newValue)
@@ -72,7 +72,7 @@ public class SkillsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Cocooned Warning Sound"))
 								.description(OptionDescription.of(
-										Text.literal("When your mob is Cocooned, play a Sound.")))
+										Text.literal("When a mob is Cocooned, play a Sound.")))
 								.binding(defaults.combat.cocoonedMob.cocoonedWarningSound,
 										() -> current.combat.cocoonedMob.cocoonedWarningSound,
 										newValue -> current.combat.cocoonedMob.cocoonedWarningSound = newValue)
@@ -81,7 +81,7 @@ public class SkillsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Cocooned Warning Waypoint Beam"))
 								.description(OptionDescription.of(
-										Text.literal("When your mob is Cocooned, show a Waypoint Beam.")))
+										Text.literal("When a mob is Cocooned, show a Waypoint Beam.")))
 								.binding(defaults.combat.cocoonedMob.cocoonedWarningBeam,
 										() -> current.combat.cocoonedMob.cocoonedWarningBeam,
 										newValue -> current.combat.cocoonedMob.cocoonedWarningBeam = newValue)

@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.feature.combat;
 
+import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
+import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -40,15 +41,16 @@ import org.jetbrains.annotations.NotNull;
 public class CocoonedWarningFeature extends Feature implements WorldRendererProvider {
 
 	private static final long WORLD_CHANGE_THRESHOLD = 10_000;
-	private static final double MAX_DISTANCE_SQ = 2f * 2f;
+	private static final double MAX_ARMORSTAND_PAIR_DISTANCE_SQ = 2f * 2f;
+	private static final double MAX_PLAYER_COCOON_DISTANCE_SQ = 15f * 15f;
 
-	private final Supplier<Boolean> configSoundEnabled =
+	private final BooleanSupplier configSoundEnabled =
 			() -> ConfigManager.getConfig().combat.cocoonedMob.cocoonedWarningSound;
 
-	private final Supplier<Boolean> configTitleEnabled =
+	private final BooleanSupplier configTitleEnabled =
 			() -> ConfigManager.getConfig().combat.cocoonedMob.cocoonedWarningTitle;
 
-	private final Supplier<Boolean> configBeamEnabled =
+	private final BooleanSupplier configBeamEnabled =
 			() -> ConfigManager.getConfig().combat.cocoonedMob.cocoonedWarningBeam;
 
 	private final SlayerManager slayerManager;
@@ -59,8 +61,8 @@ public class CocoonedWarningFeature extends Feature implements WorldRendererProv
 	private long lastWorldChange = 0;
 	private boolean canBeTriggered = false;
 
-	public CocoonedWarningFeature(SlayerManager slayerManager) {
-		this.slayerManager = slayerManager;
+	public CocoonedWarningFeature() {
+		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register(this::onChangeWorld);
 		SkyBlockEvents.ISLAND_CHANGE.register(this::onChangeIsland);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
@@ -89,14 +91,16 @@ public class CocoonedWarningFeature extends Feature implements WorldRendererProv
 
 	@EventHandler(event = "SkyBlockEvents.ISLAND_CHANGE")
 	private void onChangeIsland(@NotNull IslandType islandType) {
-		canBeTriggered = islandType != IslandType.DUNGEON && islandType != IslandType.KUUDRA_HOLLOW;
+		canBeTriggered = islandType != IslandType.DUNGEON
+				&& islandType != IslandType.KUUDRA_HOLLOW
+				&& islandType != IslandType.THE_RIFT; // Parce que dans le rift il y a les mêmes cocoons
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
 	private void onUpdateArmorStand(@NotNull ArmorStandEntity armorStandEntity, boolean equipment) {
 		if (equipment || (System.currentTimeMillis() - lastWorldChange < WORLD_CHANGE_THRESHOLD)) return;
 		if (!isEnabled()) return;
-		if (!isCocoon(armorStandEntity)) return;
+		if (!matchesCocoonCriteria(armorStandEntity)) return;
 
 		for (ArmorStandEntity as : chain) {
 			if (as.getId() == armorStandEntity.getId()) {
@@ -115,7 +119,7 @@ public class CocoonedWarningFeature extends Feature implements WorldRendererProv
 		// Si le nouveau spawn est assez proche d'au moins un élément de la chain, il est ajouté
 		boolean closeToAny = false;
 		for (ArmorStandEntity as : chain) {
-			if (as.squaredDistanceTo(armorStandEntity) <= MAX_DISTANCE_SQ) {
+			if (as.squaredDistanceTo(armorStandEntity) <= MAX_ARMORSTAND_PAIR_DISTANCE_SQ) {
 				closeToAny = true;
 				break;
 			}
@@ -154,30 +158,34 @@ public class CocoonedWarningFeature extends Feature implements WorldRendererProv
 	}
 
 	private void onMobCocooned(BlockPos pos) {
-		Client.sendMessageWithPrefix(Text.literal("You cocooned a Mob!").formatted(Formatting.RED, Formatting.BOLD));
+		Client.sendMessageWithPrefix(Text.literal("A mob has been cocooned!").formatted(Formatting.RED, Formatting.BOLD));
 
-		if (configSoundEnabled.get()) {
+		if (configSoundEnabled.getAsBoolean()) {
 			Client.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE, 1f, 1f);
 		}
 
-		if (configTitleEnabled.get()) {
+		if (configTitleEnabled.getAsBoolean()) {
 			Client.showTitle(Text.literal("Cocooned!").formatted(Formatting.RED, Formatting.BOLD), 0, 27, 0);
 		}
 
-		if (configBeamEnabled.get() && pos != null) {
+		if (configBeamEnabled.getAsBoolean() && pos != null) {
 			cocoonPositions.add(pos);
 			final BlockPos finalPos = pos;
 			TickScheduler.getInstance().runLater(() -> cocoonPositions.remove(finalPos), 4, TimeUnit.SECONDS);
 		}
 	}
 
-	private boolean isCocoon(@NotNull ArmorStandEntity as) {
+	private boolean matchesCocoonCriteria(@NotNull ArmorStandEntity as) {
 		if (as.isCustomNameVisible() || !as.hasStackEquipped(EquipmentSlot.HEAD)) {
 			return false;
 		}
 
 		String headTexture = ItemUtils.getHeadTexture(as.getEquippedStack(EquipmentSlot.HEAD));
 		if (headTexture.isBlank()) {
+			return false;
+		}
+
+		if (CLIENT.player != null && CLIENT.player.getPos().squaredDistanceTo(as.getPos()) > MAX_PLAYER_COCOON_DISTANCE_SQ) {
 			return false;
 		}
 
