@@ -3,13 +3,15 @@ package fr.siroz.cariboustonks.core.data.hypixel;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.mod.SkyBlockAttribute;
 import fr.siroz.cariboustonks.core.skyblock.Rarity;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.Nullable;
 
-final class HypixelAPIFixer {
+@ApiStatus.Internal
+public final class HypixelAPIFixer {
 
 	public static final Pattern MINION_PATTERN = Pattern.compile("^[A-Z_]+_GENERATOR_\\d+$");
 	public static final Pattern ENCHANTMENT_PATTERN = Pattern.compile("^ENCHANTMENT_[A-Z_]+_\\d+$");

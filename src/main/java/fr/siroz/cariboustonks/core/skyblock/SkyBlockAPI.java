@@ -1,10 +1,14 @@
 package fr.siroz.cariboustonks.core.skyblock;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.data.hypixel.election.ElectionResult;
+import fr.siroz.cariboustonks.core.data.hypixel.election.Mayor;
+import fr.siroz.cariboustonks.core.data.hypixel.election.Perk;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ScoreboardUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.Optional;
+import java.util.Set;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.ApiStatus;
@@ -61,6 +65,65 @@ public final class SkyBlockAPI {
 
 		for (IslandType type : islandTypes) {
 			if (type == islandType) return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns whether the given {@link Mayor} is currently the mayor or minister.
+	 *
+	 * @param mayor the {@link Mayor} to check
+	 * @return {@code true} if the given {@code mayor} matches the current mayor or minister
+	 * @see #isMayorOrMinister(Mayor, Perk)
+	 */
+	public static boolean isMayorOrMinister(@NotNull Mayor mayor) {
+		return isMayorOrMinister(mayor, null);
+	}
+
+	/**
+	 * Returns whether the given {@link Mayor} currently holds the mayor or minister role,
+	 * and (optionally) whether the specified {@link Perk} is present for that role.
+	 *
+	 * <p>Behavior:
+	 * <ul>
+	 *   <li>If the latest {@link ElectionResult} is not available, this method returns {@code false}.</li>
+	 *   <li>If {@code perk} is {@code null}, the method returns {@code true} when {@code mayor}
+	 *       equals either the current mayor or the current minister.</li>
+	 *   <li>If {@code perk} is non-null:
+	 *       <ul>
+	 *         <li>When {@code mayor} equals the current mayor, the method returns {@code true}
+	 *             only if the mayor's perk set contains {@code perk}.</li>
+	 *         <li>When {@code mayor} equals the current minister, the method returns {@code true}
+	 *             only if the minister has a perk and that perk equals {@code perk}.</li>
+	 *       </ul>
+	 *   </li>
+	 * </ul>
+	 *
+	 * @param mayor the {@link Mayor} to check
+	 * @param perk  optional {@link Perk} to verify for the given role; if {@code null} only the role is checked
+	 * @return {@code true} if the given {@code mayor} matches the current mayor or minister and,
+	 * when {@code perk} is provided, the requested perk is present for that role
+	 * @see #isMayorOrMinister(Mayor)
+	 */
+	public static boolean isMayorOrMinister(@NotNull Mayor mayor, @Nullable Perk perk) {
+		ElectionResult result = CaribouStonks.core().getHypixelDataSource().getElection();
+		if (result == null) {
+			return false;
+		}
+
+		if (perk == null) {
+			return mayor == result.mayor() || mayor == result.minister();
+		}
+
+		if (mayor == result.mayor()) {
+			final Set<Perk> mayorPerks = result.mayorPerks();
+			return !mayorPerks.isEmpty() && mayorPerks.contains(perk);
+		}
+
+		if (mayor == result.minister()) {
+			final Optional<Perk> opt = result.ministerPerk();
+			return opt.isPresent() && opt.get() == perk;
 		}
 
 		return false;

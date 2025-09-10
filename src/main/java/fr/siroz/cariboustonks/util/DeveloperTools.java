@@ -62,6 +62,7 @@ public final class DeveloperTools {
 				ClientCommandManager.literal(CaribouStonks.NAMESPACE)
 						.then(ClientCommandManager.literal("devtools")
 								.then(dumpSoundCommand())
+								.then(dumpMayorCommand())
 								.then(dumpHeldItemSimpleCommand())
 								.then(dumpHeldItemCommand())
 								.then(dumpArmorStandHeadTextures()))
@@ -284,6 +285,18 @@ public final class DeveloperTools {
 		return ClientCommandManager.literal("dumpSound").executes(context -> {
 			dumpSound = !dumpSound;
 			context.getSource().sendFeedback(CaribouStonks.prefix().get().append(Text.literal("Dump sound: " + dumpSound)));
+			return Command.SINGLE_SUCCESS;
+		});
+	}
+
+	private static LiteralArgumentBuilder<FabricClientCommandSource> dumpMayorCommand() {
+		return ClientCommandManager.literal("dumpMayor").executes(context -> {
+			String str = CaribouStonks.core().getHypixelDataSource().getElection() != null
+					? CaribouStonks.core().getHypixelDataSource().getElection().toString()
+					: "NULL";
+			context.getSource().sendFeedback(CaribouStonks.prefix().get().append(Text.literal("--")));
+			context.getSource().sendFeedback(Text.literal(str));
+			context.getSource().sendFeedback(CaribouStonks.prefix().get().append(Text.literal("--")));
 			return Command.SINGLE_SUCCESS;
 		});
 	}

@@ -1,35 +1,26 @@
 package fr.siroz.cariboustonks.core.data.hypixel;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.data.hypixel.election.ElectionResult;
+import fr.siroz.cariboustonks.core.data.hypixel.fetcher.BazaarFetcher;
+import fr.siroz.cariboustonks.core.data.hypixel.fetcher.ElectionFetcher;
+import fr.siroz.cariboustonks.core.data.hypixel.fetcher.ItemsFetcher;
 import fr.siroz.cariboustonks.core.data.mod.ModDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
-import fr.siroz.cariboustonks.core.data.hypixel.reply.SkyBlockBazaarReply;
-import fr.siroz.cariboustonks.core.data.hypixel.reply.SkyBlockItemsReply;
-import fr.siroz.cariboustonks.core.json.GsonProvider;
-import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.http.Http;
-import fr.siroz.cariboustonks.util.http.HttpResponse;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-import org.apache.http.client.HttpResponseException;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -42,57 +33,55 @@ import org.jetbrains.annotations.Unmodifiable;
  * Charge et enregistre les données des items SkyBlock et fait un mapping pendant
  * {@link ClientLifecycleEvents#CLIENT_STARTED} et donne accès à différentes méthodes pour retourner les données.
  */
-public final class HypixelDataSource { // TODO clean up & docs
-
-	// Liste des items SkyBlock (Hypixel SkyBlock API)
-	private static final String ITEMS_API = "https://api.hypixel.net/v2/resources/skyblock/items";
-	private final Object2ObjectMap<String, SkyBlockItem> skyBlockItems = new Object2ObjectOpenHashMap<>();
-
-	// Liste des items au Bazaar (Hypixel SkyBlock API)
-	private static final String BAZAAR_API = "https://api.hypixel.net/v2/skyblock/bazaar";
-	private Object2ObjectMap<String, Product> bazaarData = new Object2ObjectOpenHashMap<>();
+public final class HypixelDataSource {
 
 	private final HypixelAPIFixer apiFixer = new HypixelAPIFixer();
 	private final ModDataSource modDataSource;
 
-	private boolean skyBlockItemError = false;
-	private boolean bazaarUpdateError = false;
+	private final ItemsFetcher itemsFetcher;
+	private final BazaarFetcher bazaarFetcher;
+	private final ElectionFetcher electionFetcher;
 
-	private boolean bazaarInUpdate = false;
-	// Flags | fixMissingSkyBlockItems
-	private boolean itemsLoaded = false;
-	private boolean firstBazaarUpdated = false;
 	private boolean hasCalledFixMissing = false;
 
 	@ApiStatus.Internal
 	public HypixelDataSource(@NotNull ModDataSource modDataSource) {
 		this.modDataSource = modDataSource;
+		// Fetchers
+		this.itemsFetcher = new ItemsFetcher(this, modDataSource, apiFixer);
+		this.bazaarFetcher = new BazaarFetcher(this, 5, () -> ConfigManager.getConfig().general.stonks.bazaarTooltipPrice);
+		this.electionFetcher = new ElectionFetcher();
+		// Event listener
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> onClientStarted());
 	}
 
+	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STARTED")
 	private void onClientStarted() {
-		loadItems().thenRun(() -> {
-			itemsLoaded = true;
-			checkItemsResults();
-			fixMissingSkyBlockItems();
-		});
+		itemsFetcher.start();
+		bazaarFetcher.start();
+		electionFetcher.start();
+	}
 
-		TickScheduler.getInstance().runRepeating(() -> {
-			if (ConfigManager.getConfig().general.stonks.bazaarTooltipPrice) {
-				updateBazaar().thenRun(() -> {
-					bazaarInUpdate = false;
-					bazaarUpdateError = false;
+	@Nullable
+	public ElectionResult getElection() {
+		return electionFetcher.getCachedElection();
+	}
 
-					if (!firstBazaarUpdated) {
-						firstBazaarUpdated = true;
-						checkBazaarResult();
-						fixMissingSkyBlockItems();
-					} else {
-						checkBazaarResult();
-					}
-				});
-			}
-		}, 5, TimeUnit.MINUTES);
+	public boolean isBazaarInUpdate() {
+		return bazaarFetcher.isFetching();
+	}
+
+	public boolean hasBazaarItem(@Nullable String skyBlockItemId) {
+		if (skyBlockItemId == null || skyBlockItemId.isBlank()) {
+			return false;
+		}
+
+		return bazaarFetcher.getBazaarSnapshot().containsKey(skyBlockItemId);
+	}
+
+	public Optional<Product> getBazaarItem(@Nullable String skyBlockItemId) {
+		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) return Optional.empty();
+		return Optional.ofNullable(bazaarFetcher.getBazaarSnapshot().get(skyBlockItemId));
 	}
 
 	/**
@@ -125,7 +114,7 @@ public final class HypixelDataSource { // TODO clean up & docs
 		}
 
 		try {
-			SkyBlockItem skyBlockItem = skyBlockItems.get(skyBlockItemId);
+			SkyBlockItem skyBlockItem = itemsFetcher.getSkyBlockItemsSnapshot().get(skyBlockItemId);
 			if (skyBlockItem == null) {
 				return fallback;
 			}
@@ -166,7 +155,7 @@ public final class HypixelDataSource { // TODO clean up & docs
 	 */
 	public @Nullable SkyBlockItem getSkyBlockItem(@Nullable String skyBlockItemId) {
 		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) return null;
-		return skyBlockItems.get(skyBlockItemId);
+		return itemsFetcher.getSkyBlockItemsSnapshot().get(skyBlockItemId);
 	}
 
 	/**
@@ -202,20 +191,20 @@ public final class HypixelDataSource { // TODO clean up & docs
 			throw new HypixelDataException(Text.of("Unable to map SkyBlock Items into Minecraft."));
 		}
 
-		if (skyBlockItemError) {
+		if (!itemsFetcher.isLastFetchSuccessful()) {
 			throw new HypixelDataException(Text.of("Unable to fetch SkyBlock Items from Hypixel API."));
 		}
 
-		if (skyBlockItems.isEmpty()) {
+		if (itemsFetcher.getSkyBlockItemsSnapshot().isEmpty()) {
 			throw new HypixelDataException(Text.of("No SkyBlock Items is registered."));
 		}
 
-		return new ArrayList<>(skyBlockItems.values());
+		return new ArrayList<>(itemsFetcher.getSkyBlockItemsSnapshot().values());
 	}
 
 	@Contract(" -> new")
 	public @NotNull Set<String> getSkyBlockItemsIds() {
-		return new HashSet<>(skyBlockItems.keySet());
+		return new HashSet<>(itemsFetcher.getSkyBlockItemsSnapshot().keySet());
 	}
 
 	/**
@@ -224,165 +213,12 @@ public final class HypixelDataSource { // TODO clean up & docs
 	 * @return le nombre total d'items SkyBlock
 	 */
 	public int getSkyBlockItemCounts() {
-		return skyBlockItems.size();
+		return itemsFetcher.getSkyBlockItemsSnapshot().size();
 	}
 
-	public boolean isBazaarInUpdate() {
-		return bazaarInUpdate;
-	}
-
-	public boolean hasBazaarItem(@Nullable String skyBlockItemId) {
-		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) return false;
-		return bazaarData.containsKey(skyBlockItemId);
-	}
-
-	public Optional<Product> getBazaarItem(@Nullable String skyBlockItemId) {
-		if (bazaarData == null || skyBlockItemId == null || skyBlockItemId.isEmpty()) return Optional.empty();
-		return Optional.ofNullable(bazaarData.get(skyBlockItemId));
-	}
-
-	private @NotNull CompletableFuture<Void> loadItems() {
-		CaribouStonks.LOGGER.info("[HypixelDataSource] Loading SkyBlock Items..");
-
-		return fetchSkyBlockItems().thenAccept(reply -> {
-			if (reply.getResponse() == null) {
-				skyBlockItemError = true;
-				return;
-			}
-
-			try {
-				JsonArray array = reply.getResponse().get("items").getAsJsonArray();
-				for (int i = 0; i < array.size(); i++) {
-
-					JsonObject item = array.get(i).getAsJsonObject();
-					if (item.has("id")) {
-						String id = item.get("id").getAsString();
-						// ignore les minions et autres
-						if (apiFixer.isBlacklisted(id)) {
-							continue;
-						}
-
-						try {
-							SkyBlockItem skyBlockItem = new SkyBlockItem(item);
-							skyBlockItems.put(id, skyBlockItem);
-						} catch (Exception ex) {
-							CaribouStonks.LOGGER.error(
-									"[CaribouStonks HypixelData] Unable to parse SkyBlock Item: {}", id, ex);
-						}
-					}
-				}
-			} catch (Throwable ex) {
-				skyBlockItemError = true;
-				CaribouStonks.LOGGER.error("[HypixelDataSource] There was an error while loading SkyBlock Items", ex);
-			}
-		});
-	}
-
-	private @NotNull CompletableFuture<Void> updateBazaar() {
-		CaribouStonks.LOGGER.info("[HypixelDataSource] Updating SkyBlock Bazaar..");
-		bazaarInUpdate = true;
-
-		return fetchBazaar().thenAccept(reply -> {
-			if (reply == null) {
-				bazaarUpdateError = true;
-				return;
-			}
-
-			if (reply.getProducts() == null || reply.getProducts().isEmpty()) {
-				bazaarUpdateError = true;
-				return;
-			}
-
-			//bazaarLastUpdated = reply.getLastUpdated();
-			bazaarData = new Object2ObjectOpenHashMap<>(reply.getProducts());
-		});
-	}
-
-	@Contract(" -> new")
-	private @NotNull CompletableFuture<SkyBlockItemsReply> fetchSkyBlockItems() {
-		return CompletableFuture.supplyAsync(() -> {
-			try (HttpResponse response = Http.request(ITEMS_API)) {
-				if (!response.success()) {
-					throw new HttpResponseException(response.statusCode(), response.content());
-				}
-
-				SkyBlockItemsReply reply = new SkyBlockItemsReply(
-						GsonProvider.standard().fromJson(response.content(), JsonObject.class));
-				if (!reply.isSuccess()) {
-					throw new RuntimeException("SkyBlock Resource Items reply failed: " + reply.getCause());
-				}
-
-				return reply;
-			} catch (Throwable ex) {
-				CaribouStonks.LOGGER.error("[HypixelDataSource] Failed to fetch SkyBlock Items from Hypixel API", ex);
-				return null;
-			}
-		});
-	}
-
-	@Contract(" -> new")
-	private @NotNull CompletableFuture<SkyBlockBazaarReply> fetchBazaar() {
-		return CompletableFuture.supplyAsync(() -> {
-			try (HttpResponse response = Http.request(BAZAAR_API)) {
-				if (!response.success()) {
-					throw new HttpResponseException(response.statusCode(), response.content());
-				}
-
-				// TODO - remplacer les Reply de facon "officiel", arrêter de laisser Gson faire tout seul
-				SkyBlockBazaarReply reply
-						= GsonProvider.prettyPrinting().fromJson(response.content(), SkyBlockBazaarReply.class);
-				if (reply == null) {
-					throw new IllegalStateException("Json is null or empty");
-				}
-
-				if (!reply.isSuccess()) {
-					throw new RuntimeException("SkyBlock Bazaar reply failed: " + reply.getCause());
-				}
-
-				return reply;
-			} catch (Throwable ex) {
-				CaribouStonks.LOGGER.error("[HypixelDataSource] Failed to fetch SkyBlock Bazaar from Hypixel API", ex);
-				return null;
-			}
-		});
-	}
-
-	private void checkItemsResults() {
-		if (!skyBlockItemError) {
-			CaribouStonks.LOGGER.info("[HypixelDataSource] Loaded {} SkyBlock Items", skyBlockItems.size());
-		} else {
-			CaribouStonks.LOGGER.error("[HypixelDataSource] Unable to load SkyBlock Items from Hypixel API");
-		}
-
-		if (!skyBlockItemError && !modDataSource.isItemsMappingError()) {
-			List<String> hypixelMaterials = skyBlockItems.values().stream()
-					.map(SkyBlockItem::getMaterial)
-					.collect(Collectors.toSet())
-					.stream()
-					.toList();
-
-			for (String material : hypixelMaterials) {
-				if (!modDataSource.containsItem(material)) {
-					CaribouStonks.LOGGER.warn(
-							"[HypixelDataSource] (Minecraft Ids Mapping) -> {} is not registered!", material);
-				}
-			}
-		} else {
-			CaribouStonks.LOGGER.error("[HypixelDataSource] (Minecraft Ids Mapping) SkyBlock Items error or mapping error");
-		}
-	}
-
-	private void checkBazaarResult() {
-		if (!bazaarUpdateError) {
-			CaribouStonks.LOGGER.info("[HypixelDataSource] Updated {} Bazaar Items", bazaarData.size());
-		} else {
-			CaribouStonks.LOGGER.error("[HypixelDataSource] Unable to update Bazaar Items from Hypixel API");
-		}
-	}
-
-	@SuppressWarnings("checkstyle:CyclomaticComplexity") // -_-
-	private void fixMissingSkyBlockItems() {
-		if (itemsLoaded && firstBazaarUpdated && !hasCalledFixMissing) {
+	@ApiStatus.Internal
+	public void fixSkyBlockItems() {
+		if (itemsFetcher.isLastFetchSuccessful() && bazaarFetcher.isFirstBazaarUpdated() && !hasCalledFixMissing) {
 			hasCalledFixMissing = true;
 			CaribouStonks.LOGGER.info("[HypixelDataSource] Fixing Hypixel SkyBlock Items..");
 
@@ -390,21 +226,23 @@ public final class HypixelDataSource { // TODO clean up & docs
 			int fixedEssences = 0;
 			int fixedShards = 0;
 
-			for (String bazaarProductId : bazaarData.keySet()) {
-				if (!skyBlockItems.containsKey(bazaarProductId)) {
+			for (String bazaarProductId : bazaarFetcher.getBazaarSnapshot().keySet()) {
+				if (!itemsFetcher.getSkyBlockItemsSnapshot().containsKey(bazaarProductId)) {
 					try {
 						if (apiFixer.isEnchantment(bazaarProductId)) {
-							skyBlockItems.put(bazaarProductId, apiFixer.createEnchant(bazaarProductId));
+							//itemsFetcher.skyBlockItems().put(bazaarProductId, apiFixer.createEnchant(bazaarProductId));
+							itemsFetcher.putItem(bazaarProductId, apiFixer.createEnchant(bazaarProductId));
 							fixedEnchants++;
 
 						} else if (apiFixer.isEssence(bazaarProductId)) {
-							skyBlockItems.put(bazaarProductId, apiFixer.createEssence(bazaarProductId));
+							itemsFetcher.putItem(bazaarProductId, apiFixer.createEssence(bazaarProductId));
 							fixedEssences++;
 
 						} else if (apiFixer.isShard(bazaarProductId)) {
 							SkyBlockItem shard = apiFixer.createShard(bazaarProductId);
 							if (shard != null) {
-								skyBlockItems.put(bazaarProductId, shard);
+								//itemsFetcher.skyBlockItems().put(bazaarProductId, shard);
+								itemsFetcher.putItem(bazaarProductId, shard);
 								fixedShards++;
 							} else {
 								CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create {} Shard! Not registered in ModDataSource.",
