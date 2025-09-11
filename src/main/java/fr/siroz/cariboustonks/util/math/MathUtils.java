@@ -46,6 +46,11 @@ public final class MathUtils {
 		return d < (double) i ? i - 1 : i;
 	}
 
+	public static int floor(float v) {
+		int i = (int) v;
+		return v < (float) i ? i - 1 : i;
+	}
+
 	public static int fastFloor(double d) {
 		return (int) (d + 1024.0) - 1024;
 	}
@@ -53,5 +58,10 @@ public final class MathUtils {
 	public static int ceil(double d) {
 		int i = (int) d;
 		return d > (double) i ? i + 1 : i;
+	}
+
+	public static int ceil(float v) {
+		int i = (int) v;
+		return v > (float) i ? i + 1 : i;
 	}
 }

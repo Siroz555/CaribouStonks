@@ -2,9 +2,11 @@ package fr.siroz.cariboustonks.util.render;
 
 import com.mojang.blaze3d.systems.RenderPass;
 import fr.siroz.cariboustonks.util.render.gui.Point;
-import fr.siroz.cariboustonks.util.render.gui.state.CustomShapeGuiElementRenderState;
+import fr.siroz.cariboustonks.util.render.gui.Quad;
 import fr.siroz.cariboustonks.util.render.gui.state.GradientRectGuiElementRenderState;
+import fr.siroz.cariboustonks.util.render.gui.state.QuadGuiElementRenderState;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
@@ -12,7 +14,6 @@ import net.minecraft.client.gl.ScissorState;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.texture.TextureSetup;
 import net.minecraft.client.util.Window;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2f;
@@ -23,9 +24,7 @@ import org.joml.Vector2f;
  */
 public final class GuiRenderUtils {
 
-	// TODO - Utiliser le CustomShapeGuiElementRenderState pour fix le graphique des prix
-	//  en utilisant un autre moyen d'affichage que des lignes?
-
+	private static final List<Quad> BATCH_QUADS = new ArrayList<>();
 	private static final ScissorState BLUR_SCISSOR_STATE = new ScissorState();
 
 	private GuiRenderUtils() {
@@ -78,70 +77,72 @@ public final class GuiRenderUtils {
 	}
 
 	/**
-	 * Enqueues a custom-shaped GUI element for rendering using the given {@link DrawContext}.
+	 * Enqueues a polyline as a series of quads GUI element for rendering using the given {@link DrawContext}.
 	 * <p>
-	 * This method creates a {@link CustomShapeGuiElementRenderState}.
+	 * This method creates a {@link QuadGuiElementRenderState}.
 	 *
-	 * @param context  the {@code DrawContext}
-	 * @param vertices an ordered list of 2D vertices describing the custom shape.
-	 * @param color    the shape color.
+	 * @param context   the {@code DrawContext}
+	 * @param points    an array of Points describing the polyline
+	 * @param color     the color
+	 * @param thickness the thickness of the line in pixels
 	 */
-	public static void drawCustomShape(@NotNull DrawContext context, @NotNull List<Vector2f> vertices, int color) {
-		CustomShapeGuiElementRenderState renderState = new CustomShapeGuiElementRenderState(
+	public static void renderLinesFromPoints(
+			@NotNull DrawContext context,
+			@NotNull Point @NotNull [] points,
+			@NotNull Color color,
+			int thickness
+	) {
+		if (points.length < 2) return;
+
+		Matrix3x2f matrix = context.getMatrices();
+
+		for (int i = 0; i < points.length; i++) {
+			Point currentPoint = points[i];
+			Point nextPoint = points[i + 1 == points.length ? i - 1 : i + 1];
+			int startX = currentPoint.x();
+			int startY = currentPoint.y();
+			int endX = nextPoint.x();
+			int endY = nextPoint.y();
+
+			// Calcul du vecteur perpendiculaire (side) à la direction du segment,
+			// normalisé et multiplié par (thickness / 2) pour obtenir l'offset des bords.
+			Vector2f side = new Vector2f(endX, endY)
+					.sub(startX, startY)
+					.normalize()
+					.perpendicular()
+					.mul(thickness / 2f);
+
+			// Coins du quad (avant transformation)
+			float x1 = startX + side.x();
+			float y1 = startY + side.y();
+			float x2 = startX - side.x();
+			float y2 = startY - side.y();
+			float x3 = endX - side.x();
+			float y3 = endY - side.y();
+			float x4 = endX + side.x();
+			float y4 = endY + side.y();
+
+			Vector2f v1 = matrix.transformPosition(new Vector2f(x1, y1));
+			Vector2f v2 = matrix.transformPosition(new Vector2f(x2, y2));
+			Vector2f v3 = matrix.transformPosition(new Vector2f(x3, y3));
+			Vector2f v4 = matrix.transformPosition(new Vector2f(x4, y4));
+			BATCH_QUADS.add(new Quad(v1.x(), v1.y(), v2.x(), v2.y(), v3.x(), v3.y(), v4.x(), v4.y()));
+		}
+
+		// Le jeu crash si j'utilise directement les quads,
+		// avec un "IllegalStateException : BufferBuilder was empty"
+		// Je récupère donc une copy et je clear le batch juste après.
+		List<Quad> batchCopy = List.copyOf(BATCH_QUADS);
+		BATCH_QUADS.clear();
+
+		QuadGuiElementRenderState renderState = new QuadGuiElementRenderState(
 				RenderPipelines.GUI,
 				TextureSetup.empty(),
-				new Matrix3x2f(context.getMatrices()),
-				vertices,
-				color,
+				batchCopy,
+				color.getRGB(),
 				context.scissorStack.peekLast()
 		);
 		context.state.addSimpleElement(renderState);
-	}
-
-	public static void renderLinesFromPoints(
-			@NotNull DrawContext context,
-			@NotNull Point[] points,
-			@NotNull Color color,
-			float lineWidth
-	) {
-
-		if (points.length < 2) return;
-
-		context.drawTextWithShadow(
-				MinecraftClient.getInstance().textRenderer,
-				Text.literal("Graph is not yet implemented in this version :'(").withColor(color.getRGB()),
-				points[0].x() + 5,
-				points[0].y() + 50,
-				color.getRGB()
-		);
-
-//		GL11.glEnable(GL11.GL_LINE_SMOOTH);
-//		GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
-//		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-//		RenderSystem.lineWidth(lineWidth);
-//
-//		context.draw(consumerProvider -> {
-//			VertexConsumer buffer = consumerProvider.getBuffer(CustomRenderLayers.GUI_LINES);
-//
-//			MatrixStack matrices = context.getMatrices();
-//			for (int i = 0; i < points.length; i++) {
-//				Point nextPoint = points[i + 1 == points.length ? i - 1 : i + 1];
-//				MatrixStack.Entry entry = matrices.peek();
-//				Matrix4f matrix4f = entry.getPositionMatrix();
-//				Vec3d normalized = new Vec3d(nextPoint.x() - points[i].x(), nextPoint.y() - points[i].y(), 0).normalize();
-//
-//				buffer.vertex(matrix4f, (float) points[i].x(), (float) points[i].y(), -1)
-//						.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-//						.normal(entry, (float) normalized.x, (float) normalized.y, (float) normalized.z);
-//
-//				buffer.vertex(matrix4f, (float) nextPoint.x(), (float) nextPoint.y(), -1)
-//						.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-//						.normal(entry, (float) normalized.x, (float) normalized.y, (float) normalized.z);
-//			}
-//		});
-//
-//		GL11.glDisable(GL11.GL_LINE_SMOOTH);
-//		RenderSystem.lineWidth(1f);
 	}
 
 	public static void enableBlurScissor(int x, int y, int width, int height) {

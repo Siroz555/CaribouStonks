@@ -177,7 +177,7 @@ public class ItemGraphWidget extends AbstractItemStonksWidget {
 			drawGradient(context, pointsBuy, startColor, endColor, y2 + 10, false);
 		}
 
-		GuiRenderUtils.renderLinesFromPoints(context, pointsBuy.toArray(new Point[0]), new Color(0, 222, 5), 3f);
+		GuiRenderUtils.renderLinesFromPoints(context, pointsBuy.toArray(new Point[0]), new Color(0, 222, 5), 1);
 
 		// Calculer de facon indépendante les points pour les prix sell, même si les calculs sont les mêmes,
 		// car s'il y a une différence en nombres (quantité), les courbes seront décalées.
@@ -202,7 +202,7 @@ public class ItemGraphWidget extends AbstractItemStonksWidget {
 				drawGradient(context, pointsSell, startColor, endColor, y2, true);
 			}
 
-			GuiRenderUtils.renderLinesFromPoints(context, pointsSell.toArray(new Point[0]), new Color(234, 214, 7), 2.5f);
+			GuiRenderUtils.renderLinesFromPoints(context, pointsSell.toArray(new Point[0]), new Color(234, 214, 7), 1);
 		}
 
 		drawLabels(context, x1, y1, x2, y2);
