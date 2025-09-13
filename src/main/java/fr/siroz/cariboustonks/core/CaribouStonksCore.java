@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.core;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.changelog.ChangelogManager;
 import fr.siroz.cariboustonks.core.crash.CrashType;
 import fr.siroz.cariboustonks.core.data.generic.GenericDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
@@ -43,6 +44,7 @@ public final class CaribouStonksCore {
 		TickScheduler.getInstance().runRepeating(SkyBlockAPI::update, 3, TimeUnit.SECONDS);
 
 		new UpdateChecker();
+		new ChangelogManager();
 
 		ClientPlayConnectionEvents.DISCONNECT.register((_handler, _client) -> onDisconnect());
 
