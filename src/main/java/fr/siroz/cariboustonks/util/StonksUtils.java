@@ -114,7 +114,7 @@ public final class StonksUtils {
 	 */
 	public static boolean isConnectedToHypixel() {
 		String serverAddress = CLIENT.getCurrentServerEntry() != null
-				? CLIENT.getCurrentServerEntry().address.toLowerCase()
+				? CLIENT.getCurrentServerEntry().address.toLowerCase(Locale.ENGLISH)
 				: "";
 		String serverBrand = CLIENT.player != null
 				&& CLIENT.player.networkHandler != null

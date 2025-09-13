@@ -1,12 +1,13 @@
 package fr.siroz.cariboustonks.core.data.mod;
 
-import fr.siroz.cariboustonks.core.skyblock.Rarity;
+import fr.siroz.cariboustonks.core.data.hypixel.item.Rarity;
 
 public record SkyBlockAttribute(
 		String name,
 		String shardName,
 		String id,
-		String skyBlockApiId) {
+		String skyBlockApiId
+) {
 
 	public Rarity getRarityFromId() {
 		if (id == null || id.isEmpty()) return Rarity.UNKNOWN;

@@ -5,11 +5,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.siroz.cariboustonks.CaribouStonks;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
-
+import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.OptionalInt;
+import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
@@ -18,24 +20,19 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.util.concurrent.CompletableFuture;
-import java.util.Map;
-import java.util.OptionalInt;
-
 public final class ModDataSource {
 
 	// Hypixel SkyBlock API - Item "material" > Minecraft Item material ID
 	private static final Identifier ITEMS_MAPPING_JSON = CaribouStonks.identifier("repo/items_mapping.json");
-	private final Object2ObjectMap<String, String> minecraftIdsMapping = new Object2ObjectOpenHashMap<>();
+	private final Map<String, String> minecraftIdsMapping = new HashMap<>();
 
 	// Hypixel SkyBlock Wiki - Enchantments
 	private static final Identifier ENCHANTMENTS_JSON = CaribouStonks.identifier("repo/enchantments.json");
-	private final Object2ObjectMap<String, SkyBlockEnchantment> skyBlockEnchants = new Object2ObjectOpenHashMap<>();
+	private final Map<String, SkyBlockEnchantment> skyBlockEnchants = new HashMap<>();
 
 	// Hypixel SkyBlock API & IG - Attributes 1.23 The Foraging Update
 	private static final Identifier ATTRIBUTES_JSON = CaribouStonks.identifier("repo/attributes.json");
-	private final ObjectList<SkyBlockAttribute> skyBlockAttributes = new ObjectArrayList<>();
+	private final List<SkyBlockAttribute> skyBlockAttributes = new ArrayList<>();
 
 	private boolean itemsMappingError = false;
 	private boolean enchantmentsError = false;
@@ -64,15 +61,6 @@ public final class ModDataSource {
 	public @Nullable SkyBlockEnchantment getSkyBlockEnchantment(@NotNull String id) {
 		if (skyBlockEnchants.isEmpty()) return null;
 		return skyBlockEnchants.get(id);
-	}
-
-	public boolean containsEnchantment(@NotNull String enchantmentId) {
-		if (skyBlockEnchants.isEmpty()) return false;
-		return skyBlockEnchants.containsKey(enchantmentId);
-	}
-
-	public boolean isEnchantmentsError() {
-		return enchantmentsError;
 	}
 
 	public @Nullable SkyBlockAttribute getAttributeBySkyBlockId(@Nullable String skyBlockId) {

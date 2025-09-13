@@ -6,6 +6,7 @@ import fr.siroz.cariboustonks.core.data.hypixel.election.ElectionResult;
 import fr.siroz.cariboustonks.core.data.hypixel.fetcher.BazaarFetcher;
 import fr.siroz.cariboustonks.core.data.hypixel.fetcher.ElectionFetcher;
 import fr.siroz.cariboustonks.core.data.hypixel.fetcher.ItemsFetcher;
+import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
 import fr.siroz.cariboustonks.core.data.mod.ModDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
 import fr.siroz.cariboustonks.event.EventHandler;
@@ -119,7 +120,7 @@ public final class HypixelDataSource {
 				return fallback;
 			}
 
-			String hypixelMaterial = skyBlockItem.getMaterial();
+			String hypixelMaterial = skyBlockItem.material();
 			String minecraftId = modDataSource.getMinecraftId(hypixelMaterial);
 			if (minecraftId == null || minecraftId.equals("NO_MATCH")) {
 				return fallback;
@@ -132,8 +133,8 @@ public final class HypixelDataSource {
 				itemStack = new ItemStack(item.get(), 1);
 			}
 
-			if (skyBlockItem.isSkullItem() && skyBlockItem.getSkullTexture().isPresent()) {
-				itemStack = ItemUtils.createSkull(skyBlockItem.getSkullTexture().get());
+			if (skyBlockItem.skullTexture() != null) {
+				itemStack = ItemUtils.createSkull(skyBlockItem.skullTexture());
 			}
 
 			itemStack.set(DataComponentTypes.CUSTOM_NAME, Text.of(skyBlockItemId));

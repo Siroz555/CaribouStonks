@@ -6,7 +6,8 @@ public record SkyBlockEnchantment(
 		String id,
 		String name,
 		int maxLevel,
-		OptionalInt goodLevel) {
+		OptionalInt goodLevel
+) {
 
 	public boolean isMaxLevel(int level) {
 		return level >= maxLevel;

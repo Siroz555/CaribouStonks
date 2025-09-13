@@ -4,8 +4,8 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
 import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
-import fr.siroz.cariboustonks.core.data.item.ItemLookupKey;
-import fr.siroz.cariboustonks.core.data.hypixel.SkyBlockItem;
+import fr.siroz.cariboustonks.util.ItemLookupKey;
+import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
 import fr.siroz.cariboustonks.feature.stonks.graph.ItemGraphWidget;
 import fr.siroz.cariboustonks.feature.stonks.info.ItemInformationWidget;
 import fr.siroz.cariboustonks.feature.stonks.search.StonksSearchScreen;
@@ -61,8 +61,8 @@ public class StonksScreen extends CaribousStonksScreen {
 		HypixelDataSource hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
 		Optional<SkyBlockItem> item = hypixelDataSource.getSkyBlockItemOptional(key.getHypixelSkyBlockId());
 		if (item.isPresent()) {
-			this.itemName = Text.literal(item.get().getName()).formatted(item.get().getTier().getFormatting());
-			this.icon = hypixelDataSource.getItemStack(item.get().getSkyBlockId());
+			this.itemName = Text.literal(item.get().name()).formatted(item.get().tier().getFormatting());
+			this.icon = hypixelDataSource.getItemStack(item.get().skyBlockId());
 		} else {
 			this.itemName = Text.literal(key.getHypixelSkyBlockId() != null ? key.getHypixelSkyBlockId() : "? ? ?");
 			this.icon = new ItemStack(Items.BARRIER);

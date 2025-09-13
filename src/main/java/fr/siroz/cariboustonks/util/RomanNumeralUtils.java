@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
+import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;
@@ -39,7 +40,7 @@ public final class RomanNumeralUtils {
 			return false;
 		}
 
-		return ROMAN_PATTERN.matcher(number.toUpperCase()).matches();
+		return ROMAN_PATTERN.matcher(number.toUpperCase(Locale.ENGLISH)).matches();
 	}
 
 	public static int parse(@NotNull String roman) {

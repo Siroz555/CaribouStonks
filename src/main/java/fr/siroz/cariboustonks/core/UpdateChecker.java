@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.json.GsonProvider;
+import fr.siroz.cariboustonks.core.scheduler.AsyncScheduler;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
@@ -40,7 +41,6 @@ final class UpdateChecker {
 	private static final String MODRINTH_VERSION_URL = "https://modrinth.com/mod/cariboustonks/version/";
 	private static final String MODRINTH_VERSION_CHECKER_URL = "https://api.modrinth.com/v2/project/fraWWQSJ/version?loaders=[%22fabric%22]&game_versions=";
 
-	private static final Version MOD_VERSION = CaribouStonks.MOD_CONTAINER.getMetadata().getVersion();
 	private static final Comparator<Version> COMPARATOR = Version::compareTo;
 
 	private ModrinthVersionInfo newestModrinthVersionInfo = null;
@@ -63,7 +63,8 @@ final class UpdateChecker {
 
 				JsonArray jsonResponse = GsonProvider.prettyPrinting().fromJson(response.content(), JsonArray.class);
 				if (jsonResponse == null || jsonResponse.isEmpty()) {
-					throw new IllegalStateException("Json is null or empty");
+					CaribouStonks.LOGGER.info("[CaribouStonks UpdateChecker] No versions available on this version!");
+					return;
 				}
 
 				List<ModrinthVersionInfo> modrinthVersionInfos = new ArrayList<>();
@@ -81,7 +82,7 @@ final class UpdateChecker {
 					modrinthVersionInfos.add(new ModrinthVersionInfo(id, name, version, null));
 				}
 
-				SemanticVersion currentVersion = (SemanticVersion) MOD_VERSION;
+				SemanticVersion currentVersion = (SemanticVersion) CaribouStonks.VERSION;
 				Optional<ModrinthVersionInfo> newestModrinthVersionInfo = modrinthVersionInfos.stream()
 						.filter(info -> COMPARATOR.compare(info.version(), currentVersion) > 0)
 						.max(Comparator.comparing(ModrinthVersionInfo::version, COMPARATOR));
@@ -90,12 +91,14 @@ final class UpdateChecker {
 					this.newestModrinthVersionInfo = newestModrinthVersionInfo.get();
 
 					CaribouStonks.LOGGER.info("[CaribouStonks UpdateChecker] Found a new version! o/ ({} -> {})",
-							MOD_VERSION.getFriendlyString(), newestModrinthVersionInfo.get().version().getFriendlyString());
+							CaribouStonks.VERSION.getFriendlyString(), newestModrinthVersionInfo.get().version().getFriendlyString());
+				} else {
+					CaribouStonks.LOGGER.info("[CaribouStonks UpdateChecker] Up to the date!");
 				}
 			} catch (Exception ex) {
 				CaribouStonks.LOGGER.error("[CaribouStonks UpdateChecker] Failed to check updates on Modrinth :/", ex);
 			}
-		});
+		}, AsyncScheduler.getInstance().blockingExecutor());
 	}
 
 	@EventHandler(event = "SkyBlockEvents.JOIN")

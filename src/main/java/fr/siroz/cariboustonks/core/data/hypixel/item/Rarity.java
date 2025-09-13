@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.core.skyblock;
+package fr.siroz.cariboustonks.core.data.hypixel.item;
 
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;

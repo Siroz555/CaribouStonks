@@ -6,7 +6,7 @@ import com.google.gson.JsonParser;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelAPIFixer;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.core.data.hypixel.SkyBlockItem;
+import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
 import fr.siroz.cariboustonks.core.data.mod.ModDataSource;
 import fr.siroz.cariboustonks.core.json.GsonProvider;
 import fr.siroz.cariboustonks.core.scheduler.AsyncScheduler;
@@ -222,7 +222,7 @@ public final class ItemsFetcher {
 
 			if (lastFetchSuccessful.get() && !modDataSource.isItemsMappingError()) {
 				List<String> hypixelMaterials = skyBlockItems.get().values().stream()
-						.map(SkyBlockItem::getMaterial)
+						.map(SkyBlockItem::material)
 						.collect(Collectors.toSet())
 						.stream()
 						.toList();

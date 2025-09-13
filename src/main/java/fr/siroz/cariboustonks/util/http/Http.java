@@ -23,7 +23,7 @@ import java.util.zip.InflaterInputStream;
 public final class Http {
 
 	private static final String USER_AGENT = "CaribouStonks/"
-			+ CaribouStonks.VERSION
+			+ CaribouStonks.VERSION.getFriendlyString()
 			+ " (" + SharedConstants.getGameVersion().name() + ")";
 
 	private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()

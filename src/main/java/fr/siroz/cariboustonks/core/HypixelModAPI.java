@@ -36,11 +36,9 @@ final class HypixelModAPI {
 	private void handlePacket(@NotNull HypixelS2CPacket packet) {
 		switch (packet) {
 
-			case HelloS2CPacket(var _environment) -> {
-				SkyBlockAPI.handleLocationUpdate(true, null, null, null);
-			}
+			case HelloS2CPacket(var ignored) -> SkyBlockAPI.handleLocationUpdate(true, null, null, null);
 
-			case LocationUpdateS2CPacket(var serverName, var serverType, var _lobbyName, var mode, var _map) -> {
+			case LocationUpdateS2CPacket(var serverName, var serverType, var ignored, var mode, var ignored1) -> {
 				String previousServerType = SkyBlockAPI.getGameType();
 				String gameType = serverType.orElse("");
 				IslandType islandType = IslandType.getById(mode.orElse(""));

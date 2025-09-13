@@ -5,14 +5,13 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.data.algo.BazaarItemAnalytics;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.core.data.hypixel.SkyBlockItem;
+import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import fr.siroz.cariboustonks.util.Symbols;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -69,11 +68,11 @@ public class StonksCommandFeature extends Feature {
 
 			SkyBlockItem skyBlockItem = hypixelDataSource.getSkyBlockItem(item);
 			if (skyBlockItem == null) {
-				source.sendFeedback(Text.empty().append(Symbols.getStyled(Symbols.STAR, Colors.ORANGE.asInt()))
+				source.sendFeedback(Text.empty().append(Text.literal("⭐").withColor(Colors.ORANGE.asInt()))
 						.append(" " + Text.literal(product.productId() + " :").formatted(Formatting.GOLD)));
 			} else {
-				source.sendFeedback(Text.empty().append(Symbols.getStyled(Symbols.STAR, Colors.ORANGE.asInt()))
-						.append(Text.literal(" " + skyBlockItem.getName()).withColor(skyBlockItem.getTier().getColor()))
+				source.sendFeedback(Text.empty().append(Text.literal("⭐").withColor(Colors.ORANGE.asInt()))
+						.append(Text.literal(" " + skyBlockItem.name()).withColor(skyBlockItem.tier().getColor()))
 						.append(Text.literal(" (" + product.productId() + ")").formatted(Formatting.DARK_GRAY)));
 			}
 

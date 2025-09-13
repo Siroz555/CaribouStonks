@@ -77,7 +77,7 @@ public enum SlayerType {
 	}
 
 	public static SlayerType fromBossName(@NotNull String bossName) {
-		return BOSS_NAME_TO_TYPE.getOrDefault(bossName.toLowerCase(), UNKNOWN);
+		return BOSS_NAME_TO_TYPE.getOrDefault(bossName.toLowerCase(Locale.ENGLISH), UNKNOWN);
 	}
 
 	public EntityType<? extends Entity> getEntityType() {

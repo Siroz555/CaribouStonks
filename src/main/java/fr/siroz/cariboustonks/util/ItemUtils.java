@@ -6,7 +6,7 @@ import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.serialization.JsonOps;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.mod.SkyBlockAttribute;
-import fr.siroz.cariboustonks.core.skyblock.Rarity;
+import fr.siroz.cariboustonks.core.data.hypixel.item.Rarity;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectReferencePair;
 import java.util.Objects;

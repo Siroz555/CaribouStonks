@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.feature.stonks.tooltips.auction;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.data.generic.GenericDataSource;
-import fr.siroz.cariboustonks.core.data.item.ItemLookupKey;
+import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;

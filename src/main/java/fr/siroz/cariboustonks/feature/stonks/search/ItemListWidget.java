@@ -2,8 +2,8 @@ package fr.siroz.cariboustonks.feature.stonks.search;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.core.data.item.ItemLookupKey;
-import fr.siroz.cariboustonks.core.data.hypixel.SkyBlockItem;
+import fr.siroz.cariboustonks.util.ItemLookupKey;
+import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataException;
 import fr.siroz.cariboustonks.feature.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.Client;
@@ -73,9 +73,9 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 
 				List<ItemSummary> itemSummaries = new ArrayList<>(itemList.size());
 				for (SkyBlockItem item : itemList) {
-					String skyBlockId = item.getSkyBlockId();
-					Formatting formatting = item.getTier().getFormatting();
-					String name = item.getName();
+					String skyBlockId = item.skyBlockId();
+					Formatting formatting = item.tier().getFormatting();
+					String name = item.name();
 					ItemStack itemStack = hypixelDataSource.getItemStack(skyBlockId);
 
 					ItemSummary summary = new ItemSummary(skyBlockId, formatting, name, itemStack);

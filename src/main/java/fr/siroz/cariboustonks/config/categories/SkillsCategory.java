@@ -163,15 +163,6 @@ public class SkillsCategory extends AbstractCategory {
 										newValue -> current.hunting.attributeInfos = newValue)
 								.controller(this::createBooleanController)
 								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Prevent the placement of Fishing Net"))
-								.description(OptionDescription.of(
-										Text.literal("Prevent Fishing Net from being placed")))
-								.binding(defaults.hunting.cancelFishingNetPlacement,
-										() -> current.hunting.cancelFishingNetPlacement,
-										newValue -> current.hunting.cancelFishingNetPlacement = newValue)
-								.controller(this::createBooleanController)
-								.build())
 						.build())
                 .group(OptionGroup.createBuilder()
                         .name(Text.literal("Fishing").formatted(Formatting.BOLD))

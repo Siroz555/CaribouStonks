@@ -9,6 +9,7 @@ import fr.siroz.cariboustonks.util.StonksUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.Version;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -31,7 +32,7 @@ public final class CaribouStonks implements ClientModInitializer {
 
 	public static final String NAMESPACE = "cariboustonks";
 	public static final ModContainer MOD_CONTAINER = FabricLoader.getInstance().getModContainer(NAMESPACE).orElseThrow();
-	public static final String VERSION = MOD_CONTAINER.getMetadata().getVersion().getFriendlyString();
+	public static final Version VERSION = MOD_CONTAINER.getMetadata().getVersion();
 	public static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir().resolve(NAMESPACE);
 
 	private static CaribouStonks instance;
