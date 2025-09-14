@@ -1,10 +1,11 @@
 package fr.siroz.cariboustonks.manager.glowing;
 
+import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.Manager;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import java.util.concurrent.TimeUnit;
 import net.minecraft.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +29,7 @@ public final class GlowingManager implements Manager {
 
 	@ApiStatus.Internal
 	public GlowingManager() {
-		ClientTickEvents.END_WORLD_TICK.register(_client -> this.cachedEntities.clear());
+		TickScheduler.getInstance().runRepeating(this.cachedEntities::clear, 1, TimeUnit.SECONDS);
 	}
 
 	@Override
