@@ -78,9 +78,16 @@ public final class ChangelogManager {
 		// La dernière version vu depuis le fichier :
 		//  Si elle est présente et que la version actuelle du mod est different > fetch changelog depuis GitHub
 		//  Sinon > marquer comme "seen" (cas de la première installation depuis la version avec le changelog).
-		// > Pas de cas exceptionnel pour récupérer le changelog depuis la version avec le changelog.
 		// > Vérification avec un "equals" simple pour détecter tout changement, je ne fais pas de "*alpha" ou "*beta".
-		if (lastSeenVersion != null && !lastSeenVersion.equals(CURRENT_VERSION)) {
+
+		// TODO ---- Remove on 0.6.1 Release
+		//  Cas exceptionnel pour récupérer le changelog pour la version 0.6.1 pour l'introduction au changelog
+		boolean specialCase = lastSeenVersion == null && "0.6.1".equals(CURRENT_VERSION);
+		if (specialCase) {
+			lastSeenVersion = "0.6.0";
+		}
+
+		if (specialCase || (lastSeenVersion != null && !lastSeenVersion.equals(CURRENT_VERSION))) { // ----
 			CaribouStonks.LOGGER.info("[ChangelogManager] Last seen version is not the current version, fetching changelogs..");
 			fetchChangelogSinceLastSeen(lastSeenVersion);
 		} else if (lastSeenVersion == null) {
