@@ -103,7 +103,7 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 						ConfirmLinkScreen.opening(this, "https://github.com/Siroz555/CaribouStonks"))
 				.build());
 
-		Text version = Text.literal(" Version: " + CaribouStonks.VERSION);
+		Text version = Text.literal(" Version: " + CaribouStonks.VERSION.getFriendlyString());
 		addDrawableChild(new TextWidget(2, this.height - 15,
 				this.textRenderer.getWidth(version), 10, version, this.textRenderer));
 

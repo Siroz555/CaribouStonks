@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.core;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.changelog.ChangelogManager;
 import fr.siroz.cariboustonks.core.crash.CrashType;
 import fr.siroz.cariboustonks.core.data.generic.GenericDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
@@ -31,7 +32,6 @@ public final class CaribouStonksCore {
 	private static final Set<String> REPORTED_CRASHES = ConcurrentHashMap.newKeySet();
 
 	private final JsonFileService jsonFileService;
-
 	private final ModDataSource modDataSource;
 	private final HypixelDataSource hypixelDataSource;
 	private final GenericDataSource genericDataSource;
@@ -43,11 +43,11 @@ public final class CaribouStonksCore {
 		TickScheduler.getInstance().runRepeating(SkyBlockAPI::update, 3, TimeUnit.SECONDS);
 
 		new UpdateChecker();
+		new ChangelogManager();
 
 		ClientPlayConnectionEvents.DISCONNECT.register((_handler, _client) -> onDisconnect());
 
 		this.jsonFileService = new JsonFileService();
-
 		this.modDataSource = new ModDataSource();
 		this.hypixelDataSource = new HypixelDataSource(this.modDataSource);
 		this.genericDataSource = new GenericDataSource();
