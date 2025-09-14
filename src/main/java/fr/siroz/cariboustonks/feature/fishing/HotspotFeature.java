@@ -83,6 +83,7 @@ public class HotspotFeature extends Feature {
 		if (currentHotspot == null) {
 			currentHotspot = findClosestHotspotInRange(CLIENT.player).orElse(null);
 			if (currentHotspot != null) {
+				// dep -_-
 				CaribouStonks.features().getFeature(HotspotRadarFeature.class).reset();
 			}
 		} else {

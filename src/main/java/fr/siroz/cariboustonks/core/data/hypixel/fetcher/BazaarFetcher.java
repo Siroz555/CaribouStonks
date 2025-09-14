@@ -156,6 +156,9 @@ public final class BazaarFetcher {
 				throw new RuntimeException("SkyBlock API Bazaar returned empty products");
 			}
 
+			// TODO - remove complètement les Summary et Mappé directement les valeurs dans un nouveau Product Object
+			//  pour la version 0.7.0 - 1.7 Mo en heap est utilisé juste pour ça
+
 			bazaarCache.set(Map.copyOf(reply.products));
 			lastBazaarUpdate = reply.lastUpdated > 0 ? Instant.ofEpochSecond(reply.lastUpdated) : Instant.MIN;
 			lastFetchSuccessful.set(true);

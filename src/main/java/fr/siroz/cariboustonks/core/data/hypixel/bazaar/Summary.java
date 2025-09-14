@@ -7,5 +7,5 @@ package fr.siroz.cariboustonks.core.data.hypixel.bazaar;
  * @param pricePerUnit le prix par unité individuelle
  * @param orders       le nombre total de orders
  */
-public record Summary(long amount, double pricePerUnit, long orders) {
+public record Summary(long amount, double pricePerUnit, long orders) { // TODO - remove
 }

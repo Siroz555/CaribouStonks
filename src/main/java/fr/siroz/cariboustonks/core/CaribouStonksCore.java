@@ -32,7 +32,6 @@ public final class CaribouStonksCore {
 	private static final Set<String> REPORTED_CRASHES = ConcurrentHashMap.newKeySet();
 
 	private final JsonFileService jsonFileService;
-
 	private final ModDataSource modDataSource;
 	private final HypixelDataSource hypixelDataSource;
 	private final GenericDataSource genericDataSource;
@@ -49,7 +48,6 @@ public final class CaribouStonksCore {
 		ClientPlayConnectionEvents.DISCONNECT.register((_handler, _client) -> onDisconnect());
 
 		this.jsonFileService = new JsonFileService();
-
 		this.modDataSource = new ModDataSource();
 		this.hypixelDataSource = new HypixelDataSource(this.modDataSource);
 		this.genericDataSource = new GenericDataSource();

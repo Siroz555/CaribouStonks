@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
 
 // TODO : Refactor & Clean up
 //  Séparer par feature? Priorité sur la détection du Mythological Ritual et virer le #onDiana pour être
-//  remplacé par un Mayor Util.
+//  remplacé par SkyBlockAPI#isMayorOrMinister(Mayor, Perk).
 
 public final class MythologicalRitualFeature extends Feature implements EntityGlowProvider, WorldRendererProvider {
 

@@ -21,10 +21,11 @@ import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-@ApiStatus.Experimental // TODO on voit a travers les blocks les entities lul - en 1.21.7/8 c'est FIX
+// SIROZ-NOTE : on voit à travers les blocks : avec un Mixin c'est possible d'éviter ça,
+//  mais cela a un cout assez élevé coté performance, je trouve. Sachant que Skyblocker le
+//  fait déjà, et que la plupart on le Mod, mais à voir...
 public class HighlightMobFeature extends Feature implements EntityGlowProvider {
 
 	private EntityType<?> currentEntityTypeGlow = null;

@@ -40,7 +40,6 @@ final class UpdateChecker {
 
 	private static final String MODRINTH_VERSION_URL = "https://modrinth.com/mod/cariboustonks/version/";
 	private static final String MODRINTH_VERSION_CHECKER_URL = "https://api.modrinth.com/v2/project/fraWWQSJ/version?loaders=[%22fabric%22]&game_versions=";
-
 	private static final Comparator<Version> COMPARATOR = Version::compareTo;
 
 	private ModrinthVersionInfo newestModrinthVersionInfo = null;
