@@ -2,9 +2,8 @@ package fr.siroz.cariboustonks.feature.hunting;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.data.algo.BazaarItemAnalytics;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
+import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.data.mod.SkyBlockAttribute;
 import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -214,13 +213,13 @@ public class AttributeInfoTooltipFeature extends Feature implements ContainerMat
 
 	private void addTotalCost(List<Text> lines, int required, String skyBlockApiId) {
 		if (required > 0 && hypixelDataSource.hasBazaarItem(skyBlockApiId)) {
-			Optional<Product> product = hypixelDataSource.getBazaarItem(skyBlockApiId);
+			Optional<BazaarProduct> product = hypixelDataSource.getBazaarItem(skyBlockApiId);
 			if (product.isEmpty()) {
 				lines.add(Text.literal("Bazaar item error.").formatted(Formatting.RED));
 				return;
 			}
 
-			double price = BazaarItemAnalytics.buyPrice(product.get()) * required;
+			double price = product.get().buyPrice() * required;
 			String priceDisplay = StonksUtils.INTEGER_NUMBERS.format(price);
 
 			lines.add(Text.literal("Cost To Max: ").formatted(Formatting.YELLOW)

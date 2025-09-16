@@ -1,9 +1,7 @@
 package fr.siroz.cariboustonks.feature.stonks.info;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.data.algo.BazaarItemAnalytics;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Summary;
+import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.feature.stonks.AbstractItemStonksWidget;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
@@ -11,8 +9,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class ItemInformationWidget extends AbstractItemStonksWidget { // TODO le code ne ressemble a rien après 1687 modifs
 
@@ -35,33 +31,31 @@ public class ItemInformationWidget extends AbstractItemStonksWidget { // TODO le
 	//private double currentEMA, oneWeekAgoEMA, oneMouthAgoEMA;
 
 	public ItemInformationWidget(
-			@Nullable Product bazaarItem,
+			@Nullable BazaarProduct bazaarItem,
 			int width,
 			int height
 	) {
 		super(width, height);
 		if (bazaarItem != null) {
 			this.bazaar = true;
-			this.buyPrice = BazaarItemAnalytics.buyPrice(bazaarItem);
-			this.sellPrice = BazaarItemAnalytics.sellPrice(bazaarItem);
-			this.buyAvg = BazaarItemAnalytics.weightedAverageBuyPrice(bazaarItem);
-			this.sellAvg = BazaarItemAnalytics.weightedAverageSellPrice(bazaarItem);
-			List<Double> buyPrices = bazaarItem.buySummary().stream().map(Summary::pricePerUnit).toList();
-			List<Double> sellPrices = bazaarItem.sellSummary().stream().map(Summary::pricePerUnit).toList();
-			this.buyMedian = StonksUtils.calculateMedian(buyPrices);
-			this.sellMedian = StonksUtils.calculateMedian(sellPrices);
-			this.buyVolume = bazaarItem.quickStatus().buyVolume();
-			this.sellVolume = bazaarItem.quickStatus().sellVolume();
-			this.buyOrders = bazaarItem.quickStatus().buyOrders();
-			this.sellOrders = bazaarItem.quickStatus().sellOrders();
-			this.buyMovingWeek = bazaarItem.quickStatus().buyMovingWeek();
-			this.sellMovingWeek = bazaarItem.quickStatus().sellMovingWeek();
-			this.spreadPercentage = BazaarItemAnalytics.spreadPercentage(bazaarItem);
-			this.orderImbalancePercentage = BazaarItemAnalytics.orderImbalancePercentage(bazaarItem);
-			this.vwap = BazaarItemAnalytics.vwap(bazaarItem);
-			this.standardDeviationBuy = BazaarItemAnalytics.standardDeviation(bazaarItem.buySummary());
-			this.standardDeviationSell = BazaarItemAnalytics.standardDeviation(bazaarItem.sellSummary());
-			this.sellSideLiquiditySlope = BazaarItemAnalytics.calculateSellSideLiquiditySlope(bazaarItem, 95);
+			this.buyPrice = bazaarItem.buyPrice();
+			this.sellPrice = bazaarItem.sellPrice();
+			this.buyAvg = bazaarItem.weightedAverageBuyPrice();
+			this.sellAvg = bazaarItem.weightedAverageSellPrice();
+			this.buyMedian = bazaarItem.buyMedianPrice();
+			this.sellMedian = bazaarItem.sellMedianPrice();
+			this.buyVolume = bazaarItem.buyVolume();
+			this.sellVolume = bazaarItem.sellVolume();
+			this.buyOrders = bazaarItem.buyOrders();
+			this.sellOrders = bazaarItem.sellOrders();
+			this.buyMovingWeek = bazaarItem.buyMovingWeek();
+			this.sellMovingWeek = bazaarItem.sellMovingWeek();
+			this.spreadPercentage = bazaarItem.spreadPercentage();
+			this.orderImbalancePercentage = 0;//BazaarItemAnalytics.orderImbalancePercentage(bazaarItem);
+			this.vwap = 0;//BazaarItemAnalytics.vwap(bazaarItem);
+			this.standardDeviationBuy = bazaarItem.buyPriceStdDev();
+			this.standardDeviationSell = bazaarItem.sellPriceStdDev();
+			this.sellSideLiquiditySlope = 0;//BazaarItemAnalytics.calculateSellSideLiquiditySlope(bazaarItem, 95);
 		}
 	}
 

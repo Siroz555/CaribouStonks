@@ -1,14 +1,20 @@
 package fr.siroz.cariboustonks.core.data.hypixel.fetcher;
 
+import com.google.gson.annotations.SerializedName;
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarItemAnalytics;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
+import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.json.GsonProvider;
 import fr.siroz.cariboustonks.core.scheduler.AsyncScheduler;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.http.Http;
 import fr.siroz.cariboustonks.util.http.HttpResponse;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -18,6 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 import org.apache.http.client.HttpResponseException;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  * <a href="https://api.hypixel.net/v2/skyblock/bazaar">Hypixel API - Bazaar</a>
  * <p>
  * Periodically triggers an asynchronous fetch of the Bazaar endpoint and stores an immutable snapshot
- * of the {@link Product} objects.
+ * of the {@link BazaarProduct} objects.
  */
 @ApiStatus.Internal
 public final class BazaarFetcher {
@@ -40,7 +47,7 @@ public final class BazaarFetcher {
 	private final AtomicBoolean fetchInProgress;
 	private final AtomicBoolean lastFetchSuccessful;
 
-	private final AtomicReference<Map<String, Product>> bazaarCache;
+	private final AtomicReference<Map<String, BazaarProduct>> bazaarCache;
 	private volatile Instant lastBazaarUpdate;
 
 	private volatile boolean firstBazaarUpdated;
@@ -83,7 +90,7 @@ public final class BazaarFetcher {
 	 *
 	 * @return an immutable Map snapshot of product id -> Product
 	 */
-	public Map<String, Product> getBazaarSnapshot() {
+	public Map<String, BazaarProduct> getBazaarSnapshot() {
 		return bazaarCache.get();
 	}
 
@@ -156,15 +163,57 @@ public final class BazaarFetcher {
 				throw new RuntimeException("SkyBlock API Bazaar returned empty products");
 			}
 
-			// TODO - remove complètement les Summary et Mappé directement les valeurs dans un nouveau Product Object
-			//  pour la version 0.7.0 - 1.7 Mo en heap est utilisé juste pour ça
-
-			bazaarCache.set(Map.copyOf(reply.products));
+			bazaarCache.set(computeAndConsumeProducts(reply.products));
 			lastBazaarUpdate = reply.lastUpdated > 0 ? Instant.ofEpochSecond(reply.lastUpdated) : Instant.MIN;
 			lastFetchSuccessful.set(true);
+			reply.products = null;
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
+	}
+
+	private @NotNull Map<String, BazaarProduct> computeAndConsumeProducts(@NotNull Map<String, HypixelProduct> products) {
+		Map<String, BazaarProduct> result = new HashMap<>(Math.max(16, products.size()));
+
+		Iterator<Map.Entry<String, HypixelProduct>> it = products.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, HypixelProduct> entry = it.next();
+			result.put(entry.getKey(), computeProduct(entry.getValue()));
+			it.remove();
+		}
+
+		return result;
+	}
+
+	@Contract("_ -> new")
+	private @NotNull BazaarProduct computeProduct(@NotNull HypixelProduct product) {
+		Status qs = product.quickStatus();
+		List<Double> buyPrices = product.buySummary().stream().map(Summary::pricePerUnit).toList();
+		List<Double> sellPrices = product.sellSummary().stream().map(Summary::pricePerUnit).toList();
+
+		double buyPrice = BazaarItemAnalytics.buyPrice(buyPrices);
+		double sellPrice = BazaarItemAnalytics.sellPrice(sellPrices);
+		double spread = BazaarItemAnalytics.spread(buyPrice, sellPrice);
+		double spreadPercentage = BazaarItemAnalytics.spreadPercentage(buyPrice, sellPrice);
+		double buyMedianPrice = StonksUtils.calculateMedian(buyPrices);
+		double sellMedianPrice = StonksUtils.calculateMedian(sellPrices);
+		double buyPriceStdDev = BazaarItemAnalytics.standardDeviation(buyPrices);
+		double sellPriceStdDev = BazaarItemAnalytics.standardDeviation(sellPrices);
+		double buyVelocity = BazaarItemAnalytics.priceVelocity(qs.buyVolume(), qs.buyMovingWeek());
+		double sellVelocity = BazaarItemAnalytics.priceVelocity(qs.sellVolume(), qs.sellMovingWeek());
+
+		return new BazaarProduct(
+				product.productId(),
+				buyPrice, sellPrice,
+				qs.buyPrice(), qs.sellPrice(),
+				qs.buyVolume(), qs.sellVolume(),
+				qs.buyMovingWeek(), qs.sellMovingWeek(),
+				qs.buyOrders(), qs.sellOrders(),
+				spread, spreadPercentage,
+				buyMedianPrice, sellMedianPrice,
+				buyPriceStdDev, sellPriceStdDev,
+				buyVelocity, sellVelocity
+		);
 	}
 
 	/**
@@ -174,6 +223,33 @@ public final class BazaarFetcher {
 		public boolean success;
 		public String cause;
 		public long lastUpdated;
-		public Map<String, Product> products;
+		public Map<String, HypixelProduct> products;
+	}
+
+	private record HypixelProduct(
+			@SerializedName("product_id") String productId,
+			@SerializedName("sell_summary") List<Summary> sellSummary,
+			@SerializedName("buy_summary") List<Summary> buySummary,
+			@SerializedName("quick_status") Status quickStatus
+	) {
+	}
+
+	private record Status(
+			double sellPrice,
+			long sellVolume,
+			long sellMovingWeek,
+			long sellOrders,
+			double buyPrice,
+			long buyVolume,
+			long buyMovingWeek,
+			long buyOrders
+	) {
+	}
+
+	private record Summary(
+			long amount,
+			double pricePerUnit,
+			long orders
+	) {
 	}
 }

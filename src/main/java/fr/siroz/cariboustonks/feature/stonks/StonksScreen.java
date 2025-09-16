@@ -2,8 +2,8 @@ package fr.siroz.cariboustonks.feature.stonks;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
 import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
+import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
 import fr.siroz.cariboustonks.feature.stonks.graph.ItemGraphWidget;
@@ -51,7 +51,7 @@ public class StonksScreen extends CaribousStonksScreen {
 	private ItemInformationWidget itemInformationWidget;
 	private ItemGraphWidget itemGraphWidget;
 	private List<ItemPrice> graphData = null;
-	private Product bazaarItem = null;
+	private BazaarProduct bazaarItem = null;
 
 	private volatile boolean notFound = false;
 

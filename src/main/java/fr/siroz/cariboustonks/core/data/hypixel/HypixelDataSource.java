@@ -2,13 +2,13 @@ package fr.siroz.cariboustonks.core.data.hypixel;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.data.hypixel.election.ElectionResult;
 import fr.siroz.cariboustonks.core.data.hypixel.fetcher.BazaarFetcher;
 import fr.siroz.cariboustonks.core.data.hypixel.fetcher.ElectionFetcher;
 import fr.siroz.cariboustonks.core.data.hypixel.fetcher.ItemsFetcher;
 import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
 import fr.siroz.cariboustonks.core.data.mod.ModDataSource;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public final class HypixelDataSource {
 		return bazaarFetcher.getBazaarSnapshot().containsKey(skyBlockItemId);
 	}
 
-	public Optional<Product> getBazaarItem(@Nullable String skyBlockItemId) {
+	public Optional<BazaarProduct> getBazaarItem(@Nullable String skyBlockItemId) {
 		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) return Optional.empty();
 		return Optional.ofNullable(bazaarFetcher.getBazaarSnapshot().get(skyBlockItemId));
 	}

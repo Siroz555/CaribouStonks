@@ -3,8 +3,7 @@ package fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.core.data.algo.BazaarItemAnalytics;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
+import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
@@ -59,7 +58,7 @@ public class BazaarPriceTooltipFeature extends Feature implements ContainerMatch
 		// Fix - end
 
 		if (hypixelDataSource.hasBazaarItem(skyBlockApiId)) {
-			Optional<Product> product = hypixelDataSource.getBazaarItem(skyBlockApiId);
+			Optional<BazaarProduct> product = hypixelDataSource.getBazaarItem(skyBlockApiId);
 			if (product.isEmpty()) {
 				lines.add(Text.literal("Bazaar item error.").formatted(Formatting.RED));
 				return;
@@ -69,26 +68,26 @@ public class BazaarPriceTooltipFeature extends Feature implements ContainerMatch
 
 			switch (ConfigManager.getConfig().general.stonks.bazaarTooltipPriceType) {
 				case ALL -> {
-					addBazaarLine(lines, "Bazaar Buy: ", BazaarItemAnalytics.buyPrice(product.get()), count);
-					addBazaarLine(lines, "Bazaar Sell: ", BazaarItemAnalytics.sellPrice(product.get()), count);
-					addBazaarLine(lines, "Bazaar Buy-Avg: ", BazaarItemAnalytics.weightedAverageBuyPrice(product.get()), 1);
-					addBazaarLine(lines, "Bazaar Sell-Avg: ", BazaarItemAnalytics.weightedAverageSellPrice(product.get()), 1);
+					addBazaarLine(lines, "Bazaar Buy: ", product.get().buyPrice(), count);
+					addBazaarLine(lines, "Bazaar Sell: ", product.get().sellPrice(), count);
+					addBazaarLine(lines, "Bazaar Buy-Avg: ", product.get().weightedAverageBuyPrice(), 1);
+					addBazaarLine(lines, "Bazaar Sell-Avg: ", product.get().weightedAverageSellPrice(), 1);
 
 					if (!Screen.hasShiftDown() && count > 1) {
 						lines.add(Text.literal("[Press SHIFT for x" + count + "]").formatted(Formatting.DARK_GRAY));
 					}
 				}
 				case NORMAL -> {
-					addBazaarLine(lines, "Bazaar Buy: ", BazaarItemAnalytics.buyPrice(product.get()), count);
-					addBazaarLine(lines, "Bazaar Sell: ", BazaarItemAnalytics.sellPrice(product.get()), count);
+					addBazaarLine(lines, "Bazaar Buy: ", product.get().buyPrice(), count);
+					addBazaarLine(lines, "Bazaar Sell: ", product.get().sellPrice(), count);
 
 					if (!Screen.hasShiftDown() && count > 1) {
 						lines.add(Text.literal("[Press SHIFT for x" + count + "]").formatted(Formatting.DARK_GRAY));
 					}
 				}
 				case AVERAGE -> {
-					addBazaarLine(lines, "Bazaar Buy-Avg: ", BazaarItemAnalytics.weightedAverageBuyPrice(product.get()), 1);
-					addBazaarLine(lines, "Bazaar Sell-Avg: ", BazaarItemAnalytics.weightedAverageSellPrice(product.get()), 1);
+					addBazaarLine(lines, "Bazaar Buy-Avg: ", product.get().weightedAverageBuyPrice(), 1);
+					addBazaarLine(lines, "Bazaar Sell-Avg: ", product.get().weightedAverageSellPrice(), 1);
 				}
 				case null, default -> {
 				}

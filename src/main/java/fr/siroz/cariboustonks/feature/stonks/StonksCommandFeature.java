@@ -3,10 +3,9 @@ package fr.siroz.cariboustonks.feature.stonks;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.data.algo.BazaarItemAnalytics;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
+import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.command.CommandComponent;
@@ -58,9 +57,9 @@ public class StonksCommandFeature extends Feature {
 			return result;
 		}
 
-		Optional<Product> productOptional = hypixelDataSource.getBazaarItem(item);
+		Optional<BazaarProduct> productOptional = hypixelDataSource.getBazaarItem(item);
 		if (productOptional.isPresent()) {
-			Product product = productOptional.get();
+			BazaarProduct bazaarProduct = productOptional.get();
 
 			Client.playSound(SoundEvents.BLOCK_TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
 
@@ -69,19 +68,19 @@ public class StonksCommandFeature extends Feature {
 			SkyBlockItem skyBlockItem = hypixelDataSource.getSkyBlockItem(item);
 			if (skyBlockItem == null) {
 				source.sendFeedback(Text.empty().append(Text.literal("⭐").withColor(Colors.ORANGE.asInt()))
-						.append(" " + Text.literal(product.productId() + " :").formatted(Formatting.GOLD)));
+						.append(" " + Text.literal(bazaarProduct.skyBlockId() + " :").formatted(Formatting.GOLD)));
 			} else {
 				source.sendFeedback(Text.empty().append(Text.literal("⭐").withColor(Colors.ORANGE.asInt()))
 						.append(Text.literal(" " + skyBlockItem.name()).withColor(skyBlockItem.tier().getColor()))
-						.append(Text.literal(" (" + product.productId() + ")").formatted(Formatting.DARK_GRAY)));
+						.append(Text.literal(" (" + bazaarProduct.skyBlockId() + ")").formatted(Formatting.DARK_GRAY)));
 			}
 
 			source.sendFeedback(Text.empty());
 
-			double buyPrice = BazaarItemAnalytics.buyPrice(product);
-			double buyAvgPrice = BazaarItemAnalytics.weightedAverageBuyPrice(product);
-			double vwap = BazaarItemAnalytics.vwap(product);
-			double standardDeviationBuy = BazaarItemAnalytics.standardDeviation(product.buySummary());
+			double buyPrice = bazaarProduct.buyPrice();
+			double buyAvgPrice = bazaarProduct.weightedAverageBuyPrice();
+			double standardDeviationBuy = bazaarProduct.buyPriceStdDev();
+			double buyVelocity = bazaarProduct.buyVelocity();
 			source.sendFeedback(Text.literal("Buy: ").formatted(Formatting.YELLOW)
 					.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(buyPrice) + " Coins").formatted(Formatting.GOLD))
 					.append(Text.literal(" (").formatted(Formatting.GRAY))
@@ -95,10 +94,10 @@ public class StonksCommandFeature extends Feature {
 									.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyAvgPrice)).formatted(Formatting.GOLD))
 									.append(Text.literal(")").formatted(Formatting.GRAY))
 									.append(Text.literal("\n\n"))
-									.append(Text.literal("*VWAP: ").formatted(Formatting.LIGHT_PURPLE))
-									.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(vwap)).formatted(Formatting.DARK_PURPLE))
+									.append(Text.literal("Buy Velocity: ").formatted(Formatting.AQUA))
+									.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(buyVelocity)).formatted(Formatting.DARK_AQUA))
 									.append(Text.literal("\n"))
-									.append(Text.literal("(An average that takes into account the volumes of each order)").formatted(Formatting.GRAY, Formatting.ITALIC))
+									.append(Text.literal("(Compares current volume to the daily average from the past week)").formatted(Formatting.GRAY, Formatting.ITALIC))
 									.append(Text.literal("\n\n"))
 									.append(Text.literal("*Standard Deviation: ").formatted(Formatting.DARK_RED))
 									.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationBuy)).formatted(Formatting.RED))
@@ -108,9 +107,9 @@ public class StonksCommandFeature extends Feature {
 									.append(Text.literal("* Not a true representation of all orders").formatted(Formatting.GRAY, Formatting.ITALIC))
 					))));
 
-			long buyVolume = product.quickStatus().buyVolume();
-			long buyOrders = product.quickStatus().buyOrders();
-			long buyMovingWeek = product.quickStatus().buyMovingWeek();
+			long buyVolume = bazaarProduct.buyVolume();
+			long buyOrders = bazaarProduct.buyOrders();
+			long buyMovingWeek = bazaarProduct.buyMovingWeek();
 			source.sendFeedback(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyVolume)).formatted(Formatting.DARK_GRAY)
 					.append(" in " + StonksUtils.SHORT_FLOAT_NUMBERS.format(buyOrders) + " orders")
 					.append(Text.literal(" | ").formatted(Formatting.GRAY))
@@ -120,9 +119,10 @@ public class StonksCommandFeature extends Feature {
 
 			source.sendFeedback(Text.empty());
 
-			double sellPrice = BazaarItemAnalytics.sellPrice(product);
-			double sellAvgPrice = BazaarItemAnalytics.weightedAverageSellPrice(product);
-			double standardDeviationSell = BazaarItemAnalytics.standardDeviation(product.sellSummary());
+			double sellPrice = bazaarProduct.sellPrice();
+			double sellAvgPrice = bazaarProduct.weightedAverageSellPrice();
+			double standardDeviationSell = bazaarProduct.sellPriceStdDev();
+			double sellVelocity = bazaarProduct.sellVelocity();
 			source.sendFeedback(Text.literal("Sell: ").formatted(Formatting.YELLOW)
 					.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(sellPrice) + " Coins").formatted(Formatting.GOLD))
 					.append(Text.literal(" (").formatted(Formatting.GRAY))
@@ -136,6 +136,11 @@ public class StonksCommandFeature extends Feature {
 									.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellAvgPrice)).formatted(Formatting.GOLD))
 									.append(Text.literal(")").formatted(Formatting.GRAY))
 									.append(Text.literal("\n\n"))
+									.append(Text.literal("Sell Velocity: ").formatted(Formatting.AQUA))
+									.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(sellVelocity)).formatted(Formatting.DARK_AQUA))
+									.append(Text.literal("\n"))
+									.append(Text.literal("(Compares current volume to the daily average from the past week)").formatted(Formatting.GRAY, Formatting.ITALIC))
+									.append(Text.literal("\n\n"))
 									.append(Text.literal("*Standard Deviation: ").formatted(Formatting.DARK_RED))
 									.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationSell)).formatted(Formatting.RED))
 									.append(Text.literal("\n"))
@@ -145,9 +150,9 @@ public class StonksCommandFeature extends Feature {
 					)))
 			);
 
-			long sellVolume = product.quickStatus().sellVolume();
-			long sellOrders = product.quickStatus().sellOrders();
-			long sellMovingWeek = product.quickStatus().sellMovingWeek();
+			long sellVolume = bazaarProduct.sellVolume();
+			long sellOrders = bazaarProduct.sellOrders();
+			long sellMovingWeek = bazaarProduct.sellMovingWeek();
 			source.sendFeedback(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellVolume)).formatted(Formatting.DARK_GRAY)
 					.append(" in " + StonksUtils.SHORT_FLOAT_NUMBERS.format(sellOrders) + " orders")
 					.append(Text.literal(" | ").formatted(Formatting.GRAY))
@@ -158,13 +163,13 @@ public class StonksCommandFeature extends Feature {
 			if (ConfigManager.getConfig().general.stonks.showAllDataInStonksCommand) {
 				source.sendFeedback(Text.empty());
 
-				double spreadPercentage = BazaarItemAnalytics.spreadPercentage(product);
-				double orderImbalancePercentage = BazaarItemAnalytics.orderImbalancePercentage(product);
+				double spread = bazaarProduct.spread();
+				double spreadPercentage = bazaarProduct.spreadPercentage();
 				source.sendFeedback(Text.literal("Spreed: ").formatted(Formatting.RED)
+						.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(spread)).withColor(Colors.RED.asInt()))
+						.append(Text.literal(" (").formatted(Formatting.GRAY))
 						.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(spreadPercentage) + " %").withColor(Colors.RED.asInt()))
-						.append(Text.literal(" | ").formatted(Formatting.GRAY))
-						.append(Text.literal("Imbalance: ").formatted(Formatting.DARK_PURPLE))
-						.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(orderImbalancePercentage) + " %").withColor(Colors.PURPLE.asInt()))
+						.append(Text.literal(")").formatted(Formatting.GRAY))
 				);
 			}
 
