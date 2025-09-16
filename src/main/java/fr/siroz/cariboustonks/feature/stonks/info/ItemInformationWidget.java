@@ -100,16 +100,16 @@ public class ItemInformationWidget extends AbstractItemStonksWidget {
 
 			// Velocity - Buy/Sell
 
-			Text textVelocity = Text.literal("Velocity: ").formatted(Formatting.AQUA);
+			Text textVelocity = Text.literal("Velocity: ").formatted(Formatting.DARK_AQUA);
 
 			context.drawTextWithShadow(textRenderer, textVelocity, x + 20, y + 160, Colors.WHITE.asInt());
 
 			Text textVelocityValues = Text.empty()
-					.append(Text.literal("Buy: ").formatted(Formatting.AQUA))
-					.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(bazaarItem.buyVelocity())).formatted(Formatting.DARK_AQUA))
+					.append(Text.literal("Buy: ").formatted(Formatting.DARK_AQUA))
+					.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(bazaarItem.buyVelocity())).formatted(Formatting.AQUA))
 					.append(Text.literal(" | ").formatted(Formatting.GRAY))
-					.append(Text.literal("Sell: ").formatted(Formatting.AQUA))
-					.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(bazaarItem.sellVelocity())).formatted(Formatting.DARK_AQUA));
+					.append(Text.literal("Sell: ").formatted(Formatting.DARK_AQUA))
+					.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(bazaarItem.sellVelocity())).formatted(Formatting.AQUA));
 
 			context.drawTextWithShadow(textRenderer, textVelocityValues, x + 20, y + 170, Colors.WHITE.asInt());
 
