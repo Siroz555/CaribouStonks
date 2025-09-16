@@ -10,25 +10,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemInformationWidget extends AbstractItemStonksWidget { // TODO le code ne ressemble a rien après 1687 modifs
+public class ItemInformationWidget extends AbstractItemStonksWidget {
 
-	private boolean bazaar;
-
-	private double buyPrice, sellPrice;
-	private double buyAvg, sellAvg;
-	private double buyMedian, sellMedian;
-	private long buyVolume, sellVolume;
-	private long buyOrders, sellOrders;
-	private long buyMovingWeek, sellMovingWeek;
-
-	private double spreadPercentage;
-	private double orderImbalancePercentage;
-	private double vwap;
-	private double standardDeviationBuy, standardDeviationSell;
-	private double sellSideLiquiditySlope;
-
-	//private double currentSMA, oneWeekAgoSMA, oneMouthAgoSMA;
-	//private double currentEMA, oneWeekAgoEMA, oneMouthAgoEMA;
+	@Nullable
+	private final BazaarProduct bazaarItem;
 
 	public ItemInformationWidget(
 			@Nullable BazaarProduct bazaarItem,
@@ -36,35 +21,16 @@ public class ItemInformationWidget extends AbstractItemStonksWidget { // TODO le
 			int height
 	) {
 		super(width, height);
-		if (bazaarItem != null) {
-			this.bazaar = true;
-			this.buyPrice = bazaarItem.buyPrice();
-			this.sellPrice = bazaarItem.sellPrice();
-			this.buyAvg = bazaarItem.weightedAverageBuyPrice();
-			this.sellAvg = bazaarItem.weightedAverageSellPrice();
-			this.buyMedian = bazaarItem.buyMedianPrice();
-			this.sellMedian = bazaarItem.sellMedianPrice();
-			this.buyVolume = bazaarItem.buyVolume();
-			this.sellVolume = bazaarItem.sellVolume();
-			this.buyOrders = bazaarItem.buyOrders();
-			this.sellOrders = bazaarItem.sellOrders();
-			this.buyMovingWeek = bazaarItem.buyMovingWeek();
-			this.sellMovingWeek = bazaarItem.sellMovingWeek();
-			this.spreadPercentage = bazaarItem.spreadPercentage();
-			this.orderImbalancePercentage = 0;//BazaarItemAnalytics.orderImbalancePercentage(bazaarItem);
-			this.vwap = 0;//BazaarItemAnalytics.vwap(bazaarItem);
-			this.standardDeviationBuy = bazaarItem.buyPriceStdDev();
-			this.standardDeviationSell = bazaarItem.sellPriceStdDev();
-			this.sellSideLiquiditySlope = 0;//BazaarItemAnalytics.calculateSellSideLiquiditySlope(bazaarItem, 95);
-		}
+		this.bazaarItem = bazaarItem;
 	}
 
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, int x, int y) {
-		if (bazaar) {
+		if (bazaarItem != null) {
 
 			// Buy
 
+			double buyPrice = bazaarItem.buyPrice();
 			Text textBuy = Text.literal("Buy Price: ").formatted(Formatting.YELLOW)
 					.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(buyPrice)).formatted(Formatting.GOLD))
 					.append(Text.literal(" (").formatted(Formatting.GRAY))
@@ -74,29 +40,25 @@ public class ItemInformationWidget extends AbstractItemStonksWidget { // TODO le
 			context.drawTextWithShadow(textRenderer, textBuy, x + 20, y + 20, Colors.WHITE.asInt());
 
 			Text textAvgBuy = Text.literal("Avg. Price: ").formatted(Formatting.YELLOW)
-					.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyAvg)).formatted(Formatting.GOLD));
+					.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.weightedAverageBuyPrice())).formatted(Formatting.GOLD));
 
 			context.drawTextWithShadow(textRenderer, textAvgBuy, x + 20, y + 30, Colors.WHITE.asInt());
 
-			Text textBuyMedian = Text.literal("*Median Price: ").formatted(Formatting.YELLOW)
-					.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyMedian)).formatted(Formatting.GOLD));
-
-			context.drawTextWithShadow(textRenderer, textBuyMedian, x + 20, y + 40, Colors.WHITE.asInt());
-
 			// Buy - Infos
 
-			Text textBuyOrderInfos = Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyVolume)).formatted(Formatting.DARK_GRAY)
-					.append(" in " + StonksUtils.SHORT_FLOAT_NUMBERS.format(buyOrders) + " orders");
+			Text textBuyOrderInfos = Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.buyVolume())).formatted(Formatting.DARK_GRAY)
+					.append(" in " + StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.buyOrders()) + " orders");
 
-			context.drawTextWithShadow(textRenderer, textBuyOrderInfos, x + 20, y + 55, Colors.WHITE.asInt());
+			context.drawTextWithShadow(textRenderer, textBuyOrderInfos, x + 20, y + 45, Colors.WHITE.asInt());
 
-			Text textBuyMoving = Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyMovingWeek)).formatted(Formatting.DARK_GRAY)
+			Text textBuyMoving = Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.buyMovingWeek())).formatted(Formatting.DARK_GRAY)
 					.append(Text.literal(" insta-buys in 7d"));
 
-			context.drawTextWithShadow(textRenderer, textBuyMoving, x + 20, y + 65, Colors.WHITE.asInt());
+			context.drawTextWithShadow(textRenderer, textBuyMoving, x + 20, y + 55, Colors.WHITE.asInt());
 
 			// Sell
 
+			double sellPrice = bazaarItem.sellPrice();
 			Text textSell = Text.literal("Sell Price: ").formatted(Formatting.YELLOW)
 					.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(sellPrice)).formatted(Formatting.GOLD))
 					.append(Text.literal(" (").formatted(Formatting.GRAY))
@@ -106,68 +68,62 @@ public class ItemInformationWidget extends AbstractItemStonksWidget { // TODO le
 			context.drawTextWithShadow(textRenderer, textSell, x + 20, y + 80, Colors.WHITE.asInt());
 
 			Text textAvgSell = Text.literal("Avg. Price: ").formatted(Formatting.YELLOW)
-					.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellAvg)).formatted(Formatting.GOLD));
+					.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.weightedAverageSellPrice())).formatted(Formatting.GOLD));
 
 			context.drawTextWithShadow(textRenderer, textAvgSell, x + 20, y + 90, Colors.WHITE.asInt());
 
-			Text textSellMedian = Text.literal("*Median Price: ").formatted(Formatting.YELLOW)
-					.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellMedian)).formatted(Formatting.GOLD));
-
-			context.drawTextWithShadow(textRenderer, textSellMedian, x + 20, y + 100, Colors.WHITE.asInt());
-
 			// Sell - Infos
 
-			Text textSellOrderInfos = Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellVolume)).formatted(Formatting.DARK_GRAY)
-					.append(" in " + StonksUtils.SHORT_FLOAT_NUMBERS.format(sellOrders) + " orders");
+			Text textSellOrderInfos = Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.sellVolume())).formatted(Formatting.DARK_GRAY)
+					.append(" in " + StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.sellOrders()) + " orders");
 
-			context.drawTextWithShadow(textRenderer, textSellOrderInfos, x + 20, y + 115, Colors.WHITE.asInt());
+			context.drawTextWithShadow(textRenderer, textSellOrderInfos, x + 20, y + 105, Colors.WHITE.asInt());
 
-			Text textSellMoving = Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellMovingWeek)).formatted(Formatting.DARK_GRAY)
+			Text textSellMoving = Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.sellMovingWeek())).formatted(Formatting.DARK_GRAY)
 					.append(Text.literal(" insta-sells in 7d"));
 
-			context.drawTextWithShadow(textRenderer, textSellMoving, x + 20, y + 125, Colors.WHITE.asInt());
+			context.drawTextWithShadow(textRenderer, textSellMoving, x + 20, y + 115, Colors.WHITE.asInt());
 
 			// ============= ANALYTICS =============
 
+			// Spread & %
+
+			Text textSpread = Text.literal("Spreed: ").formatted(Formatting.RED)
+					.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(bazaarItem.spreadPercentage()) + "%").withColor(Colors.RED.asInt()))
+					.append(Text.literal(" | ").formatted(Formatting.GRAY))
+					.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(bazaarItem.spread())).withColor(Colors.RED.asInt()))
+					.append(Text.literal(" (").formatted(Formatting.GRAY))
+					.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.spread())).withColor(Colors.RED.asInt()))
+					.append(Text.literal(")").formatted(Formatting.GRAY));
+
+			context.drawTextWithShadow(textRenderer, textSpread, x + 20, y + 145, Colors.WHITE.asInt());
+
+			// Velocity - Buy/Sell
+
+			Text textVelocity = Text.literal("Velocity: ").formatted(Formatting.AQUA);
+
+			context.drawTextWithShadow(textRenderer, textVelocity, x + 20, y + 160, Colors.WHITE.asInt());
+
+			Text textVelocityValues = Text.empty()
+					.append(Text.literal("Buy: ").formatted(Formatting.AQUA))
+					.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(bazaarItem.buyVelocity())).formatted(Formatting.DARK_AQUA))
+					.append(Text.literal(" | ").formatted(Formatting.GRAY))
+					.append(Text.literal("Sell: ").formatted(Formatting.AQUA))
+					.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(bazaarItem.sellVelocity())).formatted(Formatting.DARK_AQUA));
+
+			context.drawTextWithShadow(textRenderer, textVelocityValues, x + 20, y + 170, Colors.WHITE.asInt());
+
 			if (ConfigManager.getConfig().general.stonks.showAllDataInInfoScreen) {
-				// %
-
-				Text textSpread = Text.literal("*Spread: ").formatted(Formatting.RED)
-						.append(StonksUtils.FLOAT_NUMBERS.format(spreadPercentage) + " %").formatted(Formatting.RED);
-
-				context.drawTextWithShadow(textRenderer, textSpread, x + 20, y + 145, Colors.WHITE.asInt());
-
-				Text textImbalance = Text.literal("*Imbalance: ").formatted(Formatting.DARK_PURPLE)
-						.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(orderImbalancePercentage) + " %")
-								.formatted(Formatting.LIGHT_PURPLE));
-
-				context.drawTextWithShadow(textRenderer, textImbalance, x + 20, y + 155, Colors.WHITE.asInt());
-
-				// Trade Prices
-
-				Text textVWAP = Text.literal("*VWAP: ").formatted(Formatting.LIGHT_PURPLE)
-						.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(vwap)).formatted(Formatting.DARK_PURPLE));
-
-				context.drawTextWithShadow(textRenderer, textVWAP, x + 20, y + 165, Colors.WHITE.asInt());
-
-				// Sell Orders Slope
-
-				Text textSellOrderSlope = Text.literal("*Sell Orders Slope: ").formatted(Formatting.BLUE);
-				context.drawTextWithShadow(textRenderer, textSellOrderSlope, x + 20, y + 175, Colors.WHITE.asInt());
-
-				Text textSellOrderSlopeValue = Text.literal("+~ " + StonksUtils.DOUBLE_NUMBERS.format(sellSideLiquiditySlope))
-						.formatted(Formatting.AQUA);
-				context.drawTextWithShadow(textRenderer, textSellOrderSlopeValue, x + 20, y + 185, Colors.WHITE.asInt());
 
 				// Standard Deviation - Buy/Sell
 
-				Text textStandardDeviation = Text.literal("*Standard Deviation: ").formatted(Formatting.DARK_RED);
+				Text textStandardDeviation = Text.literal("*Standard Deviation: ").formatted(Formatting.DARK_GREEN);
 				context.drawTextWithShadow(textRenderer, textStandardDeviation, x + 20, y + 195, Colors.WHITE.asInt());
 
 				Text textStandardDeviationValues = Text.literal(
-								"Buy: " + StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationBuy) +
-										" | Sell: " + StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationSell))
-						.formatted(Formatting.RED);
+								"Buy: " + StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.buyPriceStdDev()) +
+										" | Sell: " + StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.sellPriceStdDev()))
+						.formatted(Formatting.GREEN);
 
 				context.drawTextWithShadow(textRenderer, textStandardDeviationValues, x + 20, y + 205, Colors.WHITE.asInt());
 			}
