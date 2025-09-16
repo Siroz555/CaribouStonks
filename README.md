@@ -32,11 +32,11 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Stonks
     - Configure the display of item prices in Tooltips.
-    - Graphical representation of an item's price trend, quantity, and other information. (BETA)
+    - Graphical representation of an item's price trend, quantity, and other information.
+    - /stonks {item} Command: Display prices and other information simply anywhere.
     - Search engine for all SkyBlock items.
     - KeyBind to find an item.
     - Bazaar: Press ENTER to validate the last input.
-    - /stonks {item} Command: Display prices and other information simply anywhere.
 
 - Reminders
     - Chocolate Factory: Reminders when the number of chocolates reaches the limit.

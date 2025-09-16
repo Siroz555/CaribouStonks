@@ -9,13 +9,17 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.util.ItemLookupKey;
+import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.minecraft.command.CommandSource;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -29,10 +33,22 @@ public class StonksCommandFeature extends Feature {
 
 	private final HypixelDataSource hypixelDataSource;
 
+	private String lastItem = "";
+
 	public StonksCommandFeature() {
 		this.hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
+		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((_mc, _world) -> lastItem = "");
 
 		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal("stonks")
+				.executes(context -> {
+					if (lastItem != null && !lastItem.isBlank()) {
+						context.getSource().getClient().setScreen(new StonksScreen(ItemLookupKey.of(
+								NotEnoughUpdatesUtils.getNeuIdFromSkyBlockId(lastItem),
+								lastItem
+						)));
+					}
+					return 1;
+				})
 				.then(ClientCommandManager.argument("item", StringArgumentType.greedyString())
 						.suggests((context, builder) -> CommandSource.suggestMatching(hypixelDataSource.getSkyBlockItemsIds(), builder))
 						.executes(context -> handle(context.getSource(), StringArgumentType.getString(context, "item"))))
@@ -58,7 +74,10 @@ public class StonksCommandFeature extends Feature {
 		}
 
 		Optional<BazaarProduct> productOptional = hypixelDataSource.getBazaarItem(item);
-		productOptional.ifPresent(product -> showBazaarInfo(source, item, product));
+		productOptional.ifPresent(product -> {
+			lastItem = item;
+			showBazaarInfo(source, item, product);
+		});
 
 		return result;
 	}
@@ -97,21 +116,21 @@ public class StonksCommandFeature extends Feature {
 								.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyAvgPrice)).formatted(Formatting.GOLD))
 								.append(Text.literal(")").formatted(Formatting.GRAY))
 								.append(Text.literal("\n\n"))
-								.append(Text.literal("Velocity: ").formatted(Formatting.AQUA))
-								.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(buyVelocity)).formatted(Formatting.DARK_AQUA))
+								.append(Text.literal("Velocity: ").formatted(Formatting.DARK_AQUA))
+								.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(buyVelocity)).formatted(Formatting.AQUA))
 								.append(Text.literal("\n"))
 								.append(Text.literal("(Compares current volume to the daily average from the past week)").formatted(Formatting.GRAY, Formatting.ITALIC))
 								.append(Text.literal("\n"))
-								.append(Text.literal("- < 0.5 = Very low activity").formatted(Formatting.GRAY))
+								.append(Text.literal("- < 0.5    = Very low activity").formatted(Formatting.GRAY))
 								.append(Text.literal("\n"))
 								.append(Text.literal("- 0.5-1.5 = Normal activity").formatted(Formatting.GRAY))
 								.append(Text.literal("\n"))
-								.append(Text.literal("- 1.5-3 = High activity (growing interest)").formatted(Formatting.GRAY))
+								.append(Text.literal("- 1.5-3   = High activity (growing interest)").formatted(Formatting.GRAY))
 								.append(Text.literal("\n"))
-								.append(Text.literal("- > 3 = Peak activity (event, speculation)").formatted(Formatting.GRAY))
+								.append(Text.literal("- > 3      = Peak activity (event, speculation)").formatted(Formatting.GRAY))
 								.append(Text.literal("\n\n"))
-								.append(Text.literal("*Standard Deviation: ").formatted(Formatting.DARK_RED))
-								.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationBuy)).formatted(Formatting.RED))
+								.append(Text.literal("*Standard Deviation: ").formatted(Formatting.DARK_GREEN))
+								.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationBuy)).formatted(Formatting.GREEN))
 								.append(Text.literal("\n"))
 								.append(Text.literal("(This measures price volatility. Higher values indicate stronger fluctuations)").formatted(Formatting.GRAY, Formatting.ITALIC))
 								.append(Text.literal("\n\n"))
@@ -147,21 +166,21 @@ public class StonksCommandFeature extends Feature {
 								.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellAvgPrice)).formatted(Formatting.GOLD))
 								.append(Text.literal(")").formatted(Formatting.GRAY))
 								.append(Text.literal("\n\n"))
-								.append(Text.literal("Velocity: ").formatted(Formatting.AQUA))
-								.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(sellVelocity)).formatted(Formatting.DARK_AQUA))
+								.append(Text.literal("Velocity: ").formatted(Formatting.DARK_AQUA))
+								.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(sellVelocity)).formatted(Formatting.AQUA))
 								.append(Text.literal("\n"))
 								.append(Text.literal("(Compares current volume to the daily average from the past week)").formatted(Formatting.GRAY, Formatting.ITALIC))
 								.append(Text.literal("\n"))
-								.append(Text.literal("- < 0.5 = Very low activity").formatted(Formatting.GRAY))
+								.append(Text.literal("- < 0.5    = Very low activity").formatted(Formatting.GRAY))
 								.append(Text.literal("\n"))
 								.append(Text.literal("- 0.5-1.5 = Normal activity").formatted(Formatting.GRAY))
 								.append(Text.literal("\n"))
-								.append(Text.literal("- 1.5-3 = High activity (growing interest)").formatted(Formatting.GRAY))
+								.append(Text.literal("- 1.5-3   = High activity (growing interest)").formatted(Formatting.GRAY))
 								.append(Text.literal("\n"))
-								.append(Text.literal("- > 3 = Peak activity (event, speculation)").formatted(Formatting.GRAY))
+								.append(Text.literal("- > 3      = Peak activity (event, speculation)").formatted(Formatting.GRAY))
 								.append(Text.literal("\n\n"))
-								.append(Text.literal("*Standard Deviation: ").formatted(Formatting.DARK_RED))
-								.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationSell)).formatted(Formatting.RED))
+								.append(Text.literal("*Standard Deviation: ").formatted(Formatting.DARK_GREEN))
+								.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationSell)).formatted(Formatting.GREEN))
 								.append(Text.literal("\n"))
 								.append(Text.literal("(This measures price volatility. Higher values indicate stronger fluctuations)").formatted(Formatting.GRAY, Formatting.ITALIC))
 								.append(Text.literal("\n\n"))
@@ -191,6 +210,11 @@ public class StonksCommandFeature extends Feature {
 				.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(spread)).withColor(Colors.RED.asInt()))
 				.append(Text.literal(")").formatted(Formatting.GRAY))
 		);
+		source.sendFeedback(Text.empty());
+		source.sendFeedback(Text.literal(" Click HERE to show in the Graph Screen!").formatted(Formatting.YELLOW)
+				.styled(style -> style
+						.withHoverEvent(new HoverEvent.ShowText(Text.literal("Click to open in the Graph Screen!").formatted(Formatting.YELLOW)))
+						.withClickEvent(new ClickEvent.RunCommand("/stonks"))));
 
 		source.sendFeedback(Text.literal(SEPARATOR).formatted(Formatting.RED));
 	}
