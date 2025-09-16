@@ -2,18 +2,16 @@ package fr.siroz.cariboustonks.feature.diana;
 
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
-import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 
 final class GuessBurrow {
 
@@ -35,11 +33,10 @@ final class GuessBurrow {
 	}
 
 	@EventHandler(event = "UseItemCallback.EVENT")
-	private ActionResult onUseItem(@NotNull PlayerEntity player, World world, Hand hand) {
-		ItemStack item = player.getStackInHand(hand);
+	private ActionResult onUseItem(PlayerEntity player, World world, Hand hand) {
 		if (mythologicalRitual.isEnabled()
 				&& mythologicalRitual.isGuessEnabled()
-				&& ItemUtils.getSkyBlockItemId(item).equals("ANCESTRAL_SPADE")
+				&& InventoryUtils.isHoldingItem("ANCESTRAL_SPADE")
 		) {
 			predictor.reset();
 			lastSpadeUsed = System.currentTimeMillis();

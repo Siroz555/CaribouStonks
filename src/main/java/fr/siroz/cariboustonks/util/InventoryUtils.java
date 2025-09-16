@@ -21,9 +21,20 @@ public final class InventoryUtils {
 	}
 
 	/**
+	 * Retrieves the currently held item in the main hand of the client.
+	 *
+	 * @return the {@link ItemStack} representing the item currently held in the main hand of the client or {@code null}
+	 * @see #getHeldItem()
+	 */
+	public static @Nullable ItemStack getMainHandItem() {
+		return CLIENT.player != null ? CLIENT.player.getMainHandStack() : null;
+	}
+
+	/**
 	 * Retrieves the currently held item of the client.
 	 *
 	 * @return the {@link ItemStack} representing the item currently held by the client or {@code null}
+	 * @see #getMainHandItem()
 	 */
 	@Nullable
 	public static ItemStack getHeldItem() {

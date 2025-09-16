@@ -10,6 +10,7 @@ import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.fishing.radar.HotspotRadarFeature;
+import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.PositionUtils;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -74,7 +75,7 @@ public class HotspotFeature extends Feature {
 			return;
 		}
 
-		ItemStack item = CLIENT.player.getInventory().getSelectedStack();
+		ItemStack item = InventoryUtils.getHeldItem();
 		if (item == null || item.isEmpty() || !item.isOf(Items.FISHING_ROD)) {
 			reset();
 			return;
