@@ -1,30 +1,21 @@
 package fr.siroz.cariboustonks.core.json;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import fr.siroz.cariboustonks.CaribouStonks;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
-import java.util.function.Function;
 
 /**
  * The {@code JsonFileService} class provides utility methods to save and load objects to/from JSON files.
@@ -60,6 +51,7 @@ public final class JsonFileService {
 	 * @param clazz the class type of the object to load
 	 * @param <T>   the type of the object to load
 	 * @return the loaded object of the specified type, or {@code null} if the file does not exist
+	 * @throws JsonProcessingException if an error occurs while loading the object
 	 */
 	public <T> @Nullable T load(@NotNull Path path, @NotNull Class<T> clazz) throws JsonProcessingException {
 		if (Files.notExists(path)) {
@@ -82,6 +74,7 @@ public final class JsonFileService {
 	 *
 	 * @param path   the path where the object should be saved
 	 * @param object the object to save to the file
+	 * @throws JsonProcessingException if an error occurs while saving the object
 	 */
 	public void save(@NotNull Path path, @NotNull Object object) throws JsonProcessingException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path)) {
@@ -89,29 +82,6 @@ public final class JsonFileService {
 		} catch (IOException ex) {
 			throw new JsonProcessingException("Error occurred while saving the list to file: " + path, ex);
 		}
-	}
-
-	/**
-	 * @deprecated {@link #loadList(Path, Class)}
-	 */
-	@Deprecated
-	public <T> @NotNull List<T> loadList(@NotNull Path path, @NotNull Function<JsonObject, T> deserializer) {
-		try (BufferedReader reader = Files.newBufferedReader(path)) {
-			JsonArray jsonArray = JsonParser.parseReader(reader).getAsJsonArray();
-			List<T> objects = new ArrayList<>();
-			for (JsonElement element : jsonArray) {
-				JsonObject objJson = element.getAsJsonObject();
-				T obj = deserializer.apply(objJson);
-				if (obj != null) {
-					objects.add(obj);
-				}
-			}
-			return objects;
-		} catch (NoSuchFileException ignored) {
-		} catch (JsonParseException | IOException ex) {
-			CaribouStonks.LOGGER.error("[JsonFileService] Unable to load list from file: {}", path, ex);
-		}
-		return Collections.emptyList();
 	}
 
 	/**
@@ -125,6 +95,7 @@ public final class JsonFileService {
 	 * @param clazz the class type of the objects in the list to load
 	 * @param <T>   the type of the objects in the list
 	 * @return a loaded objects list of the specified type, or an empty list if the file does not exist
+	 * @throws JsonProcessingException if an error occurs while loading the list
 	 */
 	public <T> @NotNull List<T> loadList(@NotNull Path path, @NotNull Class<T> clazz) throws JsonProcessingException {
 		if (Files.notExists(path)) {
@@ -149,6 +120,7 @@ public final class JsonFileService {
 	 * @param <K>       the type of the keys in the map
 	 * @param <V>       the type of the values in the map
 	 * @return a loaded objects map of the specified key and value types, or an empty map if the file does not exist
+	 * @throws JsonProcessingException if an error occurs while loading the map
 	 */
 	public <K, V> @NotNull Map<K, V> loadMap(@NotNull Path path, @NotNull Type typeOfMap) throws JsonProcessingException {
 		if (Files.notExists(path)) {
@@ -174,6 +146,7 @@ public final class JsonFileService {
 	 * @param <K>        the type of the keys in the map
 	 * @param <V>        the type of the values in the map
 	 * @return a loaded objects map of the specified key and value types, or an empty map if the file does not exist
+	 * @throws JsonProcessingException if an error occurs while loading the map
 	 */
 	public <K, V> @NotNull Map<K, V> loadMap(@NotNull Path path, @NotNull Class<K> keyClass, @NotNull Class<V> valueClass) throws JsonProcessingException {
 		if (Files.notExists(path)) {
