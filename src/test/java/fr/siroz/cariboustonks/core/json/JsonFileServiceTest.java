@@ -69,7 +69,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testLoad_success() throws IOException {
+    void testLoad_success() throws IOException, JsonProcessingException {
 		Path testFilePath = Paths.get("test.json");
 
 		String jsonData = "{\"name\": \"TestObject\"}";
@@ -83,7 +83,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testLoad_object_success() throws IOException {
+    void testLoad_object_success() throws IOException, JsonProcessingException {
 		Path testFilePath = Paths.get("test.json");
 
 		String jsonData = "{\"name\": \"TestObject\"}";
@@ -95,7 +95,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testLoad_fileNotFound() {
+    void testLoad_fileNotFound() throws JsonProcessingException {
         Path nonExistentPath = Paths.get("non_existent_file.json");
         MyObject result = jsonFileService.load(nonExistentPath, MyObject.class);
 
@@ -108,14 +108,19 @@ class JsonFileServiceTest {
         String invalidJsonData = "{\"name\": \"TestObject\", }";  // Json malformé
         Files.write(invalidFilePath, invalidJsonData.getBytes());
 
-        MyObject result = jsonFileService.load(invalidFilePath, MyObject.class);
+		MyObject result;
+		try {
+			result = jsonFileService.load(invalidFilePath, MyObject.class);
+		} catch (JsonProcessingException e) {
+			result = null;
+		}
 
-        assertNull(result, "Expected null when JSON parsing fails");
+		assertNull(result, "Expected null when JSON parsing fails");
 		Files.delete(invalidFilePath);
     }
 
     @Test
-    void testSaveAndLoad_validObject() {
+    void testSaveAndLoad_validObject() throws JsonProcessingException {
         MyObject myObject = new MyObject("TestObject");
 
         jsonFileService.save(testSaveFilePath, myObject);
@@ -131,7 +136,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSaveAndLoad_SpecialObject() throws IOException {
+    void testSaveAndLoad_SpecialObject() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-special-object", ".json");
 
         AnotherClass anotherClass = new AnotherClass("TestName", 42.5);
@@ -152,7 +157,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSaveAndLoad_SpecialObjectWithNullValues() throws IOException {
+    void testSaveAndLoad_SpecialObjectWithNullValues() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-special-object-null", ".json");
 
         SpecialObject specialObject = new SpecialObject(null, 123, null, null);
@@ -171,7 +176,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSaveAndLoad_SpecialObjectWithEmptyList() throws IOException {
+    void testSaveAndLoad_SpecialObjectWithEmptyList() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-special-object-empty-list", ".json");
 
         AnotherClass anotherClass = new AnotherClass("TestName", 42.5);
@@ -189,7 +194,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSave_collectionPrimitive_valid() {
+    void testSave_collectionPrimitive_valid() throws JsonProcessingException {
         List<Integer> myObjects = Arrays.asList(1, 10, 555);
 
         jsonFileService.save(testSaveFilePath, myObjects);
@@ -203,7 +208,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testLoad_collectionPrimitive_validResult() {
+    void testLoad_collectionPrimitive_validResult() throws JsonProcessingException {
         List<Integer> myObjects = Arrays.asList(1, 10, 555);
 
         jsonFileService.save(testSaveFilePath, myObjects);
@@ -217,7 +222,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSave_collectionObject_valid() {
+    void testSave_collectionObject_valid() throws JsonProcessingException {
         List<MyObject> myObjects = Arrays.asList(new MyObject("Object1"), new MyObject("Object2"));
 
         jsonFileService.save(testSaveFilePath, myObjects);
@@ -231,7 +236,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testLoad_collectionObject_validResult() {
+    void testLoad_collectionObject_validResult() throws JsonProcessingException {
         List<MyObject> myObjects = Arrays.asList(new MyObject("Object1"), new MyObject("Object2"));
 
         jsonFileService.save(testSaveFilePath, myObjects);
@@ -247,7 +252,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSave_objectWithList_valid() throws IOException {
+    void testSave_objectWithList_valid() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-object-with-list", ".json");
 
         List<String> sampleList = Arrays.asList("Item1", "Item2", "Item3");
@@ -267,7 +272,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testLoad_objectWithList_validResult() throws IOException {
+    void testLoad_objectWithList_validResult() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-object-with-list", ".json");
 
         List<String> sampleList = Arrays.asList("Item1", "Item2", "Item3");
@@ -292,7 +297,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSave_mapPrimitive_valid() {
+    void testSave_mapPrimitive_valid() throws JsonProcessingException {
         Map<String, Double> myMap = new HashMap<>();
         myMap.put("key1", 555.5D);
         myMap.put("key2", 555.555D);
@@ -308,7 +313,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testLoad_mapPrimitive_validResult() {
+    void testLoad_mapPrimitive_validResult() throws JsonProcessingException {
         Map<String, Double> myMap = new HashMap<>();
         myMap.put("key1", 555.5D);
         myMap.put("key2", 555.555D);
@@ -325,7 +330,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSave_mapObject_valid() {
+    void testSave_mapObject_valid() throws JsonProcessingException {
         Map<String, MyObject> myMap = new HashMap<>();
         myMap.put("key1", new MyObject("Object1"));
         myMap.put("key2", new MyObject("Object2"));
@@ -341,7 +346,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testLoad_mapObject_validResult() {
+    void testLoad_mapObject_validResult() throws JsonProcessingException {
         Map<String, MyObject> myMap = new HashMap<>();
         MyObject myObject1 = new MyObject("Object1");
         MyObject myObject2 = new MyObject("Object2");
@@ -362,7 +367,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSave_objectWithMap_valid() throws IOException {
+    void testSave_objectWithMap_valid() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-object-with-map", ".json");
 
         Map<String, String> sampleMap = new HashMap<>();
@@ -385,7 +390,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testLoad_objectWithMap_validResult() throws IOException {
+    void testLoad_objectWithMap_validResult() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-object-with-map", ".json");
 
         Map<String, String> sampleMap = new HashMap<>();
@@ -413,7 +418,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSaveAndLoad_objectWithEmptyList() throws IOException {
+    void testSaveAndLoad_objectWithEmptyList() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-object-with-empty-list", ".json");
 
         ObjectWithList objectWithList = new ObjectWithList(new ArrayList<>());
@@ -428,7 +433,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSaveAndLoad_objectWithEmptyMap() throws IOException {
+    void testSaveAndLoad_objectWithEmptyMap() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-object-with-empty-map", ".json");
 
         ObjectWithMap objectWithMap = new ObjectWithMap(new HashMap<>());
@@ -443,7 +448,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSaveAndLoad_objectWithListContainingNull() throws IOException {
+    void testSaveAndLoad_objectWithListContainingNull() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-object-with-list-containing-null", ".json");
 
         List<String> sampleList = Arrays.asList("Item1", null, "Item3");
@@ -460,7 +465,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSaveAndLoad_objectWithMapContainingNull() throws IOException {
+    void testSaveAndLoad_objectWithMapContainingNull() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-object-with-map-containing-null", ".json");
 
         Map<String, String> sampleMap = new HashMap<>();
@@ -485,9 +490,7 @@ class JsonFileServiceTest {
         boolean b = readOnlyFilePath.toFile().setReadOnly();
         MyObject myObject = new MyObject("TestObject::" + b);
 
-        assertThrows(Exception.class, () -> {
-            jsonFileService.save(readOnlyFilePath, myObject);
-        });
+        assertThrows(JsonProcessingException.class, () -> jsonFileService.save(readOnlyFilePath, myObject));
     }
 
     @Test
@@ -594,7 +597,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSaveAndLoad_objectWithInstant() throws IOException {
+    void testSaveAndLoad_objectWithInstant() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-object-with-instant", ".json");
         MyInstantObject myInstantObject = new MyInstantObject("TestInstantObject", Instant.now());
 
@@ -610,7 +613,7 @@ class JsonFileServiceTest {
     }
 
     @Test
-    void testSaveAndLoad_objectWithColor() throws IOException {
+    void testSaveAndLoad_objectWithColor() throws IOException, JsonProcessingException {
         Path tempFile = Files.createTempFile("test-object-with-color", ".json");
         MyColorObject myColorObject = new MyColorObject(new Color(255, 255, 0));
 
