@@ -9,6 +9,7 @@ import fr.siroz.cariboustonks.feature.Feature;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -80,7 +81,7 @@ public class KeyShortcutFeature extends Feature {
 				return CaribouStonks.core().getJsonFileService().loadMap(SHORTCUTS_PATH, mapType);
 			} catch (JsonProcessingException ex) {
 				CaribouStonks.LOGGER.error("[KeyShortcuts] Unable to load shortcuts", ex);
-				return Map.of();
+				return Collections.emptyMap();
 			}
 		});
 	}

@@ -11,6 +11,7 @@ import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -162,7 +163,7 @@ public final class ReminderManager implements Manager {
 				return CaribouStonks.core().getJsonFileService().loadList(REMAINDER_PATH, TimedObject.class);
 			} catch (JsonProcessingException ex) {
 				CaribouStonks.LOGGER.error("[ReminderManager] Unable to load timedObject list", ex);
-				return List.of();
+				return Collections.emptyList();
 			}
 		});
     }

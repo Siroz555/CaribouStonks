@@ -10,6 +10,7 @@ import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +101,7 @@ public final class WaypointFeature extends Feature implements WorldRendererProvi
 				return CaribouStonks.core().getJsonFileService().loadMap(WAYPOINT_PATH, mapType);
 			} catch (JsonProcessingException ex) {
 				CaribouStonks.LOGGER.error("[WaypointFeature] Unable to load waypoints", ex);
-				return Map.of();
+				return Collections.emptyMap();
 			}
 		});
     }
