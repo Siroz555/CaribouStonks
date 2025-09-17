@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.feature.waypoints;
 
 import com.google.common.reflect.TypeToken;
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.json.JsonProcessingException;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
@@ -95,14 +96,19 @@ public final class WaypointFeature extends Feature implements WorldRendererProvi
 
         return CompletableFuture.supplyAsync(() -> {
             Type mapType = new TypeToken<Map<IslandType, List<Waypoint>>>() {}.getType();
-            return CaribouStonks.core().getJsonFileService().loadMap(WAYPOINT_PATH, mapType);
-        });
+			try {
+				return CaribouStonks.core().getJsonFileService().loadMap(WAYPOINT_PATH, mapType);
+			} catch (JsonProcessingException ex) {
+				CaribouStonks.LOGGER.error("[WaypointFeature] Unable to load waypoints", ex);
+				return Map.of();
+			}
+		});
     }
 
     private void loadExistingWaypoints(@NotNull Map<IslandType, List<Waypoint>> waypointMap) {
         int loaded = 0;
         for (Map.Entry<IslandType, List<Waypoint>> entry : waypointMap.entrySet()) {
-            // S'assurer qu'il n'y a pas de vide dans le Json, même si useless. Mettre + de sécu coté Json
+            // S'assurer qu'il n'y a pas de vide dans le Json, même si useless. Mettre + de sécu cotée Json
             if (entry.getValue() == null) {
 				waypointMap.put(entry.getKey(), new ArrayList<>());
 			}
@@ -116,6 +122,10 @@ public final class WaypointFeature extends Feature implements WorldRendererProvi
     }
 
     public void saveWaypoints(MinecraftClient client) {
-        CaribouStonks.core().getJsonFileService().save(WAYPOINT_PATH, waypoints);
-    }
+		try {
+			CaribouStonks.core().getJsonFileService().save(WAYPOINT_PATH, waypoints);
+		} catch (JsonProcessingException ex) {
+			CaribouStonks.LOGGER.error("[WaypointFeature] Unable to save waypoints", ex);
+		}
+	}
 }

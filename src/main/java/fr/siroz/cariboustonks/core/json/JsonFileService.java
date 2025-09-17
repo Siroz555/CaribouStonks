@@ -29,6 +29,7 @@ import java.util.function.Function;
 /**
  * The {@code JsonFileService} class provides utility methods to save and load objects to/from JSON files.
  */
+@SuppressWarnings("ClassCanBeRecord")
 public final class JsonFileService {
 
 	private final Gson gson;
@@ -60,7 +61,7 @@ public final class JsonFileService {
 	 * @param <T>   the type of the object to load
 	 * @return the loaded object of the specified type, or {@code null} if the file does not exist
 	 */
-	public <T> @Nullable T load(@NotNull Path path, @NotNull Class<T> clazz) {
+	public <T> @Nullable T load(@NotNull Path path, @NotNull Class<T> clazz) throws JsonProcessingException {
 		if (Files.notExists(path)) {
 			return null;
 		}
@@ -68,8 +69,7 @@ public final class JsonFileService {
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
 			return gson.fromJson(reader, clazz);
 		} catch (JsonParseException | IOException ex) {
-			CaribouStonks.LOGGER.error("[JsonFileService] Unable to load file: {}", path, ex);
-			return null;
+			throw new JsonProcessingException("Error occurred while loading from file", ex);
 		}
 	}
 
@@ -83,11 +83,10 @@ public final class JsonFileService {
 	 * @param path   the path where the object should be saved
 	 * @param object the object to save to the file
 	 */
-	public void save(@NotNull Path path, @NotNull Object object) {
+	public void save(@NotNull Path path, @NotNull Object object) throws JsonProcessingException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path)) {
 			gson.toJson(object, writer);
 		} catch (IOException ex) {
-			CaribouStonks.LOGGER.error("[JsonFileService] Unable to save file: {}", path, ex);
 			throw new JsonProcessingException("Error occurred while saving the list to file: " + path, ex);
 		}
 	}
@@ -127,7 +126,7 @@ public final class JsonFileService {
 	 * @param <T>   the type of the objects in the list
 	 * @return a loaded objects list of the specified type, or an empty list if the file does not exist
 	 */
-	public <T> @NotNull List<T> loadList(@NotNull Path path, @NotNull Class<T> clazz) {
+	public <T> @NotNull List<T> loadList(@NotNull Path path, @NotNull Class<T> clazz) throws JsonProcessingException {
 		if (Files.notExists(path)) {
 			return Collections.emptyList();
 		}
@@ -136,8 +135,7 @@ public final class JsonFileService {
 			Type listType = TypeToken.getParameterized(List.class, clazz).getType();
 			return gson.fromJson(reader, listType);
 		} catch (IOException | JsonSyntaxException ex) {
-			CaribouStonks.LOGGER.error("[JsonFileService] Unable to load list from file: {}", path, ex);
-			throw new JsonProcessingException("Error occurred while loading the list from file: " + path, ex);
+			throw new JsonProcessingException("Error occurred while loading the list from file", ex);
 		}
 	}
 
@@ -152,7 +150,7 @@ public final class JsonFileService {
 	 * @param <V>       the type of the values in the map
 	 * @return a loaded objects map of the specified key and value types, or an empty map if the file does not exist
 	 */
-	public <K, V> @NotNull Map<K, V> loadMap(@NotNull Path path, @NotNull Type typeOfMap) {
+	public <K, V> @NotNull Map<K, V> loadMap(@NotNull Path path, @NotNull Type typeOfMap) throws JsonProcessingException {
 		if (Files.notExists(path)) {
 			return Collections.emptyMap();
 		}
@@ -160,8 +158,7 @@ public final class JsonFileService {
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
 			return gson.fromJson(reader, typeOfMap);
 		} catch (IOException | JsonSyntaxException ex) {
-			CaribouStonks.LOGGER.error("[JsonFileService] Unable to load map from file: {}", path, ex);
-			throw new JsonProcessingException("Error occurred while loading the map from file: " + path, ex);
+			throw new JsonProcessingException("Error occurred while loading the map from file", ex);
 		}
 	}
 
@@ -178,7 +175,7 @@ public final class JsonFileService {
 	 * @param <V>        the type of the values in the map
 	 * @return a loaded objects map of the specified key and value types, or an empty map if the file does not exist
 	 */
-	public <K, V> @NotNull Map<K, V> loadMap(@NotNull Path path, @NotNull Class<K> keyClass, @NotNull Class<V> valueClass) {
+	public <K, V> @NotNull Map<K, V> loadMap(@NotNull Path path, @NotNull Class<K> keyClass, @NotNull Class<V> valueClass) throws JsonProcessingException {
 		if (Files.notExists(path)) {
 			return Collections.emptyMap();
 		}
@@ -187,8 +184,7 @@ public final class JsonFileService {
 			Type mapType = TypeToken.getParameterized(Map.class, keyClass, valueClass).getType();
 			return gson.fromJson(reader, mapType);
 		} catch (IOException | JsonSyntaxException ex) {
-			CaribouStonks.LOGGER.error("[JsonFileService] Unable to load map from file: {}", path, ex);
-			throw new JsonProcessingException("Error occurred while loading the map from file: " + path, ex);
+			throw new JsonProcessingException("Error occurred while loading the map from file", ex);
 		}
 	}
 }

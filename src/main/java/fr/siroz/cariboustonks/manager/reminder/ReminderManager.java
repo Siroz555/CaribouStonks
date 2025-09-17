@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.manager.reminder;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.json.JsonProcessingException;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
@@ -144,16 +145,26 @@ public final class ReminderManager implements Manager {
         loaded = false;
 
         List<TimedObject> objectsList = !queue.isEmpty() ? new ArrayList<>(queue) : List.of();
-        CaribouStonks.core().getJsonFileService().save(REMAINDER_PATH, objectsList);
-    }
+		try {
+			CaribouStonks.core().getJsonFileService().save(REMAINDER_PATH, objectsList);
+		} catch (JsonProcessingException ex) {
+			CaribouStonks.LOGGER.error("[ReminderManager] Unable to save timedObject list", ex);
+		}
+	}
 
     private @NotNull CompletableFuture<List<TimedObject>> loadTimedObjects() {
         if (!Files.exists(REMAINDER_PATH)) {
             return CompletableFuture.completedFuture(List.of());
         }
 
-        return CompletableFuture.supplyAsync(
-                () -> CaribouStonks.core().getJsonFileService().loadList(REMAINDER_PATH, TimedObject.class));
+        return CompletableFuture.supplyAsync(() -> {
+			try {
+				return CaribouStonks.core().getJsonFileService().loadList(REMAINDER_PATH, TimedObject.class);
+			} catch (JsonProcessingException ex) {
+				CaribouStonks.LOGGER.error("[ReminderManager] Unable to load timedObject list", ex);
+				return List.of();
+			}
+		});
     }
 
     private void loadExistingObjects(@NotNull List<TimedObject> loadedObjects) {

@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.feature.keyshortcut;
 
 import com.google.common.reflect.TypeToken;
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.json.JsonProcessingException;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
@@ -56,7 +57,11 @@ public class KeyShortcutFeature extends Feature {
 			shortcutsToSave.put(entry.getKey(), entry.getValue().keyCode());
 		}
 
-		CaribouStonks.core().getJsonFileService().save(SHORTCUTS_PATH, shortcutsToSave);
+		try {
+			CaribouStonks.core().getJsonFileService().save(SHORTCUTS_PATH, shortcutsToSave);
+		} catch (JsonProcessingException ex) {
+			CaribouStonks.LOGGER.error("[KeyShortcuts] Unable to save shortcuts", ex);
+		}
 	}
 
 	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STARTED")
@@ -70,9 +75,13 @@ public class KeyShortcutFeature extends Feature {
 		}
 
 		return CompletableFuture.supplyAsync(() -> {
-			Type mapType = new TypeToken<Map<String, Integer>>() {
-			}.getType();
-			return CaribouStonks.core().getJsonFileService().loadMap(SHORTCUTS_PATH, mapType);
+			Type mapType = new TypeToken<Map<String, Integer>>() {}.getType();
+			try {
+				return CaribouStonks.core().getJsonFileService().loadMap(SHORTCUTS_PATH, mapType);
+			} catch (JsonProcessingException ex) {
+				CaribouStonks.LOGGER.error("[KeyShortcuts] Unable to load shortcuts", ex);
+				return Map.of();
+			}
 		});
 	}
 
