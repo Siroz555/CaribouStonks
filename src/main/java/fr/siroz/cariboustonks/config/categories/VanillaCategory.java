@@ -52,6 +52,15 @@ public class VanillaCategory extends AbstractCategory {
 						.controller(this::createBooleanController)
 						.build())
 				.option(Option.<Boolean>createBuilder()
+						.name(Text.literal("Stop the FPS Limiter"))
+						.description(OptionDescription.of(
+								Text.literal("Prevents the FPS Limiter from limiting the game's FPS.")))
+						.binding(defaults.vanilla.stopFpsLimiter,
+								() -> current.vanilla.stopFpsLimiter,
+								newValue -> current.vanilla.stopFpsLimiter = newValue)
+						.controller(this::createBooleanController)
+						.build())
+				.option(Option.<Boolean>createBuilder()
 						.name(Text.literal("Display your own Nametag in F5"))
 						.description(OptionDescription.of(
 								Text.literal("Allows you to display your Nametag in F5 above your player.")))

@@ -1,5 +1,7 @@
 package fr.siroz.cariboustonks.mixin;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.event.InteractionEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import net.minecraft.client.MinecraftClient;
@@ -12,6 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -21,6 +24,13 @@ public abstract class MinecraftClientMixin {
 	@Shadow
 	@Nullable
 	public ClientPlayerEntity player;
+
+	@Redirect(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;limitDisplayFPS(I)V"))
+	private static void cariboustonks$redirectLimitDisplayFPS(int fps) {
+		if (!ConfigManager.getConfig().vanilla.stopFpsLimiter) {
+			RenderSystem.limitDisplayFPS(fps);
+		}
+	}
 
 	@Inject(method = "joinWorld", at = @At("TAIL"))
 	private void cariboustonks$onJoinWorldEvent(ClientWorld world, DownloadingTerrainScreen.WorldEntryReason reason, CallbackInfo ci) {
