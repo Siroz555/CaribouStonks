@@ -6,12 +6,14 @@ import fr.siroz.cariboustonks.core.crash.CrashManager;
 import fr.siroz.cariboustonks.core.data.generic.GenericDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.data.mod.ModDataSource;
+import fr.siroz.cariboustonks.core.dev.DeveloperManager;
 import fr.siroz.cariboustonks.core.json.JsonFileService;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.util.DeveloperTools;
 import java.util.concurrent.TimeUnit;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import org.jetbrains.annotations.ApiStatus;
@@ -23,6 +25,7 @@ public final class CaribouStonksCore {
 
 	private final CrashManager crashManager;
 	private final JsonFileService jsonFileService;
+
 	private final ModDataSource modDataSource;
 	private final HypixelDataSource hypixelDataSource;
 	private final GenericDataSource genericDataSource;
@@ -51,6 +54,11 @@ public final class CaribouStonksCore {
 
 		// Event listeners
 		ClientPlayConnectionEvents.DISCONNECT.register((_handler, _client) -> this.onDisconnect());
+
+		// Developer Mode
+		if (DeveloperTools.isInDevelopment()) {
+			new DeveloperManager();
+		}
 
 		CaribouStonks.LOGGER.info("[CaribouStonksCore] Loaded!");
 	}

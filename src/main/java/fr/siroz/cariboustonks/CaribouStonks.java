@@ -2,7 +2,6 @@ package fr.siroz.cariboustonks;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.CaribouStonksCore;
-import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.feature.Features;
 import fr.siroz.cariboustonks.manager.Managers;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -56,8 +55,6 @@ public final class CaribouStonks implements ClientModInitializer {
 		this.caribouStonksCore = new CaribouStonksCore();
 		this.managers = new Managers();
 		this.features = new Features();
-		// Dev
-		DeveloperTools.initDeveloperTools();
 	}
 
 	/**
