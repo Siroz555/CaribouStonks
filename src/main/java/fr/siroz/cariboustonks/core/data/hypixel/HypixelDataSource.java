@@ -29,10 +29,30 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 /**
- * Cette class est responsable de la gestion des données des items provenant de l'API SkyBlock d'Hypixel,
- * de "mapper" les SkyBlock items, en fonction des items ID Minecraft ({@link net.minecraft.registry.Registries#ITEM}).
- * Charge et enregistre les données des items SkyBlock et fait un mapping pendant
- * {@link ClientLifecycleEvents#CLIENT_STARTED} et donne accès à différentes méthodes pour retourner les données.
+ * Class responsible for managing data from the official Hypixel SkyBlock API.
+ * <h3>Fetchers:</h3>
+ * <li>
+ * {@code Items}: Retrieves SkyBlock Items from the API resource.
+ * Processed and mapped via internal mapping in the Mod to convert Hypixel materials
+ * into Minecraft materials from the current version.
+ * </li>
+ * <li>
+ * {@code Bazaar}: Retrieves SkyBlock Products from the Bazaar Endpoint.
+ * Retrieve in raw form, the products are processed and pre-calculated
+ * to get statistics and other data at each fetch cycle.
+ * </li>
+ * <li>
+ * {@code Election}: Retrieves SkyBlock Election results from the API resource.
+ * Retrieves the results of the current election, for the current mayor,
+ * his perks, as well as the minister and his optional perk.
+ * </li>
+ * <p>
+ * The data is retrieved with the {@link ClientLifecycleEvents#CLIENT_STARTED}
+ * once or repeatedly according to a given time, failure cases are handled as retries for single fetches.
+ *
+ * @see ItemsFetcher
+ * @see BazaarFetcher
+ * @see ElectionFetcher
  */
 public final class HypixelDataSource {
 
@@ -63,48 +83,73 @@ public final class HypixelDataSource {
 		electionFetcher.start();
 	}
 
+	/**
+	 * Returns {@link ElectionResult} of the current election.
+	 * May be null if the fetcher was unable to retrieve or process the data.
+	 *
+	 * @return the {@link ElectionResult} or {@code null}
+	 */
 	@Nullable
 	public ElectionResult getElection() {
 		return electionFetcher.getCachedElection();
 	}
 
+	/**
+	 * Check if the Bazaar fetch is in progress
+	 *
+	 * @return {@code true} if the fetch is in progress
+	 */
 	public boolean isBazaarInUpdate() {
 		return bazaarFetcher.isFetching();
 	}
 
+	/**
+	 * Check if the given item is present in the Products of the Bazaar.
+	 *
+	 * @param skyBlockItemId the ID of the SkyBlock item to check for.
+	 * @return {@code true} if the item is present in the Bazaar Products.
+	 */
 	public boolean hasBazaarItem(@Nullable String skyBlockItemId) {
 		if (skyBlockItemId == null || skyBlockItemId.isBlank()) {
 			return false;
 		}
-
 		return bazaarFetcher.getBazaarSnapshot().containsKey(skyBlockItemId);
 	}
 
+	/**
+	 * Returns an Optional of {@link BazaarProduct} according to the given item.
+	 *
+	 * @param skyBlockItemId the ID of the SkyBlock item to check for
+	 * @return an Optional of {@link BazaarProduct}
+	 */
 	public Optional<BazaarProduct> getBazaarItem(@Nullable String skyBlockItemId) {
-		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) return Optional.empty();
+		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) {
+			return Optional.empty();
+		}
 		return Optional.ofNullable(bazaarFetcher.getBazaarSnapshot().get(skyBlockItemId));
 	}
 
 	/**
-	 * Retourne un {@link ItemStack} qui correspond à l'ID de l'item SkyBlock spécifié.
+	 * Returns an {@link ItemStack} that corresponds to the ID of the specified SkyBlock item.
 	 * <p>
-	 * Cette correspondance dépend si l'item SkyBlock est enregistré en interne, avec un "material" retourné
-	 * par l'API SkyBlock d'Hypixel et est mappé avec un ID du {@link net.minecraft.registry.Registries#ITEM}.
+	 * This correspondence depends on whether the SkyBlock item is stored internally, with a “material” returned
+	 * by Hypixel's SkyBlock API, and is mapped with an ID from {@link net.minecraft.registry.Registries#ITEM}.
 	 * <p>
-	 * Si l'ID de l'item spécifié n'est pas reconnu dans la liste des items SkyBlock enregistrés,
-	 * <b>OU</b> qu'il est impossible de récupérer la liste des items SkyBlock / récupérer le mapping selon
-	 * la version, {@link Items#BARRIER} sera retourné.
+	 * If the specified item ID is not recognized in the list of registered SkyBlock items,
+	 * <b>OR</b> if it is impossible to retrieve the list of SkyBlock items / retrieve the mapping according to
+	 * the version, {@link Items#BARRIER} will be returned.
 	 * <p>
-	 * Dans l'API SkyBlock d'Hypixel, les items retournés ont un "material" qui est une chaine de caractères,
-	 * qui est basé de facon <b>arbitraire par Hypixel</b> et selon la version <b>1.8</b>. Pour ce faire,
-	 * un mapping est réalisé en amont qui défini {@code "material": ID}. Par exemple : {@code "SKULL_ITEM": 1156}.
-	 * "SKULL_ITEM" provenant d'Hypixel, et "1156" étant l'ID du {@link net.minecraft.registry.Registries#ITEM}.
+	 * If the item is a “SKULL_ITEM” (Hypixel Material) and a skin is found,
+	 * a {@link Items#PLAYER_HEAD} is returned with the texture
 	 * <p>
-	 * Si l'item est un "SKULL_ITEM" (Hypixel Material) et qu'un skin est trouvé, un {@link Items#PLAYER_HEAD}
-	 * est retourné avec la texture.
+	 * In Hypixel's SkyBlock API, the items returned have a {@code material} that is a string,
+	 * which is based <b>arbitrarily by Hypixel</b> and according to version <b>1.8</b>.
+	 * To do this, a mapping is performed upstream that defines {@code “material”: ID}.
+	 * For example: {@code “SKULL_ITEM”: 1156}.
+	 * “SKULL_ITEM” comes from Hypixel, and “1156” is the ID of {@link net.minecraft.registry.Registries#ITEM}.
 	 *
-	 * @param skyBlockItemId l'ID du SkyBlock item (par exemple : "RECOMBOBULATOR_3000")
-	 * @return un nouveau {@link ItemStack} de l'item SkyBlock
+	 * @param skyBlockItemId the ID of the SkyBlock item to check for
+	 * @return an {@link ItemStack} corresponding to the ID of the specified SkyBlock item.
 	 */
 	public @NotNull ItemStack getItemStack(@NotNull String skyBlockItemId) {
 		ItemStack fallback = new ItemStack(Items.BARRIER, 1);
@@ -148,22 +193,24 @@ public final class HypixelDataSource {
 	}
 
 	/**
-	 * Retourne un {@link SkyBlockItem} selon le {@code skyBlockItemId} spécifié.
+	 * Returns an {@link SkyBlockItem} that corresponds to the ID of the specified SkyBlock item.
 	 *
-	 * @param skyBlockItemId l'ID de l'item SkyBlock
-	 * @return le SkyBlock item trouvé ou {@code null} si aucune correspondance
+	 * @param skyBlockItemId the ID of the SkyBlock item to check for
+	 * @return the {@link SkyBlockItem} or null
 	 * @see #getSkyBlockItemOptional(String)
 	 */
 	public @Nullable SkyBlockItem getSkyBlockItem(@Nullable String skyBlockItemId) {
-		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) return null;
+		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) {
+			return null;
+		}
 		return itemsFetcher.getSkyBlockItemsSnapshot().get(skyBlockItemId);
 	}
 
 	/**
-	 * Retourne un {@link Optional} du {@link SkyBlockItem} selon le {@code skyBlockItemId} spécifié.
+	 * Returns an Optional of {@link SkyBlockItem} that corresponds to the ID of the specified SkyBlock item.
 	 *
-	 * @param skyBlockItemId l'ID de l'item SkyBlock
-	 * @return un Optional du SkyBlock item
+	 * @param skyBlockItemId the ID of the SkyBlock item to check for
+	 * @return an Optional of {@link SkyBlockItem}
 	 * @see #getSkyBlockItem(String)
 	 */
 	public Optional<SkyBlockItem> getSkyBlockItemOptional(@Nullable String skyBlockItemId) {
@@ -172,18 +219,15 @@ public final class HypixelDataSource {
 	}
 
 	/**
-	 * Récupère la liste complète des items SkyBlock enregistrés depuis l'API Hypixel.
-	 * Cette méthode effectue des vérifications des erreurs internes liées au mapping des items
-	 * ou à la récupération des données depuis l'API SkyBlock d'Hypixel.
-	 * Si de tels problèmes sont détectés, ou si la liste interne des items SkyBlock est vide,
-	 * une exception {@link HypixelDataException} est levée avec un message d'erreur approprié.
-	 * Sinon, elle retourne une nouvelle liste {@link List} contenant tous les items SkyBlock
-	 * actuellement enregistrés.
+	 * Retrieves the complete list of SkyBlock items registered from the Hypixel API.
+	 * Performs checks for internal errors related to item mapping or data retrieval from the endpoint.
+	 * If such problems are detected, or if the internal list of SkyBlock items is empty,
+	 * a {@link HypixelDataException} exception is thrown with an appropriate error message.
 	 *
-	 * @return une liste des SkyBlock items.
-	 * @throws HypixelDataException S'il y a une erreur dans le mapping des items,
-	 *                              la récupération des données depuis l'API
-	 *                              ou si la liste des items SkyBlock est vide.
+	 * @return a list of SkyBlock items.
+	 * @throws HypixelDataException If there is an error in the item mapping,
+	 *                              data retrieval from the API,
+	 *                              or if the SkyBlock item list is empty
 	 */
 	@NotNull
 	@Unmodifiable
@@ -209,9 +253,9 @@ public final class HypixelDataSource {
 	}
 
 	/**
-	 * Retourne le nombre total des items SkyBlock actuellement enregistrés.
+	 * Returns the total number of SkyBlock items currently registered.
 	 *
-	 * @return le nombre total d'items SkyBlock
+	 * @return the total number of SkyBlock items
 	 */
 	public int getSkyBlockItemCounts() {
 		return itemsFetcher.getSkyBlockItemsSnapshot().size();
@@ -221,41 +265,39 @@ public final class HypixelDataSource {
 	public void fixSkyBlockItems() {
 		if (itemsFetcher.isLastFetchSuccessful() && bazaarFetcher.isFirstBazaarUpdated() && !hasCalledFixMissing) {
 			hasCalledFixMissing = true;
-			CaribouStonks.LOGGER.info("[HypixelDataSource] Fixing Hypixel SkyBlock Items..");
 
 			int fixedEnchants = 0;
 			int fixedEssences = 0;
 			int fixedShards = 0;
 
 			for (String bazaarProductId : bazaarFetcher.getBazaarSnapshot().keySet()) {
-				if (!itemsFetcher.getSkyBlockItemsSnapshot().containsKey(bazaarProductId)) {
-					try {
-						if (apiFixer.isEnchantment(bazaarProductId)) {
-							//itemsFetcher.skyBlockItems().put(bazaarProductId, apiFixer.createEnchant(bazaarProductId));
-							itemsFetcher.putItem(bazaarProductId, apiFixer.createEnchant(bazaarProductId));
-							fixedEnchants++;
+				if (itemsFetcher.getSkyBlockItemsSnapshot().containsKey(bazaarProductId)) {
+					continue;
+				}
+				try {
+					if (apiFixer.isEnchantment(bazaarProductId)) {
+						itemsFetcher.putItem(bazaarProductId, apiFixer.createEnchant(bazaarProductId));
+						fixedEnchants++;
 
-						} else if (apiFixer.isEssence(bazaarProductId)) {
-							itemsFetcher.putItem(bazaarProductId, apiFixer.createEssence(bazaarProductId));
-							fixedEssences++;
+					} else if (apiFixer.isEssence(bazaarProductId)) {
+						itemsFetcher.putItem(bazaarProductId, apiFixer.createEssence(bazaarProductId));
+						fixedEssences++;
 
-						} else if (apiFixer.isShard(bazaarProductId)) {
-							SkyBlockItem shard = apiFixer.createShard(bazaarProductId);
-							if (shard != null) {
-								//itemsFetcher.skyBlockItems().put(bazaarProductId, shard);
-								itemsFetcher.putItem(bazaarProductId, shard);
-								fixedShards++;
-							} else {
-								CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create {} Shard! Not registered in ModDataSource.",
-										bazaarProductId);
-							}
+					} else if (apiFixer.isShard(bazaarProductId)) {
+						SkyBlockItem shard = apiFixer.createShard(bazaarProductId);
+						if (shard != null) {
+							itemsFetcher.putItem(bazaarProductId, shard);
+							fixedShards++;
 						} else {
-							CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to fix {}. Not identified!",
+							CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create {} Shard! Not registered in ModDataSource.",
 									bazaarProductId);
 						}
-					} catch (Throwable ex) {
-						CaribouStonks.LOGGER.error("[HypixelDataSource] Fix for {} failed", bazaarProductId, ex);
+					} else {
+						CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to fix {}. Not identified!",
+								bazaarProductId);
 					}
+				} catch (Throwable ex) {
+					CaribouStonks.LOGGER.error("[HypixelDataSource] Fix for {} failed", bazaarProductId, ex);
 				}
 			}
 
