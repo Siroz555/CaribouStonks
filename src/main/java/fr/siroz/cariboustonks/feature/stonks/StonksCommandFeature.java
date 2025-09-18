@@ -42,7 +42,7 @@ public class StonksCommandFeature extends Feature {
 		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal("stonks")
 				.executes(context -> {
 					if (lastItem != null && !lastItem.isBlank()) {
-						context.getSource().getClient().setScreen(new StonksScreen(ItemLookupKey.of(
+						context.getSource().getClient().setScreen(StonksScreen.create(ItemLookupKey.of(
 								NotEnoughUpdatesUtils.getNeuIdFromSkyBlockId(lastItem),
 								lastItem
 						)));

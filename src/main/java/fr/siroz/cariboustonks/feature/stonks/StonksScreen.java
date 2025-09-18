@@ -32,6 +32,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import net.minecraft.util.Util;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
@@ -55,7 +56,7 @@ public class StonksScreen extends CaribousStonksScreen {
 
 	private volatile boolean notFound = false;
 
-	public StonksScreen(@NotNull ItemLookupKey key) {
+	private StonksScreen(@NotNull ItemLookupKey key) {
 		super(Text.literal("Stonks"));
 
 		HypixelDataSource hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
@@ -69,6 +70,11 @@ public class StonksScreen extends CaribousStonksScreen {
 		}
 
 		this.fetchItemData(key).thenRun(this::initStonksWidgets);
+	}
+
+	@Contract("_ -> new")
+	public static @NotNull StonksScreen create(@NotNull ItemLookupKey key) {
+		return new StonksScreen(key);
 	}
 
 	private void initStonksWidgets() {

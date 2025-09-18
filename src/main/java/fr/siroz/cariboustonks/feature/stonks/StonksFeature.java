@@ -60,7 +60,7 @@ public class StonksFeature extends Feature {
 							"{} NEU ID: {}, Hypixel SkyBlock API ID: {}",
 					stack.getName().getString(), neuIdError, hypixelSkyBlockIdError);
 		} else {
-			MinecraftClient.getInstance().setScreen(new StonksScreen(ItemLookupKey.of(neuId, hypixelSkyBlockId)));
+			MinecraftClient.getInstance().setScreen(StonksScreen.create(ItemLookupKey.of(neuId, hypixelSkyBlockId)));
 		}
 	}
 }

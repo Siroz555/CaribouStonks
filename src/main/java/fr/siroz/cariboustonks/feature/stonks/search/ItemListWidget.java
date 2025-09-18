@@ -280,7 +280,7 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 			loadingSearch = true;
 
 			if (client.player != null) {
-				client.setScreen(new StonksScreen(ItemLookupKey.of(
+				client.setScreen(StonksScreen.create(ItemLookupKey.of(
 						NotEnoughUpdatesUtils.getNeuIdFromSkyBlockId(item.hypixelSkyBlockId()),
 						item.hypixelSkyBlockId()
 				)));
