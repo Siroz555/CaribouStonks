@@ -20,7 +20,7 @@ public abstract class CaribousStonksScreen extends Screen {
 
 	private void failure(String method, Throwable throwable) {
 		MinecraftClient.getInstance().setScreen(null);
-		CaribouStonks.core().reportCrash(CrashType.SCREEN,
+		CaribouStonks.core().getCrashManager().reportCrash(CrashType.SCREEN,
 				this.getClass().getSimpleName(),
 				this.getClass().getName(),
 				method, throwable);

@@ -75,7 +75,7 @@ public final class ContainerOverlayManager implements Manager {
 		try {
 			currentContainerOverlay.render(context, screenWidth, screenHeight, 0, 0);
 		} catch (Throwable throwable) {
-			CaribouStonks.core().reportCrash(CrashType.CONTAINER,
+			CaribouStonks.core().getCrashManager().reportCrash(CrashType.CONTAINER,
 					currentContainerOverlay.getClass().getSimpleName(),
 					currentContainerOverlay.getClass().getName(),
 					"render", throwable

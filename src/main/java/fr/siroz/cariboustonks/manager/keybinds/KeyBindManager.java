@@ -125,7 +125,7 @@ public final class KeyBindManager implements Manager {
 				try {
 					checkKeyBind.accept(keyBind);
 				} catch (Throwable throwable) {
-					CaribouStonks.core().reportCrash(
+					CaribouStonks.core().getCrashManager().reportCrash(
 							CrashType.KEYBINDING,
 							keyBind.getName(),
 							feature.getClass().getName() + "." + keyBind.getName(),
@@ -152,7 +152,7 @@ public final class KeyBindManager implements Manager {
 						keyBind.onScreenPress(screen, slot);
 					}
 				} catch (Throwable throwable) {
-					CaribouStonks.core().reportCrash(
+					CaribouStonks.core().getCrashManager().reportCrash(
 							CrashType.KEYBINDING,
 							keyBind.getName(),
 							feature.getClass().getName() + "." + keyBind.getName(),

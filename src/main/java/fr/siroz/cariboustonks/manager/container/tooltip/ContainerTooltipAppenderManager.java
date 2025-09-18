@@ -88,7 +88,7 @@ public final class ContainerTooltipAppenderManager implements Manager {
 			try {
 				appender.appendToTooltip(focusedSlot, stack, lines);
 			} catch (Throwable throwable) {
-				CaribouStonks.core().reportCrash(CrashType.CONTAINER,
+				CaribouStonks.core().getCrashManager().reportCrash(CrashType.CONTAINER,
 						appender.getClass().getSimpleName(),
 						appender.getClass().getName(),
 						"appendToTooltip", throwable
