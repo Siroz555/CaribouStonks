@@ -55,6 +55,8 @@ public final class CaribouStonks implements ClientModInitializer {
 		this.caribouStonksCore = new CaribouStonksCore();
 		this.managers = new Managers();
 		this.features = new Features();
+		// Developer Mode
+		this.caribouStonksCore.initDeveloperMode();
 	}
 
 	/**

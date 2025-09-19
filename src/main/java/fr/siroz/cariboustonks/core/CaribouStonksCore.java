@@ -55,12 +55,15 @@ public final class CaribouStonksCore {
 		// Event listeners
 		ClientPlayConnectionEvents.DISCONNECT.register((_handler, _client) -> this.onDisconnect());
 
+		CaribouStonks.LOGGER.info("[CaribouStonksCore] Loaded!");
+	}
+
+	@ApiStatus.Internal
+	public void initDeveloperMode() {
 		// Developer Mode
 		if (DeveloperTools.isInDevelopment()) {
 			new DeveloperManager();
 		}
-
-		CaribouStonks.LOGGER.info("[CaribouStonksCore] Loaded!");
 	}
 
 	/**
