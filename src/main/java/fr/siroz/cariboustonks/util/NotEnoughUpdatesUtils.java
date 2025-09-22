@@ -1,5 +1,7 @@
 package fr.siroz.cariboustonks.util;
 
+import fr.siroz.cariboustonks.core.data.hypixel.item.PetInfo;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.ApiStatus;
@@ -24,7 +26,7 @@ public final class NotEnoughUpdatesUtils {
 			return "";
 		}
 
-		String id = ItemUtils.getSkyBlockItemId(stack);
+		String id = SkyBlockAPI.getSkyBlockItemId(stack);
 		NbtCompound customData = ItemUtils.getCustomData(stack);
 
 		return switch (id) {
@@ -40,19 +42,30 @@ public final class NotEnoughUpdatesUtils {
 				yield rune.toUpperCase(Locale.ENGLISH) + "_RUNE;" + runes.getInt(rune, 0);
 			}
 
+			case "PET" -> {
+				if (!customData.contains("petInfo")) yield id;
+				PetInfo petInfo = PetInfo.parse(customData);
+				yield petInfo.type() + ";" + petInfo.rarity().getIndex();
+			}
+
 			case "POTION" -> "POTION_" + customData.getString("potion", "").toUpperCase(Locale.ENGLISH)
 					+ ";"
 					+ customData.getInt("potion_level", 0);
+
 			case "ATTRIBUTE_SHARD" -> ""; // The Foraging Update 0.23 - "New Shard API"
+
 			case "PARTY_HAT_CRAB", "BALLOON_HAT_2024" -> id
 					+ "_"
 					+ customData.getString("party_hat_color", "").toUpperCase(Locale.ENGLISH);
+
 			case "PARTY_HAT_CRAB_ANIMATED" -> "PARTY_HAT_CRAB_"
 					+ customData.getString("party_hat_color", "").toUpperCase(Locale.ENGLISH)
 					+ "_ANIMATED";
+
 			case "PARTY_HAT_SLOTH" -> id
 					+ "_"
 					+ customData.getString("party_hat_emoji", "").toUpperCase(Locale.ENGLISH);
+
 			default -> id.replace(":", "-");
 		};
 	}

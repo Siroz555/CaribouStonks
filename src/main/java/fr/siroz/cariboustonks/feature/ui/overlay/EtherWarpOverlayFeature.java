@@ -52,7 +52,7 @@ public class EtherWarpOverlayFeature extends Feature implements WorldRendererPro
 			return;
 		}
 
-		String skyBlockItemId = ItemUtils.getSkyBlockItemId(heldItem);
+		String skyBlockItemId = SkyBlockAPI.getSkyBlockItemId(heldItem);
 		NbtCompound customData = ItemUtils.getCustomData(heldItem);
 		if (!ETHER_WARP_ITEMS.contains(skyBlockItemId) || customData.getInt("ethermerge", 0) == 0) {
 			return;

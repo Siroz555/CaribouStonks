@@ -50,7 +50,7 @@ public final class CaribouStonksCore {
 		this.genericDataSource = new GenericDataSource();
 
 		// General Tick Scheduler for the SkyBlock API
-		TickScheduler.getInstance().runRepeating(SkyBlockAPI::update, 3, TimeUnit.SECONDS);
+		TickScheduler.getInstance().runRepeating(SkyBlockAPI::handleInternalUpdate, 3, TimeUnit.SECONDS);
 
 		// Event listeners
 		ClientPlayConnectionEvents.DISCONNECT.register((_handler, _client) -> this.onDisconnect());
@@ -117,6 +117,6 @@ public final class CaribouStonksCore {
 			SkyBlockEvents.LEAVE.invoker().onLeave();
 		}
 
-		SkyBlockAPI.handleLocationUpdate(null, false, "", IslandType.UNKNOWN);
+		SkyBlockAPI.handleInternalLocationUpdate(null, false, "", IslandType.UNKNOWN);
 	}
 }

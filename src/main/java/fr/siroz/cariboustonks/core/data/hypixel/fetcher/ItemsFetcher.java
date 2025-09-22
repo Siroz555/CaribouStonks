@@ -198,7 +198,7 @@ public final class ItemsFetcher {
 				if (apiFixer.isBlacklisted(id)) continue;
 
 				try {
-					SkyBlockItem skyBlockItem = new SkyBlockItem(item);
+					SkyBlockItem skyBlockItem = SkyBlockItem.parse(item);
 					items.put(id, skyBlockItem);
 				} catch (Exception ex) {
 					CaribouStonks.LOGGER.error("[ItemFetcher] Unable to parse SkyBlock Item: {}", id, ex);

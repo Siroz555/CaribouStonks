@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.util;
 
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.type.AttributeModifierSlot;
@@ -49,7 +50,7 @@ public final class InventoryUtils {
 	 */
 	public static boolean isHoldingItem(@NotNull String skyBlockItemId) {
 		ItemStack held = getHeldItem();
-		return held != null && ItemUtils.getSkyBlockItemId(held).equals(skyBlockItemId);
+		return held != null && SkyBlockAPI.getSkyBlockItemId(held).equals(skyBlockItemId);
 	}
 
 	/**

@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.util.ItemUtils;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +35,7 @@ public class StopPickobulusAbilityFeature extends Feature {
 		if (!isEnabled()) return ActionResult.PASS;
 
 		ItemStack itemStack = player.getStackInHand(hand);
-		String ability = ItemUtils.getAbility(itemStack);
+		String ability = SkyBlockAPI.getAbility(itemStack);
 		if (ability != null && ability.equalsIgnoreCase(PICKOBULUS)) {
 			Client.sendMessageWithPrefix(Text.literal("Blocked the Pickobulus ability from being used on the Private Island."));
 			return ActionResult.FAIL;

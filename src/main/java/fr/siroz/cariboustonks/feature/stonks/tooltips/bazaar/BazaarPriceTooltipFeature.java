@@ -10,7 +10,6 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
 import fr.siroz.cariboustonks.manager.container.tooltip.ContainerTooltipAppender;
-import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
@@ -51,7 +50,7 @@ public class BazaarPriceTooltipFeature extends Feature implements ContainerMatch
 			return;
 		}
 
-		String skyBlockApiId = ItemUtils.getSkyBlockApiId(item);
+		String skyBlockApiId = SkyBlockAPI.getSkyBlockApiId(item);
 
 		// Fix - The Foraging Update 0.23 - HuntingBox, Attribute Menu & Fusion Machine - Shard API ID Hypixel wtf
 		skyBlockApiId = AttributeAPI.getSkyBlockApiIdFromNewShard(skyBlockApiId, item, lines);

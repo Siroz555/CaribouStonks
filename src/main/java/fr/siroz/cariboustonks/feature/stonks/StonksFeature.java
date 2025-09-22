@@ -8,7 +8,6 @@ import fr.siroz.cariboustonks.manager.keybinds.KeyBind;
 import fr.siroz.cariboustonks.manager.keybinds.KeyBindComponent;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import java.util.Collections;
 import net.minecraft.client.MinecraftClient;
@@ -43,7 +42,7 @@ public class StonksFeature extends Feature {
 		Client.sendMessageWithPrefix(stack.getName().copy().append(Text.literal(" ..")));
 
 		String neuId = NotEnoughUpdatesUtils.getNeuId(stack);
-		String hypixelSkyBlockId = ItemUtils.getSkyBlockApiId(stack);
+		String hypixelSkyBlockId = SkyBlockAPI.getSkyBlockApiId(stack);
 
 		if (neuId.isEmpty() || hypixelSkyBlockId.isEmpty()) {
 

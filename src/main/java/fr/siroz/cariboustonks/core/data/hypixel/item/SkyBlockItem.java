@@ -1,8 +1,8 @@
 package fr.siroz.cariboustonks.core.data.hypixel.item;
 
 import com.google.gson.JsonObject;
-import fr.siroz.cariboustonks.core.data.mod.ModDataSource;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
  * Represents a SkyBlock item as returned by the SkyBlock API.
  * <p>
  * Note: the {@code material} field is the <b>Hypixel</b> material and not the Minecraft material.
- * See {@link ModDataSource#getMinecraftId(String)} for the mapping.
+ * See {@link fr.siroz.cariboustonks.core.data.mod.ModDataSource#getMinecraftId(String)} for the mapping.
  *
  * @param skyBlockId   the skyBlockId (e.g. "BOOSTER_COOKIE")
  * @param material     the material (e.g. "COOKIE")
@@ -32,14 +32,18 @@ public record SkyBlockItem(
 	 * @param jsonItem the JsonObject describing the item
 	 */
 	@ApiStatus.Internal
-	public SkyBlockItem(@NotNull JsonObject jsonItem) throws NullPointerException, UnsupportedOperationException, IllegalStateException {
-		this(
-				jsonItem.get("id").getAsString(),
-				jsonItem.get("material").getAsString(),
-				jsonItem.get("name").getAsString(),
-				computeTier(jsonItem),
-				computeSkullTexture(jsonItem, jsonItem.get("material").getAsString())
-		);
+	@Contract("_ -> new")
+	public static @NotNull SkyBlockItem parse(@NotNull JsonObject jsonItem) throws RuntimeException {
+		try {
+			String id = jsonItem.get("id").getAsString();
+			String material = jsonItem.get("material").getAsString();
+			String name = jsonItem.get("name").getAsString();
+			Rarity rarity = computeTier(jsonItem);
+			String skullTexture = computeSkullTexture(jsonItem, material);
+			return new SkyBlockItem(id, material, name, rarity, skullTexture);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	private static Rarity computeTier(@NotNull JsonObject jsonItem) {

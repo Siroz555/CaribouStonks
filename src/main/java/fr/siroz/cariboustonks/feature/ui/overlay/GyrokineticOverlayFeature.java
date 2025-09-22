@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.feature.ui.overlay;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
 import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
@@ -36,7 +35,7 @@ public class GyrokineticOverlayFeature extends Feature implements WorldRendererP
 		if (CLIENT.player == null || CLIENT.world == null || CLIENT.cameraEntity == null) return;
 		if (!isEnabled()) return;
 
-		String skyBlockId = ItemUtils.getSkyBlockItemId(CLIENT.player.getMainHandStack());
+		String skyBlockId = SkyBlockAPI.getSkyBlockItemId(CLIENT.player.getMainHandStack());
 		if (!GYROKINETIC_ITEM_ID.equals(skyBlockId)) {
 			return;
 		}

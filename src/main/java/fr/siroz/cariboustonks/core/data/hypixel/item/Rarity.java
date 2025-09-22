@@ -1,23 +1,28 @@
 package fr.siroz.cariboustonks.core.data.hypixel.item;
 
+import com.google.common.collect.Streams;
+import java.util.Arrays;
+import java.util.Optional;
 import net.minecraft.util.Formatting;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents SkyBlock's Rarity
  */
 public enum Rarity {
-	UNKNOWN(' ', 0, Formatting.GRAY),
 	COMMON('C', 1, Formatting.WHITE),
 	UNCOMMON('U', 2, Formatting.GREEN),
 	RARE('R', 3, Formatting.BLUE),
 	EPIC('E', 4, Formatting.DARK_PURPLE),
 	LEGENDARY('L', 5, Formatting.GOLD),
-	SPECIAL(' ', 6, Formatting.RED),
-	VERY_SPECIAL(' ', 7, Formatting.RED),
-	MYTHIC('M', 8, Formatting.LIGHT_PURPLE),
-	DIVINE('D', 9, Formatting.AQUA),
+	MYTHIC('M', 6, Formatting.LIGHT_PURPLE),
+	DIVINE('D', 7, Formatting.AQUA),
+	SPECIAL(' ', 8, Formatting.RED),
+	VERY_SPECIAL(' ', 9, Formatting.RED),
 	ULTIMATE(' ', 10, Formatting.DARK_RED),
+	ADMIN(' ', 11, Formatting.DARK_RED),
+	UNKNOWN(' ', 555, Formatting.BLACK),
 	;
 
 	private static final Rarity[] VALUES = values();
@@ -56,6 +61,14 @@ public enum Rarity {
 		}
 
 		return UNKNOWN;
+	}
+
+	public static @NotNull Optional<Rarity> containsName(@NotNull String name) {
+		return Streams.findLast(Arrays.stream(VALUES).filter(rarity -> name.contains(rarity.name())));
+	}
+
+	public int getIndex() {
+		return ordinal();
 	}
 
 	public char getCode() {

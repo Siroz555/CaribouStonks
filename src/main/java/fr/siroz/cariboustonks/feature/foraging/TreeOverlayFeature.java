@@ -10,7 +10,6 @@ import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.InventoryUtils;
-import fr.siroz.cariboustonks.util.ItemUtils;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +61,7 @@ public class TreeOverlayFeature extends Feature {
 			return;
 		}
 
-		String itemId = ItemUtils.getSkyBlockItemId(heldItem);
+		String itemId = SkyBlockAPI.getSkyBlockItemId(heldItem);
 		if (!AXES.contains(itemId)) {
 			return;
 		}

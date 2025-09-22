@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -63,7 +62,7 @@ public class HotspotRadarFeature extends Feature {
 	private ActionResult onUseItem(PlayerEntity player, World _world, Hand hand) {
 		ItemStack stack = player.getStackInHand(hand);
 		if (isEnabled() && stack != null && !stack.isEmpty()) {
-			if (HOTSPOT_RADAR_ITEM_ID.equals(ItemUtils.getSkyBlockItemId(stack))) {
+			if (HOTSPOT_RADAR_ITEM_ID.equals(SkyBlockAPI.getSkyBlockItemId(stack))) {
 				predictor.reset();
 				guessPosition = null;
 				lastUsedRadar = System.currentTimeMillis();
