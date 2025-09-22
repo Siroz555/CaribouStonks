@@ -1,14 +1,13 @@
 package fr.siroz.cariboustonks.feature.stonks;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.data.item.ItemLookupKey;
+import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.manager.keybinds.KeyBind;
 import fr.siroz.cariboustonks.manager.keybinds.KeyBindComponent;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import java.util.Collections;
 import net.minecraft.client.MinecraftClient;
@@ -43,7 +42,7 @@ public class StonksFeature extends Feature {
 		Client.sendMessageWithPrefix(stack.getName().copy().append(Text.literal(" ..")));
 
 		String neuId = NotEnoughUpdatesUtils.getNeuId(stack);
-		String hypixelSkyBlockId = ItemUtils.getSkyBlockApiId(stack);
+		String hypixelSkyBlockId = SkyBlockAPI.getSkyBlockApiId(stack);
 
 		if (neuId.isEmpty() || hypixelSkyBlockId.isEmpty()) {
 

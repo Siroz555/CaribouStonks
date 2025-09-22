@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.json.GsonProvider;
+import fr.siroz.cariboustonks.core.scheduler.AsyncScheduler;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
@@ -95,7 +96,7 @@ final class UpdateChecker {
 			} catch (Exception ex) {
 				CaribouStonks.LOGGER.error("[CaribouStonks UpdateChecker] Failed to check updates on Modrinth :/", ex);
 			}
-		});
+		}, AsyncScheduler.getInstance().blockingExecutor());
 	}
 
 	@EventHandler(event = "SkyBlockEvents.JOIN")

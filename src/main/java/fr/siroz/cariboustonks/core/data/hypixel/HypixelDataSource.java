@@ -1,35 +1,27 @@
 package fr.siroz.cariboustonks.core.data.hypixel;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
+import fr.siroz.cariboustonks.core.data.hypixel.election.ElectionResult;
+import fr.siroz.cariboustonks.core.data.hypixel.fetcher.BazaarFetcher;
+import fr.siroz.cariboustonks.core.data.hypixel.fetcher.ElectionFetcher;
+import fr.siroz.cariboustonks.core.data.hypixel.fetcher.ItemsFetcher;
+import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
 import fr.siroz.cariboustonks.core.data.mod.ModDataSource;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.Product;
-import fr.siroz.cariboustonks.core.data.hypixel.reply.SkyBlockBazaarReply;
-import fr.siroz.cariboustonks.core.data.hypixel.reply.SkyBlockItemsReply;
-import fr.siroz.cariboustonks.core.json.GsonProvider;
-import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.http.Http;
-import fr.siroz.cariboustonks.util.http.HttpResponse;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-import org.apache.http.client.HttpResponseException;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -37,84 +29,127 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 /**
- * Cette class est responsable de la gestion des données des items provenant de l'API SkyBlock d'Hypixel,
- * de "mapper" les SkyBlock items, en fonction des items ID Minecraft ({@link net.minecraft.registry.Registries#ITEM}).
- * Charge et enregistre les données des items SkyBlock et fait un mapping pendant
- * {@link ClientLifecycleEvents#CLIENT_STARTED} et donne accès à différentes méthodes pour retourner les données.
+ * Class responsible for managing data from the official Hypixel SkyBlock API.
+ * <h3>Fetchers:</h3>
+ * <li>
+ * {@code Items}: Retrieves SkyBlock Items from the API resource.
+ * Processed and mapped via internal mapping in the Mod to convert Hypixel materials
+ * into Minecraft materials from the current version.
+ * </li>
+ * <li>
+ * {@code Bazaar}: Retrieves SkyBlock Products from the Bazaar Endpoint.
+ * Retrieve in raw form, the products are processed and pre-calculated
+ * to get statistics and other data at each fetch cycle.
+ * </li>
+ * <li>
+ * {@code Election}: Retrieves SkyBlock Election results from the API resource.
+ * Retrieves the results of the current election, for the current mayor,
+ * his perks, as well as the minister and his optional perk.
+ * </li>
+ * <p>
+ * The data is retrieved with the {@link ClientLifecycleEvents#CLIENT_STARTED}
+ * once or repeatedly according to a given time, failure cases are handled as retries for single fetches.
+ *
+ * @see ItemsFetcher
+ * @see BazaarFetcher
+ * @see ElectionFetcher
  */
-public final class HypixelDataSource { // TODO clean up & docs
-
-	// Liste des items SkyBlock (Hypixel SkyBlock API)
-	private static final String ITEMS_API = "https://api.hypixel.net/v2/resources/skyblock/items";
-	private final Object2ObjectMap<String, SkyBlockItem> skyBlockItems = new Object2ObjectOpenHashMap<>();
-
-	// Liste des items au Bazaar (Hypixel SkyBlock API)
-	private static final String BAZAAR_API = "https://api.hypixel.net/v2/skyblock/bazaar";
-	private Object2ObjectMap<String, Product> bazaarData = new Object2ObjectOpenHashMap<>();
+public final class HypixelDataSource {
 
 	private final HypixelAPIFixer apiFixer = new HypixelAPIFixer();
 	private final ModDataSource modDataSource;
 
-	private boolean skyBlockItemError = false;
-	private boolean bazaarUpdateError = false;
+	private final ItemsFetcher itemsFetcher;
+	private final BazaarFetcher bazaarFetcher;
+	private final ElectionFetcher electionFetcher;
 
-	private boolean bazaarInUpdate = false;
-	// Flags | fixMissingSkyBlockItems
-	private boolean itemsLoaded = false;
-	private boolean firstBazaarUpdated = false;
 	private boolean hasCalledFixMissing = false;
 
 	@ApiStatus.Internal
 	public HypixelDataSource(@NotNull ModDataSource modDataSource) {
 		this.modDataSource = modDataSource;
+		// Fetchers
+		this.itemsFetcher = new ItemsFetcher(this, modDataSource, apiFixer);
+		this.bazaarFetcher = new BazaarFetcher(this, 5, () -> ConfigManager.getConfig().general.stonks.bazaarTooltipPrice);
+		this.electionFetcher = new ElectionFetcher();
+		// Event listener
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> onClientStarted());
 	}
 
+	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STARTED")
 	private void onClientStarted() {
-		loadItems().thenRun(() -> {
-			itemsLoaded = true;
-			checkItemsResults();
-			fixMissingSkyBlockItems();
-		});
-
-		TickScheduler.getInstance().runRepeating(() -> {
-			if (ConfigManager.getConfig().general.stonks.bazaarTooltipPrice) {
-				updateBazaar().thenRun(() -> {
-					bazaarInUpdate = false;
-					bazaarUpdateError = false;
-
-					if (!firstBazaarUpdated) {
-						firstBazaarUpdated = true;
-						checkBazaarResult();
-						fixMissingSkyBlockItems();
-					} else {
-						checkBazaarResult();
-					}
-				});
-			}
-		}, 5, TimeUnit.MINUTES);
+		itemsFetcher.start();
+		bazaarFetcher.start();
+		electionFetcher.start();
 	}
 
 	/**
-	 * Retourne un {@link ItemStack} qui correspond à l'ID de l'item SkyBlock spécifié.
-	 * <p>
-	 * Cette correspondance dépend si l'item SkyBlock est enregistré en interne, avec un "material" retourné
-	 * par l'API SkyBlock d'Hypixel et est mappé avec un ID du {@link net.minecraft.registry.Registries#ITEM}.
-	 * <p>
-	 * Si l'ID de l'item spécifié n'est pas reconnu dans la liste des items SkyBlock enregistrés,
-	 * <b>OU</b> qu'il est impossible de récupérer la liste des items SkyBlock / récupérer le mapping selon
-	 * la version, {@link Items#BARRIER} sera retourné.
-	 * <p>
-	 * Dans l'API SkyBlock d'Hypixel, les items retournés ont un "material" qui est une chaine de caractères,
-	 * qui est basé de facon <b>arbitraire par Hypixel</b> et selon la version <b>1.8</b>. Pour ce faire,
-	 * un mapping est réalisé en amont qui défini {@code "material": ID}. Par exemple : {@code "SKULL_ITEM": 1156}.
-	 * "SKULL_ITEM" provenant d'Hypixel, et "1156" étant l'ID du {@link net.minecraft.registry.Registries#ITEM}.
-	 * <p>
-	 * Si l'item est un "SKULL_ITEM" (Hypixel Material) et qu'un skin est trouvé, un {@link Items#PLAYER_HEAD}
-	 * est retourné avec la texture.
+	 * Returns {@link ElectionResult} of the current election.
+	 * May be null if the fetcher was unable to retrieve or process the data.
 	 *
-	 * @param skyBlockItemId l'ID du SkyBlock item (par exemple : "RECOMBOBULATOR_3000")
-	 * @return un nouveau {@link ItemStack} de l'item SkyBlock
+	 * @return the {@link ElectionResult} or {@code null}
+	 */
+	@Nullable
+	public ElectionResult getElection() {
+		return electionFetcher.getCachedElection();
+	}
+
+	/**
+	 * Check if the Bazaar fetch is in progress
+	 *
+	 * @return {@code true} if the fetch is in progress
+	 */
+	public boolean isBazaarInUpdate() {
+		return bazaarFetcher.isFetching();
+	}
+
+	/**
+	 * Check if the given item is present in the Products of the Bazaar.
+	 *
+	 * @param skyBlockItemId the ID of the SkyBlock item to check for.
+	 * @return {@code true} if the item is present in the Bazaar Products.
+	 */
+	public boolean hasBazaarItem(@Nullable String skyBlockItemId) {
+		if (skyBlockItemId == null || skyBlockItemId.isBlank()) {
+			return false;
+		}
+		return bazaarFetcher.getBazaarSnapshot().containsKey(skyBlockItemId);
+	}
+
+	/**
+	 * Returns an Optional of {@link BazaarProduct} according to the given item.
+	 *
+	 * @param skyBlockItemId the ID of the SkyBlock item to check for
+	 * @return an Optional of {@link BazaarProduct}
+	 */
+	public Optional<BazaarProduct> getBazaarItem(@Nullable String skyBlockItemId) {
+		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) {
+			return Optional.empty();
+		}
+		return Optional.ofNullable(bazaarFetcher.getBazaarSnapshot().get(skyBlockItemId));
+	}
+
+	/**
+	 * Returns an {@link ItemStack} that corresponds to the ID of the specified SkyBlock item.
+	 * <p>
+	 * This correspondence depends on whether the SkyBlock item is stored internally, with a “material” returned
+	 * by Hypixel's SkyBlock API, and is mapped with an ID from {@link net.minecraft.registry.Registries#ITEM}.
+	 * <p>
+	 * If the specified item ID is not recognized in the list of registered SkyBlock items,
+	 * <b>OR</b> if it is impossible to retrieve the list of SkyBlock items / retrieve the mapping according to
+	 * the version, {@link Items#BARRIER} will be returned.
+	 * <p>
+	 * If the item is a “SKULL_ITEM” (Hypixel Material) and a skin is found,
+	 * a {@link Items#PLAYER_HEAD} is returned with the texture
+	 * <p>
+	 * In Hypixel's SkyBlock API, the items returned have a {@code material} that is a string,
+	 * which is based <b>arbitrarily by Hypixel</b> and according to version <b>1.8</b>.
+	 * To do this, a mapping is performed upstream that defines {@code “material”: ID}.
+	 * For example: {@code “SKULL_ITEM”: 1156}.
+	 * “SKULL_ITEM” comes from Hypixel, and “1156” is the ID of {@link net.minecraft.registry.Registries#ITEM}.
+	 *
+	 * @param skyBlockItemId the ID of the SkyBlock item to check for
+	 * @return an {@link ItemStack} corresponding to the ID of the specified SkyBlock item.
 	 */
 	public @NotNull ItemStack getItemStack(@NotNull String skyBlockItemId) {
 		ItemStack fallback = new ItemStack(Items.BARRIER, 1);
@@ -125,12 +160,12 @@ public final class HypixelDataSource { // TODO clean up & docs
 		}
 
 		try {
-			SkyBlockItem skyBlockItem = skyBlockItems.get(skyBlockItemId);
+			SkyBlockItem skyBlockItem = itemsFetcher.getSkyBlockItemsSnapshot().get(skyBlockItemId);
 			if (skyBlockItem == null) {
 				return fallback;
 			}
 
-			String hypixelMaterial = skyBlockItem.getMaterial();
+			String hypixelMaterial = skyBlockItem.material();
 			String minecraftId = modDataSource.getMinecraftId(hypixelMaterial);
 			if (minecraftId == null || minecraftId.equals("NO_MATCH")) {
 				return fallback;
@@ -143,8 +178,8 @@ public final class HypixelDataSource { // TODO clean up & docs
 				itemStack = new ItemStack(item.get(), 1);
 			}
 
-			if (skyBlockItem.isSkullItem() && skyBlockItem.getSkullTexture().isPresent()) {
-				itemStack = ItemUtils.createSkull(skyBlockItem.getSkullTexture().get());
+			if (skyBlockItem.skullTexture() != null) {
+				itemStack = ItemUtils.createSkull(skyBlockItem.skullTexture());
 			}
 
 			itemStack.set(DataComponentTypes.CUSTOM_NAME, Text.of(skyBlockItemId));
@@ -158,22 +193,24 @@ public final class HypixelDataSource { // TODO clean up & docs
 	}
 
 	/**
-	 * Retourne un {@link SkyBlockItem} selon le {@code skyBlockItemId} spécifié.
+	 * Returns an {@link SkyBlockItem} that corresponds to the ID of the specified SkyBlock item.
 	 *
-	 * @param skyBlockItemId l'ID de l'item SkyBlock
-	 * @return le SkyBlock item trouvé ou {@code null} si aucune correspondance
+	 * @param skyBlockItemId the ID of the SkyBlock item to check for
+	 * @return the {@link SkyBlockItem} or null
 	 * @see #getSkyBlockItemOptional(String)
 	 */
 	public @Nullable SkyBlockItem getSkyBlockItem(@Nullable String skyBlockItemId) {
-		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) return null;
-		return skyBlockItems.get(skyBlockItemId);
+		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) {
+			return null;
+		}
+		return itemsFetcher.getSkyBlockItemsSnapshot().get(skyBlockItemId);
 	}
 
 	/**
-	 * Retourne un {@link Optional} du {@link SkyBlockItem} selon le {@code skyBlockItemId} spécifié.
+	 * Returns an Optional of {@link SkyBlockItem} that corresponds to the ID of the specified SkyBlock item.
 	 *
-	 * @param skyBlockItemId l'ID de l'item SkyBlock
-	 * @return un Optional du SkyBlock item
+	 * @param skyBlockItemId the ID of the SkyBlock item to check for
+	 * @return an Optional of {@link SkyBlockItem}
 	 * @see #getSkyBlockItem(String)
 	 */
 	public Optional<SkyBlockItem> getSkyBlockItemOptional(@Nullable String skyBlockItemId) {
@@ -182,18 +219,15 @@ public final class HypixelDataSource { // TODO clean up & docs
 	}
 
 	/**
-	 * Récupère la liste complète des items SkyBlock enregistrés depuis l'API Hypixel.
-	 * Cette méthode effectue des vérifications des erreurs internes liées au mapping des items
-	 * ou à la récupération des données depuis l'API SkyBlock d'Hypixel.
-	 * Si de tels problèmes sont détectés, ou si la liste interne des items SkyBlock est vide,
-	 * une exception {@link HypixelDataException} est levée avec un message d'erreur approprié.
-	 * Sinon, elle retourne une nouvelle liste {@link List} contenant tous les items SkyBlock
-	 * actuellement enregistrés.
+	 * Retrieves the complete list of SkyBlock items registered from the Hypixel API.
+	 * Performs checks for internal errors related to item mapping or data retrieval from the endpoint.
+	 * If such problems are detected, or if the internal list of SkyBlock items is empty,
+	 * a {@link HypixelDataException} exception is thrown with an appropriate error message.
 	 *
-	 * @return une liste des SkyBlock items.
-	 * @throws HypixelDataException S'il y a une erreur dans le mapping des items,
-	 *                              la récupération des données depuis l'API
-	 *                              ou si la liste des items SkyBlock est vide.
+	 * @return a list of SkyBlock items.
+	 * @throws HypixelDataException If there is an error in the item mapping,
+	 *                              data retrieval from the API,
+	 *                              or if the SkyBlock item list is empty
 	 */
 	@NotNull
 	@Unmodifiable
@@ -202,221 +236,68 @@ public final class HypixelDataSource { // TODO clean up & docs
 			throw new HypixelDataException(Text.of("Unable to map SkyBlock Items into Minecraft."));
 		}
 
-		if (skyBlockItemError) {
+		if (!itemsFetcher.isLastFetchSuccessful()) {
 			throw new HypixelDataException(Text.of("Unable to fetch SkyBlock Items from Hypixel API."));
 		}
 
-		if (skyBlockItems.isEmpty()) {
+		if (itemsFetcher.getSkyBlockItemsSnapshot().isEmpty()) {
 			throw new HypixelDataException(Text.of("No SkyBlock Items is registered."));
 		}
 
-		return new ArrayList<>(skyBlockItems.values());
+		return new ArrayList<>(itemsFetcher.getSkyBlockItemsSnapshot().values());
 	}
 
 	@Contract(" -> new")
 	public @NotNull Set<String> getSkyBlockItemsIds() {
-		return new HashSet<>(skyBlockItems.keySet());
+		return new HashSet<>(itemsFetcher.getSkyBlockItemsSnapshot().keySet());
 	}
 
 	/**
-	 * Retourne le nombre total des items SkyBlock actuellement enregistrés.
+	 * Returns the total number of SkyBlock items currently registered.
 	 *
-	 * @return le nombre total d'items SkyBlock
+	 * @return the total number of SkyBlock items
 	 */
 	public int getSkyBlockItemCounts() {
-		return skyBlockItems.size();
+		return itemsFetcher.getSkyBlockItemsSnapshot().size();
 	}
 
-	public boolean isBazaarInUpdate() {
-		return bazaarInUpdate;
-	}
-
-	public boolean hasBazaarItem(@Nullable String skyBlockItemId) {
-		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) return false;
-		return bazaarData.containsKey(skyBlockItemId);
-	}
-
-	public Optional<Product> getBazaarItem(@Nullable String skyBlockItemId) {
-		if (bazaarData == null || skyBlockItemId == null || skyBlockItemId.isEmpty()) return Optional.empty();
-		return Optional.ofNullable(bazaarData.get(skyBlockItemId));
-	}
-
-	private @NotNull CompletableFuture<Void> loadItems() {
-		CaribouStonks.LOGGER.info("[HypixelDataSource] Loading SkyBlock Items..");
-
-		return fetchSkyBlockItems().thenAccept(reply -> {
-			if (reply.getResponse() == null) {
-				skyBlockItemError = true;
-				return;
-			}
-
-			try {
-				JsonArray array = reply.getResponse().get("items").getAsJsonArray();
-				for (int i = 0; i < array.size(); i++) {
-
-					JsonObject item = array.get(i).getAsJsonObject();
-					if (item.has("id")) {
-						String id = item.get("id").getAsString();
-						// ignore les minions et autres
-						if (apiFixer.isBlacklisted(id)) {
-							continue;
-						}
-
-						try {
-							SkyBlockItem skyBlockItem = new SkyBlockItem(item);
-							skyBlockItems.put(id, skyBlockItem);
-						} catch (Exception ex) {
-							CaribouStonks.LOGGER.error(
-									"[CaribouStonks HypixelData] Unable to parse SkyBlock Item: {}", id, ex);
-						}
-					}
-				}
-			} catch (Throwable ex) {
-				skyBlockItemError = true;
-				CaribouStonks.LOGGER.error("[HypixelDataSource] There was an error while loading SkyBlock Items", ex);
-			}
-		});
-	}
-
-	private @NotNull CompletableFuture<Void> updateBazaar() {
-		CaribouStonks.LOGGER.info("[HypixelDataSource] Updating SkyBlock Bazaar..");
-		bazaarInUpdate = true;
-
-		return fetchBazaar().thenAccept(reply -> {
-			if (reply == null) {
-				bazaarUpdateError = true;
-				return;
-			}
-
-			if (reply.getProducts() == null || reply.getProducts().isEmpty()) {
-				bazaarUpdateError = true;
-				return;
-			}
-
-			//bazaarLastUpdated = reply.getLastUpdated();
-			bazaarData = new Object2ObjectOpenHashMap<>(reply.getProducts());
-		});
-	}
-
-	@Contract(" -> new")
-	private @NotNull CompletableFuture<SkyBlockItemsReply> fetchSkyBlockItems() {
-		return CompletableFuture.supplyAsync(() -> {
-			try (HttpResponse response = Http.request(ITEMS_API)) {
-				if (!response.success()) {
-					throw new HttpResponseException(response.statusCode(), response.content());
-				}
-
-				SkyBlockItemsReply reply = new SkyBlockItemsReply(
-						GsonProvider.standard().fromJson(response.content(), JsonObject.class));
-				if (!reply.isSuccess()) {
-					throw new RuntimeException("SkyBlock Resource Items reply failed: " + reply.getCause());
-				}
-
-				return reply;
-			} catch (Throwable ex) {
-				CaribouStonks.LOGGER.error("[HypixelDataSource] Failed to fetch SkyBlock Items from Hypixel API", ex);
-				return null;
-			}
-		});
-	}
-
-	@Contract(" -> new")
-	private @NotNull CompletableFuture<SkyBlockBazaarReply> fetchBazaar() {
-		return CompletableFuture.supplyAsync(() -> {
-			try (HttpResponse response = Http.request(BAZAAR_API)) {
-				if (!response.success()) {
-					throw new HttpResponseException(response.statusCode(), response.content());
-				}
-
-				// TODO - remplacer les Reply de facon "officiel", arrêter de laisser Gson faire tout seul
-				SkyBlockBazaarReply reply
-						= GsonProvider.prettyPrinting().fromJson(response.content(), SkyBlockBazaarReply.class);
-				if (reply == null) {
-					throw new IllegalStateException("Json is null or empty");
-				}
-
-				if (!reply.isSuccess()) {
-					throw new RuntimeException("SkyBlock Bazaar reply failed: " + reply.getCause());
-				}
-
-				return reply;
-			} catch (Throwable ex) {
-				CaribouStonks.LOGGER.error("[HypixelDataSource] Failed to fetch SkyBlock Bazaar from Hypixel API", ex);
-				return null;
-			}
-		});
-	}
-
-	private void checkItemsResults() {
-		if (!skyBlockItemError) {
-			CaribouStonks.LOGGER.info("[HypixelDataSource] Loaded {} SkyBlock Items", skyBlockItems.size());
-		} else {
-			CaribouStonks.LOGGER.error("[HypixelDataSource] Unable to load SkyBlock Items from Hypixel API");
-		}
-
-		if (!skyBlockItemError && !modDataSource.isItemsMappingError()) {
-			List<String> hypixelMaterials = skyBlockItems.values().stream()
-					.map(SkyBlockItem::getMaterial)
-					.collect(Collectors.toSet())
-					.stream()
-					.toList();
-
-			for (String material : hypixelMaterials) {
-				if (!modDataSource.containsItem(material)) {
-					CaribouStonks.LOGGER.warn(
-							"[HypixelDataSource] (Minecraft Ids Mapping) -> {} is not registered!", material);
-				}
-			}
-		} else {
-			CaribouStonks.LOGGER.error("[HypixelDataSource] (Minecraft Ids Mapping) SkyBlock Items error or mapping error");
-		}
-	}
-
-	private void checkBazaarResult() {
-		if (!bazaarUpdateError) {
-			CaribouStonks.LOGGER.info("[HypixelDataSource] Updated {} Bazaar Items", bazaarData.size());
-		} else {
-			CaribouStonks.LOGGER.error("[HypixelDataSource] Unable to update Bazaar Items from Hypixel API");
-		}
-	}
-
-	@SuppressWarnings("checkstyle:CyclomaticComplexity") // -_-
-	private void fixMissingSkyBlockItems() {
-		if (itemsLoaded && firstBazaarUpdated && !hasCalledFixMissing) {
+	@ApiStatus.Internal
+	public void fixSkyBlockItems() {
+		if (itemsFetcher.isLastFetchSuccessful() && bazaarFetcher.isFirstBazaarUpdated() && !hasCalledFixMissing) {
 			hasCalledFixMissing = true;
-			CaribouStonks.LOGGER.info("[HypixelDataSource] Fixing Hypixel SkyBlock Items..");
 
 			int fixedEnchants = 0;
 			int fixedEssences = 0;
 			int fixedShards = 0;
 
-			for (String bazaarProductId : bazaarData.keySet()) {
-				if (!skyBlockItems.containsKey(bazaarProductId)) {
-					try {
-						if (apiFixer.isEnchantment(bazaarProductId)) {
-							skyBlockItems.put(bazaarProductId, apiFixer.createEnchant(bazaarProductId));
-							fixedEnchants++;
+			for (String bazaarProductId : bazaarFetcher.getBazaarSnapshot().keySet()) {
+				if (itemsFetcher.getSkyBlockItemsSnapshot().containsKey(bazaarProductId)) {
+					continue;
+				}
+				try {
+					if (apiFixer.isEnchantment(bazaarProductId)) {
+						itemsFetcher.putItem(bazaarProductId, apiFixer.createEnchant(bazaarProductId));
+						fixedEnchants++;
 
-						} else if (apiFixer.isEssence(bazaarProductId)) {
-							skyBlockItems.put(bazaarProductId, apiFixer.createEssence(bazaarProductId));
-							fixedEssences++;
+					} else if (apiFixer.isEssence(bazaarProductId)) {
+						itemsFetcher.putItem(bazaarProductId, apiFixer.createEssence(bazaarProductId));
+						fixedEssences++;
 
-						} else if (apiFixer.isShard(bazaarProductId)) {
-							SkyBlockItem shard = apiFixer.createShard(bazaarProductId);
-							if (shard != null) {
-								skyBlockItems.put(bazaarProductId, shard);
-								fixedShards++;
-							} else {
-								CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create {} Shard! Not registered in ModDataSource.",
-										bazaarProductId);
-							}
+					} else if (apiFixer.isShard(bazaarProductId)) {
+						SkyBlockItem shard = apiFixer.createShard(bazaarProductId);
+						if (shard != null) {
+							itemsFetcher.putItem(bazaarProductId, shard);
+							fixedShards++;
 						} else {
-							CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to fix {}. Not identified!",
+							CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create {} Shard! Not registered in ModDataSource.",
 									bazaarProductId);
 						}
-					} catch (Throwable ex) {
-						CaribouStonks.LOGGER.error("[HypixelDataSource] Fix for {} failed", bazaarProductId, ex);
+					} else {
+						CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to fix {}. Not identified!",
+								bazaarProductId);
 					}
+				} catch (Throwable ex) {
+					CaribouStonks.LOGGER.error("[HypixelDataSource] Fix for {} failed", bazaarProductId, ex);
 				}
 			}
 

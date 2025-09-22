@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.core.data.item;
+package fr.siroz.cariboustonks.util;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

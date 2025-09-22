@@ -9,7 +9,6 @@ import fr.siroz.cariboustonks.event.InteractionEvents;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -84,7 +83,7 @@ public final class PestFinderFeature extends Feature {
 			return;
 		}
 
-		if (ItemUtils.getSkyBlockItemId(stack).contains("VACUUM")) {
+		if (SkyBlockAPI.getSkyBlockItemId(stack).contains("VACUUM")) {
 			predictor.reset();
 			guessPosition = null;
 			lastUsedVacuum = System.currentTimeMillis();

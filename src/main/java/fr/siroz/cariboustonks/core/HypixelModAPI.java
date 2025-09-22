@@ -37,7 +37,7 @@ final class HypixelModAPI {
 		switch (packet) {
 
 			case HelloS2CPacket(var _environment) -> {
-				SkyBlockAPI.handleLocationUpdate(true, null, null, null);
+				SkyBlockAPI.handleInternalLocationUpdate(true, null, null, null);
 			}
 
 			case LocationUpdateS2CPacket(var serverName, var serverType, var _lobbyName, var mode, var _map) -> {
@@ -45,22 +45,22 @@ final class HypixelModAPI {
 				String gameType = serverType.orElse("");
 				IslandType islandType = IslandType.getById(mode.orElse(""));
 
-				SkyBlockAPI.handleLocationUpdate(null, null, gameType, islandType);
+				SkyBlockAPI.handleInternalLocationUpdate(null, null, gameType, islandType);
 				SkyBlockEvents.ISLAND_CHANGE.invoker().onIslandChange(islandType);
 
 				if (gameType.equals("SKYBLOCK")) {
-					SkyBlockAPI.handleLocationUpdate(null, true, null, null);
+					SkyBlockAPI.handleInternalLocationUpdate(null, true, null, null);
 					if (!previousServerType.equals("SKYBLOCK")) {
 						SkyBlockEvents.JOIN.invoker().onJoin(serverName);
 					}
 				} else if (previousServerType.equals("SKYBLOCK")) {
-					SkyBlockAPI.handleLocationUpdate(null, false, null, null);
+					SkyBlockAPI.handleInternalLocationUpdate(null, false, null, null);
 					SkyBlockEvents.LEAVE.invoker().onLeave();
 				}
 			}
 
 			case ErrorS2CPacket(var id, var error) when id.equals(LocationUpdateS2CPacket.ID) -> {
-				SkyBlockAPI.handleLocationUpdate(null, null, "", IslandType.UNKNOWN);
+				SkyBlockAPI.handleInternalLocationUpdate(null, null, "", IslandType.UNKNOWN);
 				CaribouStonks.LOGGER.error("[HypixelModAPI] Failed to update Hypixel location! Error: {}", error);
 			}
 

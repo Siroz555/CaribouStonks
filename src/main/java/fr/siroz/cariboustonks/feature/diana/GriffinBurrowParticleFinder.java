@@ -2,9 +2,9 @@ package fr.siroz.cariboustonks.feature.diana;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
-import fr.siroz.cariboustonks.util.ItemUtils;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.Blocks;
@@ -152,7 +152,7 @@ final class GriffinBurrowParticleFinder {
 
 	private void handleInteractBlock(@NotNull PlayerEntity player, Hand hand, BlockPos pos) {
 		ItemStack stack = player.getStackInHand(hand);
-		if (!ItemUtils.getSkyBlockItemId(stack).equals(ANCESTRAL_SPADE_ITEM_ID)) {
+		if (!SkyBlockAPI.getSkyBlockItemId(stack).equals(ANCESTRAL_SPADE_ITEM_ID)) {
 			return;
 		}
 

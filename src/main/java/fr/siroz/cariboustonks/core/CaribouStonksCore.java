@@ -40,7 +40,7 @@ public final class CaribouStonksCore {
 	public CaribouStonksCore() {
 		CaribouStonks.LOGGER.info("[CaribouStonksCore] Loading..");
 
-		TickScheduler.getInstance().runRepeating(SkyBlockAPI::update, 3, TimeUnit.SECONDS);
+		TickScheduler.getInstance().runRepeating(SkyBlockAPI::handleInternalUpdate, 3, TimeUnit.SECONDS);
 
 		new UpdateChecker();
 		new ChangelogManager();
@@ -157,6 +157,6 @@ public final class CaribouStonksCore {
 			SkyBlockEvents.LEAVE.invoker().onLeave();
 		}
 
-		SkyBlockAPI.handleLocationUpdate(null, false, "", IslandType.UNKNOWN);
+		SkyBlockAPI.handleInternalLocationUpdate(null, false, "", IslandType.UNKNOWN);
 	}
 }

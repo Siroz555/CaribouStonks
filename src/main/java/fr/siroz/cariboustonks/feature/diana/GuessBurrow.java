@@ -1,8 +1,8 @@
 package fr.siroz.cariboustonks.feature.diana;
 
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
-import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,7 +39,7 @@ final class GuessBurrow {
 		ItemStack item = player.getStackInHand(hand);
 		if (mythologicalRitual.isEnabled()
 				&& mythologicalRitual.isGuessEnabled()
-				&& ItemUtils.getSkyBlockItemId(item).equals("ANCESTRAL_SPADE")
+				&& SkyBlockAPI.getSkyBlockItemId(item).equals("ANCESTRAL_SPADE")
 		) {
 			predictor.reset();
 			lastSpadeUsed = System.currentTimeMillis();

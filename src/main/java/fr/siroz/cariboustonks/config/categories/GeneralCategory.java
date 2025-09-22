@@ -196,15 +196,6 @@ public class GeneralCategory extends AbstractCategory {
 										newValue -> current.general.stonks.showAllDataInInfoScreen = newValue)
 								.controller(this::createBooleanController)
 								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Show all data in the /stonks Command").append(BETA))
-								.description(OptionDescription.of(
-										Text.literal("Show in the /stonks Command, all calculated data.")))
-								.binding(defaults.general.stonks.showAllDataInStonksCommand,
-										() -> current.general.stonks.showAllDataInStonksCommand,
-										newValue -> current.general.stonks.showAllDataInStonksCommand = newValue)
-								.controller(this::createBooleanController)
-								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Reminders").formatted(Formatting.BOLD))

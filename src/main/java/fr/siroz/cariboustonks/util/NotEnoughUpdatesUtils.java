@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.util;
 
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.ApiStatus;
@@ -24,7 +25,7 @@ public final class NotEnoughUpdatesUtils {
 			return "";
 		}
 
-		String id = ItemUtils.getSkyBlockItemId(stack);
+		String id = SkyBlockAPI.getSkyBlockItemId(stack);
 		NbtCompound customData = ItemUtils.getCustomData(stack);
 
 		return switch (id) {

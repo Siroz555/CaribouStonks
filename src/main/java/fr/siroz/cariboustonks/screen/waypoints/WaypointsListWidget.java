@@ -32,6 +32,8 @@ import java.util.List;
  */
 class WaypointsListWidget extends ElementListWidget<WaypointsListWidget.WaypointEntry> {
 
+	private static final int SPACE = 6;
+
 	private final WaypointScreen waypointScreen;
 	private List<Waypoint> waypoints;
 
@@ -50,7 +52,7 @@ class WaypointsListWidget extends ElementListWidget<WaypointsListWidget.Waypoint
 
 	@Override
 	public int getRowWidth() {
-		return super.getRowWidth() + 100;
+		return super.getRowWidth() + 250;
 	}
 
 	@Override
@@ -167,7 +169,7 @@ class WaypointsListWidget extends ElementListWidget<WaypointsListWidget.Waypoint
 			this.deleteWidget = ButtonWidget.builder(Text.translatable("selectServer.deleteButton"), button -> {
 				waypoints.remove(waypoint);
 				WaypointsListWidget.this.children().remove(this);
-			}).width(38).build();
+			}).width(56).build();
 
 			this.children = List.of(enabledWidget, nameWidget, xWidget, yWidget, zWidget, colorWidget, typeWidget, deleteWidget);
 		}
@@ -195,20 +197,33 @@ class WaypointsListWidget extends ElementListWidget<WaypointsListWidget.Waypoint
 				boolean hovered,
 				float tickProgress
 		) {
-			context.drawTextWithShadow(client.textRenderer, "X:", width / 2 - 56, y + 6, Colors.WHITE.asInt());
-			context.drawTextWithShadow(client.textRenderer, "Y:", width / 2 - 11, y + 6, Colors.WHITE.asInt());
-			context.drawTextWithShadow(client.textRenderer, "Z:", width / 2 + 35, y + 6, Colors.WHITE.asInt());
+			int enabledX = x + 10;
+			enabledWidget.setPosition(enabledX, y + 1);
 
-			enabledWidget.setPosition(x + 10, y + 1);
-			nameWidget.setPosition(x + 32, y);
+			int nameX = enabledX + enabledWidget.getWidth() + SPACE;
+			nameWidget.setPosition(nameX, y);
 
-			xWidget.setPosition(width / 2 - 46, y);
-			yWidget.setPosition(width / 2 - 1, y);
-			zWidget.setPosition(width / 2 + 44, y);
+			int afterName = nameX + nameWidget.getWidth();
+			int xX = afterName + SPACE * 2;
+			context.drawTextWithShadow(client.textRenderer, "X:", xX, y + 6, Colors.WHITE.asInt());
+			xWidget.setPosition(xX + 9, y);
 
-			colorWidget.setPosition(x + entryWidth - 79, y);
-			typeWidget.setPosition(x + entryWidth - 18, y);
-			deleteWidget.setPosition(x + entryWidth + 43, y); // 41
+			int yX = xX + xWidget.getWidth() + (SPACE * 2);
+			context.drawTextWithShadow(client.textRenderer, "Y:", yX, y + 6, Colors.WHITE.asInt());
+			yWidget.setPosition(yX + 9, y);
+
+			int zX = yX + yWidget.getWidth() + (SPACE * 2);
+			context.drawTextWithShadow(client.textRenderer, "Z:", zX, y + 6, Colors.WHITE.asInt());
+			zWidget.setPosition(zX + 9, y);
+
+			int colorX = zX + zWidget.getWidth() + SPACE * 4;
+			colorWidget.setPosition(colorX, y);
+
+			int typeX = colorX + colorWidget.getWidth() + SPACE;
+			typeWidget.setPosition(typeX, y);
+
+			int deleteX = typeX + typeWidget.getWidth() + SPACE;
+			deleteWidget.setPosition(deleteX, y);
 
 			for (ClickableWidget child : children) {
 				child.render(context, mouseX, mouseY, tickProgress);

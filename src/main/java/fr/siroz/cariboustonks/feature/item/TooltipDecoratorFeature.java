@@ -1,12 +1,11 @@
 package fr.siroz.cariboustonks.feature.item;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.event.ItemRenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.render.GuiRenderUtils;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.client.font.TextRenderer;
@@ -57,8 +56,8 @@ public class TooltipDecoratorFeature extends Feature {
 		if (!isEnabled()) return;
 		if (itemStack == null || itemStack.isEmpty()) return;
 
-		Rarity rarity = ItemUtils.getItemRarity(itemStack);
-		if (rarity != null) {
+		Rarity rarity = SkyBlockAPI.getRarity(itemStack);
+		if (rarity != Rarity.UNKNOWN) {
 			if (!RARITY_COLORS.containsKey(rarity)) {
 				return;
 			}
