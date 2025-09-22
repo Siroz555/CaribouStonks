@@ -14,7 +14,6 @@ import fr.siroz.cariboustonks.feature.foraging.TreeOverlayFeature;
 import fr.siroz.cariboustonks.feature.garden.MouseLockFeature;
 import fr.siroz.cariboustonks.feature.garden.pest.PestFinderFeature;
 import fr.siroz.cariboustonks.feature.hunting.AttributeInfoTooltipFeature;
-import fr.siroz.cariboustonks.feature.hunting.FishingNetPlacementFeature;
 import fr.siroz.cariboustonks.feature.item.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.feature.item.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
@@ -83,7 +82,6 @@ public final class Features {
 		registerFeature(new MouseLockFeature());
 		// Hunting
 		registerFeature(new AttributeInfoTooltipFeature(3));
-		registerFeature(new FishingNetPlacementFeature());
 		// Item
 		registerFeature(new ColoredEnchantmentFeature());
 		registerFeature(new ScrollableTooltipFeature());

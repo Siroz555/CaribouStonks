@@ -6,7 +6,4 @@ public class HuntingConfig {
 
 	@SerialEntry
 	public boolean attributeInfos = false;
-
-	@SerialEntry
-	public boolean cancelFishingNetPlacement = false;
 }
