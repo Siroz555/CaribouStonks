@@ -60,12 +60,12 @@ public class StonksScreen extends CaribousStonksScreen {
 		super(Text.literal("Stonks"));
 
 		HypixelDataSource hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
-		Optional<SkyBlockItem> item = hypixelDataSource.getSkyBlockItemOptional(key.getHypixelSkyBlockId());
+		Optional<SkyBlockItem> item = hypixelDataSource.getSkyBlockItemOptional(key.hypixelSkyBlockId());
 		if (item.isPresent()) {
 			this.itemName = Text.literal(item.get().name()).formatted(item.get().tier().getFormatting());
 			this.icon = hypixelDataSource.getItemStack(item.get().skyBlockId());
 		} else {
-			this.itemName = Text.literal(key.getHypixelSkyBlockId() != null ? key.getHypixelSkyBlockId() : "? ? ?");
+			this.itemName = Text.literal(key.hypixelSkyBlockId() != null ? key.hypixelSkyBlockId() : "? ? ?");
 			this.icon = new ItemStack(Items.BARRIER);
 		}
 
@@ -242,7 +242,7 @@ public class StonksScreen extends CaribousStonksScreen {
 				});
 
 		bazaarItem = CaribouStonks.core().getHypixelDataSource()
-				.getBazaarItem(key.getHypixelSkyBlockId())
+				.getBazaarItem(key.hypixelSkyBlockId())
 				.orElse(null);
 
 		/*CompletableFuture<Void> auctionItem;
