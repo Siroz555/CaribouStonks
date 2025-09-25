@@ -33,6 +33,7 @@
     "WorldRendererMixin",
     "accessors.ChatHudAccessor",
     "accessors.ConfigClassHandlerImplAccessor",
+    "accessors.DurstParticleEffectAccessor",
     "accessors.FrustumInvoker",
     "accessors.HandledScreenAccessor",
     "accessors.MessageHandlerAccessor",
