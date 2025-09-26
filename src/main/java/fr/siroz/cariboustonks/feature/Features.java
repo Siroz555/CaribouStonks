@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.feature.chat.CopyChatMessageFeature;
 import fr.siroz.cariboustonks.feature.combat.CocoonedWarningFeature;
 import fr.siroz.cariboustonks.feature.combat.LowHealthWarningFeature;
 import fr.siroz.cariboustonks.feature.diana.MythologicalRitualFeature;
-import fr.siroz.cariboustonks.feature.fishing.HotspotFeature;
+import fr.siroz.cariboustonks.feature.fishing.hotspot.HotspotFeature;
 import fr.siroz.cariboustonks.feature.fishing.radar.HotspotRadarFeature;
 import fr.siroz.cariboustonks.feature.foraging.BreakTreeAnimationFeature;
 import fr.siroz.cariboustonks.feature.foraging.TreeOverlayFeature;

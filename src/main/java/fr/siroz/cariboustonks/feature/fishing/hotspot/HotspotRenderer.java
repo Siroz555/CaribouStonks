@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.feature.fishing;
+package fr.siroz.cariboustonks.feature.fishing.hotspot;
 
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
@@ -6,16 +6,10 @@ import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
 import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
-class HotspotRenderer implements WorldRendererProvider {
+record HotspotRenderer(HotspotFeature hotspotFeature) implements WorldRendererProvider {
 
 	private static final Color BOBBER_IN = Colors.GREEN.withAlpha(0.25F);
 	private static final Color BOBBER_OUT = Colors.RED.withAlpha(0.25F);
-
-	private final HotspotFeature hotspotFeature;
-
-	HotspotRenderer(HotspotFeature hotspotFeature) {
-		this.hotspotFeature = hotspotFeature;
-	}
 
 	@Override
 	public void render(WorldRenderContext context) {

@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.feature.fishing;
+package fr.siroz.cariboustonks.feature.fishing.hotspot;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
