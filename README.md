@@ -114,8 +114,9 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Display the number of missing Shards and the price to max it out.
 
 - Fishing
+    - Bobber Timer Display: Show the bobber timer in the center of the screen.
     - Fish Caught Warning: Display a Title when you catch a fish.
-    - Guess Hotspot: Predict the location of the nearest hotspot
+    - Guess Hotspot: Predict the location of the nearest hotspot.
     - Highlight Hotspot: A colored circle appears if your bobber is within the hotspot radius.
 
 **Slayers**

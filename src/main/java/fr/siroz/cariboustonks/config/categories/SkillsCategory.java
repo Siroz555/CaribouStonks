@@ -170,6 +170,15 @@ public class SkillsCategory extends AbstractCategory {
                         .description(OptionDescription.of(
                                 Text.literal("Fishing settings.")))
 						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Bobber Timer Display"))
+								.description(OptionDescription.of(
+										Text.literal("Show the bobber timer in the center of the screen.")))
+								.binding(defaults.fishing.bobberTimerDisplay,
+										() -> current.fishing.bobberTimerDisplay,
+										newValue -> current.fishing.bobberTimerDisplay = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Fish Caught Warning"))
 								.description(OptionDescription.of(
 										Text.literal("Show a Title when you catch a fish.")))
