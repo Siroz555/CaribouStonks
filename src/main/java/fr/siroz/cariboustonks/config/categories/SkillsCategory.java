@@ -170,6 +170,16 @@ public class SkillsCategory extends AbstractCategory {
                         .description(OptionDescription.of(
                                 Text.literal("Fishing settings.")))
 						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Fish Caught Warning"))
+								.description(OptionDescription.of(
+										Text.literal("Show a Title when you catch a fish.")))
+								.binding(defaults.fishing.fishCaughtWarning,
+										() -> current.fishing.fishCaughtWarning,
+										newValue -> current.fishing.fishCaughtWarning = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(LabelOption.create(Text.literal("| Hotspots").formatted(Formatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Locating Hotspots"))
 								.description(OptionDescription.of(
 										Text.literal("Locates Hotspots when using the Hotspot Radar.")))
@@ -187,6 +197,7 @@ public class SkillsCategory extends AbstractCategory {
 										newValue -> current.fishing.hotspotHighlight = newValue)
 								.controller(this::createBooleanController)
 								.build())
+						.option(LabelOption.create(Text.empty()))
 						.option(LabelOption.create(Text.empty()))
                         .build())
                 .build();
