@@ -79,15 +79,15 @@ public final class StonksUtils {
 	public static void initUtilities() {
 		WorldRenderUtils.initRenderUtilities();
 		AnimationUtils.initAnimationUtilities();
-		TickScheduler.getInstance().runRepeating(StonksUtils::updateUtilities, 1, TimeUnit.SECONDS);
+		TickScheduler.getInstance().runRepeating(StonksUtils::handleUpdates, 1, TimeUnit.SECONDS);
 	}
 
 	/**
 	 * Met à jour les utilities
 	 */
-	private static void updateUtilities() {
-		ScoreboardUtils.internalUpdate(CLIENT);
-		TabListUtils.internalUpdate(CLIENT);
+	private static void handleUpdates() {
+		ScoreboardUtils.handleInternalUpdate(CLIENT);
+		TabListUtils.handleInternalUpdate(CLIENT);
 	}
 
 	/**
@@ -192,6 +192,7 @@ public final class StonksUtils {
 	 * @param s2 candidat
 	 * @return retourne la distance calculée entre s1 et s2
 	 */
+	@Deprecated // À remettre avec le SearchScreen futur
 	public static int levenshteinDistance(@NotNull String s1, @NotNull String s2) {
 		int[][] dp = new int[s1.length() + 1][s2.length() + 1];
 
@@ -235,6 +236,7 @@ public final class StonksUtils {
 	 * @param list la liste dont chaque deuxième élément doit être supprimé
 	 * @return la nouvelle liste après traitement
 	 */
+	@Deprecated
 	public static <T> @NotNull List<T> removeEverySecondElement(@NotNull List<T> list) {
 		if (list.size() < 3) return list;
 

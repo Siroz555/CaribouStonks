@@ -18,9 +18,7 @@ import java.util.regex.Pattern;
  */
 public final class RomanNumeralUtils {
 
-	public static final Pattern ROMAN_PATTERN = Pattern.compile(
-			"M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})"
-	);
+	public static final Pattern ROMAN_PATTERN = Pattern.compile("M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})");
 
 	public static final Int2ObjectMap<String> VALUE_TO_ROMAN = Int2ObjectMaps.unmodifiable(new Int2ObjectLinkedOpenHashMap<>(
 			new int[]{1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1},

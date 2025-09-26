@@ -12,22 +12,6 @@ public final class PositionUtils {
 	}
 
 	/**
-	 * Calculates the 2D distance between two positions, ignoring the Y coordinate.
-	 * <p>
-	 * {@code Note à moi-même} : Math.pow() est généralement moins efficace que
-	 * la multiplication directe pour élever au carré.
-	 *
-	 * @param a the first position
-	 * @param b the second position
-	 * @return the 2D distance between the two positions
-	 * @see #distanceToIgnoringY(Position, Position)
-	 * @see #squaredDistanceToIgnoringY(Position, Position)
-	 */
-	public static double distanceIgnoringY(@NotNull Position a, @NotNull Position b) {
-		return Math.sqrt(Math.pow(a.getX() - b.getX(), 2) + Math.pow(a.getZ() - b.getZ(), 2));
-	}
-
-	/**
 	 * Calculates the distance between two positions, ignoring the Y coordinate.
 	 *
 	 * @param from the starting position

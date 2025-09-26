@@ -9,6 +9,7 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardDisplaySlot;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.Team;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,16 +28,6 @@ public final class ScoreboardUtils {
         return new ObjectArrayList<>(STRING_SCOREBOARD);
     }
 
-    public static boolean hasSkyBlockTitle() {
-        for (String sidebarLine : STRING_SCOREBOARD) {
-            if (sidebarLine.contains("SKYBLOCK")) {
-				return true;
-			}
-        }
-
-        return false;
-    }
-
     public static @Nullable String getIslandArea() {
         for (String sidebarLine : STRING_SCOREBOARD) {
             if (sidebarLine.contains("⏣") || sidebarLine.contains("ф")) {
@@ -47,7 +38,8 @@ public final class ScoreboardUtils {
         return null;
     }
 
-    static void internalUpdate(MinecraftClient client) {
+	@ApiStatus.Internal
+    static void handleInternalUpdate(MinecraftClient client) {
         try {
             STRING_SCOREBOARD.clear();
 
