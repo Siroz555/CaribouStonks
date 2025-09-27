@@ -10,6 +10,9 @@ public class CombatConfig {
 	@SerialEntry
 	public LowHealthWarning lowHealthWarning = new LowHealthWarning();
 
+	@SerialEntry
+	public SecondLife secondLife = new SecondLife();
+
 	public static class CocoonedMob {
 
 		@SerialEntry
@@ -32,5 +35,14 @@ public class CombatConfig {
 
 		@SerialEntry
 		public int lowHealthWarningThreshold = 15;
+	}
+
+	public static class SecondLife {
+
+		@SerialEntry
+		public boolean spiritMaskUsed = false;
+
+		@SerialEntry
+		public boolean spiritMaskBack = false;
 	}
 }

@@ -87,6 +87,25 @@ public class SkillsCategory extends AbstractCategory {
 										newValue -> current.combat.cocoonedMob.cocoonedWarningBeam = newValue)
 								.controller(this::createYesNoController)
 								.build())
+						.option(LabelOption.create(Text.literal("| Second Life").formatted(Formatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Spirit Mask Used Warning"))
+								.description(OptionDescription.of(
+										Text.literal("Shows a Title when the Spirit Mask is used.")))
+								.binding(defaults.combat.secondLife.spiritMaskUsed,
+										() -> current.combat.secondLife.spiritMaskUsed,
+										newValue -> current.combat.secondLife.spiritMaskUsed = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Spirit Mask Back Warning"))
+								.description(OptionDescription.of(
+										Text.literal("Shows a Title when the Spirit Mask is ready.")))
+								.binding(defaults.combat.secondLife.spiritMaskBack,
+										() -> current.combat.secondLife.spiritMaskBack,
+										newValue -> current.combat.secondLife.spiritMaskBack = newValue)
+								.controller(this::createBooleanController)
+								.build())
                         .build())
                 .group(OptionGroup.createBuilder()
                         .name(Text.literal("Farming - Garden").formatted(Formatting.BOLD))

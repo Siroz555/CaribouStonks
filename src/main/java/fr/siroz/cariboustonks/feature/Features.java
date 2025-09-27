@@ -6,6 +6,7 @@ import fr.siroz.cariboustonks.feature.chat.ChatPositionFeature;
 import fr.siroz.cariboustonks.feature.chat.CopyChatMessageFeature;
 import fr.siroz.cariboustonks.feature.combat.CocoonedWarningFeature;
 import fr.siroz.cariboustonks.feature.combat.LowHealthWarningFeature;
+import fr.siroz.cariboustonks.feature.combat.SpiritMaskFeature;
 import fr.siroz.cariboustonks.feature.diana.MythologicalRitualFeature;
 import fr.siroz.cariboustonks.feature.fishing.BobberTimerFeature;
 import fr.siroz.cariboustonks.feature.fishing.FishCaughtFeature;
@@ -72,6 +73,7 @@ public final class Features {
 		// Combat
 		registerFeature(new CocoonedWarningFeature());
 		registerFeature(new LowHealthWarningFeature());
+		registerFeature(new SpiritMaskFeature());
 		// Events
 		registerFeature(new MythologicalRitualFeature());
 		// Fishing
