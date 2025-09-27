@@ -23,7 +23,6 @@ public final class TabListUtils {
     private TabListUtils() {
     }
 
-	@Deprecated
     @Contract(" -> new")
     public static @NotNull ObjectArrayList<String> getStringTab() {
         return new ObjectArrayList<>(STRING_TAB);
