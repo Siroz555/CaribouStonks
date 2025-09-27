@@ -132,6 +132,9 @@ public final class Features {
 		// Vanilla
 		registerFeature(new MuteVanillaSoundFeature());
 
+		// Après les enregistrements, initialise les dépendances
+		FEATURE_INSTANCES.values().forEach(feature -> feature.postInitialize(this));
+
 		CaribouStonks.LOGGER.info("{} features are now loaded and ready", getFeatures().size());
     }
 
