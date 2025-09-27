@@ -9,6 +9,7 @@ import fr.siroz.cariboustonks.feature.combat.LowHealthWarningFeature;
 import fr.siroz.cariboustonks.feature.diana.MythologicalRitualFeature;
 import fr.siroz.cariboustonks.feature.fishing.BobberTimerFeature;
 import fr.siroz.cariboustonks.feature.fishing.FishCaughtFeature;
+import fr.siroz.cariboustonks.feature.fishing.RareSeaCreatureFeature;
 import fr.siroz.cariboustonks.feature.fishing.hotspot.HotspotFeature;
 import fr.siroz.cariboustonks.feature.fishing.radar.HotspotRadarFeature;
 import fr.siroz.cariboustonks.feature.foraging.BreakTreeAnimationFeature;
@@ -74,6 +75,7 @@ public final class Features {
 		// Events
 		registerFeature(new MythologicalRitualFeature());
 		// Fishing
+		registerFeature(new RareSeaCreatureFeature());
 		registerFeature(new BobberTimerFeature());
 		registerFeature(new FishCaughtFeature());
 		registerFeature(new HotspotFeature());
