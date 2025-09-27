@@ -5,15 +5,20 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.feature.Features;
 import fr.siroz.cariboustonks.util.Client;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class FishCaughtFeature extends Feature {
 
 	private static final String CAUGHT_FISH_NAME = "!!!";
+
+	@Nullable
+	private RareSeaCreatureFeature rareSeaCreatureFeature;
 
 	public FishCaughtFeature() {
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
@@ -24,6 +29,11 @@ public class FishCaughtFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().fishing.fishCaughtWarning;
 	}
 
+	@Override
+	protected void postInitialize(@NotNull Features features) {
+		rareSeaCreatureFeature = features.getFeature(RareSeaCreatureFeature.class);
+	}
+
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
 	private void onArmorStandUpdate(@NotNull ArmorStandEntity armorStand, boolean equipment) {
 		if (CLIENT.player == null || CLIENT.world == null || CLIENT.player.fishHook == null) return;
@@ -32,7 +42,10 @@ public class FishCaughtFeature extends Feature {
 
 		String name = armorStand.getCustomName() != null ? armorStand.getCustomName().getString() : "";
 		if (name.equals(CAUGHT_FISH_NAME) && CLIENT.player.fishHook.getBoundingBox().expand(4D).contains(armorStand.getPos())) {
-			Client.showTitle(Text.literal(CAUGHT_FISH_NAME).formatted(Formatting.RED, Formatting.BOLD), 1, 25, 1);
+			// Priorité pour RareSeaCreatureFeature
+			if (rareSeaCreatureFeature == null || !rareSeaCreatureFeature.hasFoundCreature()) {
+				Client.showTitle(Text.literal(CAUGHT_FISH_NAME).formatted(Formatting.RED, Formatting.BOLD), 1, 25, 1);
+			}
 		}
 	}
 }

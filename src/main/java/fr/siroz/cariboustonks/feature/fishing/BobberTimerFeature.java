@@ -5,6 +5,7 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.feature.Features;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +22,9 @@ public class BobberTimerFeature extends Feature {
 	private static final double MIN_BOBBER_TIMER_DISTANCE = 0.1D;
 
 	@Nullable
+	private RareSeaCreatureFeature rareSeaCreatureFeature;
+
+	@Nullable
 	private ArmorStandEntity bobberTimerArmorStand;
 
 	public BobberTimerFeature() {
@@ -32,6 +36,11 @@ public class BobberTimerFeature extends Feature {
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().fishing.bobberTimerDisplay;
+	}
+
+	@Override
+	protected void postInitialize(@NotNull Features features) {
+		rareSeaCreatureFeature = features.getFeature(RareSeaCreatureFeature.class);
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
@@ -69,7 +78,10 @@ public class BobberTimerFeature extends Feature {
 
 		Text bobberTimerText = bobberTimerArmorStand.getCustomName();
 		if (isEnabled() && bobberTimerText != null) {
-			Client.showSubtitle(bobberTimerText, 0, 25, 1);
+			// Priorité pour RareSeaCreatureFeature
+			if (rareSeaCreatureFeature == null || !rareSeaCreatureFeature.hasFoundCreature()) {
+				Client.showSubtitle(bobberTimerText, 0, 25, 1);
+			}
 		}
 	}
 }

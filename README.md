@@ -115,6 +115,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Fishing
     - Bobber Timer Display: Show the bobber timer in the center of the screen.
+    - Rare Sea Creature Warning: Display a Title when you catch a Rare Sea Creature.
     - Fish Caught Warning: Display a Title when you catch a fish.
     - Guess Hotspot: Predict the location of the nearest hotspot.
     - Highlight Hotspot: A colored circle appears if your bobber is within the hotspot radius.

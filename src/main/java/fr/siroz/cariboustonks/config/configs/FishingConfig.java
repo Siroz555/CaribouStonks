@@ -15,4 +15,10 @@ public class FishingConfig {
 
 	@SerialEntry
 	public boolean hotspotHighlight = false;
+
+	@SerialEntry
+	public boolean rareSeaCreatureWarning = false;
+
+	@SerialEntry
+	public boolean rareSeaCreatureSound = false;
 }

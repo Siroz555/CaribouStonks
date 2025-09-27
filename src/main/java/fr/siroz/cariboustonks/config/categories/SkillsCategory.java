@@ -179,6 +179,25 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Rare Sea Creature Warning"))
+								.description(OptionDescription.of(
+										Text.literal("Show a Title when you catch a Rare Sea Creature."),
+										Text.literal("(Also detected Double Hooks)")))
+								.binding(defaults.fishing.rareSeaCreatureWarning,
+										() -> current.fishing.rareSeaCreatureWarning,
+										newValue -> current.fishing.rareSeaCreatureWarning = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Rare Sea Creature Sound"))
+								.description(OptionDescription.of(
+										Text.literal("If Rare Sea Creature Warning is enabled, play a Sound when you catch a Rare Sea Creature.")))
+								.binding(defaults.fishing.rareSeaCreatureSound,
+										() -> current.fishing.rareSeaCreatureSound,
+										newValue -> current.fishing.rareSeaCreatureSound = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Fish Caught Warning"))
 								.description(OptionDescription.of(
 										Text.literal("Show a Title when you catch a fish.")))
