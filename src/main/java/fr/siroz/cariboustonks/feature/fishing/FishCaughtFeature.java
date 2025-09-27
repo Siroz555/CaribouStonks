@@ -32,7 +32,7 @@ public class FishCaughtFeature extends Feature {
 
 		String name = armorStand.getCustomName() != null ? armorStand.getCustomName().getString() : "";
 		if (name.equals(CAUGHT_FISH_NAME) && CLIENT.player.fishHook.getBoundingBox().expand(4D).contains(armorStand.getPos())) {
-			Client.showTitle(Text.literal(CAUGHT_FISH_NAME).formatted(Formatting.RED, Formatting.BOLD), 1, 35, 5);
+			Client.showTitle(Text.literal(CAUGHT_FISH_NAME).formatted(Formatting.RED, Formatting.BOLD), 1, 25, 1);
 		}
 	}
 }

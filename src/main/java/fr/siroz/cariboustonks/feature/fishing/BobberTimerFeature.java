@@ -69,7 +69,7 @@ public class BobberTimerFeature extends Feature {
 
 		Text bobberTimerText = bobberTimerArmorStand.getCustomName();
 		if (isEnabled() && bobberTimerText != null) {
-			Client.showSubtitle(bobberTimerText, 0, 35, 5);
+			Client.showSubtitle(bobberTimerText, 0, 25, 1);
 		}
 	}
 }
