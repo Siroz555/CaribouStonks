@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.event.ItemRenderEvents;
-import fr.siroz.cariboustonks.feature.item.ScrollableTooltipFeature;
+import fr.siroz.cariboustonks.feature.vanilla.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.mixin.accessors.HandledScreenAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;

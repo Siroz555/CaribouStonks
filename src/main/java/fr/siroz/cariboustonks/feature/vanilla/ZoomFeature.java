@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.feature.ui;
+package fr.siroz.cariboustonks.feature.vanilla;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.event.EventHandler;
