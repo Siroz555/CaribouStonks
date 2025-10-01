@@ -99,7 +99,9 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Cocooned Warning: Allows you to be alerted when a mob has been cocooned.
       - _(works with The Primordial Belt & Bloodshot Reforge Stone)_
     - Low health warning: Display a red screen when your health is low.
-    - Spirit Mask used/ready Warning.
+    - Spirit Mask / Bonzo Mask / Phoenix Pet:
+        - Displays a Title when a Mask/Pet is used or ready back.
+        - Display a HUD showing the time remaining, sorted and color-coded.
 
 - Farming | Garden
     - KeyBind / Command to lock the camera during farming sessions.

@@ -89,22 +89,74 @@ public class SkillsCategory extends AbstractCategory {
 								.build())
 						.option(LabelOption.create(Text.literal("| Second Life").formatted(Formatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Spirit Mask Used Warning"))
+								.name(Text.literal("Spirit/Bonzo/Phoenix Cooldowns HUD"))
 								.description(OptionDescription.of(
-										Text.literal("Shows a Title when the Spirit Mask is used.")))
+										Text.literal("Displays a HUD that shows the cooldowns for Second Life abilities. Multiple cooldowns can be displayed, sorted and colored according to the time remaining."),
+										Text.literal(SPACE + "- §5Spirit Mask"),
+										Text.literal("- §cBonzo Mask"),
+										Text.literal("- §ePhoenix Pet"),
+										Text.literal(SPACE + "Note: The HUD will only be displayed if at least one of the above options (used) is enabled.").formatted(Formatting.GOLD)))
+								.binding(defaults.combat.secondLife.cooldownHud.enabled,
+										() -> current.combat.secondLife.cooldownHud.enabled,
+										newValue -> current.combat.secondLife.cooldownHud.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Spirit Mask - Used"))
+								.description(OptionDescription.of(
+										Text.literal("Shows a Title when the Spirit Mask is used."),
+										Text.literal(SPACE + "If this option is enabled, it can be displayed in the Cooldowns HUD.").formatted(Formatting.ITALIC)))
 								.binding(defaults.combat.secondLife.spiritMaskUsed,
 										() -> current.combat.secondLife.spiritMaskUsed,
 										newValue -> current.combat.secondLife.spiritMaskUsed = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Spirit Mask Back Warning"))
+								.name(Text.literal("Spirit Mask - Back"))
 								.description(OptionDescription.of(
 										Text.literal("Shows a Title when the Spirit Mask is ready.")))
 								.binding(defaults.combat.secondLife.spiritMaskBack,
 										() -> current.combat.secondLife.spiritMaskBack,
 										newValue -> current.combat.secondLife.spiritMaskBack = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Bonzo Mask - Used"))
+								.description(OptionDescription.of(
+										Text.literal("Shows a Title when the Bonzo Mask is used."),
+										Text.literal(SPACE + "If this option is enabled, it can be displayed in the Cooldowns HUD.").formatted(Formatting.ITALIC)))
+								.binding(defaults.combat.secondLife.bonzoMaskUsed,
+										() -> current.combat.secondLife.bonzoMaskUsed,
+										newValue -> current.combat.secondLife.bonzoMaskUsed = newValue)
 								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Bonzo Mask - Back"))
+								.description(OptionDescription.of(
+										Text.literal("Shows a Title when the Bonzo Mask is ready.")))
+								.binding(defaults.combat.secondLife.bonzoMaskBack,
+										() -> current.combat.secondLife.bonzoMaskBack,
+										newValue -> current.combat.secondLife.bonzoMaskBack = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Phoenix Pet - Used"))
+								.description(OptionDescription.of(
+										Text.literal("Shows a Title when the Phoenix Pet is used."),
+										Text.literal(SPACE + "If this option is enabled, it can be displayed in the Cooldowns HUD.").formatted(Formatting.ITALIC)))
+								.binding(defaults.combat.secondLife.phoenixUsed,
+										() -> current.combat.secondLife.phoenixUsed,
+										newValue -> current.combat.secondLife.phoenixUsed = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Phoenix Pet - Back"))
+								.description(OptionDescription.of(
+										Text.literal("Shows a Title when the Phoenix Pet is ready.")))
+								.binding(defaults.combat.secondLife.phoenixBack,
+										() -> current.combat.secondLife.phoenixBack,
+										newValue -> current.combat.secondLife.phoenixBack = newValue)
+								.controller(this::createYesNoController)
 								.build())
                         .build())
                 .group(OptionGroup.createBuilder()
