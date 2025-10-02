@@ -6,6 +6,7 @@ import fr.siroz.cariboustonks.feature.chat.ChatPositionFeature;
 import fr.siroz.cariboustonks.feature.chat.CopyChatMessageFeature;
 import fr.siroz.cariboustonks.feature.combat.CocoonedWarningFeature;
 import fr.siroz.cariboustonks.feature.combat.LowHealthWarningFeature;
+import fr.siroz.cariboustonks.feature.combat.RagnarockAxeFeature;
 import fr.siroz.cariboustonks.feature.combat.SecondLifeFeature;
 import fr.siroz.cariboustonks.feature.diana.MythologicalRitualFeature;
 import fr.siroz.cariboustonks.feature.fishing.BobberTimerFeature;
@@ -73,6 +74,7 @@ public final class Features {
 		// Combat
 		registerFeature(new CocoonedWarningFeature());
 		registerFeature(new LowHealthWarningFeature());
+		registerFeature(new RagnarockAxeFeature());
 		registerFeature(new SecondLifeFeature());
 		// Events
 		registerFeature(new MythologicalRitualFeature());

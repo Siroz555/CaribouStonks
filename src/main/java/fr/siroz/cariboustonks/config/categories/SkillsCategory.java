@@ -6,6 +6,7 @@ import dev.isxander.yacl3.api.LabelOption;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionGroup;
+import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.util.Client;
 import net.minecraft.text.Text;
@@ -85,6 +86,37 @@ public class SkillsCategory extends AbstractCategory {
 								.binding(defaults.combat.cocoonedMob.cocoonedWarningBeam,
 										() -> current.combat.cocoonedMob.cocoonedWarningBeam,
 										newValue -> current.combat.cocoonedMob.cocoonedWarningBeam = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(LabelOption.create(Text.literal("| Ragnarock Axe").formatted(Formatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Ragnarock Axe - Cast Title"))
+								.description(OptionDescription.of(
+										Text.literal("Display a Title when the Ragnarock Axe is cast.")))
+								.binding(defaults.combat.ragAxe.enabled,
+										() -> current.combat.ragAxe.enabled,
+										newValue -> current.combat.ragAxe.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<String>createBuilder()
+								.name(Text.literal("Ragnarock Axe - Cast Message"))
+								.description(OptionDescription.of(
+										Text.literal("Allows you to customize the Cast message. Supports Minecraft color codes (§c, §b, etc).")))
+								.binding(defaults.combat.ragAxe.message,
+										() -> current.combat.ragAxe.message,
+										newValue -> current.combat.ragAxe.message = newValue)
+								.controller(StringControllerBuilder::create)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Ragnarock Axe - HUD"))
+								.description(OptionDescription.of(
+										Text.literal("Displays a HUD when the Ragnarock Axe is cast, showing:"),
+										Text.literal(SPACE + "- Time remaining for the Cast effect").formatted(Formatting.YELLOW),
+										Text.literal("- Strength gained").formatted(Formatting.RED),
+										Text.literal(SPACE + "Note: The HUD will only be displayed if the Ragnarock Axe Cast is enabled.").formatted(Formatting.ITALIC)))
+								.binding(defaults.combat.ragAxe.hud.enabled,
+										() -> current.combat.ragAxe.hud.enabled,
+										newValue -> current.combat.ragAxe.hud.enabled = newValue)
 								.controller(this::createYesNoController)
 								.build())
 						.option(LabelOption.create(Text.literal("| Second Life").formatted(Formatting.BOLD)))

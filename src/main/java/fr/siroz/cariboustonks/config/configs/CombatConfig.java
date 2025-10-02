@@ -12,6 +12,9 @@ public class CombatConfig {
 	public LowHealthWarning lowHealthWarning = new LowHealthWarning();
 
 	@SerialEntry
+	public RagAxe ragAxe = new RagAxe();
+
+	@SerialEntry
 	public SecondLife secondLife = new SecondLife();
 
 	public static class CocoonedMob {
@@ -36,6 +39,68 @@ public class CombatConfig {
 
 		@SerialEntry
 		public int lowHealthWarningThreshold = 15;
+	}
+
+	public static class RagAxe {
+
+		@SerialEntry
+		public boolean enabled = false;
+
+		@SerialEntry
+		public String message = "§cCasted!";
+
+		@SerialEntry
+		public RagAxeHud hud = new RagAxeHud();
+
+		public static class RagAxeHud implements HudConfig {
+
+			@SerialEntry
+			public boolean enabled = false;
+
+			@SerialEntry
+			public int x = 200;
+
+			@SerialEntry
+			public int y = 10;
+
+			@SerialEntry
+			public float scale = 1f;
+
+			@Override
+			public int x() {
+				return this.x;
+			}
+
+			@Override
+			public void setX(int x) {
+				this.x = x;
+			}
+
+			@Override
+			public int y() {
+				return this.y;
+			}
+
+			@Override
+			public void setY(int y) {
+				this.y = y;
+			}
+
+			@Override
+			public float scale() {
+				return this.scale;
+			}
+
+			@Override
+			public void setScale(float scale) {
+				this.scale = scale;
+			}
+
+			@Override
+			public boolean shouldRender() {
+				return this.enabled;
+			}
+		}
 	}
 
 	public static class SecondLife {
