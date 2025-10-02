@@ -45,8 +45,9 @@ public final class TextHud extends Hud {
 
 	@Override
 	public void renderHud(DrawContext context, RenderTickCounter tickCounter) {
-		if (shouldRender()) {
-			render(textSupplier.get(), context, hudConfig.x(), hudConfig.y(), hudConfig.scale());
+		Text text = textSupplier.get();
+		if (shouldRender() && !text.getString().isEmpty()) {
+			render(text, context, hudConfig.x(), hudConfig.y(), hudConfig.scale());
 		}
 	}
 
