@@ -6,6 +6,9 @@ import fr.siroz.cariboustonks.core.json.JsonProcessingException;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.manager.command.CommandComponent;
+import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
+import fr.siroz.cariboustonks.util.StonksUtils;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
@@ -33,6 +37,11 @@ public class KeyShortcutFeature extends Feature {
 		ClientLifecycleEvents.CLIENT_STARTED.register(this::onClientStarted);
 		ClientLifecycleEvents.CLIENT_STOPPING.register(this::saveShortcuts);
 		ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
+
+		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
+				.then(ClientCommandManager.literal("keyShortcuts")
+						.executes(StonksUtils.openScreen(() -> KeyShortcutScreen.create(null))))
+		));
 	}
 
 	@Override
