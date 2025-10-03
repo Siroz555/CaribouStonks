@@ -21,12 +21,6 @@ public class UIAndVisualsConfig {
 	public ColoredEnchantment coloredEnchantment = new ColoredEnchantment();
 
 	@SerialEntry
-	public Zoom zoom = new Zoom();
-
-	@SerialEntry
-	public ScrollableTooltip scrollableTooltip = new ScrollableTooltip();
-
-	@SerialEntry
 	public SharedPositionWaypoint sharedPositionWaypoint = new SharedPositionWaypoint();
 
 	@SerialEntry
@@ -72,24 +66,6 @@ public class UIAndVisualsConfig {
 
 		@SerialEntry
 		public Color goodEnchantsColor = Color.ORANGE;
-	}
-
-	public static class Zoom {
-
-		@SerialEntry
-		public boolean enabled = true;
-
-		@SerialEntry
-		public boolean mouseScrolling = false;
-	}
-
-	public static class ScrollableTooltip {
-
-		@SerialEntry
-		public boolean enabled = true;
-
-		@SerialEntry
-		public boolean reverseScroll = false;
 	}
 
 	public static class SharedPositionWaypoint {

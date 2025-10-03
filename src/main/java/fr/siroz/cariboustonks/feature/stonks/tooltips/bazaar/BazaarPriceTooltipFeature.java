@@ -11,6 +11,7 @@ import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
 import fr.siroz.cariboustonks.manager.container.tooltip.ContainerTooltipAppender;
 import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
@@ -90,6 +91,20 @@ public class BazaarPriceTooltipFeature extends Feature implements ContainerMatch
 				}
 				case null, default -> {
 				}
+			}
+
+			if (ConfigManager.getConfig().general.stonks.bazaarTooltipMoreData) {
+				double absoluteSpread = product.get().spread();
+				double spreadPercentage = product.get().spreadPercentage();
+				Text spread = Text.empty()
+						.append(Text.literal(" | Spreed: ").formatted(Formatting.RED))
+						.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(spreadPercentage) + "%").withColor(Colors.RED.asInt()))
+						.append(Text.literal(" | ").formatted(Formatting.GRAY))
+						.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(absoluteSpread)).withColor(Colors.RED.asInt()))
+						.append(Text.literal(" (").formatted(Formatting.GRAY))
+						.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(absoluteSpread)).withColor(Colors.RED.asInt()))
+						.append(Text.literal(")").formatted(Formatting.GRAY));
+				lines.add(spread);
 			}
 		}
 	}

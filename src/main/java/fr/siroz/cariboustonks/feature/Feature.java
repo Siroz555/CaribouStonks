@@ -35,6 +35,14 @@ public abstract class Feature {
 	public abstract boolean isEnabled();
 
 	/**
+	 * Called after all features have been initialized.
+	 *
+	 * @param features the feature manager instance
+	 */
+	protected void postInitialize(@NotNull Features features) {
+	}
+
+	/**
 	 * Attaches a {@link Component} to this feature.
 	 * <p>
 	 * Usage:

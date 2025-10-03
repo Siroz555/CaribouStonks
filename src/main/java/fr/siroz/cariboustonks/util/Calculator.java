@@ -7,6 +7,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,13 +62,13 @@ public final class Calculator {
 	 *                                       </ul>
 	 */
 	public static double calculate(@NotNull String expression) throws UnsupportedOperationException {
-		expression = expression.toLowerCase();
+		expression = expression.toLowerCase(Locale.ENGLISH);
 		return evaluate(shunt(lex(expression)));
 	}
 
 	private static @NotNull List<Token> lex(String input) {
 		List<Token> tokens = new ArrayList<>();
-		input = input.replace(" ", "").toLowerCase().replace("x", "*");
+		input = input.replace(" ", "").toLowerCase(Locale.ENGLISH).replace("x", "*");
 		int i = 0;
 		while (i < input.length()) {
 			Token token = new Token();
@@ -237,7 +238,7 @@ public final class Calculator {
 	}
 
 	private static double calculateValue(@NotNull String value) {
-		Matcher numberMatcher = NUMBER_PATTERN.matcher(value.toLowerCase());
+		Matcher numberMatcher = NUMBER_PATTERN.matcher(value.toLowerCase(Locale.ENGLISH));
 		if (!numberMatcher.matches()) {
 			throw new UnsupportedOperationException("Not a Number");
 		}

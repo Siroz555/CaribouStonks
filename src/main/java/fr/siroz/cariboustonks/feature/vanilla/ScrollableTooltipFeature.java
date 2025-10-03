@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.feature.item;
+package fr.siroz.cariboustonks.feature.vanilla;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -29,6 +29,7 @@ public class ScrollableTooltipFeature extends Feature {
 	private static final Cooldown COOLDOWN = Cooldown.of(100, TimeUnit.MILLISECONDS);
 	private static final int SCROLL_AMOUNT = 10;
 	private static final double SMOOTHNESS_MULTIPLIER = 0.25D;
+	private static final int MIN_SCROLLABLE_TOOLTIPS = 25;
 
 	private double currentXOffset = 0;
 	private double currentYOffset = 0;
@@ -44,7 +45,7 @@ public class ScrollableTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().uiAndVisuals.scrollableTooltip.enabled;
+		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().vanilla.scrollableTooltip.enabled;
 	}
 
 	public int getXOffset() {
@@ -100,12 +101,13 @@ public class ScrollableTooltipFeature extends Feature {
 	}
 
 	private boolean isReverseScroll() {
-		return ConfigManager.getConfig().uiAndVisuals.scrollableTooltip.reverseScroll;
+		return ConfigManager.getConfig().vanilla.scrollableTooltip.reverseScroll;
 	}
 
 	@EventHandler(event = "ItemRenderEvents.TOOLTIP_TRACKER")
 	private void onTooltipTracker(List<TooltipComponent> tooltipComponents) {
 		if (!isEnabled()) return;
+		if (tooltipComponents != null && tooltipComponents.size() < MIN_SCROLLABLE_TOOLTIPS) return;
 		if (COOLDOWN.testSilently()) resetScroll();
 
 		COOLDOWN.reset();

@@ -27,11 +27,11 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Stonks
     - Configure the display of item prices in Tooltips.
-    - Graphical representation of an item's price trend, quantity, and other information. (BETA)
+    - Graphical representation of an item's price trend, quantity, and other information.
+    - /stonks {item} Command: Display prices and other information simply anywhere.
     - Search engine for all SkyBlock items.
     - KeyBind to find an item.
     - Bazaar: Press ENTER to validate the last input.
-    - /stonks {item} Command: Display prices and other information simply anywhere.
 
 - Reminders
     - Chocolate Factory: Reminders when the number of chocolates reaches the limit.
@@ -45,6 +45,8 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - Hide Toast tutorials at the top of the screen.
 - Stop the cursor reset position between GUIs.
 - Display your own Nametag in F5.
+- In-game Zoom. (default to C).
+- Scrollable Tooltips.
 - Overlay:
     - Hide fire on the screen.
     - Hide armor above inventory-hotbar.
@@ -62,8 +64,6 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Highlight selected Pet in the Pet Menu.
 - Create & highlight favorite contacts in the Abiphone Menu
-- Zoom KeyBind (default to C).
-- Scrollable tooltips.
 - Create and customize Waypoints.
 - Display a Waypoint in the world when a player shares its position.
 - Color and change the colors of enchantments on Items, according to their levels
@@ -94,6 +94,12 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Cocooned Warning: Allows you to be alerted when a mob has been cocooned.
       - _(works with The Primordial Belt & Bloodshot Reforge Stone)_
     - Low health warning: Display a red screen when your health is low.
+    - Ragnarock Axe:
+        - Cast Title / Personalized message
+        - HUD displays the remaining time and Strength gained.
+    - Spirit Mask / Bonzo Mask / Phoenix Pet:
+        - Displays a Title when a Mask/Pet is used or ready back.
+        - Display a HUD showing the time remaining, sorted and color-coded.
 
 - Farming | Garden
     - KeyBind / Command to lock the camera during farming sessions.
@@ -109,6 +115,9 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Display the number of missing Shards and the price to max it out.
 
 - Fishing
+    - Bobber Timer Display: Show the bobber timer in the center of the screen.
+    - Rare Sea Creature Warning: Display a Title when you catch a Rare Sea Creature.
+    - Fish Caught Warning: Display a Title when you catch a fish.
     - Guess Hotspot: Predict the location of the nearest hotspot.
     - Highlight Hotspot: A colored circle appears if your bobber is within the hotspot radius.
 
@@ -157,6 +166,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - /highlighter > Highlight a specific entity in the world.
 - /stonks > Display prices and other information simply anywhere.
 - /cariboustonks heldItemCustomization <mainHand/offHand>: Customize the appearance of Held Item.
+- /cariboustonks keyShortcuts: Link Keybinds to commands to be executed.
 - /cariboustonks resetDiana: Reset Mythological Ritual Waypoints.
 
 ---

@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.feature.fishing;
+package fr.siroz.cariboustonks.feature.fishing.hotspot;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
@@ -10,6 +10,8 @@ import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.fishing.radar.HotspotRadarFeature;
+import fr.siroz.cariboustonks.mixin.accessors.DurstParticleEffectAccessor;
+import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.PositionUtils;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -19,8 +21,12 @@ import net.minecraft.entity.projectile.FishingBobberEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
+import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -74,7 +80,7 @@ public class HotspotFeature extends Feature {
 			return;
 		}
 
-		ItemStack item = CLIENT.player.getInventory().getSelectedStack();
+		ItemStack item = InventoryUtils.getHeldItem();
 		if (item == null || item.isEmpty() || !item.isOf(Items.FISHING_ROD)) {
 			reset();
 			return;
@@ -83,6 +89,7 @@ public class HotspotFeature extends Feature {
 		if (currentHotspot == null) {
 			currentHotspot = findClosestHotspotInRange(CLIENT.player).orElse(null);
 			if (currentHotspot != null) {
+				// dep -_-
 				CaribouStonks.features().getFeature(HotspotRadarFeature.class).reset();
 			}
 		} else {
@@ -114,14 +121,41 @@ public class HotspotFeature extends Feature {
 			return;
 		}
 
-		// [STDOUT]: particle: smoke count: 5 speed: 0.0
-		if (ParticleTypes.SMOKE.equals(particle.getParameters().getType())
-				&& particle.getCount() == 5
-				&& particle.getSpeed() == 0f
-		) {
-			Vec3d particlePos = new Vec3d(particle.getX(), particle.getY(), particle.getZ());
-			hotspotRadius = currentHotspot.centerPos().distanceTo(particlePos);
+		ParticleEffect params = particle.getParameters();
+		ParticleType<?> type = params.getType();
+		// Future: (Predicate<ParticleS2CPacket>, Consumer<ParticleS2CPacket>)
+		// pour itérer dessus pour rendre l'ajout de nouveaux handlers trivial.
+
+		if (ParticleTypes.SMOKE.equals(type) && matchesSmoke(particle)) {
+			handleParticle(new Vec3d(particle.getX(), particle.getY(), particle.getZ()));
+			return;
 		}
+
+		if (ParticleTypes.DUST.equals(type) && matchesDust(particle, params)) {
+			handleParticle(new Vec3d(particle.getX(), particle.getY(), particle.getZ()));
+		}
+	}
+
+	/**
+	 * [STDOUT]: particle: smoke count: 5 speed: 0.0
+	 */
+	private boolean matchesSmoke(@NotNull ParticleS2CPacket p) {
+		return p.getCount() == 5 && p.getSpeed() == 0f;
+	}
+
+	/**
+	 * [STDOUT]: DUST:: color: -38476 scale:1.0 count: 0 speed: 1.0
+	 */
+	private boolean matchesDust(@NotNull ParticleS2CPacket p, ParticleEffect params) {
+		if (p.getCount() != 0 || p.getSpeed() != 1f) return false;
+		if (!(params instanceof DustParticleEffect effect)) return false;
+
+		int color = ((DurstParticleEffectAccessor) effect).getColor();
+		return color == -38476 && effect.getScale() == 1f;
+	}
+
+	private void handleParticle(Vec3d particlePos) {
+		hotspotRadius = currentHotspot.centerPos().distanceTo(particlePos);
 	}
 
 	@EventHandler(event = "WorldRenderEvents.AFTER_TRANSLUCENT")

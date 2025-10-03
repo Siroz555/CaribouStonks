@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.feature.ui.ZoomFeature;
+import fr.siroz.cariboustonks.feature.vanilla.ZoomFeature;
 import fr.siroz.cariboustonks.screen.HeldItemViewConfigScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;

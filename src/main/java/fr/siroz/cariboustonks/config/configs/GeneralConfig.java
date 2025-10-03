@@ -22,7 +22,10 @@ public class GeneralConfig {
 	public static class Stonks {
 
 		@SerialEntry
-		public boolean bazaarTooltipPrice = false;
+		public boolean bazaarTooltipPrice = true;
+
+		@SerialEntry
+		public boolean bazaarTooltipMoreData = false;
 
 		@SerialEntry
 		public BazaarTooltipPriceType bazaarTooltipPriceType = BazaarTooltipPriceType.NORMAL;
@@ -31,7 +34,7 @@ public class GeneralConfig {
 		public TooltipPriceDisplayType bazaarTooltipPriceDisplayType = TooltipPriceDisplayType.FULL;
 
 		@SerialEntry
-		public boolean auctionTooltipPrice = false;
+		public boolean auctionTooltipPrice = true;
 
 		@SerialEntry
 		public AuctionTooltipPriceType auctionTooltipPriceType = AuctionTooltipPriceType.LOWEST_BIN;
@@ -49,7 +52,7 @@ public class GeneralConfig {
 		public boolean showGradientInGraphScreen = false;
 
 		@SerialEntry
-		public boolean showAllDataInInfoScreen = false;
+		public boolean showAllDataInInfoScreen = true;
 	}
 
 	public static class Reminders {

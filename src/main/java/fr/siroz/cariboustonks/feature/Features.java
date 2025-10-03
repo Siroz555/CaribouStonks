@@ -6,8 +6,13 @@ import fr.siroz.cariboustonks.feature.chat.ChatPositionFeature;
 import fr.siroz.cariboustonks.feature.chat.CopyChatMessageFeature;
 import fr.siroz.cariboustonks.feature.combat.CocoonedWarningFeature;
 import fr.siroz.cariboustonks.feature.combat.LowHealthWarningFeature;
+import fr.siroz.cariboustonks.feature.combat.RagnarockAxeFeature;
+import fr.siroz.cariboustonks.feature.combat.SecondLifeFeature;
 import fr.siroz.cariboustonks.feature.diana.MythologicalRitualFeature;
-import fr.siroz.cariboustonks.feature.fishing.HotspotFeature;
+import fr.siroz.cariboustonks.feature.fishing.BobberTimerFeature;
+import fr.siroz.cariboustonks.feature.fishing.FishCaughtFeature;
+import fr.siroz.cariboustonks.feature.fishing.RareSeaCreatureFeature;
+import fr.siroz.cariboustonks.feature.fishing.hotspot.HotspotFeature;
 import fr.siroz.cariboustonks.feature.fishing.radar.HotspotRadarFeature;
 import fr.siroz.cariboustonks.feature.foraging.BreakTreeAnimationFeature;
 import fr.siroz.cariboustonks.feature.foraging.TreeOverlayFeature;
@@ -15,7 +20,6 @@ import fr.siroz.cariboustonks.feature.garden.MouseLockFeature;
 import fr.siroz.cariboustonks.feature.garden.pest.PestFinderFeature;
 import fr.siroz.cariboustonks.feature.hunting.AttributeInfoTooltipFeature;
 import fr.siroz.cariboustonks.feature.item.ColoredEnchantmentFeature;
-import fr.siroz.cariboustonks.feature.item.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.feature.misc.HighlightMobFeature;
@@ -37,7 +41,6 @@ import fr.siroz.cariboustonks.feature.stonks.tooltips.auction.AuctionLowestBinTo
 import fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
 import fr.siroz.cariboustonks.feature.ui.AbiphoneFavoriteContactFeature;
 import fr.siroz.cariboustonks.feature.ui.SelectedPetHighlightFeature;
-import fr.siroz.cariboustonks.feature.ui.ZoomFeature;
 import fr.siroz.cariboustonks.feature.ui.hud.DayHud;
 import fr.siroz.cariboustonks.feature.ui.hud.FpsHud;
 import fr.siroz.cariboustonks.feature.ui.hud.PingHud;
@@ -45,6 +48,8 @@ import fr.siroz.cariboustonks.feature.ui.hud.TpsHud;
 import fr.siroz.cariboustonks.feature.ui.overlay.EtherWarpOverlayFeature;
 import fr.siroz.cariboustonks.feature.ui.overlay.GyrokineticOverlayFeature;
 import fr.siroz.cariboustonks.feature.vanilla.MuteVanillaSoundFeature;
+import fr.siroz.cariboustonks.feature.vanilla.ScrollableTooltipFeature;
+import fr.siroz.cariboustonks.feature.vanilla.ZoomFeature;
 import fr.siroz.cariboustonks.feature.waypoints.WaypointFeature;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -69,9 +74,14 @@ public final class Features {
 		// Combat
 		registerFeature(new CocoonedWarningFeature());
 		registerFeature(new LowHealthWarningFeature());
+		registerFeature(new RagnarockAxeFeature());
+		registerFeature(new SecondLifeFeature());
 		// Events
 		registerFeature(new MythologicalRitualFeature());
 		// Fishing
+		registerFeature(new RareSeaCreatureFeature());
+		registerFeature(new BobberTimerFeature());
+		registerFeature(new FishCaughtFeature());
 		registerFeature(new HotspotFeature());
 		registerFeature(new HotspotRadarFeature());
 		// Foraging
@@ -84,7 +94,6 @@ public final class Features {
 		registerFeature(new AttributeInfoTooltipFeature(3));
 		// Item
 		registerFeature(new ColoredEnchantmentFeature());
-		registerFeature(new ScrollableTooltipFeature());
 		registerFeature(new TooltipDecoratorFeature());
 		// KeyShortcut
 		registerFeature(new KeyShortcutFeature());
@@ -109,7 +118,6 @@ public final class Features {
 		registerFeature(new AuctionLowestBinTooltipFeature(2));
 		// UI
 		registerFeature(new AbiphoneFavoriteContactFeature(0));
-		registerFeature(new ZoomFeature());
 		// UI - HUDs
 		registerFeature(new FpsHud());
 		registerFeature(new PingHud());
@@ -127,6 +135,11 @@ public final class Features {
 		registerFeature(new StopPickobulusAbilityFeature());
 		// Vanilla
 		registerFeature(new MuteVanillaSoundFeature());
+		registerFeature(new ScrollableTooltipFeature());
+		registerFeature(new ZoomFeature());
+
+		// Après les enregistrements, initialise les dépendances
+		FEATURE_INSTANCES.values().forEach(feature -> feature.postInitialize(this));
 
 		CaribouStonks.LOGGER.info("{} features are now loaded and ready", getFeatures().size());
     }

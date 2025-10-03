@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.util.render.animation;
 
-import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
@@ -19,8 +19,6 @@ import org.jetbrains.annotations.Range;
 
 public final class AnimationUtils {
 
-	// NOTE-ME: Add config for fixed and hard-coded values.
-
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
 	private static final int RAINBOW_CHANGE_RATE = 10;
@@ -31,7 +29,7 @@ public final class AnimationUtils {
 
 	@ApiStatus.Internal
 	public static void initAnimationUtilities() {
-		TickScheduler.getInstance().runRepeating(AnimationUtils::onTick, 1);
+		ClientTickEvents.END_CLIENT_TICK.register(AnimationUtils::onTick);
 	}
 
 	/**
@@ -103,7 +101,7 @@ public final class AnimationUtils {
 		}
 	}
 
-	private static void onTick() {
+	private static void onTick(MinecraftClient _client) {
 		int r = currentRainbowColor.r;
 		int g = currentRainbowColor.g;
 		int b = currentRainbowColor.b;
