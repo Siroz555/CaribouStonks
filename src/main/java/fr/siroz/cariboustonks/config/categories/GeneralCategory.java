@@ -13,6 +13,7 @@ import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.screen.CaribouStonksMenuScreen;
 import fr.siroz.cariboustonks.screen.HudConfigScreen;
 import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -58,7 +59,9 @@ public class GeneralCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Bazaar Prices"))
 								.description(OptionDescription.of(
-										Text.literal("Displays item prices in its Tooltip. For the Bazaar, Buy-Order & Sell-Order will be added.")))
+										Text.literal("Displays item prices in its Tooltip. For the Bazaar, Buy-Order & Sell-Order will be added."),
+										Text.literal(SPACE + "§c§lNote: §fThe prices displayed can be interpreted both as Insta-Buy/Sell prices, or as the prices of the best orders when you create a Buy/Sell order."),
+										Text.literal(SPACE + "The same information appears when you hover over an item in the Bazaar. In addition, prices are updated every 5 minutes from Hypixel's official API.").formatted(Formatting.ITALIC)))
 								.binding(defaults.general.stonks.bazaarTooltipPrice,
 										() -> current.general.stonks.bazaarTooltipPrice,
 										newValue -> {
@@ -86,7 +89,7 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createEnumCyclingController)
 								.build())
 						.option(Option.<TooltipPriceDisplayType>createBuilder()
-								.name(Text.literal("Bazaar Prices Format"))
+								.name(Text.literal("Bazaar Prices - Format"))
 								.description(OptionDescription.of(
 										Text.literal("Select the format displayed for Bazaar prices."),
 										Text.literal(SPACE + "FULL :").formatted(Formatting.UNDERLINE),
@@ -99,6 +102,18 @@ public class GeneralCategory extends AbstractCategory {
 										() -> current.general.stonks.bazaarTooltipPriceDisplayType,
 										newValue -> current.general.stonks.bazaarTooltipPriceDisplayType = newValue)
 								.controller(this::createEnumCyclingController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Bazaar Prices - Stats"))
+								.description(OptionDescription.of(
+										Text.literal("Allows you to display advanced statistics on Bazaar product tooltips."),
+										Text.literal(SPACE + "Statistics displayed:").formatted(Formatting.UNDERLINE),
+										Text.literal(SPACE + "> Spread").formatted(Formatting.RED),
+										Text.literal(" | Spread % with the absolute spread between Buy and Sell.").withColor(Colors.RED.asInt())))
+								.binding(defaults.general.stonks.bazaarTooltipMoreData,
+										() -> current.general.stonks.bazaarTooltipMoreData,
+										newValue -> current.general.stonks.bazaarTooltipMoreData = newValue)
+								.controller(this::createBooleanController)
 								.build())
 						.option(LabelOption.create(Text.literal("")))
 						.option(Option.<Boolean>createBuilder()
