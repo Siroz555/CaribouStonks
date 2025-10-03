@@ -59,13 +59,13 @@ public final class GenericDataSource {
 	}
 
 	public boolean hasLowestBin(@NotNull ItemLookupKey key) {
-		if (key.isNull() || key.getNeuId() == null || lowestBinsNEU.isEmpty()) return false;
-		return lowestBinsNEU.containsKey(key.getNeuId());
+		if (key.isNull() || key.neuId() == null || lowestBinsNEU.isEmpty()) return false;
+		return lowestBinsNEU.containsKey(key.neuId());
 	}
 
 	public Optional<Double> getLowestBin(@NotNull ItemLookupKey key) {
-		if (key.isNull() || key.getNeuId() == null || lowestBinsNEU.isEmpty()) return Optional.empty();
-		return Optional.of(lowestBinsNEU.getDouble(key.getNeuId()));
+		if (key.isNull() || key.neuId() == null || lowestBinsNEU.isEmpty()) return Optional.empty();
+		return Optional.of(lowestBinsNEU.getDouble(key.neuId()));
 	}
 
 	public CompletableFuture<List<ItemPrice>> loadGraphData(@NotNull ItemLookupKey key) {
@@ -73,11 +73,11 @@ public final class GenericDataSource {
 			return CompletableFuture.completedFuture(null);
 		}
 
-		GraphCacheEntry cacheEntry = graphCache.get(key.getNeuId());
+		GraphCacheEntry cacheEntry = graphCache.get(key.neuId());
 		if (cacheEntry != null && cacheEntry.isValid()) {
 			return CompletableFuture.completedFuture(cacheEntry.data());
 		} else if (cacheEntry != null && !cacheEntry.isValid()) {
-			graphCache.remove(key.getNeuId());
+			graphCache.remove(key.neuId());
 		}
 
 		return fetchGraphData(key);
@@ -86,7 +86,7 @@ public final class GenericDataSource {
 	@Contract("_ -> new")
 	private @NotNull CompletableFuture<List<ItemPrice>> fetchGraphData(@NotNull ItemLookupKey key) {
 		return CompletableFuture.supplyAsync(() -> {
-			try (HttpResponse response = Http.request(NEU_PRICE_HISTORY_URL + "?item=" + key.getNeuId())) {
+			try (HttpResponse response = Http.request(NEU_PRICE_HISTORY_URL + "?item=" + key.neuId())) {
 				if (!response.success()) {
 					throw new HttpResponseException(response.statusCode(), response.content());
 				}
@@ -106,18 +106,18 @@ public final class GenericDataSource {
 						result.add(new ItemPrice(instant, buyPrice, sellPrice));
 					} catch (Exception ex) {
 						CaribouStonks.LOGGER.error(
-								"[GenericDataSource] Failed to parse price history for {}", key.getNeuId(), ex);
+								"[GenericDataSource] Failed to parse price history for {}", key.neuId(), ex);
 					}
 				}
 
 				if (result.size() > 2) {
 					GraphCacheEntry entry = new GraphCacheEntry(result, Instant.now());
-					graphCache.put(key.getNeuId(), entry);
+					graphCache.put(key.neuId(), entry);
 				}
 
 				return result;
 			} catch (Exception ex) {
-				CaribouStonks.LOGGER.error("[GenericDataSource] Failed to fetch price history for {}", key.getNeuId(), ex);
+				CaribouStonks.LOGGER.error("[GenericDataSource] Failed to fetch price history for {}", key.neuId(), ex);
 				return null;
 			}
 		});

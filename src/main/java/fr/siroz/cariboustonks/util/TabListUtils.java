@@ -8,6 +8,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +34,7 @@ public final class TabListUtils {
 	}
 
     public static @NotNull IslandType getIsland() {
-        IslandType fromArea = IslandType.getById(getArea());;
+        IslandType fromArea = IslandType.getById(getArea());
         return fromArea == IslandType.UNKNOWN ? IslandType.getById(getDungeon()) : fromArea;
     }
 
@@ -63,7 +64,8 @@ public final class TabListUtils {
         return "Unknown";
     }
 
-    static void internalUpdate(MinecraftClient client) {
+	@ApiStatus.Internal
+    static void handleInternalUpdate(MinecraftClient client) {
         try {
             STRING_TAB.clear();
 

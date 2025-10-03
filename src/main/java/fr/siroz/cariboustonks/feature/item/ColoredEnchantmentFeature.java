@@ -13,6 +13,7 @@ import fr.siroz.cariboustonks.util.RomanNumeralUtils;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import java.util.function.BooleanSupplier;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -43,6 +44,15 @@ public class ColoredEnchantmentFeature extends Feature {
 
 	private final ModDataSource modDataSource;
 
+	private final BooleanSupplier configShowMaxEnchants =
+			() -> ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.showMaxEnchants;
+
+	private final BooleanSupplier configShowGoodEnchants =
+			() -> ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.showGoodEnchants;
+
+	private final BooleanSupplier configMaxEnchantsRainbow =
+			() -> ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.maxEnchantsRainbow;
+
 	public ColoredEnchantmentFeature() {
 		this.modDataSource = CaribouStonks.core().getModDataSource();
 		ItemRenderEvents.TOOLTIP_APPENDER.register(this::onTooltipLine);
@@ -50,7 +60,7 @@ public class ColoredEnchantmentFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && (showGoodEnchants() || showMaxEnchants());
+		return SkyBlockAPI.isOnSkyBlock() && (configShowMaxEnchants.getAsBoolean() || configShowGoodEnchants.getAsBoolean());
 	}
 
 	@Nullable
@@ -60,7 +70,7 @@ public class ColoredEnchantmentFeature extends Feature {
 		if (itemStack == null || itemStack.isEmpty()) return null;
 		if (loreComponent == null || loreComponent.lines().isEmpty()) return null;
 		if (!isEnabled()) return null;
-		if (!showMaxEnchants() && !showGoodEnchants()) return null;
+		if (!configShowMaxEnchants.getAsBoolean() && !configShowGoodEnchants.getAsBoolean()) return null;
 
 		NbtCompound enchantments = ItemUtils.getCustomData(itemStack).getCompoundOrEmpty("enchantments");
 		if (enchantments.isEmpty()) {
@@ -78,7 +88,7 @@ public class ColoredEnchantmentFeature extends Feature {
 				String name = enchantment.name() + " " + RomanNumeralUtils.generate(level);
 				if (enchantment.isMaxLevel(level)) {
 					maxEnchantmentColors.put(name, maxEnchantsColor().getRGB());
-				} else if (enchantment.isGoodLevel(level) && showGoodEnchants()) {
+				} else if (enchantment.isGoodLevel(level) && configShowGoodEnchants.getAsBoolean()) {
 					goodEnchantmentColors.put(name, goodEnchantsColor().getRGB());
 				}
 			}
@@ -95,10 +105,10 @@ public class ColoredEnchantmentFeature extends Feature {
 
 		for (Text line : lines) {
 
-			if (showMaxEnchants() && !maxEnchantmentColors.isEmpty()
+			if (configShowMaxEnchants.getAsBoolean() && !maxEnchantmentColors.isEmpty()
 					&& maxEnchantmentColors.keySet().stream().anyMatch(line.getString()::contains)
 			) {
-				if (maxEnchantsRainbow()) {
+				if (configMaxEnchantsRainbow.getAsBoolean()) {
 					ListIterator<Text> iterator = line.getSiblings().listIterator();
 					while (iterator.hasNext()) {
 						Text currentText = iterator.next();
@@ -129,7 +139,7 @@ public class ColoredEnchantmentFeature extends Feature {
 				}
 			}
 
-			if (showGoodEnchants() && !goodEnchantmentColors.isEmpty()
+			if (configShowGoodEnchants.getAsBoolean() && !goodEnchantmentColors.isEmpty()
 					&& goodEnchantmentColors.keySet().stream().anyMatch(line.getString()::contains)
 			) {
 				for (Text currentText : line.getSiblings()) {
@@ -155,20 +165,8 @@ public class ColoredEnchantmentFeature extends Feature {
 		return null;
 	}
 
-	private boolean showMaxEnchants() {
-		return ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.showMaxEnchants;
-	}
-
-	private boolean showGoodEnchants() {
-		return ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.showGoodEnchants;
-	}
-
 	private Color maxEnchantsColor() {
 		return ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.maxEnchantsColor;
-	}
-
-	private boolean maxEnchantsRainbow() {
-		return ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.maxEnchantsRainbow;
 	}
 
 	private Color goodEnchantsColor() {

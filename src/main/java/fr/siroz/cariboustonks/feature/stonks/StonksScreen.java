@@ -32,6 +32,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import net.minecraft.util.Util;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
@@ -55,20 +56,25 @@ public class StonksScreen extends CaribousStonksScreen {
 
 	private volatile boolean notFound = false;
 
-	public StonksScreen(@NotNull ItemLookupKey key) {
+	private StonksScreen(@NotNull ItemLookupKey key) {
 		super(Text.literal("Stonks"));
 
 		HypixelDataSource hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
-		Optional<SkyBlockItem> item = hypixelDataSource.getSkyBlockItemOptional(key.getHypixelSkyBlockId());
+		Optional<SkyBlockItem> item = hypixelDataSource.getSkyBlockItemOptional(key.hypixelSkyBlockId());
 		if (item.isPresent()) {
 			this.itemName = Text.literal(item.get().name()).formatted(item.get().tier().getFormatting());
 			this.icon = hypixelDataSource.getItemStack(item.get().skyBlockId());
 		} else {
-			this.itemName = Text.literal(key.getHypixelSkyBlockId() != null ? key.getHypixelSkyBlockId() : "? ? ?");
+			this.itemName = Text.literal(key.hypixelSkyBlockId() != null ? key.hypixelSkyBlockId() : "? ? ?");
 			this.icon = new ItemStack(Items.BARRIER);
 		}
 
 		this.fetchItemData(key).thenRun(this::initStonksWidgets);
+	}
+
+	@Contract("_ -> new")
+	public static @NotNull StonksScreen create(@NotNull ItemLookupKey key) {
+		return new StonksScreen(key);
 	}
 
 	private void initStonksWidgets() {
@@ -236,7 +242,7 @@ public class StonksScreen extends CaribousStonksScreen {
 				});
 
 		bazaarItem = CaribouStonks.core().getHypixelDataSource()
-				.getBazaarItem(key.getHypixelSkyBlockId())
+				.getBazaarItem(key.hypixelSkyBlockId())
 				.orElse(null);
 
 		/*CompletableFuture<Void> auctionItem;

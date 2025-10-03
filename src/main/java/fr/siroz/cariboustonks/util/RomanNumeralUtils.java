@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
+import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;
@@ -17,9 +18,7 @@ import java.util.regex.Pattern;
  */
 public final class RomanNumeralUtils {
 
-	public static final Pattern ROMAN_PATTERN = Pattern.compile(
-			"M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})"
-	);
+	public static final Pattern ROMAN_PATTERN = Pattern.compile("M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})");
 
 	public static final Int2ObjectMap<String> VALUE_TO_ROMAN = Int2ObjectMaps.unmodifiable(new Int2ObjectLinkedOpenHashMap<>(
 			new int[]{1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1},
@@ -39,7 +38,7 @@ public final class RomanNumeralUtils {
 			return false;
 		}
 
-		return ROMAN_PATTERN.matcher(number.toUpperCase()).matches();
+		return ROMAN_PATTERN.matcher(number.toUpperCase(Locale.ENGLISH)).matches();
 	}
 
 	public static int parse(@NotNull String roman) {
