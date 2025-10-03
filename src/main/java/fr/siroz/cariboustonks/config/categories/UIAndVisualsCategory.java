@@ -48,59 +48,6 @@ public class UIAndVisualsCategory extends AbstractCategory {
 						.controller(this::createBooleanController)
 						.build())
 				.group(OptionGroup.createBuilder()
-						.name(Text.literal("Zoom").formatted(Formatting.BOLD))
-						.description(OptionDescription.of(
-								Text.literal("In-game Zoom Options")))
-						.collapsed(false)
-						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Zoom"))
-								.description(OptionDescription.of(
-										Text.literal("If enabled, hold a key to toggle the zoom in-game."),
-										Text.literal("Default to 'C'").formatted(Formatting.ITALIC)))
-								.binding(defaults.uiAndVisuals.zoom.enabled,
-										() -> current.uiAndVisuals.zoom.enabled,
-										newValue -> current.uiAndVisuals.zoom.enabled = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(this::shortcutToKeybindsOptions)
-						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Zoom Scrolling"))
-								.description(OptionDescription.of(
-										Text.literal("If enabled, the mouse wheel can be used to zoom in-game.")))
-								.binding(defaults.uiAndVisuals.zoom.mouseScrolling,
-										() -> current.uiAndVisuals.zoom.mouseScrolling,
-										newValue -> current.uiAndVisuals.zoom.mouseScrolling = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.build())
-				.group(OptionGroup.createBuilder()
-						.name(Text.literal("Scrollable Tooltips").formatted(Formatting.BOLD))
-						.description(OptionDescription.of(
-								Text.literal("Options for scrolling Tooltips on items")))
-						.collapsed(false)
-						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Enable Tooltip Scrolling"))
-								.description(OptionDescription.of(
-										Text.literal("When enabled, item tooltips can be scrolled using the mouse wheel."),
-										Text.literal(SPACE + "Scrolling up moves the tooltip upwards, scrolling down moves it downwards."),
-										Text.literal(SPACE + "Hold SHIFT while scrolling to move the tooltip horizontally (left or right)."),
-										Text.literal(SPACE + "[!] Attention: This feature may not work correctly with certain other mods. Please be aware of potential compatibility issues.").formatted(Formatting.RED)))
-								.binding(defaults.uiAndVisuals.scrollableTooltip.enabled,
-										() -> current.uiAndVisuals.scrollableTooltip.enabled,
-										newValue -> current.uiAndVisuals.scrollableTooltip.enabled = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Reverse Scroll"))
-								.description(OptionDescription.of(
-										Text.literal("If enabled, the Scrolling is reversed.")))
-								.binding(defaults.uiAndVisuals.scrollableTooltip.reverseScroll,
-										() -> current.uiAndVisuals.scrollableTooltip.reverseScroll,
-										newValue -> current.uiAndVisuals.scrollableTooltip.reverseScroll = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.build())
-				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Colored Enchantments").formatted(Formatting.BOLD))
 						.description(OptionDescription.of(
 								Text.literal("Colored enchantments in the item tooltips.")))

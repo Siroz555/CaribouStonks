@@ -24,6 +24,12 @@ public class VanillaConfig {
 	public Overlay overlay = new Overlay();
 
 	@SerialEntry
+	public Zoom zoom = new Zoom();
+
+	@SerialEntry
+	public ScrollableTooltip scrollableTooltip = new ScrollableTooltip();
+
+	@SerialEntry
 	public Mob mob = new Mob();
 
 	@SerialEntry
@@ -42,6 +48,24 @@ public class VanillaConfig {
 
 		@SerialEntry
 		public boolean hideFoodOverlay = false;
+	}
+
+	public static class Zoom {
+
+		@SerialEntry
+		public boolean enabled = true;
+
+		@SerialEntry
+		public boolean mouseScrolling = false;
+	}
+
+	public static class ScrollableTooltip {
+
+		@SerialEntry
+		public boolean enabled = true;
+
+		@SerialEntry
+		public boolean reverseScroll = false;
 	}
 
 	public static class ItemModelCustomization {

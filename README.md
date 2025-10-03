@@ -50,6 +50,8 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - Hide Toast tutorials at the top of the screen.
 - Stop the cursor reset position between GUIs.
 - Display your own Nametag in F5.
+- In-game Zoom. (default to C).
+- Scrollable Tooltips.
 - Overlay:
     - Hide fire on the screen.
     - Hide armor above inventory-hotbar.
@@ -67,8 +69,6 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Highlight selected Pet in the Pet Menu.
 - Create & highlight favorite contacts in the Abiphone Menu
-- Zoom KeyBind (default to C).
-- Scrollable tooltips.
 - Create and customize Waypoints.
 - Display a Waypoint in the world when a player shares its position.
 - Color and change the colors of enchantments on Items, according to their levels

@@ -45,7 +45,7 @@ public class ScrollableTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().uiAndVisuals.scrollableTooltip.enabled;
+		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().vanilla.scrollableTooltip.enabled;
 	}
 
 	public int getXOffset() {
@@ -101,7 +101,7 @@ public class ScrollableTooltipFeature extends Feature {
 	}
 
 	private boolean isReverseScroll() {
-		return ConfigManager.getConfig().uiAndVisuals.scrollableTooltip.reverseScroll;
+		return ConfigManager.getConfig().vanilla.scrollableTooltip.reverseScroll;
 	}
 
 	@EventHandler(event = "ItemRenderEvents.TOOLTIP_TRACKER")

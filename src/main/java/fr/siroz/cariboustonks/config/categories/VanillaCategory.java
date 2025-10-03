@@ -70,6 +70,59 @@ public class VanillaCategory extends AbstractCategory {
 						.controller(this::createBooleanController)
 						.build())
 				.group(OptionGroup.createBuilder()
+						.name(Text.literal("Zoom").formatted(Formatting.BOLD))
+						.description(OptionDescription.of(
+								Text.literal("In-game Zoom Options")))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Zoom"))
+								.description(OptionDescription.of(
+										Text.literal("If enabled, hold a key to toggle the zoom in-game. (Default to 'C')"),
+										Text.literal(SPACE + "You can change the Key Bind in the Minecraft Options.").formatted(Formatting.ITALIC)))
+								.binding(defaults.vanilla.zoom.enabled,
+										() -> current.vanilla.zoom.enabled,
+										newValue -> current.vanilla.zoom.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(this::shortcutToKeybindsOptions)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Zoom Scrolling"))
+								.description(OptionDescription.of(
+										Text.literal("If enabled, the mouse wheel can be used to zoom in-game.")))
+								.binding(defaults.vanilla.zoom.mouseScrolling,
+										() -> current.vanilla.zoom.mouseScrolling,
+										newValue -> current.vanilla.zoom.mouseScrolling = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Text.literal("Scrollable Tooltips").formatted(Formatting.BOLD))
+						.description(OptionDescription.of(
+								Text.literal("Options for scrolling Tooltips on items")))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Enable Tooltip Scrolling"))
+								.description(OptionDescription.of(
+										Text.literal("When enabled, item tooltips can be scrolled using the mouse wheel."),
+										Text.literal(SPACE + "Scrolling up moves the tooltip upwards, scrolling down moves it downwards."),
+										Text.literal(SPACE + "Hold SHIFT while scrolling to move the tooltip horizontally (left or right)."),
+										Text.literal(SPACE + "[!] Attention: This feature may not work correctly with certain other mods. Please be aware of potential compatibility issues.").formatted(Formatting.RED)))
+								.binding(defaults.vanilla.scrollableTooltip.enabled,
+										() -> current.vanilla.scrollableTooltip.enabled,
+										newValue -> current.vanilla.scrollableTooltip.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Reverse Scroll"))
+								.description(OptionDescription.of(
+										Text.literal("If enabled, the Scrolling is reversed.")))
+								.binding(defaults.vanilla.scrollableTooltip.reverseScroll,
+										() -> current.vanilla.scrollableTooltip.reverseScroll,
+										newValue -> current.vanilla.scrollableTooltip.reverseScroll = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Overlay").formatted(Formatting.BOLD))
 						.description(OptionDescription.of(
 								Text.literal("Overlay-related settings")))

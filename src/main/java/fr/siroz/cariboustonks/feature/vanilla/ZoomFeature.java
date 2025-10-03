@@ -38,7 +38,7 @@ public final class ZoomFeature extends Feature {
     @Override
     public boolean isEnabled() {
         // Ignore isOnSkyBlock
-        return ConfigManager.getConfig().uiAndVisuals.zoom.enabled;
+        return ConfigManager.getConfig().vanilla.zoom.enabled;
     }
 
     public boolean isZooming() {
@@ -60,7 +60,7 @@ public final class ZoomFeature extends Feature {
 	@EventHandler(event = "MouseEvents.ALLOW_MOUSE_SCROLL")
     private boolean allowMouseScroll(double horizontal, double vertical) {
         if (!isZooming()) return true;
-        if (!ConfigManager.getConfig().uiAndVisuals.zoom.mouseScrolling) return true;
+        if (!ConfigManager.getConfig().vanilla.zoom.mouseScrolling) return true;
 
         if (vertical > 0) {
 			decreaseZoom();
