@@ -29,7 +29,7 @@ public class ScrollableTooltipFeature extends Feature {
 	private static final Cooldown COOLDOWN = Cooldown.of(100, TimeUnit.MILLISECONDS);
 	private static final int SCROLL_AMOUNT = 10;
 	private static final double SMOOTHNESS_MULTIPLIER = 0.25D;
-	//private static final int MIN_SCROLLABLE_TOOLTIPS = 28;
+	private static final int MIN_SCROLLABLE_TOOLTIPS = 25;
 
 	private double currentXOffset = 0;
 	private double currentYOffset = 0;
@@ -107,7 +107,7 @@ public class ScrollableTooltipFeature extends Feature {
 	@EventHandler(event = "ItemRenderEvents.TOOLTIP_TRACKER")
 	private void onTooltipTracker(List<TooltipComponent> tooltipComponents) {
 		if (!isEnabled()) return;
-		//if (tooltipComponents != null && tooltipComponents.size() < MIN_SCROLLABLE_TOOLTIPS) return;
+		if (tooltipComponents != null && tooltipComponents.size() < MIN_SCROLLABLE_TOOLTIPS) return;
 		if (COOLDOWN.testSilently()) resetScroll();
 
 		COOLDOWN.reset();
