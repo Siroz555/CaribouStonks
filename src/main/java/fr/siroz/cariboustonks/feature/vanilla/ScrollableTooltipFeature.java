@@ -23,6 +23,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 
 public class ScrollableTooltipFeature extends Feature {
 
@@ -31,14 +32,18 @@ public class ScrollableTooltipFeature extends Feature {
 	private static final double SMOOTHNESS_MULTIPLIER = 0.25D;
 	private static final int MIN_SCROLLABLE_TOOLTIPS = 25;
 
+	private final BooleanSupplier reverseScrollConfig =
+			() -> ConfigManager.getConfig().vanilla.scrollableTooltip.reverseScroll;
+
 	private double currentXOffset = 0;
 	private double currentYOffset = 0;
 	private double xOffset = 0;
 	private double yOffset = 0;
+	@Nullable
 	private List<TooltipComponent> currentTooltips;
 
 	public ScrollableTooltipFeature() {
-		CustomScreenEvents.CLOSE.register(screen -> reset());
+		CustomScreenEvents.CLOSE.register(screen -> this.reset());
 		MouseEvents.ALLOW_MOUSE_SCROLL.register(this::allowMouseScroll);
 		ItemRenderEvents.TOOLTIP_TRACKER.register(this::onTooltipTracker);
 	}
@@ -77,13 +82,13 @@ public class ScrollableTooltipFeature extends Feature {
 			}
 		} else {
 			if (vertical > 0) {
-				if (isReverseScroll()) {
+				if (reverseScrollConfig.getAsBoolean()) {
 					scrollDown();
 				} else {
 					scrollUp();
 				}
 			} else if (vertical < 0) {
-				if (isReverseScroll()) {
+				if (reverseScrollConfig.getAsBoolean()) {
 					scrollUp();
 				} else {
 					scrollDown();
@@ -100,15 +105,18 @@ public class ScrollableTooltipFeature extends Feature {
 		return allowScroll;
 	}
 
-	private boolean isReverseScroll() {
-		return ConfigManager.getConfig().vanilla.scrollableTooltip.reverseScroll;
-	}
-
 	@EventHandler(event = "ItemRenderEvents.TOOLTIP_TRACKER")
 	private void onTooltipTracker(List<TooltipComponent> tooltipComponents) {
 		if (!isEnabled()) return;
-		if (tooltipComponents != null && tooltipComponents.size() < MIN_SCROLLABLE_TOOLTIPS) return;
-		if (COOLDOWN.testSilently()) resetScroll();
+
+		if (tooltipComponents != null && tooltipComponents.size() < MIN_SCROLLABLE_TOOLTIPS) {
+			resetScroll();
+			return;
+		}
+
+		if (COOLDOWN.testSilently()) {
+			resetScroll();
+		}
 
 		COOLDOWN.reset();
 
