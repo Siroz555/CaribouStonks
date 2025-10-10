@@ -88,7 +88,7 @@ public final class GenericDataSource {
 		return CompletableFuture.supplyAsync(() -> {
 			try (HttpResponse response = Http.request(NEU_PRICE_HISTORY_URL + "?item=" + key.neuId())) {
 				if (!response.success()) {
-					throw new HttpResponseException(response.statusCode(), response.content());
+					throw new HttpResponseException(response.statusCode(), "HTTP error " + response.statusCode());
 				}
 
 				JsonObject json = GsonProvider.prettyPrinting().fromJson(response.content(), JsonObject.class);
