@@ -63,7 +63,7 @@ public class RareSeaCreatureFeature extends Feature {
 		if (seaCreature != null && !foundCreature) {
 			foundCreature = true;
 			showNotification(seaCreature, doubleHook);
-			TickScheduler.getInstance().runLater(() -> foundCreature = false, 5, TimeUnit.SECONDS);
+			TickScheduler.getInstance().runLater(() -> foundCreature = false, 3, TimeUnit.SECONDS);
 		}
 		doubleHook = false;
 	}
@@ -78,7 +78,7 @@ public class RareSeaCreatureFeature extends Feature {
 
 		if (ConfigManager.getConfig().fishing.rareSeaCreatureSound) {
 			if (doubleHook) {
-				Client.playSound(SoundEvents.ENTITY_ENDER_DRAGON_GROWL, 2.5f, 1f);
+				Client.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, 2.5f, 1f);
 			} else {
 				Client.playSound(SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE.value(), 2.5f, 1f);
 			}
