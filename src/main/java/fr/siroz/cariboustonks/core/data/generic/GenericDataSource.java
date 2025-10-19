@@ -44,7 +44,7 @@ public final class GenericDataSource {
 	@ApiStatus.Internal
 	public GenericDataSource() {
 		ClientLifecycleEvents.CLIENT_STARTED.register(_mc -> TickScheduler.getInstance().runRepeating(() -> {
-			if (ConfigManager.getConfig().general.stonks.auctionTooltipPrice) {
+			if (ConfigManager.getConfig().general.internal.fetchAuctionData) {
 				updateLowestBins().thenRun(() -> {
 					lowestBinsInUpdate = false;
 					lowestBinsError = false;

@@ -70,7 +70,7 @@ public final class HypixelDataSource {
 		this.modDataSource = modDataSource;
 		// Fetchers
 		this.itemsFetcher = new ItemsFetcher(this, modDataSource, apiFixer);
-		this.bazaarFetcher = new BazaarFetcher(this, 5, () -> ConfigManager.getConfig().general.stonks.bazaarTooltipPrice);
+		this.bazaarFetcher = new BazaarFetcher(this, 5, () -> ConfigManager.getConfig().general.internal.fetchBazaarData);
 		this.electionFetcher = new ElectionFetcher();
 		// Event listener
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> onClientStarted());

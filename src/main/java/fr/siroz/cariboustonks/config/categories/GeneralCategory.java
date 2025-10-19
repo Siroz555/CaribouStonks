@@ -313,6 +313,32 @@ public class GeneralCategory extends AbstractCategory {
 								.build())
 						.option(LabelOption.create(Text.empty()))
 						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Text.literal("Danger Zone").formatted(Formatting.RED, Formatting.BOLD))
+						.description(OptionDescription.of(
+								Text.literal("Control of internal parameters in Mod.").formatted(Formatting.RED)))
+						.collapsed(true)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Fetch Bazaar Data"))
+								.description(OptionDescription.of(
+										Text.literal("Completely disable data recovery from Bazaar.").formatted(Formatting.RED),
+										Text.literal("Please note that many features depend on this option. ").formatted(Formatting.RED)))
+								.binding(defaults.general.internal.fetchBazaarData,
+										() -> current.general.internal.fetchBazaarData,
+										newValue -> current.general.internal.fetchBazaarData = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Fetch Auction Data"))
+								.description(OptionDescription.of(
+										Text.literal("Completely disable data recovery from Auction House.").formatted(Formatting.RED),
+										Text.literal("Please note that many features depend on this option. ").formatted(Formatting.RED)))
+								.binding(defaults.general.internal.fetchAuctionData,
+										() -> current.general.internal.fetchAuctionData,
+										newValue -> current.general.internal.fetchAuctionData = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.build())
 				.build();
 	}
 }

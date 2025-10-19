@@ -19,6 +19,9 @@ public class GeneralConfig {
 	@SerialEntry
 	public Reminders reminders = new Reminders();
 
+	@SerialEntry
+	public Internal internal = new Internal();
+
 	public static class Stonks {
 
 		@SerialEntry
@@ -89,5 +92,14 @@ public class GeneralConfig {
 
 		@SerialEntry
 		public boolean forge = true;
+	}
+
+	public static class Internal {
+
+		@SerialEntry
+		public boolean fetchBazaarData = true;
+
+		@SerialEntry
+		public boolean fetchAuctionData = true;
 	}
 }
