@@ -25,7 +25,6 @@ import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.feature.misc.HighlightMobFeature;
 import fr.siroz.cariboustonks.feature.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.feature.misc.REISearchBarCalculatorFeature;
-import fr.siroz.cariboustonks.feature.misc.StopPickobulusAbilityFeature;
 import fr.siroz.cariboustonks.feature.reminders.BoosterCookieReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.ChocolateLimitReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.EnchantedCloakReminderFeature;
@@ -136,7 +135,6 @@ public final class Features {
 		registerFeature(new HighlightMobFeature());
 		registerFeature(new PartyCommandFeature());
 		registerFeature(new REISearchBarCalculatorFeature());
-		registerFeature(new StopPickobulusAbilityFeature());
 		// Vanilla
 		registerFeature(new MuteVanillaSoundFeature());
 		registerFeature(new ScrollableTooltipFeature());
