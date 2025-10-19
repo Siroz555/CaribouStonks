@@ -37,6 +37,8 @@ import fr.siroz.cariboustonks.feature.slayer.SlayerStatsFeature;
 import fr.siroz.cariboustonks.feature.slayer.boss.TarantulaBossFeature;
 import fr.siroz.cariboustonks.feature.stonks.StonksCommandFeature;
 import fr.siroz.cariboustonks.feature.stonks.StonksFeature;
+import fr.siroz.cariboustonks.feature.stonks.ItemValueViewerFeature;
+import fr.siroz.cariboustonks.feature.stonks.tooltips.ItemValueTooltipFeature;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.auction.AuctionLowestBinTooltipFeature;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
 import fr.siroz.cariboustonks.feature.ui.AbiphoneFavoriteContactFeature;
@@ -112,10 +114,12 @@ public final class Features {
 		// Slayer - Boss
 		registerFeature(new TarantulaBossFeature());
 		// Stonks
+		registerFeature(new ItemValueViewerFeature());
 		registerFeature(new StonksCommandFeature());
 		registerFeature(new StonksFeature());
 		registerFeature(new BazaarPriceTooltipFeature(1));
 		registerFeature(new AuctionLowestBinTooltipFeature(2));
+		registerFeature(new ItemValueTooltipFeature(4));
 		// UI
 		registerFeature(new AbiphoneFavoriteContactFeature(0));
 		// UI - HUDs

@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
+import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.feature.stonks.graph.ItemGraphWidget;
 import fr.siroz.cariboustonks.feature.stonks.info.ItemInformationWidget;
 import fr.siroz.cariboustonks.feature.stonks.search.StonksSearchScreen;
@@ -60,7 +60,7 @@ public class StonksScreen extends CaribousStonksScreen {
 		super(Text.literal("Stonks"));
 
 		HypixelDataSource hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
-		Optional<SkyBlockItem> item = hypixelDataSource.getSkyBlockItemOptional(key.hypixelSkyBlockId());
+		Optional<SkyBlockItemData> item = hypixelDataSource.getSkyBlockItemOptional(key.hypixelSkyBlockId());
 		if (item.isPresent()) {
 			this.itemName = Text.literal(item.get().name()).formatted(item.get().tier().getFormatting());
 			this.icon = hypixelDataSource.getItemStack(item.get().skyBlockId());

@@ -6,6 +6,7 @@ import dev.isxander.yacl3.api.LabelOption;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
+import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.auction.AuctionTooltipPriceType;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar.BazaarTooltipPriceType;
@@ -161,6 +162,54 @@ public class GeneralCategory extends AbstractCategory {
 										() -> current.general.stonks.auctionTooltipPriceDisplayType,
 										newValue -> current.general.stonks.auctionTooltipPriceDisplayType = newValue)
 								.controller(this::createEnumCyclingController)
+								.build())
+						// Item Value
+						.option(LabelOption.create(Text.literal("| Item Value").formatted(Formatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Estimated Item Value Tooltip"))
+								.description(OptionDescription.of(
+										Text.literal("Displays the Estimated Value of an item in its Tooltip.")))
+								.binding(defaults.general.stonks.itemValueTooltip,
+										() -> current.general.stonks.itemValueTooltip,
+										newValue -> current.general.stonks.itemValueTooltip = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Estimated Item Value Viewer").append(BETA))
+								.description(OptionDescription.of(
+										Text.literal("Displays the detailed summary of an item's value when you hover over it."),
+										Text.literal(SPACE + "Displays all details of the item's value on the side of the inventory."),
+										Text.literal(SPACE + "This viewer is in BETA phase.").formatted(Formatting.YELLOW)))
+								.binding(defaults.general.stonks.itemValueViewer.enabled,
+										() -> current.general.stonks.itemValueViewer.enabled,
+										newValue -> current.general.stonks.itemValueViewer.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Float>createBuilder()
+								.name(Text.literal("Estimated Item Value Viewer Scale"))
+								.description(OptionDescription.of(
+										Text.literal("Scale the Display of the Estimated Item Value Viewer.")))
+								.binding(defaults.general.stonks.itemValueViewer.scale,
+										() -> current.general.stonks.itemValueViewer.scale,
+										newValue -> current.general.stonks.itemValueViewer.scale = newValue)
+								.controller(opt -> FloatSliderControllerBuilder.create(opt)
+										.range(0.5f, 2.5f)
+										.step(0.1f)
+										.formatValue(d -> Text.of("x " + String.format("%.1f", d))))
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Use Networth Item Value"))
+								.description(OptionDescription.of(
+										Text.literal("Yes:").formatted(Formatting.GREEN, Formatting.BOLD),
+										Text.literal("The value given does not reflect actual market prices.").formatted(Formatting.DARK_PURPLE),
+										Text.literal("Prices are adjusted as with Discord bots or Websites. (Networth)").formatted(Formatting.DARK_PURPLE),
+										Text.literal(SPACE + "No:").formatted(Formatting.RED, Formatting.BOLD),
+										Text.literal("The value given reflects actual market prices.").formatted(Formatting.LIGHT_PURPLE),
+										Text.literal("Prices are not modified; they are retrieved directly at the time of calculation.").formatted(Formatting.LIGHT_PURPLE)))
+								.binding(defaults.general.stonks.useNetworthItemValue,
+										() -> current.general.stonks.useNetworthItemValue,
+										newValue -> current.general.stonks.useNetworthItemValue = newValue)
+								.controller(this::createYesNoController)
 								.build())
 						// Bazaar
 						.option(LabelOption.create(Text.literal("| Bazaar").formatted(Formatting.BOLD)))

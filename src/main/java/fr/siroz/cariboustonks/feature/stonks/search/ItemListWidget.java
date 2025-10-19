@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.feature.stonks.search;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
+import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataException;
 import fr.siroz.cariboustonks.feature.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.Client;
@@ -67,12 +67,12 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 	private CompletableFuture<List<ItemSummary>> loadItems() {
 		try {
 			HypixelDataSource hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
-			List<SkyBlockItem> itemList = hypixelDataSource.getSkyBlockItems(); // HypixelDataException
+			List<SkyBlockItemData> itemList = hypixelDataSource.getSkyBlockItems(); // HypixelDataException
 
 			return CompletableFuture.supplyAsync(() -> {
 
 				List<ItemSummary> itemSummaries = new ArrayList<>(itemList.size());
-				for (SkyBlockItem item : itemList) {
+				for (SkyBlockItemData item : itemList) {
 					String skyBlockId = item.skyBlockId();
 					Formatting formatting = item.tier().getFormatting();
 					String name = item.name();

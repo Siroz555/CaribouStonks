@@ -43,6 +43,15 @@ public class GeneralConfig {
 		public TooltipPriceDisplayType auctionTooltipPriceDisplayType = TooltipPriceDisplayType.FULL;
 
 		@SerialEntry
+		public boolean itemValueTooltip = true;
+
+		@SerialEntry
+		public boolean useNetworthItemValue = true;
+
+		@SerialEntry
+		public ItemValueViewer itemValueViewer = new ItemValueViewer();
+
+		@SerialEntry
 		public boolean bazaarOrderTracker = false;
 
 		@SerialEntry
@@ -53,6 +62,15 @@ public class GeneralConfig {
 
 		@SerialEntry
 		public boolean showAllDataInInfoScreen = true;
+
+		public static class ItemValueViewer {
+
+			@SerialEntry
+			public boolean enabled = false;
+
+			@SerialEntry
+			public float scale = 1;
+		}
 	}
 
 	public static class Reminders {

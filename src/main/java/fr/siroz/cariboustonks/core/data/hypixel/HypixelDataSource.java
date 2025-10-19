@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.core.data.hypixel.election.ElectionResult;
 import fr.siroz.cariboustonks.core.data.hypixel.fetcher.BazaarFetcher;
 import fr.siroz.cariboustonks.core.data.hypixel.fetcher.ElectionFetcher;
 import fr.siroz.cariboustonks.core.data.hypixel.fetcher.ItemsFetcher;
-import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
+import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.data.mod.ModDataSource;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.util.ItemUtils;
@@ -160,7 +160,7 @@ public final class HypixelDataSource {
 		}
 
 		try {
-			SkyBlockItem skyBlockItem = itemsFetcher.getSkyBlockItemsSnapshot().get(skyBlockItemId);
+			SkyBlockItemData skyBlockItem = itemsFetcher.getSkyBlockItemsSnapshot().get(skyBlockItemId);
 			if (skyBlockItem == null) {
 				return fallback;
 			}
@@ -178,8 +178,8 @@ public final class HypixelDataSource {
 				itemStack = new ItemStack(item.get(), 1);
 			}
 
-			if (skyBlockItem.skullTexture() != null) {
-				itemStack = ItemUtils.createSkull(skyBlockItem.skullTexture());
+			if (skyBlockItem.skullTexture().isPresent()) {
+				itemStack = ItemUtils.createSkull(skyBlockItem.skullTexture().get());
 			}
 
 			itemStack.set(DataComponentTypes.CUSTOM_NAME, Text.of(skyBlockItemId));
@@ -193,13 +193,13 @@ public final class HypixelDataSource {
 	}
 
 	/**
-	 * Returns an {@link SkyBlockItem} that corresponds to the ID of the specified SkyBlock item.
+	 * Returns an {@link SkyBlockItemData} that corresponds to the ID of the specified SkyBlock item.
 	 *
 	 * @param skyBlockItemId the ID of the SkyBlock item to check for
-	 * @return the {@link SkyBlockItem} or null
+	 * @return the {@link SkyBlockItemData} or null
 	 * @see #getSkyBlockItemOptional(String)
 	 */
-	public @Nullable SkyBlockItem getSkyBlockItem(@Nullable String skyBlockItemId) {
+	public @Nullable SkyBlockItemData getSkyBlockItem(@Nullable String skyBlockItemId) {
 		if (skyBlockItemId == null || skyBlockItemId.isEmpty()) {
 			return null;
 		}
@@ -207,14 +207,14 @@ public final class HypixelDataSource {
 	}
 
 	/**
-	 * Returns an Optional of {@link SkyBlockItem} that corresponds to the ID of the specified SkyBlock item.
+	 * Returns an Optional of {@link SkyBlockItemData} that corresponds to the ID of the specified SkyBlock item.
 	 *
 	 * @param skyBlockItemId the ID of the SkyBlock item to check for
-	 * @return an Optional of {@link SkyBlockItem}
+	 * @return an Optional of {@link SkyBlockItemData}
 	 * @see #getSkyBlockItem(String)
 	 */
-	public Optional<SkyBlockItem> getSkyBlockItemOptional(@Nullable String skyBlockItemId) {
-		SkyBlockItem item = getSkyBlockItem(skyBlockItemId);
+	public Optional<SkyBlockItemData> getSkyBlockItemOptional(@Nullable String skyBlockItemId) {
+		SkyBlockItemData item = getSkyBlockItem(skyBlockItemId);
 		return item == null ? Optional.empty() : Optional.of(item);
 	}
 
@@ -231,7 +231,7 @@ public final class HypixelDataSource {
 	 */
 	@NotNull
 	@Unmodifiable
-	public List<SkyBlockItem> getSkyBlockItems() throws HypixelDataException {
+	public List<SkyBlockItemData> getSkyBlockItems() throws HypixelDataException {
 		if (modDataSource.isItemsMappingError()) {
 			throw new HypixelDataException(Text.of("Unable to map SkyBlock Items into Minecraft."));
 		}
@@ -284,7 +284,7 @@ public final class HypixelDataSource {
 						fixedEssences++;
 
 					} else if (apiFixer.isShard(bazaarProductId)) {
-						SkyBlockItem shard = apiFixer.createShard(bazaarProductId);
+						SkyBlockItemData shard = apiFixer.createShard(bazaarProductId);
 						if (shard != null) {
 							itemsFetcher.putItem(bazaarProductId, shard);
 							fixedShards++;

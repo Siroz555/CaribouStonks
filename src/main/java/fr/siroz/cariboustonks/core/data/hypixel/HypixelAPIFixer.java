@@ -1,10 +1,11 @@
 package fr.siroz.cariboustonks.core.data.hypixel;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
+import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.data.mod.SkyBlockAttribute;
 import fr.siroz.cariboustonks.core.data.hypixel.item.Rarity;
 import java.util.Locale;
+import java.util.Optional;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,27 +52,27 @@ public final class HypixelAPIFixer {
 		return matcher.matches();
 	}
 
-	public @NotNull SkyBlockItem createEnchant(@NotNull String skyBlockIdEnchantment) {
+	public @NotNull SkyBlockItemData createEnchant(@NotNull String skyBlockIdEnchantment) {
 		String material = "ENCHANTED_BOOK";
 		String name = getEnchantName(skyBlockIdEnchantment);
 		Rarity tier = skyBlockIdEnchantment.contains("ULTIMATE") ? Rarity.MYTHIC : Rarity.UNCOMMON;
-		return new SkyBlockItem(skyBlockIdEnchantment, material, name, tier, null);
+		return new SkyBlockItemData(skyBlockIdEnchantment, material, name, tier, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 	}
 
-	public @NotNull SkyBlockItem createEssence(@NotNull String skyBlockIdEssence) {
+	public @NotNull SkyBlockItemData createEssence(@NotNull String skyBlockIdEssence) {
 		String material = "SKULL_ITEM";
 		String name = getEssenceName(skyBlockIdEssence);
-		return new SkyBlockItem(skyBlockIdEssence, material, name, Rarity.MYTHIC, null);
+		return new SkyBlockItemData(skyBlockIdEssence, material, name, Rarity.MYTHIC, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 	}
 
 	// TODO : Récupérer les textures des HEAD, mais vu qu'elles ne sont pas dispo dans l'API..
-	public @Nullable SkyBlockItem createShard(@NotNull String skyBlockIdShard) {
+	public @Nullable SkyBlockItemData createShard(@NotNull String skyBlockIdShard) {
 		SkyBlockAttribute attribute = CaribouStonks.core().getModDataSource().getAttributeBySkyBlockId(skyBlockIdShard);
 		if (attribute != null) {
 			String material = "PRISMARINE_SHARD";
 			String name = attribute.name() + " (" + attribute.id() + ")";
 			Rarity tier = attribute.getRarityFromId();
-			return new SkyBlockItem(skyBlockIdShard, material, name, tier, null);
+			return new SkyBlockItemData(skyBlockIdShard, material, name, tier, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 		}
 
 		return null;
