@@ -156,21 +156,6 @@ public class VanillaCategory extends AbstractCategory {
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
-						.name(Text.literal("Mobs").formatted(Formatting.BOLD))
-						.description(OptionDescription.of(
-								Text.literal("Mobs-related settings")))
-						.collapsed(false)
-						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Hide fire on entities"))
-								.description(OptionDescription.of(
-										Text.literal("Prevents fire on entities from being rendered. For example, for the Flaming Spiders in Crimson Isle.")))
-								.binding(defaults.vanilla.mob.hideFireOnEntities,
-										() -> current.vanilla.mob.hideFireOnEntities,
-										newValue -> current.vanilla.mob.hideFireOnEntities = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.build())
-				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Customize Held Item Appearance").formatted(Formatting.BOLD))
 						.description(OptionDescription.of(
 								Text.literal("Change the appearance of items in the hand and apply transformations.")))
@@ -210,6 +195,45 @@ public class VanillaCategory extends AbstractCategory {
 								.binding(defaults.vanilla.itemModelCustomization.ignoreMiningEffects,
 										() -> current.vanilla.itemModelCustomization.ignoreMiningEffects,
 										newValue -> current.vanilla.itemModelCustomization.ignoreMiningEffects = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Text.literal("Chat").formatted(Formatting.BOLD))
+						.description(OptionDescription.of(Text.literal("Chat-related settings.")))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Copy a message from the chat"))
+								.description(OptionDescription.of(
+										Text.literal("Copy a message from the chat by clicking on it using"),
+										Text.literal(SPACE + "CTRL + CLICK").formatted(Formatting.AQUA, Formatting.BOLD)))
+								.binding(defaults.chat.copyChat,
+										() -> current.chat.copyChat,
+										newValue -> current.chat.copyChat = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Integer>createBuilder()
+								.name(Text.literal("Chat history length"))
+								.description(OptionDescription.of(
+										Text.literal("Modify the maximum length of the chat history")))
+								.binding(defaults.chat.chatHistoryLength,
+										() -> current.chat.chatHistoryLength,
+										newValue -> current.chat.chatHistoryLength = Math.max(100, newValue))
+								.controller(opt -> IntegerSliderControllerBuilder.create(opt).range(100, 5000).step(10))
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Text.literal("Mobs").formatted(Formatting.BOLD))
+						.description(OptionDescription.of(
+								Text.literal("Mobs-related settings")))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Hide fire on entities"))
+								.description(OptionDescription.of(
+										Text.literal("Prevents fire on entities from being rendered. For example, for the Flaming Spiders in Crimson Isle.")))
+								.binding(defaults.vanilla.mob.hideFireOnEntities,
+										() -> current.vanilla.mob.hideFireOnEntities,
+										newValue -> current.vanilla.mob.hideFireOnEntities = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.build())
