@@ -18,6 +18,7 @@ public final class CustomRenderPipelines {
 	public static void init() {
 		Renderer.getInstance().excludePipelineFromBatching(CIRCLE);
 		Renderer.getInstance().excludePipelineFromBatching(CIRCLE_THROUGH_BLOCKS);
+		IrisCompatibility.assignPipelines();
 	}
 
 	// ---------- WORLD ----------
