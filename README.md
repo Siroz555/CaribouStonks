@@ -160,7 +160,6 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 **Misc**
 
 - Highlight entities (/highlighter)
-- Stop the Pickobulus Ability on Private Island
 - Party Commands (!warp, !coords, !dice, ..)
 - RoughlyEnoughItems (REI) Search Bar Calculator
 

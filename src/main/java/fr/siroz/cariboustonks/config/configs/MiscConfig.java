@@ -18,9 +18,6 @@ public class MiscConfig {
 	public Color highlighterColor = ColorUtils.getAwtColor(Formatting.AQUA);
 
 	@SerialEntry
-	public boolean stopPickobulusAbilityOnDynamic = false;
-
-	@SerialEntry
 	public Compatibility compatibility = new Compatibility();
 
 	@SerialEntry
