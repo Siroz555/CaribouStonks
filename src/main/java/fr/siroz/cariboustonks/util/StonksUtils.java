@@ -5,6 +5,8 @@ import fr.siroz.cariboustonks.core.json.GsonProvider;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.FatalErrorScreen;
@@ -280,5 +282,29 @@ public final class StonksUtils {
 		}
 
 		return result;
+	}
+
+	/**
+	 * Capitalize the given input String.
+	 *
+	 * <li>blessed -> Blessed</li>
+	 * <li>BLESSED -> Blessed</li>
+	 * <li>blood_soaked -> Blood Soaked</li>
+	 * <li>BLOOD_SOAKED -> Blood Soaked</li>
+	 *
+	 * @param s the input String
+	 * @return the capitalized input String
+	 */
+	public static String capitalize(@NotNull String s) {
+		if (s.isEmpty()) return s;
+
+		String normalized = s.replace('_', ' ');
+		return Arrays.stream(normalized.split("\\s+"))
+				.filter(token -> !token.isEmpty())
+				.map(token -> {
+					String lower = token.toLowerCase(Locale.ENGLISH);
+					return lower.substring(0, 1).toUpperCase(Locale.ENGLISH) + lower.substring(1);
+				})
+				.collect(Collectors.joining(" "));
 	}
 }

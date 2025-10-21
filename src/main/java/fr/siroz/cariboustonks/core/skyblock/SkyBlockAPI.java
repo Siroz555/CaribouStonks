@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.core.data.hypixel.item.PetInfo;
 import fr.siroz.cariboustonks.core.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.data.mod.SkyBlockAttribute;
 import fr.siroz.cariboustonks.util.DeveloperTools;
+import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.ScoreboardUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -173,6 +174,17 @@ public final class SkyBlockAPI {
 	 */
 	public static @NotNull String getSkyBlockItemUuid(@NotNull ComponentHolder stack) {
 		return ItemUtils.getCustomData(stack).getString(ITEM_UUID, "");
+	}
+
+	/**
+	 * Determines if the currently held item has the specified SkyBlock item ID.
+	 *
+	 * @param skyBlockItemId the SkyBlock item ID to compare against the held item's ID
+	 * @return {@code true} if the currently held is not null, and the skyBlockItemId matches
+	 */
+	public static boolean isHoldingItem(@NotNull String skyBlockItemId) {
+		ItemStack held = InventoryUtils.getHeldItem();
+		return held != null && getSkyBlockItemId(held).equals(skyBlockItemId);
 	}
 
 	/**

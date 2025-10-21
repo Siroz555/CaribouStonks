@@ -25,7 +25,6 @@ import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.feature.misc.HighlightMobFeature;
 import fr.siroz.cariboustonks.feature.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.feature.misc.REISearchBarCalculatorFeature;
-import fr.siroz.cariboustonks.feature.misc.StopPickobulusAbilityFeature;
 import fr.siroz.cariboustonks.feature.reminders.BoosterCookieReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.ChocolateLimitReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.EnchantedCloakReminderFeature;
@@ -37,6 +36,8 @@ import fr.siroz.cariboustonks.feature.slayer.SlayerStatsFeature;
 import fr.siroz.cariboustonks.feature.slayer.boss.TarantulaBossFeature;
 import fr.siroz.cariboustonks.feature.stonks.StonksCommandFeature;
 import fr.siroz.cariboustonks.feature.stonks.StonksFeature;
+import fr.siroz.cariboustonks.feature.stonks.ItemValueViewerFeature;
+import fr.siroz.cariboustonks.feature.stonks.tooltips.ItemValueTooltipFeature;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.auction.AuctionLowestBinTooltipFeature;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
 import fr.siroz.cariboustonks.feature.ui.AbiphoneFavoriteContactFeature;
@@ -112,10 +113,12 @@ public final class Features {
 		// Slayer - Boss
 		registerFeature(new TarantulaBossFeature());
 		// Stonks
+		registerFeature(new ItemValueViewerFeature());
 		registerFeature(new StonksCommandFeature());
 		registerFeature(new StonksFeature());
 		registerFeature(new BazaarPriceTooltipFeature(1));
 		registerFeature(new AuctionLowestBinTooltipFeature(2));
+		registerFeature(new ItemValueTooltipFeature(4));
 		// UI
 		registerFeature(new AbiphoneFavoriteContactFeature(0));
 		// UI - HUDs
@@ -132,7 +135,6 @@ public final class Features {
 		registerFeature(new HighlightMobFeature());
 		registerFeature(new PartyCommandFeature());
 		registerFeature(new REISearchBarCalculatorFeature());
-		registerFeature(new StopPickobulusAbilityFeature());
 		// Vanilla
 		registerFeature(new MuteVanillaSoundFeature());
 		registerFeature(new ScrollableTooltipFeature());

@@ -68,7 +68,7 @@
   {
     "name": "Creature Fisher",
     "shardName": "Bogged",
-    "id": "C14",
+    "id": "C13",
     "skyBlockApiId": "SHARD_SEA_ARCHER"
   },
   {
@@ -757,7 +757,7 @@
   },
   {
     "name": "Sea Wisdom",
-    "shardName": "Sea Emperor",
+    "shardName": "Loch Emperor",
     "id": "E20",
     "skyBlockApiId": "SHARD_SEA_EMPEROR"
   },
@@ -895,7 +895,7 @@
   },
   {
     "name": "Paramount Fortitude",
-    "shardName": "Endstone Protector",
+    "shardName": "End Stone Protector",
     "id": "L9",
     "skyBlockApiId": "SHARD_ENDSTONE_PROTECTOR"
   },
@@ -1054,5 +1054,11 @@
     "shardName": "Titanoboa",
     "id": "L47",
     "skyBlockApiId": "SHARD_TITANOBOA"
+  },
+  {
+    "name": "Catacombs Graduate",
+    "shardName": "Scarf",
+    "id": "L51",
+    "skyBlockApiId": "SHARD_SCARF"
   }
 ]

@@ -62,15 +62,6 @@ public class MiscCategory extends AbstractCategory {
                                 newValue -> current.misc.highlightPartyMembersColor = newValue)
                         .controller(ColorControllerBuilder::create)
                         .build())
-				.option(Option.<Boolean>createBuilder()
-						.name(Text.literal("Stop Pickobulus Ability on Private Island"))
-						.description(OptionDescription.of(
-								Text.literal("Prevents activation of the Pickobulus ability on Private Island.")))
-						.binding(defaults.misc.stopPickobulusAbilityOnDynamic,
-								() -> current.misc.stopPickobulusAbilityOnDynamic,
-								newValue -> current.misc.stopPickobulusAbilityOnDynamic = newValue)
-						.controller(this::createBooleanController)
-						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Other Mods").formatted(Formatting.BOLD))
 						.collapsed(false)

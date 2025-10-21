@@ -134,7 +134,7 @@ public class SlayerCategory extends AbstractCategory {
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
-						.name(Text.literal("Slayer's Bosses"))
+						.name(Text.literal("Slayer's Bosses").formatted(Formatting.BOLD))
 						.description(OptionDescription.of(
 								Text.literal("Control different settings during Boss Fight")))
 						.collapsed(false)

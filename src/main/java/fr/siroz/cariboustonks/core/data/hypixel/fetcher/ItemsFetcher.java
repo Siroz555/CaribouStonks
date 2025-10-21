@@ -6,7 +6,7 @@ import com.google.gson.JsonParser;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelAPIFixer;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
+import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.data.mod.ModDataSource;
 import fr.siroz.cariboustonks.core.json.GsonProvider;
 import fr.siroz.cariboustonks.core.scheduler.AsyncScheduler;
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
  * <a href="https://api.hypixel.net/v2/resources/skyblock/items">Hypixel API - Resources - Items</a>
  * <p>
  * Performs an asynchronous fetch of the SkyBlock items resource and stores an immutable snapshot
- * of parsed {@link SkyBlockItem} objects.
+ * of parsed {@link SkyBlockItemData} objects.
  */
 @ApiStatus.Internal
 public final class ItemsFetcher {
@@ -54,7 +54,7 @@ public final class ItemsFetcher {
 	private final AtomicInteger retryAttempts;
 	private final AtomicBoolean lastFetchSuccessful;
 
-	private final AtomicReference<Map<String, SkyBlockItem>> skyBlockItems;
+	private final AtomicReference<Map<String, SkyBlockItemData>> skyBlockItems;
 
 	public ItemsFetcher(HypixelDataSource hypixelDataSource, ModDataSource modDataSource, HypixelAPIFixer apiFixer) {
 		this.hypixelDataSource = hypixelDataSource;
@@ -78,7 +78,7 @@ public final class ItemsFetcher {
 	 *
 	 * @return immutable snapshot Map of item id -> SkyBlockItem
 	 */
-	public Map<String, SkyBlockItem> getSkyBlockItemsSnapshot() {
+	public Map<String, SkyBlockItemData> getSkyBlockItemsSnapshot() {
 		return skyBlockItems.get();
 	}
 
@@ -100,9 +100,9 @@ public final class ItemsFetcher {
 	 * @param key  the item id
 	 * @param item the SkyBlockItem instance
 	 */
-	public void putItem(@NotNull String key, @NotNull SkyBlockItem item) {
+	public void putItem(@NotNull String key, @NotNull SkyBlockItemData item) {
 		skyBlockItems.updateAndGet(prev -> {
-			Map<String, SkyBlockItem> mutable = new HashMap<>(prev);
+			Map<String, SkyBlockItemData> mutable = new HashMap<>(prev);
 			mutable.put(key, item);
 			return Map.copyOf(mutable);
 		});
@@ -173,7 +173,7 @@ public final class ItemsFetcher {
 
 			JsonArray itemsArray = GsonProvider.safeGetAsArray(root, "items");
 
-			Map<String, SkyBlockItem> items = parseItems(itemsArray);
+			Map<String, SkyBlockItemData> items = parseItems(itemsArray);
 			if (items != null && !items.isEmpty()) {
 				skyBlockItems.set(Map.copyOf(items));
 				retryAttempts.set(0);
@@ -186,10 +186,10 @@ public final class ItemsFetcher {
 		}
 	}
 
-	private Map<String, SkyBlockItem> parseItems(@Nullable JsonArray itemsArray) {
+	private Map<String, SkyBlockItemData> parseItems(@Nullable JsonArray itemsArray) {
 		if (itemsArray == null) return null;
 
-		Map<String, SkyBlockItem> items = new HashMap<>();
+		Map<String, SkyBlockItemData> items = new HashMap<>();
 		for (int i = 0; i < itemsArray.size(); i++) {
 
 			JsonObject item = itemsArray.get(i).getAsJsonObject();
@@ -198,7 +198,7 @@ public final class ItemsFetcher {
 				if (apiFixer.isBlacklisted(id)) continue;
 
 				try {
-					SkyBlockItem skyBlockItem = SkyBlockItem.parse(item);
+					SkyBlockItemData skyBlockItem = SkyBlockItemData.parse(item);
 					items.put(id, skyBlockItem);
 				} catch (Exception ex) {
 					CaribouStonks.LOGGER.error("[ItemFetcher] Unable to parse SkyBlock Item: {}", id, ex);
@@ -222,7 +222,7 @@ public final class ItemsFetcher {
 
 			if (lastFetchSuccessful.get() && !modDataSource.isItemsMappingError()) {
 				List<String> hypixelMaterials = skyBlockItems.get().values().stream()
-						.map(SkyBlockItem::material)
+						.map(SkyBlockItemData::material)
 						.collect(Collectors.toSet())
 						.stream()
 						.toList();

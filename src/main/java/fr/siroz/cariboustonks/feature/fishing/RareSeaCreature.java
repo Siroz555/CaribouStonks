@@ -30,7 +30,7 @@ public enum RareSeaCreature {
 	// Water - Backwater Bayou
 	ALLIGATOR("Alligator", "A long snout breaks the surface of the water. It's an Alligator!", Formatting.DARK_GREEN),
 	BLUE_RINGED_OCTOPUS("Blue Ringed Octopus", "A garish set of tentacles arise. It's a Blue Ringed Octopus!", Formatting.LIGHT_PURPLE),
-	TITANOBOA("Titanoboa", "A massive Titanoboa surfaces. It's body stretches as far as the eye can see.", Formatting.DARK_GREEN),
+	TITANOBOA("Titanoboa", "A massive Titanoboa surfaces. Its body stretches as far as the eye can see.", Formatting.DARK_GREEN),
 	WIKI_TIKI("Wiki Tiki", "The water bubbles and froths. A massive form emerges- you have disturbed the Wiki Tiki! You shall pay the price.", Formatting.LIGHT_PURPLE),
 	// Lava - Crimson Isle
 	FIERY_SCUTTLER("Fiery Scuttler", "A Fiery Scuttler inconspicuously waddles up to you, friends in tow.", Formatting.GOLD),

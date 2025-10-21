@@ -126,11 +126,11 @@ public class ItemInformationWidget extends AbstractItemStonksWidget {
 						.formatted(Formatting.GREEN);
 
 				context.drawTextWithShadow(textRenderer, textStandardDeviationValues, x + 20, y + 205, Colors.WHITE.asInt());
-			}
 
-			// Warning
-			Text warningInfo = Text.literal("* Not a true representation of all orders.").formatted(Formatting.DARK_GRAY, Formatting.ITALIC);
-			context.drawTextWithShadow(textRenderer, warningInfo, x + 20, y + 225, Colors.WHITE.asInt());
+				// Warning
+				Text warningInfo = Text.literal("* Not a true representation of all orders.").formatted(Formatting.DARK_GRAY, Formatting.ITALIC);
+				context.drawTextWithShadow(textRenderer, warningInfo, x + 20, y + 225, Colors.WHITE.asInt());
+			}
 		}
 	}
 }

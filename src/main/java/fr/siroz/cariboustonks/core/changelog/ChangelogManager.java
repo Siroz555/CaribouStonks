@@ -96,8 +96,6 @@ public final class ChangelogManager {
 		TickScheduler.getInstance().runLater(() -> {
 			Client.sendMessage(Text.empty());
 			Client.sendMessageWithPrefix(Text.empty()
-					.append(Text.literal("Important: the Mod is also available in 1.21.8+. Version 1.21.5 will still be updated!").formatted(Formatting.GOLD)));
-			Client.sendMessageWithPrefix(Text.empty()
 					.append(Text.literal("Updated!").formatted(Formatting.GREEN))
 					.append(Text.literal(" " + lastSeenVersion + " ").formatted(Formatting.YELLOW))
 					.append(Text.literal("->").formatted(Formatting.GRAY))

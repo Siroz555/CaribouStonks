@@ -4,7 +4,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
-import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItem;
+import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.command.CommandComponent;
@@ -87,7 +87,7 @@ public class StonksCommandFeature extends Feature {
 
 		source.sendFeedback(Text.literal(SEPARATOR).formatted(Formatting.RED));
 
-		SkyBlockItem skyBlockItem = hypixelDataSource.getSkyBlockItem(item);
+		SkyBlockItemData skyBlockItem = hypixelDataSource.getSkyBlockItem(item);
 		if (skyBlockItem == null) {
 			source.sendFeedback(Text.empty().append(Text.literal("⭐").withColor(Colors.ORANGE.asInt()))
 					.append(" " + Text.literal(bazaarProduct.skyBlockId() + " :").formatted(Formatting.GOLD)));

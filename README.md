@@ -27,6 +27,8 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Stonks
     - Configure the display of item prices in Tooltips.
+    - Displays the Estimated Value of an item in its Tooltip.
+    - Item Value Viewer: Displays the detailed summary of an item's value when you hover over it.
     - Graphical representation of an item's price trend, quantity, and other information.
     - /stonks {item} Command: Display prices and other information simply anywhere.
     - Search engine for all SkyBlock items.
@@ -47,6 +49,9 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - Display your own Nametag in F5.
 - In-game Zoom. (default to C).
 - Scrollable Tooltips.
+- Chat:
+    - Copy message (CTRL + LEFT CLICK).
+    - Change history size.
 - Overlay:
     - Hide fire on the screen.
     - Hide armor above inventory-hotbar.
@@ -57,7 +62,6 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Change the size.
     - Change the positions.
     - Change the Swing Duration.
-    - _Customization Screen & /cariboustonks heldItemCustomization <mainHand/offHand>_
 - Mutes Vanilla Sounds (Lightning, Player Fall, Enderman, Phantom)
 
 **UI & Visuals**
@@ -74,19 +78,13 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - Overlay
     - Etherwarp Teleport Target display.
     - Gyrokinetic Wand radius display.
+- Change the color of Party messages.
+- Change the color of Guild messages.
 - HUDs
     - Fps HUD
     - Ping HUD
     - Tps HUD
     - Day HUD
-
-**Chat**
-
-- Copy message (CTRL + LEFT CLICK).
-- Change history size.
-- Change the color of Party messages.
-- Change the color of Guild messages.
-- Send your current position (/sendCoords).
 
 **Skills**
 
@@ -155,7 +153,6 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 **Misc**
 
 - Highlight entities (/highlighter)
-- Stop the Pickobulus Ability on Private Island
 - Party Commands (!warp, !coords, !dice, ..)
 - RoughlyEnoughItems (REI) Search Bar Calculator
 

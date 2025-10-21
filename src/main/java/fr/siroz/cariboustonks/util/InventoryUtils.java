@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.util;
 
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.type.AttributeModifierSlot;
@@ -40,17 +39,6 @@ public final class InventoryUtils {
 	@Nullable
 	public static ItemStack getHeldItem() {
 		return CLIENT.player != null ? CLIENT.player.getInventory().getSelectedStack() : null;
-	}
-
-	/**
-	 * Determines if the currently held item has the specified SkyBlock item ID.
-	 *
-	 * @param skyBlockItemId the SkyBlock item ID to compare against the held item's ID
-	 * @return {@code true} if the currently held is not null, and the skyBlockItemId matches
-	 */
-	public static boolean isHoldingItem(@NotNull String skyBlockItemId) {
-		ItemStack held = getHeldItem();
-		return held != null && SkyBlockAPI.getSkyBlockItemId(held).equals(skyBlockItemId);
 	}
 
 	/**
