@@ -96,7 +96,7 @@ public class ItemValueTooltipFeature extends Feature implements ContainerMatcher
 	}
 
 	private void displayItemValue(@NotNull List<Text> lines, @Nullable ItemValueResult result) {
-		if (result == null || result.calculations().isEmpty()) {
+		if (result == null || result.calculations().size() <= 1) {
 			return;
 		}
 
