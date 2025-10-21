@@ -2,7 +2,6 @@ package fr.siroz.cariboustonks.config.categories;
 
 import dev.isxander.yacl3.api.ButtonOption;
 import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.LabelOption;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
@@ -138,7 +137,6 @@ public class UIAndVisualsCategory extends AbstractCategory {
 										newValue -> current.uiAndVisuals.sharedPositionWaypoint.shareWithArea = newValue)
 								.controller(this::createBooleanController)
 								.build())
-						.option(LabelOption.create(Text.literal(" ")))
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Enable Waypoint display"))
 								.description(OptionDescription.of(

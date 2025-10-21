@@ -62,7 +62,7 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Cocooned Warning Title"))
+								.name(Text.literal("Cocooned Warning - Title"))
 								.description(OptionDescription.of(
 										Text.literal("When a mob is Cocooned, show a Title on the screen.")))
 								.binding(defaults.combat.cocoonedMob.cocoonedWarningTitle,
@@ -71,7 +71,7 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Cocooned Warning Sound"))
+								.name(Text.literal("Cocooned Warning - Sound"))
 								.description(OptionDescription.of(
 										Text.literal("When a mob is Cocooned, play a Sound.")))
 								.binding(defaults.combat.cocoonedMob.cocoonedWarningSound,
@@ -80,7 +80,7 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Cocooned Warning Waypoint Beam"))
+								.name(Text.literal("Cocooned Warning - Waypoint Beam"))
 								.description(OptionDescription.of(
 										Text.literal("When a mob is Cocooned, show a Waypoint Beam.")))
 								.binding(defaults.combat.cocoonedMob.cocoonedWarningBeam,

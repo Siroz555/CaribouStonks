@@ -11,9 +11,6 @@ public class GeneralConfig {
 	public boolean firstTimeWithTheMod = true;
 
 	@SerialEntry
-	public boolean checkForUpdates = true;
-
-	@SerialEntry
 	public Stonks stonks = new Stonks();
 
 	@SerialEntry
@@ -95,6 +92,9 @@ public class GeneralConfig {
 	}
 
 	public static class Internal {
+
+		@SerialEntry
+		public boolean checkForUpdates = true;
 
 		@SerialEntry
 		public boolean fetchBazaarData = true;

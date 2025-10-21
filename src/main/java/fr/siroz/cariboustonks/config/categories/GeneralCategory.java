@@ -41,15 +41,6 @@ public class GeneralCategory extends AbstractCategory {
 						.text(Text.literal("Open"))
 						.action((screen, opt) -> MinecraftClient.getInstance().setScreen(HudConfigScreen.create(screen)))
 						.build())
-				.option(Option.<Boolean>createBuilder()
-						.name(Text.literal("Check for updates"))
-						.description(OptionDescription.of(
-								Text.literal("Check if updates are available at game launch.")))
-						.binding(defaults.general.checkForUpdates,
-								() -> current.general.checkForUpdates,
-								newValue -> current.general.checkForUpdates = newValue)
-						.controller(this::createBooleanController)
-						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Stonks").formatted(Formatting.BOLD))
 						.description(OptionDescription.of(
@@ -93,12 +84,18 @@ public class GeneralCategory extends AbstractCategory {
 								.name(Text.literal("Bazaar Prices - Format"))
 								.description(OptionDescription.of(
 										Text.literal("Select the format displayed for Bazaar prices."),
-										Text.literal(SPACE + "FULL :").formatted(Formatting.UNDERLINE),
-										Text.literal(SPACE + "Format '").append(Text.literal("47,100,000").formatted(Formatting.GOLD)).append(Text.literal("'")),
-										Text.literal(SPACE + "SHORT :"),
-										Text.literal(SPACE + "Format '").append(Text.literal("47,1M").formatted(Formatting.GOLD)).append(Text.literal("'")),
-										Text.literal(SPACE + "ALL :"),
-										Text.literal(SPACE + "Format '").append(Text.literal("47,100,000 (47,1M)").formatted(Formatting.GOLD)).append(Text.literal("'"))))
+										Text.empty()
+												.append(Text.literal(SPACE + "FULL:").formatted(Formatting.UNDERLINE))
+												.append(Text.literal(" 47,100,000").formatted(Formatting.GOLD)),
+										Text.empty()
+												.append(Text.literal(SPACE + "SHORT:").formatted(Formatting.UNDERLINE))
+												.append(Text.literal(" 47,1M").formatted(Formatting.GOLD)),
+										Text.empty()
+												.append(Text.literal(SPACE + "ALL:").formatted(Formatting.UNDERLINE))
+												.append(Text.literal(" 47,100,000").formatted(Formatting.GOLD))
+												.append(Text.literal(" (").formatted(Formatting.GRAY))
+												.append(Text.literal("47,1M").formatted(Formatting.GOLD))
+												.append(Text.literal(")").formatted(Formatting.GRAY))))
 								.binding(defaults.general.stonks.bazaarTooltipPriceDisplayType,
 										() -> current.general.stonks.bazaarTooltipPriceDisplayType,
 										newValue -> current.general.stonks.bazaarTooltipPriceDisplayType = newValue)
@@ -114,7 +111,7 @@ public class GeneralCategory extends AbstractCategory {
 								.binding(defaults.general.stonks.bazaarTooltipMoreData,
 										() -> current.general.stonks.bazaarTooltipMoreData,
 										newValue -> current.general.stonks.bazaarTooltipMoreData = newValue)
-								.controller(this::createBooleanController)
+								.controller(this::createYesNoController)
 								.build())
 						.option(LabelOption.create(Text.literal("")))
 						.option(Option.<Boolean>createBuilder()
@@ -149,15 +146,21 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createEnumCyclingController)
 								.build())
 						.option(Option.<TooltipPriceDisplayType>createBuilder()
-								.name(Text.literal("Auction Prices Format"))
+								.name(Text.literal("Auction Prices - Format"))
 								.description(OptionDescription.of(
 										Text.literal("Select the format displayed for Auction prices."),
-										Text.literal(SPACE + "FULL :").formatted(Formatting.UNDERLINE),
-										Text.literal(SPACE + "Format '").append(Text.literal("47,100,000").formatted(Formatting.GOLD)).append(Text.literal("'")),
-										Text.literal(SPACE + "SHORT :"),
-										Text.literal(SPACE + "Format '").append(Text.literal("47,1M").formatted(Formatting.GOLD)).append(Text.literal("'")),
-										Text.literal(SPACE + "ALL :"),
-										Text.literal(SPACE + "Format '").append(Text.literal("47,100,000 (47,1M)").formatted(Formatting.GOLD)).append(Text.literal("'"))))
+										Text.empty()
+												.append(Text.literal(SPACE + "FULL:").formatted(Formatting.UNDERLINE))
+												.append(Text.literal(" 47,100,000").formatted(Formatting.GOLD)),
+										Text.empty()
+												.append(Text.literal(SPACE + "SHORT:").formatted(Formatting.UNDERLINE))
+												.append(Text.literal(" 47,1M").formatted(Formatting.GOLD)),
+										Text.empty()
+												.append(Text.literal(SPACE + "ALL:").formatted(Formatting.UNDERLINE))
+												.append(Text.literal(" 47,100,000").formatted(Formatting.GOLD))
+												.append(Text.literal(" (").formatted(Formatting.GRAY))
+												.append(Text.literal("47,1M").formatted(Formatting.GOLD))
+												.append(Text.literal(")").formatted(Formatting.GRAY))))
 								.binding(defaults.general.stonks.auctionTooltipPriceDisplayType,
 										() -> current.general.stonks.auctionTooltipPriceDisplayType,
 										newValue -> current.general.stonks.auctionTooltipPriceDisplayType = newValue)
@@ -318,6 +321,15 @@ public class GeneralCategory extends AbstractCategory {
 						.description(OptionDescription.of(
 								Text.literal("Control of internal parameters in Mod.").formatted(Formatting.RED)))
 						.collapsed(true)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Check for updates"))
+								.description(OptionDescription.of(
+										Text.literal("Check if updates are available at game launch.").formatted(Formatting.RED)))
+								.binding(defaults.general.internal.checkForUpdates,
+										() -> current.general.internal.checkForUpdates,
+										newValue -> current.general.internal.checkForUpdates = newValue)
+								.controller(this::createBooleanController)
+								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Fetch Bazaar Data"))
 								.description(OptionDescription.of(
