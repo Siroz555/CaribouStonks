@@ -107,7 +107,6 @@ public final class Client {
 
 		if (notification) {
 			Notification.showSystem(errorMessage);
-			CLIENT.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ENTITY_WITHER_HURT, 0.5f, 2f));
 		}
 	}
 
