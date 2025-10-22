@@ -2,7 +2,6 @@ package fr.siroz.cariboustonks.feature.diana;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
@@ -10,7 +9,6 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.particle.ParticleTypes;
@@ -28,9 +26,10 @@ import org.jetbrains.annotations.NotNull;
 
 final class GriffinBurrowParticleFinder {
 
+	// TODO : MythologicalRitual V2 :: After a block attack, the handleInteractBlock is bugged
+
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-	private static final String ANCESTRAL_SPADE_ITEM_ID = "ANCESTRAL_SPADE";
 	private static final Cache<BlockPos, BlockPos> DUG_BURROWS_CACHE = CacheBuilder.newBuilder()
 			.expireAfterWrite(Duration.ofMinutes(1))
 			.build();
@@ -61,13 +60,12 @@ final class GriffinBurrowParticleFinder {
 	}
 
 	private ActionResult onInteractBlock(PlayerEntity player, Hand hand, BlockPos pos) {
-		if (mythologicalRitual.isEnabled() && mythologicalRitual.isParticleFinderEnabled()
-				&& CLIENT.world != null && CLIENT.world.getBlockState(pos).isOf(Blocks.GRASS_BLOCK)
-		) {
-			handleInteractBlock(player, hand, pos);
-		}
+		if (CLIENT.world != null && !CLIENT.world.getBlockState(pos).isOf(Blocks.GRASS_BLOCK)) return ActionResult.PASS;
+		if (!mythologicalRitual.isEnabled() || !mythologicalRitual.isParticleFinderEnabled()) return ActionResult.PASS;
+		if (!mythologicalRitual.isHoldingSpade(player.getStackInHand(hand))) return ActionResult.PASS;
 
-		return ActionResult.PASS;
+		handleInteractBlock(pos);
+		return ActionResult.SUCCESS;
 	}
 
 	@SuppressWarnings("checkstyle:CyclomaticComplexity")
@@ -150,12 +148,7 @@ final class GriffinBurrowParticleFinder {
 		}
 	}
 
-	private void handleInteractBlock(@NotNull PlayerEntity player, Hand hand, BlockPos pos) {
-		ItemStack stack = player.getStackInHand(hand);
-		if (!SkyBlockAPI.getSkyBlockItemId(stack).equals(ANCESTRAL_SPADE_ITEM_ID)) {
-			return;
-		}
-
+	private void handleInteractBlock(BlockPos pos) {
 		if (pos.equals(pendingBurrow)) {
 			pendingBurrow = null;
 			commitBurrowDug(pos, true);

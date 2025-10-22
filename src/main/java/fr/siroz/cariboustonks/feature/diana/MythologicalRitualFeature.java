@@ -25,6 +25,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -39,6 +40,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,6 +54,12 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 			"(?<message>You dug out a Griffin Burrow!|You finished the Griffin burrow chain!) \\((?<index>\\d)/4\\)");
 	private static final Pattern INQUISITOR_FOUND_PATTERN = Pattern.compile(".* You dug out a Minos Inquisitor!");
 	private static final String INQUISITOR_ENTITY_NAME = "Minos Inquisitor";
+
+	private final Set<String> spades = Set.of(
+			"ANCESTRAL_SPADE",
+			"ARCHAIC_SPADE",
+			"DEIFIC_SPADE"
+	);
 
 	private final GriffinBurrowParticleFinder particleFinder;
 	private final GuessBurrow guessBurrow;
@@ -95,6 +103,15 @@ public final class MythologicalRitualFeature extends Feature implements EntityGl
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() == IslandType.HUB
 				&& ConfigManager.getConfig().events.mythologicalRitual.enabled;
+	}
+
+	public boolean isHoldingSpade(@Nullable ItemStack heldItem) {
+		if (heldItem == null) {
+			return false;
+		}
+
+		String itemId = SkyBlockAPI.getSkyBlockItemId(heldItem);
+		return spades.contains(itemId);
 	}
 
 	public boolean onPlayerFoundInquisitor(@Nullable String playerName, @NotNull Position position) {
