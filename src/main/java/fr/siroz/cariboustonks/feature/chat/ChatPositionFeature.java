@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.config.configs.UIAndVisualsConfig;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.feature.diana.MythologicalRitualFeature;
 import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.feature.Feature;
@@ -125,11 +124,8 @@ public class ChatPositionFeature extends Feature {
 			int positionZ = Integer.parseInt(z);
 			Position position = Position.of(positionX, positionY, positionZ);
 
-			boolean foundInquisitor = CaribouStonks.features().getFeature(MythologicalRitualFeature.class)
-					.onPlayerFoundInquisitor(playerName, position);
-
 			UIAndVisualsConfig.SharedPositionWaypoint config = ConfigManager.getConfig().uiAndVisuals.sharedPositionWaypoint;
-			int showTime = foundInquisitor ? 60 : config.showTime;
+			int showTime = config.showTime;
 			Color color = config.rainbow ? Colors.RAINBOW : Color.fromInt(config.color.getRGB());
 
 			Text waypointName = playerName.isEmpty()

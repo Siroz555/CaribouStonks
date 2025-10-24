@@ -4,7 +4,6 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import fr.siroz.cariboustonks.config.configs.ChatConfig;
 import fr.siroz.cariboustonks.config.configs.CombatConfig;
 import fr.siroz.cariboustonks.config.configs.DungeonConfig;
-import fr.siroz.cariboustonks.config.configs.EventsConfig;
 import fr.siroz.cariboustonks.config.configs.FarmingConfig;
 import fr.siroz.cariboustonks.config.configs.FishingConfig;
 import fr.siroz.cariboustonks.config.configs.ForagingConfig;
@@ -49,9 +48,6 @@ public class Config {
 
     @SerialEntry
     public FishingConfig fishing = new FishingConfig();
-
-    @SerialEntry
-    public EventsConfig events = new EventsConfig();
 
     @SerialEntry
     public MiscConfig misc = new MiscConfig();

@@ -8,7 +8,6 @@ import fr.siroz.cariboustonks.feature.combat.CocoonedWarningFeature;
 import fr.siroz.cariboustonks.feature.combat.LowHealthWarningFeature;
 import fr.siroz.cariboustonks.feature.combat.RagnarockAxeFeature;
 import fr.siroz.cariboustonks.feature.combat.SecondLifeFeature;
-import fr.siroz.cariboustonks.feature.diana.MythologicalRitualFeature;
 import fr.siroz.cariboustonks.feature.dungeon.CroesusMenuFeature;
 import fr.siroz.cariboustonks.feature.fishing.BobberTimerFeature;
 import fr.siroz.cariboustonks.feature.fishing.FishCaughtFeature;
@@ -80,8 +79,6 @@ public final class Features {
 		registerFeature(new SecondLifeFeature());
 		// Dungeons
 		registerFeature(new CroesusMenuFeature());
-		// Events
-		registerFeature(new MythologicalRitualFeature());
 		// Fishing
 		registerFeature(new RareSeaCreatureFeature());
 		registerFeature(new BobberTimerFeature());
