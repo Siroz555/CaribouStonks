@@ -69,26 +69,33 @@ public class CroesusMenuFeature extends Feature implements ContainerMatcherTrait
 				}
 			}
 
-			// Priorité des couleurs : Kismet > Opened > NoMoreChest
-			// Pas de "else-if", car c'est pour mieux contrôler chaque option dans la config, d'où le "highlight == null"
-			ColorHighlight highlight = null;
-			if (kismetAvailable && !notOpenedYet && kismetAvailableConfig.getAsBoolean()) {
-				highlight = new ColorHighlight(entry.getIntKey(), kismetAvailableColor());
-			}
-
-			if (highlight == null && opened && !kismetAvailable && openedChestConfig.getAsBoolean()) {
-				highlight = new ColorHighlight(entry.getIntKey(), openedChestColor());
-			}
-
-			if (highlight == null && noMoreChest && !kismetAvailable && noMoreChestConfig.getAsBoolean()) {
-				highlight = new ColorHighlight(entry.getIntKey(), noMoreChestColor());
-			}
-
+			ColorHighlight highlight = getHighlight(notOpenedYet, opened, noMoreChest, kismetAvailable, entry);
 			if (highlight != null) {
 				highlights.add(highlight);
 			}
+
 		}
 		return highlights;
+	}
+
+	@Nullable
+	private ColorHighlight getHighlight(boolean notOpenedYet, boolean opened, boolean noMoreChest, boolean kismetAvailable, Int2ObjectMap.Entry<ItemStack> entry) {
+		// Priorité des couleurs : Kismet > Opened > NoMoreChest
+		// Pas de "else-if", car c'est pour mieux contrôler chaque option dans la config, d'où le "highlight == null"
+		ColorHighlight highlight = null;
+		if (kismetAvailable && !notOpenedYet && kismetAvailableConfig.getAsBoolean()) {
+			highlight = new ColorHighlight(entry.getIntKey(), kismetAvailableColor());
+		}
+
+		if (highlight == null && opened && !kismetAvailable && openedChestConfig.getAsBoolean()) {
+			highlight = new ColorHighlight(entry.getIntKey(), openedChestColor());
+		}
+
+		if (highlight == null && noMoreChest && !kismetAvailable && noMoreChestConfig.getAsBoolean()) {
+			highlight = new ColorHighlight(entry.getIntKey(), noMoreChestColor());
+		}
+
+		return highlight;
 	}
 
 	@Contract(" -> new")
