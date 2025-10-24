@@ -91,6 +91,13 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Tps HUD
     - Day HUD
 
+**Dungeons**
+
+- Croesus:
+    - Highlight Opened Chests.
+    - Highlight Kismet Feather Available.
+    - Highlight No more Chests.
+
 **Skills**
 
 - Combat
@@ -146,6 +153,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 **Events**
 
+> **SCHEDULED TO BE REMOVED** for Mythological Ritual V2 release. Use SBO instead!
 - Mythological Ritual
     - Guess Burrow: Waypoint that predicts the location of a Burrow (like 1.8).
     - Burrow Particle Finder: Displays a Waypoint according to the type of Burrow nearby.
