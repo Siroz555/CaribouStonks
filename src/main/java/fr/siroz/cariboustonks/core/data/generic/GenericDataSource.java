@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.scheduler.AsyncScheduler;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.core.json.GsonProvider;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
@@ -120,7 +121,7 @@ public final class GenericDataSource {
 				CaribouStonks.LOGGER.error("[GenericDataSource] Failed to fetch price history for {}", key.neuId(), ex);
 				return null;
 			}
-		});
+		}, AsyncScheduler.getInstance().blockingExecutor());
 	}
 
 	private @NotNull CompletableFuture<Void> updateLowestBins() {
@@ -165,7 +166,7 @@ public final class GenericDataSource {
 				CaribouStonks.LOGGER.error("[GenericDataSource] Failed to fetch Auction lowest bins", ex);
 				return null;
 			}
-		});
+		}, AsyncScheduler.getInstance().blockingExecutor());
 	}
 
 	private void checkLowestBinsResult() {
