@@ -4,6 +4,7 @@ import com.google.gson.FieldNamingPolicy;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.config.categories.DungeonsCategory;
 import fr.siroz.cariboustonks.config.categories.EventsCategory;
 import fr.siroz.cariboustonks.config.categories.GeneralCategory;
 import fr.siroz.cariboustonks.config.categories.MiscCategory;
@@ -92,6 +93,7 @@ public final class ConfigManager {
 					.category(new UIAndVisualsCategory(defaults, config).create())
 					.category(new SkillsCategory(defaults, config).create())
 					.category(new SlayerCategory(defaults, config).create())
+					.category(new DungeonsCategory(defaults, config).create())
 					.category(new EventsCategory(defaults, config).create())
 					.category(new MiscCategory(defaults, config).create())
 					.category(new VanillaCategory(defaults, config).create());

@@ -137,6 +137,17 @@ public class Color {
 	}
 
 	/**
+	 * Récupère la couleur sous un {@link java.awt.Color}.
+	 *
+	 * @param color la couleur sous {@link java.awt.Color}
+	 * @return la couleur obtenue
+	 */
+	@Contract("_ -> new")
+	public static @NotNull Color fromAwtColor(@NotNull java.awt.Color color) {
+		return new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+	}
+
+	/**
 	 * Récupère la couleur sous format {@code #rrggbb(aa)} ou {@code rrggbb(aa)}.
 	 *
 	 * @param hex la couleur hexadécimale
