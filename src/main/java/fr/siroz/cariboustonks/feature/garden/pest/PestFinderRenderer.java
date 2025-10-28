@@ -1,19 +1,18 @@
 package fr.siroz.cariboustonks.feature.garden.pest;
 
+import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
+import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.position.Position;
-import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
-import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-final class PestFinderRenderer implements WorldRendererProvider {
+final class PestFinderRenderer {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
@@ -32,15 +31,15 @@ final class PestFinderRenderer implements WorldRendererProvider {
 		});
     }
 
-    @Override
-    public void render(WorldRenderContext context) {
+	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+    public void render(WorldRenderer renderer) {
         if (!pestFinder.isEnabled()) return;
         if (CLIENT.player == null || CLIENT.world == null) return;
 
 		if (pestFinder.getGuessPosition() != null) {
 			waypoint.setEnabled(true);
 			waypoint.updatePosition(Position.of(pestFinder.getGuessPosition()));
-			waypoint.getRenderer().render(context);
+			waypoint.getRenderer().render(renderer);
 		}
 
         for (Entity entity : CLIENT.world.getEntities()) {
@@ -52,7 +51,7 @@ final class PestFinderRenderer implements WorldRendererProvider {
 				continue;
 			}
 
-            WorldRenderUtils.renderLineFromCursor(context, armorStand.getEyePos(), Colors.GREEN, 1f);
+            renderer.submitLineFromCursor(armorStand.getEyePos(), Colors.GREEN, 1f);
         }
     }
 }

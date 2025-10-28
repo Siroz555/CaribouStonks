@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.util;
 import com.mojang.brigadier.Command;
 import fr.siroz.cariboustonks.core.json.GsonProvider;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -71,6 +71,8 @@ public final class StonksUtils {
 			NumberFormat.getCompactNumberInstance(Locale.US, NumberFormat.Style.SHORT),
 			nf -> nf.setMinimumFractionDigits(1));
 
+	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.0");
+
 	private StonksUtils() {
 	}
 
@@ -79,7 +81,6 @@ public final class StonksUtils {
 	 */
 	@ApiStatus.Internal
 	public static void initUtilities() {
-		WorldRenderUtils.initRenderUtilities();
 		AnimationUtils.initAnimationUtilities();
 		TickScheduler.getInstance().runRepeating(StonksUtils::handleUpdates, 1, TimeUnit.SECONDS);
 	}

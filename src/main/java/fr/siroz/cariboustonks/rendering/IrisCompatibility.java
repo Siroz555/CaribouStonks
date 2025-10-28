@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.util.render;
+package fr.siroz.cariboustonks.rendering;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.CaribouStonks;
@@ -38,13 +38,13 @@ final class IrisCompatibility {
 	public static void assignPipelines() {
 		if (IRIS_ENABLED) {
 			assignPipeline(RenderPipelines.DEBUG_FILLED_BOX, "BASIC");
-			assignPipeline(CustomRenderPipelines.FILLED_THROUGH_BLOCKS, "BASIC");
-			assignPipeline(CustomRenderPipelines.LINES_THROUGH_BLOCKS, "LINES");
-			assignPipeline(CustomRenderPipelines.QUADS_THROUGH_BLOCKS, "BASIC");
-			assignPipeline(CustomRenderPipelines.TEXTURE, "TEXTURED");
-			assignPipeline(CustomRenderPipelines.TEXTURE_THROUGH_BLOCKS, "TEXTURED");
-			assignPipeline(CustomRenderPipelines.CIRCLE, "BASIC");
-			assignPipeline(CustomRenderPipelines.CIRCLE_THROUGH_BLOCKS, "BASIC");
+			assignPipeline(CaribouRenderPipelines.FILLED_THROUGH_BLOCKS, "BASIC");
+			assignPipeline(CaribouRenderPipelines.LINES_THROUGH_BLOCKS, "LINES");
+			assignPipeline(CaribouRenderPipelines.QUADS_THROUGH_BLOCKS, "BASIC");
+			assignPipeline(CaribouRenderPipelines.TEXTURE, "TEXTURED");
+			assignPipeline(CaribouRenderPipelines.TEXTURE_THROUGH_BLOCKS, "TEXTURED");
+			assignPipeline(CaribouRenderPipelines.CIRCLE, "BASIC");
+			assignPipeline(CaribouRenderPipelines.CIRCLE_THROUGH_BLOCKS, "BASIC");
 		}
 	}
 
@@ -61,7 +61,7 @@ final class IrisCompatibility {
 			Objects.requireNonNull(GET_IRIS_PROGRAM, "Iris Program handle must be present to assign a pipeline.");
 			REGISTER_PIPELINE.invoke(GET_IRIS_API.invoke(), pipeline, GET_IRIS_PROGRAM.invoke(irisProgramName));
 		} catch (IllegalStateException ignored) {
-			//The pipeline was probably already registered
+			// The pipeline was probably already registered
 		} catch (Throwable ex) {
 			CaribouStonks.LOGGER.error("[IrisCompatibility] Failed to assign pipeline {} to {}.", pipeline.getLocation(), irisProgramName, ex);
 		}

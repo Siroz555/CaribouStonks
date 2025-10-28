@@ -5,6 +5,7 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
+import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
@@ -12,14 +13,11 @@ import fr.siroz.cariboustonks.manager.glowing.EntityGlowProvider;
 import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
 import fr.siroz.cariboustonks.manager.slayer.SlayerTier;
 import fr.siroz.cariboustonks.manager.slayer.SlayerType;
+import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
-import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.decoration.ArmorStandEntity;
@@ -31,7 +29,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TarantulaBossFeature extends Feature implements WorldRendererProvider, EntityGlowProvider {
+public class TarantulaBossFeature extends Feature implements EntityGlowProvider {
 
 	private static final Pattern COCOON_EGG_PATTERN = Pattern.compile("(\\d+)s (\\d)/3");
 
@@ -42,7 +40,7 @@ public class TarantulaBossFeature extends Feature implements WorldRendererProvid
 		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((_mc, _world) -> this.bossEggs.clear());
 		SkyBlockEvents.SLAYER_BOSS_DEATH.register((_type, _tier, _startTime) -> this.bossEggs.clear());
-		WorldRenderEvents.AFTER_TRANSLUCENT.register(this::render);
+		RenderEvents.WORLD_RENDER.register(this::render);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
 		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
 	}
@@ -55,14 +53,14 @@ public class TarantulaBossFeature extends Feature implements WorldRendererProvid
 				&& slayerManager.isSlayerTier(SlayerTier.V);
 	}
 
-	@Override
-	public void render(WorldRenderContext context) {
+	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	public void render(WorldRenderer renderer) {
 		if (!isEnabled()) return;
 		if (bossEggs.isEmpty()) return;
 		if (!ConfigManager.getConfig().slayer.tarantulaBoss.showCursorLineToBossEggs) return;
 
 		for (ArmorStandEntity egg : bossEggs) {
-			WorldRenderUtils.renderLineFromCursor(context, egg.getPos(), Colors.PURPLE, 1.2f);
+			renderer.submitLineFromCursor(egg.getPos(), Colors.PURPLE, 1.2f);
 		}
 	}
 

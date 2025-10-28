@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.manager.waypoint;
 
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.manager.Manager;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +34,6 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @see Waypoint
  * @see Manager
- * @see WorldRenderEvents
  * @see TickScheduler
  */
 public final class WaypointManager implements Manager {
@@ -46,7 +45,7 @@ public final class WaypointManager implements Manager {
     @ApiStatus.Internal
     public WaypointManager() {
 		WorldEvents.JOIN.register(world -> this.resetWaypoints());
-        WorldRenderEvents.AFTER_TRANSLUCENT.register(this::render);
+        RenderEvents.WORLD_RENDER.register(this::render);
         TickScheduler.getInstance().runRepeating(this::onTick, 1);
     }
 
@@ -68,13 +67,13 @@ public final class WaypointManager implements Manager {
         waypoints.remove(waypoint.getUuid());
     }
 
-    private void render(WorldRenderContext context) {
+    private void render(WorldRenderer renderer) {
         if (CLIENT.player == null || CLIENT.world == null || waypoints.isEmpty()) {
 			return;
 		}
 
         for (Map.Entry<UUID, Waypoint> waypoint : waypoints.entrySet()) {
-            waypoint.getValue().getRenderer().render(context);
+            waypoint.getValue().getRenderer().render(renderer);
         }
     }
 

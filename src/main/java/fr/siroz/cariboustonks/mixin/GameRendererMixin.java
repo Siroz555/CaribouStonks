@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.feature.vanilla.ZoomFeature;
-import fr.siroz.cariboustonks.util.render.GuiRenderUtils;
-import fr.siroz.cariboustonks.util.render.Renderer;
+import fr.siroz.cariboustonks.rendering.Renderer;
+import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import org.spongepowered.asm.mixin.Final;
@@ -54,6 +54,6 @@ public abstract class GameRendererMixin {
 
 	@Inject(method = "renderBlur", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/PostEffectProcessor;render(Lnet/minecraft/client/gl/Framebuffer;Lnet/minecraft/client/util/ObjectAllocator;)V", shift = At.Shift.AFTER))
 	private void cariboustonks$onBlurRendered(CallbackInfo ci) {
-		GuiRenderUtils.disableBlurScissor();
+		GuiRenderer.disableBlurScissor();
 	}
 }

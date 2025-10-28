@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.util.render;
+package fr.siroz.cariboustonks.rendering;
 
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
@@ -19,7 +19,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import net.minecraft.client.MinecraftClient;
@@ -27,6 +26,7 @@ import net.minecraft.client.gl.MappableRingBuffer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BuiltBuffer;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.texture.TextureSetup;
 import net.minecraft.client.util.BufferAllocator;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -112,15 +112,15 @@ public final class Renderer {
 	}
 
 	public BufferBuilder getBuffer(@NotNull RenderPipeline pipeline) {
-		return getBuffer(pipeline, null, DEFAULT_LINE_WIDTH);
-	}
-
-	public BufferBuilder getBuffer(@NotNull RenderPipeline pipeline, @NotNull GpuTextureView textureView) {
-		return getBuffer(pipeline, textureView, DEFAULT_LINE_WIDTH);
+		return getBuffer(pipeline, TextureSetup.empty(), DEFAULT_LINE_WIDTH);
 	}
 
 	public BufferBuilder getBuffer(@NotNull RenderPipeline pipeline, float lineWidth) {
-		return getBuffer(pipeline, null, lineWidth);
+		return getBuffer(pipeline, TextureSetup.empty(), lineWidth);
+	}
+
+	public BufferBuilder getBuffer(@NotNull RenderPipeline pipeline, @NotNull TextureSetup textureSetup) {
+		return getBuffer(pipeline, textureSetup, DEFAULT_LINE_WIDTH);
 	}
 
 	public void close() {
@@ -138,35 +138,35 @@ public final class Renderer {
 	/**
 	 * Returns the appropriate {@code BufferBuilder} that should be used with the given pipeline, texture view, and line width.
 	 */
-	private BufferBuilder getBuffer(RenderPipeline pipeline, @Nullable GpuTextureView textureView, float lineWidth) {
+	private BufferBuilder getBuffer(RenderPipeline pipeline, TextureSetup textureSetup, float lineWidth) {
 		if (!excludedFromBatching.contains(pipeline)) {
-			return setupBatched(pipeline, textureView, lineWidth);
+			return setupBatched(pipeline, textureSetup, lineWidth);
 		} else {
-			return setupUnbatched(pipeline, textureView, lineWidth);
+			return setupUnbatched(pipeline, textureSetup, lineWidth);
 		}
 	}
 
-	private BufferBuilder setupBatched(RenderPipeline pipeline, @Nullable GpuTextureView textureView, float lineWidth) {
-		int hash = hash(pipeline, textureView, lineWidth);
+	private BufferBuilder setupBatched(RenderPipeline pipeline, TextureSetup textureSetup, float lineWidth) {
+		int hash = hash(pipeline, textureSetup, lineWidth);
 		BatchedDraw draw = batchedDraws.get(hash);
 
 		if (draw == null) {
 			BufferAllocator allocator = allocators.computeIfAbsent(hash, _hash -> new BufferAllocator(RenderLayer.CUTOUT_BUFFER_SIZE));
 			BufferBuilder bufferBuilder = new BufferBuilder(allocator, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-			batchedDraws.put(hash, new BatchedDraw(bufferBuilder, pipeline, textureView, lineWidth));
+			batchedDraws.put(hash, new BatchedDraw(bufferBuilder, pipeline, textureSetup, lineWidth));
 			return bufferBuilder;
 		} else {
 			return draw.bufferBuilder();
 		}
 	}
 
-	private @NotNull BufferBuilder setupUnbatched(RenderPipeline pipeline, @Nullable GpuTextureView textureView, float lineWidth) {
+	private @NotNull BufferBuilder setupUnbatched(RenderPipeline pipeline, TextureSetup textureSetup, float lineWidth) {
 		if (lastUnbatchedDraw != null) {
 			prepareBatchedDraw(lastUnbatchedDraw);
 		}
 
 		BufferBuilder bufferBuilder = new BufferBuilder(GENERAL_ALLOCATOR, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-		lastUnbatchedDraw = new BatchedDraw(bufferBuilder, pipeline, textureView, lineWidth);
+		lastUnbatchedDraw = new BatchedDraw(bufferBuilder, pipeline, textureSetup, lineWidth);
 
 		return bufferBuilder;
 	}
@@ -175,11 +175,11 @@ public final class Renderer {
 	 * Calculates the hash of the given inputs which serves as the keys to our maps where we store stuff for the batched draws.
 	 * This is much faster than using an object-based key as we do not need to create any objects to find the instances we want.
 	 */
-	private int hash(@NotNull RenderPipeline pipeline, @Nullable GpuTextureView textureView, float lineWidth) {
+	private int hash(@NotNull RenderPipeline pipeline, TextureSetup textureSetup, float lineWidth) {
 		// This manually calculates the hash, avoiding Objects#hash to not incur the array allocation each time
 		int hash = 1;
 		hash = 31 * hash + pipeline.hashCode();
-		hash = 31 * hash + Objects.hashCode(textureView);
+		hash = 31 * hash + textureSetup.hashCode();
 		hash = 31 * hash + Float.hashCode(lineWidth);
 
 		return hash;
@@ -200,7 +200,7 @@ public final class Renderer {
 		preparedDraws.add(new PreparedDraw(
 				draw.bufferBuilder().end(),
 				draw.pipeline(),
-				draw.textureView(),
+				draw.textureSetup(),
 				draw.lineWidth()
 		));
 	}
@@ -230,7 +230,7 @@ public final class Renderer {
 					vertexBufferPosition / format.getVertexSize(),
 					drawParameters.indexCount(),
 					prepared.pipeline(),
-					prepared.textureView(),
+					prepared.textureSetup(),
 					prepared.lineWidth()
 			));
 		}
@@ -329,10 +329,14 @@ public final class Renderer {
 			RenderSystem.bindDefaultUniforms(renderPass);
 			renderPass.setUniform("DynamicTransforms", dynamicTransforms);
 
-			// Bind texture if applicable
-			if (draw.textureView != null) {
-				// Sampler0 is used for texture inputs in vertices
-				renderPass.bindSampler("Sampler0", draw.textureView);
+			if (draw.textureSetup().texure0() != null) {
+				// Sampler0 is used for normal texture inputs in shaders
+				renderPass.bindSampler("Sampler0", draw.textureSetup().texure0());
+			}
+
+			if (draw.textureSetup().texure2() != null) {
+				// Sampler2 is used for lightmap texture inputs in shaders
+				renderPass.bindSampler("Sampler2", draw.textureSetup().texure2());
 			}
 
 			renderPass.setVertexBuffer(0, draw.vertices);
@@ -379,7 +383,7 @@ public final class Renderer {
 			int baseVertex,
 			int indexCount,
 			RenderPipeline pipeline,
-			@Nullable GpuTextureView textureView,
+			TextureSetup textureSetup,
 			float lineWidth
 	) {
 	}
@@ -387,7 +391,7 @@ public final class Renderer {
 	private record PreparedDraw(
 			BuiltBuffer builtBuffer,
 			RenderPipeline pipeline,
-			@Nullable GpuTextureView textureView,
+			TextureSetup textureSetup,
 			float lineWidth
 	) {
 	}
@@ -395,7 +399,7 @@ public final class Renderer {
 	private record BatchedDraw(
 			BufferBuilder bufferBuilder,
 			RenderPipeline pipeline,
-			@Nullable GpuTextureView textureView,
+			TextureSetup textureSetup,
 			float lineWidth
 	) {
 	}

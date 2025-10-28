@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.TabListUtils;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
-import fr.siroz.cariboustonks.util.render.notification.Notification;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -73,7 +72,7 @@ public final class BoosterCookieReminderFeature extends Feature /*implements Rem
 
 			Client.sendMessageWithPrefix(message);
 
-			Notification.show(message.copy(), ICON);
+			Client.showNotification(message.copy(), ICON);
 
 			AnimationUtils.showSpecialEffect(ICON, ParticleTypes.OMINOUS_SPAWNING, 10,
 					SoundEvents.ENTITY_BLAZE_DEATH, 1f, 0.75f);

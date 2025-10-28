@@ -3,10 +3,10 @@ package fr.siroz.cariboustonks.feature.stonks.graph;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
 import fr.siroz.cariboustonks.feature.stonks.AbstractItemStonksWidget;
+import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.util.colors.ColorUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
-import fr.siroz.cariboustonks.util.render.GuiRenderUtils;
 import fr.siroz.cariboustonks.util.render.gui.Point;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
@@ -177,7 +177,7 @@ public class ItemGraphWidget extends AbstractItemStonksWidget {
 			drawGradient(context, pointsBuy, startColor, endColor, y2 + 10, false);
 		}
 
-		GuiRenderUtils.renderLinesFromPoints(context, pointsBuy.toArray(new Point[0]), new Color(0, 222, 5), 1);
+		GuiRenderer.submitLinesFromPoints(context, pointsBuy.toArray(new Point[0]), new Color(0, 222, 5), 1);
 
 		// Calculer de facon indépendante les points pour les prix sell, même si les calculs sont les mêmes,
 		// car s'il y a une différence en nombres (quantité), les courbes seront décalées.
@@ -202,7 +202,7 @@ public class ItemGraphWidget extends AbstractItemStonksWidget {
 				drawGradient(context, pointsSell, startColor, endColor, y2, true);
 			}
 
-			GuiRenderUtils.renderLinesFromPoints(context, pointsSell.toArray(new Point[0]), new Color(234, 214, 7), 1);
+			GuiRenderer.submitLinesFromPoints(context, pointsSell.toArray(new Point[0]), new Color(234, 214, 7), 1);
 		}
 
 		drawLabels(context, x1, y1, x2, y2);

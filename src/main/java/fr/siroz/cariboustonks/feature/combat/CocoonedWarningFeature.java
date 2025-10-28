@@ -7,18 +7,18 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
+import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.slayer.SlayerCocoonedWarningFeature;
 import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
 import fr.siroz.cariboustonks.manager.slayer.SlayerType;
+import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import fr.siroz.cariboustonks.util.render.WorldRenderUtils;
-import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EquipmentSlot;
@@ -38,7 +36,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-public class CocoonedWarningFeature extends Feature implements WorldRendererProvider {
+public class CocoonedWarningFeature extends Feature {
 
 	private static final long WORLD_CHANGE_THRESHOLD = 10_000;
 	private static final double MAX_ARMORSTAND_PAIR_DISTANCE_SQ = 2f * 2f;
@@ -67,7 +65,7 @@ public class CocoonedWarningFeature extends Feature implements WorldRendererProv
 		SkyBlockEvents.ISLAND_CHANGE.register(this::onChangeIsland);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
 		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
-		WorldRenderEvents.AFTER_TRANSLUCENT.register(this::render);
+		RenderEvents.WORLD_RENDER.register(this::render);
 	}
 
 	@Override
@@ -149,11 +147,11 @@ public class CocoonedWarningFeature extends Feature implements WorldRendererProv
 		chain.removeIf(a -> a.getId() == armorStand.getId());
 	}
 
-	@Override
-	public void render(WorldRenderContext context) {
+	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	public void render(WorldRenderer renderer) {
 		for (BlockPos pos : cocoonPositions) {
 			final BlockPos finalPos = pos.toImmutable().add(0, -4, 0);
-			WorldRenderUtils.renderBeaconBeam(context, finalPos, Colors.RED);
+			renderer.submitBeaconBeam(finalPos, Colors.RED);
 		}
 	}
 

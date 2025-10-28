@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.util.render.notification;
+package fr.siroz.cariboustonks.util.render.ui;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import net.minecraft.client.MinecraftClient;

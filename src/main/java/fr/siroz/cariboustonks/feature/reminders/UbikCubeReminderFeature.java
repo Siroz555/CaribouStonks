@@ -13,7 +13,6 @@ import fr.siroz.cariboustonks.manager.reminder.TimedObject;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.render.notification.Notification;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -68,7 +67,7 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
                 .append(SPLIT_OR_STEAL_TEXT)
         );
 
-        Notification.show(Text.literal("Ubik's Cube !\n").formatted(Formatting.GOLD, Formatting.BOLD)
+        Client.showNotification(Text.literal("Ubik's Cube !\n").formatted(Formatting.GOLD, Formatting.BOLD)
                         .append(Text.literal("Ready to play ").formatted(Formatting.GREEN))
                         .append(SPLIT_OR_STEAL_TEXT), ubikCube);
     }

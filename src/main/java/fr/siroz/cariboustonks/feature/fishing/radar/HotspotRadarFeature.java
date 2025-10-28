@@ -5,11 +5,11 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
+import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -37,7 +37,7 @@ public class HotspotRadarFeature extends Feature {
 		WorldEvents.JOIN.register(world -> reset());
 
 		this.renderer = new HotspotRadarRenderer(this);
-		WorldRenderEvents.AFTER_TRANSLUCENT.register(this::render);
+		RenderEvents.WORLD_RENDER.register(this::render);
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class HotspotRadarFeature extends Feature {
 	}
 
 	@EventHandler(event = "WorldRenderEvents.AFTER_TRANSLUCENT")
-	private void render(WorldRenderContext context) {
+	private void render(WorldRenderer context) {
 		renderer.render(context);
 	}
 

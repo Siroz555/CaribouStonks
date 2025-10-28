@@ -14,7 +14,6 @@ import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
-import fr.siroz.cariboustonks.util.render.notification.Notification;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -67,7 +66,7 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
                 .append(Text.literal(" was ended!").formatted(Formatting.GREEN))
         );
 
-        Notification.show(Text.literal("Forge !\n").formatted(Formatting.GOLD, Formatting.BOLD)
+        Client.showNotification(Text.literal("Forge !\n").formatted(Formatting.GOLD, Formatting.BOLD)
                 .append(text).append("\n")
                 .append(Text.literal("was ended").formatted(Formatting.GREEN)), ICON);
     }

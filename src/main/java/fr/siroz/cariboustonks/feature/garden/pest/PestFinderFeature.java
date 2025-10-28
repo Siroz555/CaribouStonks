@@ -7,11 +7,10 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.HudEvents;
 import fr.siroz.cariboustonks.event.InteractionEvents;
 import fr.siroz.cariboustonks.event.NetworkEvents;
+import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
@@ -29,8 +28,6 @@ public final class PestFinderFeature extends Feature {
 
 	private static final Pattern INFESTED_PLOTS_TABLIST_PATTERN = Pattern.compile("\\sPlots: (?<plots>.*)");
 
-	private final PestFinderRenderer pestFinderRenderer;
-	private final PlotInfestedRenderer plotInfestedRenderer;
 	private final ParticlePathPredictor predictor = new ParticlePathPredictor(3);
 
 	private final List<Integer> infestedPlots = new ArrayList<>();
@@ -38,14 +35,18 @@ public final class PestFinderFeature extends Feature {
 	private Vec3d guessPosition = null;
 
 	public PestFinderFeature() {
-		this.pestFinderRenderer = new PestFinderRenderer(this);
-		this.plotInfestedRenderer = new PlotInfestedRenderer(this);
+		PestFinderRenderer pestFinderRenderer = new PestFinderRenderer(this);
+		PlotInfestedRenderer plotInfestedRenderer = new PlotInfestedRenderer(this);
+
+		RenderEvents.WORLD_RENDER.register(renderer -> {
+			pestFinderRenderer.render(renderer);
+			plotInfestedRenderer.render(renderer);
+		});
 
 		WorldEvents.JOIN.register(world -> this.reset());
 		InteractionEvents.LEFT_CLICK_AIR.register(this::onLeftClickAir);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
 		HudEvents.TAB_LIST_UPDATE.register(this::onTabListUpdate);
-		WorldRenderEvents.AFTER_TRANSLUCENT.register(this::render);
 	}
 
 	@Override
@@ -154,11 +155,5 @@ public final class PestFinderFeature extends Feature {
 				}
 			}
 		}
-	}
-
-	@EventHandler(event = "WorldRenderEvents.AFTER_TRANSLUCENT")
-	private void render(WorldRenderContext context) {
-		pestFinderRenderer.render(context);
-		plotInfestedRenderer.render(context);
 	}
 }

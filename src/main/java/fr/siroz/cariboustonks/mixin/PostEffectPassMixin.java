@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReceiver;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderPass;
-import fr.siroz.cariboustonks.util.render.GuiRenderUtils;
+import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import net.minecraft.client.gl.PostEffectPass;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Contract;
@@ -19,7 +19,7 @@ public abstract class PostEffectPassMixin {
 	private RenderPass cariboustonks$applyBlurScissor(RenderPass renderPass, @NotNull RenderPipeline pipeline) {
 		Identifier id = pipeline.getLocation();
 		if (id.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) && id.getPath().startsWith("blur")) {
-			GuiRenderUtils.applyBlurScissorToRenderPass(renderPass);
+			GuiRenderer.applyBlurScissorToRenderPass(renderPass);
 		}
 
 		return renderPass;

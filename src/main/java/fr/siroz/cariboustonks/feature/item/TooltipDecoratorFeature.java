@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.core.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.event.ItemRenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.util.render.GuiRenderUtils;
+import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -70,7 +70,7 @@ public class TooltipDecoratorFeature extends Feature {
 	private void drawBorder(DrawContext context, int x, int y, int width, int height, Pair<Integer, Integer> colors) {
 		context.getMatrices().pushMatrix();
 
-		GuiRenderUtils.drawGradientRect(context,
+		GuiRenderer.submitGradientRect(context,
 				400,
 				x - 3,
 				y - 3 + 1,
@@ -78,7 +78,7 @@ public class TooltipDecoratorFeature extends Feature {
 				y + height + 3 - 1,
 				colors.left(), colors.right());
 
-		GuiRenderUtils.drawGradientRect(context,
+		GuiRenderer.submitGradientRect(context,
 				400,
 				x + width + 2,
 				y - 3 + 1,
@@ -86,7 +86,7 @@ public class TooltipDecoratorFeature extends Feature {
 				y + height + 3 - 1,
 				colors.left(), colors.right());
 
-		GuiRenderUtils.drawGradientRect(context,
+		GuiRenderer.submitGradientRect(context,
 				400,
 				x - 3,
 				y - 3,
@@ -94,7 +94,7 @@ public class TooltipDecoratorFeature extends Feature {
 				y - 3 + 1,
 				colors.left(), colors.left());
 
-		GuiRenderUtils.drawGradientRect(context,
+		GuiRenderer.submitGradientRect(context,
 				400,
 				x - 3,
 				y + height + 2,

@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.util.render.gui.state;
+package fr.siroz.cariboustonks.rendering.gui.state;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.client.gui.ScreenRect;

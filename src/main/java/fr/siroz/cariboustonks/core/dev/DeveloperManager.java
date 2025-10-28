@@ -9,6 +9,7 @@ import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
+import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
@@ -25,7 +26,6 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
@@ -60,7 +60,7 @@ public final class DeveloperManager {
 		ClientPlayConnectionEvents.JOIN.register(this::onPlayConnection);
 		WorldEvents.ALLOW_SOUND.register(this::onSound);
 		NetworkEvents.PLAY_SOUND_PACKET.register(this::onSoundPacket);
-		WorldRenderEvents.AFTER_TRANSLUCENT.register(debugRenderer::render);
+		RenderEvents.WORLD_RENDER.register(debugRenderer::render);
 		// Commands
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _ra) -> dispatcher.register(
 				ClientCommandManager.literal(CaribouStonks.NAMESPACE).then(ClientCommandManager.literal("devtools")

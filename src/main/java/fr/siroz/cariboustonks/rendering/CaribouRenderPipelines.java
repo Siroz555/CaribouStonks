@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.util.render;
+package fr.siroz.cariboustonks.rendering;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DepthTestFunction;
@@ -8,10 +8,9 @@ import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.VertexFormats;
 import org.jetbrains.annotations.ApiStatus;
 
-@ApiStatus.Internal
-public final class CustomRenderPipelines {
+public final class CaribouRenderPipelines {
 
-	private CustomRenderPipelines() {
+	private CaribouRenderPipelines() {
 	}
 
 	@ApiStatus.Internal
@@ -74,6 +73,7 @@ public final class CustomRenderPipelines {
 
 	// ---------- GUI ----------
 
+	@Deprecated
 	public static final RenderPipeline GUI_LINES = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.RENDERTYPE_LINES_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/gui_lines"))

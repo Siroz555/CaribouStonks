@@ -12,7 +12,6 @@ import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.http.Http;
 import fr.siroz.cariboustonks.util.http.HttpResponse;
-import fr.siroz.cariboustonks.util.render.notification.Notification;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
@@ -120,7 +119,7 @@ final class UpdateChecker {
 			Client.sendMessage(Text.empty());
 
 			Client.playSound(SoundEvents.BLOCK_TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
-			Notification.showSystem("CaribouStonks Update Available!", "Update to " + newestModrinthVersionInfo.version().getFriendlyString());
+			Client.showNotificationSystem("CaribouStonks Update Available!", "Update to " + newestModrinthVersionInfo.version().getFriendlyString());
 		}, 3, TimeUnit.SECONDS);
 	}
 

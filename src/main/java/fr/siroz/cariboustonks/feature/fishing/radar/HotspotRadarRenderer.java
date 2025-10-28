@@ -1,16 +1,16 @@
 package fr.siroz.cariboustonks.feature.fishing.radar;
 
+import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
+import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.position.Position;
-import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-final class HotspotRadarRenderer implements WorldRendererProvider {
+final class HotspotRadarRenderer {
 
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
@@ -29,15 +29,15 @@ final class HotspotRadarRenderer implements WorldRendererProvider {
 		});
 	}
 
-	@Override
-	public void render(WorldRenderContext context) {
+	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	public void render(WorldRenderer renderer) {
 		if (!hotspotRadar.isEnabled()) return;
 		if (CLIENT.player == null || CLIENT.world == null) return;
 
 		if (hotspotRadar.getGuessPosition() != null) {
 			waypoint.setEnabled(true);
 			waypoint.updatePosition(Position.of(hotspotRadar.getGuessPosition()));
-			waypoint.getRenderer().render(context);
+			waypoint.getRenderer().render(renderer);
 		}
 	}
 }

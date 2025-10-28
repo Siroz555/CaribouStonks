@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.manager.hud.Hud;
 import fr.siroz.cariboustonks.manager.hud.HudManager;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import fr.siroz.cariboustonks.util.render.GuiRenderUtils;
+import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -91,7 +91,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			case GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
 				for (Hud element : hudList) {
 					// overlapping behaviour
-					if (GuiRenderUtils.pointIsInArea(mouseX, mouseY,
+					if (RenderUtils.pointIsInArea(mouseX, mouseY,
 							element.x(), element.y(),
 							element.x() + element.width(), element.y() + element.height())
 							&& selected != element) {

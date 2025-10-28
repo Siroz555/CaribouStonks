@@ -6,17 +6,15 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.hud.Hud;
 import fr.siroz.cariboustonks.manager.hud.HudProvider;
 import fr.siroz.cariboustonks.manager.hud.TextHud;
+import fr.siroz.cariboustonks.util.Client;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public class DayHud extends Feature implements HudProvider {
-
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_day");
 	private final Hud hud;
@@ -48,7 +46,7 @@ public class DayHud extends Feature implements HudProvider {
 
 	@Contract(" -> new")
 	private @NotNull Text getText() {
-		long day = CLIENT.world != null ? CLIENT.world.getTimeOfDay() / 24000 : 0L;
+		long day = Client.getWorldDay();
 		return Text.literal("Day: " + day);
 	}
 }

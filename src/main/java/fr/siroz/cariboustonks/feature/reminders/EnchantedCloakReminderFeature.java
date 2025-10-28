@@ -13,7 +13,6 @@ import fr.siroz.cariboustonks.manager.reminder.TimedObject;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import fr.siroz.cariboustonks.util.render.notification.Notification;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
@@ -72,7 +71,7 @@ public final class EnchantedCloakReminderFeature extends Feature implements Remi
 		Client.sendMessageWithPrefix(Text.literal("[Enchanted Cloak] ").formatted(Formatting.GOLD)
 				.append(text));
 
-		Notification.show(Text.literal("Enchanted Cloak !\n").formatted(Formatting.GOLD, Formatting.BOLD)
+		Client.showNotification(Text.literal("Enchanted Cloak !\n").formatted(Formatting.GOLD, Formatting.BOLD)
 				.append(text), ICON);
 	}
 

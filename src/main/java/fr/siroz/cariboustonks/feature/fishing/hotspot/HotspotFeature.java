@@ -7,14 +7,13 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
+import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.fishing.radar.HotspotRadarFeature;
 import fr.siroz.cariboustonks.mixin.accessors.DurstParticleEffectAccessor;
 import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.PositionUtils;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.projectile.FishingBobberEntity;
@@ -38,20 +37,18 @@ public class HotspotFeature extends Feature {
 
 	private static final double DISTANCE_TO_HOTSPOT_IN_BLOCKS = 10;
 
-	private final HotspotRenderer renderer;
-
 	private Double hotspotRadius = null;
 	private Hotspot currentHotspot = null;
 	private boolean bobberInHotspot = false;
 
 	public HotspotFeature() {
-		this.renderer = new HotspotRenderer(this);
+		HotspotRenderer renderer = new HotspotRenderer(this);
+		RenderEvents.WORLD_RENDER.register(renderer::render);
 
 		WorldEvents.JOIN.register(world -> reset());
 		TickScheduler.getInstance().runRepeating(this::update, 2, TimeUnit.SECONDS);
 		TickScheduler.getInstance().runRepeating(this::updateBobber, 500, TimeUnit.MILLISECONDS);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
-		WorldRenderEvents.AFTER_TRANSLUCENT.register(this::render);
 	}
 
 	@Override
@@ -156,11 +153,6 @@ public class HotspotFeature extends Feature {
 
 	private void handleParticle(Vec3d particlePos) {
 		hotspotRadius = currentHotspot.centerPos().distanceTo(particlePos);
-	}
-
-	@EventHandler(event = "WorldRenderEvents.AFTER_TRANSLUCENT")
-	private void render(WorldRenderContext context) {
-		renderer.render(context);
 	}
 
 	private Optional<Hotspot> findClosestHotspotInRange(@Nullable Entity entity) {

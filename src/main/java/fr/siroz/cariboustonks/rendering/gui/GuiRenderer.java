@@ -1,10 +1,11 @@
-package fr.siroz.cariboustonks.util.render;
+package fr.siroz.cariboustonks.rendering.gui;
 
 import com.mojang.blaze3d.systems.RenderPass;
+import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
+import fr.siroz.cariboustonks.rendering.gui.state.GradientRectGuiElementRenderState;
+import fr.siroz.cariboustonks.rendering.gui.state.QuadGuiElementRenderState;
 import fr.siroz.cariboustonks.util.render.gui.Point;
 import fr.siroz.cariboustonks.util.render.gui.Quad;
-import fr.siroz.cariboustonks.util.render.gui.state.GradientRectGuiElementRenderState;
-import fr.siroz.cariboustonks.util.render.gui.state.QuadGuiElementRenderState;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,35 +15,16 @@ import net.minecraft.client.gl.ScissorState;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.texture.TextureSetup;
 import net.minecraft.client.util.Window;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
 
-/**
- * <b>2D</b> rendering in GUIs.
- */
-public final class GuiRenderUtils {
+public final class GuiRenderer {
 
 	private static final List<Quad> BATCH_QUADS = new ArrayList<>();
 	private static final ScissorState BLUR_SCISSOR_STATE = new ScissorState();
 
-	private GuiRenderUtils() {
-	}
-
-	/**
-	 * Determines whether a point is within a rectangular area defined by two corners.
-	 *
-	 * @param x  the x-coordinate of the point to check
-	 * @param y  the y-coordinate of the point to check
-	 * @param x1 the x-coordinate of the first corner
-	 * @param y1 the y-coordinate of the first corner
-	 * @param x2 the x-coordinate of the opposite corner
-	 * @param y2 the y-coordinate of the opposite corner
-	 * @return {@code true} if the point (x, y) is within the area defined by (x1, y1) and (x2, y2), inclusive
-	 */
-	public static boolean pointIsInArea(double x, double y, double x1, double y1, double x2, double y2) {
-		return x >= x1 && x <= x2 && y >= y1 && y <= y2;
+	private GuiRenderer() {
 	}
 
 	/**
@@ -59,9 +41,9 @@ public final class GuiRenderUtils {
 	 * @param startColor the start color of the gradient
 	 * @param endColor   the end color of the gradient
 	 */
-	public static void drawGradientRect(@NotNull DrawContext context, int depth, int left, int top, int right, int bottom, int startColor, int endColor) {
+	public static void submitGradientRect(@NotNull DrawContext context, int depth, int left, int top, int right, int bottom, int startColor, int endColor) {
 		GradientRectGuiElementRenderState renderState = new GradientRectGuiElementRenderState(
-				CustomRenderPipelines.GUI_QUADS, //RenderPipelines.GUI,
+				CaribouRenderPipelines.GUI_QUADS, //RenderPipelines.GUI,
 				TextureSetup.empty(),
 				new Matrix3x2f(context.getMatrices()),
 				depth,
@@ -77,7 +59,7 @@ public final class GuiRenderUtils {
 	}
 
 	/**
-	 * Enqueues a polyline as a series of quads GUI element for rendering using the given {@link DrawContext}.
+	 * Enqueues a polyline as a series of a quad GUI element for rendering using the given {@link DrawContext}.
 	 * <p>
 	 * This method creates a {@link QuadGuiElementRenderState}.
 	 *
@@ -86,7 +68,7 @@ public final class GuiRenderUtils {
 	 * @param color     the color
 	 * @param thickness the thickness of the line in pixels
 	 */
-	public static void renderLinesFromPoints(
+	public static void submitLinesFromPoints(
 			@NotNull DrawContext context,
 			@NotNull Point @NotNull [] points,
 			@NotNull Color color,
@@ -132,7 +114,7 @@ public final class GuiRenderUtils {
 		// Le jeu crash si j'utilise directement les quads,
 		// avec un "IllegalStateException : BufferBuilder was empty"
 		// Je récupère donc une copy et je clear le batch juste après.
-		List<Quad> batchCopy = List.copyOf(BATCH_QUADS);
+		java.util.List<Quad> batchCopy = List.copyOf(BATCH_QUADS);
 		BATCH_QUADS.clear();
 
 		QuadGuiElementRenderState renderState = new QuadGuiElementRenderState(
@@ -149,12 +131,10 @@ public final class GuiRenderUtils {
 		BLUR_SCISSOR_STATE.enable(x, y, width, height);
 	}
 
-	@ApiStatus.Internal
 	public static void disableBlurScissor() {
 		BLUR_SCISSOR_STATE.disable();
 	}
 
-	@ApiStatus.Internal
 	public static void applyBlurScissorToRenderPass(RenderPass renderPass) {
 		if (BLUR_SCISSOR_STATE.method_72091()) {
 			Window window = MinecraftClient.getInstance().getWindow();

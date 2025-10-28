@@ -371,7 +371,7 @@ public final class Waypoint {
 		private float alpha = 0.5f;
 		private Color color = Colors.RED;
 
-		private float boxLineWidth = 5;
+		private float boxLineWidth = 1f;
 		private boolean boxThroughBlocks = true;
 		private Consumer<Waypoint> destroyListener = null;
 

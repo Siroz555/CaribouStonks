@@ -15,7 +15,6 @@ import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
-import fr.siroz.cariboustonks.util.render.notification.Notification;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.List;
 import java.util.Optional;
@@ -86,7 +85,7 @@ public final class ChocolateLimitReminderFeature
 		Client.sendMessageWithPrefix(Text.literal("[Chocolate Factory] ").formatted(Formatting.GOLD)
 				.append(text));
 
-		Notification.show(Text.literal("Chocolate Factory\n").formatted(Formatting.GOLD, Formatting.BOLD)
+		Client.showNotification(Text.literal("Chocolate Factory\n").formatted(Formatting.GOLD, Formatting.BOLD)
 				.append(text), ICON);
 	}
 
@@ -103,7 +102,7 @@ public final class ChocolateLimitReminderFeature
 		Client.sendMessageWithPrefix(Text.literal("[Chocolate Factory] ").formatted(Formatting.GOLD)
 				.append(text));
 
-		Notification.show(Text.literal("Chocolate Factory\n").formatted(Formatting.GOLD, Formatting.BOLD)
+		Client.showNotification(Text.literal("Chocolate Factory\n").formatted(Formatting.GOLD, Formatting.BOLD)
 				.append(text), ICON);
 	}
 

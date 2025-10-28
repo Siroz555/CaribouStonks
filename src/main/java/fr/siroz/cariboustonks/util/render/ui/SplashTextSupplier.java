@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.util.render.gui;
+package fr.siroz.cariboustonks.util.render.ui;
 
 import java.util.Calendar;
 import java.util.List;

@@ -1,11 +1,15 @@
 package fr.siroz.cariboustonks.util;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.util.render.notification.Notification;
+import fr.siroz.cariboustonks.util.render.ui.StonksToast;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.toast.SystemToast;
+import net.minecraft.client.toast.Toast;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.StringHelper;
@@ -15,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 /**
@@ -25,8 +30,18 @@ import org.jetbrains.annotations.Range;
 public final class Client {
 
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final SystemToast.Type STONKS_SYSTEM = new SystemToast.Type(10000L); // 10000L
 
 	private Client() {
+	}
+
+	/**
+	 * Retrieves the current username of the player.
+	 *
+	 * @return the player's username, or {@code null} if unavailable
+	 */
+	public static @Nullable String getPlayerName() {
+		return CLIENT.player != null ? CLIENT.player.getName().getString() : null;
 	}
 
 	/**
@@ -106,7 +121,7 @@ public final class Client {
 				.append(Text.literal(errorMessage).formatted(Formatting.RED)), false);
 
 		if (notification) {
-			Notification.showSystem(errorMessage);
+			showNotificationSystem(errorMessage);
 		}
 	}
 
@@ -235,6 +250,31 @@ public final class Client {
 				CLIENT.player.networkHandler.sendChatMessage(message);
 			}
 		}
+	}
+
+	public static void showNotification(MutableText text, ItemStack icon) {
+		showNotification(new StonksToast(text, icon));
+	}
+
+	public static void showNotification(Toast toast) {
+		CLIENT.getToastManager().add(toast);
+	}
+
+	public static void showNotificationSystem(@NotNull String description) {
+		showNotificationSystem("CaribouStonks", description);
+	}
+
+	public static void showNotificationSystem(@NotNull String title, @NotNull String description) {
+		SystemToast systemToast = SystemToast.create(CLIENT, STONKS_SYSTEM, Text.literal(title), Text.literal(description));
+		CLIENT.getToastManager().add(systemToast);
+	}
+
+	public static long getWorldDay() {
+		return CLIENT.world != null ? CLIENT.world.getTimeOfDay() / 24000 : 0L;
+	}
+
+	public static long getWorldTime() {
+		return CLIENT.world != null ? CLIENT.world.getTime() : 0;
 	}
 
 	public static void playSound(@NotNull SoundEvent sound, float volume, float pitch) {

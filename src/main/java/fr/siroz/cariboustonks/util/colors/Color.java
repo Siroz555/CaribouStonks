@@ -212,6 +212,15 @@ public class Color {
 	}
 
 	/**
+	 * Récupère l'alpha de la couleur.
+	 *
+	 * @return l'alpha de la couleur en float
+	 */
+	public float getAlpha() {
+		return a / 255f;
+	}
+
+	/**
 	 * Transforme la couleur en {@code HEX} format avec {@link #a} (alpha).
 	 * <p>
 	 * {@code #rrggbbaa} format.

@@ -5,9 +5,11 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.json.JsonProcessingException;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.event.EventHandler;
+import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
-import fr.siroz.cariboustonks.util.render.WorldRendererProvider;
+import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,8 +17,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class WaypointFeature extends Feature implements WorldRendererProvider {
+public final class WaypointFeature extends Feature {
 
     private static final Path WAYPOINT_PATH = CaribouStonks.CONFIG_DIR.resolve("waypoints.json");
 
@@ -43,7 +43,7 @@ public final class WaypointFeature extends Feature implements WorldRendererProvi
     public WaypointFeature() {
         ClientLifecycleEvents.CLIENT_STARTED.register(this::onClientStarted);
         ClientLifecycleEvents.CLIENT_STOPPING.register(this::saveWaypoints);
-        WorldRenderEvents.AFTER_TRANSLUCENT.register(this::render);
+        RenderEvents.WORLD_RENDER.register(this::render);
     }
 
     @Override
@@ -51,8 +51,8 @@ public final class WaypointFeature extends Feature implements WorldRendererProvi
         return SkyBlockAPI.isOnSkyBlock();
     }
 
-    @Override
-    public void render(WorldRenderContext context) {
+	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+    public void render(WorldRenderer renderer) {
         if (!isEnabled()) return;
         if (waypoints.isEmpty()) return;
 
@@ -63,7 +63,7 @@ public final class WaypointFeature extends Feature implements WorldRendererProvi
 		}
 
         for (Waypoint waypoint : currentWaypoints) {
-            waypoint.getRenderer().render(context);
+            waypoint.getRenderer().render(renderer);
         }
     }
 

@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.CaribouStonksCore;
 import fr.siroz.cariboustonks.feature.Features;
 import fr.siroz.cariboustonks.manager.Managers;
+import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
@@ -51,6 +52,8 @@ public final class CaribouStonks implements ClientModInitializer {
 		ConfigManager.loadConfig();
 		// Utilities
 		StonksUtils.initUtilities();
+		// Rendering
+		CaribouRenderer.initRendering();
 		// Main
 		this.caribouStonksCore = new CaribouStonksCore();
 		this.managers = new Managers();
