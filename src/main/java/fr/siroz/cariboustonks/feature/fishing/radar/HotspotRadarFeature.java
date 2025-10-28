@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
-import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;
@@ -34,7 +33,6 @@ public class HotspotRadarFeature extends Feature {
 	public HotspotRadarFeature() {
 		UseItemCallback.EVENT.register(this::onUseItem);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
-		WorldEvents.JOIN.register(world -> reset());
 
 		this.renderer = new HotspotRadarRenderer(this);
 		RenderEvents.WORLD_RENDER.register(this::render);
@@ -45,6 +43,11 @@ public class HotspotRadarFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& ConfigManager.getConfig().fishing.hotspotRadarGuess
 				&& SkyBlockAPI.isOnIslands(IslandType.CRIMSON_ISLE, IslandType.BACKWATER_BAYOU);
+	}
+
+	@Override
+	protected void onClientJoinServer() {
+		reset();
 	}
 
 	@Nullable

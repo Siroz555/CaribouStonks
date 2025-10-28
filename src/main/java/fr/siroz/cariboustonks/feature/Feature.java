@@ -43,6 +43,18 @@ public abstract class Feature {
 	}
 
 	/**
+	 * Called every tick by the client.
+	 */
+	protected void onClientTick() {
+	}
+
+	/**
+	 * Called when the client joins a server.
+	 */
+	protected void onClientJoinServer() {
+	}
+
+	/**
 	 * Attaches a {@link Component} to this feature.
 	 * <p>
 	 * Usage:
@@ -95,7 +107,7 @@ public abstract class Feature {
 	/**
 	 * Provides the feature's canonical short name.
 	 * <p>
-	 * Automatically strips "Feature" suffix from class name
+	 * Automatically strips the "Feature" suffix from the class name
 	 *
 	 * @return simplified feature name
 	 */

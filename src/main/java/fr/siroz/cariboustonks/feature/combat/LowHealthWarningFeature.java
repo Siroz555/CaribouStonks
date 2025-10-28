@@ -5,7 +5,6 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.text.Text;
 import net.minecraft.world.border.WorldBorder;
@@ -24,7 +23,6 @@ public class LowHealthWarningFeature extends Feature {
 
 	public LowHealthWarningFeature() {
 		ClientReceiveMessageEvents.ALLOW_GAME.register(this::allowActionBar);
-		ClientTickEvents.END_CLIENT_TICK.register(client -> this.onTick());
 	}
 
 	@Override
@@ -48,8 +46,8 @@ public class LowHealthWarningFeature extends Feature {
 		return true;
 	}
 
-	@EventHandler(event = "ClientTickEvents.END_CLIENT_TICK")
-	private void onTick() {
+	@Override
+	protected void onClientTick() {
 		if (!isEnabled() || CLIENT.player == null || CLIENT.world == null) {
 			return;
 		}

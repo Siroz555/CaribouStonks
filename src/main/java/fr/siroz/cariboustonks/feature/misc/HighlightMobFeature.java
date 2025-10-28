@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.manager.command.argument.EntityIdArgumentType;
@@ -12,9 +11,6 @@ import fr.siroz.cariboustonks.manager.glowing.EntityGlowProvider;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.registry.Registries;
@@ -31,8 +27,6 @@ public class HighlightMobFeature extends Feature implements EntityGlowProvider {
 	private EntityType<?> currentEntityTypeGlow = null;
 
 	public HighlightMobFeature() {
-		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register(this::onClientChangeWorld);
-
 		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal("highlighter")
 				.executes(context -> {
 					currentEntityTypeGlow = null;
@@ -74,8 +68,8 @@ public class HighlightMobFeature extends Feature implements EntityGlowProvider {
 				&& currentEntityTypeGlow != null;
 	}
 
-	@EventHandler(event = "ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE")
-	private void onClientChangeWorld(MinecraftClient client, ClientWorld _clientWorld) {
+	@Override
+	protected void onClientJoinServer() {
 		if (currentEntityTypeGlow != null) {
 			Client.sendMessageWithPrefix(Text.literal("Glowing entities are no longer displayed due to a server change.").formatted(Formatting.RED));
 		}

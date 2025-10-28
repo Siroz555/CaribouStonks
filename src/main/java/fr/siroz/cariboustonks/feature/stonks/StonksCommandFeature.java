@@ -16,7 +16,6 @@ import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.minecraft.command.CommandSource;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.ClickEvent;
@@ -37,7 +36,6 @@ public class StonksCommandFeature extends Feature {
 
 	public StonksCommandFeature() {
 		this.hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
-		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((_mc, _world) -> lastItem = "");
 
 		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal("stonks")
 				.executes(context -> {
@@ -58,6 +56,11 @@ public class StonksCommandFeature extends Feature {
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock();
+	}
+
+	@Override
+	protected void onClientJoinServer() {
+		lastItem = "";
 	}
 
 	private int handle(FabricClientCommandSource source, String item) {

@@ -11,7 +11,6 @@ import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvents;
@@ -27,13 +26,18 @@ public class RareSeaCreatureFeature extends Feature {
 	private boolean doubleHook = false;
 
 	public RareSeaCreatureFeature() {
-		ClientPlayConnectionEvents.JOIN.register((_handler, _ps, _client) -> this.reset());
 		ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().fishing.rareSeaCreatureWarning;
+	}
+
+	@Override
+	protected void onClientJoinServer() {
+		doubleHook = false;
+		foundCreature = false;
 	}
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -89,10 +93,5 @@ public class RareSeaCreatureFeature extends Feature {
 	private boolean hasFishingRod() {
 		ItemStack item = InventoryUtils.getHeldItem();
 		return item != null && !item.isEmpty() && item.isOf(Items.FISHING_ROD);
-	}
-
-	private void reset() {
-		doubleHook = false;
-		foundCreature = false;
 	}
 }

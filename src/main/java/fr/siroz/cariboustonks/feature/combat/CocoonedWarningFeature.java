@@ -25,9 +25,6 @@ import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.sound.SoundEvents;
@@ -61,7 +58,6 @@ public class CocoonedWarningFeature extends Feature {
 
 	public CocoonedWarningFeature() {
 		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
-		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register(this::onChangeWorld);
 		SkyBlockEvents.ISLAND_CHANGE.register(this::onChangeIsland);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
 		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
@@ -80,8 +76,8 @@ public class CocoonedWarningFeature extends Feature {
 				&& ConfigManager.getConfig().combat.cocoonedMob.cocoonedWarning;
 	}
 
-	@EventHandler(event = "ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE")
-	private void onChangeWorld(MinecraftClient _mc, ClientWorld _world) {
+	@Override
+	protected void onClientJoinServer() {
 		lastWorldChange = System.currentTimeMillis();
 		chain.clear();
 		cocoonPositions.clear();

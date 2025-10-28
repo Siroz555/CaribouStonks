@@ -17,7 +17,6 @@ import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.decoration.ArmorStandEntity;
@@ -38,7 +37,6 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 
 	public TarantulaBossFeature() {
 		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
-		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((_mc, _world) -> this.bossEggs.clear());
 		SkyBlockEvents.SLAYER_BOSS_DEATH.register((_type, _tier, _startTime) -> this.bossEggs.clear());
 		RenderEvents.WORLD_RENDER.register(this::render);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
@@ -51,6 +49,11 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 				&& ConfigManager.getConfig().slayer.tarantulaBoss.highlightBossEggs
 				&& slayerManager.isInQuestWithBoss(SlayerType.SPIDER)
 				&& slayerManager.isSlayerTier(SlayerTier.V);
+	}
+
+	@Override
+	protected void onClientJoinServer() {
+		bossEggs.clear();
 	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")

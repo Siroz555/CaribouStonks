@@ -12,7 +12,6 @@ import fr.siroz.cariboustonks.util.Client;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -28,7 +27,6 @@ public class SlayerCocoonedWarningFeature extends Feature {
 
 	public SlayerCocoonedWarningFeature() {
 		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
-		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((_c, _w) -> cocoonedBoss = false);
 		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
 	}
 
@@ -37,6 +35,11 @@ public class SlayerCocoonedWarningFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& slayerManager.isInQuest()
 				&& ConfigManager.getConfig().slayer.slayerBossCocoonedWarning;
+	}
+
+	@Override
+	protected void onClientJoinServer() {
+		cocoonedBoss = false;
 	}
 
 	public static boolean isCocoonedBoss() {

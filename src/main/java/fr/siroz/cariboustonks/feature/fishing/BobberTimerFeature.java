@@ -9,8 +9,6 @@ import fr.siroz.cariboustonks.feature.Features;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -28,9 +26,7 @@ public class BobberTimerFeature extends Feature {
 	private ArmorStandEntity bobberTimerArmorStand;
 
 	public BobberTimerFeature() {
-		ClientPlayConnectionEvents.JOIN.register((_handler, _sender, _client) -> this.bobberTimerArmorStand = null);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
-		ClientTickEvents.END_CLIENT_TICK.register(_client -> this.update());
 	}
 
 	@Override
@@ -41,6 +37,11 @@ public class BobberTimerFeature extends Feature {
 	@Override
 	protected void postInitialize(@NotNull Features features) {
 		rareSeaCreatureFeature = features.getFeature(RareSeaCreatureFeature.class);
+	}
+
+	@Override
+	protected void onClientJoinServer() {
+		bobberTimerArmorStand = null;
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
@@ -65,8 +66,8 @@ public class BobberTimerFeature extends Feature {
 		}
 	}
 
-	@EventHandler(event = "ClientTickEvents.END_CLIENT_TICK")
-	private void update() {
+	@Override
+	protected void onClientTick() {
 		if (bobberTimerArmorStand == null || !bobberTimerArmorStand.isAlive() || !bobberTimerArmorStand.hasCustomName()) {
 			bobberTimerArmorStand = null; // reset
 			return;

@@ -17,7 +17,6 @@ import java.text.DecimalFormat;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
@@ -42,7 +41,6 @@ public class RagnarockAxeFeature extends Feature implements HudProvider {
 	private long lastCastTime = 0;
 
 	public RagnarockAxeFeature() {
-		ClientPlayConnectionEvents.JOIN.register((_h, _s, _mc) -> this.reset());
 		NetworkEvents.PLAY_SOUND_PACKET.register(this::onPlaySound);
 	}
 
@@ -114,6 +112,11 @@ public class RagnarockAxeFeature extends Feature implements HudProvider {
 			// Si jamais la Strength est mal détecté, le Title sera quand même là.
 			Client.showTitle(Text.literal(castMessageConfig.get()), 1, 20, 1);
 		}
+	}
+
+	@Override
+	protected void onClientJoinServer() {
+		reset();
 	}
 
 	private void reset() {

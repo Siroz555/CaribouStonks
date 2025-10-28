@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -51,7 +50,6 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 
 	public SecondLifeFeature() {
 		ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
-		ClientPlayConnectionEvents.JOIN.register((_handler, _sender, _mc) -> this.reset());
 
 		this.hudBuilder = new HudElementBuilder();
 		this.hud = new MultiElementHud(
@@ -80,6 +78,12 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 	@Override
 	public @NotNull Hud getHud() {
 		return hud;
+	}
+
+	@Override
+	protected void onClientJoinServer() {
+		serverHasChanged = true;
+		activeCooldowns.clear();
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
@@ -177,11 +181,6 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 		} else {
 			return Formatting.RED;
 		}
-	}
-
-	private void reset() {
-		serverHasChanged = true;
-		activeCooldowns.clear();
 	}
 
 	private enum SecondLife {

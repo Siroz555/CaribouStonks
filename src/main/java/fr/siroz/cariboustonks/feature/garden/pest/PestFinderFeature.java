@@ -8,7 +8,6 @@ import fr.siroz.cariboustonks.event.HudEvents;
 import fr.siroz.cariboustonks.event.InteractionEvents;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
-import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;
 import net.minecraft.entity.player.PlayerEntity;
@@ -43,7 +42,6 @@ public final class PestFinderFeature extends Feature {
 			plotInfestedRenderer.render(renderer);
 		});
 
-		WorldEvents.JOIN.register(world -> this.reset());
 		InteractionEvents.LEFT_CLICK_AIR.register(this::onLeftClickAir);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
 		HudEvents.TAB_LIST_UPDATE.register(this::onTabListUpdate);
@@ -54,6 +52,14 @@ public final class PestFinderFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() == IslandType.GARDEN
 				&& ConfigManager.getConfig().farming.garden.pestsLocator;
+	}
+
+	@Override
+	protected void onClientJoinServer() {
+		infestedPlots.clear();
+		predictor.reset();
+		guessPosition = null;
+		lastUsedVacuum = 0;
 	}
 
 	public Vec3d getGuessPosition() {
@@ -67,14 +73,6 @@ public final class PestFinderFeature extends Feature {
 
 	public List<Integer> getInfestedPlots() {
 		return infestedPlots;
-	}
-
-	@EventHandler(event = "WorldEvents.JOIN")
-	private void reset() {
-		infestedPlots.clear();
-		predictor.reset();
-		guessPosition = null;
-		lastUsedVacuum = 0;
 	}
 
 	@EventHandler(event = "InteractionEvents.LEFT_CLICK_AIR")

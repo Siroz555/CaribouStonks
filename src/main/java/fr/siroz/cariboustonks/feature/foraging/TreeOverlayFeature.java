@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
-import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.InventoryUtils;
@@ -40,7 +39,6 @@ public class TreeOverlayFeature extends Feature {
 	private Text currentInfo = null;
 
 	public TreeOverlayFeature() {
-		WorldEvents.JOIN.register(world -> reset());
 		TickScheduler.getInstance().runRepeating(this::update, 1, TimeUnit.SECONDS);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorstandUpdate);
 	}
@@ -50,6 +48,11 @@ public class TreeOverlayFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() == IslandType.GALATEA
 				&& ConfigManager.getConfig().foraging.showTreeOverlayInfo;
+	}
+
+	@Override
+	protected void onClientJoinServer() {
+		reset();
 	}
 
 	private void update() {

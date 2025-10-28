@@ -52,25 +52,22 @@ import fr.siroz.cariboustonks.feature.vanilla.MuteVanillaSoundFeature;
 import fr.siroz.cariboustonks.feature.vanilla.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.feature.vanilla.ZoomFeature;
 import fr.siroz.cariboustonks.feature.waypoints.WaypointFeature;
-import org.jetbrains.annotations.Contract;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class Features {
 
-	private static final Set<Feature> FEATURES = new LinkedHashSet<>();
 	private static final Map<Class<? extends Feature>, Feature> FEATURE_INSTANCES = new ConcurrentHashMap<>();
 
-    public Features() {
+	public Features() {
 		CaribouStonks.LOGGER.info("[FeatureManager] Loading..");
-        // Chat
+		// Chat
 		registerFeature(new ChatColorationFeature());
-        registerFeature(new ChatPositionFeature());
+		registerFeature(new ChatPositionFeature());
 		registerFeature(new CopyChatMessageFeature());
 		// Combat
 		registerFeature(new CocoonedWarningFeature());
@@ -141,25 +138,43 @@ public final class Features {
 		registerFeature(new ZoomFeature());
 
 		// Après les enregistrements, initialise les dépendances
-		FEATURE_INSTANCES.values().forEach(feature -> feature.postInitialize(this));
-
-		CaribouStonks.LOGGER.info("{} features are now loaded and ready", getFeatures().size());
-    }
-
-	private void registerFeature(@NotNull Feature feature) {
-		FEATURES.add(feature);
-		FEATURE_INSTANCES.put(feature.getClass(), feature);
-
-		CaribouStonks.managers().handleFeatureRegistration(feature);
-	}
-
-	@Contract(" -> new")
-	public @NotNull @Unmodifiable Set<Feature> getFeatures() {
-		return new LinkedHashSet<>(FEATURES);
+		postInitialize();
+		// Enregistre les listeners
+		registerListeners();
+		CaribouStonks.LOGGER.info("{} features are now loaded and ready", FEATURE_INSTANCES.size());
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T extends Feature> T getFeature(@NotNull Class<T> featureClass) {
 		return (T) FEATURE_INSTANCES.get(featureClass);
+	}
+
+	private void registerFeature(@NotNull Feature feature) {
+		FEATURE_INSTANCES.put(feature.getClass(), feature);
+
+		CaribouStonks.managers().handleFeatureRegistration(feature);
+	}
+
+	private void postInitialize() {
+		for (Feature feature : FEATURE_INSTANCES.values()) {
+			feature.postInitialize(this);
+		}
+	}
+
+	private void registerListeners() {
+		ClientTickEvents.END_CLIENT_TICK.register(_mc -> onTick());
+		ClientPlayConnectionEvents.JOIN.register((_h, _ps, _mc) -> onJoin());
+	}
+
+	private void onTick() {
+		for (Feature feature : FEATURE_INSTANCES.values()) {
+			feature.onClientTick();
+		}
+	}
+
+	private void onJoin() {
+		for (Feature feature : FEATURE_INSTANCES.values()) {
+			feature.onClientJoinServer();
+		}
 	}
 }
