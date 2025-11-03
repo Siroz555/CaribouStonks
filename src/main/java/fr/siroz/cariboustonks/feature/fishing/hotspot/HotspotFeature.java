@@ -12,7 +12,7 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.fishing.radar.HotspotRadarFeature;
 import fr.siroz.cariboustonks.mixin.accessors.DurstParticleEffectAccessor;
 import fr.siroz.cariboustonks.util.InventoryUtils;
-import fr.siroz.cariboustonks.util.PositionUtils;
+import fr.siroz.cariboustonks.util.StonksUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.projectile.FishingBobberEntity;
@@ -107,8 +107,7 @@ public class HotspotFeature extends Feature {
 		FishingBobberEntity bobber = CLIENT.player.fishHook;
 		if (bobber != null && bobber.isAlive() && bobber.getOwner() == CLIENT.player) {
 			Vec3d bobberPos = bobber.getPos();
-			//bobberInHotspot = currentHotspot.centerPos().squaredDistanceTo(bobberPos) <= hotspotRadius * hotspotRadius;
-			double distanceToIgnoringY = PositionUtils.squaredDistanceToIgnoringY(currentHotspot.centerPos(), bobberPos);
+			double distanceToIgnoringY = StonksUtils.squaredDistanceToIgnoringY(currentHotspot.centerPos(), bobberPos);
 			bobberInHotspot = distanceToIgnoringY <= hotspotRadius * hotspotRadius;
 		} else {
 			bobberInHotspot = false;

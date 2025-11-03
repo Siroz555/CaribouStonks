@@ -282,24 +282,6 @@ public final class Client {
 	}
 
 	/**
-	 * Jouer le son {@code ENTITY_EXPERIENCE_ORB_PICKUP}.
-	 * <p>
-	 * {@code Safe Client null}
-	 */
-	public static void playSoundNotificationOrb() {
-		if (CLIENT.player != null) CLIENT.player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 100f, 0.1f);
-	}
-
-	/**
-	 * Jouer le son {@code BLOCK_NOTE_BLOCK_CHIME}.
-	 * <p>
-	 * {@code Safe Client null}
-	 */
-	public static void playSoundNotificationChime() {
-		if (CLIENT.player != null) CLIENT.player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), 2f, 1); // 1.2
-	}
-
-	/**
 	 * Jouer le son {@code UI_BUTTON_CLICK}.
 	 */
 	public static void playSoundButtonClickUI() {

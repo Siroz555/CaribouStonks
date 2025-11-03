@@ -12,6 +12,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.FatalErrorScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Position;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -189,35 +190,6 @@ public final class StonksUtils {
 	}
 
 	/**
-	 * Implémentation de l'algorithme de Levenshtein.
-	 *
-	 * @param s1 entrée
-	 * @param s2 candidat
-	 * @return retourne la distance calculée entre s1 et s2
-	 */
-	@Deprecated // À remettre avec le SearchScreen futur
-	public static int levenshteinDistance(@NotNull String s1, @NotNull String s2) {
-		int[][] dp = new int[s1.length() + 1][s2.length() + 1];
-
-		for (int i = 0; i <= s1.length(); i++) {
-			for (int j = 0; j <= s2.length(); j++) {
-				if (i == 0) { // Insère tous les caractères de la deuxième chaîne
-					dp[i][j] = j;
-				} else if (j == 0) { // Supprime tous les caractères de la première chaîne
-					dp[i][j] = i;
-				} else if (s1.charAt(i - 1) == s2.charAt(j - 1)) { // égalité
-					dp[i][j] = dp[i - 1][j - 1];
-				} else { // Si pas d'égalité, le "coût" est augmenté de 1.
-					// Substitution / Insertion / Suppression
-					dp[i][j] = 1 + Math.min(dp[i - 1][j - 1], Math.min(dp[i - 1][j], dp[i][j - 1]));
-				}
-			}
-		}
-		// Distance calculée entre s1 et s2 (coin inférieur droit)
-		return dp[s1.length()][s2.length()];
-	}
-
-	/**
 	 * Créer une commande qui met en file d'attente un écran à ouvrir dans le prochain tick.
 	 * Utilisé pour éviter que l'écran ne se ferme immédiatement après l'exécution de la commande.
 	 *
@@ -230,6 +202,19 @@ public final class StonksUtils {
 			CLIENT.send(() -> CLIENT.setScreen(screenSupplier.get()));
 			return Command.SINGLE_SUCCESS;
 		};
+	}
+
+	/**
+	 * Calculates the squared distance between two positions, ignoring their Y coordinates.
+	 *
+	 * @param from the starting position
+	 * @param to   the destination position
+	 * @return the squared distance between the two positions
+	 */
+	public static double squaredDistanceToIgnoringY(@NotNull Position from, @NotNull Position to) {
+		double dx = from.getX() - to.getX();
+		double dz = from.getZ() - to.getZ();
+		return dx * dx + dz * dz;
 	}
 
 	/**
