@@ -98,6 +98,16 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Highlight Kismet Feather Available.
     - Highlight No more Chests.
 
+- Thorn - F4/M4 - Spirit Bear Spawn Timer.
+- Sadan - F6/M6 - Terracotta Timers.
+- Necron - F7/M7 - Goldor Tick Timer
+- Wither King - M7:
+    - Dragon Priority & Spawn alerts.
+    - Dragon Spawn Time.
+    - Dragons' colored boxes.
+    - Target Line.
+    - Last Breath Target.
+
 **Skills**
 
 - Combat
