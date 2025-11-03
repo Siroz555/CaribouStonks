@@ -4,10 +4,10 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import fr.siroz.cariboustonks.util.shape.Cuboid;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,10 +40,6 @@ final class PlotInfestedRenderer {
 		createPlots();
 	}
 
-	public @NotNull Optional<Plot> getPlot(int id) {
-		return plots.stream().filter(plot -> plot.id == id).findFirst();
-	}
-
 	private void createPlots() {
 		for (int i = 0; i < PLOTS_IDS.size(); i++) {
 
@@ -56,12 +52,12 @@ final class PlotInfestedRenderer {
 				double maxX = (x - 2) * 96 + 48;
 				double maxZ = (i - 2) * 96 + 48;
 
-				Cuboid cuboid = new Cuboid(
+				Vec3d center = Box.enclosing(
 						new BlockPos((int) minX, 0, (int) minZ),
 						new BlockPos((int) maxX, 256, (int) maxZ)
-				);
+				).getCenter();
 
-				plots.add(new Plot(id, cuboid, cuboid.getCenter().toCenterPos()));
+				plots.add(new Plot(id, center));
 			}
 		}
 	}
@@ -91,6 +87,10 @@ final class PlotInfestedRenderer {
 		}
 	}
 
-	public record Plot(int id, Cuboid cuboid, Vec3d center) {
+	private @NotNull Optional<Plot> getPlot(int id) {
+		return plots.stream().filter(plot -> plot.id == id).findFirst();
+	}
+
+	private record Plot(int id, Vec3d center) {
 	}
 }
