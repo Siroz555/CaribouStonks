@@ -24,11 +24,11 @@ public class CroesusMenuFeature extends Feature implements ContainerMatcherTrait
 	private static final Pattern CROESUS_PATTERN = Pattern.compile("^Croesus$");
 
 	private final BooleanSupplier openedChestConfig =
-			() -> ConfigManager.getConfig().dungeon.croesus.mainMenuOpenedChest;
+			() -> ConfigManager.getConfig().instance.croesus.mainMenuOpenedChest;
 	private final BooleanSupplier noMoreChestConfig =
-			() -> ConfigManager.getConfig().dungeon.croesus.mainMenuNoMoreChest;
+			() -> ConfigManager.getConfig().instance.croesus.mainMenuNoMoreChest;
 	private final BooleanSupplier kismetAvailableConfig =
-			() -> ConfigManager.getConfig().dungeon.croesus.mainMenuKismetAvailable;
+			() -> ConfigManager.getConfig().instance.croesus.mainMenuKismetAvailable;
 
 	@Override
 	public boolean isEnabled() {
@@ -100,16 +100,16 @@ public class CroesusMenuFeature extends Feature implements ContainerMatcherTrait
 
 	@Contract(" -> new")
 	private @NotNull Color openedChestColor() {
-		return Color.fromAwtColor(ConfigManager.getConfig().dungeon.croesus.mainMenuOpenedChestColor);
+		return Color.fromAwtColor(ConfigManager.getConfig().instance.croesus.mainMenuOpenedChestColor);
 	}
 
 	@Contract(" -> new")
 	private @NotNull Color noMoreChestColor() {
-		return Color.fromAwtColor(ConfigManager.getConfig().dungeon.croesus.mainMenuNoMoreChestColor);
+		return Color.fromAwtColor(ConfigManager.getConfig().instance.croesus.mainMenuNoMoreChestColor);
 	}
 
 	@Contract(" -> new")
 	private @NotNull Color kismetAvailableColor() {
-		return Color.fromAwtColor(ConfigManager.getConfig().dungeon.croesus.mainMenuKismetAvailableColor);
+		return Color.fromAwtColor(ConfigManager.getConfig().instance.croesus.mainMenuKismetAvailableColor);
 	}
 }

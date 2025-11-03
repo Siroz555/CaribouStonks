@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.config;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import fr.siroz.cariboustonks.config.configs.ChatConfig;
 import fr.siroz.cariboustonks.config.configs.CombatConfig;
-import fr.siroz.cariboustonks.config.configs.DungeonConfig;
+import fr.siroz.cariboustonks.config.configs.InstanceConfig;
 import fr.siroz.cariboustonks.config.configs.FarmingConfig;
 import fr.siroz.cariboustonks.config.configs.FishingConfig;
 import fr.siroz.cariboustonks.config.configs.ForagingConfig;
@@ -32,7 +32,7 @@ public class Config {
     public CombatConfig combat = new CombatConfig();
 
 	@SerialEntry
-	public DungeonConfig dungeon = new DungeonConfig();
+	public InstanceConfig instance = new InstanceConfig();
 
 	@SerialEntry
 	public SlayerConfig slayer = new SlayerConfig();

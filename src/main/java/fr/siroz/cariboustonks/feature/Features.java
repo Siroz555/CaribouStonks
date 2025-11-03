@@ -9,6 +9,10 @@ import fr.siroz.cariboustonks.feature.combat.LowHealthWarningFeature;
 import fr.siroz.cariboustonks.feature.combat.RagnarockAxeFeature;
 import fr.siroz.cariboustonks.feature.combat.SecondLifeFeature;
 import fr.siroz.cariboustonks.feature.dungeon.CroesusMenuFeature;
+import fr.siroz.cariboustonks.feature.dungeon.NecronBossFeature;
+import fr.siroz.cariboustonks.feature.dungeon.SadanBossFeature;
+import fr.siroz.cariboustonks.feature.dungeon.ThornBossFeature;
+import fr.siroz.cariboustonks.feature.dungeon.WitherKingDragonFeature;
 import fr.siroz.cariboustonks.feature.fishing.BobberTimerFeature;
 import fr.siroz.cariboustonks.feature.fishing.FishCaughtFeature;
 import fr.siroz.cariboustonks.feature.fishing.RareSeaCreatureFeature;
@@ -76,6 +80,10 @@ public final class Features {
 		registerFeature(new SecondLifeFeature());
 		// Dungeons
 		registerFeature(new CroesusMenuFeature());
+		registerFeature(new ThornBossFeature());
+		registerFeature(new SadanBossFeature());
+		registerFeature(new NecronBossFeature());
+		registerFeature(new WitherKingDragonFeature());
 		// Fishing
 		registerFeature(new RareSeaCreatureFeature());
 		registerFeature(new BobberTimerFeature());
