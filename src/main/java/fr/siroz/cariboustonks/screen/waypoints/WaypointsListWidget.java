@@ -309,22 +309,22 @@ class WaypointsListWidget extends ElementListWidget<WaypointsListWidget.Waypoint
 	}
 
 	private enum WaypointColors {
-		RED(Color.fromHexString("#FF5555")), // Color.fromDyeColor(DyeColor.RED)
-		LIGHT_PURPLE(Color.fromHexString("#FF55FF")),
-		YELLOW(Color.fromHexString("#FFFF55")),
-		WHITE(Color.fromHexString("#FFFFFF")),
-		BLACK(Color.fromHexString("#000000")),
-		DARK_BLUE(Color.fromHexString("#0000AA")),
-		DARK_GREEN(Color.fromHexString("#00AA00")),
-		DARK_AQUA(Color.fromHexString("#00AAAA")),
-		DARK_RED(Color.fromHexString("#AA0000")),
-		DARK_PURPLE(Color.fromHexString("#AA00AA")),
-		GOLD(Color.fromHexString("#FFAA00")),
-		GRAY(Color.fromHexString("#AAAAAA")),
-		DARK_GRAY(Color.fromHexString("#555555")),
-		BLUE(Color.fromHexString("#5555FF")),
-		GREEN(Color.fromHexString("#55FF55")),
-		AQUA(Color.fromHexString("#55FFFF")),
+		RED(Color.fromFormatting(Formatting.RED)),
+		DARK_RED(Color.fromFormatting(Formatting.DARK_RED)),
+		GREEN(Color.fromFormatting(Formatting.GREEN)),
+		DARK_GREEN(Color.fromFormatting(Formatting.DARK_GREEN)),
+		YELLOW(Color.fromFormatting(Formatting.YELLOW)),
+		GOLD(Color.fromFormatting(Formatting.GOLD)),
+		AQUA(Color.fromFormatting(Formatting.AQUA)),
+		DARK_AQUA(Color.fromFormatting(Formatting.DARK_AQUA)),
+		BLUE(Color.fromFormatting(Formatting.BLUE)),
+		DARK_BLUE(Color.fromFormatting(Formatting.DARK_BLUE)),
+		LIGHT_PURPLE(Color.fromFormatting(Formatting.LIGHT_PURPLE)),
+		DARK_PURPLE(Color.fromFormatting(Formatting.DARK_PURPLE)),
+		WHITE(Color.fromFormatting(Formatting.WHITE)),
+		GRAY(Color.fromFormatting(Formatting.GRAY)),
+		DARK_GRAY(Color.fromFormatting(Formatting.DARK_GRAY)),
+		BLACK(Color.fromFormatting(Formatting.BLACK)),
 		;
 
 		final Color color;

@@ -8,14 +8,18 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.screen.waypoints.WaypointScreen;
+import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.Contract;
@@ -44,6 +48,11 @@ public final class WaypointFeature extends Feature {
         ClientLifecycleEvents.CLIENT_STARTED.register(this::onClientStarted);
         ClientLifecycleEvents.CLIENT_STOPPING.register(this::saveWaypoints);
         RenderEvents.WORLD_RENDER.register(this::render);
+
+		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
+				.then(ClientCommandManager.literal("waypoints")
+						.executes(StonksUtils.openScreen(() -> WaypointScreen.create(null))))
+		));
     }
 
     @Override

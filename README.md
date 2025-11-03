@@ -187,7 +187,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - /stonks > Display prices and other information simply anywhere.
 - /cariboustonks heldItemCustomization <mainHand/offHand>: Customize the appearance of Held Item.
 - /cariboustonks keyShortcuts: Link Keybinds to commands to be executed.
-- /cariboustonks resetDiana: Reset Mythological Ritual Waypoints.
+- /cariboustonks waypoints: Manage Waypoints.
 
 ---
 
