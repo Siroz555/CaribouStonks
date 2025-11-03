@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.util.math.MathUtils;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.c2s.query.QueryPingC2SPacket;
+import net.minecraft.network.packet.s2c.common.CommonPingS2CPacket;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -16,6 +17,8 @@ import java.util.Arrays;
 public final class NetworkManager implements Manager {
 
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+
+	private int lastParameterS2CPing;
 
 	private long lastPingResult = 0;
 	private long currentPingResult = 0;
@@ -59,6 +62,14 @@ public final class NetworkManager implements Manager {
 		}
 
 		return sumTickRates / numTicks;
+	}
+
+	@ApiStatus.Internal
+	public void onServerTick(CommonPingS2CPacket packet) {
+		if (packet != null && packet.getParameter() != lastParameterS2CPing) {
+			lastParameterS2CPing = packet.getParameter();
+			NetworkEvents.SERVER_TICK.invoker().onServerTick();
+		}
 	}
 
 	@EventHandler(event = "NetworkEvents.WORLD_TIME_UPDATE_PACKET")

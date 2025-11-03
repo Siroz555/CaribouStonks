@@ -18,6 +18,15 @@ public final class NetworkEvents {
 	}
 
 	/**
+	 * Called when the {@code CommonPingS2CPacket} is received
+	 */
+	public static final Event<ServerTick> SERVER_TICK = EventFactory.createArrayBacked(ServerTick.class, listeners -> () -> {
+		for (ServerTick listener : listeners) {
+			listener.onServerTick();
+		}
+	});
+
+	/**
 	 * Called when the {@code GameJoinS2CPacket} is received
 	 */
 	public static final Event<GameJoin> GAME_JOIN_PACKET = EventFactory.createArrayBacked(GameJoin.class, listeners -> () -> {
@@ -83,6 +92,11 @@ public final class NetworkEvents {
 			listener.onArmorStandUpdate(entity, equipmentUpdate);
 		}
 	});
+
+	@FunctionalInterface
+	public interface ServerTick {
+		void onServerTick();
+	}
 
 	@FunctionalInterface
 	public interface GameJoin {
