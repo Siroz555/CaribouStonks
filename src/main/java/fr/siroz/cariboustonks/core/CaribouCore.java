@@ -21,7 +21,7 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * The {@code CaribouStonksCore} class serves as the core manager for the mod.
  */
-public final class CaribouStonksCore {
+public final class CaribouCore {
 
 	private final CrashManager crashManager;
 	private final JsonFileService jsonFileService;
@@ -31,7 +31,7 @@ public final class CaribouStonksCore {
 	private final GenericDataSource genericDataSource;
 
 	@ApiStatus.Internal
-	public CaribouStonksCore() {
+	public CaribouCore() {
 		CaribouStonks.LOGGER.info("[CaribouStonksCore] Loading..");
 
 		// "Main" core components

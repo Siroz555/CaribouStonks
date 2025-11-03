@@ -13,31 +13,35 @@ import org.joml.Quaternionf;
 @ApiStatus.Internal
 public final class CaribouRenderer {
 
-	private static WorldRendererImpl worldRenderer;
-
-	private CaribouRenderer() {
-	}
+	private final WorldRendererImpl worldRenderer;
 
 	@ApiStatus.Internal
-	public static void initRendering() {
+	public CaribouRenderer() {
 		if (StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass() != CaribouStonks.class) {
 			throw new RuntimeException("Noo noo and noo");
 		}
 		// Mod Implementation
 		CaribouRenderPipelines.init();
-		worldRenderer = new WorldRendererImpl();
-		// Fabric API -> Mod Rendering
-		WorldRenderEvents.AFTER_SETUP.register(CaribouRenderer::startFrame);
-		WorldRenderEvents.AFTER_TRANSLUCENT.register(CaribouRenderer::executeDraws);
+		this.worldRenderer = new WorldRendererImpl();
+		// TODO - remove - 1.21.10
+		registerListeners();
 	}
 
-	private static void startFrame(WorldRenderContext context) {
+	private void registerListeners() {
+		// Fabric API -> Mod Rendering
+		WorldRenderEvents.AFTER_SETUP.register(this::startExtraction);
+		WorldRenderEvents.AFTER_TRANSLUCENT.register(this::executeDraws);
+	}
+
+	public void startExtraction(WorldRenderContext context) {
+		if (worldRenderer == null) return;
+
 		worldRenderer.begin();
 		RenderEvents.WORLD_RENDER.invoker().onWorldRender(worldRenderer);
 		worldRenderer.end();
 	}
 
-	private static void executeDraws(@NotNull WorldRenderContext context) {
+	public void executeDraws(@NotNull WorldRenderContext context) {
 		if (worldRenderer == null) return;
 
 		CameraRenderState cameraState = new CameraRenderState(

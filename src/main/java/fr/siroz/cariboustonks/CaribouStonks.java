@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.CaribouStonksCore;
+import fr.siroz.cariboustonks.core.CaribouCore;
 import fr.siroz.cariboustonks.feature.Features;
 import fr.siroz.cariboustonks.manager.Managers;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
@@ -37,7 +37,8 @@ public final class CaribouStonks implements ClientModInitializer {
 
 	private static CaribouStonks instance;
 
-	private CaribouStonksCore caribouStonksCore;
+	private CaribouRenderer caribouRenderer;
+	private CaribouCore caribouCore;
 	private Managers managers;
 	private Features features;
 
@@ -53,24 +54,35 @@ public final class CaribouStonks implements ClientModInitializer {
 		// Utilities
 		StonksUtils.initUtilities();
 		// Rendering
-		CaribouRenderer.initRendering();
+		this.caribouRenderer = new CaribouRenderer();
 		// Main
-		this.caribouStonksCore = new CaribouStonksCore();
+		this.caribouCore = new CaribouCore();
 		this.managers = new Managers();
 		this.features = new Features();
 		// Developer Mode
-		this.caribouStonksCore.initDeveloperMode();
+		this.caribouCore.initDeveloperMode();
 	}
 
 	/**
-	 * Returns the {@link CaribouStonksCore} instance of the mod.
-	 * This instance is used to retrieve and manage all core functionalities.
+	 * Returns the {@link CaribouRenderer} instance of the mod.
+	 * This instance is used to retrieve and manage Mod Rendering.
 	 *
-	 * @return the {@link CaribouStonksCore} instance
+	 * @return the {@link CaribouRenderer} instance
 	 */
 	@Contract(pure = true)
-	public static CaribouStonksCore core() {
-		return instance.caribouStonksCore;
+	public static CaribouRenderer renderer() {
+		return instance.caribouRenderer;
+	}
+
+	/**
+	 * Returns the {@link CaribouCore} instance of the mod.
+	 * This instance is used to retrieve and manage all core functionalities.
+	 *
+	 * @return the {@link CaribouCore} instance
+	 */
+	@Contract(pure = true)
+	public static CaribouCore core() {
+		return instance.caribouCore;
 	}
 
 	/**

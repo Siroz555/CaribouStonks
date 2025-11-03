@@ -48,55 +48,33 @@ import org.jetbrains.annotations.NotNull;
 @ApiStatus.Internal
 public final class WorldRendererImpl implements WorldRenderer {
 	// Commands
-	private final TextRendererCommand textRendererCommand;
-	private final TextureRendererCommand textureRendererCommand;
-	private final CircleRendererCommand circleRendererCommand;
-	private final ThickCircleRendererCommand thickCircleRendererCommand;
-	private final QuadRendererCommand quadRendererCommand;
-	private final FilledBoxRendererCommand filledBoxRendererCommand;
-	private final BeaconBeamRendererCommand beaconBeamRendererCommand;
-	private final OutlineBoxRendererCommand outlineBoxRendererCommand;
-	private final LinesRendererCommand linesRendererCommand;
-	private final CursorLineRendererCommand cursorLineRendererCommand;
-	private final CuboidOutlineRendererCommand cuboidOutlineRendererCommand;
+	private final TextRendererCommand textRendererCommand = new TextRendererCommand();
+	private final TextureRendererCommand textureRendererCommand = new TextureRendererCommand();
+	private final CircleRendererCommand circleRendererCommand = new CircleRendererCommand();
+	private final ThickCircleRendererCommand thickCircleRendererCommand = new ThickCircleRendererCommand();
+	private final QuadRendererCommand quadRendererCommand = new QuadRendererCommand();
+	private final FilledBoxRendererCommand filledBoxRendererCommand = new FilledBoxRendererCommand();
+	private final BeaconBeamRendererCommand beaconBeamRendererCommand = new BeaconBeamRendererCommand();
+	private final OutlineBoxRendererCommand outlineBoxRendererCommand = new OutlineBoxRendererCommand();
+	private final LinesRendererCommand linesRendererCommand = new LinesRendererCommand();
+	private final CursorLineRendererCommand cursorLineRendererCommand = new CursorLineRendererCommand();
+	private final CuboidOutlineRendererCommand cuboidOutlineRendererCommand = new CuboidOutlineRendererCommand();
 	// States
-	private final List<TextRenderState> textRenderStates;
-	private final List<TextureRenderState> textureRenderStates;
-	private final List<CircleRenderState> circleRenderStates;
-	private final List<ThickCircleRenderState> thickCircleRenderStates;
-	private final List<QuadRenderState> quadRenderStates;
-	private final List<FilledBoxRenderState> filledBoxRenderStates;
-	private final List<BeaconBeamRenderState> beaconBeamRenderStates;
-	private final List<OutlineBoxRenderState> outlineBoxRenderStates;
-	private final List<LinesRenderState> linesRenderStates;
-	private final List<CursorLineRenderState> cursorLineRenderStates;
-	private final List<CuboidOutlineRenderState> cuboidOutlineRenderStates;
-	private boolean frozen;
+	private final List<TextRenderState> textRenderStates = new ArrayList<>();
+	private final List<TextureRenderState> textureRenderStates = new ArrayList<>();
+	private final List<CircleRenderState> circleRenderStates = new ArrayList<>();
+	private final List<ThickCircleRenderState> thickCircleRenderStates = new ArrayList<>();
+	private final List<QuadRenderState> quadRenderStates = new ArrayList<>();
+	private final List<FilledBoxRenderState> filledBoxRenderStates = new ArrayList<>();
+	private final List<BeaconBeamRenderState> beaconBeamRenderStates = new ArrayList<>();
+	private final List<OutlineBoxRenderState> outlineBoxRenderStates = new ArrayList<>();
+	private final List<LinesRenderState> linesRenderStates = new ArrayList<>();
+	private final List<CursorLineRenderState> cursorLineRenderStates = new ArrayList<>();
+	private final List<CuboidOutlineRenderState> cuboidOutlineRenderStates = new ArrayList<>();
+
+	private boolean frozen = false;
 
 	public WorldRendererImpl() {
-		this.textRendererCommand = new TextRendererCommand();
-		this.textureRendererCommand = new TextureRendererCommand();
-		this.circleRendererCommand = new CircleRendererCommand();
-		this.thickCircleRendererCommand = new ThickCircleRendererCommand();
-		this.quadRendererCommand = new QuadRendererCommand();
-		this.filledBoxRendererCommand = new FilledBoxRendererCommand();
-		this.beaconBeamRendererCommand = new BeaconBeamRendererCommand();
-		this.outlineBoxRendererCommand = new OutlineBoxRendererCommand();
-		this.linesRendererCommand = new LinesRendererCommand();
-		this.cursorLineRendererCommand = new CursorLineRendererCommand();
-		this.cuboidOutlineRendererCommand = new CuboidOutlineRendererCommand();
-
-		this.textRenderStates = new ArrayList<>();
-		this.textureRenderStates = new ArrayList<>();
-		this.circleRenderStates = new ArrayList<>();
-		this.thickCircleRenderStates = new ArrayList<>();
-		this.quadRenderStates = new ArrayList<>();
-		this.filledBoxRenderStates = new ArrayList<>();
-		this.beaconBeamRenderStates = new ArrayList<>();
-		this.outlineBoxRenderStates = new ArrayList<>();
-		this.linesRenderStates = new ArrayList<>();
-		this.cursorLineRenderStates = new ArrayList<>();
-		this.cuboidOutlineRenderStates = new ArrayList<>();
 	}
 
 	@Override
