@@ -77,30 +77,30 @@ public class PartyCommandFeature extends Feature {
 			Client.sendChatMessage("/pc " + position.asChatCoordinates(), true);
 		}),
 		WARP(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !warp"), cmd -> cmd.warp, matcher -> {
-			Client.sendChatMessage("/p warp"); // -_-
+			Client.sendChatMessage("/p warp", true); // -_-
 		}),
 		DICE(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !dice"), cmd -> cmd.diceGame, matcher -> {
 			int roll = (int) (1 + Math.floor(Math.random() * 6));
 			String extra = roll == 1 ? " Sheeh!" : roll == 6 ? " Waw!" : "";
 			String message = matcher.group(2) + " rolled a " + roll + "." + extra;
-			Client.sendChatMessage("/pc " + message);
+			Client.sendChatMessage("/pc " + message, true);
 		}),
 		EIGHT_BALL(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !8ball"), cmd -> cmd.magic8Ball, matcher -> {
 			int r = new Random().nextInt(MAGIC_8BALL_ANSWERS.size());
 			String selected = MAGIC_8BALL_ANSWERS.get(r);
-			Client.sendChatMessage("/pc " + selected);
+			Client.sendChatMessage("/pc " + selected, true);
 		}),
 		CF(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !cf"), cmd -> cmd.coinFlip, matcher -> {
 			if (new Random().nextBoolean()) {
-				Client.sendChatMessage("/pc HEADS!");
+				Client.sendChatMessage("/pc HEADS!", true);
 			} else {
-				Client.sendChatMessage("/pc TAILS!");
+				Client.sendChatMessage("/pc TAILS!", true);
 			}
 		}),
 		TPS(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !tps"), cmd -> cmd.tps, matcher -> {
 			float tps = CaribouStonks.managers().getManager(NetworkManager.class).getTickRate();
 			String message = String.format("TPS: %.1f", tps);
-			Client.sendChatMessage("/pc " + message);
+			Client.sendChatMessage("/pc " + message, true);
 		}),
 		;
 
