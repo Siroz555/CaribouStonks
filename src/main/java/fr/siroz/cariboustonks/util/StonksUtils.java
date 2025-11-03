@@ -71,7 +71,7 @@ public final class StonksUtils {
 			NumberFormat.getCompactNumberInstance(Locale.US, NumberFormat.Style.SHORT),
 			nf -> nf.setMinimumFractionDigits(1));
 
-	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.0");
+	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.00");
 
 	private StonksUtils() {
 	}

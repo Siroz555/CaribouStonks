@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.event;
 
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.manager.dungeon.DungeonBoss;
 import fr.siroz.cariboustonks.manager.slayer.SlayerTier;
 import fr.siroz.cariboustonks.manager.slayer.SlayerType;
 import java.time.Instant;
@@ -82,6 +83,20 @@ public final class SkyBlockEvents {
 		}
 	});
 
+	@OnlySkyBlock
+	public static final Event<DungeonStart> DUNGEON_START = EventFactory.createArrayBacked(DungeonStart.class, listeners -> () -> {
+		for (DungeonStart listener : listeners) {
+			listener.onDungeonStart();
+		}
+	});
+
+	@OnlySkyBlock
+	public static final Event<DungeonBossSpawn> DUNGEON_BOSS_SPAWN = EventFactory.createArrayBacked(DungeonBossSpawn.class, listeners -> (boss) -> {
+		for (DungeonBossSpawn listener : listeners) {
+			listener.onBossSpawn(boss);
+		}
+	});
+
 	@FunctionalInterface
 	public interface Join {
 		void onJoin(@NotNull String serverName);
@@ -120,5 +135,15 @@ public final class SkyBlockEvents {
 	@FunctionalInterface
 	public interface SlayerQuestFail {
 		void onFail(@NotNull SlayerType type, @NotNull SlayerTier tier);
+	}
+
+	@FunctionalInterface
+	public interface DungeonStart {
+		void onDungeonStart();
+	}
+
+	@FunctionalInterface
+	public interface DungeonBossSpawn {
+		void onBossSpawn(@NotNull DungeonBoss boss);
 	}
 }
