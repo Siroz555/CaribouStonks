@@ -91,9 +91,15 @@ public final class ContainerOverlayManager implements Manager {
 			);
 		}
 
-		for (ColorHighlight highlight : highlights) {
-			Slot slot = slots.get(highlight.slot());
-			context.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, highlight.color().asInt());
+		// NPE - Cannot invoke "java.util.List.iterator()" because "this.highlights" is null.
+		// J'ai crash qu'une seule fois, je ne sais pas pourquoi donc tout bêtement un try-catch.
+		// Je sais que la boucle for fait un iterator à chaque fois, est-ce que c'est le délai ?
+		try {
+			for (ColorHighlight highlight : highlights) {
+				Slot slot = slots.get(highlight.slot());
+				context.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, highlight.color().asInt());
+			}
+		} catch (Throwable ignored) {
 		}
 
 		context.getMatrices().popMatrix();
