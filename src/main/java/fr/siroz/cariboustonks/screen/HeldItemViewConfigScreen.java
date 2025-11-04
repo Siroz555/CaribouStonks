@@ -75,10 +75,17 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 
 	@Override
 	protected void onInit() {
-		if (this.client == null || this.client.world == null) {
+		boolean isWorldLoaded = this.client != null && this.client.world != null;
+		if (!isWorldLoaded || !ConfigManager.getConfig().vanilla.itemModelCustomization.enabled) {
 			layout = new ThreePartsLayoutWidget(this);
 			layout.addHeader(new TextWidget(this.getTitle(), this.textRenderer));
-			layout.addBody(new TextWidget(Text.literal("You must be in a world to use this.").withColor(Colors.ORANGE.asInt()), this.textRenderer));
+
+			if (!isWorldLoaded) {
+				layout.addBody(new TextWidget(Text.literal("You must be in a world to use this.").withColor(Colors.ORANGE.asInt()), this.textRenderer));
+			} else {
+				layout.addBody(new TextWidget(Text.literal("You must enable Held Item customization to use this.").withColor(Colors.ORANGE.asInt()), this.textRenderer));
+			}
+
 			layout.addFooter(ButtonWidget.builder(ScreenTexts.DONE, b -> onClose()).width(210).build());
 			layout.refreshPositions();
 			layout.forEachChild(this::addDrawableChild);
