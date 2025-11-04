@@ -10,14 +10,21 @@ import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.dungeon.DungeonBoss;
 import fr.siroz.cariboustonks.manager.dungeon.DungeonManager;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.manager.hud.Hud;
+import fr.siroz.cariboustonks.manager.hud.HudProvider;
+import fr.siroz.cariboustonks.manager.hud.TextHud;
 import fr.siroz.cariboustonks.util.StonksUtils;
+import it.unimi.dsi.fastutil.Pair;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class NecronBossFeature extends Feature {
+public class NecronBossFeature extends Feature implements HudProvider {
 
+	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_necron_tick");
 	private static final String STORM_DEATH_MESSAGE = "[BOSS] Storm: I should have known that I stood no chance.";
 	private static final String GOLDOR_TRIGGER_MESSAGE = "[BOSS] Goldor: Who dares trespass into my domain?";
 	private static final String GOLDOR_DEATH_MESSAGE = "The Core entrance is opening!";
@@ -41,7 +48,7 @@ public class NecronBossFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() == IslandType.DUNGEON
 				&& dungeonManager.getBoss() == DungeonBoss.NECRON
-				&& ConfigManager.getConfig().instance.theCatacombs.bossNecronPhase3TickTimers;
+				&& ConfigManager.getConfig().instance.theCatacombs.necronTimerHud.enabled;
 	}
 
 	@Override
@@ -51,11 +58,28 @@ public class NecronBossFeature extends Feature {
 	}
 
 	@Override
-	protected void onClientTick() {
-		if (goldorTicks >= 0 && isEnabled()) {
+	public @NotNull Pair<Identifier, Identifier> getAttachLayerAfter() {
+		return Pair.of(VanillaHudElements.STATUS_EFFECTS, HUD_ID);
+	}
+
+	@Override
+	public @NotNull Hud getHud() {
+		return new TextHud(
+				Text.literal("§6Goldor: §c1.69s"),
+				this::getTextHud,
+				ConfigManager.getConfig().instance.theCatacombs.necronTimerHud,
+				250,
+				50
+		);
+	}
+
+	@Contract(value = " -> new", pure = true)
+	private @NotNull Text getTextHud() {
+		if (goldorTicks >= 0) {
 			String seconds = StonksUtils.DECIMAL_FORMAT.format(goldorTicks / 20f) + "s";
-			Text message = Text.literal(seconds).formatted(getColor(goldorTicks));
-			Client.showSubtitle(message, 0, 10, 0);
+			return Text.literal(seconds).formatted(getColor(goldorTicks));
+		} else {
+			return Text.empty();
 		}
 	}
 
@@ -74,7 +98,6 @@ public class NecronBossFeature extends Feature {
 			default -> {
 			}
 		}
-
 	}
 
 	@EventHandler(event = "NetworkEvents.SERVER_TICK")

@@ -114,9 +114,9 @@ public class DungeonsCategory extends AbstractCategory {
 								.description(OptionDescription.of(
 										Text.literal("Displays a timer at the Goldor phase. In other words, the 3-second “Goldor Tick.”"),
 										Text.literal(SPACE + "Adapted according to the server's TPS.").formatted(Formatting.AQUA)))
-								.binding(defaults.instance.theCatacombs.bossNecronPhase3TickTimers,
-										() -> current.instance.theCatacombs.bossNecronPhase3TickTimers,
-										newValue -> current.instance.theCatacombs.bossNecronPhase3TickTimers = newValue)
+								.binding(defaults.instance.theCatacombs.necronTimerHud.enabled,
+										() -> current.instance.theCatacombs.necronTimerHud.enabled,
+										newValue -> current.instance.theCatacombs.necronTimerHud.enabled = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.build())
