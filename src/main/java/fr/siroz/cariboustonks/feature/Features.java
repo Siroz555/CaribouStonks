@@ -68,7 +68,6 @@ public final class Features {
 	private static final Map<Class<? extends Feature>, Feature> FEATURE_INSTANCES = new ConcurrentHashMap<>();
 
 	public Features() {
-		CaribouStonks.LOGGER.info("[FeatureManager] Loading..");
 		// Chat
 		registerFeature(new ChatColorationFeature());
 		registerFeature(new ChatPositionFeature());

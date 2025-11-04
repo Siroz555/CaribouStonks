@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.core;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.changelog.ChangelogManager;
 import fr.siroz.cariboustonks.core.crash.CrashManager;
 import fr.siroz.cariboustonks.core.data.generic.GenericDataSource;
@@ -32,8 +31,6 @@ public final class CaribouCore {
 
 	@ApiStatus.Internal
 	public CaribouCore() {
-		CaribouStonks.LOGGER.info("[CaribouStonksCore] Loading..");
-
 		// "Main" core components
 		this.crashManager = new CrashManager();
 		this.jsonFileService = new JsonFileService();
@@ -54,8 +51,6 @@ public final class CaribouCore {
 
 		// Event listeners
 		ClientPlayConnectionEvents.DISCONNECT.register((_handler, _client) -> this.onDisconnect());
-
-		CaribouStonks.LOGGER.info("[CaribouStonksCore] Loaded!");
 	}
 
 	@ApiStatus.Internal
