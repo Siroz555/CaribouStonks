@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
+import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -106,7 +107,9 @@ public class KeyShortcutFeature extends Feature {
 			loaded++;
 		}
 
-		CaribouStonks.LOGGER.info("[KeyShortcuts] Loaded {} KeyShortcut", loaded);
+		if (DeveloperTools.isInDevelopment()) {
+			CaribouStonks.LOGGER.info("[KeyShortcuts] Loaded {} KeyShortcut", loaded);
+		}
 	}
 
 	@EventHandler(event = "ClientTickEvents.END_CLIENT_TICK")

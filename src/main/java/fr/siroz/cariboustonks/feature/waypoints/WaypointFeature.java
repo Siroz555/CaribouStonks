@@ -12,6 +12,7 @@ import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.screen.waypoints.WaypointScreen;
+import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -126,7 +127,9 @@ public final class WaypointFeature extends Feature {
             loaded += entry.getValue().size();
         }
 
-        CaribouStonks.LOGGER.info("[Waypoints] Loaded {} waypoints", loaded);
+        if (DeveloperTools.isInDevelopment()) {
+			CaribouStonks.LOGGER.info("[Waypoints] Loaded {} waypoints", loaded);
+		}
 
         waypoints.putAll(waypointMap);
     }

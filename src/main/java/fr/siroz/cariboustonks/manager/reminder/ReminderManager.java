@@ -169,7 +169,9 @@ public final class ReminderManager implements Manager {
     }
 
     private void loadExistingObjects(@NotNull List<TimedObject> loadedObjects) {
-        CaribouStonks.LOGGER.info("[Reminder] Loading {} TimedObject", loadedObjects.size());
+        if (DeveloperTools.isInDevelopment()) {
+			CaribouStonks.LOGGER.info("[Reminder] Loading {} TimedObject", loadedObjects.size());
+		}
         Instant now = Instant.now();
         for (TimedObject obj : loadedObjects) {
             if (obj.expirationTime().isBefore(now)) {
