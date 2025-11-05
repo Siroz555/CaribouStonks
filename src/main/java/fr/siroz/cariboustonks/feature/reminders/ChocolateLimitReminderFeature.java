@@ -22,6 +22,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
@@ -96,14 +97,17 @@ public final class ChocolateLimitReminderFeature
 
 	@Override
 	public void onPreExpire(@NotNull TimedObject timedObject) {
-		Text text = Text.literal("The chocolate limit will be reached soon!")
-				.formatted(Formatting.RESET, Formatting.RED);
+		MutableText text = Text.literal("The chocolate limit will be reached soon!").formatted(Formatting.RED);
+		MutableText message = Text.empty()
+				.append(Text.literal("[Chocolate Factory] ").formatted(Formatting.GOLD, Formatting.BOLD))
+				.append(text);
+		MutableText notification = Text.empty()
+				.append(Text.literal("Chocolate Factory").formatted(Formatting.GOLD, Formatting.BOLD))
+				.append(Text.literal("\n"))
+				.append(text);
 
-		Client.sendMessageWithPrefix(Text.literal("[Chocolate Factory] ").formatted(Formatting.GOLD)
-				.append(text));
-
-		Client.showNotification(Text.literal("Chocolate Factory\n").formatted(Formatting.GOLD, Formatting.BOLD)
-				.append(text), ICON);
+		Client.sendMessageWithPrefix(message);
+		Client.showNotification(notification, ICON);
 	}
 
 	@Override

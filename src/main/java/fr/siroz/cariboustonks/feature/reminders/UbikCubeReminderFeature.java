@@ -14,6 +14,7 @@ import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
@@ -62,14 +63,18 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
 
     @Override
     public void onExpire(@NotNull TimedObject timedObject) {
-        Client.sendMessageWithPrefix(Text.literal("[Ubik's Cube] ").formatted(Formatting.GOLD)
-                .append(Text.literal("Ready to play ").formatted(Formatting.GREEN))
-                .append(SPLIT_OR_STEAL_TEXT)
-        );
+		MutableText message = Text.empty()
+				.append(Text.literal("[Ubik's Cube] ").formatted(Formatting.GOLD))
+				.append(Text.literal("Ready to play ").formatted(Formatting.GREEN))
+				.append(SPLIT_OR_STEAL_TEXT);
+		MutableText notification = Text.empty()
+				.append(Text.literal("Ubik's Cube !").formatted(Formatting.GOLD, Formatting.BOLD))
+				.append(Text.literal("\n"))
+				.append(Text.literal("Ready to play ").formatted(Formatting.GREEN))
+				.append(SPLIT_OR_STEAL_TEXT);
 
-        Client.showNotification(Text.literal("Ubik's Cube !\n").formatted(Formatting.GOLD, Formatting.BOLD)
-                        .append(Text.literal("Ready to play ").formatted(Formatting.GREEN))
-                        .append(SPLIT_OR_STEAL_TEXT), ubikCube);
+        Client.sendMessageWithPrefix(message);
+        Client.showNotification(notification, ubikCube);
     }
 
     private void onChatMessage(@NotNull Text text) {

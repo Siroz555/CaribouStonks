@@ -17,6 +17,7 @@ import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Contract;
@@ -60,15 +61,19 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
     @Override
     public void onExpire(@NotNull TimedObject timedObject) {
         Text text = StonksUtils.jsonToText(timedObject.message()).orElse(Text.literal(timedObject.message()));
+		MutableText message = Text.empty()
+				.append(Text.literal("[Forge] ").formatted(Formatting.GOLD))
+				.append(text)
+				.append(Text.literal(" was ended!").formatted(Formatting.GREEN));
+		MutableText notification = Text.empty()
+				.append(Text.literal("Forge !").formatted(Formatting.GOLD, Formatting.BOLD))
+				.append(Text.literal("\n"))
+				.append(text)
+				.append(Text.literal("\n"))
+				.append(Text.literal(" was ended!").formatted(Formatting.GREEN));
 
-        Client.sendMessageWithPrefix(Text.literal("[Forge] ").formatted(Formatting.GOLD)
-                .append(text)
-                .append(Text.literal(" was ended!").formatted(Formatting.GREEN))
-        );
-
-        Client.showNotification(Text.literal("Forge !\n").formatted(Formatting.GOLD, Formatting.BOLD)
-                .append(text).append("\n")
-                .append(Text.literal("was ended").formatted(Formatting.GREEN)), ICON);
+        Client.sendMessageWithPrefix(message );
+        Client.showNotification(notification, ICON);
     }
 
     @Override

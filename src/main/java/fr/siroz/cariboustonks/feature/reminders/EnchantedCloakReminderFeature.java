@@ -15,6 +15,7 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
@@ -65,14 +66,19 @@ public final class EnchantedCloakReminderFeature extends Feature implements Remi
 			return;
 		}
 
-		Text text = Text.empty().append(boostType.name)
+		MutableText text = Text.empty()
+				.append(boostType.name)
 				.append(Text.literal(" is ready!").formatted(Formatting.GREEN));
+		MutableText message = Text.empty()
+				.append(Text.literal("[Enchanted Cloak] ").formatted(Formatting.GOLD))
+				.append(text);
+		MutableText notification = Text.empty()
+				.append(Text.literal("Enchanted Cloak !").formatted(Formatting.GOLD, Formatting.BOLD))
+				.append(Text.literal("\n"))
+				.append(text);
 
-		Client.sendMessageWithPrefix(Text.literal("[Enchanted Cloak] ").formatted(Formatting.GOLD)
-				.append(text));
-
-		Client.showNotification(Text.literal("Enchanted Cloak !\n").formatted(Formatting.GOLD, Formatting.BOLD)
-				.append(text), ICON);
+		Client.sendMessageWithPrefix(message);
+		Client.showNotification(notification, ICON);
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
