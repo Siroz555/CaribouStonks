@@ -236,7 +236,9 @@ public final class ChangelogManager {
 		for (String line : lines) {
 			line = line.trim();
 
-			if (line.toLowerCase(Locale.ENGLISH).startsWith("## features")) {
+			if (line.toLowerCase(Locale.ENGLISH).startsWith("# important notes")) {
+				currentSection = entry.notes;
+			} else if (line.toLowerCase(Locale.ENGLISH).startsWith("## features")) {
 				currentSection = entry.feature;
 			} else if (line.toLowerCase(Locale.ENGLISH).startsWith("## improvements")) {
 				currentSection = entry.improvement;

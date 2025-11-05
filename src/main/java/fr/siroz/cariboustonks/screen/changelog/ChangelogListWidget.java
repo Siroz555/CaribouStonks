@@ -91,6 +91,17 @@ class ChangelogListWidget extends ElementListWidget<ChangelogListWidget.LineEntr
 		}
 		out.add(SPACE);
 
+		// Important Notes
+		if (!entry.notes.isEmpty()) {
+			out.add(Text.literal("Important Notes:").formatted(Formatting.RED, Formatting.BOLD));
+			for (String item : entry.notes) {
+				for (String l : wrapText(" • " + item, maxWidth)) {
+					out.add(Text.literal(l).formatted(Formatting.RED, Formatting.BOLD));
+				}
+			}
+			out.add(SPACE);
+		}
+
 		// Features
 		if (!entry.feature.isEmpty()) {
 			out.add(Text.literal("Features:").withColor(Colors.GREEN.asInt()).formatted(Formatting.BOLD));

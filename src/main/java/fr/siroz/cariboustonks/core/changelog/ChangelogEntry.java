@@ -9,6 +9,7 @@ import java.util.List;
 public class ChangelogEntry {
 	public String version;
 	public String date;
+	public List<String> notes = new ArrayList<>();
 	public List<String> feature = new ArrayList<>();
 	public List<String> improvement = new ArrayList<>();
 	public List<String> fixed = new ArrayList<>();
