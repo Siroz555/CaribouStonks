@@ -81,6 +81,7 @@ class ChangelogListWidget extends ElementListWidget<ChangelogListWidget.LineEntr
 		}
 	}
 
+	@SuppressWarnings("checkstyle:CyclomaticComplexity")
 	private @NotNull List<Text> formatChangelogToTexts(@NotNull ChangelogEntry entry, int maxWidth) {
 		List<Text> out = new ArrayList<>();
 
