@@ -124,7 +124,7 @@ public class ItemValueViewerFeature extends Feature {
 				return;
 			}
 			// Si c'est globalement un Enchanted Book ou un item avec un prix unique du Bazaar ou de l'Auction
-			if (result.calculations().size() <= 2) {
+			if (result.calculations().size() < 2) {
 				lines.clear();
 				return;
 			}
