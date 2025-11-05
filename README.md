@@ -9,10 +9,11 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 **Supported versions**
 
-| Version             |                     Status | Notes                                                               |
-|---------------------|---------------------------:|---------------------------------------------------------------------|
-| **1.21.7 / 1.21.8** | ✅ **Latest (recommended)** | Full support: new features, performance improvements and bug fixes. |
-| **1.21.5**          | ⚠️ **Maintained (legacy)** | Still maintained: features from latest and bug fixes                |
+| Version             |                            Status | Notes                                                               |
+|---------------------|----------------------------------:|---------------------------------------------------------------------|
+| **1.21.10**         |                          **BETA** | Under development (beta version)                                    |
+| **1.21.7 / 1.21.8** |        ✅ **Latest (recommended)** | Full support: new features, performance improvements and bug fixes. |
+| **1.21.5**          | ⚠️ **No Longer Updated (legacy)** | No longer updated (latest version: 0.8.0)                           |
 
 ### Installation
 
