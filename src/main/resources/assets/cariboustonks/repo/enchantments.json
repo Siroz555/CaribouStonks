@@ -642,8 +642,8 @@
   {
     "id": "venomous",
     "name": "Venomous",
-    "maxLevel": 6,
-    "goodLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "vicious",

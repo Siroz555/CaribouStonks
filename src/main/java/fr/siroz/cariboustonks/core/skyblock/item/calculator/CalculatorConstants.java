@@ -92,6 +92,7 @@ public interface CalculatorConstants {
 		map.put("SMITE", Map.of(7, "SEVERED_HAND"));
 		map.put("ENDER_SLAYER", Map.of(7, "ENDSTONE_IDOL"));
 		map.put("BANE_OF_ARTHROPODS", Map.of(7, "ENSNARED_SNAIL"));
+		map.put("VENOMOUS", Map.of(7, "FATEFUL_STINGER"));
 	}));
 
 	List<String> MASTER_STARS = List.of(
@@ -223,6 +224,8 @@ public interface CalculatorConstants {
 		// Vacuums (https://wiki.hypixel.net/Reforging#Vacuums_)
 		map.put("beady", "BEADY_EYES");
 		map.put("buzzing", "CLIPPED_WINGS");
+		// Spades
+		map.put("erudite", "DAEDALUS_NOTES");
 	}));
 
 	/**

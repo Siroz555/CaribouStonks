@@ -68,7 +68,7 @@
   {
     "name": "Creature Fisher",
     "shardName": "Bogged",
-    "id": "C13",
+    "id": "C14",
     "skyBlockApiId": "SHARD_SEA_ARCHER"
   },
   {
@@ -172,6 +172,12 @@
     "shardName": "Miner Zombie",
     "id": "C36",
     "skyBlockApiId": "SHARD_MINER_ZOMBIE"
+  },
+  {
+    "name": "Mythological Resistance",
+    "shardName": "Cretan Bull",
+    "id": "C39",
+    "skyBlockApiId": "SHARD_CRETAN_BULL"
   },
   {
     "name": "Wood Elemental",
@@ -648,6 +654,12 @@
     "skyBlockApiId": "SHARD_GECKO"
   },
   {
+    "name": "Mythological Fortune",
+    "shardName": "Minotor",
+    "id": "R63",
+    "skyBlockApiId": "SHARD_MINOTOR"
+  },
+  {
     "name": "Shop",
     "shardName": "Hummingbird",
     "id": "R64",
@@ -712,12 +724,6 @@
     "shardName": "Moray Eel",
     "id": "E11",
     "skyBlockApiId": "SHARD_MORAY_EEL"
-  },
-  {
-    "name": "Dominance",
-    "shardName": "Thorn",
-    "id": "E12",
-    "skyBlockApiId": "SHARD_THORN"
   },
   {
     "name": "Lunar Power",
@@ -850,6 +856,18 @@
     "shardName": "Dragonfly",
     "id": "E37",
     "skyBlockApiId": "SHARD_DRAGONFLY"
+  },
+  {
+    "name": "Big Game Hunter",
+    "shardName": "Sphinx",
+    "id": "E39",
+    "skyBlockApiId": "SHARD_SPHINX"
+  },
+  {
+    "name": "King of Greed",
+    "shardName": "King Minos",
+    "id": "E42",
+    "skyBlockApiId": "SHARD_KING_MINOS"
   },
   {
     "name": "Shadow Elemental",
@@ -1054,6 +1072,12 @@
     "shardName": "Titanoboa",
     "id": "L47",
     "skyBlockApiId": "SHARD_TITANOBOA"
+  },
+  {
+    "name": "Dominance",
+    "shardName": "Thorn",
+    "id": "L48",
+    "skyBlockApiId": "SHARD_THORN"
   },
   {
     "name": "Catacombs Graduate",
