@@ -12,7 +12,6 @@ import fr.siroz.cariboustonks.rendering.world.renderer.TextRendererCommand;
 import fr.siroz.cariboustonks.rendering.world.renderer.TextureRendererCommand;
 import fr.siroz.cariboustonks.rendering.world.renderer.ThickCircleRendererCommand;
 import fr.siroz.cariboustonks.rendering.world.state.BeaconBeamRenderState;
-import fr.siroz.cariboustonks.rendering.world.state.CameraRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.CircleRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.CuboidOutlineRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.CursorLineRenderState;
@@ -33,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.Frustum;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.text.OrderedText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -73,6 +74,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	private final List<CuboidOutlineRenderState> cuboidOutlineRenderStates = new ArrayList<>();
 
 	private boolean frozen = false;
+	private Frustum frustum = null;
 
 	public WorldRendererImpl() {
 	}
@@ -124,7 +126,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	@Override
 	public void submitFilled(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, @NotNull Color color, boolean throughBlocks) {
 		if (frozen) return;
-		if (!FrustumUtils.isVisible(minX, minY, minZ, maxX, maxY, maxZ)) return;
+		if (!FrustumUtils.isVisible(frustum, minX, minY, minZ, maxX, maxY, maxZ)) return;
 
 		if (color == Colors.RAINBOW) {
 			int colorInt = AnimationUtils.getCurrentRainbowColor().withAlpha(1f).asInt();
@@ -138,7 +140,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	@Override
 	public void submitBeaconBeam(@NotNull BlockPos position, @NotNull Color color) {
 		if (frozen) return;
-		if (!FrustumUtils.isVisible(position.getX(), position.getY(), position.getZ(), position.getX() + 1, RenderUtils.MAX_BUILD_HEIGHT, position.getZ() + 1)) return;
+		if (!FrustumUtils.isVisible(frustum, position.getX(), position.getY(), position.getZ(), position.getX() + 1, RenderUtils.MAX_BUILD_HEIGHT, position.getZ() + 1)) return;
 
 		int colorInt;
 		if (color == Colors.RAINBOW) {
@@ -149,17 +151,16 @@ public final class WorldRendererImpl implements WorldRenderer {
 
 		float length = (float) RenderUtils.getCamera().getPos().subtract(position.toCenterPos()).horizontalLength();
 		float scale = Math.max(1.0f, length / 96.0f);
-		float tickProgress = RenderUtils.getTickCounter().getTickProgress(true);
-		long worldTime = Client.getWorldTime();
+		float beamRotationDegrees = Math.floorMod(Client.getWorldTime(), 40) + RenderUtils.getTickCounter().getTickProgress(true);
 
-		BeaconBeamRenderState state = new BeaconBeamRenderState(position, colorInt, scale, tickProgress, worldTime);
+		BeaconBeamRenderState state = new BeaconBeamRenderState(position, colorInt, scale, beamRotationDegrees);
 		beaconBeamRenderStates.add(state);
 	}
 
 	@Override
 	public void submitOutline(@NotNull Box box, @NotNull Color color, float lineWidth, boolean throughBlocks) {
 		if (frozen) return;
-		if (!FrustumUtils.isVisible(box)) return;
+		if (!FrustumUtils.isVisible(frustum, box)) return;
 
 		OutlineBoxRenderState state = new OutlineBoxRenderState(box, color, lineWidth, throughBlocks);
 		outlineBoxRenderStates.add(state);
@@ -193,8 +194,9 @@ public final class WorldRendererImpl implements WorldRenderer {
 	/**
 	 * Resets the renderer.
 	 */
-	public void begin() {
+	public void begin(Frustum frustumExtracted) {
 		frozen = false;
+		frustum = frustumExtracted;
 		textRenderStates.clear();
 		textureRenderStates.clear();
 		circleRenderStates.clear();

@@ -76,7 +76,8 @@ class WaypointsListWidget extends ElementListWidget<WaypointsListWidget.Waypoint
 		}
 
 		waypoints.add(waypointEntry.waypoint);
-		children().add(entryIndex, waypointEntry);
+		int newEntryIndex = addEntry(waypointEntry);
+		swapEntriesOnPositions(newEntryIndex, entryIndex);
 	}
 
 	void setNewIslandType(IslandType newIslandType) {
@@ -88,7 +89,7 @@ class WaypointsListWidget extends ElementListWidget<WaypointsListWidget.Waypoint
 		for (EntryListWidget.Entry<WaypointEntry> entry : children()) {
 			if (entry instanceof WaypointEntry waypointEntry) {
 				if (waypointEntry.enabledWidget.isChecked() != waypointEntry.waypoint.isEnabled()) {
-					waypointEntry.enabledWidget.onPress();
+					waypointEntry.enabledWidget.onPress(null); // le AbstractInput ne sert à rien, TODO
 				}
 			}
 		}
@@ -168,7 +169,7 @@ class WaypointsListWidget extends ElementListWidget<WaypointsListWidget.Waypoint
 
 			this.deleteWidget = ButtonWidget.builder(Text.translatable("selectServer.deleteButton"), button -> {
 				waypoints.remove(waypoint);
-				WaypointsListWidget.this.children().remove(this);
+				removeEntry(this);
 			}).width(56).build();
 
 			this.children = List.of(enabledWidget, nameWidget, xWidget, yWidget, zWidget, colorWidget, typeWidget, deleteWidget);
@@ -185,18 +186,10 @@ class WaypointsListWidget extends ElementListWidget<WaypointsListWidget.Waypoint
 		}
 
 		@Override
-		public void render(
-				@NotNull DrawContext context,
-				int index,
-				int y,
-				int x,
-				int entryWidth,
-				int entryHeight,
-				int mouseX,
-				int mouseY,
-				boolean hovered,
-				float tickProgress
-		) {
+		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+			int x = this.getX(); //getContentX();
+			int y = this.getY(); //getContentY();
+
 			int enabledX = x + 10;
 			enabledWidget.setPosition(enabledX, y + 1);
 
@@ -226,7 +219,7 @@ class WaypointsListWidget extends ElementListWidget<WaypointsListWidget.Waypoint
 			deleteWidget.setPosition(deleteX, y);
 
 			for (ClickableWidget child : children) {
-				child.render(context, mouseX, mouseY, tickProgress);
+				child.render(context, mouseX, mouseY, deltaTicks);
 			}
 		}
 

@@ -3,9 +3,9 @@ package fr.siroz.cariboustonks.rendering.world.renderer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.Renderer;
-import fr.siroz.cariboustonks.rendering.world.state.CameraRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.CircleRenderState;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.state.CameraRenderState;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -20,7 +20,7 @@ public final class CircleRendererCommand implements RendererCommand<CircleRender
 		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline);
 
 		Matrix4f matrix4f = new Matrix4f()
-				.translate((float) -camera.pos().getX(), (float) -camera.pos().getY(), (float) -camera.pos().getZ());
+				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());
 
 		// 5% du rayon (0.05) | min : 0.01f (trop faible) | max : 0.95 (la quasi-totalité du cercle)
 		float thicknessPercent = state.thicknessPercent();

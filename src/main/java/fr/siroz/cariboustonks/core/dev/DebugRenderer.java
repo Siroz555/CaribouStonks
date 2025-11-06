@@ -21,11 +21,11 @@ record DebugRenderer(@NotNull DeveloperManager dev) {
 		if (!dev.getTexturedArmorStands().isEmpty()) {
 			for (Object2IntMap.Entry<ArmorStandEntity> armorStand : dev.getTexturedArmorStands().object2IntEntrySet()) {
 				ArmorStandEntity entity = armorStand.getKey();
-				if (entity == null || entity.getPos() == null) {
+				if (entity == null || entity.getEntityPos() == null) {
 					continue;
 				}
 
-				Vec3d centerPos = entity.getPos();
+				Vec3d centerPos = entity.getEntityPos();
 				renderer.submitText(Text.literal("#" + armorStand.getIntValue()),
 						centerPos.add(0, 1, 0), 1, true);
 			}

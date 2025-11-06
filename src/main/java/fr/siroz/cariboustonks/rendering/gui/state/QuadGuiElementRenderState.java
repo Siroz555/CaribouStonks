@@ -32,12 +32,12 @@ public record QuadGuiElementRenderState(
 	}
 
 	@Override
-	public void setupVertices(VertexConsumer vertices, float depth) {
+	public void setupVertices(VertexConsumer vertices) {
 		for (Quad quad : quads) {
-			vertices.vertex(quad.x1(), quad.y1(), depth).color(color);
-			vertices.vertex(quad.x2(), quad.y2(), depth).color(color);
-			vertices.vertex(quad.x3(), quad.y3(), depth).color(color);
-			vertices.vertex(quad.x4(), quad.y4(), depth).color(color);
+			vertices.vertex(quad.x1(), quad.y1(), 0).color(color);
+			vertices.vertex(quad.x2(), quad.y2(), 0).color(color);
+			vertices.vertex(quad.x3(), quad.y3(), 0).color(color);
+			vertices.vertex(quad.x4(), quad.y4(), 0).color(color);
 		}
 	}
 

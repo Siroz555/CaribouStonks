@@ -106,7 +106,7 @@ public class HotspotFeature extends Feature {
 
 		FishingBobberEntity bobber = CLIENT.player.fishHook;
 		if (bobber != null && bobber.isAlive() && bobber.getOwner() == CLIENT.player) {
-			Vec3d bobberPos = bobber.getPos();
+			Vec3d bobberPos = bobber.getEntityPos();
 			double distanceToIgnoringY = StonksUtils.squaredDistanceToIgnoringY(currentHotspot.centerPos(), bobberPos);
 			bobberInHotspot = distanceToIgnoringY <= hotspotRadius * hotspotRadius;
 		} else {

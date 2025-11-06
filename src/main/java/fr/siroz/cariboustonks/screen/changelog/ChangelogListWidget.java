@@ -72,11 +72,12 @@ class ChangelogListWidget extends ElementListWidget<ChangelogListWidget.LineEntr
 		}
 
 		@Override
-		public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickProgress) {
-			int drawX = x + PADDING;
+		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+			int drawX = this.getX() + PADDING;
 			// Centre verticalement la ligne dans entryHeight si besoin
 			int textHeight = client.textRenderer.fontHeight;
-			int drawY = y + Math.max(0, (entryHeight - textHeight) / 2);
+			//int drawY = getContentY() + Math.max(0, (getContentHeight() - textHeight) / 2);
+			int drawY = this.getY() + Math.max(0, (this.getHeight() - textHeight) / 2);
 			context.drawTextWithShadow(client.textRenderer, text, drawX, drawY, Colors.WHITE.asInt());
 		}
 	}

@@ -1,8 +1,6 @@
 package fr.siroz.cariboustonks.mixin;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.event.MouseEvents;
@@ -43,38 +41,18 @@ public abstract class MouseMixin {
 		return !mouseLockFeature.isLocked();
 	}
 
-	@Inject(method = "lockCursor", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Mouse;x:D", ordinal = 0, shift = At.Shift.BEFORE))
-	private void cariboustonks$lockXPosition(CallbackInfo ci) {
+	@Inject(method = "lockCursor", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Mouse;cursorLocked:Z", opcode = Opcodes.PUTFIELD))
+	private void cariboustonks$setUpCursorPosition(CallbackInfo ci) {
 		this.guiX = this.x;
-	}
-
-	@Inject(method = "lockCursor", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Mouse;y:D", ordinal = 0, shift = At.Shift.BEFORE))
-	private void cariboustonks$lockYPosition(CallbackInfo ci) {
 		this.guiY = this.y;
 	}
 
-	@WrapOperation(method = "unlockCursor", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Mouse;x:D", opcode = Opcodes.PUTFIELD, ordinal = 0))
-	private void cariboustonks$unlockXPosition(Mouse mouse, double centreX, Operation<Void> operation) {
+	@Inject(method = "unlockCursor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/InputUtil;setCursorParameters(Lnet/minecraft/client/util/Window;IDD)V", shift = At.Shift.AFTER))
+	private void cariboustonks$unlockCursorPosition(CallbackInfo ci) {
 		if (ConfigManager.getConfig().vanilla.stopCursorResetPosition && MinecraftClient.getInstance().currentScreen instanceof GenericContainerScreen) {
 			this.x = this.guiX;
-		} else {
-			operation.call(mouse, centreX);
-		}
-	}
-
-	@WrapOperation(method = "unlockCursor", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Mouse;y:D", opcode = Opcodes.PUTFIELD, ordinal = 0))
-	private void cariboustonks$unlockYPosition(Mouse mouse, double centreY, Operation<Void> operation) {
-		if (ConfigManager.getConfig().vanilla.stopCursorResetPosition && MinecraftClient.getInstance().currentScreen instanceof GenericContainerScreen) {
 			this.y = this.guiY;
-		} else {
-			operation.call(mouse, centreY);
-		}
-	}
-
-	@Inject(method = "unlockCursor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/InputUtil;setCursorParameters(JIDD)V", ordinal = 0, shift = At.Shift.AFTER))
-	private void cariboustonks$fixCursorPosition(CallbackInfo ci) {
-		if (ConfigManager.getConfig().vanilla.stopCursorResetPosition && MinecraftClient.getInstance().currentScreen instanceof GenericContainerScreen) {
-			GLFW.glfwSetCursorPos(MinecraftClient.getInstance().getWindow().getHandle(), this.guiX, this.guiY);
+			GLFW.glfwSetCursorPos(MinecraftClient.getInstance().getWindow().getHandle(), this.x, this.y);
 		}
 	}
 

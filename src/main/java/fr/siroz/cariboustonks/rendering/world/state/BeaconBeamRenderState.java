@@ -6,7 +6,6 @@ public record BeaconBeamRenderState(
 		BlockPos pos,
 		int colorInt,
 		float scale,
-		float tickProgress,
-		long worldTime
+		float beamRotationDegrees
 ) {
 }

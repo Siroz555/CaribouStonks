@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.FatalErrorScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Position;
 import org.jetbrains.annotations.ApiStatus;
@@ -102,6 +103,16 @@ public final class StonksUtils {
 	 */
 	public static void showFatalErrorScreen(@NotNull Text title, @NotNull Text message) {
 		if (CLIENT.player != null) CLIENT.setScreen(new FatalErrorScreen(title, message));
+	}
+
+	/**
+	 * Determines if the {@code Shift key} is currently pressed by checking if either
+	 * the left or right Shift keys (340 or 344) are pressed.
+	 *
+	 * @return {@code true} if the Shift key is pressed
+	 */
+	public static boolean hasShiftDown() {
+		return InputUtil.isKeyPressed(CLIENT.getWindow(), 340) || InputUtil.isKeyPressed(CLIENT.getWindow(), 344);
 	}
 
 	@Contract(pure = true)

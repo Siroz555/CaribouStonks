@@ -286,7 +286,7 @@ public class ItemGraphWidget extends AbstractItemStonksWidget {
 				int textWidth = this.textRenderer.getWidth(dateText) + 10;
 				int height = type == Type.BAZAAR && secondPriceText != null ? 34 : 24; // 24
 				// Border
-				context.drawBorder(mouseX + 7, mouseY - 13, textWidth, height, Color.WHITE.getRGB());
+				GuiRenderer.drawBorder(context, mouseX + 7, mouseY - 13, textWidth, height, Color.WHITE.getRGB());
 				// Date
 				context.drawTextWithShadow(textRenderer, dateText, mouseX + 10, mouseY - 10, Color.WHITE.getRGB());
 				// Price - Auction / 1ère ligne du Bazaar

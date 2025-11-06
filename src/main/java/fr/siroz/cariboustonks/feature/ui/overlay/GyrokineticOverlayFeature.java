@@ -31,7 +31,7 @@ public class GyrokineticOverlayFeature extends Feature {
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")
 	public void render(WorldRenderer renderer) {
-		if (CLIENT.player == null || CLIENT.world == null || CLIENT.cameraEntity == null) return;
+		if (CLIENT.player == null || CLIENT.world == null || CLIENT.getCameraEntity() == null) return;
 		if (!isEnabled()) return;
 
 		String skyBlockId = SkyBlockAPI.getSkyBlockItemId(CLIENT.player.getMainHandStack());
@@ -39,7 +39,7 @@ public class GyrokineticOverlayFeature extends Feature {
 			return;
 		}
 
-		HitResult hitResult = CLIENT.cameraEntity.raycast(REACH, 1.0F, false);
+		HitResult hitResult = CLIENT.getCameraEntity().raycast(REACH, 1.0F, false);
 		if (hitResult.getType() == HitResult.Type.MISS) {
 			return;
 		}

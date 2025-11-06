@@ -11,7 +11,6 @@ import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
 import fr.siroz.cariboustonks.manager.container.tooltip.ContainerTooltipAppender;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
@@ -62,7 +61,7 @@ public class AuctionLowestBinTooltipFeature extends Feature implements Container
 
 			int count = item.getCount();
 			double price = lowestBin.get();
-			if (Screen.hasShiftDown() && count > 1) price *= count;
+			if (StonksUtils.hasShiftDown() && count > 1) price *= count;
 
             TooltipPriceDisplayType displayType = ConfigManager.getConfig().general.stonks.auctionTooltipPriceDisplayType;
             switch (displayType) {
@@ -89,7 +88,7 @@ public class AuctionLowestBinTooltipFeature extends Feature implements Container
                 }
             }
 
-			if (!Screen.hasShiftDown() && count > 1) {
+			if (!StonksUtils.hasShiftDown() && count > 1) {
 				lines.add(Text.literal("[Press SHIFT for x" + count + "]").formatted(Formatting.DARK_GRAY));
 			}
         }

@@ -7,6 +7,7 @@ import fr.siroz.cariboustonks.manager.container.overlay.ContainerOverlayManager;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -35,7 +36,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 	@Unique
 	private final ContainerOverlayManager overlayManager = CaribouStonks.managers().getManager(ContainerOverlayManager.class);
 
-
 	protected HandledScreenMixin(Text title) {
 		super(title);
 	}
@@ -46,14 +46,14 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 		overlayManager.draw(context, (HandledScreen<GenericContainerScreenHandler>) (Object) this, this.handler.slots);
 	}
 
-	@Inject(at = @At("HEAD"), method = "keyPressed")
-	public void cariboustonks$onKeyPressedEvent(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+	@Inject(method = "keyPressed", at = @At("HEAD"))
+	private void cariboustonks$onKeyPressedEvent(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
 		if (this.client == null || this.client.player == null) {
 			return;
 		}
 
-		if (this.focusedSlot != null && keyCode != 256 && !this.client.options.inventoryKey.matchesKey(keyCode, scanCode)) {
-			CustomScreenEvents.KEY_PRESSED.invoker().onKeyPressed(this, keyCode, scanCode, this.focusedSlot);
+		if (this.focusedSlot != null && input.getKeycode() != 256 && !this.client.options.inventoryKey.matchesKey(input)) {
+			CustomScreenEvents.KEY_PRESSED.invoker().onKeyPressed(this, input, this.focusedSlot);
 		}
 	}
 }

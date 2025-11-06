@@ -43,11 +43,11 @@ public final class ScoreboardUtils {
         try {
             STRING_SCOREBOARD.clear();
 
-            if (client.player == null) {
+			if (client.world == null || client.world.getScoreboard() == null) {
 				return;
 			}
 
-            Scoreboard scoreboard = client.player.getScoreboard();
+			Scoreboard scoreboard = client.world.getScoreboard();
             ScoreboardObjective objective = scoreboard.getObjectiveForSlot(ScoreboardDisplaySlot.FROM_ID.apply(1));
             ObjectArrayList<String> stringLines = new ObjectArrayList<>();
 

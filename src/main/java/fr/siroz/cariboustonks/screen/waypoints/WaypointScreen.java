@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.gui.DropdownWidget;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -84,12 +85,12 @@ public class WaypointScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public boolean onMouseClicked(double mouseX, double mouseY, int button) {
-		if (islandDropdownWidget.mouseClicked(mouseX, mouseY, button)) {
+	public boolean onMouseClicked(Click click, boolean doubled) {
+		if (islandDropdownWidget.mouseClicked(click, doubled)) {
 			return true;
 		}
 
-		boolean mouseClicked = super.onMouseClicked(mouseX, mouseY, button);
+		boolean mouseClicked = super.onMouseClicked(click, doubled);
 		updateButtons();
 		return mouseClicked;
 	}

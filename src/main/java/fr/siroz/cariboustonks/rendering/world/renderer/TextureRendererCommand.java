@@ -3,10 +3,10 @@ package fr.siroz.cariboustonks.rendering.world.renderer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.Renderer;
-import fr.siroz.cariboustonks.rendering.world.state.CameraRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.TextureRenderState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.texture.TextureSetup;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -24,13 +24,13 @@ public final class TextureRendererCommand implements RendererCommand<TextureRend
 		);
 		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline, textureSetup);
 
-		double dx = state.pos().getX() - camera.pos().getX();
-		double dy = state.pos().getY() - camera.pos().getY();
-		double dz = state.pos().getZ() - camera.pos().getZ();
+		double dx = state.pos().getX() - camera.pos.getX();
+		double dy = state.pos().getY() - camera.pos.getY();
+		double dz = state.pos().getZ() - camera.pos.getZ();
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) dx, (float) dy, (float) dz)
-				.rotate(camera.rotation());
+				.rotate(camera.orientation);
 
 		float[] colorComponents = state.color().asFloatComponents();
 

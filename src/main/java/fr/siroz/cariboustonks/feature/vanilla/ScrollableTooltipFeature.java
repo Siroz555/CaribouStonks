@@ -74,7 +74,7 @@ public class ScrollableTooltipFeature extends Feature {
 			return allowScroll;
 		}
 
-		if (InputUtil.isKeyPressed(CLIENT.getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+		if (InputUtil.isKeyPressed(CLIENT.getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
 			if (vertical > 0) {
 				scrollLeft();
 			} else if (vertical < 0) {

@@ -9,6 +9,8 @@ import fr.siroz.cariboustonks.manager.Manager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.input.KeyInput;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.screen.slot.Slot;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +34,8 @@ import java.util.function.Consumer;
  */
 public final class KeyBindManager implements Manager {
 
+	public static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(CaribouStonks.identifier("mod"));
+
 	private final Set<KeyBind> enabledKeyBinds = ConcurrentHashMap.newKeySet();
 	private final Map<Feature, List<KeyBind>> keyBinds = new ConcurrentHashMap<>();
 
@@ -48,8 +52,8 @@ public final class KeyBindManager implements Manager {
 	}
 
 	@EventHandler(event = "CustomScreenEvents.KEY_PRESSED")
-	private void handleKeyPressed(Screen screen, int keyCode, int scanCode, @NotNull Slot slot) {
-		triggerKeyBindsInScreen(screen, keyCode, scanCode, slot);
+	private void handleKeyPressed(Screen screen, KeyInput input, @NotNull Slot slot) {
+		triggerKeyBindsInScreen(screen, input, slot);
 	}
 
 	private void register(Feature feature, KeyBindComponent keyBindComponent) {
@@ -144,11 +148,11 @@ public final class KeyBindManager implements Manager {
 	 * <p>
 	 * TODO À voir si je combine tout, mais je suis PERDU
 	 */
-	private void triggerKeyBindsInScreen(Screen screen, int keyCode, int scanCode, Slot slot) {
+	private void triggerKeyBindsInScreen(Screen screen, KeyInput input, Slot slot) {
 		for (Feature feature : keyBinds.keySet()) {
 			for (KeyBind keyBind : keyBinds.get(feature)) {
 				try {
-					if (keyBind.hasScreenPressHandler() && keyBind.getKeyBinding().matchesKey(keyCode, scanCode)) {
+					if (keyBind.hasScreenPressHandler() && keyBind.getKeyBinding().matchesKey(input)) {
 						keyBind.onScreenPress(screen, slot);
 					}
 				} catch (Throwable throwable) {

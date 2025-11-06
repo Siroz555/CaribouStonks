@@ -7,10 +7,9 @@
     "ClientCommonNetworkHandlerMixin",
     "ClientPlayNetworkHandlerMixin",
     "ClientWorldMixin",
-    "DownloadingTerrainScreenMixin",
     "DrawContextMixin",
-    "EntityRenderDispatcherMixin",
     "EntityRendererMixin",
+    "EntityRenderManagerMixin",
     "GameMenuScreenMixin",
     "GameRendererMixin",
     "HandledScreenMixin",
@@ -18,6 +17,7 @@
     "InGameHudMixin",
     "InGameOverlayRendererMixin",
     "ItemStackMixin",
+    "LevelLoadingScreenMixin",
     "LivingEntityMixin",
     "LivingEntityRendererMixin",
     "MessageHandlerMixin",
@@ -40,8 +40,7 @@
     "accessors.HandledScreenAccessor",
     "accessors.MessageHandlerAccessor",
     "accessors.OrderedTextTooltipComponentAccessor",
-    "accessors.PlayerListHudAccessor",
-    "accessors.WorldRendererAccessor"
+    "accessors.PlayerListHudAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,5 +1,7 @@
 package fr.siroz.cariboustonks.util;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import java.util.List;
@@ -38,9 +40,8 @@ public final class ItemUtils {
 	 * @return The {@link DataComponentTypes#CUSTOM_DATA custom data} of the ItemStack,
 	 * or an empty {@link NbtCompound} if the ItemStack is missing a custom data component
 	 */
-	@SuppressWarnings("deprecation")
 	public static @NotNull NbtCompound getCustomData(@NotNull ComponentHolder stack) {
-		return stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).getNbt();
+		return stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
 	}
 
 	/**
@@ -142,12 +143,12 @@ public final class ItemUtils {
 	 * @param textureB64 the texture in Base64 format
 	 * @return the created ItemStack
 	 */
-	public static @NotNull ItemStack createSkull(@NotNull String textureB64) { // TODO - 1.21.9 Custom Head
+	public static @NotNull ItemStack createSkull(@NotNull String textureB64) {
 		ItemStack skull = new ItemStack(Items.PLAYER_HEAD);
 		try {
-			PropertyMap map = new PropertyMap();
-			map.put("textures", new Property("textures", textureB64));
-			ProfileComponent profile = new ProfileComponent(Optional.of("skull"), Optional.of(UUID.randomUUID()), map);
+			PropertyMap map = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", textureB64)));
+			GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "skull", map);
+			ProfileComponent profile = ProfileComponent.ofStatic(gameProfile);
 			skull.set(DataComponentTypes.PROFILE, profile);
 		} catch (Exception ex) {
 			fr.siroz.cariboustonks.CaribouStonks.LOGGER.error("[ItemUtils] Failed to create skull", ex);
@@ -173,7 +174,7 @@ public final class ItemUtils {
 			return "";
 		}
 
-		return profile.properties().get("textures").stream()
+		return profile.getGameProfile().properties().get("textures").stream()
 				.filter(Objects::nonNull)
 				.map(Property::value)
 				.findFirst()

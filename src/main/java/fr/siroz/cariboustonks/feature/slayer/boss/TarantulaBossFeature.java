@@ -63,7 +63,7 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 		if (!ConfigManager.getConfig().slayer.tarantulaBoss.showCursorLineToBossEggs) return;
 
 		for (ArmorStandEntity egg : bossEggs) {
-			renderer.submitLineFromCursor(egg.getPos(), Colors.PURPLE, 1.2f);
+			renderer.submitLineFromCursor(egg.getEntityPos(), Colors.PURPLE, 1.2f);
 		}
 	}
 
@@ -82,7 +82,7 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 			Matcher cocoonEggMatcher = COCOON_EGG_PATTERN.matcher(armorStand.getName().getString());
 			if (cocoonEggMatcher.matches()) {
 				Entity bossEntity = slayerManager.getBossEntity();
-				if (bossEntity != null && armorStand.getPos().distanceTo(bossEntity.getPos()) <= 15) {
+				if (bossEntity != null && armorStand.getEntityPos().distanceTo(bossEntity.getEntityPos()) <= 15) {
 					bossEggs.add(armorStand);
 				}
 			}

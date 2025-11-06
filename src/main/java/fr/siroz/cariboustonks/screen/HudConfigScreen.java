@@ -4,10 +4,13 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.manager.hud.Hud;
 import fr.siroz.cariboustonks.manager.hud.HudManager;
+import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -80,21 +83,21 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			int bWidth = Math.min(x + width + 2, this.width) - bX;
 			int bHeight = Math.min(y + height + 2, this.height) - bY;
 
-			context.drawBorder(bX, bY, bWidth, bHeight, Colors.RED.asInt());
+			GuiRenderer.drawBorder(context, bX, bY, bWidth, bHeight, Colors.RED.asInt());
 		}
 	}
 
 	@Override
-	public boolean onMouseClicked(double mouseX, double mouseY, int button) {
-		switch (button) {
+	public boolean onMouseClicked(Click click, boolean doubled) {
+		switch (click.button()) {
 			// Select
 			case GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
 				for (Hud element : hudList) {
 					// overlapping behaviour
-					if (RenderUtils.pointIsInArea(mouseX, mouseY,
+					if (RenderUtils.pointIsInArea(click.x(), click.y(),
 							element.x(), element.y(),
-							element.x() + element.width(), element.y() + element.height())
-							&& selected != element) {
+							element.x() + element.width(), element.y() + element.height()
+					) && selected != element) {
 						selected = element;
 						return true;
 					}
@@ -109,27 +112,27 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			}
 		}
 
-		return super.onMouseClicked(mouseX, mouseY, button);
+		return super.onMouseClicked(click, doubled);
 	}
 
 	@Override
-	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-		if (selected != null && button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-			selected.setX((int) Math.clamp(mouseX - (selected.width() >> 1), 0, this.width - selected.width()));
-			selected.setY((int) Math.clamp(mouseY - (selected.height() >> 1), 0, this.height - selected.height()));
+	public boolean mouseDragged(Click click, double offsetX, double offsetY) {
+		if (selected != null && click.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+			selected.setX((int) Math.clamp(click.x() - (selected.width() >> 1), 0, this.width - selected.width()));
+			selected.setY((int) Math.clamp(click.y() - (selected.height() >> 1), 0, this.height - selected.height()));
 		}
 
-		return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		return super.mouseDragged(click, offsetX, offsetY);
 	}
 
 	@Override
 	@SuppressWarnings("checkstyle:CyclomaticComplexity")
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		switch (keyCode) {
+	public boolean keyPressed(KeyInput input) {
+		switch (input.getKeycode()) {
 			// Scale up
 			case GLFW.GLFW_KEY_EQUAL, GLFW.GLFW_KEY_KP_ADD -> {
 				// Pour '=' il faut Maj (AZERTY/+, sinon ignore), et pour KP_ADD jamais besoin de shift
-				if (selected != null && (keyCode != GLFW.GLFW_KEY_EQUAL || (modifiers & GLFW.GLFW_MOD_SHIFT) != 0)) {
+				if (selected != null && (input.getKeycode() != GLFW.GLFW_KEY_EQUAL || (input.modifiers() & GLFW.GLFW_MOD_SHIFT) != 0)) {
 					selected.setScale(selected.scale() + 0.1f);
 					return true;
 				}
@@ -137,7 +140,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			// Scale down
 			case GLFW.GLFW_KEY_MINUS, GLFW.GLFW_KEY_KP_SUBTRACT -> {
 				// Pour '-' il faut Maj (AZERTY/+, sinon ignore), et pour KP_SUBTRACT jamais besoin de shift
-				if (selected != null && (keyCode != GLFW.GLFW_KEY_MINUS || (modifiers & GLFW.GLFW_MOD_SHIFT) != 0)) {
+				if (selected != null && (input.getKeycode() != GLFW.GLFW_KEY_MINUS || (input.modifiers() & GLFW.GLFW_MOD_SHIFT) != 0)) {
 					selected.setScale(selected.scale() - 0.1f);
 					return true;
 				}
@@ -167,7 +170,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			}
 		}
 
-		return super.keyPressed(keyCode, scanCode, modifiers);
+		return super.keyPressed(input);
 	}
 
 	@Override

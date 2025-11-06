@@ -54,7 +54,7 @@ public class BobberTimerFeature extends Feature {
 			return;
 		}
 
-		if (armorStand.getPos().distanceTo(CLIENT.player.fishHook.getPos()) > MIN_BOBBER_TIMER_DISTANCE) {
+		if (armorStand.getEntityPos().distanceTo(CLIENT.player.fishHook.getEntityPos()) > MIN_BOBBER_TIMER_DISTANCE) {
 			return;
 		}
 

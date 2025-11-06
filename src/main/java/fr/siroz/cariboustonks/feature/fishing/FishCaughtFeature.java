@@ -41,7 +41,7 @@ public class FishCaughtFeature extends Feature {
 		if (!isEnabled()) return;
 
 		String name = armorStand.getCustomName() != null ? armorStand.getCustomName().getString() : "";
-		if (name.equals(CAUGHT_FISH_NAME) && CLIENT.player.fishHook.getBoundingBox().expand(4D).contains(armorStand.getPos())) {
+		if (name.equals(CAUGHT_FISH_NAME) && CLIENT.player.fishHook.getBoundingBox().expand(4D).contains(armorStand.getEntityPos())) {
 			// Priorité pour RareSeaCreatureFeature
 			if (rareSeaCreatureFeature == null || !rareSeaCreatureFeature.hasFoundCreature()) {
 				Client.showTitle(Text.literal(CAUGHT_FISH_NAME).formatted(Formatting.RED, Formatting.BOLD), 1, 25, 1);

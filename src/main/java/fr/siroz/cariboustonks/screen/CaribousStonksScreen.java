@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.crash.CrashType;
 import fr.siroz.cariboustonks.util.Client;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -41,22 +42,22 @@ public abstract class CaribousStonksScreen extends Screen {
 	}
 
 	@Override
-	public final void render(DrawContext context, int mouseX, int mouseY, float delta) {
+	public final void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
 		try {
-			onRender(context, mouseX, mouseY, delta);
+			onRender(context, mouseX, mouseY, deltaTicks);
 		} catch (Throwable throwable) {
 			failure("render", throwable);
 		}
 	}
 
-	public void onRender(DrawContext context, int mouseX, int mouseY, float delta) {
-		super.render(context, mouseX, mouseY, delta);
+	public void onRender(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+		super.render(context, mouseX, mouseY, deltaTicks);
 	}
 
 	@Override
-	public final boolean mouseClicked(double mouseX, double mouseY, int button) {
+	public boolean mouseClicked(Click click, boolean doubled) {
 		try {
-			return onMouseClicked(mouseX, mouseY, button);
+			return onMouseClicked(click, doubled);
 		} catch (Throwable throwable) {
 			failure("mouseClicked", throwable);
 		}
@@ -64,8 +65,8 @@ public abstract class CaribousStonksScreen extends Screen {
 		return false;
 	}
 
-	public boolean onMouseClicked(double mouseX, double mouseY, int button) {
-		return super.mouseClicked(mouseX, mouseY, button);
+	public boolean onMouseClicked(Click click, boolean doubled) {
+		return super.mouseClicked(click, doubled);
 	}
 
 	@Override

@@ -33,6 +33,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4fStack;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.system.MemoryUtil;
 
@@ -59,6 +60,7 @@ public final class Renderer {
 
 	private static final BufferAllocator GENERAL_ALLOCATOR = new BufferAllocator(RenderLayer.DEFAULT_BUFFER_SIZE);
 	private static final Vector4f COLOR_MODULATOR = new Vector4f(1f, 1f, 1f, 1f);
+	private static final Vector3f MODEL_OFFSET = new Vector3f();
 	private static final float DEFAULT_LINE_WIDTH = 0f;
 
 	private final List<RenderPipeline> excludedFromBatching;
@@ -353,7 +355,7 @@ public final class Renderer {
 		return RenderSystem.getDynamicUniforms().write(
 				RenderSystem.getModelViewMatrix(),
 				COLOR_MODULATOR,
-				RenderSystem.getModelOffset(),
+				MODEL_OFFSET,
 				RenderSystem.getTextureMatrix(),
 				lineWidth
 		);

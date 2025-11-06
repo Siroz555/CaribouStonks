@@ -3,10 +3,10 @@ package fr.siroz.cariboustonks.rendering.world.renderer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.Renderer;
-import fr.siroz.cariboustonks.rendering.world.state.CameraRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.LinesRenderState;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -23,7 +23,7 @@ public final class LinesRendererCommand implements RendererCommand<LinesRenderSt
 		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline, state.lineWidth());
 
 		Matrix4f matrix4f = new Matrix4f()
-				.translate((float) -camera.pos().getX(), (float) -camera.pos().getY(), (float) -camera.pos().getZ());
+				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());
 
 		Vec3d[] points = state.points();
 		for (int i = 0; i < points.length; i++) {

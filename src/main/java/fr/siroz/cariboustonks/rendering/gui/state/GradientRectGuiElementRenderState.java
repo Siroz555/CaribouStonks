@@ -42,7 +42,7 @@ public record GradientRectGuiElementRenderState(
 	}
 
 	@Override
-	public void setupVertices(@NotNull VertexConsumer vertices, float v) {
+	public void setupVertices(@NotNull VertexConsumer vertices) {
 		float startAlpha = (float) (startColor >> 24 & 255) / 255.0F;
 		float startRed = (float) (startColor >> 16 & 255) / 255.0F;
 		float startGreen = (float) (startColor >> 8 & 255) / 255.0F;
@@ -52,19 +52,19 @@ public record GradientRectGuiElementRenderState(
 		float endGreen = (float) (endColor >> 8 & 255) / 255.0F;
 		float endBlue = (float) (endColor & 255) / 255.0F;
 
-		vertices.vertex(this.matrix, right, top, depth)
+		vertices.vertex(this.matrix, right, top)
 				.normal(right, top, depth)
 				.color(startRed, startGreen, startBlue, startAlpha);
 
-		vertices.vertex(this.matrix, left, top, depth)
+		vertices.vertex(this.matrix, left, top)
 				.normal(right, top, depth)
 				.color(startRed, startGreen, startBlue, startAlpha);
 
-		vertices.vertex(this.matrix, left, bottom, depth)
+		vertices.vertex(this.matrix, left, bottom)
 				.normal(right, top, depth)
 				.color(endRed, endGreen, endBlue, endAlpha);
 
-		vertices.vertex(this.matrix, right, bottom, depth)
+		vertices.vertex(this.matrix, right, bottom)
 				.normal(right, top, depth)
 				.color(endRed, endGreen, endBlue, endAlpha);
 	}

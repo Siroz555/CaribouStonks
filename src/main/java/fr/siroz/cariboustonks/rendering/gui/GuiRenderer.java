@@ -28,6 +28,23 @@ public final class GuiRenderer {
 	}
 
 	/**
+	 * Draws a rectangular border within the specified coordinates and dimensions.
+	 *
+	 * @param context the {@code DrawContext} used for rendering the border
+	 * @param x the x-coordinate (top-left corner)
+	 * @param y the y-coordinate (top-left corner)
+	 * @param width the width
+	 * @param height the height
+	 * @param color the color
+	 */
+	public static void drawBorder(@NotNull DrawContext context, int x, int y, int width, int height, int color) {
+		context.fill(x, y, x + width, y + 1, color);
+		context.fill(x, y + height - 1, x + width, y + height, color);
+		context.fill(x, y + 1, x + 1, y + height - 1, color);
+		context.fill(x + width - 1, y + 1, x + width, y + height - 1, color);
+	}
+
+	/**
 	 * Enqueues a gradient rectangle GUI element for rendering using the given {@link DrawContext}.
 	 * <p>
 	 * This method creates a {@link GradientRectGuiElementRenderState}.
@@ -136,15 +153,15 @@ public final class GuiRenderer {
 	}
 
 	public static void applyBlurScissorToRenderPass(RenderPass renderPass) {
-		if (BLUR_SCISSOR_STATE.method_72091()) {
+		if (BLUR_SCISSOR_STATE.isEnabled()) {
 			Window window = MinecraftClient.getInstance().getWindow();
 			int framebufferHeight = window.getFramebufferHeight();
 			double scaleFactor = window.getScaleFactor();
 
-			double x = BLUR_SCISSOR_STATE.method_72092() * scaleFactor;
-			double y = framebufferHeight - (BLUR_SCISSOR_STATE.method_72093() + BLUR_SCISSOR_STATE.method_72095()) * scaleFactor;
-			double width = BLUR_SCISSOR_STATE.method_72094() * scaleFactor;
-			double height = BLUR_SCISSOR_STATE.method_72095() * scaleFactor;
+			double x = BLUR_SCISSOR_STATE.getX() * scaleFactor;
+			double y = framebufferHeight - (BLUR_SCISSOR_STATE.getY() + BLUR_SCISSOR_STATE.getHeight()) * scaleFactor;
+			double width = BLUR_SCISSOR_STATE.getWidth() * scaleFactor;
+			double height = BLUR_SCISSOR_STATE.getHeight() * scaleFactor;
 
 			renderPass.enableScissor((int) x, (int) y, Math.max(0, (int) width), Math.max(0, (int) height));
 		}

@@ -66,7 +66,7 @@ public class EtherWarpOverlayFeature extends Feature {
 		HitResult hitResult = CLIENT.crosshairTarget;
 		if (hitResult != null && hitResult.getType() == HitResult.Type.BLOCK
 				&& hitResult instanceof BlockHitResult blockHitResult
-				&& blockHitResult.getPos().isInRange(CLIENT.player.getPos(), range)
+				&& blockHitResult.getPos().isInRange(CLIENT.player.getEntityPos(), range)
 		) {
 			renderOverlayAt(renderer, blockHitResult);
 			return;

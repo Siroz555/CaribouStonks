@@ -13,10 +13,11 @@ import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.LoadingDisplay;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.input.KeyCodes;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -172,8 +173,8 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 	}
 
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		if (KeyCodes.isToggle(keyCode)) {
+	public boolean keyPressed(KeyInput input) {
+		if (input.isEnter()) {
 			Optional<ItemEntry> itemEntry = getSelectedOptional();
 			if (itemEntry.isPresent()) {
 				Client.playSoundButtonClickUI();
@@ -182,7 +183,7 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 			}
 		}
 
-		return super.keyPressed(keyCode, scanCode, modifiers);
+		return super.keyPressed(input);
 	}
 
 	public Optional<ItemEntry> getSelectedOptional() {
@@ -218,19 +219,7 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 			return Text.literal("Select " + item.name());
 		}
 
-		@Override
-		public void render(
-				DrawContext context,
-				int index,
-				int y,
-				int x,
-				int entryWidth,
-				int entryHeight,
-				int mouseX,
-				int mouseY,
-				boolean hovered,
-				float tickDelta
-		) {
+		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			if (this.client == null || this.client.textRenderer == null) {
 				return;
 			}
@@ -239,32 +228,32 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 			String name = item.hypixelSkyBlockId();
 			Color color = item.color().getColorValue() == null ? Colors.WHITE : Color.fromFormatting(item.color());
 
-			context.drawTextWithShadow(this.client.textRenderer, displayName, x + 32 + 3, y + 1, color.asInt());
-			int x1 = x + 32 + 3;
-			context.drawTextWithShadow(this.client.textRenderer, name, x1, y + 9 + 3, Color.fromHexString("#7f7f80").asInt());
+			context.drawTextWithShadow(this.client.textRenderer, displayName, this.getContentX() + 32 + 3, this.getContentY() + 1, color.asInt());
+			int x1 = this.getContentX() + 32 + 3;
+			context.drawTextWithShadow(this.client.textRenderer, name, x1, this.getContentY() + 9 + 3, Color.fromHexString("#7f7f80").asInt());
 
 			//context.drawItem(item.icon(), x + 7, y + 7);
 
 			if (hovered) {
-				context.fill(x, y, x + 32, y + 32, -1601138544);
-				int x2 = mouseX - x;
+				context.fill(this.getContentX(), this.getContentY(), this.getContentX() + 32, this.getContentY() + 32, -1601138544);
+				int x2 = mouseX - this.getContentX();
 				if (x2 < 32) {
-					context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ItemListWidget.HIGHLIGHTED_TEXTURE, x, y, 32, 32);
+					context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ItemListWidget.HIGHLIGHTED_TEXTURE, this.getContentX(), this.getContentY(), 32, 32);
 				} else {
-					context.drawItem(item.icon(), x + 7, y + 7);
-					context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ItemListWidget.TEXTURE, x, y, 32, 32);
+					context.drawItem(item.icon(), this.getContentX() + 7, this.getContentY() + 7);
+					context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ItemListWidget.TEXTURE, this.getContentX(), this.getContentY(), 32, 32);
 				}
 			} else {
-				context.drawItem(item.icon(), x + 7, y + 7);
+				context.drawItem(item.icon(), this.getContentX() + 7, this.getContentY() + 7);
 			}
 		}
 
 		@Override
-		public boolean mouseClicked(double mouseX, double mouseY, int button) {
+		public boolean mouseClicked(Click click, boolean doubled) {
 			setSelected(this);
-			if (!(mouseX - (double) getRowLeft() <= (double) 32.0F) && Util.getMeasuringTimeMs() - time >= 1000L) {
+			if (!(click.x() - (double) getRowLeft() <= (double) 32.0F) && Util.getMeasuringTimeMs() - time >= 1000L) {
 				time = Util.getMeasuringTimeMs();
-				return super.mouseClicked(mouseX, mouseY, button);
+				return super.mouseClicked(click, doubled);
 			} else {
 				Client.playSoundButtonClickUI();
 				load();
@@ -297,24 +286,13 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 		}
 
 		@Override
-		public void render(
-				DrawContext context,
-				int index,
-				int y,
-				int x,
-				int entryWidth,
-				int entryHeight,
-				int mouseX,
-				int mouseY,
-				boolean hovered,
-				float tickDelta
-		) {
+		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			if (this.client == null || this.client.currentScreen == null || this.client.textRenderer == null) {
 				return;
 			}
 
 			int x1 = (this.client.currentScreen.width - this.client.textRenderer.getWidth(LOADING_LIST_TEXT)) / 2;
-			int y1 = y + (entryHeight - 9) / 2;
+			int y1 = this.getY() + (this.getHeight() - 9) / 2;
 			context.drawTextWithShadow(this.client.textRenderer, LOADING_LIST_TEXT, x1, y1,  Colors.WHITE.asInt());
 
 			String string = LoadingDisplay.get(Util.getMeasuringTimeMs());

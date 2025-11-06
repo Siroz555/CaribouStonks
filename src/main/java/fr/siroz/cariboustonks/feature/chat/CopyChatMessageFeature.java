@@ -33,8 +33,7 @@ public class CopyChatMessageFeature extends Feature {
 			return;
 		}
 
-		long handle = MinecraftClient.getInstance().getWindow().getHandle();
-		if (!InputUtil.isKeyPressed(handle, GLFW.GLFW_KEY_LEFT_CONTROL)) {
+		if (!InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow(), GLFW.GLFW_KEY_LEFT_CONTROL)) {
 			return;
 		}
 

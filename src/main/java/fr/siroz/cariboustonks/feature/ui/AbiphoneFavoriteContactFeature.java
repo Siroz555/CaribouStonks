@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.feature.ui;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.CustomScreenEvents;
+import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
 import fr.siroz.cariboustonks.manager.container.overlay.ContainerOverlay;
@@ -14,6 +15,7 @@ import fr.siroz.cariboustonks.util.cooldown.Cooldown;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.Slot;
@@ -96,11 +98,12 @@ public class AbiphoneFavoriteContactFeature
 		return priority;
 	}
 
-	private void onKeyPressed(Screen screen, int keyCode, int scanCode, @NotNull Slot slot) {
+	@EventHandler(event = "CustomScreenEvents.KEY_PRESSED")
+	private void onKeyPressed(Screen screen, KeyInput input, @NotNull Slot slot) {
 		if (!isEnabled() || screen == null) return;
 		if (!matches(screen)) return;
 
-		if (Screen.hasShiftDown() && COOLDOWN.test()) {
+		if (StonksUtils.hasShiftDown() && COOLDOWN.test()) {
 			ItemStack itemStack = slot.getStack();
 			if (itemStack == null) {
 				return;

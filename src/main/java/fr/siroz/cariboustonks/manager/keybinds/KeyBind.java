@@ -41,8 +41,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class KeyBind {
 
-	private static final String CATEGORY = "CaribouStonks";
-
 	private final String name;
 	@Nullable
 	private final Runnable onPress;
@@ -99,7 +97,7 @@ public class KeyBind {
 		this.firstPress = firstPress;
 		this.onPress = onPress;
 		this.onScreenPress = onScreenPress;
-		this.keyBinding = new KeyBinding(name, keyCode, CATEGORY);
+		this.keyBinding = new KeyBinding(name, keyCode, KeyBindManager.CATEGORY);
 	}
 
 	public String getName() {

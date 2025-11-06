@@ -1,11 +1,11 @@
 package fr.siroz.cariboustonks.rendering.world.renderer;
 
 import fr.siroz.cariboustonks.rendering.Renderer;
-import fr.siroz.cariboustonks.rendering.world.state.CameraRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.CuboidOutlineRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ public final class CuboidOutlineRendererCommand implements RendererCommand<Cuboi
 		BufferBuilder buffer = Renderer.getInstance().getBuffer(RenderPipelines.DEBUG_LINE_STRIP, state.lineWidth());
 
 		Matrix4f matrix4f = new Matrix4f()
-				.translate((float) -camera.pos().getX(), (float) -camera.pos().getY(), (float) -camera.pos().getZ());
+				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());
 
 		MatrixStack matrices = RenderUtils.matrixToStack(matrix4f);
 		MatrixStack.Entry entry = matrices.peek();

@@ -7,12 +7,14 @@ import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.SimplePositioningWidget;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -93,27 +95,27 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+	public boolean keyPressed(KeyInput input) {
 		if (currentEntry != null) {
-			int code = (keyCode == GLFW.GLFW_KEY_ESCAPE || keyCode == GLFW.GLFW_KEY_DELETE) ? -1 : keyCode;
+			int code = (input.getKeycode() == GLFW.GLFW_KEY_ESCAPE || input.getKeycode() == GLFW.GLFW_KEY_DELETE) ? -1 : input.getKeycode();
 			currentEntry.setKeyCode(code);
 			currentEntry = null;
 			setFocused(null);
 			return true;
 		}
 
-		return super.keyPressed(keyCode, scanCode, modifiers);
+		return super.keyPressed(input);
 	}
 
 	@Override
-	public boolean onMouseClicked(double mouseX, double mouseY, int button) {
+	public boolean onMouseClicked(Click click, boolean doubled) {
 		if (currentEntry != null) {
-			currentEntry.setKeyCode(-2000 - button);
+			currentEntry.setKeyCode(-2000 - click.button());
 			currentEntry = null;
 			return true;
 		}
 
-		return super.onMouseClicked(mouseX, mouseY, button);
+		return super.onMouseClicked(click, doubled);
 	}
 
 	@Override

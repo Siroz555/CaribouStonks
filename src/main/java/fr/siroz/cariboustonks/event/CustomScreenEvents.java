@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.event;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.screen.slot.Slot;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,9 +27,9 @@ public final class CustomScreenEvents {
 	/**
 	 * Called when a key is pressed within a screen.
 	 */
-	public static final Event<KeyPressed> KEY_PRESSED = EventFactory.createArrayBacked(KeyPressed.class, listeners -> (screen, keyCode, scanCode, slot) -> {
+	public static final Event<KeyPressed> KEY_PRESSED = EventFactory.createArrayBacked(KeyPressed.class, listeners -> (screen, keyInput, slot) -> {
 		for (KeyPressed listener : listeners) {
-			listener.onKeyPressed(screen, keyCode, scanCode, slot);
+			listener.onKeyPressed(screen, keyInput, slot);
 		}
 	});
 
@@ -39,6 +40,6 @@ public final class CustomScreenEvents {
 
 	@FunctionalInterface
 	public interface KeyPressed {
-		void onKeyPressed(Screen screen, int keyCode, int scanCode, @NotNull Slot slot);
+		void onKeyPressed(Screen screen, KeyInput input, @NotNull Slot slot);
 	}
 }

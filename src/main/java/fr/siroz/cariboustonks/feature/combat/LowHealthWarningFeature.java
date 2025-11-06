@@ -102,14 +102,14 @@ public class LowHealthWarningFeature extends Feature {
 		if (CLIENT.player == null) return;
 
 		// C'est incroyable de faire comme ça, mais bon ça marche lul
-		WorldBorder worldBorder = CLIENT.player.getWorld().getWorldBorder();
+		WorldBorder worldBorder = CLIENT.player.getEntityWorld().getWorldBorder();
 		worldBorder.setSize(1D);
 		worldBorder.setCenter(CLIENT.player.getX() + 5_555, CLIENT.player.getZ() + 5_555);
 	}
 
 	private void remove() {
 		if (CLIENT.player == null) return;
-		CLIENT.player.getWorld().getWorldBorder().load(WorldBorder.DEFAULT_BORDER);
+		CLIENT.player.getEntityWorld().getWorldBorder().load(WorldBorder.Properties.DEFAULT);
 	}
 
 	private record Health(int value, int max, int overflow) {

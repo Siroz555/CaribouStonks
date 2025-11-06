@@ -73,24 +73,13 @@ class ReminderListWidget extends AlwaysSelectedEntryListWidget<ReminderListWidge
 		}
 
 		@Override
-		public void render(
-				DrawContext context,
-				int index,
-				int y,
-				int x,
-				int entryWidth,
-				int entryHeight,
-				int mouseX,
-				int mouseY,
-				boolean hovered,
-				float tickProgress
-		) {
+		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			if (client == null || client.currentScreen == null || client.textRenderer == null) {
 				return;
 			}
 
 			int x1 = (client.currentScreen.width - client.textRenderer.getWidth(TEXT)) / 2;
-			int y1 = y + (entryHeight - 9) / 2;
+			int y1 = this.getY() + (this.getHeight() - 9) / 2; // getContentHeight()
 			context.drawTextWithShadow(client.textRenderer, TEXT, x1, y1, Colors.WHITE.asInt());
 		}
 	}
@@ -128,28 +117,17 @@ class ReminderListWidget extends AlwaysSelectedEntryListWidget<ReminderListWidge
 		}
 
 		@Override
-		public void render(
-				@NotNull DrawContext context,
-				int index,
-				int y,
-				int x,
-				int entryWidth,
-				int entryHeight,
-				int mouseX,
-				int mouseY,
-				boolean hovered,
-				float tickProgress
-		) {
+		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			if (client == null || client.currentScreen == null || client.textRenderer == null) {
 				return;
 			}
 
-			context.drawTextWithShadow(client.textRenderer, name, x + 32 + 3, y + 1, Colors.WHITE.asInt());
-			int x1 = x + 32 + 3;
-			context.drawTextWithShadow(client.textRenderer, expireTime, x1, y + 12, Colors.WHITE.asInt());
-			context.drawTextWithShadow(client.textRenderer, description, x1, y + 23, Colors.WHITE.asInt());
+			context.drawTextWithShadow(client.textRenderer, name, this.getX() + 32 + 3, this.getY() + 1, Colors.WHITE.asInt());
+			int x1 = this.getX() + 32 + 3;
+			context.drawTextWithShadow(client.textRenderer, expireTime, x1, this.getY() + 12, Colors.WHITE.asInt());
+			context.drawTextWithShadow(client.textRenderer, description, x1, this.getY() + 23, Colors.WHITE.asInt());
 
-			context.drawItem(icon, x + 7, y + 7);
+			context.drawItem(icon, this.getX() + 7, this.getY() + 7);
 		}
 	}
 }

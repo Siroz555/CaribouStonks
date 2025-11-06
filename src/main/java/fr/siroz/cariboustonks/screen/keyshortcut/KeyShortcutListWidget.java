@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcut;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -44,12 +46,10 @@ class KeyShortcutListWidget extends ElementListWidget<KeyShortcutListWidget.KeyS
 	}
 
 	@Override
-	protected boolean removeEntry(KeyShortcutEntry entry) {
+	protected void removeEntry(KeyShortcutEntry entry) {
 		if (entry != null && entry.keyShortcut != null) {
 			parent.shortcuts.remove(entry.keyShortcut.command());
 		}
-
-		return super.removeEntry(entry);
 	}
 
 	@Override
@@ -111,31 +111,19 @@ class KeyShortcutListWidget extends ElementListWidget<KeyShortcutListWidget.KeyS
 			return children;
 		}
 
-		@Override
-		public void render(
-				DrawContext context,
-				int index,
-				int y,
-				int x,
-				int entryWidth,
-				int entryHeight,
-				int mouseX,
-				int mouseY,
-				boolean hovered,
-				float tickProgress
-		) {
+		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			// Vu que le Widget n'est pas un AlwaysSelectedEntryListWidget, le rendu ne se fait pas.
 			// Et si c'était le cas, la facon de gérer les ElementListWidget-Entry change.
 			// La facon de gérer les screen me rend fou -_-
 			if (getSelectedOrNull() != null && getSelectedOrNull() == this) {
-				int x1 = getX() + (width - entryWidth) / 2;
-				int x2 = getX() + (width + entryWidth) / 2;
-				context.fill(x1, y - 6, x2, y + entryHeight - 4, Colors.GRAY.asInt());
-				context.fill(x1 + 1, y - 5, x2 - 1, y + entryHeight - 5, Colors.BLACK.asInt());
+				int x1 = this.getX();
+				int x2 = this.getX() + this.getContentWidth();
+				context.fill(x1, this.getY() - 6, x2, this.getY() + this.getHeight() - 4, Colors.GRAY.asInt());
+				context.fill(x1 + 1, this.getY() - 5, x2 - 1, this.getY() + this.getHeight() - 5, Colors.BLACK.asInt());
 			}
 
-			commandWidget.setPosition(x + 10, y + 1);
-			keyBindWidget.setPosition(width / 2 + 44, y);
+			commandWidget.setPosition(this.getX() + 10, this.getY() + 1);
+			keyBindWidget.setPosition(width / 2 + 44, this.getY());
 			keyBindWidget.active = !waitingForKey;
 
 			int keyCode = parent.shortcuts.values().stream()
@@ -153,7 +141,7 @@ class KeyShortcutListWidget extends ElementListWidget<KeyShortcutListWidget.KeyS
 				int mouseButton = -2000 - keyCode;
 				label = InputUtil.Type.MOUSE.createFromCode(mouseButton).getLocalizedText().getString();
 			} else {
-				label = InputUtil.fromKeyCode(keyCode, 0).getLocalizedText().getString();
+				label = InputUtil.fromKeyCode(new KeyInput(keyCode, 0, 0)).getLocalizedText().getString();
 			}
 
 			boolean duplicate = keyCode != -1 && parent.shortcuts.values().stream()
@@ -164,17 +152,17 @@ class KeyShortcutListWidget extends ElementListWidget<KeyShortcutListWidget.KeyS
 			keyBindWidget.setMessage(message);
 
 			for (ClickableWidget child : children) {
-				child.render(context, mouseX, mouseY, tickProgress);
+				child.render(context, mouseX, mouseY, deltaTicks);
 			}
 		}
 
 		@Override
-		public boolean mouseClicked(double mouseX, double mouseY, int button) {
-			if (keyBindWidget.mouseClicked(mouseX, mouseY, button)) {
+		public boolean mouseClicked(Click click, boolean doubled) {
+			if (keyBindWidget.mouseClicked(click, doubled)) {
 				return true;
 			}
 
-			return super.mouseClicked(mouseX, mouseY, button);
+			return super.mouseClicked(click, doubled);
 		}
 	}
 }

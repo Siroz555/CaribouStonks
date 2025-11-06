@@ -3,9 +3,9 @@ package fr.siroz.cariboustonks.rendering.world.renderer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.Renderer;
-import fr.siroz.cariboustonks.rendering.world.state.CameraRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.CursorLineRenderState;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -19,10 +19,9 @@ public final class CursorLineRendererCommand implements RendererCommand<CursorLi
 		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline, state.lineWidth());
 
 		Matrix4f matrix4f = new Matrix4f()
-				.translate((float) -camera.pos().getX(), (float) -camera.pos().getY(), (float) -camera.pos().getZ());
+				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());
 
-		Vec3d cameraPoint = camera.pos()
-				.add(Vec3d.fromPolar(camera.pitch(), camera.yaw()));
+		Vec3d cameraPoint = camera.pos.add(new Vec3d(camera.orientation.transform(new Vector3f(0, 0, -1))));
 		Vector3f normal = state.point().toVector3f()
 				.sub((float) cameraPoint.getX(), (float) cameraPoint.getY(), (float) cameraPoint.getZ())
 				.normalize();

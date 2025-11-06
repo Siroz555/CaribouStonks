@@ -119,7 +119,6 @@ public class KeyShortcutFeature extends Feature {
 		if (!isEnabled()) return;
 		if (System.currentTimeMillis() - lastKeyPressed < COOLDOWN) return;
 
-		long handle = client.getWindow().getHandle();
 		for (KeyShortcut shortcut : shortcuts.values()) {
 			if (shortcut.command().isBlank() || shortcut.keyCode() == -1) {
 				continue;
@@ -128,9 +127,9 @@ public class KeyShortcutFeature extends Feature {
 			boolean pressed;
 			if (shortcut.keyCode() <= -2000) {
 				int mouseButton = -2000 - shortcut.keyCode();
-				pressed = GLFW.glfwGetMouseButton(handle, mouseButton) == GLFW.GLFW_PRESS;
+				pressed = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), mouseButton) == GLFW.GLFW_PRESS;
 			} else {
-				pressed = InputUtil.isKeyPressed(handle, shortcut.keyCode());
+				pressed = InputUtil.isKeyPressed(client.getWindow(), shortcut.keyCode());
 			}
 
 			if (pressed) {

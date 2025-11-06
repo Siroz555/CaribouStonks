@@ -285,7 +285,7 @@ public final class SlayerManager implements Manager {
 		if (entityType == null) return null;
 		if (armorStand == null) return null;
 
-		List<T> entities = armorStand.getWorld().getEntitiesByType(
+		List<T> entities = armorStand.getEntityWorld().getEntitiesByType(
 				entityType,
 				armorStand.getBoundingBox().expand(0, 1.5D, 0),
 				e -> e.isAlive() && !(e instanceof MobEntity mob && mob.isBaby())
@@ -303,7 +303,7 @@ public final class SlayerManager implements Manager {
 	}
 
 	private List<Entity> getArmorStands(@NotNull Entity entity) {
-		return entity.getWorld().getOtherEntities(
+		return entity.getEntityWorld().getOtherEntities(
 				entity,
 				entity.getBoundingBox().expand(0.1D, 1.5D, 0.1D),
 				e -> e instanceof ArmorStandEntity && e.hasCustomName());

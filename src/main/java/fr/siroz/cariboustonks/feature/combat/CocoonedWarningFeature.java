@@ -179,7 +179,7 @@ public class CocoonedWarningFeature extends Feature {
 			return false;
 		}
 
-		if (CLIENT.player != null && CLIENT.player.getPos().squaredDistanceTo(as.getPos()) > MAX_PLAYER_COCOON_DISTANCE_SQ) {
+		if (CLIENT.player != null && CLIENT.player.getEntityPos().squaredDistanceTo(as.getEntityPos()) > MAX_PLAYER_COCOON_DISTANCE_SQ) {
 			return false;
 		}
 
