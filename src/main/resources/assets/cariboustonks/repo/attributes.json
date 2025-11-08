@@ -655,9 +655,9 @@
   },
   {
     "name": "Mythological Fortune",
-    "shardName": "Minotor",
+    "shardName": "Minotaur",
     "id": "R63",
-    "skyBlockApiId": "SHARD_MINOTOR"
+    "skyBlockApiId": "SHARD_MINOTAUR"
   },
   {
     "name": "Shop",
