@@ -4,6 +4,8 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.manager.waypoint.options.IconOption;
 import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.util.colors.Color;
+import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
@@ -35,24 +37,27 @@ public final class WaypointRenderer {
 		}
 
 		BlockPos pos = waypoint.getPosition().toBlockPos();
+		Color color = waypoint.getColor() == Colors.RAINBOW
+				? waypoint.getColor()
+				: waypoint.getColor().withAlpha(waypoint.getAlpha());
 
 		switch (waypoint.getType()) {
-			case BEAM -> renderer.submitBeaconBeam(pos, waypoint.getColor());
+			case BEAM -> renderer.submitBeaconBeam(pos, color);
 			case WAYPOINT -> {
-				renderer.submitFilled(pos, waypoint.getColor().withAlpha(waypoint.getAlpha()), waypoint.isBoxThroughBlocks());
-				renderer.submitBeaconBeam(pos, waypoint.getColor());
+				renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
+				renderer.submitBeaconBeam(pos.add(0, 1, 0), color);
 			}
 			case OUTLINED_WAYPOINT -> {
-				renderer.submitFilled(pos, waypoint.getColor().withAlpha(waypoint.getAlpha()), waypoint.isBoxThroughBlocks());
-				renderer.submitBeaconBeam(pos, waypoint.getColor());
-				renderer.submitOutline(waypoint.getBox(), waypoint.getColor(), waypoint.getBoxLineWidth(), waypoint.isBoxThroughBlocks());
+				renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
+				renderer.submitBeaconBeam(pos.add(0, 1, 0), color);
+				renderer.submitOutline(waypoint.getBox(), color, waypoint.getBoxLineWidth(), waypoint.isBoxThroughBlocks());
 			}
-			case HIGHLIGHT -> renderer.submitFilled(pos, waypoint.getColor().withAlpha(waypoint.getAlpha()), waypoint.isBoxThroughBlocks());
+			case HIGHLIGHT -> renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
 			case OUTLINED_HIGHLIGHT -> {
-				renderer.submitFilled(pos, waypoint.getColor().withAlpha(waypoint.getAlpha()), waypoint.isBoxThroughBlocks());
-				renderer.submitOutline(waypoint.getBox(), waypoint.getColor(), waypoint.getBoxLineWidth(), waypoint.isBoxThroughBlocks());
+				renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
+				renderer.submitOutline(waypoint.getBox(),color, waypoint.getBoxLineWidth(), waypoint.isBoxThroughBlocks());
 			}
-			case OUTLINE -> renderer.submitOutline(waypoint.getBox(), waypoint.getColor(), waypoint.getBoxLineWidth(), waypoint.isBoxThroughBlocks());
+			case OUTLINE -> renderer.submitOutline(waypoint.getBox(), color, waypoint.getBoxLineWidth(), waypoint.isBoxThroughBlocks());
 			default -> {
 			}
 		}

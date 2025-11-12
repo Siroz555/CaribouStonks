@@ -40,10 +40,19 @@ record DebugRenderer(@NotNull DeveloperManager dev) {
 				new BlockPos(1, 71, 25),
 				Colors.RED);
 
+		renderer.submitBeaconBeam(
+				new BlockPos(1, 71, 27),
+				Colors.RAINBOW);
+
 		renderer.submitFilled(
 				new BlockPos(1, 70, 25),
 				Colors.RED.withAlpha(0.25f),
 				true);
+
+		renderer.submitFilled(
+				new BlockPos(1, 70, 27),
+				Colors.RAINBOW,
+				false);
 
 		renderer.submitOutline(
 				new Box(new BlockPos(5, 70, 25)),
