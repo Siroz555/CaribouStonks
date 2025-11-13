@@ -89,7 +89,7 @@ class WaypointsListWidget extends ElementListWidget<WaypointsListWidget.Waypoint
 		for (EntryListWidget.Entry<WaypointEntry> entry : children()) {
 			if (entry instanceof WaypointEntry waypointEntry) {
 				if (waypointEntry.enabledWidget.isChecked() != waypointEntry.waypoint.isEnabled()) {
-					waypointEntry.enabledWidget.onPress(null); // le AbstractInput ne sert à rien, TODO
+					waypointEntry.enabledWidget.onPress(null); // le AbstractInput ne sert à rien
 				}
 			}
 		}

@@ -58,7 +58,7 @@ public final class NetworkEvents {
 	 */
 	public static final Event<ParticlePreReceived> PARTICLE_PRE_RECEIVED_PACKET = EventFactory.createArrayBacked(ParticlePreReceived.class, listeners -> particlePacket -> {
 		for (ParticlePreReceived listener : listeners) {
-			if (listener.onParticlePreReceived(particlePacket)) { // TODO
+			if (listener.onParticlePreReceived(particlePacket)) {
 				return true;
 			}
 		}

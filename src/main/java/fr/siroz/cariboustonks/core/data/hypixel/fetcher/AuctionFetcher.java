@@ -4,5 +4,5 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 @Deprecated
-public final class AuctionFetcher { // TODO
+public final class AuctionFetcher {
 }

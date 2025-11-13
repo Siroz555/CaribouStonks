@@ -67,7 +67,7 @@ public final class AsyncScheduler {
 	/**
 	 * Submit a runnable to the blocking executor and log rejections.
 	 */
-	@SuppressWarnings("unused") // TODO: clean submit, + new methods for handling repeating tasks
+	@SuppressWarnings("unused")
 	public void submit(@NotNull Runnable task) {
 		try {
 			blockingExecutor.execute(task);

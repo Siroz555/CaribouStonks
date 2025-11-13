@@ -65,7 +65,6 @@ public final class HypixelAPIFixer {
 		return new SkyBlockItemData(skyBlockIdEssence, material, name, Rarity.MYTHIC, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 	}
 
-	// TODO : Récupérer les textures des HEAD, mais vu qu'elles ne sont pas dispo dans l'API..
 	public @Nullable SkyBlockItemData createShard(@NotNull String skyBlockIdShard) {
 		SkyBlockAttribute attribute = CaribouStonks.core().getModDataSource().getAttributeBySkyBlockId(skyBlockIdShard);
 		if (attribute != null) {

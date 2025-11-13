@@ -43,7 +43,7 @@ public final class ChocolateLimitReminderFeature
 
 	private static final int CHOCOLATE_SLOT = 13;
 	private static final int COCOA_BEAM_SLOT = 45;
-	private static final long MAX_CHOCOLATE = 60_000_000_000L; // TODO
+	private static final long MAX_CHOCOLATE = 60_000_000_000L;
 
 	private static final ItemStack ICON = new ItemStack(Items.COCOA_BEANS);
 

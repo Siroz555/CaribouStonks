@@ -145,8 +145,6 @@ public final class KeyBindManager implements Manager {
 	 * <p>
 	 * This method is different from {@link #checkAllKeyBinds(Consumer)}, because it's not possible to match
 	 * the 'firstPress' behavior and the connections with the actual {@link net.minecraft.client.option.KeyBinding}.
-	 * <p>
-	 * TODO À voir si je combine tout, mais je suis PERDU
 	 */
 	private void triggerKeyBindsInScreen(Screen screen, KeyInput input, Slot slot) {
 		for (Feature feature : keyBinds.keySet()) {
