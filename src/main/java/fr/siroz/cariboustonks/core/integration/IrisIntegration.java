@@ -1,7 +1,8 @@
-package fr.siroz.cariboustonks.rendering;
+package fr.siroz.cariboustonks.core.integration;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
  * @author MicrocontrollersDev (<a href="https://github.com/MicrocontrollersDev">MicrocontrollersDev GitHub</a>)
  */
 @ApiStatus.Internal
-final class IrisCompatibility {
+public final class IrisIntegration {
 
 	private static final boolean IRIS_ENABLED = FabricLoader.getInstance().isModLoaded("iris");
 	private static final String IRIS_API_CLASS = "net.irisshaders.iris.api.v0.IrisApi";
@@ -29,7 +30,7 @@ final class IrisCompatibility {
 	private static final MethodHandle REGISTER_PIPELINE = registerPipelineHandle();
 	private static final MethodHandle GET_IRIS_PROGRAM = getIrisProgramHandle();
 
-	private IrisCompatibility() {
+	private IrisIntegration() {
 	}
 
 	/**

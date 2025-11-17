@@ -19,7 +19,7 @@
       "fr.siroz.cariboustonks.CaribouStonks"
     ],
     "modmenu": [
-      "fr.siroz.cariboustonks.config.ModMenuIntegration"
+      "fr.siroz.cariboustonks.core.integration.ModMenuIntegration"
     ]
   },
   "mixins": [

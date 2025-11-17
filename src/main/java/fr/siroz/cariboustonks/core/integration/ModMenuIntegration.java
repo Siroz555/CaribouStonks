@@ -1,7 +1,8 @@
-package fr.siroz.cariboustonks.config;
+package fr.siroz.cariboustonks.core.integration;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import fr.siroz.cariboustonks.config.ConfigManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Contract;

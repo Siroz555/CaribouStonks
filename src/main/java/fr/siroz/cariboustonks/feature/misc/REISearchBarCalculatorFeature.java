@@ -1,16 +1,13 @@
 package fr.siroz.cariboustonks.feature.misc;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.integration.RoughlyEnoughItemsIntegration;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Calculator;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import me.shedaniel.rei.api.client.REIRuntime;
-import me.shedaniel.rei.api.client.gui.config.SearchFieldLocation;
-import me.shedaniel.rei.api.client.gui.widgets.TextField;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -32,20 +29,15 @@ public class REISearchBarCalculatorFeature extends Feature {
 	@Override
 	public boolean isEnabled() {
 		return ConfigManager.getConfig().misc.compatibility.reiSearchBarCalculator
-				&& FabricLoader.getInstance().isModLoaded("roughlyenoughitems");
+				&& RoughlyEnoughItemsIntegration.isModLoaded();
 	}
 
 	@EventHandler(event = "ScreenEvents.BEFORE_INIT")
 	private void onScreenBeforeInit(MinecraftClient client, Screen screen, int scaledWidth, int scaledHeight) {
 		if (isEnabled() && screen instanceof HandledScreen<?> handledScreen) {
 			ScreenEvents.afterRender(screen).register((_screen, context, mouseX, mouseY, tickDelta) -> {
-				TextField searchBarField = REIRuntime.getInstance().getSearchTextField();
-				if (searchBarField == null) {
-					return;
-				}
-
-				String searchBarText = searchBarField.getText();
-				if (searchBarText.isBlank() || !searchBarText.matches(".*\\d.*")) {
+				String searchBarText = RoughlyEnoughItemsIntegration.getSearchBarText();
+				if (searchBarText == null || searchBarText.isBlank() || !searchBarText.matches(".*\\d.*")) {
 					return;
 				}
 
@@ -80,9 +72,7 @@ public class REISearchBarCalculatorFeature extends Feature {
 	}
 
 	private void draw(@NotNull DrawContext context, @NotNull HandledScreen<?> handledScreen, Text displayText) {
-		int x = REIRuntime.getInstance().getContextualSearchFieldLocation() == SearchFieldLocation.BOTTOM_SIDE
-				? handledScreen.width / 2 + 90
-				: handledScreen.width / 2 - 80;
+		int x = RoughlyEnoughItemsIntegration.isSearchBarAtBottomSide() ? handledScreen.width / 2 + 90 : handledScreen.width / 2 - 80;
 		int y = handledScreen.height - 32;
 
 		context.drawText(MinecraftClient.getInstance().textRenderer, displayText, x, y, Colors.WHITE.asInt(), false);
