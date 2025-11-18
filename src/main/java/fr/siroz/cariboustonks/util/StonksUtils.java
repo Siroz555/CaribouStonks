@@ -84,15 +84,7 @@ public final class StonksUtils {
 	@ApiStatus.Internal
 	public static void initUtilities() {
 		AnimationUtils.initAnimationUtilities();
-		TickScheduler.getInstance().runRepeating(StonksUtils::handleUpdates, 1, TimeUnit.SECONDS);
-	}
-
-	/**
-	 * Met à jour les utilities
-	 */
-	private static void handleUpdates() {
-		ScoreboardUtils.handleInternalUpdate(CLIENT);
-		TabListUtils.handleInternalUpdate(CLIENT);
+		TickScheduler.getInstance().runRepeating(Client::handleUpdates, 1, TimeUnit.SECONDS);
 	}
 
 	/**

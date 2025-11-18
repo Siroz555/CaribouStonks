@@ -5,7 +5,6 @@ import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.util.TabListUtils;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.item.ItemStack;
@@ -60,7 +59,7 @@ public final class BoosterCookieReminderFeature extends Feature /*implements Rem
 		if (!isEnabled()) return;
 		if (notified) return;
 
-		String footer = TabListUtils.getFooter();
+		String footer = Client.getTabListFooter();
 		if (footer == null || !footer.contains("Cookie Buff")) return;
 
 		if (footer.contains("Not active! Obtain booster cookies from the community")) {

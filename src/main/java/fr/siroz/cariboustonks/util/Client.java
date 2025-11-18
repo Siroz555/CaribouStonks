@@ -1,12 +1,24 @@
 package fr.siroz.cariboustonks.util;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.event.HudEvents;
+import fr.siroz.cariboustonks.mixin.accessors.PlayerListHudAccessor;
 import fr.siroz.cariboustonks.util.render.gui.StonksToast;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.Toast;
 import net.minecraft.item.ItemStack;
+import net.minecraft.scoreboard.ScoreHolder;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.scoreboard.ScoreboardDisplaySlot;
+import net.minecraft.scoreboard.ScoreboardObjective;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
@@ -18,6 +30,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -31,6 +44,8 @@ public final class Client {
 
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 	private static final SystemToast.Type STONKS_SYSTEM = new SystemToast.Type(10000L); // 10000L
+	private static final List<String> STRING_SCOREBOARD = new ArrayList<>();
+	private static final List<String> STRING_TAB = new ArrayList<>();
 
 	private Client() {
 	}
@@ -81,6 +96,37 @@ public final class Client {
 		}
 
 		return CLIENT.player.getBlockPos();
+	}
+
+	/**
+	 * Retrieves the current scoreboard lines.
+	 *
+	 * @return the current scoreboard lines
+	 */
+	@Contract(value = " -> new", pure = true)
+	public static @NotNull List<String> getScoreboard() {
+		return new ArrayList<>(STRING_SCOREBOARD);
+	}
+
+	/**
+	 * Retrieves the current tab list lines.
+	 *
+	 * @return the current tab list lines
+	 */
+	@SuppressWarnings("unused")
+	@Contract(value = " -> new", pure = true)
+	public static @NotNull List<String> getTabList() {
+		return new ArrayList<>(STRING_TAB);
+	}
+
+	/**
+	 * Retrieves the footer of the tab list.
+	 *
+	 * @return the footer of the tab list, or {@code null}
+	 */
+	public static @Nullable String getTabListFooter() {
+		Text footer = ((PlayerListHudAccessor) MinecraftClient.getInstance().inGameHud.getPlayerListHud()).getFooter();
+		return footer != null ? footer.getString() : null;
 	}
 
 	/**
@@ -286,5 +332,82 @@ public final class Client {
 	 */
 	public static void playSoundButtonClickUI() {
 		CLIENT.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+	}
+
+	@ApiStatus.Internal
+	public static void handleUpdates() {
+		updateScoreboard();
+		updateTabList();
+	}
+
+	private static void updateScoreboard() {
+		try {
+			STRING_SCOREBOARD.clear();
+
+			if (CLIENT.world == null || CLIENT.world.getScoreboard() == null) {
+				return;
+			}
+
+			Scoreboard scoreboard = CLIENT.world.getScoreboard();
+			ScoreboardObjective objective = scoreboard.getObjectiveForSlot(ScoreboardDisplaySlot.FROM_ID.apply(1));
+			List<String> stringLines = new ArrayList<>();
+
+			for (ScoreHolder scoreHolder : scoreboard.getKnownScoreHolders()) {
+				if (scoreboard.getScoreHolderObjectives(scoreHolder).containsKey(objective)) {
+					Team team = scoreboard.getScoreHolderTeam(scoreHolder.getNameForScoreboard());
+
+					if (team != null) {
+						String strLine = team.getPrefix().getString() + team.getSuffix().getString();
+
+						if (!strLine.trim().isEmpty()) {
+							String formatted = StonksUtils.stripColor(strLine);
+							stringLines.add(formatted);
+						}
+					}
+				}
+			}
+
+			if (objective != null) {
+				stringLines.add(objective.getDisplayName().getString());
+				Collections.reverse(stringLines);
+			}
+
+			STRING_SCOREBOARD.addAll(stringLines);
+			if (SkyBlockAPI.isOnSkyBlock()) {
+				HudEvents.SCOREBOARD_UPDATE.invoker().onUpdate(STRING_SCOREBOARD);
+			}
+		} catch (Exception ignored) {
+		}
+	}
+
+	private static void updateTabList() {
+		try {
+			STRING_TAB.clear();
+
+			if (CLIENT.getNetworkHandler() == null) {
+				return;
+			}
+
+			List<String> stringLines = new ArrayList<>();
+			for (PlayerListEntry playerListEntry : CLIENT.getNetworkHandler().getPlayerList()) {
+				if (playerListEntry.getDisplayName() == null) {
+					continue;
+				}
+
+				String name = playerListEntry.getDisplayName().getString();
+				if (name.isEmpty() || name.startsWith("[")) {
+					continue;
+				}
+
+				//String formatted = StonksUtils.strip(name); // ?
+				stringLines.add(name);
+			}
+
+			STRING_TAB.addAll(stringLines);
+			if (SkyBlockAPI.isOnSkyBlock()) {
+				HudEvents.TAB_LIST_UPDATE.invoker().onUpdate(STRING_TAB);
+			}
+		} catch (Exception ignored) {
+		}
 	}
 }

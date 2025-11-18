@@ -9,7 +9,7 @@ import fr.siroz.cariboustonks.event.HudEvents;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.manager.Manager;
-import fr.siroz.cariboustonks.util.ScoreboardUtils;
+import fr.siroz.cariboustonks.util.Client;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -184,7 +184,7 @@ public final class SlayerManager implements Manager {
 		bossFight = null;
 		quest = null;
 		TickScheduler.getInstance().runLater(
-				() -> updateSlayerBossInfo(false, ScoreboardUtils.getStringScoreboard()),
+				() -> updateSlayerBossInfo(false, Client.getScoreboard()),
 				3, TimeUnit.SECONDS
 		);
 	}

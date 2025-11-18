@@ -7,10 +7,10 @@ import fr.siroz.cariboustonks.core.data.hypixel.election.Perk;
 import fr.siroz.cariboustonks.core.data.hypixel.item.PetInfo;
 import fr.siroz.cariboustonks.core.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.data.mod.SkyBlockAttribute;
+import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.ScoreboardUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.Locale;
 import java.util.Optional;
@@ -153,7 +153,12 @@ public final class SkyBlockAPI {
 	 * @return an {@link Optional} containing the area name
 	 */
 	public static @NotNull Optional<String> getArea() {
-		return Optional.ofNullable(ScoreboardUtils.getIslandArea());
+		for (String line : Client.getScoreboard()) {
+			if (line.contains("⏣") || line.contains("ф")) {
+				return Optional.of(line.strip());
+			}
+		}
+		return Optional.empty();
 	}
 
 	/**
