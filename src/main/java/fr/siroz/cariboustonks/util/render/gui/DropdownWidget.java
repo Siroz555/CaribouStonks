@@ -7,6 +7,7 @@ import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.cursor.StandardCursors;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ContainerWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
@@ -72,13 +73,11 @@ public class DropdownWidget<T> extends ContainerWidget {
 
 		context.fill(getX(), getY(), getRight(), getY() + HEADER_HEIGHT + 1, BACKGROUND_COLOR);
 		GuiRenderer.drawBorder(context, getX(), getY(), getWidth(), HEADER_HEIGHT + 1, -1);
-
-		drawScrollableText(context, CLIENT.textRenderer, Text.literal(selected.toString()),
-				getX() + 2,
-				getY() + 2,
-				getRight() - 2,
-				getY() + HEADER_HEIGHT - 2,
-				-1);
+		context.drawText(CLIENT.textRenderer, ">", getX() + 4, getY() + 6, Colors.WHITE.asInt(), true);
+		context.drawText(CLIENT.textRenderer, selected.toString(), getX() + 12, getY() + 6, Colors.WHITE.asInt(), true);
+		if (isMouseOver(mouseX, mouseY)) {
+			context.setCursor(StandardCursors.POINTING_HAND);
+		}
 	}
 
 	@Override

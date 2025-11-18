@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.util;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.util.render.ui.StonksToast;
+import fr.siroz.cariboustonks.util.render.gui.StonksToast;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.toast.SystemToast;
