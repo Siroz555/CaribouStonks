@@ -1,6 +1,8 @@
 package fr.siroz.cariboustonks.feature.dungeon;
 
+import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.util.colors.Color;
+import java.util.concurrent.TimeUnit;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
@@ -38,6 +40,8 @@ enum WitherKingDragon {
 			Color.fromHexString("#55FF55")),
 	;
 
+	private static final int SPAWN_COOLDOWN_TICKS = 100; // 5s
+
 	private final String name;
 	private final int archPriority;
 	private final int bersPriority;
@@ -47,7 +51,9 @@ enum WitherKingDragon {
 	private final BlockPos pos2;
 	private final Color color;
 	private final Box box;
+
 	private int spawnTime = 0;
+	private boolean spawned = false;
 
 	public static final WitherKingDragon[] VALUES = WitherKingDragon.values();
 
@@ -103,16 +109,23 @@ enum WitherKingDragon {
 		return spawnTime;
 	}
 
-	public void setSpawnTime(int spawnTime) {
-		this.spawnTime = spawnTime;
+	public void spawn() {
+		spawned = true;
+		spawnTime = SPAWN_COOLDOWN_TICKS;
+		TickScheduler.getInstance().runLater(() -> spawned = false, 4900, TimeUnit.MILLISECONDS);
 	}
 
 	public void tick() {
 		spawnTime--;
 	}
 
+	public boolean isSpawned() {
+		return spawned;
+	}
+
 	public static void resetAll() {
 		for (WitherKingDragon dragon : VALUES) {
+			dragon.spawned = false;
 			dragon.spawnTime = 0;
 		}
 	}
