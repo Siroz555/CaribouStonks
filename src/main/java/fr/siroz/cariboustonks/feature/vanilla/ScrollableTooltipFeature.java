@@ -39,6 +39,7 @@ public class ScrollableTooltipFeature extends Feature {
 	private double currentYOffset = 0;
 	private double xOffset = 0;
 	private double yOffset = 0;
+	private boolean hasMoved = false;
 	@Nullable
 	private List<TooltipComponent> currentTooltips;
 
@@ -59,6 +60,15 @@ public class ScrollableTooltipFeature extends Feature {
 
 	public int getYOffset() {
 		return isEnabled() ? MathUtils.floor(currentYOffset) : 0;
+	}
+
+	public void initOffsetY(int offsetY) {
+		yOffset += offsetY;
+		currentYOffset = yOffset;
+	}
+
+	public boolean canStartFromTop() {
+		return ConfigManager.getConfig().vanilla.scrollableTooltip.startOnTop && !hasMoved;
 	}
 
 	@EventHandler(event = "CustomScreenEvents.CLOSE")
@@ -138,18 +148,22 @@ public class ScrollableTooltipFeature extends Feature {
 
 	private void scrollUp() {
 		if (!COOLDOWN.testSilently()) yOffset -= SCROLL_AMOUNT;
+		hasMoved = true;
 	}
 
 	private void scrollDown() {
 		if (!COOLDOWN.testSilently()) yOffset += SCROLL_AMOUNT;
+		hasMoved = true;
 	}
 
 	private void scrollLeft() {
 		if (!COOLDOWN.testSilently()) xOffset -= SCROLL_AMOUNT;
+		hasMoved = true;
 	}
 
 	private void scrollRight() {
 		if (!COOLDOWN.testSilently()) xOffset += SCROLL_AMOUNT;
+		hasMoved = true;
 	}
 
 	private void resetScroll() {
@@ -157,6 +171,7 @@ public class ScrollableTooltipFeature extends Feature {
 		currentYOffset = 0;
 		xOffset = 0;
 		yOffset = 0;
+		hasMoved = false;
 	}
 
 	private boolean isEqual(@Nullable List<TooltipComponent> item1, @Nullable List<TooltipComponent> item2) {

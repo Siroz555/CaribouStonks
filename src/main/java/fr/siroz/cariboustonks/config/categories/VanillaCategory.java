@@ -121,6 +121,15 @@ public class VanillaCategory extends AbstractCategory {
 										newValue -> current.vanilla.scrollableTooltip.reverseScroll = newValue)
 								.controller(this::createBooleanController)
 								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Start displaying Tooltips from the TOP"))
+								.description(OptionDescription.of(
+										Text.literal("If enabled, allows Tooltips for items to be displayed starting from the TOP.")))
+								.binding(defaults.vanilla.scrollableTooltip.startOnTop,
+										() -> current.vanilla.scrollableTooltip.startOnTop,
+										newValue -> current.vanilla.scrollableTooltip.startOnTop = newValue)
+								.controller(this::createBooleanController)
+								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Overlay").formatted(Formatting.BOLD))

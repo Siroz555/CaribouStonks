@@ -66,6 +66,9 @@ public class VanillaConfig {
 
 		@SerialEntry
 		public boolean reverseScroll = false;
+
+		@SerialEntry
+		public boolean startOnTop = false;
 	}
 
 	public static class ItemModelCustomization {
