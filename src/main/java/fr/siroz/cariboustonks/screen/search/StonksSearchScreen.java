@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.feature.stonks.search;
+package fr.siroz.cariboustonks.screen.search;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.util.colors.Colors;

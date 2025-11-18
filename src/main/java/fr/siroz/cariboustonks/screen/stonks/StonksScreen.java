@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
-import fr.siroz.cariboustonks.feature.stonks.search.StonksSearchScreen;
+import fr.siroz.cariboustonks.screen.search.StonksSearchScreen;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.util.colors.Colors;

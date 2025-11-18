@@ -1,11 +1,11 @@
-package fr.siroz.cariboustonks.feature.stonks.search;
+package fr.siroz.cariboustonks.screen.search;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
+import fr.siroz.cariboustonks.screen.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataException;
-import fr.siroz.cariboustonks.feature.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -23,6 +23,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry> {
+class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry> {
 
 	private final StonksSearchScreen parent;
 
@@ -47,7 +48,7 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 	static boolean loadingSearch;
 	private final LoadingEntry loadingEntry;
 
-	public ItemListWidget(
+	ItemListWidget(
 			StonksSearchScreen parent,
 			MinecraftClient client,
 			int width,
@@ -195,7 +196,7 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 		}
 	}
 
-	public abstract static class Entry extends AlwaysSelectedEntryListWidget.Entry<Entry> implements AutoCloseable {
+	abstract static class Entry extends AlwaysSelectedEntryListWidget.Entry<Entry> implements AutoCloseable {
 		public Entry() {
 		}
 
@@ -204,12 +205,12 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 		}
 	}
 
-	public class ItemEntry extends Entry {
+	class ItemEntry extends Entry {
 		private final MinecraftClient client;
 		private final ItemSummary item;
 		private long time;
 
-		public ItemEntry(ItemListWidget itemList, ItemSummary item) {
+		ItemEntry(ItemListWidget itemList, ItemSummary item) {
 			this.client = itemList.client;
 			this.item = item;
 		}
@@ -277,7 +278,7 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 		}
 	}
 
-	public static class LoadingEntry extends Entry {
+	static class LoadingEntry extends Entry {
 		private static final Text LOADING_LIST_TEXT = Text.literal("Loading..");
 		private final MinecraftClient client;
 
@@ -303,6 +304,19 @@ public class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget
 
 		public Text getNarration() {
 			return LOADING_LIST_TEXT;
+		}
+	}
+
+	private record ItemSummary(
+			String hypixelSkyBlockId,
+			Formatting color,
+			String name,
+			ItemStack icon
+	) implements Comparable<ItemSummary> {
+
+		@Override
+		public int compareTo(@NotNull ItemSummary itemSummary) {
+			return this.name.compareToIgnoreCase(itemSummary.name);
 		}
 	}
 }

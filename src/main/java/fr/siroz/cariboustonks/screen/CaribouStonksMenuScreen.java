@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.screen;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.feature.stonks.search.StonksSearchScreen;
+import fr.siroz.cariboustonks.screen.search.StonksSearchScreen;
 import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
 import fr.siroz.cariboustonks.screen.reminders.ReminderScreen;
 import fr.siroz.cariboustonks.screen.waypoints.WaypointScreen;
