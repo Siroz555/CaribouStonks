@@ -1,16 +1,19 @@
-package fr.siroz.cariboustonks.feature.stonks;
+package fr.siroz.cariboustonks.screen.stonks;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
+import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
-import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
-import fr.siroz.cariboustonks.feature.stonks.graph.ItemGraphWidget;
-import fr.siroz.cariboustonks.feature.stonks.info.ItemInformationWidget;
 import fr.siroz.cariboustonks.feature.stonks.search.StonksSearchScreen;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
+import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.util.colors.Colors;
+import java.awt.Color;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
@@ -35,12 +38,6 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.Color;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-
 public class StonksScreen extends CaribousStonksScreen {
 
 	private static final Identifier MENU_LIST_BACKGROUND_TEXTURE
@@ -49,8 +46,8 @@ public class StonksScreen extends CaribousStonksScreen {
 	private final ItemStack icon;
 	private final Text itemName;
 
-	private ItemInformationWidget itemInformationWidget;
-	private ItemGraphWidget itemGraphWidget;
+	private InformationWidget itemInformationWidget;
+	private GraphWidget itemGraphWidget;
 	private List<ItemPrice> graphData = null;
 	private BazaarProduct bazaarItem = null;
 
@@ -83,11 +80,11 @@ public class StonksScreen extends CaribousStonksScreen {
 		}
 
 		CompletableFuture<Void> graphFuture = CompletableFuture.runAsync(() ->
-				itemGraphWidget = new ItemGraphWidget(
+				itemGraphWidget = new GraphWidget(
 						graphData, getGraphWidgetWidth(), getGraphWidgetHeight())
 		);
 		CompletableFuture<Void> informationsFuture = CompletableFuture.runAsync(() ->
-				itemInformationWidget = new ItemInformationWidget(
+				itemInformationWidget = new InformationWidget(
 						bazaarItem, getInformationWidgetWidth(), getInformationWidgetHeight())
 		);
 

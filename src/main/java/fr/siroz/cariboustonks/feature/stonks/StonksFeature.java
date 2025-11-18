@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.feature.stonks;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.screen.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.util.DeveloperTools;

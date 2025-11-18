@@ -1,16 +1,16 @@
-package fr.siroz.cariboustonks.feature.stonks;
+package fr.siroz.cariboustonks.screen.stonks;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 
-public abstract class AbstractItemStonksWidget {
+abstract class AbstractStonksWidget {
 
 	protected final TextRenderer textRenderer;
 	protected int width;
 	protected int height;
 
-	public AbstractItemStonksWidget(int width, int height) {
+	AbstractStonksWidget(int width, int height) {
 		this.textRenderer = MinecraftClient.getInstance().textRenderer;
 		this.width = width;
 		this.height = height;

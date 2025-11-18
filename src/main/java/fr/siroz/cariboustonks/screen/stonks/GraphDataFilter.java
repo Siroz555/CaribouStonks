@@ -1,8 +1,6 @@
-package fr.siroz.cariboustonks.feature.stonks.graph;
+package fr.siroz.cariboustonks.screen.stonks;
 
 import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
-import org.jetbrains.annotations.NotNull;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -11,11 +9,12 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Méthodes pour filtrer les données pour le graphique selon le type de {@link Granularity}.
  */
-public interface GraphDataFilter {
+interface GraphDataFilter {
 
 	/**
 	 * Type de granularité temporel

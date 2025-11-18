@@ -1,8 +1,7 @@
-package fr.siroz.cariboustonks.feature.stonks.info;
+package fr.siroz.cariboustonks.screen.stonks;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
-import fr.siroz.cariboustonks.feature.stonks.AbstractItemStonksWidget;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.gui.DrawContext;
@@ -10,12 +9,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemInformationWidget extends AbstractItemStonksWidget {
+class InformationWidget extends AbstractStonksWidget {
 
 	@Nullable
 	private final BazaarProduct bazaarItem;
 
-	public ItemInformationWidget(
+	public InformationWidget(
 			@Nullable BazaarProduct bazaarItem,
 			int width,
 			int height

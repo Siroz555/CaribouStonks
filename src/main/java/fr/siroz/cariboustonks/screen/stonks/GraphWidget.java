@@ -1,13 +1,25 @@
-package fr.siroz.cariboustonks.feature.stonks.graph;
+package fr.siroz.cariboustonks.screen.stonks;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
-import fr.siroz.cariboustonks.feature.stonks.AbstractItemStonksWidget;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
-import fr.siroz.cariboustonks.util.colors.ColorUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
+import fr.siroz.cariboustonks.util.colors.ColorUtils;
 import fr.siroz.cariboustonks.util.render.gui.Point;
+import java.awt.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -15,26 +27,12 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.awt.Color;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-
 /**
  * TODO - C'est un bordel monumentale lul. Ça marche, mais c'est beaucoup trop brouillon pour le moment coté code -_-
  *  Beaucoup de chose useless et surtout a modifier pour avoir un vrai truc "trading" mais sur MC..
  *  Il y a plein de chose a changer, que sa soit coté ordre et logique d'implémentation de chaque partie.
  */
-public class ItemGraphWidget extends AbstractItemStonksWidget {
+class GraphWidget extends AbstractStonksWidget {
 
 	private GraphDataFilter.Granularity granularity;
 	private Type type = Type.AUCTION;
@@ -49,7 +47,7 @@ public class ItemGraphWidget extends AbstractItemStonksWidget {
 	private double minPrice;
 	private double maxPrice;
 
-	public ItemGraphWidget(@NotNull List<ItemPrice> neuData, int width, int height) {
+	public GraphWidget(@NotNull List<ItemPrice> neuData, int width, int height) {
 		super(width, height);
 
 		this.granularity = GraphDataFilter.Granularity.DAY;
