@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.screen.search;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -9,7 +10,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
-public class StonksSearchScreen extends Screen {
+public class StonksSearchScreen extends CaribousStonksScreen {
 
 	private final Screen parent;
 	private ButtonWidget selectButton;
@@ -24,7 +25,7 @@ public class StonksSearchScreen extends Screen {
 	}
 
 	@Override
-	protected void init() {
+	protected void onInit() {
 		searchBox = new TextFieldWidget(this.textRenderer,
 				this.width / 2 - 100, 22,
 				200, 20,
@@ -52,9 +53,9 @@ public class StonksSearchScreen extends Screen {
 	}
 
 	@Override
-	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-		super.render(context, mouseX, mouseY, delta);
-		searchBox.render(context, mouseX, mouseY, delta);
+	public void onRender(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+		super.onRender(context, mouseX, mouseY, deltaTicks);
+		searchBox.render(context, mouseX, mouseY, deltaTicks);
 		Text title = Text.literal("Search for a SkyBlock item (" + this.totalSkyBlockItemsCount + " items)");
 		context.drawCenteredTextWithShadow(this.textRenderer, title, this.width / 2, 8, Colors.WHITE.asInt());
 	}
@@ -65,7 +66,7 @@ public class StonksSearchScreen extends Screen {
 	}
 
 	@Override
-	public void close() {
+	public void onClose() {
 		if (this.client != null) {
 			this.client.setScreen(parent);
 		}
