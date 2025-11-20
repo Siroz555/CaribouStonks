@@ -6,6 +6,7 @@ import fr.siroz.cariboustonks.screen.search.StonksSearchScreen;
 import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
 import fr.siroz.cariboustonks.screen.reminders.ReminderScreen;
 import fr.siroz.cariboustonks.screen.waypoints.WaypointScreen;
+import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
@@ -160,7 +161,7 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 			int iconX = x - 34;
 			int iconY = y - 13;
 
-			context.drawTextWithShadow(textRenderer, orderedText, x, y, this.getTextColor());
+			context.drawTextWithShadow(textRenderer, orderedText, x, y, Colors.WHITE.asInt());
 			context.drawTexture(RenderPipelines.GUI_TEXTURED, icon, iconX, iconY, 0, 0, 32, 32, 32, 32);
 		}
 

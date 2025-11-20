@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LowHealthWarningFeature extends Feature {
+public class LowHealthWarningFeature extends Feature { // TODO - Mettre uniquement le rendu et PAS une vraie border
 
 	private static final Pattern HEALTH_ACTION_BAR_PATTERN = Pattern.compile(
 			"§[6c](?<health>[\\d,]+)/(?<max>[\\d,]+)❤ *(?<healing>\\+§c([\\d,]+). *)?");
@@ -109,7 +109,11 @@ public class LowHealthWarningFeature extends Feature {
 
 	private void remove() {
 		if (CLIENT.player == null) return;
-		CLIENT.player.getEntityWorld().getWorldBorder().load(WorldBorder.Properties.DEFAULT);
+		WorldBorder.Properties properties = WorldBorder.Properties.DEFAULT;
+		WorldBorder worldBorder = CLIENT.player.getEntityWorld().getWorldBorder();
+
+		worldBorder.setCenter(properties.centerX(), properties.centerZ());
+		worldBorder.setSize(properties.size());
 	}
 
 	private record Health(int value, int max, int overflow) {

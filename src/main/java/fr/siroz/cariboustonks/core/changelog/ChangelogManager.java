@@ -36,7 +36,6 @@ import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import org.apache.http.client.HttpResponseException;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -155,7 +154,7 @@ public final class ChangelogManager {
 		CompletableFuture.runAsync(() -> {
 			try (HttpResponse response = Http.request(GITHUB_REPO_URL)) {
 				if (!response.success()) {
-					throw new HttpResponseException(response.statusCode(), response.content());
+					throw new RuntimeException("GitHub API returned an error code: " + response.statusCode() + " cause: " + response.content());
 				}
 
 				String responseBody = response.content();

@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
-import org.apache.http.client.HttpResponseException;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -146,7 +145,7 @@ public final class BazaarFetcher {
 	private void executeFetch() {
 		try (HttpResponse response = Http.request(BAZAAR_URL)) {
 			if (!response.success()) {
-				throw new HttpResponseException(response.statusCode(), response.content());
+				throw new RuntimeException("Hypixel API returned an error code: " + response.statusCode() + " cause: " + response.content());
 			}
 
 			SkyBlockBazaarReply reply = GsonProvider.prettyPrinting().fromJson(response.content(), SkyBlockBazaarReply.class);

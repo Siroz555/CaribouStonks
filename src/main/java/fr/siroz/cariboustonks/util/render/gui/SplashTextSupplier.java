@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import net.minecraft.client.gui.screen.SplashTextRenderer;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,13 +18,13 @@ public final class SplashTextSupplier {
 	private SplashTextRenderer splashText = null;
 
 	private static final List<SplashTextRenderer> PREDEFINED_SPLASH = List.of(
-			new SplashTextRenderer("/visit Siroz555"),
-			new SplashTextRenderer("Crafting like a French baker"),
-			new SplashTextRenderer("Foraging Update?"),
-			new SplashTextRenderer("3-5 Business days"),
-			new SplashTextRenderer("Galatea!"),
-			new SplashTextRenderer("People want to stay in 1.8 when the latest versions are better for SkyBlock ;'("),
-			new SplashTextRenderer("SkyBlock!")
+			new SplashTextRenderer(Text.literal("/visit Siroz555")),
+			new SplashTextRenderer(Text.literal("Crafting like a French baker")),
+			new SplashTextRenderer(Text.literal("Foraging Update?")),
+			new SplashTextRenderer(Text.literal("3-5 Business days")),
+			new SplashTextRenderer(Text.literal("Galatea!")),
+			new SplashTextRenderer(Text.literal("People want to stay in 1.8 when the latest versions are better for SkyBlock ;'(")),
+			new SplashTextRenderer(Text.literal("SkyBlock!"))
 	);
 
 	private SplashTextSupplier() {
@@ -32,7 +33,7 @@ public final class SplashTextSupplier {
 		int month = today.get(Calendar.MONTH);
 
 		if (day == 11 && month == Calendar.JUNE) {
-			this.splashText = new SplashTextRenderer("Happy birthday SkyBlock!");
+			this.splashText = new SplashTextRenderer(Text.literal("Happy birthday SkyBlock!"));
 			return;
 		}
 

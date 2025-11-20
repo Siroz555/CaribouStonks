@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-import org.apache.http.client.HttpResponseException;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -157,7 +156,7 @@ public final class ItemsFetcher {
 	private void executeFetch() {
 		try (HttpResponse response = Http.request(ITEMS_URL)) {
 			if (!response.success()) {
-				throw new HttpResponseException(response.statusCode(), response.content());
+				throw new RuntimeException("Hypixel API returned an error code: " + response.statusCode() + " cause: " + response.content());
 			}
 
 			String body = response.content();

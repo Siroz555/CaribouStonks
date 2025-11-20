@@ -38,7 +38,8 @@ public final class LinesRendererCommand implements RendererCommand<LinesRenderSt
 
 			buffer.vertex(matrix4f, (float) points[i].getX(), (float) points[i].getY(), (float) points[i].getZ())
 					.color(state.color().r, state.color().g, state.color().b, state.color().a)
-					.normal(normalVec.x(), normalVec.y(), normalVec.z());
+					.normal(normalVec.x(), normalVec.y(), normalVec.z())
+					.lineWidth(state.lineWidth());
 		}
 	}
 }

@@ -85,7 +85,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 
 		TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 		float xOffset = -textRenderer.getWidth(text) / 2f;
-		TextRenderer.GlyphDrawable glyphs = textRenderer.prepare(text, xOffset, offsetY, 0xFFFFFFFF, false, 0);
+		TextRenderer.GlyphDrawable glyphs = textRenderer.prepare(text, xOffset, offsetY, 0xFFFFFFFF, false, false, 0);
 
 		TextRenderState state = new TextRenderState(glyphs, position, scale * 0.025f, offsetY, throughBlocks);
 		textRenderStates.add(state);
@@ -149,7 +149,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 			colorInt = color.withAlpha(1f).asInt();
 		}
 
-		float length = (float) RenderUtils.getCamera().getPos().subtract(position.toCenterPos()).horizontalLength();
+		float length = (float) RenderUtils.getCamera().getCameraPos().subtract(position.toCenterPos()).horizontalLength();
 		float scale = Math.max(1.0f, length / 96.0f);
 		float beamRotationDegrees = Math.floorMod(Client.getWorldTime(), 40) + RenderUtils.getTickCounter().getTickProgress(true);
 

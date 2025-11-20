@@ -77,7 +77,7 @@ public class VanillaConfig {
 		public boolean enabled = false;
 
 		@SerialEntry
-		public int swingDuration = LivingEntity.GLOWING_FLAG; // 6
+		public int swingDuration = 6; //LivingEntity.GLOWING_FLAG; // 6
 
 		@SerialEntry
 		public boolean ignoreMiningEffects = false;

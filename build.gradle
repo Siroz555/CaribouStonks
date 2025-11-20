@@ -98,7 +98,7 @@ dependencies {
 	}
 
 	// DevAuth - DEVELOPMENT ONLY (https://github.com/DJtheRedstoner/DevAuth)
-	modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
+	//modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
 }
 
 test {

@@ -1,6 +1,8 @@
 package fr.siroz.cariboustonks.rendering.world.renderer;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.textures.FilterMode;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.TextRenderState;
 import net.minecraft.client.font.TextDrawable;
@@ -14,8 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 public final class TextRendererCommand implements RendererCommand<TextRenderState> {
-
-	private static final int MAX_LIGHT_COORDINATE = LightmapTextureManager.MAX_LIGHT_COORDINATE;
 
 	@Override
 	public void emit(@NotNull TextRenderState state, @NotNull CameraRenderState camera) {
@@ -34,17 +34,23 @@ public final class TextRendererCommand implements RendererCommand<TextRenderStat
 
 		state.glyphs().draw(new TextRenderer.GlyphDrawer() {
 			@Override
-			public void drawGlyph(TextDrawable glyph) {
-				TextureSetup textureSetup = TextureSetup.of(glyph.textureView());
-				BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline, textureSetup);
-				glyph.render(matrix4f, buffer, MAX_LIGHT_COORDINATE, false);
+			public void drawGlyph(TextDrawable.DrawnGlyphRect glyph) {
+				this.draw(glyph);
 			}
 
 			@Override
-			public void drawRectangle(TextDrawable bakedGlyph) {
-				TextureSetup textureSetup = TextureSetup.of(bakedGlyph.textureView());
+			public void drawRectangle(TextDrawable rect) {
+				this.draw(rect);
+			}
+
+			private void draw(@NotNull TextDrawable glyph) {
+				TextureSetup textureSetup = TextureSetup.of(
+						glyph.textureView(),
+						RenderSystem.getSamplerCache().get(FilterMode.NEAREST)
+				);
+
 				BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline, textureSetup);
-				bakedGlyph.render(matrix4f, buffer, MAX_LIGHT_COORDINATE, false);
+				glyph.render(matrix4f, buffer, LightmapTextureManager.MAX_LIGHT_COORDINATE, false);
 			}
 		});
 	}

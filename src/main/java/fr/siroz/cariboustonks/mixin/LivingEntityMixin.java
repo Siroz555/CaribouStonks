@@ -18,12 +18,7 @@ public abstract class LivingEntityMixin extends Entity {
 		super(type, world);
 	}
 
-	/*@Inject(method = "playBlockFallSound", at = @At("HEAD"), cancellable = true)
-	private void cariboustonks$stopFallSound(CallbackInfo ci) {
-		ci.cancel();
-	}*/
-
-	@ModifyExpressionValue(method = "getHandSwingDuration", at = @At(value = "CONSTANT", args = "intValue=6"))
+	@ModifyExpressionValue(method = "getHandSwingDuration", at = @At(value = "INVOKE", target = "Lnet/minecraft/component/type/SwingAnimationComponent;duration()I"))
 	private int cariboustonks$editSwingDuration(int original) {
 		return shouldEnableSwingModifications()
 				? ConfigManager.getConfig().vanilla.itemModelCustomization.swingDuration

@@ -34,7 +34,7 @@ public abstract class MinecraftClientMixin {
 	}
 
 	// https://github.com/architectury/architectury-api/blob/1.19.2/fabric/src/main/java/dev/architectury/mixin/fabric/client/MixinMinecraft.java#L76
-	@Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;resetLastAttackedTicks()V", ordinal = 0))
+	@Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;resetTicksSince()V", ordinal = 0))
 	private void cariboustonks$leftClickAirEvent(CallbackInfoReturnable<Boolean> cir) {
 		InteractionEvents.LEFT_CLICK_AIR.invoker().onClick(player, Hand.MAIN_HAND);
 	}

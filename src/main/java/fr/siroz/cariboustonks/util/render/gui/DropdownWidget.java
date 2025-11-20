@@ -265,7 +265,7 @@ public class DropdownWidget<T> extends ContainerWidget {
 
 		@Override
 		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			drawScrollableText(context, CLIENT.textRenderer,
+			GuiRenderer.drawScrollableText(context, CLIENT.textRenderer,
 					Text.literal(entry.toString()).fillStyle(Style.EMPTY.withUnderline(hovered)),
 					getX() + 10, getY(), getX() + getContentWidth(), getY() + 11, -1);
 

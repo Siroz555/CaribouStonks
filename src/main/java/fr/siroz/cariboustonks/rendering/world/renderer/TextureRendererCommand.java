@@ -20,7 +20,8 @@ public final class TextureRendererCommand implements RendererCommand<TextureRend
 				: CaribouRenderPipelines.TEXTURE;
 
 		TextureSetup textureSetup = TextureSetup.of(
-				MinecraftClient.getInstance().getTextureManager().getTexture(state.texture()).getGlTextureView()
+				MinecraftClient.getInstance().getTextureManager().getTexture(state.texture()).getGlTextureView(),
+				MinecraftClient.getInstance().getTextureManager().getTexture(state.texture()).getSampler()
 		);
 		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline, textureSetup);
 

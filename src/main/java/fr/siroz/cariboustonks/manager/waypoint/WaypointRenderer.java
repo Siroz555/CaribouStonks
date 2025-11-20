@@ -71,7 +71,7 @@ public final class WaypointRenderer {
 			float width = iconOption.getWidth();
 			float height = iconOption.getHeight();
 			if (iconOption.isScaleWithDistance()) {
-				distance = RenderUtils.getCamera().getPos().distanceTo(centerPos);
+				distance = RenderUtils.getCamera().getCameraPos().distanceTo(centerPos);
 				float scaleIcon = Math.max((float) distance / 10, 1);
 				width = scaleIcon;
 				height = scaleIcon;
@@ -95,7 +95,7 @@ public final class WaypointRenderer {
 
 		if (textOption.isWithDistance()) {
 			if (distance == -1) {
-				distance = RenderUtils.getCamera().getPos().distanceTo(centerPos);
+				distance = RenderUtils.getCamera().getCameraPos().distanceTo(centerPos);
 			}
 
 			renderer.submitText(
@@ -108,7 +108,7 @@ public final class WaypointRenderer {
 
 		if (textOption.getText().isPresent()) {
 			if (distance == -1) {
-				distance = RenderUtils.getCamera().getPos().distanceTo(centerPos);
+				distance = RenderUtils.getCamera().getCameraPos().distanceTo(centerPos);
 			}
 
 			renderer.submitText(

@@ -24,7 +24,7 @@ public abstract class WorldRendererMixin {
 	 * <p>
 	 * <a href="https://github.com/FabricMC/fabric/blob/850c318777d99bf5ca96d29f96ba15e58d08060f/fabric-rendering-v1/src/client/java/net/fabricmc/fabric/mixin/client/rendering/WorldRendererMixin.java#L98">GitHub FabricMC Mixin</a>
 	 */
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldBorderRendering;updateRenderState(Lnet/minecraft/world/border/WorldBorder;Lnet/minecraft/util/math/Vec3d;DLnet/minecraft/client/render/state/WorldBorderRenderState;)V", shift = At.Shift.AFTER))
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldBorderRendering;updateRenderState(Lnet/minecraft/world/border/WorldBorder;FLnet/minecraft/util/math/Vec3d;DLnet/minecraft/client/render/state/WorldBorderRenderState;)V", shift = At.Shift.AFTER))
 	private void cariboustonks$extractWorldRendering(CallbackInfo ci, @Local Frustum frustum) {
 		CaribouRenderer.startExtraction(frustum);
 	}

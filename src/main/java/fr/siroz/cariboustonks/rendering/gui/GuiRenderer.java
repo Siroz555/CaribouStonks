@@ -10,11 +10,15 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gl.ScissorState;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.texture.TextureSetup;
 import net.minecraft.client.util.Window;
+import net.minecraft.text.Text;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
@@ -31,17 +35,50 @@ public final class GuiRenderer {
 	 * Draws a rectangular border within the specified coordinates and dimensions.
 	 *
 	 * @param context the {@code DrawContext} used for rendering the border
-	 * @param x the x-coordinate (top-left corner)
-	 * @param y the y-coordinate (top-left corner)
-	 * @param width the width
-	 * @param height the height
-	 * @param color the color
+	 * @param x       the x-coordinate (top-left corner)
+	 * @param y       the y-coordinate (top-left corner)
+	 * @param width   the width
+	 * @param height  the height
+	 * @param color   the color
 	 */
 	public static void drawBorder(@NotNull DrawContext context, int x, int y, int width, int height, int color) {
 		context.fill(x, y, x + width, y + 1, color);
 		context.fill(x, y + height - 1, x + width, y + height, color);
 		context.fill(x, y + 1, x + 1, y + height - 1, color);
 		context.fill(x + width - 1, y + 1, x + width, y + height - 1, color);
+	}
+
+	/**
+	 * Draws a scrollable text within the specified coordinates and dimensions.
+	 *
+	 * @param context      the {@code DrawContext} used for rendering the text
+	 * @param textRenderer the {@code TextRenderer} used for rendering the text
+	 * @param text         the text to be rendered
+	 * @param startX       the x-coordinate (top-left corner)
+	 * @param startY       the y-coordinate (top-left corner)
+	 * @param endX         the x-coordinate (bottom-right corner)
+	 * @param endY         the y-coordinate (bottom-right corner)
+	 * @param color        the color
+	 */
+	public static void drawScrollableText(@NotNull DrawContext context, @NotNull TextRenderer textRenderer, Text text, int startX, int startY, int endX, int endY, int color) {
+		int textWidth = textRenderer.getWidth(text);
+		int scrollAreaWidth = startY + endY;
+		int offsetY = (scrollAreaWidth - 9) / 2 + 1;
+		int textOffset = endX - startX;
+		if (textWidth > textOffset) {
+			int scrollOffset = textWidth - textOffset;
+			double timeOffset = (double) Util.getMeasuringTimeMs() / 1_000;
+			double scrollAmount = Math.max((double) scrollOffset * 0.5D, 3.0D);
+			double normalizedScrollValue = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * timeOffset / scrollAmount)) / 2.0D + 0.5D;
+			double textRenderOffset = MathHelper.lerp(normalizedScrollValue, 0.0F, scrollOffset);
+			context.enableScissor(startX, startY, endX, endY);
+			context.drawTextWithShadow(textRenderer, text, startX - (int) textRenderOffset, offsetY, color);
+			context.disableScissor();
+		} else {
+			int centerX = (startX + endX) / 2;
+			int clampedX = MathHelper.clamp(centerX, startX + textWidth / 2, endX - textWidth / 2);
+			context.drawCenteredTextWithShadow(textRenderer, text, clampedX, offsetY, color);
+		}
 	}
 
 	/**

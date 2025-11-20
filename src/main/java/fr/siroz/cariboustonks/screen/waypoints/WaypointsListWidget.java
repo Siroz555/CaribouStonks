@@ -150,18 +150,18 @@ class WaypointsListWidget extends ElementListWidget<WaypointsListWidget.Waypoint
 			this.zWidget.setChangedListener(this::updateZ);
 
 			this.colorWidget = CyclingButtonWidget.<WaypointColors>builder(
-							value -> Text.literal(value.name()).withColor(value.color.asInt()))
+							value -> Text.literal(value.name()).withColor(value.color.asInt()),
+							() -> WaypointColors.getFromWaypoint(waypoint.getColor()))
 					.values(WaypointColors.values())
-					.initially(WaypointColors.getFromWaypoint(waypoint.getColor()))
 					.omitKeyText() // " : " avant la value, ques-ce que c ?
 					.tooltip(value -> Tooltip.of(WaypointColors.getColoredList(value)))
 					.build(0, 0, 56, 20, Text.empty(),
 							(button, value) -> updateColor(value.color));
 
 			this.typeWidget = CyclingButtonWidget.<Waypoint.Type>builder(
-							value -> Text.literal(value.name()))
+							value -> Text.literal(value.name()),
+							waypoint::getType)
 					.values(Waypoint.Type.values())
-					.initially(waypoint.getType())
 					.omitKeyText() // " : " avant la value, ques-ce que c ?
 					.tooltip(value -> Tooltip.of(getWaypointTypeList(value)))
 					.build(0, 0, 56, 20, Text.empty(),

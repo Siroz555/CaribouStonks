@@ -47,10 +47,13 @@ public class CopyChatMessageFeature extends Feature {
 	private @Nullable ChatHudLine getMessageAt(double x, double y) {
 		try {
 			ChatHudAccessor accessor = (ChatHudAccessor) MinecraftClient.getInstance().inGameHud.getChatHud();
-			int lineSelected = accessor.invokeGetMessageLineIndex(
-					accessor.invokeToChatLineX(x),
-					accessor.invokeToChatLineY(y)
-			);
+//			int lineSelected = accessor.invokeGetMessageLineIndex(
+//					accessor.invokeToChatLineX(x),
+//					accessor.invokeToChatLineY(y)
+//			);
+
+			// TODO
+			int lineSelected = 555;
 			if (lineSelected == -1) {
 				return null;
 			}

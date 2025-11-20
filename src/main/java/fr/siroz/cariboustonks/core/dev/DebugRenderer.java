@@ -110,7 +110,7 @@ record DebugRenderer(@NotNull DeveloperManager dev) {
 				true);
 
 		Vec3d centerPos = new Vec3d(3, 66, 18);
-		double distance = RenderUtils.getCamera().getPos().distanceTo(centerPos);
+		double distance = RenderUtils.getCamera().getCameraPos().distanceTo(centerPos);
 		float scale = Math.max((float) distance / 10, 1);
 
 		renderer.submitTexture(

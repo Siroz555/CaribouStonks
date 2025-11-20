@@ -48,7 +48,7 @@ public abstract class HeldItemRendererMixin {
 		}
 	}
 
-	@ModifyExpressionValue(method = "updateHeldItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getAttackCooldownProgress(F)F"))
+	@ModifyExpressionValue(method = "updateHeldItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getHandEquippingProgress(F)F"))
 	private float cariboustonks$changeAnimationProgress(float original) {
 		return ConfigManager.getConfig().vanilla.itemModelCustomization.enabled ? 1f : original;
 	}

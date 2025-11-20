@@ -29,6 +29,16 @@ public final class CaribouRenderPipelines {
 					.build()
 	);
 
+	public static final RenderPipeline LINE_STRIP = RenderPipelines.register(
+			RenderPipeline.builder(RenderPipelines.TRANSFORMS_AND_PROJECTION_SNIPPET)
+					.withLocation(CaribouStonks.identifier("pipeline/line_strip"))
+					.withVertexShader("core/position_color")
+					.withFragmentShader("core/position_color")
+					.withCull(false)
+					.withVertexFormat(VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.DEBUG_LINE_STRIP)
+					.build()
+	);
+
 	public static final RenderPipeline LINES_THROUGH_BLOCKS = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.RENDERTYPE_LINES_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/lines_through_blocks"))
@@ -80,7 +90,7 @@ public final class CaribouRenderPipelines {
 	public static final RenderPipeline GUI_LINES = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.RENDERTYPE_LINES_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/gui_lines"))
-					.withVertexFormat(VertexFormats.POSITION_COLOR_NORMAL, VertexFormat.DrawMode.LINE_STRIP)
+					.withVertexFormat(VertexFormats.POSITION_COLOR_NORMAL, VertexFormat.DrawMode.DEBUG_LINE_STRIP)
 					.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
 					.withCull(false)
 					.build()

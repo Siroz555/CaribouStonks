@@ -318,7 +318,7 @@ public class StonksScreen extends CaribousStonksScreen {
 			int y = this.getY() + (this.getHeight() - textRenderer.fontHeight) / 2;
 			OrderedText orderedText = textWidth > width ? this.trim(text, width) : text.asOrderedText();
 
-			context.drawTextWithShadow(textRenderer, orderedText, x, y, this.getTextColor());
+			context.drawTextWithShadow(textRenderer, orderedText, x, y, Colors.WHITE.asInt());
 			context.drawItem(icon, x - 34, y - 4);
 		}
 

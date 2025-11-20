@@ -37,6 +37,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -46,9 +47,11 @@ public final class CaribouRenderer {
 
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-	private static final BufferAllocator GENERAL_ALLOCATOR = new BufferAllocator(RenderLayer.DEFAULT_BUFFER_SIZE);
+	// TODO DEFAULT_BUFFER_SIZE (1536)
+	private static final BufferAllocator GENERAL_ALLOCATOR = new BufferAllocator(RenderLayer.field_64010);
 	private static final Vector4f COLOR_MODULATOR = new Vector4f(1f, 1f, 1f, 1f);
 	private static final Vector3f MODEL_OFFSET = new Vector3f();
+	private static final Matrix4f TEXTURE_MATRICE = new Matrix4f();
 	private static final float DEFAULT_LINE_WIDTH = 0f;
 
 	private static final List<RenderPipeline> EXCLUDED_FROM_BATCHING = new ArrayList<>();
@@ -157,7 +160,8 @@ public final class CaribouRenderer {
 		BatchedDraw draw = BATCHED_DRAWS.get(hash);
 
 		if (draw == null) {
-			BufferAllocator allocator = ALLOCATORS.computeIfAbsent(hash, _hash -> new BufferAllocator(RenderLayer.CUTOUT_BUFFER_SIZE));
+			// TODO CUTOUT_BUFFER_SIZE (786432)
+			BufferAllocator allocator = ALLOCATORS.computeIfAbsent(hash, _hash -> new BufferAllocator(RenderLayer.field_64009));
 			BufferBuilder bufferBuilder = new BufferBuilder(allocator, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
 			BATCHED_DRAWS.put(hash, new BatchedDraw(bufferBuilder, pipeline, textureSetup, lineWidth));
 			return bufferBuilder;
@@ -337,12 +341,12 @@ public final class CaribouRenderer {
 
 			if (draw.textureSetup().texure0() != null) {
 				// Sampler0 is used for normal texture inputs in shaders
-				renderPass.bindSampler("Sampler0", draw.textureSetup().texure0());
+				renderPass.bindTexture("Sampler0", draw.textureSetup().texure0(), draw.textureSetup().sampler0());
 			}
 
 			if (draw.textureSetup().texure2() != null) {
 				// Sampler2 is used for lightmap texture inputs in shaders
-				renderPass.bindSampler("Sampler2", draw.textureSetup().texure2());
+				renderPass.bindTexture("Sampler2", draw.textureSetup().texure2(), draw.textureSetup().sampler2());
 			}
 
 			renderPass.setVertexBuffer(0, draw.vertices);
@@ -360,8 +364,7 @@ public final class CaribouRenderer {
 				RenderSystem.getModelViewMatrix(),
 				COLOR_MODULATOR,
 				MODEL_OFFSET,
-				RenderSystem.getTextureMatrix(),
-				lineWidth
+				TEXTURE_MATRICE // TODO RenderSystem.getModelViewMatrix()
 		);
 	}
 

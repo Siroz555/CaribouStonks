@@ -13,7 +13,6 @@ import fr.siroz.cariboustonks.util.http.HttpResponse;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import org.apache.http.client.HttpResponseException;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -89,7 +88,7 @@ public final class GenericDataSource {
 		return CompletableFuture.supplyAsync(() -> {
 			try (HttpResponse response = Http.request(NEU_PRICE_HISTORY_URL + "?item=" + key.neuId())) {
 				if (!response.success()) {
-					throw new HttpResponseException(response.statusCode(), "HTTP error " + response.statusCode());
+					throw new RuntimeException("Price History API returned an error code: " + response.statusCode());
 				}
 
 				JsonObject json = GsonProvider.prettyPrinting().fromJson(response.content(), JsonObject.class);
@@ -143,7 +142,7 @@ public final class GenericDataSource {
 		return CompletableFuture.supplyAsync(() -> {
 			try (HttpResponse response = Http.request(NEU_LOWEST_BIN_AUCTION_URL)) {
 				if (!response.success()) {
-					throw new HttpResponseException(response.statusCode(), response.content());
+					throw new RuntimeException("Auction Lowest Bin API returned an error code: " + response.statusCode());
 				}
 
 				JsonObject json = GsonProvider.prettyPrinting().fromJson(response.content(), JsonObject.class);
