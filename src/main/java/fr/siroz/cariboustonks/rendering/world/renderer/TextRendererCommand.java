@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.rendering.world.renderer;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import fr.siroz.cariboustonks.rendering.Renderer;
+import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.TextRenderState;
 import net.minecraft.client.font.TextDrawable;
 import net.minecraft.client.font.TextRenderer;
@@ -36,14 +36,14 @@ public final class TextRendererCommand implements RendererCommand<TextRenderStat
 			@Override
 			public void drawGlyph(TextDrawable glyph) {
 				TextureSetup textureSetup = TextureSetup.of(glyph.textureView());
-				BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline, textureSetup);
+				BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline, textureSetup);
 				glyph.render(matrix4f, buffer, MAX_LIGHT_COORDINATE, false);
 			}
 
 			@Override
 			public void drawRectangle(TextDrawable bakedGlyph) {
 				TextureSetup textureSetup = TextureSetup.of(bakedGlyph.textureView());
-				BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline, textureSetup);
+				BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline, textureSetup);
 				bakedGlyph.render(matrix4f, buffer, MAX_LIGHT_COORDINATE, false);
 			}
 		});

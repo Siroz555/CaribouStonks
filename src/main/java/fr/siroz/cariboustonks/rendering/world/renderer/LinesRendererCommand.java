@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.rendering.world.renderer;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
-import fr.siroz.cariboustonks.rendering.Renderer;
+import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.LinesRenderState;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.BufferBuilder;
@@ -20,7 +20,7 @@ public final class LinesRendererCommand implements RendererCommand<LinesRenderSt
 				? CaribouRenderPipelines.LINES_THROUGH_BLOCKS
 				: RenderPipelines.LINES;
 
-		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline, state.lineWidth());
+		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline, state.lineWidth());
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());

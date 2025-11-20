@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.state.WorldRenderState;
@@ -26,7 +26,7 @@ public abstract class WorldRendererMixin {
 	 */
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldBorderRendering;updateRenderState(Lnet/minecraft/world/border/WorldBorder;Lnet/minecraft/util/math/Vec3d;DLnet/minecraft/client/render/state/WorldBorderRenderState;)V", shift = At.Shift.AFTER))
 	private void cariboustonks$extractWorldRendering(CallbackInfo ci, @Local Frustum frustum) {
-		CaribouStonks.renderer().startExtraction(frustum);
+		CaribouRenderer.startExtraction(frustum);
 	}
 
 	/**
@@ -36,6 +36,6 @@ public abstract class WorldRendererMixin {
 	 */
 	@Inject(method = "method_62214", at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiler/Profiler;push(Ljava/lang/String;)V", args = "ldc=translucent"))
 	private void cariboustonks$drawBeforeTranslucent(CallbackInfo ci) {
-		CaribouStonks.renderer().executeDraws(this.worldRenderState);
+		CaribouRenderer.executeDraws(this.worldRenderState);
 	}
 }

@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.feature.vanilla.ZoomFeature;
-import fr.siroz.cariboustonks.rendering.Renderer;
+import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
@@ -30,7 +30,7 @@ public abstract class GameRendererMixin {
 
 	@Inject(method = "close", at = @At("TAIL"))
 	private void cariboustonks$onGameRendererClose(CallbackInfo ci) {
-		Renderer.getInstance().close();
+		CaribouRenderer.close();
 	}
 
 	@ModifyReturnValue(method = "getFov", at = @At("RETURN"))

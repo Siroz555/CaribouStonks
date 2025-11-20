@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.rendering.world.renderer;
 
-import fr.siroz.cariboustonks.rendering.Renderer;
+import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.CuboidOutlineRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.gl.RenderPipelines;
@@ -20,7 +20,7 @@ public final class CuboidOutlineRendererCommand implements RendererCommand<Cuboi
 
 	@Override
 	public void emit(@NotNull CuboidOutlineRenderState state, @NotNull CameraRenderState camera) {
-		BufferBuilder buffer = Renderer.getInstance().getBuffer(RenderPipelines.DEBUG_LINE_STRIP, state.lineWidth());
+		BufferBuilder buffer = CaribouRenderer.getBuffer(RenderPipelines.DEBUG_LINE_STRIP, state.lineWidth());
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());

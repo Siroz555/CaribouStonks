@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.rendering.world.renderer;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
-import fr.siroz.cariboustonks.rendering.Renderer;
+import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.FilledBoxRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.gl.RenderPipelines;
@@ -21,7 +21,7 @@ public final class FilledBoxRendererCommand implements RendererCommand<FilledBox
 				? CaribouRenderPipelines.FILLED_THROUGH_BLOCKS
 				: RenderPipelines.DEBUG_FILLED_BOX;
 
-		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline);
+		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline);
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());

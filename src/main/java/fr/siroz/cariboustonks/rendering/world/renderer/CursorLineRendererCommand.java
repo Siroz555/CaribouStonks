@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.rendering.world.renderer;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
-import fr.siroz.cariboustonks.rendering.Renderer;
+import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.CursorLineRenderState;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.state.CameraRenderState;
@@ -16,7 +16,7 @@ public final class CursorLineRendererCommand implements RendererCommand<CursorLi
 	@Override
 	public void emit(@NotNull CursorLineRenderState state, @NotNull CameraRenderState camera) {
 		RenderPipeline pipeline = CaribouRenderPipelines.LINES_THROUGH_BLOCKS;
-		BufferBuilder buffer = Renderer.getInstance().getBuffer(pipeline, state.lineWidth());
+		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline, state.lineWidth());
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());

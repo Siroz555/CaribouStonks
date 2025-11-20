@@ -16,8 +16,8 @@ public final class CaribouRenderPipelines {
 
 	@ApiStatus.Internal
 	public static void init() {
-		Renderer.getInstance().excludePipelineFromBatching(CIRCLE);
-		Renderer.getInstance().excludePipelineFromBatching(CIRCLE_THROUGH_BLOCKS);
+		CaribouRenderer.excludePipelineFromBatching(CIRCLE);
+		CaribouRenderer.excludePipelineFromBatching(CIRCLE_THROUGH_BLOCKS);
 		IrisIntegration.assignPipelines();
 	}
 

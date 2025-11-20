@@ -37,7 +37,6 @@ public final class CaribouStonks implements ClientModInitializer {
 
 	private static CaribouStonks instance;
 
-	private CaribouRenderer caribouRenderer;
 	private CaribouCore caribouCore;
 	private Managers managers;
 	private Features features;
@@ -54,24 +53,13 @@ public final class CaribouStonks implements ClientModInitializer {
 		// Utilities
 		StonksUtils.initUtilities();
 		// Rendering
-		this.caribouRenderer = new CaribouRenderer();
+		CaribouRenderer.init();
 		// Main
 		this.caribouCore = new CaribouCore();
 		this.managers = new Managers();
 		this.features = new Features();
 		// Developer Mode
 		this.caribouCore.initDeveloperMode();
-	}
-
-	/**
-	 * Returns the {@link CaribouRenderer} instance of the mod.
-	 * This instance is used to retrieve and manage Mod Rendering.
-	 *
-	 * @return the {@link CaribouRenderer} instance
-	 */
-	@Contract(pure = true)
-	public static CaribouRenderer renderer() {
-		return instance.caribouRenderer;
 	}
 
 	/**
