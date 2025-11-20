@@ -8,7 +8,6 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.Objects;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gl.RenderPipelines;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,8 +37,10 @@ public final class IrisIntegration {
 	 */
 	public static void assignPipelines() {
 		if (IRIS_ENABLED) {
-			assignPipeline(RenderPipelines.DEBUG_FILLED_BOX, "BASIC");
+			// assignPipeline(RenderPipelines.DEBUG_FILLED_BOX, "BASIC");
+			assignPipeline(CaribouRenderPipelines.FILLED, "BASIC");
 			assignPipeline(CaribouRenderPipelines.FILLED_THROUGH_BLOCKS, "BASIC");
+			assignPipeline(CaribouRenderPipelines.LINE_STRIP, "LINES");
 			assignPipeline(CaribouRenderPipelines.LINES_THROUGH_BLOCKS, "LINES");
 			assignPipeline(CaribouRenderPipelines.QUADS_THROUGH_BLOCKS, "BASIC");
 			assignPipeline(CaribouRenderPipelines.TEXTURE, "TEXTURED");

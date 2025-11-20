@@ -21,6 +21,13 @@ public final class CaribouRenderPipelines {
 		IrisIntegration.assignPipelines();
 	}
 
+	public static final RenderPipeline FILLED = RenderPipelines.register(
+			RenderPipeline.builder(RenderPipelines.POSITION_COLOR_SNIPPET)
+					.withLocation(CaribouStonks.identifier("pipeline/filled_box"))
+					.withVertexFormat(VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.TRIANGLE_STRIP)
+					.build()
+	);
+
 	public static final RenderPipeline FILLED_THROUGH_BLOCKS = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.POSITION_COLOR_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/filled_box_through_blocks"))

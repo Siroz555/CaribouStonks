@@ -5,7 +5,6 @@ import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.FilledBoxRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
@@ -18,7 +17,9 @@ public final class FilledBoxRendererCommand implements RendererCommand<FilledBox
 	public void emit(@NotNull FilledBoxRenderState state, @NotNull CameraRenderState camera) {
 		RenderPipeline pipeline = state.throughBlocks()
 				? CaribouRenderPipelines.FILLED_THROUGH_BLOCKS
-				: RenderPipelines.DEBUG_FILLED_BOX;
+				// Il y a certains cotés qui ont des triangles vide.
+				// Pipeline de MC est remplacé par une nouvelle.
+				: CaribouRenderPipelines.FILLED; // RenderPipelines.DEBUG_FILLED_BOX;
 
 		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline);
 
