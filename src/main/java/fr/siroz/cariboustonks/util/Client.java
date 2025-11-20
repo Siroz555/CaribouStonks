@@ -13,6 +13,7 @@ import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.Toast;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ScoreHolder;
 import net.minecraft.scoreboard.Scoreboard;
@@ -34,6 +35,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Util lié au {@link MinecraftClient}.
@@ -57,6 +59,28 @@ public final class Client {
 	 */
 	public static @Nullable String getPlayerName() {
 		return CLIENT.player != null ? CLIENT.player.getName().getString() : null;
+	}
+
+	/**
+	 * Determines if the given {@code keyCode} is pressed.
+	 * <p>
+	 * See {@link GLFW}
+	 *
+	 * @param keyCode the keyCode to check
+	 * @return {@code true} if the keyCode is pressed
+	 */
+	public static boolean isKeyPressed(int keyCode) {
+		return InputUtil.isKeyPressed(CLIENT.getWindow(), keyCode);
+	}
+
+	/**
+	 * Determines if the {@code Shift key} is currently pressed by checking if either
+	 * the left or right Shift keys (340 or 344) are pressed.
+	 *
+	 * @return {@code true} if the Shift key is pressed
+	 */
+	public static boolean hasShiftDown() {
+		return InputUtil.isKeyPressed(CLIENT.getWindow(), 340) || InputUtil.isKeyPressed(CLIENT.getWindow(), 344);
 	}
 
 	/**

@@ -8,11 +8,11 @@ import fr.siroz.cariboustonks.event.ItemRenderEvents;
 import fr.siroz.cariboustonks.event.MouseEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.mixin.accessors.OrderedTextTooltipComponentAccessor;
+import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import fr.siroz.cariboustonks.util.cooldown.Cooldown;
 import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.CharacterVisitor;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
@@ -84,7 +84,7 @@ public class ScrollableTooltipFeature extends Feature {
 			return allowScroll;
 		}
 
-		if (InputUtil.isKeyPressed(CLIENT.getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT)) {
+		if (Client.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT)) {
 			if (vertical > 0) {
 				scrollLeft();
 			} else if (vertical < 0) {

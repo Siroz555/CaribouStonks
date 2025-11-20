@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.feature.stonks.tooltips.auction;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.data.generic.GenericDataSource;
+import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
@@ -61,7 +62,7 @@ public class AuctionLowestBinTooltipFeature extends Feature implements Container
 
 			int count = item.getCount();
 			double price = lowestBin.get();
-			if (StonksUtils.hasShiftDown() && count > 1) price *= count;
+			if (Client.hasShiftDown() && count > 1) price *= count;
 
             TooltipPriceDisplayType displayType = ConfigManager.getConfig().general.stonks.auctionTooltipPriceDisplayType;
             switch (displayType) {
@@ -88,7 +89,7 @@ public class AuctionLowestBinTooltipFeature extends Feature implements Container
                 }
             }
 
-			if (!StonksUtils.hasShiftDown() && count > 1) {
+			if (!Client.hasShiftDown() && count > 1) {
 				lines.add(Text.literal("[Press SHIFT for x" + count + "]").formatted(Formatting.DARK_GRAY));
 			}
         }

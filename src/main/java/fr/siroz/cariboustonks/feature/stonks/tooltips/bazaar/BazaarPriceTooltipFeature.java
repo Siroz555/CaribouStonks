@@ -10,6 +10,7 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
 import fr.siroz.cariboustonks.manager.container.tooltip.ContainerTooltipAppender;
+import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.item.ItemStack;
@@ -72,7 +73,7 @@ public class BazaarPriceTooltipFeature extends Feature implements ContainerMatch
 					addBazaarLine(lines, "Bazaar Buy-Avg: ", product.get().weightedAverageBuyPrice(), 1);
 					addBazaarLine(lines, "Bazaar Sell-Avg: ", product.get().weightedAverageSellPrice(), 1);
 
-					if (!StonksUtils.hasShiftDown() && count > 1) {
+					if (!Client.hasShiftDown() && count > 1) {
 						lines.add(Text.literal("[Press SHIFT for x" + count + "]").formatted(Formatting.DARK_GRAY));
 					}
 				}
@@ -80,7 +81,7 @@ public class BazaarPriceTooltipFeature extends Feature implements ContainerMatch
 					addBazaarLine(lines, "Bazaar Buy: ", product.get().buyPrice(), count);
 					addBazaarLine(lines, "Bazaar Sell: ", product.get().sellPrice(), count);
 
-					if (!StonksUtils.hasShiftDown() && count > 1) {
+					if (!Client.hasShiftDown() && count > 1) {
 						lines.add(Text.literal("[Press SHIFT for x" + count + "]").formatted(Formatting.DARK_GRAY));
 					}
 				}
@@ -126,7 +127,7 @@ public class BazaarPriceTooltipFeature extends Feature implements ContainerMatch
 			display = StonksUtils.FLOAT_NUMBERS.format(value);
 		} else {
 
-			if (StonksUtils.hasShiftDown() && count > 1) value *= count;
+			if (Client.hasShiftDown() && count > 1) value *= count;
 
 			if (displayType == TooltipPriceDisplayType.SHORT) {
 				display = StonksUtils.SHORT_FLOAT_NUMBERS.format(value);

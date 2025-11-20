@@ -103,7 +103,7 @@ public class AbiphoneFavoriteContactFeature
 		if (!isEnabled() || screen == null) return;
 		if (!matches(screen)) return;
 
-		if (StonksUtils.hasShiftDown() && COOLDOWN.test()) {
+		if (Client.hasShiftDown() && COOLDOWN.test()) {
 			ItemStack itemStack = slot.getStack();
 			if (itemStack == null) {
 				return;

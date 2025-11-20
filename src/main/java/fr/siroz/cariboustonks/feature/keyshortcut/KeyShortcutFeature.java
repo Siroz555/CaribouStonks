@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
+import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.lang.reflect.Type;
@@ -22,7 +23,6 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.InputUtil;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
@@ -129,7 +129,7 @@ public class KeyShortcutFeature extends Feature {
 				int mouseButton = -2000 - shortcut.keyCode();
 				pressed = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), mouseButton) == GLFW.GLFW_PRESS;
 			} else {
-				pressed = InputUtil.isKeyPressed(client.getWindow(), shortcut.keyCode());
+				pressed = Client.isKeyPressed(shortcut.keyCode());
 			}
 
 			if (pressed) {
