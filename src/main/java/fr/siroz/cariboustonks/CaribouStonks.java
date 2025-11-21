@@ -10,10 +10,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -103,33 +103,33 @@ public final class CaribouStonks implements ClientModInitializer {
 	 */
 	@Contract("_ -> new")
 	public static @NotNull Identifier identifier(@NotNull String path) {
-		return Identifier.of(NAMESPACE, path);
+		return Identifier.fromNamespaceAndPath(NAMESPACE, path);
 	}
 
 	/**
-	 * Returns a {@link MutableText} colored text prefix of the Mod.
+	 * Returns a {@link MutableComponent} colored text prefix of the Mod.
 	 * <p>
 	 * Symbol: "" ("\ue820")
 	 *
 	 * @return the text prefix
 	 */
 	@Contract(pure = true)
-	public static @NotNull Supplier<MutableText> prefix() {
-		return () -> Text.empty()
-				.append(Text.literal("[").formatted(Formatting.DARK_GRAY))
-				.append(Text.literal("C").withColor(0xe13333))
-				.append(Text.literal("a").withColor(0xdc3030))
-				.append(Text.literal("r").withColor(0xd82e2e))
-				.append(Text.literal("i").withColor(0xd42c2c))
-				.append(Text.literal("b").withColor(0xd02a2a))
-				.append(Text.literal("o").withColor(0xcc2828))
-				.append(Text.literal("u").withColor(0xc82626))
-				.append(Text.literal("S").withColor(0xc42424))
-				.append(Text.literal("t").withColor(0xc02222))
-				.append(Text.literal("o").withColor(0xbc2020))
-				.append(Text.literal("n").withColor(0xb81e1e))
-				.append(Text.literal("k").withColor(0xb41c1c))
-				.append(Text.literal("s").withColor(0xb01a1a)) // 13
-				.append(Text.literal("] ").formatted(Formatting.DARK_GRAY));
+	public static @NotNull Supplier<MutableComponent> prefix() {
+		return () -> Component.empty()
+				.append(Component.literal("[").withStyle(ChatFormatting.DARK_GRAY))
+				.append(Component.literal("C").withColor(0xe13333))
+				.append(Component.literal("a").withColor(0xdc3030))
+				.append(Component.literal("r").withColor(0xd82e2e))
+				.append(Component.literal("i").withColor(0xd42c2c))
+				.append(Component.literal("b").withColor(0xd02a2a))
+				.append(Component.literal("o").withColor(0xcc2828))
+				.append(Component.literal("u").withColor(0xc82626))
+				.append(Component.literal("S").withColor(0xc42424))
+				.append(Component.literal("t").withColor(0xc02222))
+				.append(Component.literal("o").withColor(0xbc2020))
+				.append(Component.literal("n").withColor(0xb81e1e))
+				.append(Component.literal("k").withColor(0xb41c1c))
+				.append(Component.literal("s").withColor(0xb01a1a)) // 13
+				.append(Component.literal("] ").withStyle(ChatFormatting.DARK_GRAY));
 	}
 }

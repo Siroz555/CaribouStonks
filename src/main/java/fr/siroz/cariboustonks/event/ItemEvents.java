@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public final class ItemEvents {
@@ -14,7 +14,7 @@ public final class ItemEvents {
 	 * Called when a {@link ItemStack} is set in the player inventory slot.
 	 */
 	@OnlySkyBlock
-	public static final Event<Pickup> PICKUP = EventFactory.createArrayBacked(Pickup.class, listeners -> (slot, stack) -> {
+	public static final Event<@NotNull Pickup> PICKUP = EventFactory.createArrayBacked(Pickup.class, listeners -> (slot, stack) -> {
 		for (Pickup listener : listeners) {
 			listener.onPickup(slot, stack);
 		}

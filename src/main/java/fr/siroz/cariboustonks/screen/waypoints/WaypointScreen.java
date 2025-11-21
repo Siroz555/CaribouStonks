@@ -8,15 +8,15 @@ import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.gui.DropdownWidget;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.client.gui.widget.SimplePositioningWidget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +37,7 @@ public class WaypointScreen extends CaribousStonksScreen {
 	private DropdownWidget<IslandType> islandDropdownWidget;
 
 	private WaypointScreen(@Nullable Screen parent) {
-		super(Text.literal("Waypoints").formatted(Formatting.BOLD));
+		super(Component.literal("Waypoints").withStyle(ChatFormatting.BOLD));
 		this.parent = parent;
 		this.currentIslandType = SkyBlockAPI.getIsland();
 		this.waypointFeature = CaribouStonks.features().getFeature(WaypointFeature.class);
@@ -51,41 +51,41 @@ public class WaypointScreen extends CaribousStonksScreen {
 
 	@Override
 	protected void onInit() {
-		waypointsListWidget = this.addDrawableChild(new WaypointsListWidget(
-				client, this, width, height - 120, 32, 24));
-		islandDropdownWidget = this.addDrawableChild(new DropdownWidget<>(
+		waypointsListWidget = this.addRenderableWidget(new WaypointsListWidget(
+                minecraft, this, width, height - 120, 32, 24));
+		islandDropdownWidget = this.addRenderableWidget(new DropdownWidget<>(
 				width - 160, 8, 150, height - 8,
 				Arrays.asList(IslandType.VALUES), this::onIslandChanged, currentIslandType));
 
-		GridWidget grid = new GridWidget();
-		grid.getMainPositioner().marginX(5).marginY(2);
+		GridLayout grid = new GridLayout();
+		grid.defaultCellSetting().paddingHorizontal(5).paddingVertical(2);
 
-		GridWidget.Adder adder = grid.createAdder(2);
-		adder.add(ButtonWidget.builder(Text.literal("Add (At Crosshair)"),
+		GridLayout.RowHelper adder = grid.createRowHelper(2);
+		adder.addChild(Button.builder(Component.literal("Add (At Crosshair)"),
 				button -> waypointsListWidget.createWaypoint(true)).build());
 
-		adder.add(ButtonWidget.builder(Text.literal("Add (Your position)"),
+		adder.addChild(Button.builder(Component.literal("Add (Your position)"),
 				button -> waypointsListWidget.createWaypoint(false)).build());
 
-		adder.add(ButtonWidget.builder(ScreenTexts.DONE, button -> {
+		adder.addChild(Button.builder(CommonComponents.GUI_DONE, button -> {
 			saveWaypoints();
-			onClose();
+			close();
 		}).width(310).build(), 2);
 
-		grid.refreshPositions();
-		SimplePositioningWidget.setPos(grid, 0, this.height - 64, this.width, 64);
-		grid.forEachChild(this::addDrawableChild);
+		grid.arrangeElements();
+		FrameLayout.centerInRectangle(grid, 0, this.height - 64, this.width, 64);
+		grid.visitWidgets(this::addRenderableWidget);
 		updateButtons();
 	}
 
 	@Override
-	public void onRender(DrawContext context, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
 		super.onRender(context, mouseX, mouseY, delta);
-		context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 16, Colors.WHITE.asInt());
+		context.drawCenteredString(this.font, this.title, this.width / 2, 16, Colors.WHITE.asInt());
 	}
 
 	@Override
-	public boolean onMouseClicked(Click click, boolean doubled) {
+	public boolean onMouseClicked(MouseButtonEvent click, boolean doubled) {
 		if (islandDropdownWidget.mouseClicked(click, doubled)) {
 			return true;
 		}
@@ -107,7 +107,7 @@ public class WaypointScreen extends CaribousStonksScreen {
 
 	private void saveWaypoints() {
 		waypointFeature.updateWaypoints(waypoints);
-		waypointFeature.saveWaypoints(client);
+		waypointFeature.saveWaypoints(minecraft);
 	}
 
 	private void onIslandChanged(IslandType islandType) {
@@ -120,8 +120,8 @@ public class WaypointScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onClose() {
-		assert client != null;
-		client.setScreen(parent);
+	public void close() {
+		assert minecraft != null;
+		minecraft.setScreen(parent);
 	}
 }

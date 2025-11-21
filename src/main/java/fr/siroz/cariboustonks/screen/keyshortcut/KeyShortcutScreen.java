@@ -7,17 +7,17 @@ import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ConfirmScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.client.gui.widget.SimplePositioningWidget;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.ConfirmScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,13 +33,13 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	private final KeyShortcutFeature keyShortcutFeature;
 	protected Map<String, KeyShortcut> shortcuts;
 	private KeyShortcutListWidget listWidget;
-	private ButtonWidget buttonDelete;
+	private Button buttonDelete;
 	private double scrollBackup;
 	@Nullable
 	private KeyShortcutListWidget.KeyShortcutEntry currentEntry = null;
 
 	private KeyShortcutScreen(@Nullable Screen parent) {
-		super(Text.literal("Key Shortcuts").formatted(Formatting.BOLD));
+		super(Component.literal("Key Shortcuts").withStyle(ChatFormatting.BOLD));
 		this.parent = parent;
 		this.keyShortcutFeature = CaribouStonks.features().getFeature(KeyShortcutFeature.class);
 		this.shortcuts = new HashMap<>(this.keyShortcutFeature.getShortcutsCopy());
@@ -52,52 +52,52 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 
 	@Override
 	protected void onInit() {
-		listWidget = new KeyShortcutListWidget(this.client, this, this.width, this.height - 112, 40, 36);
-		addDrawableChild(listWidget);
+		listWidget = new KeyShortcutListWidget(this.minecraft, this, this.width, this.height - 112, 40, 36);
+		addRenderableWidget(listWidget);
 
-		GridWidget grid = new GridWidget();
-		grid.getMainPositioner().marginX(5).marginY(2);
+		GridLayout grid = new GridLayout();
+		grid.defaultCellSetting().paddingHorizontal(5).paddingVertical(2);
 
-		GridWidget.Adder adder = grid.createAdder(2);
+		GridLayout.RowHelper adder = grid.createRowHelper(2);
 
-		adder.add(ButtonWidget.builder(Text.literal("New Shortcut"),
+		adder.addChild(Button.builder(Component.literal("New Shortcut"),
 				b -> listWidget.createKeyShortcut()).build());
 
-		buttonDelete = ButtonWidget.builder(Text.translatable("selectServer.deleteButton"), b -> {
-			if (client != null && listWidget.getSelectedOrNull() instanceof KeyShortcutListWidget.KeyShortcutEntry) {
-				scrollBackup = listWidget.getScrollY();
-				client.setScreen(new ConfirmScreen(
+		buttonDelete = Button.builder(Component.translatable("selectServer.deleteButton"), b -> {
+			if (minecraft != null && listWidget.getSelected() instanceof KeyShortcutListWidget.KeyShortcutEntry) {
+				scrollBackup = listWidget.scrollAmount();
+				minecraft.setScreen(new ConfirmScreen(
 						this::deleteEntry,
-						Text.literal("Confirm?"),
-						Text.empty(),
-						Text.translatable("selectServer.deleteButton"),
-						ScreenTexts.CANCEL)
+						Component.literal("Confirm?"),
+						Component.empty(),
+						Component.translatable("selectServer.deleteButton"),
+						CommonComponents.GUI_CANCEL)
 				);
 			}
 		}).build();
-		adder.add(buttonDelete);
+		adder.addChild(buttonDelete);
 
-		adder.add(ButtonWidget.builder(ScreenTexts.DONE, b -> {
+		adder.addChild(Button.builder(CommonComponents.GUI_DONE, b -> {
 			saveShortcuts();
-			onClose();
+			close();
 		}).width(310).build(), 2);
 
-		grid.refreshPositions();
-		SimplePositioningWidget.setPos(grid, 0, this.height - 64, this.width, 64);
-		grid.forEachChild(this::addDrawableChild);
+		grid.arrangeElements();
+		FrameLayout.centerInRectangle(grid, 0, this.height - 64, this.width, 64);
+		grid.visitWidgets(this::addRenderableWidget);
 		updateButtons();
 	}
 
 	@Override
-	public void onRender(DrawContext context, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
 		super.onRender(context, mouseX, mouseY, delta);
-		context.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 16, Colors.WHITE.asInt());
+		context.drawCenteredString(this.font, this.title, this.width / 2, 16, Colors.WHITE.asInt());
 	}
 
 	@Override
-	public boolean keyPressed(KeyInput input) {
+	public boolean keyPressed(KeyEvent input) {
 		if (currentEntry != null) {
-			int code = (input.getKeycode() == GLFW.GLFW_KEY_ESCAPE || input.getKeycode() == GLFW.GLFW_KEY_DELETE) ? -1 : input.getKeycode();
+			int code = (input.input() == GLFW.GLFW_KEY_ESCAPE || input.input() == GLFW.GLFW_KEY_DELETE) ? -1 : input.input();
 			currentEntry.setKeyCode(code);
 			currentEntry = null;
 			setFocused(null);
@@ -108,7 +108,7 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public boolean onMouseClicked(Click click, boolean doubled) {
+	public boolean onMouseClicked(MouseButtonEvent click, boolean doubled) {
 		if (currentEntry != null) {
 			currentEntry.setKeyCode(-2000 - click.button());
 			currentEntry = null;
@@ -119,7 +119,7 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+	public void renderBackground(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
 		super.renderBackground(context, mouseX, mouseY, delta);
 		if (currentEntry != null) {
 			context.fill(0, 0, width, height, 0x88000000);
@@ -127,13 +127,13 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onClose() {
-		assert client != null;
-		client.setScreen(parent);
+	public void close() {
+		assert minecraft != null;
+		minecraft.setScreen(parent);
 	}
 
 	void updateButtons() {
-		buttonDelete.active = listWidget.getSelectedOrNull() instanceof KeyShortcutListWidget.KeyShortcutEntry;
+		buttonDelete.active = listWidget.getSelected() instanceof KeyShortcutListWidget.KeyShortcutEntry;
 	}
 
 	void setCurrentEntry(KeyShortcutListWidget.KeyShortcutEntry entry) {
@@ -142,19 +142,19 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	}
 
 	private void deleteEntry(boolean confirmed) {
-		if (confirmed && listWidget.getSelectedOrNull() instanceof KeyShortcutListWidget.KeyShortcutEntry entry) {
+		if (confirmed && listWidget.getSelected() instanceof KeyShortcutListWidget.KeyShortcutEntry entry) {
 			listWidget.removeEntry(entry);
 		}
 
-		if (client != null) {
-			client.setScreen(this);
+		if (minecraft != null) {
+			minecraft.setScreen(this);
 		}
 
-		listWidget.setScrollY(scrollBackup);
+		listWidget.setScrollAmount(scrollBackup);
 	}
 
 	private void saveShortcuts() {
 		keyShortcutFeature.updateShortcuts(shortcuts);
-		keyShortcutFeature.saveShortcuts(client);
+		keyShortcutFeature.saveShortcuts(minecraft);
 	}
 }

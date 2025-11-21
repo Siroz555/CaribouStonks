@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,8 +49,8 @@ public final class AttributeAPI {
 	 * @param lines    the lore of the ItemStack
 	 * @return the skyBlockApiId or the fallback
 	 */
-	public static String getSkyBlockApiIdFromNewShard(@NotNull String fallback, ItemStack item, List<Text> lines) {
-		Screen currentScreen = MinecraftClient.getInstance().currentScreen;
+	public static String getSkyBlockApiIdFromNewShard(@NotNull String fallback, ItemStack item, List<Component> lines) {
+		Screen currentScreen = Minecraft.getInstance().screen;
 		if (!fallback.isEmpty() || currentScreen == null) return fallback;
 		// Certaines shards ne sont pas des PLAYER_HEAD
 		//if (!item.isOf(Items.PLAYER_HEAD)) return fallback; // pas sûr de cette verification là, à voir
@@ -58,13 +58,13 @@ public final class AttributeAPI {
 		String title = currentScreen.getTitle().getString();
 		switch (title) {
 			case HUNTING_BOX -> {
-				String name = item.getOrDefault(DataComponentTypes.CUSTOM_NAME, Text.empty()).getString();
+				String name = item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
 				SkyBlockAttribute attribute = CaribouStonks.core().getModDataSource().getAttributeByShardName(name);
 				return attribute != null ? attribute.skyBlockApiId() : fallback;
 			}
 			case ATTRIBUTE_MENU -> {
 				String id = null;
-				for (Text line : lines) {
+				for (Component line : lines) {
 					String lineText = line.getString();
 					if (lineText.isEmpty()) {
 						continue;
@@ -81,7 +81,7 @@ public final class AttributeAPI {
 			}
 			case FUSION_BOX, SHARD_FUSION -> {
 				String id = null;
-				for (Text line : lines) {
+				for (Component line : lines) {
 					String lineText = line.getString();
 					if (lineText.isEmpty()) {
 						continue;

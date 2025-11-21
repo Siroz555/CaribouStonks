@@ -5,9 +5,9 @@ import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.FilledBoxRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import com.mojang.blaze3d.vertex.PoseStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -24,16 +24,16 @@ public final class FilledBoxRendererCommand implements RendererCommand<FilledBox
 		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline);
 
 		Matrix4f matrix4f = new Matrix4f()
-				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());
+				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());
 
-		MatrixStack matrices = RenderUtils.matrixToStack(matrix4f);
+		PoseStack matrices = RenderUtils.matrixToStack(matrix4f);
 
 //		VertexRendering.drawFilledBox(matrices, buffer,
 //				state.minX(), state.minY(), state.minZ(), state.maxX(), state.maxY(), state.maxZ(),
 //				colorComponents[0], colorComponents[1], colorComponents[2], state.color().getAlpha()
 //		);
 
-		Matrix4f positionMatrix = matrices.peek().getPositionMatrix();
+		Matrix4f positionMatrix = matrices.last().pose();
 
 		float minX = (float) state.minX();
 		float minY = (float) state.minY();
@@ -48,35 +48,35 @@ public final class FilledBoxRendererCommand implements RendererCommand<FilledBox
 		float blue = colorComponents[2];
 		float alpha = state.color().getAlpha();
 
-		buffer.vertex(positionMatrix, minX, minY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, minY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, minY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, minY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, maxY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, maxY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, maxY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, minY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, maxY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, minY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, minY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, minY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, maxY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, maxY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, maxY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, minY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, maxY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, minY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, minY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, minY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, minY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, minY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, minY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, maxY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, maxY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, minX, maxY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, maxY, minZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, maxY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, maxY, maxZ).color(red, green, blue, alpha);
-		buffer.vertex(positionMatrix, maxX, maxY, maxZ).color(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, minY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, minY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, minY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, minY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, maxY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, maxY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, maxY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, minY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, maxY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, minY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, minY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, minY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, maxY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, maxY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, maxY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, minY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, maxY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, minY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, minY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, minY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, minY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, minY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, minY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, maxY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, maxY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, minX, maxY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, maxY, minZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, maxY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, maxY, maxZ).setColor(red, green, blue, alpha);
+		buffer.addVertex(positionMatrix, maxX, maxY, maxZ).setColor(red, green, blue, alpha);
 	}
 }

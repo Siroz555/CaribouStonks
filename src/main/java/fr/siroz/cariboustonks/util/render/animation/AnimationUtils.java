@@ -5,12 +5,12 @@ import fr.siroz.cariboustonks.util.math.MathUtils;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Range;
 
 public final class AnimationUtils {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private static final int RAINBOW_CHANGE_RATE = 10;
 	private static Color currentRainbowColor = Colors.RED;
@@ -35,16 +35,16 @@ public final class AnimationUtils {
 	/**
 	 * Applies a dynamic rainbow color effect to the given text.
 	 * <p>
-	 * This method creates un {@link Text} object where each character
+	 * This method creates un {@link Component} object where each character
 	 * of the input string is assigned a different color based on the current epoch time,
 	 * producing a smooth and animated rainbow gradient effect.
 	 *
 	 * @param text the input string
-	 * @return un {@link Text} instance with each character colored according to a time-based rainbow gradient
+	 * @return un {@link Component} instance with each character colored according to a time-based rainbow gradient
 	 */
-	public static @NotNull Text applyRainbow(@NotNull String text) {
-		MutableText result = Text.empty();
-		long time = Util.getEpochTimeMs();
+	public static @NotNull Component applyRainbow(@NotNull String text) {
+		MutableComponent result = Component.empty();
+		long time = Util.getEpochMillis();
 		float speed = 2000F; // 2000 | plus bas = plus rapide
 		float spacing = 0.05f; // 0.05f | décalage des couleurs pour le next
 		float saturation = 0.8F;
@@ -56,7 +56,7 @@ public final class AnimationUtils {
 			// ce qui permet d'inverser la "rotation" du cercle des couleurs. NOTE-ME : À voir dans la config
 			hue = (hue + 1.0f) % 1.0f;
 			int rgb = java.awt.Color.HSBtoRGB(hue, saturation, brightness);
-			result.append(Text.literal(String.valueOf(text.charAt(i))).withColor(rgb));
+			result.append(Component.literal(String.valueOf(text.charAt(i))).withColor(rgb));
 		}
 
 		return result;
@@ -68,7 +68,7 @@ public final class AnimationUtils {
 
 	public static void showSpecialEffect(
 			@NotNull ItemStack item,
-			@Nullable ParticleEffect particle,
+			@Nullable ParticleOptions particle,
 			@Range(from = 1, to = 120) int particleAge,
 			@NotNull SoundEvent sound,
 			float soundVolume,
@@ -78,30 +78,30 @@ public final class AnimationUtils {
 	}
 
 	public static void showSpecialEffect(
-			@Nullable Text title,
+			@Nullable Component title,
 			@NotNull ItemStack item,
-			@Nullable ParticleEffect particle,
+			@Nullable ParticleOptions particle,
 			@Range(from = 1, to = 120) int particleAge,
 			@NotNull SoundEvent sound,
 			float soundVolume,
 			float soundPitch
 	) {
-		if (CLIENT.player != null && CLIENT.world != null) {
+		if (CLIENT.player != null && CLIENT.level != null) {
 			if (title != null) {
 				Client.showTitle(title, 0, 60, 20);
 			}
 
-			CLIENT.gameRenderer.showFloatingItem(item);
+			CLIENT.gameRenderer.displayItemActivation(item);
 
 			if (particle != null) {
-				CLIENT.particleManager.addEmitter(CLIENT.player, particle, particleAge);
+				CLIENT.particleEngine.createTrackingEmitter(CLIENT.player, particle, particleAge);
 			}
 
 			CLIENT.player.playSound(sound, soundVolume, soundPitch);
 		}
 	}
 
-	private static void onTick(MinecraftClient _client) {
+	private static void onTick(Minecraft _client) {
 		int r = currentRainbowColor.r;
 		int g = currentRainbowColor.g;
 		int b = currentRainbowColor.b;

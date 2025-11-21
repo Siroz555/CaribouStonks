@@ -6,8 +6,8 @@ import fr.siroz.cariboustonks.manager.hud.element.HudTextLine;
 import fr.siroz.cariboustonks.manager.hud.element.HudTableRow;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -34,18 +34,18 @@ public final class HudElementBuilder {
 	 * @param text the title text to insert
 	 * @return this builder instance
 	 */
-	public HudElementBuilder appendTitle(@NotNull Text text) {
+	public HudElementBuilder appendTitle(@NotNull Component text) {
 		elements.addFirst(new HudTextLine(text, true));
 		return this;
 	}
 
 	/**
-	 * Appends a single {@link Text} line to the HUD.
+	 * Appends a single {@link Component} line to the HUD.
 	 *
 	 * @param text the text of the line to append
 	 * @return this builder instance
 	 */
-	public HudElementBuilder appendLine(@NotNull Text text) {
+	public HudElementBuilder appendLine(@NotNull Component text) {
 		elements.add(new HudTextLine(text, false));
 		return this;
 	}
@@ -58,19 +58,19 @@ public final class HudElementBuilder {
 	 * @param c3 the text for the third column
 	 * @return this builder instance
 	 */
-	public HudElementBuilder appendTableRow(@NotNull Text c1, @NotNull Text c2, @NotNull Text c3) {
+	public HudElementBuilder appendTableRow(@NotNull Component c1, @NotNull Component c2, @NotNull Component c3) {
 		elements.add(new HudTableRow(c1, c2, c3, false));
 		return this;
 	}
 
 	/**
-	 * Appends a single {@link ItemStack} with a {@link Text} on the same line to the HUD.
+	 * Appends a single {@link ItemStack} with a {@link Component} on the same line to the HUD.
 	 *
 	 * @param stack the ItemStack
 	 * @param text  the text
 	 * @return this builder instance
 	 */
-	public HudElementBuilder appendIconLine(@NotNull ItemStack stack, @NotNull Text text) {
+	public HudElementBuilder appendIconLine(@NotNull ItemStack stack, @NotNull Component text) {
 		elements.add(new HudIconLine(stack, text, false));
 		return this;
 	}

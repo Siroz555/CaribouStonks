@@ -1,13 +1,13 @@
 package fr.siroz.cariboustonks.rendering.world.state;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.phys.Vec3;
 
 public record TextRenderState(
-		TextRenderer.GlyphDrawable glyphs,
-		Vec3d pos,
-		float scale,
-		float offsetY,
-		boolean throughBlocks
+        Font.PreparedText glyphs,
+        Vec3 pos,
+        float scale,
+        float offsetY,
+        boolean throughBlocks
 ) {
 }

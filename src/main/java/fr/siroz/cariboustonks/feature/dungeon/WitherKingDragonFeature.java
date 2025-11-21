@@ -21,13 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,7 +71,7 @@ public class WitherKingDragonFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onMessage(@NotNull Text text) {
+	private void onMessage(@NotNull Component text) {
 		if (!isEnabled()) return;
 
 		String message = StonksUtils.stripColor(text.getString());
@@ -107,33 +107,33 @@ public class WitherKingDragonFeature extends Feature {
 			}
 
 			if (canShowLastBreathTarget) {
-				renderer.submitCircle(dragon.getLbPos().toCenterPos(), 1.5d, 16, 0.02f, dragon.getColor(), Direction.Axis.Y, false);
+				renderer.submitCircle(dragon.getLbPos().getCenter(), 1.5d, 16, 0.02f, dragon.getColor(), Direction.Axis.Y, false);
 			}
 
 			if (target != null && target.getName().equals(dragon.getName())) { // .equals avec un spawn time different pas confiance
-				renderer.submitLineFromCursor(target.getText().toCenterPos(), target.getColor(), 1f);
+				renderer.submitLineFromCursor(target.getText().getCenter(), target.getColor(), 1f);
 			}
 
 			if (canShowSpawnTime && dragon.getSpawnTime() > 0) {
 				int timeUntilSpawn = dragon.getSpawnTime() * Ticks.MILLISECONDS_PER_TICK;
-				Text spawnText = Text.literal(timeUntilSpawn + " ms").formatted(colorFor(timeUntilSpawn));
-				renderer.submitText(spawnText, dragon.getText().toCenterPos(), 8.5f, true);
+				Component spawnText = Component.literal(timeUntilSpawn + " ms").withStyle(colorFor(timeUntilSpawn));
+				renderer.submitText(spawnText, dragon.getText().getCenter(), 8.5f, true);
 			}
 		}
 	}
 
 	@EventHandler(event = "NetworkEvents.PARTICLE_RECEIVED_PACKET")
-	private void onParticle(ParticleS2CPacket packet) {
+	private void onParticle(ClientboundLevelParticlesPacket packet) {
 		if (!isPhase5) return;
 		if (!isEnabled()) return;
-		if (!packet.getParameters().getType().equals(ParticleTypes.ENCHANT)) return;
+		if (!packet.getParticle().getType().equals(ParticleTypes.ENCHANT)) return;
 
 		for (WitherKingDragon dragon : WitherKingDragon.VALUES) {
 			// Les box sont alignés au niveau du sol des chests, le Y est ajusté pour detect qu'en hauteur.
 			// Réduit la box si les positions correspondent au Purple.
 			// Cette approche est différentes des versions classiques de la 1.8, car il faut gérer les state.
-			Box box = Box.enclosing(dragon.getPos1().add(0, 14, 0), dragon.getPos2());
-			box.contract(dragon.getPos1().getX() == 41 ? 11 : 0, 0, dragon.getPos1().getZ() == 112 ? 0 : 11);
+			AABB box = AABB.encapsulatingFullBlocks(dragon.getPos1().offset(0, 14, 0), dragon.getPos2());
+			box.deflate(dragon.getPos1().getX() == 41 ? 11 : 0, 0, dragon.getPos1().getZ() == 112 ? 0 : 11);
 			// Si dans le box
 			if (box.contains(packet.getX(), packet.getY(), packet.getZ())) {
 				if (dragon.getSpawnTime() <= 0 && !dragon.isSpawned()) {
@@ -175,18 +175,18 @@ public class WitherKingDragonFeature extends Feature {
 
 		if (ConfigManager.getConfig().instance.theCatacombs.witherKing.dragPrioTitle) {
 			Client.showTitleAndSubtitle(
-					Text.literal(dragonName).withColor(color).formatted(Formatting.BOLD),
-					Text.literal("is Spawning!").withColor(color),
+					Component.literal(dragonName).withColor(color).withStyle(ChatFormatting.BOLD),
+					Component.literal("is Spawning!").withColor(color),
 					0, 30, 0
 			);
-			Client.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 5f, 1f);
+			Client.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 5f, 1f);
 		}
 
 		if (ConfigManager.getConfig().instance.theCatacombs.witherKing.dragPrioMessage) {
 			if (split) {
-				Client.sendMessageWithPrefix(Text.literal(dragonName + " is Spawning! (Split Prio)").withColor(color));
+				Client.sendMessageWithPrefix(Component.literal(dragonName + " is Spawning! (Split Prio)").withColor(color));
 			} else {
-				Client.sendMessageWithPrefix(Text.literal(dragonName + " is Spawning!").withColor(color));
+				Client.sendMessageWithPrefix(Component.literal(dragonName + " is Spawning!").withColor(color));
 			}
 		}
 	}
@@ -203,11 +203,11 @@ public class WitherKingDragonFeature extends Feature {
 		};
 	}
 
-	private Formatting colorFor(long ms) {
-		if (ms <= 1_000L) return Formatting.RED;
-		if (ms <= 2_000L) return Formatting.GOLD;
-		if (ms <= 3_000L) return Formatting.YELLOW;
-		return Formatting.GREEN;
+	private ChatFormatting colorFor(long ms) {
+		if (ms <= 1_000L) return ChatFormatting.RED;
+		if (ms <= 2_000L) return ChatFormatting.GOLD;
+		if (ms <= 3_000L) return ChatFormatting.YELLOW;
+		return ChatFormatting.GREEN;
 	}
 
 	private void reset() {

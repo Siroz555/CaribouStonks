@@ -7,10 +7,10 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import java.util.Set;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.decoration.DisplayEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Display;
 import org.jetbrains.annotations.NotNull;
 
 public class BreakTreeAnimationFeature extends Feature {
@@ -36,7 +36,7 @@ public class BreakTreeAnimationFeature extends Feature {
 	@EventHandler(event = "RenderEvents.ALLOW_RENDER_ENTITY")
 	private boolean allowRenderEntity(@NotNull Entity entity) {
 		if (!isEnabled()) return true;
-		if (!(entity instanceof DisplayEntity.BlockDisplayEntity blockDisplayEntity)) return true;
+		if (!(entity instanceof Display.BlockDisplay blockDisplayEntity)) return true;
 
 		return !treeBlocks.contains(blockDisplayEntity.getBlockState().getBlock());
 	}

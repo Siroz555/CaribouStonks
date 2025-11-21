@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.core.skyblock.item.metadata;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -63,10 +63,10 @@ public record Modifiers(
 		return rarityUpgrades == 1;
 	}
 
-	public static Modifiers ofNbt(@NotNull NbtCompound customData) {
+	public static Modifiers ofNbt(@NotNull CompoundTag customData) {
 		try {
-			int rarityUpgradeData = customData.getInt("rarity_upgrades", 0);
-			int upgradeLevelData = customData.getInt("upgrade_level", 0);
+			int rarityUpgradeData = customData.getIntOr("rarity_upgrades", 0);
+			int upgradeLevelData = customData.getIntOr("upgrade_level", 0);
 			Optional<String> enrichmentData = customData.getString("talisman_enrichment");
 			OptionalInt woodSingularityData = customData.getInt("wood_singularity_count")
 					.map(OptionalInt::of)
@@ -89,7 +89,7 @@ public record Modifiers(
 			Optional<String> powerScrollData = customData.getString("power_ability_scroll");
 			Optional<List<String>> abilityScrollsData = customData.getList("ability_scroll")
 					.map(list -> list.stream()
-							.map(NbtElement::asString)
+							.map(Tag::asString)
 							.flatMap(Optional::stream)
 							.toList())
 					.filter(list -> !list.isEmpty());
@@ -101,7 +101,7 @@ public record Modifiers(
 					.orElse(OptionalInt.empty());
 			Optional<List<String>> boostersData = customData.getList("boosters")
 					.map(list -> list.stream()
-							.map(NbtElement::asString)
+							.map(Tag::asString)
 							.flatMap(Optional::stream)
 							.toList())
 					.filter(list -> !list.isEmpty());

@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.regex.Pattern;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +44,7 @@ public class CroesusMenuFeature extends Feature implements ContainerMatcherTrait
 	public @NotNull List<ColorHighlight> content(@NotNull Int2ObjectMap<ItemStack> slots) {
 		List<ColorHighlight> highlights = new ArrayList<>();
 		for (Int2ObjectMap.Entry<ItemStack> entry : slots.int2ObjectEntrySet()) {
-			List<Text> lore = ItemUtils.getLore(entry.getValue());
+			List<Component> lore = ItemUtils.getLore(entry.getValue());
 			if (lore.isEmpty()) {
 				continue;
 			}
@@ -53,14 +53,14 @@ public class CroesusMenuFeature extends Feature implements ContainerMatcherTrait
 			boolean opened = false;
 			boolean noMoreChest = false;
 			boolean kismetAvailable = false;
-			for (Text text : lore) {
+			for (Component text : lore) {
 				String line = text.getString();
 				if (line.contains("No chests opened yet!")) notOpenedYet = true;
 				if (line.contains("Opened Chest:")) opened = true;
 				if (line.contains("No more chests to open!")) noMoreChest = true;
 				if (line.contains("Kismet Feather")) {
-					List<Text> kismetText = text.getSiblings();
-					for (Text kismetLine : kismetText) {
+					List<Component> kismetText = text.getSiblings();
+					for (Component kismetLine : kismetText) {
 						String kismetLineString = kismetLine.getString();
 						if (kismetLineString.contains("Kismet Feather") && !kismetLine.getStyle().isStrikethrough()) {
 							kismetAvailable = true;

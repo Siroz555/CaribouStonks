@@ -4,9 +4,9 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.ThickCircleRenderState;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.util.math.Vec3d;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -21,9 +21,9 @@ public final class ThickCircleRendererCommand implements RendererCommand<ThickCi
 		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline);
 
 		Matrix4f matrix4f = new Matrix4f()
-				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());
+				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());
 
-		Vec3d centerTopPos = state.center().add(0, state.thickness(), 0);
+		Vec3 centerTopPos = state.center().add(0, state.thickness(), 0);
 
 		for (int i = 0; i <= state.segments(); i++) {
 			double angle = 2 * Math.PI * i / state.segments();
@@ -38,10 +38,10 @@ public final class ThickCircleRendererCommand implements RendererCommand<ThickCi
 			float xUpper = (float) v;
 			float zUpper = (float) v1;
 
-			buffer.vertex(matrix4f, xUpper, (float) centerTopPos.getY(), zUpper)
-					.color(state.color().r, state.color().g, state.color().b, state.color().a);
-			buffer.vertex(matrix4f, xLower, (float) state.center().getY(), zLower)
-					.color(state.color().r, state.color().g, state.color().b, state.color().a);
+			buffer.addVertex(matrix4f, xUpper, (float) centerTopPos.y(), zUpper)
+					.setColor(state.color().r, state.color().g, state.color().b, state.color().a);
+			buffer.addVertex(matrix4f, xLower, (float) state.center().y(), zLower)
+					.setColor(state.color().r, state.color().g, state.color().b, state.color().a);
 		}
 	}
 }

@@ -3,9 +3,9 @@ package fr.siroz.cariboustonks.manager.slayer;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import org.jetbrains.annotations.NotNull;
 
 class SlayerQuest {
@@ -14,7 +14,7 @@ class SlayerQuest {
 	private SlayerType slayerType;
 	private SlayerTier slayerTier;
 
-	private final List<ArmorStandEntity> minibossesArmorStand = new ArrayList<>();
+	private final List<ArmorStand> minibossesArmorStand = new ArrayList<>();
 	private final List<Entity> minibosses = new ArrayList<>();
 
 	SlayerQuest(SlayerManager slayerManager) {
@@ -23,13 +23,13 @@ class SlayerQuest {
 		this.slayerTier = SlayerTier.UNKNOWN;
 	}
 
-	public void onMinibossSpawn(@NotNull ArmorStandEntity armorStand, @NotNull SlayerType type) {
+	public void onMinibossSpawn(@NotNull ArmorStand armorStand, @NotNull SlayerType type) {
 		if (!minibossesArmorStand.contains(armorStand)) {
 			minibossesArmorStand.add(armorStand);
 			// Cas particulier :
 			// Depuis l'ajout du Spider T5, les Miniboss ne sont plus la même EntityType que le boss lui-même
 			if (slayerTier == SlayerTier.V && !type.getMinibossEntityTypes().isEmpty()) {
-				for (EntityType<? extends Entity> minibossEntityType : type.getMinibossEntityTypes()) {
+				for (EntityType<? extends @NotNull Entity> minibossEntityType : type.getMinibossEntityTypes()) {
 					Entity closestEntity = slayerManager.findClosestEntity(minibossEntityType, armorStand);
 					// true sera toujours retourné avec le add même si la closestEntity est null
 					if (closestEntity != null) {

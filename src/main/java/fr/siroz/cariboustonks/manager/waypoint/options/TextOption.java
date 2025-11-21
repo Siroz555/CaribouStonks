@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.manager.waypoint.options;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public final class TextOption {
 
-    private Text text;
+    private Component text;
     private final boolean withDistance;
     private final int offsetY;
     private final boolean throughBlocks;
@@ -19,7 +19,7 @@ public final class TextOption {
         this(null, false, -1, true);
     }
 
-    private TextOption(Text text, boolean withDistance, int offsetY, boolean throughBlocks) {
+    private TextOption(Component text, boolean withDistance, int offsetY, boolean throughBlocks) {
         this.text = text;
         this.withDistance = withDistance;
         this.offsetY = offsetY;
@@ -27,21 +27,21 @@ public final class TextOption {
     }
 
     /**
-     * Récupère le {@link Text} du Waypoint.
+     * Récupère le {@link Component} du Waypoint.
      *
-     * @return le {@link Text} ou {@code null}
+     * @return le {@link Component} ou {@code null}
      */
     @Contract(pure = true)
-    public @NotNull Optional<Text> getText() {
+    public @NotNull Optional<Component> getText() {
         return Optional.ofNullable(text);
     }
 
     /**
-     * Changer le {@link Text} du Waypoint.
+     * Changer le {@link Component} du Waypoint.
      *
-     * @param text le {@link Text} ou {@code null} pour retirer le Text actuel
+     * @param text le {@link Component} ou {@code null} pour retirer le Text actuel
      */
-    public void updateText(@Nullable Text text) {
+    public void updateText(@Nullable Component text) {
         this.text = text;
     }
 
@@ -64,12 +64,12 @@ public final class TextOption {
 
     public static class Builder {
 
-        protected Text text = null;
+        protected Component text = null;
         protected boolean withDistance = false;
         protected int offsetY = -1;
         protected boolean throughBlocks = true;
 
-        public TextOption.Builder withText(@Nullable Text text) {
+        public TextOption.Builder withText(@Nullable Component text) {
             this.text = text;
             return this;
         }

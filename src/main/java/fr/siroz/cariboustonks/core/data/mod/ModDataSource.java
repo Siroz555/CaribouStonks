@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.OptionalInt;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -104,7 +104,7 @@ public final class ModDataSource {
 		return null;
 	}
 
-	private @NotNull CompletableFuture<Void> loadModData(MinecraftClient client) {
+	private @NotNull CompletableFuture<Void> loadModData(Minecraft client) {
 		CompletableFuture<Void> itemsMappingFuture = CompletableFuture.runAsync(() -> {
 			try (BufferedReader reader = client.getResourceManager().openAsReader(ITEMS_MAPPING_JSON)) {
 

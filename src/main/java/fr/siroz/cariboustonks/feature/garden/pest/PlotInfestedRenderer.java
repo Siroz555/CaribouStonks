@@ -4,11 +4,11 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ final class PlotInfestedRenderer {
 				double maxX = (x - 2) * 96 + 48;
 				double maxZ = (i - 2) * 96 + 48;
 
-				Vec3d center = Box.enclosing(
+				Vec3 center = AABB.encapsulatingFullBlocks(
 						new BlockPos((int) minX, 0, (int) minZ),
 						new BlockPos((int) maxX, 256, (int) maxZ)
 				).getCenter();
@@ -76,8 +76,8 @@ final class PlotInfestedRenderer {
 
 			Plot plot = plotOptional.get();
 			renderer.submitText(
-					Text.literal("Plot").formatted(Formatting.GREEN, Formatting.BOLD)
-							.append(Text.literal(" " + plot.id()).formatted(Formatting.YELLOW, Formatting.BOLD)),
+					Component.literal("Plot").withStyle(ChatFormatting.GREEN, ChatFormatting.BOLD)
+							.append(Component.literal(" " + plot.id()).withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD)),
 					plot.center().subtract(0, 40, 0),
 					5F,
 					true
@@ -91,6 +91,6 @@ final class PlotInfestedRenderer {
 		return plots.stream().filter(plot -> plot.id == id).findFirst();
 	}
 
-	private record Plot(int id, Vec3d center) {
+	private record Plot(int id, Vec3 center) {
 	}
 }

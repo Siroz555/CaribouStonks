@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.glowing.EntityGlowProvider;
 import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 public class HighlightSlayerMobFeature extends Feature implements EntityGlowProvider {

@@ -7,11 +7,11 @@ import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * The {@code WaypointRenderer} class is responsible for rendering {@link Waypoint} instances in the game world.
@@ -45,11 +45,11 @@ public final class WaypointRenderer {
 			case BEAM -> renderer.submitBeaconBeam(pos, color);
 			case WAYPOINT -> {
 				renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
-				renderer.submitBeaconBeam(pos.add(0, 1, 0), color);
+				renderer.submitBeaconBeam(pos.offset(0, 1, 0), color);
 			}
 			case OUTLINED_WAYPOINT -> {
 				renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
-				renderer.submitBeaconBeam(pos.add(0, 1, 0), color);
+				renderer.submitBeaconBeam(pos.offset(0, 1, 0), color);
 				renderer.submitOutline(waypoint.getBox(), color, waypoint.getBoxLineWidth(), waypoint.isBoxThroughBlocks());
 			}
 			case HIGHLIGHT -> renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
@@ -62,7 +62,7 @@ public final class WaypointRenderer {
 			}
 		}
 
-		Vec3d centerPos = pos.toCenterPos();
+		Vec3 centerPos = pos.getCenter();
 		double distance = -1;
 
 		IconOption iconOption = waypoint.getIconOption();
@@ -71,7 +71,7 @@ public final class WaypointRenderer {
 			float width = iconOption.getWidth();
 			float height = iconOption.getHeight();
 			if (iconOption.isScaleWithDistance()) {
-				distance = RenderUtils.getCamera().getCameraPos().distanceTo(centerPos);
+				distance = RenderUtils.getCamera().position().distanceTo(centerPos);
 				float scaleIcon = Math.max((float) distance / 10, 1);
 				width = scaleIcon;
 				height = scaleIcon;
@@ -95,26 +95,26 @@ public final class WaypointRenderer {
 
 		if (textOption.isWithDistance()) {
 			if (distance == -1) {
-				distance = RenderUtils.getCamera().getCameraPos().distanceTo(centerPos);
+				distance = RenderUtils.getCamera().position().distanceTo(centerPos);
 			}
 
 			renderer.submitText(
-					Text.literal(Math.round(distance) + "m").formatted(Formatting.AQUA),
+					Component.literal(Math.round(distance) + "m").withStyle(ChatFormatting.AQUA),
 					centerPos.add(0, 1, 0), Math.max((float) distance / 10, 1),
-					MinecraftClient.getInstance().textRenderer.fontHeight + 1F,
+					Minecraft.getInstance().font.lineHeight + 1F,
 					textOption.isThroughBlocks()
 			);
 		}
 
 		if (textOption.getText().isPresent()) {
 			if (distance == -1) {
-				distance = RenderUtils.getCamera().getCameraPos().distanceTo(centerPos);
+				distance = RenderUtils.getCamera().position().distanceTo(centerPos);
 			}
 
 			renderer.submitText(
 					textOption.getText().get(),
 					centerPos.add(0, 1, 0), Math.max((float) distance / 10, 1),
-					MinecraftClient.getInstance().textRenderer.fontHeight - 12F,
+					Minecraft.getInstance().font.lineHeight - 12F,
 					textOption.isThroughBlocks()
 			);
 		}

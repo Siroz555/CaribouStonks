@@ -4,10 +4,10 @@ import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.event.InteractionEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.Hand;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.InteractionHand;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,27 +16,27 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(MinecraftClient.class)
-public abstract class MinecraftClientMixin {
+@Mixin(Minecraft.class) // MinecraftClient
+public abstract class MinecraftMixin {
 
 	@Shadow
 	@Nullable
-	public ClientPlayerEntity player;
+	public LocalPlayer player;
 
-	@WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;limitDisplayFPS(I)V"))
+	@WrapWithCondition(method = "runTick", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;limitDisplayFPS(I)V"))
 	private boolean cariboustonks$stopFpsLimiter(int fps) {
 		return !ConfigManager.getConfig().vanilla.stopFpsLimiter;
 	}
 
-	@Inject(method = "joinWorld", at = @At("TAIL"))
-	private void cariboustonks$onJoinWorldEvent(ClientWorld world, CallbackInfo ci) {
+	@Inject(method = "setLevel", at = @At("TAIL"))
+	private void cariboustonks$onJoinWorldEvent(ClientLevel world, CallbackInfo ci) {
 		WorldEvents.JOIN.invoker().onJoinWorld(world);
 	}
 
 	// https://github.com/architectury/architectury-api/blob/1.19.2/fabric/src/main/java/dev/architectury/mixin/fabric/client/MixinMinecraft.java#L76
-	@Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;resetTicksSince()V", ordinal = 0))
+	@Inject(method = "startAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;resetAttackStrengthTicker()V", ordinal = 0))
 	private void cariboustonks$leftClickAirEvent(CallbackInfoReturnable<Boolean> cir) {
-		InteractionEvents.LEFT_CLICK_AIR.invoker().onClick(player, Hand.MAIN_HAND);
+		InteractionEvents.LEFT_CLICK_AIR.invoker().onClick(player, InteractionHand.MAIN_HAND);
 	}
 
 	// https://github.com/architectury/architectury-api/blob/1.19.2/fabric/src/main/java/dev/architectury/mixin/fabric/client/MixinMinecraft.java#L70

@@ -2,8 +2,8 @@ package fr.siroz.cariboustonks.util.render.gui;
 
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import it.unimi.dsi.fastutil.doubles.DoubleConsumer;
-import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -11,9 +11,9 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Siroz-Note : Clamp la valeur afin de garantir qu’elle reste toujours dans l’intervalle minimum/maximum spécifié.
  *
- * @see SliderWidget
+ * @see AbstractSliderButton
  */
-public final class DoubleSliderWidget extends SliderWidget {
+public final class DoubleSliderWidget extends AbstractSliderButton {
 
 	private final double min;
 	private final double max;
@@ -22,9 +22,9 @@ public final class DoubleSliderWidget extends SliderWidget {
 	/**
 	 * Creates a new DoubleSliderWidget
 	 *
-	 * @see SliderWidget
+	 * @see AbstractSliderButton
 	 */
-	public DoubleSliderWidget(int x, int y, int width, int height, @NotNull Text text, double min, double max, double value, @NotNull DoubleConsumer changeCallback) {
+	public DoubleSliderWidget(int x, int y, int width, int height, @NotNull Component text, double min, double max, double value, @NotNull DoubleConsumer changeCallback) {
 		super(x, y, width, height, text, value);
 		this.min = min;
 		this.max = max;
@@ -35,7 +35,7 @@ public final class DoubleSliderWidget extends SliderWidget {
 
 	@Override
 	protected void updateMessage() {
-		this.setMessage(Text.of(String.format("%.2f", getValue())));
+		this.setMessage(Component.nullToEmpty(String.format("%.2f", getValue())));
 	}
 
 	@Override

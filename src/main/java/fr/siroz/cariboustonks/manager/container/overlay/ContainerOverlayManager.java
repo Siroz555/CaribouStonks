@@ -7,19 +7,19 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.Manager;
 import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.mixin.accessors.HandledScreenAccessor;
+import fr.siroz.cariboustonks.mixin.accessors.AbstractContainerScreenAccessor;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectRBTreeMap;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 public final class ContainerOverlayManager implements Manager {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private final Map<Feature, ContainerOverlay> containerOverlayMap = new HashMap<>();
 	private ContainerOverlay currentContainerOverlay = null;
@@ -52,8 +52,8 @@ public final class ContainerOverlayManager implements Manager {
 	}
 
 	@EventHandler(event = "ScreenEvents.BEFORE_INIT")
-	private void onScreenBeforeInit(MinecraftClient _client, Screen screen, int _scaledWidth, int _scaledHeight) {
-		if (SkyBlockAPI.isOnSkyBlock() && screen instanceof GenericContainerScreen genericContainerScreen) {
+	private void onScreenBeforeInit(Minecraft _client, Screen screen, int _scaledWidth, int _scaledHeight) {
+		if (SkyBlockAPI.isOnSkyBlock() && screen instanceof ContainerScreen genericContainerScreen) {
 			ScreenEvents.remove(screen).register(_screen -> clearScreen());
 			onScreen(genericContainerScreen);
 		} else {
@@ -65,13 +65,13 @@ public final class ContainerOverlayManager implements Manager {
 		highlights = null;
 	}
 
-	public void draw(DrawContext context, HandledScreen<GenericContainerScreenHandler> handledScreen, List<Slot> slots) {
+	public void draw(GuiGraphics context, AbstractContainerScreen<@NotNull ChestMenu> handledScreen, List<Slot> slots) {
 		if (currentContainerOverlay == null) {
 			return;
 		}
 
-		int screenWidth = CLIENT.getWindow().getScaledWidth();
-		int screenHeight = CLIENT.getWindow().getScaledHeight();
+		int screenWidth = CLIENT.getWindow().getGuiScaledWidth();
+		int screenHeight = CLIENT.getWindow().getGuiScaledHeight();
 		try {
 			currentContainerOverlay.render(context, screenWidth, screenHeight, 0, 0);
 		} catch (Throwable throwable) {
@@ -82,12 +82,12 @@ public final class ContainerOverlayManager implements Manager {
 			);
 		}
 
-		context.getMatrices().pushMatrix();
-		context.getMatrices().translate(((HandledScreenAccessor) handledScreen).getX(), ((HandledScreenAccessor) handledScreen).getY());
+		context.pose().pushMatrix();
+		context.pose().translate(((AbstractContainerScreenAccessor) handledScreen).getX(), ((AbstractContainerScreenAccessor) handledScreen).getY());
 
 		if (highlights == null) {
 			highlights = currentContainerOverlay.content(
-					slotMap(slots.subList(0, handledScreen.getScreenHandler().getRows() * 9))
+					slotMap(slots.subList(0, handledScreen.getMenu().getRowCount() * 9))
 			);
 		}
 
@@ -102,10 +102,10 @@ public final class ContainerOverlayManager implements Manager {
 		} catch (Throwable ignored) {
 		}
 
-		context.getMatrices().popMatrix();
+		context.pose().popMatrix();
 	}
 
-	private void onScreen(@NotNull GenericContainerScreen screen) {
+	private void onScreen(@NotNull ContainerScreen screen) {
 		for (Map.Entry<Feature, ContainerOverlay> overlay : containerOverlayMap.entrySet()) {
 			if (overlay.getKey().isEnabled()) {
 				if (overlay.getKey() instanceof ContainerMatcherTrait trait && trait.matches(screen)) {
@@ -130,7 +130,7 @@ public final class ContainerOverlayManager implements Manager {
 	private Int2ObjectMap<ItemStack> slotMap(@NotNull List<Slot> slots) {
 		Int2ObjectMap<ItemStack> slotMap = new Int2ObjectRBTreeMap<>();
 		for (int i = 0; i < slots.size(); i++) {
-			slotMap.put(i, slots.get(i).getStack());
+			slotMap.put(i, slots.get(i).getItem());
 		}
 
 		return slotMap;

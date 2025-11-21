@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.util.Ticks;
 import it.unimi.dsi.fastutil.ints.AbstractInt2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -150,7 +150,7 @@ public final class TickScheduler {
 	 *
 	 * @param client the Minecraft client instance used during the tick processing
 	 */
-	void processTick(MinecraftClient client) {
+	void processTick(Minecraft client) {
 		if (tasks.containsKey(currentTick)) {
 			List<Runnable> currentTickTasks = tasks.get(currentTick);
 			//noinspection ForLoopReplaceableByForEach
@@ -232,8 +232,8 @@ public final class TickScheduler {
 				task.run();
 
 				if (taskType == TaskType.REPEATING) {
-					if (MinecraftClient.getInstance() != null && !RenderSystem.isOnRenderThread()) {
-						MinecraftClient.getInstance().send(() -> instance.scheduleTask(this, instance.currentTick + interval));
+					if (!RenderSystem.isOnRenderThread()) {
+						Minecraft.getInstance().schedule(() -> instance.scheduleTask(this, instance.currentTick + interval));
 					} else {
 						instance.scheduleTask(this, instance.currentTick + interval);
 					}

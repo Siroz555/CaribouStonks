@@ -1,11 +1,11 @@
 package fr.siroz.cariboustonks.util;
 
 import java.util.List;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Unmodifiable;
  */
 public final class InventoryUtils {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private InventoryUtils() {
 	}
@@ -27,7 +27,7 @@ public final class InventoryUtils {
 	 * @see #getHeldItem()
 	 */
 	public static @Nullable ItemStack getMainHandItem() {
-		return CLIENT.player != null ? CLIENT.player.getMainHandStack() : null;
+		return CLIENT.player != null ? CLIENT.player.getMainHandItem() : null;
 	}
 
 	/**
@@ -38,7 +38,7 @@ public final class InventoryUtils {
 	 */
 	@Nullable
 	public static ItemStack getHeldItem() {
-		return CLIENT.player != null ? CLIENT.player.getInventory().getSelectedStack() : null;
+		return CLIENT.player != null ? CLIENT.player.getInventory().getSelectedItem() : null;
 	}
 
 	/**
@@ -48,7 +48,7 @@ public final class InventoryUtils {
 	 */
 	@Nullable
 	public static ItemStack getHelmet() {
-		return CLIENT.player != null ? CLIENT.player.getEquippedStack(EquipmentSlot.HEAD) : null;
+		return CLIENT.player != null ? CLIENT.player.getItemBySlot(EquipmentSlot.HEAD) : null;
 	}
 
 	/**
@@ -60,9 +60,9 @@ public final class InventoryUtils {
 	@NotNull
 	@Unmodifiable
 	public static List<ItemStack> getArmorFromEntity(@NotNull LivingEntity entity) {
-		return AttributeModifierSlot.ARMOR.getSlots().stream()
+		return EquipmentSlotGroup.ARMOR.slots().stream()
 				.filter(slot -> slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
-				.map(entity::getEquippedStack)
+				.map(entity::getItemBySlot)
 				.toList();
 	}
 

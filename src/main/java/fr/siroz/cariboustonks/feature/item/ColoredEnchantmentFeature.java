@@ -14,12 +14,12 @@ import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.function.BooleanSupplier;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -66,23 +66,23 @@ public class ColoredEnchantmentFeature extends Feature {
 	@Nullable
 	@SuppressWarnings("checkstyle:CyclomaticComplexity")
 	@EventHandler(event = "ItemRenderEvents.TOOLTIP_APPENDER")
-	private LoreComponent onTooltipLine(ItemStack itemStack, LoreComponent loreComponent) {
+	private ItemLore onTooltipLine(ItemStack itemStack, ItemLore loreComponent) {
 		if (itemStack == null || itemStack.isEmpty()) return null;
 		if (loreComponent == null || loreComponent.lines().isEmpty()) return null;
 		if (!isEnabled()) return null;
 		if (!configShowMaxEnchants.getAsBoolean() && !configShowGoodEnchants.getAsBoolean()) return null;
 
-		NbtCompound enchantments = ItemUtils.getCustomData(itemStack).getCompoundOrEmpty("enchantments");
+		CompoundTag enchantments = ItemUtils.getCustomData(itemStack).getCompoundOrEmpty("enchantments");
 		if (enchantments.isEmpty()) {
 			return null;
 		}
 
 		Object2IntMap<String> maxEnchantmentColors = new Object2IntOpenHashMap<>();
 		Object2IntMap<String> goodEnchantmentColors = new Object2IntOpenHashMap<>();
-		for (String id : enchantments.getKeys()) {
+		for (String id : enchantments.keySet()) {
 
 			SkyBlockEnchantment enchantment = modDataSource.getSkyBlockEnchantment(id);
-			int level = enchantments.getInt(id, 0);
+			int level = enchantments.getIntOr(id, 0);
 			if (enchantment != null && enchantment.isGoodOrMaxLevel(level) && level > 0) {
 
 				String name = enchantment.name() + " " + RomanNumeralUtils.generate(level);
@@ -99,24 +99,24 @@ public class ColoredEnchantmentFeature extends Feature {
 		}
 
 		boolean applied = false;
-		List<Text> lines = loreComponent.lines().stream()
+		List<Component> lines = loreComponent.lines().stream()
 				.map(this::recursiveCopy)
 				.collect(Collectors.toList());
 
-		for (Text line : lines) {
+		for (Component line : lines) {
 
 			if (configShowMaxEnchants.getAsBoolean() && !maxEnchantmentColors.isEmpty()
 					&& maxEnchantmentColors.keySet().stream().anyMatch(line.getString()::contains)
 			) {
 				if (configMaxEnchantsRainbow.getAsBoolean()) {
-					ListIterator<Text> iterator = line.getSiblings().listIterator();
+					ListIterator<Component> iterator = line.getSiblings().listIterator();
 					while (iterator.hasNext()) {
-						Text currentText = iterator.next();
+						Component currentText = iterator.next();
 						String enchant = currentText.getString().trim();
 
 						//noinspection DataFlowIssue
 						if (maxEnchantmentColors.containsKey(enchant)
-								&& currentText.getStyle().getColor().getRgb() == Formatting.BLUE.getColorValue()
+								&& currentText.getStyle().getColor().getValue() == ChatFormatting.BLUE.getColor()
 						) {
 							iterator.set(AnimationUtils.applyRainbow(enchant));
 							maxEnchantmentColors.removeInt(enchant);
@@ -124,14 +124,14 @@ public class ColoredEnchantmentFeature extends Feature {
 						}
 					}
 				} else {
-					for (Text currentText : line.getSiblings()) {
+					for (Component currentText : line.getSiblings()) {
 						String enchant = currentText.getString().trim();
 
 						//noinspection DataFlowIssue
 						if (maxEnchantmentColors.containsKey(enchant)
-								&& currentText.getStyle().getColor().getRgb() == Formatting.BLUE.getColorValue()
+								&& currentText.getStyle().getColor().getValue() == ChatFormatting.BLUE.getColor()
 						) {
-							((MutableText) currentText).withColor(maxEnchantmentColors.getInt(enchant));
+							((MutableComponent) currentText).withColor(maxEnchantmentColors.getInt(enchant));
 							maxEnchantmentColors.removeInt(enchant);
 							applied = true;
 						}
@@ -142,14 +142,14 @@ public class ColoredEnchantmentFeature extends Feature {
 			if (configShowGoodEnchants.getAsBoolean() && !goodEnchantmentColors.isEmpty()
 					&& goodEnchantmentColors.keySet().stream().anyMatch(line.getString()::contains)
 			) {
-				for (Text currentText : line.getSiblings()) {
+				for (Component currentText : line.getSiblings()) {
 					String enchant = currentText.getString().trim();
 
 					//noinspection DataFlowIssue
 					if (goodEnchantmentColors.containsKey(enchant)
-							&& currentText.getStyle().getColor().getRgb() == Formatting.BLUE.getColorValue()
+							&& currentText.getStyle().getColor().getValue() == ChatFormatting.BLUE.getColor()
 					) {
-						((MutableText) currentText).withColor(goodEnchantmentColors.getInt(enchant));
+						((MutableComponent) currentText).withColor(goodEnchantmentColors.getInt(enchant));
 						goodEnchantmentColors.removeInt(enchant);
 						applied = true;
 					}
@@ -159,7 +159,7 @@ public class ColoredEnchantmentFeature extends Feature {
 
 		// Le flag permet de s'assurer qu'il y a eu au moins un ou plusieurs changements
 		if (applied) {
-			return new LoreComponent(lines);
+			return new ItemLore(lines);
 		}
 
 		return null;
@@ -174,11 +174,11 @@ public class ColoredEnchantmentFeature extends Feature {
 	}
 
 	@NotNull
-	private MutableText recursiveCopy(@NotNull Text original) {
-		MutableText copy = MutableText.of(original.getContent()).setStyle(original.getStyle());
-		((ArrayList<Text>) copy.getSiblings()).ensureCapacity(original.getSiblings().size());
+	private MutableComponent recursiveCopy(@NotNull Component original) {
+		MutableComponent copy = MutableComponent.create(original.getContents()).setStyle(original.getStyle());
+		((ArrayList<Component>) copy.getSiblings()).ensureCapacity(original.getSiblings().size());
 
-		for (Text sibling : original.getSiblings()) {
+		for (Component sibling : original.getSiblings()) {
 			copy.getSiblings().add(recursiveCopy(sibling));
 		}
 

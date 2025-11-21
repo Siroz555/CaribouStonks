@@ -9,7 +9,7 @@
 
 package fr.siroz.cariboustonks.util.math.bezier;
 
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -36,9 +36,9 @@ public class BezierCurve {
 	 * Computes the derivative of the 3-dimensional Bézier curve at a given parameter value.
 	 *
 	 * @param t the parameter value at which to evaluate the derivative
-	 * @return a {@link Vec3d}
+	 * @return a {@link Vec3}
 	 */
-	public Vec3d getDerivative(double t) {
+	public Vec3 getDerivative(double t) {
 		double x = 0.0D;
 		double y = 0.0D;
 		double z = 0.0D;
@@ -61,16 +61,16 @@ public class BezierCurve {
 			}
 		}
 
-		return new Vec3d(x, y, z);
+		return new Vec3(x, y, z);
 	}
 
 	/**
 	 * Computes a point on the 3-dimensional Bézier curve at the specified parameter value.
 	 *
 	 * @param t the parameter value at which to evaluate the curve
-	 * @return a {@link Vec3d}
+	 * @return a {@link Vec3}
 	 */
-	public Vec3d getPoint(double t) {
+	public Vec3 getPoint(double t) {
 		double x = 0.0D;
 		double y = 0.0D;
 		double z = 0.0D;
@@ -93,7 +93,7 @@ public class BezierCurve {
 			}
 		}
 
-		return new Vec3d(x, y, z);
+		return new Vec3(x, y, z);
 	}
 
 	private double[] reverseArray(double @NotNull [] array) {

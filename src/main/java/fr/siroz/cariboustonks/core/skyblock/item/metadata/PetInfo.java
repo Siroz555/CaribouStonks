@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.core.skyblock.item.metadata;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.Optional;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 // SIROZ-NOTE : Remplacer l'autre PetInfo par celui ci et le cleanup pour le SkyBlockAPI#getPetInfo
@@ -27,9 +27,9 @@ public record PetInfo(
 			Optional.empty()
 	);
 
-	public static PetInfo ofNbt(@NotNull NbtCompound customData) {
+	public static PetInfo ofNbt(@NotNull CompoundTag customData) {
 		try {
-			String petInfoJson = customData.getString("petInfo", "");
+			String petInfoJson = customData.getStringOr("petInfo", "");
 			if (petInfoJson.isEmpty()) {
 				return EMPTY;
 			}

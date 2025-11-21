@@ -2,8 +2,9 @@ package fr.siroz.cariboustonks.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Hand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionHand;
+import org.jetbrains.annotations.NotNull;
 
 public final class InteractionEvents {
 
@@ -13,7 +14,7 @@ public final class InteractionEvents {
 	/**
 	 * Invoked whenever a player left-clicks the air
 	 */
-	public static final Event<LeftClickAir> LEFT_CLICK_AIR = EventFactory.createArrayBacked(LeftClickAir.class, listeners -> (player, hand) -> {
+	public static final Event<@NotNull LeftClickAir> LEFT_CLICK_AIR = EventFactory.createArrayBacked(LeftClickAir.class, listeners -> (player, hand) -> {
 		for (LeftClickAir listener : listeners) {
 			listener.onClick(player, hand);
 		}
@@ -23,7 +24,7 @@ public final class InteractionEvents {
 	 * Invoked whenever a player right-clicks the air
 	 */
 	@Deprecated
-	public static final Event<RightClickAir> RIGHT_CLICK_AIR = EventFactory.createArrayBacked(RightClickAir.class, listeners -> (player, hand) -> {
+	public static final Event<@NotNull RightClickAir> RIGHT_CLICK_AIR = EventFactory.createArrayBacked(RightClickAir.class, listeners -> (player, hand) -> {
 		for (RightClickAir listener : listeners) {
 			listener.onClick(player, hand);
 		}
@@ -31,12 +32,12 @@ public final class InteractionEvents {
 
 	@FunctionalInterface
 	public interface LeftClickAir {
-		void onClick(PlayerEntity player, Hand hand);
+		void onClick(Player player, InteractionHand hand);
 	}
 
 	@Deprecated
 	@FunctionalInterface
 	public interface RightClickAir {
-		void onClick(PlayerEntity player, Hand hand);
+		void onClick(Player player, InteractionHand hand);
 	}
 }

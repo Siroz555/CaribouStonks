@@ -13,10 +13,10 @@ import fr.siroz.cariboustonks.manager.reminder.TimedObject;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -29,9 +29,9 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
     // You earned 45,000 Motes in this match!
     private static final Pattern UBIK_CUBE_MESSAGE = Pattern.compile("You earned ([\\d,]+) Motes in this match!");
 
-    private static final Text SPLIT_OR_STEAL_TEXT = Text.literal("Split").formatted(Formatting.GREEN)
-            .append(Text.literal(" or ").formatted(Formatting.WHITE))
-            .append(Text.literal("Steal").formatted(Formatting.RED));
+    private static final Component SPLIT_OR_STEAL_TEXT = Component.literal("Split").withStyle(ChatFormatting.GREEN)
+            .append(Component.literal(" or ").withStyle(ChatFormatting.WHITE))
+            .append(Component.literal("Steal").withStyle(ChatFormatting.RED));
 
 	private final ItemStack ubikCube;
 
@@ -55,7 +55,7 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
     @Override
     public @NotNull ReminderDisplay display() {
         return ReminderDisplay.of(
-                Text.literal("Ubik's Cube").formatted(Formatting.RED, Formatting.BOLD, Formatting.UNDERLINE),
+                Component.literal("Ubik's Cube").withStyle(ChatFormatting.RED, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
                 SPLIT_OR_STEAL_TEXT,
 				ubikCube
         );
@@ -63,21 +63,21 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
 
     @Override
     public void onExpire(@NotNull TimedObject timedObject) {
-		MutableText message = Text.empty()
-				.append(Text.literal("[Ubik's Cube] ").formatted(Formatting.GOLD))
-				.append(Text.literal("Ready to play ").formatted(Formatting.GREEN))
+		MutableComponent message = Component.empty()
+				.append(Component.literal("[Ubik's Cube] ").withStyle(ChatFormatting.GOLD))
+				.append(Component.literal("Ready to play ").withStyle(ChatFormatting.GREEN))
 				.append(SPLIT_OR_STEAL_TEXT);
-		MutableText notification = Text.empty()
-				.append(Text.literal("Ubik's Cube !").formatted(Formatting.GOLD, Formatting.BOLD))
-				.append(Text.literal("\n"))
-				.append(Text.literal("Ready to play ").formatted(Formatting.GREEN))
+		MutableComponent notification = Component.empty()
+				.append(Component.literal("Ubik's Cube !").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD))
+				.append(Component.literal("\n"))
+				.append(Component.literal("Ready to play ").withStyle(ChatFormatting.GREEN))
 				.append(SPLIT_OR_STEAL_TEXT);
 
         Client.sendMessageWithPrefix(message);
         Client.showNotification(notification, ubikCube);
     }
 
-    private void onChatMessage(@NotNull Text text) {
+    private void onChatMessage(@NotNull Component text) {
         if (!isEnabled()) {
 			return;
 		}

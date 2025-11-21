@@ -17,9 +17,9 @@ import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -33,7 +33,7 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 	private static final Pattern COCOON_EGG_PATTERN = Pattern.compile("(\\d+)s (\\d)/3");
 
 	private final SlayerManager slayerManager;
-	private final Set<ArmorStandEntity> bossEggs = new HashSet<>();
+	private final Set<ArmorStand> bossEggs = new HashSet<>();
 
 	public TarantulaBossFeature() {
 		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
@@ -62,14 +62,14 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 		if (bossEggs.isEmpty()) return;
 		if (!ConfigManager.getConfig().slayer.tarantulaBoss.showCursorLineToBossEggs) return;
 
-		for (ArmorStandEntity egg : bossEggs) {
-			renderer.submitLineFromCursor(egg.getEntityPos(), Colors.PURPLE, 1.2f);
+		for (ArmorStand egg : bossEggs) {
+			renderer.submitLineFromCursor(egg.position(), Colors.PURPLE, 1.2f);
 		}
 	}
 
 	@Override
 	public int getEntityGlowColor(@NotNull Entity entity) {
-		if (entity instanceof ArmorStandEntity armorStand && isTarantulaBossEgg(armorStand)) {
+		if (entity instanceof ArmorStand armorStand && isTarantulaBossEgg(armorStand)) {
 			return ConfigManager.getConfig().slayer.tarantulaBoss.highlightBossEggsColor.getRGB();
 		}
 
@@ -77,12 +77,12 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
-	private void onArmorStandUpdate(@NotNull ArmorStandEntity armorStand, boolean equipment) {
+	private void onArmorStandUpdate(@NotNull ArmorStand armorStand, boolean equipment) {
 		if (isEnabled() && !equipment) {
 			Matcher cocoonEggMatcher = COCOON_EGG_PATTERN.matcher(armorStand.getName().getString());
 			if (cocoonEggMatcher.matches()) {
 				Entity bossEntity = slayerManager.getBossEntity();
-				if (bossEntity != null && armorStand.getEntityPos().distanceTo(bossEntity.getEntityPos()) <= 15) {
+				if (bossEntity != null && armorStand.position().distanceTo(bossEntity.position()) <= 15) {
 					bossEggs.add(armorStand);
 				}
 			}
@@ -90,11 +90,11 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 	}
 
 	@EventHandler(event = "WorldEvents.ARMORSTAND_REMOVED")
-	private void onRemoveArmorStand(@NotNull ArmorStandEntity armorStand) {
+	private void onRemoveArmorStand(@NotNull ArmorStand armorStand) {
 		if (isEnabled() && !bossEggs.isEmpty()) {
-			Iterator<ArmorStandEntity> iterator = bossEggs.iterator();
+			Iterator<ArmorStand> iterator = bossEggs.iterator();
 			while (iterator.hasNext()) {
-				ArmorStandEntity egg = iterator.next();
+				ArmorStand egg = iterator.next();
 				if (egg.getId() == armorStand.getId()) {
 					iterator.remove();
 					break;
@@ -103,12 +103,12 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 		}
 	}
 
-	private boolean isTarantulaBossEgg(@NotNull ArmorStandEntity as) {
-		if (as.isCustomNameVisible() || !as.hasStackEquipped(EquipmentSlot.HEAD)) {
+	private boolean isTarantulaBossEgg(@NotNull ArmorStand as) {
+		if (as.isCustomNameVisible() || !as.hasItemInSlot(EquipmentSlot.HEAD)) {
 			return false;
 		}
 
-		String headTexture = ItemUtils.getHeadTexture(as.getEquippedStack(EquipmentSlot.HEAD));
+		String headTexture = ItemUtils.getHeadTexture(as.getItemBySlot(EquipmentSlot.HEAD));
 		if (headTexture.isBlank()) {
 			return false;
 		}

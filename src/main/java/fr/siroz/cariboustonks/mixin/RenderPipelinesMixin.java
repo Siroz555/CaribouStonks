@@ -4,7 +4,7 @@ import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DepthTestFunction;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.renderer.RenderPipelines;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -25,7 +25,7 @@ public abstract class RenderPipelinesMixin {
     private static void onInit(CallbackInfo ci) {
         if (ConfigManager.getConfig().uiAndVisuals.beaconBeamWithNoDepthTest) {
             BEACON_BEAM_TRANSLUCENT = RenderPipelines.register(
-                    RenderPipeline.builder(RenderPipelines.RENDERTYPE_BEACON_BEAM_SNIPPET)
+                    RenderPipeline.builder(RenderPipelines.BEACON_BEAM_SNIPPET)
                             .withLocation("pipeline/beacon_beam_translucent")
                             .withDepthWrite(false)
                             .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)

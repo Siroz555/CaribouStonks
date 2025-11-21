@@ -12,13 +12,14 @@ import fr.siroz.cariboustonks.config.categories.SlayerCategory;
 import fr.siroz.cariboustonks.config.categories.UIAndVisualsCategory;
 import fr.siroz.cariboustonks.config.categories.VanillaCategory;
 import fr.siroz.cariboustonks.core.json.adapters.CodecTypeAdapter;
+import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.colors.ColorUtils;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextCodecs;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.Color;
@@ -41,8 +42,8 @@ public final class ConfigManager {
 					.setPrettyPrinting()
 					.serializeNulls()
 					.registerTypeHierarchyAdapter(Identifier.class, new CodecTypeAdapter<>(Identifier.CODEC))
-					.registerTypeHierarchyAdapter(Text.class, new CodecTypeAdapter<>(TextCodecs.CODEC))
-					.registerTypeHierarchyAdapter(Style.class, new CodecTypeAdapter<>(Style.Codecs.CODEC))
+					.registerTypeHierarchyAdapter(Component.class, new CodecTypeAdapter<>(ComponentSerialization.CODEC))
+					.registerTypeHierarchyAdapter(Style.class, new CodecTypeAdapter<>(Style.Serializer.CODEC))
 					.registerTypeHierarchyAdapter(Color.class, new CodecTypeAdapter<>(ColorUtils.COLOR_CODEC))))
 			.build();
 
@@ -85,17 +86,23 @@ public final class ConfigManager {
 	 * @param parent the parent GUI
 	 * @return the {@link Screen} config
 	 */
-	public static Screen createConfigGUI(@Nullable Screen parent) {
-		return YetAnotherConfigLib.create(HANDLER, (defaults, config, builder) -> {
-			builder.title(Text.of("CaribouStonks"))
-					.category(new GeneralCategory(defaults, config).create())
-					.category(new UIAndVisualsCategory(defaults, config).create())
-					.category(new SkillsCategory(defaults, config).create())
-					.category(new SlayerCategory(defaults, config).create())
-					.category(new DungeonsCategory(defaults, config).create())
-					.category(new MiscCategory(defaults, config).create())
-					.category(new VanillaCategory(defaults, config).create());
-			return builder;
-		}).generateScreen(parent);
+	public static @Nullable Screen createConfigGUI(@Nullable Screen parent) {
+		try {
+			return YetAnotherConfigLib.create(HANDLER, (defaults, config, builder) -> {
+				builder.title(Component.nullToEmpty("CaribouStonks"))
+						.category(new GeneralCategory(defaults, config).create())
+						.category(new UIAndVisualsCategory(defaults, config).create())
+						.category(new SkillsCategory(defaults, config).create())
+						.category(new SlayerCategory(defaults, config).create())
+						.category(new DungeonsCategory(defaults, config).create())
+						.category(new MiscCategory(defaults, config).create())
+						.category(new VanillaCategory(defaults, config).create());
+				return builder;
+			}).generateScreen(parent);
+		} catch (Throwable throwable) {
+			CaribouStonks.LOGGER.error("[ConfigManager] Unable to generate CaribouStonks Screen for YACL Screen.", throwable);
+			Client.sendErrorMessage("Unable to open the Configuration Menu! This may be due to a Snapshot or Pre-Release. If this is not the case, please report the issue!", true);
+			return null;
+		}
 	}
 }

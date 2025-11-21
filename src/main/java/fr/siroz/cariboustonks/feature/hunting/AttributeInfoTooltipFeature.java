@@ -19,12 +19,12 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,18 +56,18 @@ public class AttributeInfoTooltipFeature extends Feature implements ContainerMat
 	}
 
 	@Override
-	public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Text> lines) {
+	public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
 		if (hypixelDataSource.isBazaarInUpdate()) return;
 
-		Screen currentScreen = MinecraftClient.getInstance().currentScreen;
+		Screen currentScreen = Minecraft.getInstance().screen;
 		if (focusedSlot == null || currentScreen == null || lines.isEmpty()) return;
-		if (InventoryUtils.isEdgeSlot(focusedSlot.id, 6)) return;
+		if (InventoryUtils.isEdgeSlot(focusedSlot.index, 6)) return;
 
 		String title = currentScreen.getTitle().getString();
 		switch (title) {
 			case AttributeAPI.HUNTING_BOX -> handleHuntingBox(lines);
 			case AttributeAPI.ATTRIBUTE_MENU -> handleAttributeMenu(lines);
-			case null, default -> {
+			default -> {
 			}
 		}
 	}
@@ -77,7 +77,7 @@ public class AttributeInfoTooltipFeature extends Feature implements ContainerMat
 		return priority;
 	}
 
-	private void handleHuntingBox(@NotNull List<Text> lines) {
+	private void handleHuntingBox(@NotNull List<Component> lines) {
 		String levelStr = null;
 		String ownedStr = null;
 		String syphonCountStr = null;
@@ -85,7 +85,7 @@ public class AttributeInfoTooltipFeature extends Feature implements ContainerMat
 		String id = null;
 		Matcher matcher = PLACEHOLDER_PATTERN.matcher("");
 
-		for (Text line : lines) {
+		for (Component line : lines) {
 			String lineText = line.getString();
 			if (lineText.isEmpty()) {
 				continue;
@@ -142,14 +142,14 @@ public class AttributeInfoTooltipFeature extends Feature implements ContainerMat
 		appendTooltip(lines, id, required, owned);
 	}
 
-	private void handleAttributeMenu(@NotNull List<Text> lines) {
+	private void handleAttributeMenu(@NotNull List<Component> lines) {
 		String id = null;
 		String rarityStr = null;
 		String levelStr = null;
 		String syphonCountStr = null;
 		Matcher matcher = PLACEHOLDER_PATTERN.matcher("");
 
-		for (Text line : lines) {
+		for (Component line : lines) {
 			String lineText = line.getString();
 			if (lineText.isEmpty()) {
 				continue;
@@ -200,10 +200,10 @@ public class AttributeInfoTooltipFeature extends Feature implements ContainerMat
 		appendTooltip(lines, id, required, 0);
 	}
 
-	private void appendTooltip(@NotNull List<Text> lines, String id, int required, int owned) {
-		lines.add(Text.empty()
-				.append(Text.literal("Shards Until Maxed: ").formatted(Formatting.GREEN))
-				.append(Text.literal(String.valueOf(required)).formatted(Formatting.AQUA)));
+	private void appendTooltip(@NotNull List<Component> lines, String id, int required, int owned) {
+		lines.add(Component.empty()
+				.append(Component.literal("Shards Until Maxed: ").withStyle(ChatFormatting.GREEN))
+				.append(Component.literal(String.valueOf(required)).withStyle(ChatFormatting.AQUA)));
 
 		SkyBlockAttribute attribute = CaribouStonks.core().getModDataSource().getAttributeById(id);
 		if (attribute != null) {
@@ -211,22 +211,22 @@ public class AttributeInfoTooltipFeature extends Feature implements ContainerMat
 		}
 	}
 
-	private void addTotalCost(List<Text> lines, int required, String skyBlockApiId) {
+	private void addTotalCost(List<Component> lines, int required, String skyBlockApiId) {
 		if (required > 0 && hypixelDataSource.hasBazaarItem(skyBlockApiId)) {
 			Optional<BazaarProduct> product = hypixelDataSource.getBazaarItem(skyBlockApiId);
 			if (product.isEmpty()) {
-				lines.add(Text.literal("Bazaar item error.").formatted(Formatting.RED));
+				lines.add(Component.literal("Bazaar item error.").withStyle(ChatFormatting.RED));
 				return;
 			}
 
 			double price = product.get().buyPrice() * required;
 			String priceDisplay = StonksUtils.INTEGER_NUMBERS.format(price);
 
-			lines.add(Text.literal("Cost To Max: ").formatted(Formatting.YELLOW)
-					.append(Text.literal(priceDisplay + " Coins").formatted(Formatting.GOLD))
-					.append(Text.literal(" (").formatted(Formatting.GRAY))
-					.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(price)).formatted(Formatting.GOLD))
-					.append(Text.literal(")").formatted(Formatting.GRAY))
+			lines.add(Component.literal("Cost To Max: ").withStyle(ChatFormatting.YELLOW)
+					.append(Component.literal(priceDisplay + " Coins").withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+					.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(price)).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 			);
 		}
 	}

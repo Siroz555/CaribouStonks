@@ -1,17 +1,17 @@
 package fr.siroz.cariboustonks.screen.stonks;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 
 abstract class AbstractStonksWidget {
 
-	protected final TextRenderer textRenderer;
+	protected final Font textRenderer;
 	protected int width;
 	protected int height;
 
 	AbstractStonksWidget(int width, int height) {
-		this.textRenderer = MinecraftClient.getInstance().textRenderer;
+		this.textRenderer = Minecraft.getInstance().font;
 		this.width = width;
 		this.height = height;
 	}
@@ -21,5 +21,5 @@ abstract class AbstractStonksWidget {
 		this.height = height;
 	}
 
-	public abstract void render(DrawContext context, int mouseX, int mouseY, int x, int y);
+	public abstract void render(GuiGraphics context, int mouseX, int mouseY, int x, int y);
 }

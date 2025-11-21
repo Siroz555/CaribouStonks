@@ -1,18 +1,18 @@
 package fr.siroz.cariboustonks.core.data.hypixel;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public class HypixelDataException extends RuntimeException {
 
-	private final Text messageText;
+	private final Component messageText;
 
-	public HypixelDataException(@NotNull Text messageText) {
+	public HypixelDataException(@NotNull Component messageText) {
 		super(messageText.getString());
 		this.messageText = messageText;
 	}
 
-	public Text getMessageText() {
+	public Component getMessageText() {
 		return this.messageText;
 	}
 }

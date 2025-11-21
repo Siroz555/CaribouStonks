@@ -9,8 +9,8 @@ import fr.siroz.cariboustonks.manager.hud.TextHud;
 import fr.siroz.cariboustonks.manager.network.NetworkManager;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class TpsHud extends Feature implements HudProvider {
@@ -26,7 +26,7 @@ public class TpsHud extends Feature implements HudProvider {
 	public TpsHud() {
 		this.networkManager = CaribouStonks.managers().getManager(NetworkManager.class);
 		this.hud = new TextHud(
-				Text.literal("TPS: 20.0"),
+				Component.literal("TPS: 20.0"),
 				this::getText,
 				ConfigManager.getConfig().uiAndVisuals.tpsHud,
 				6,
@@ -49,7 +49,7 @@ public class TpsHud extends Feature implements HudProvider {
 		return hud;
 	}
 
-	private Text getText() {
+	private Component getText() {
 		float tps = networkManager.getTickRate();
 
 		// Troncature à une décimale (sans arrondi)
@@ -63,7 +63,7 @@ public class TpsHud extends Feature implements HudProvider {
 		}
 
 		int textColor = getTickRateColor(tps) | 0xFF000000;
-		return Text.literal(cachedText).styled(style -> style.withColor(textColor));
+		return Component.literal(cachedText).withStyle(style -> style.withColor(textColor));
 	}
 
 	private int getTickRateColor(float tps) {

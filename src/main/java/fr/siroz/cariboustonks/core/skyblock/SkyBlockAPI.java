@@ -18,12 +18,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.component.ComponentHolder;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.component.DataComponentHolder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class SkyBlockAPI {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final Minecraft CLIENT = Minecraft.getInstance();
 	// Common constants
 	private static final Pattern ABILITY = Pattern.compile("Ability: (?<name>.*?) *");
 	private static final String ITEM_ID = "id";
@@ -167,8 +167,8 @@ public final class SkyBlockAPI {
 	 * @param stack the ItemStack
 	 * @return the SkyBlock Item ID or an empty string
 	 */
-	public static @NotNull String getSkyBlockItemId(@NotNull ComponentHolder stack) {
-		return ItemUtils.getCustomData(stack).getString(ITEM_ID, "");
+	public static @NotNull String getSkyBlockItemId(@NotNull DataComponentHolder stack) {
+		return ItemUtils.getCustomData(stack).getStringOr(ITEM_ID, "");
 	}
 
 	/**
@@ -177,8 +177,8 @@ public final class SkyBlockAPI {
 	 * @param stack the ItemStack
 	 * @return the UUID or an empty string
 	 */
-	public static @NotNull String getSkyBlockItemUuid(@NotNull ComponentHolder stack) {
-		return ItemUtils.getCustomData(stack).getString(ITEM_UUID, "");
+	public static @NotNull String getSkyBlockItemUuid(@NotNull DataComponentHolder stack) {
+		return ItemUtils.getCustomData(stack).getStringOr(ITEM_UUID, "");
 	}
 
 	/**
@@ -208,7 +208,7 @@ public final class SkyBlockAPI {
 		}
 
 		return ItemUtils.getLore(stack).reversed().stream()
-				.map(Text::getString)
+				.map(Component::getString)
 				.map(Rarity::containsName)
 				.flatMap(Optional::stream)
 				.findFirst()
@@ -246,9 +246,9 @@ public final class SkyBlockAPI {
 	 * @return the SkyBlock API ID or an empty String
 	 */
 	@SuppressWarnings("checkstyle:CyclomaticComplexity")
-	public static @NotNull String getSkyBlockApiId(@NotNull ComponentHolder itemStack) {
-		NbtCompound customData = ItemUtils.getCustomData(itemStack);
-		String id = customData.getString(ITEM_ID, "");
+	public static @NotNull String getSkyBlockApiId(@NotNull DataComponentHolder itemStack) {
+		CompoundTag customData = ItemUtils.getCustomData(itemStack);
+		String id = customData.getStringOr(ITEM_ID, "");
 
 		if (customData.contains("is_shiny")) {
 			return "SHINY_" + id;
@@ -257,10 +257,10 @@ public final class SkyBlockAPI {
 		switch (id) {
 			case "ENCHANTED_BOOK" -> {
 				if (customData.contains("enchantments")) {
-					NbtCompound enchants = customData.getCompoundOrEmpty("enchantments");
-					Optional<String> firstEnchant = enchants.getKeys().stream().findFirst();
+					CompoundTag enchants = customData.getCompoundOrEmpty("enchantments");
+					Optional<String> firstEnchant = enchants.keySet().stream().findFirst();
 					String enchant = firstEnchant.orElse("");
-					return "ENCHANTMENT_" + enchant.toUpperCase(Locale.ENGLISH) + "_" + enchants.getInt(enchant, 0);
+					return "ENCHANTMENT_" + enchant.toUpperCase(Locale.ENGLISH) + "_" + enchants.getIntOr(enchant, 0);
 				}
 			}
 
@@ -269,22 +269,22 @@ public final class SkyBlockAPI {
 				String extended = customData.contains("extended") ? "_EXTENDED" : "";
 				String splash = customData.contains("splash") ? "_SPLASH" : "";
 				if (customData.contains("potion") && customData.contains("potion_level")) {
-					return (customData.getString("potion", "")
-							+ "_" + id + "_" + customData.getInt("potion_level", 0)
+					return (customData.getStringOr("potion", "")
+							+ "_" + id + "_" + customData.getIntOr("potion_level", 0)
 							+ enhanced + extended + splash).toUpperCase(Locale.ENGLISH);
 				}
 			}
 
 			case "RUNE" -> {
 				if (customData.contains("runes")) {
-					NbtCompound runes = customData.getCompoundOrEmpty("runes");
-					String rune = runes.getKeys().stream().findFirst().orElse("");
-					return rune.toUpperCase(Locale.ENGLISH) + "_RUNE_" + runes.getInt(rune, 0);
+					CompoundTag runes = customData.getCompoundOrEmpty("runes");
+					String rune = runes.keySet().stream().findFirst().orElse("");
+					return rune.toUpperCase(Locale.ENGLISH) + "_RUNE_" + runes.getIntOr(rune, 0);
 				}
 			}
 
 			case "ATTRIBUTE_SHARD" -> {
-				String name = itemStack.getOrDefault(DataComponentTypes.CUSTOM_NAME, Text.empty()).getString();
+				String name = itemStack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
 				SkyBlockAttribute attribute = CaribouStonks.core().getModDataSource().getAttributeByShardName(name);
 				if (attribute != null) {
 					return attribute.skyBlockApiId();
@@ -299,7 +299,7 @@ public final class SkyBlockAPI {
 			}
 
 			case "NEW_YEAR_CAKE" -> {
-				return id + "_" + customData.getInt("new_years_cake", 0);
+				return id + "_" + customData.getIntOr("new_years_cake", 0);
 			}
 
 			default -> {
@@ -318,7 +318,7 @@ public final class SkyBlockAPI {
 	public static void handleInternalUpdate() {
 		FabricLoader fabricLoader = FabricLoader.getInstance();
 
-		if (CLIENT.world == null || CLIENT.isInSingleplayer()) {
+		if (CLIENT.level == null || CLIENT.isLocalServer()) {
 			if (fabricLoader.isDevelopmentEnvironment()) {
 				onSkyBlockState = true;
 			}

@@ -6,8 +6,7 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.ChatHudLine;
+import net.minecraft.client.GuiMessage;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -32,14 +31,14 @@ public class CopyChatMessageFeature extends Feature {
 			return;
 		}
 
-		ChatHudLine message = getMessageAt(mouseX, mouseY);
+		GuiMessage message = getMessageAt(mouseX, mouseY);
 		if (message != null) {
 			String toClipboard = StonksUtils.stripColor(message.content().getString());
-			MinecraftClient.getInstance().keyboard.setClipboard(toClipboard);
+			CLIENT.keyboardHandler.setClipboard(toClipboard);
 		}
 	}
 
-	private @Nullable ChatHudLine getMessageAt(double x, double y) {
+	private @Nullable GuiMessage getMessageAt(double x, double y) {
 		return null;
 //		try {
 //			ChatHudAccessor accessor = (ChatHudAccessor) MinecraftClient.getInstance().inGameHud.getChatHud();

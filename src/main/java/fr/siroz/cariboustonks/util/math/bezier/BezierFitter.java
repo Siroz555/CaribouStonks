@@ -9,7 +9,7 @@
 
 package fr.siroz.cariboustonks.util.math.bezier;
 
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +26,7 @@ import java.util.stream.IntStream;
 public class BezierFitter {
 
 	private final int degree;
-	protected final List<Vec3d> points = new ArrayList<>();
+	protected final List<Vec3> points = new ArrayList<>();
 	private final PolynomialFitter[] fitters;
 	private BezierCurve lastBezierCurve = null;
 
@@ -39,7 +39,7 @@ public class BezierFitter {
 		};
 	}
 
-	public void addPoint(@NotNull Vec3d point) {
+	public void addPoint(@NotNull Vec3 point) {
 		if (!Double.isFinite(point.x) || !Double.isFinite(point.y) || !Double.isFinite(point.z)) {
 			throw new IllegalArgumentException();
 		}
@@ -52,7 +52,7 @@ public class BezierFitter {
 		lastBezierCurve = null;
 	}
 
-	public @Nullable Vec3d getLastPoint() {
+	public @Nullable Vec3 getLastPoint() {
 		return points.isEmpty() ? null : points.getLast();
 	}
 
@@ -84,7 +84,7 @@ public class BezierFitter {
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	private double @NotNull [] toDoubleArray(@NotNull Vec3d vec) {
+	private double @NotNull [] toDoubleArray(@NotNull Vec3 vec) {
 		return new double[]{vec.x, vec.y, vec.z};
 	}
 }

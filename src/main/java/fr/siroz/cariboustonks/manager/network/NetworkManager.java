@@ -6,9 +6,9 @@ import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.manager.Manager;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import java.util.concurrent.TimeUnit;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.packet.c2s.query.QueryPingC2SPacket;
-import net.minecraft.network.packet.s2c.common.CommonPingS2CPacket;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.protocol.ping.ServerboundPingRequestPacket;
+import net.minecraft.network.protocol.common.ClientboundPingPacket;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -16,7 +16,7 @@ import java.util.Arrays;
 
 public final class NetworkManager implements Manager {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private int lastParameterS2CPing;
 
@@ -49,7 +49,7 @@ public final class NetworkManager implements Manager {
 	}
 
 	public float getTickRate() {
-		if (CLIENT == null || CLIENT.world == null || CLIENT.player == null) return 0;
+		if (CLIENT.level == null || CLIENT.player == null) return 0;
 		if (System.currentTimeMillis() - timeGameJoined < 4000) return 20;
 
 		int numTicks = 0;
@@ -65,9 +65,9 @@ public final class NetworkManager implements Manager {
 	}
 
 	@ApiStatus.Internal
-	public void onServerTick(CommonPingS2CPacket packet) {
-		if (packet != null && packet.getParameter() != lastParameterS2CPing) {
-			lastParameterS2CPing = packet.getParameter();
+	public void onServerTick(ClientboundPingPacket packet) {
+		if (packet != null && packet.getId() != lastParameterS2CPing) {
+			lastParameterS2CPing = packet.getId();
 			NetworkEvents.SERVER_TICK.invoker().onServerTick();
 		}
 	}
@@ -89,8 +89,8 @@ public final class NetworkManager implements Manager {
 	}
 
 	private void sendPingPacket() {
-		if (CLIENT.player != null && CLIENT.world != null && CLIENT.getNetworkHandler() != null) {
-			CLIENT.getNetworkHandler().sendPacket(new QueryPingC2SPacket(Util.getMeasuringTimeMs()));
+		if (CLIENT.player != null && CLIENT.level != null && CLIENT.getConnection() != null) {
+			CLIENT.getConnection().send(new ServerboundPingRequestPacket(Util.getMillis()));
 		}
 	}
 }

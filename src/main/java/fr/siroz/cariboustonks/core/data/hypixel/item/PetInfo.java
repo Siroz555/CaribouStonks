@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.core.data.hypixel.item;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,8 +24,8 @@ public record PetInfo(
 	public static final PetInfo EMPTY = new PetInfo(null, "", Rarity.UNKNOWN);
 
 	@ApiStatus.Internal
-	public static @NotNull PetInfo parse(@NotNull NbtCompound data) {
-		String petInfo = data.getString("petInfo", "");
+	public static @NotNull PetInfo parse(@NotNull CompoundTag data) {
+		String petInfo = data.getStringOr("petInfo", "");
 		if (petInfo.isEmpty()) {
 			return EMPTY;
 		}

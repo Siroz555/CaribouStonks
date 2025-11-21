@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.manager.container.tooltip;
 
 import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +35,7 @@ public interface ContainerTooltipAppender {
 	 * @param item        the item stack for which the tooltip is being generated
 	 * @param lines       the list of text lines representing the current tooltip
 	 */
-	void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Text> lines);
+	void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines);
 
 	/**
 	 * Retrieves the priority of this tooltip appender. Higher values indicate lower priority,

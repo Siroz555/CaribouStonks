@@ -18,11 +18,11 @@ import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,7 +57,7 @@ public class RagnarockAxeFeature extends Feature implements HudProvider {
 	@Override
 	public @NotNull Hud getHud() {
 		return new TextHud(
-				Text.literal("§cRag Casted! §e8.4s §f(§c+765.1§f)"),
+				Component.literal("§cRag Casted! §e8.4s §f(§c+765.1§f)"),
 				this::getText,
 				ConfigManager.getConfig().combat.ragAxe.hud,
 				200,
@@ -66,36 +66,35 @@ public class RagnarockAxeFeature extends Feature implements HudProvider {
 	}
 
 	@Contract(pure = true)
-	private @NotNull Text getText() {
+	private @NotNull Component getText() {
 		if (lastStrength == null || lastCastTime == 0) {
-			return Text.empty();
+			return Component.empty();
 		}
 
 		long currentTime = System.currentTimeMillis();
 		double timeRemaining = (lastCastTime - currentTime) / 1000.0;
 		if (timeRemaining > 0) {
 			String strength = lastStrength == 0 ? "?" : DECIMAL_FORMAT.format(lastStrength);
-			return Text.empty()
-					.append(Text.literal(castMessageConfig.get()))
-					.append(Text.literal(" " + DECIMAL_FORMAT.format(timeRemaining) + "s").formatted(Formatting.YELLOW))
-					.append(Text.literal(" (").formatted(Formatting.GRAY))
-					.append(Text.literal("+" + strength).formatted(Formatting.RED))
-					.append(Text.literal(")").formatted(Formatting.GRAY));
+			return Component.empty()
+					.append(Component.literal(castMessageConfig.get()))
+					.append(Component.literal(" " + DECIMAL_FORMAT.format(timeRemaining) + "s").withStyle(ChatFormatting.YELLOW))
+					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+					.append(Component.literal("+" + strength).withStyle(ChatFormatting.RED))
+					.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 		} else {
 			reset();
 		}
 
-		return Text.empty();
+		return Component.empty();
 	}
 
 	@EventHandler(event = "NetworkEvents.PLAY_SOUND_PACKET")
-	private void onPlaySound(PlaySoundS2CPacket packet) {
+	private void onPlaySound(ClientboundSoundPacket packet) {
 		if (!isEnabled()) return;
 		// 1.4920635f
 		if (packet.getPitch() != 1.4920635f) return;
-		if (packet.getSound() == null || packet.getSound().value() == null) return;
 		// SoundEvents.WOLF_SOUNDS Map > sound path compare
-		if (!packet.getSound().value().id().getPath().startsWith("entity.wolf.death")) return;
+		if (!packet.getSound().value().location().getPath().startsWith("entity.wolf.death")) return;
 
 		ItemStack held = InventoryUtils.getHeldItem();
 		if (held == null || held.isEmpty()) {
@@ -110,7 +109,7 @@ public class RagnarockAxeFeature extends Feature implements HudProvider {
 			lastStrength = strength > 0 ? (strength * 1.5) : 0;
 			lastCastTime = System.currentTimeMillis() + (RAGNAROCK_AXE_CAST_TIME * 1000L);
 			// Si jamais la Strength est mal détecté, le Title sera quand même là.
-			Client.showTitle(Text.literal(castMessageConfig.get()), 1, 20, 1);
+			Client.showTitle(Component.literal(castMessageConfig.get()), 1, 20, 1);
 		}
 	}
 
@@ -126,7 +125,7 @@ public class RagnarockAxeFeature extends Feature implements HudProvider {
 
 	private double getStrength(ItemStack item) {
 		try {
-			for (Text line : ItemUtils.getLore(item)) {
+			for (Component line : ItemUtils.getLore(item)) {
 				Matcher strengthMatcher = STRENGTH_PATTERN.matcher(line.getString());
 				if (strengthMatcher.find()) {
 					return Double.parseDouble(strengthMatcher.group("strength"));

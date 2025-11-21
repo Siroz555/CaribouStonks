@@ -16,9 +16,9 @@ import fr.siroz.cariboustonks.manager.hud.TextHud;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,7 +65,7 @@ public class NecronBossFeature extends Feature implements HudProvider {
 	@Override
 	public @NotNull Hud getHud() {
 		return new TextHud(
-				Text.literal("§6Goldor: §c1.69s"),
+				Component.literal("§6Goldor: §c1.69s"),
 				this::getTextHud,
 				ConfigManager.getConfig().instance.theCatacombs.necronTimerHud,
 				250,
@@ -74,17 +74,17 @@ public class NecronBossFeature extends Feature implements HudProvider {
 	}
 
 	@Contract(value = " -> new", pure = true)
-	private @NotNull Text getTextHud() {
+	private @NotNull Component getTextHud() {
 		if (goldorTicks >= 0) {
 			String seconds = StonksUtils.DECIMAL_FORMAT.format(goldorTicks / 20f) + "s";
-			return Text.literal(seconds).formatted(getColor(goldorTicks));
+			return Component.literal(seconds).withStyle(getColor(goldorTicks));
 		} else {
-			return Text.empty();
+			return Component.empty();
 		}
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onChatMessage(@NotNull Text text) {
+	private void onChatMessage(@NotNull Component text) {
 		if (!isEnabled()) return;
 
 		String message = StonksUtils.stripColor(text.getString());
@@ -107,9 +107,9 @@ public class NecronBossFeature extends Feature implements HudProvider {
 		if (goldorTicks == 0 && goldorStartTime <= 0) goldorTicks = GOLDOR_TICKS; // restart tick tick
 	}
 
-	private Formatting getColor(int goldorTicks) {
-		if (goldorTicks <= 20) return Formatting.RED;
-		if (goldorTicks <= 40) return Formatting.YELLOW;
-		return Formatting.GREEN;
+	private ChatFormatting getColor(int goldorTicks) {
+		if (goldorTicks <= 20) return ChatFormatting.RED;
+		if (goldorTicks <= 40) return ChatFormatting.YELLOW;
+		return ChatFormatting.GREEN;
 	}
 }

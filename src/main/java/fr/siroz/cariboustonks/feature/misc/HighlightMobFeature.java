@@ -11,12 +11,12 @@ import fr.siroz.cariboustonks.manager.glowing.EntityGlowProvider;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 // SIROZ-NOTE : on voit à travers les blocks : avec un Mixin c'est possible d'éviter ça,
@@ -31,27 +31,27 @@ public class HighlightMobFeature extends Feature implements EntityGlowProvider {
 				.executes(context -> {
 					currentEntityTypeGlow = null;
 					context.getSource().sendFeedback(CaribouStonks.prefix().get()
-							.append(Text.literal("Glowing entities removed.").formatted(Formatting.RED)));
+							.append(Component.literal("Glowing entities removed.").withStyle(ChatFormatting.RED)));
 					return 1;
 				})
 				.then(ClientCommandManager.argument("mob", EntityIdArgumentType.entityType())
 						.executes(context -> {
 							String entityArg = context.getArgument("mob", String.class);
-							Optional<EntityType<?>> entityType = Registries.ENTITY_TYPE
-									.getOptionalValue(Identifier.ofVanilla(entityArg));
+							Optional<EntityType<?>> entityType = BuiltInRegistries.ENTITY_TYPE
+									.getOptional(Identifier.withDefaultNamespace(entityArg));
 							if (entityType.isEmpty()) {
 								context.getSource().sendFeedback(CaribouStonks.prefix().get()
-										.append(Text.literal("Unable to find this entity type!").formatted(Formatting.RED)));
+										.append(Component.literal("Unable to find this entity type!").withStyle(ChatFormatting.RED)));
 							} else {
 								if (currentEntityTypeGlow == entityType.get()) {
 									currentEntityTypeGlow = null;
 									context.getSource().sendFeedback(CaribouStonks.prefix().get()
-											.append(Text.literal("Glowing entities removed.").formatted(Formatting.RED)));
+											.append(Component.literal("Glowing entities removed.").withStyle(ChatFormatting.RED)));
 								} else {
 									currentEntityTypeGlow = entityType.get();
 									context.getSource().sendFeedback(CaribouStonks.prefix().get()
-											.append(Text.literal("Glowing ").formatted(Formatting.GREEN)
-													.append(entityType.get().getName()).formatted(Formatting.YELLOW)));
+											.append(Component.literal("Glowing ").withStyle(ChatFormatting.GREEN)
+													.append(entityType.get().getDescription()).withStyle(ChatFormatting.YELLOW)));
 								}
 							}
 
@@ -71,7 +71,7 @@ public class HighlightMobFeature extends Feature implements EntityGlowProvider {
 	@Override
 	protected void onClientJoinServer() {
 		if (currentEntityTypeGlow != null) {
-			Client.sendMessageWithPrefix(Text.literal("Glowing entities are no longer displayed due to a server change.").formatted(Formatting.RED));
+			Client.sendMessageWithPrefix(Component.literal("Glowing entities are no longer displayed due to a server change.").withStyle(ChatFormatting.RED));
 		}
 
 		currentEntityTypeGlow = null;

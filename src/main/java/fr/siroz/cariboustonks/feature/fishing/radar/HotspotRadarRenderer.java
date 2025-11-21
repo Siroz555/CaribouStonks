@@ -6,13 +6,13 @@ import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.position.Position;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 final class HotspotRadarRenderer {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private final HotspotRadarFeature hotspotRadar;
 	private final Waypoint waypoint;
@@ -21,9 +21,9 @@ final class HotspotRadarRenderer {
 		this.hotspotRadar = hotspotRadar;
 		this.waypoint = Waypoint.builder(builder -> {
 			builder.enabled(false);
-			builder.color(Color.fromFormatting(Formatting.LIGHT_PURPLE));
+			builder.color(Color.fromFormatting(ChatFormatting.LIGHT_PURPLE));
 			builder.textOption(TextOption.builder()
-					.withText(Text.literal("Guess").formatted(Formatting.LIGHT_PURPLE))
+					.withText(Component.literal("Guess").withStyle(ChatFormatting.LIGHT_PURPLE))
 					.withDistance(false)
 					.build());
 		});
@@ -32,7 +32,7 @@ final class HotspotRadarRenderer {
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")
 	public void render(WorldRenderer renderer) {
 		if (!hotspotRadar.isEnabled()) return;
-		if (CLIENT.player == null || CLIENT.world == null) return;
+		if (CLIENT.player == null || CLIENT.level == null) return;
 
 		if (hotspotRadar.getGuessPosition() != null) {
 			waypoint.setEnabled(true);

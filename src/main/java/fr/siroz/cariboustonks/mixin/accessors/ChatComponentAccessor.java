@@ -1,24 +1,24 @@
 package fr.siroz.cariboustonks.mixin.accessors;
 
-import net.minecraft.client.gui.hud.ChatHud;
-import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.util.collection.ArrayListDeque;
+import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.client.GuiMessage;
+import net.minecraft.util.ArrayListDeque;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.List;
 
-@Mixin(ChatHud.class)
-public interface ChatHudAccessor {
+@Mixin(ChatComponent.class)
+public interface ChatComponentAccessor {
 
-    @Accessor
+    @Accessor("recentChat")
     ArrayListDeque<String> getMessageHistory();
 
-    @Accessor
-    List<ChatHudLine.Visible> getVisibleMessages();
+    @Accessor("trimmedMessages")
+    List<GuiMessage.Line> getVisibleMessages();
 
-    @Accessor
-    List<ChatHudLine> getMessages();
+    @Accessor("allMessages")
+    List<GuiMessage> getMessages();
 
 // TODO
 //    @Invoker("getMessageLineIndex")

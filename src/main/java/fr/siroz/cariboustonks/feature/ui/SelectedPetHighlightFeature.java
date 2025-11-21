@@ -8,9 +8,9 @@ import fr.siroz.cariboustonks.manager.container.overlay.ContainerOverlay;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,11 +39,11 @@ public class SelectedPetHighlightFeature extends Feature implements ContainerMat
         for (Int2ObjectMap.Entry<ItemStack> entry : slots.int2ObjectEntrySet()) {
 
             ItemStack itemStack = entry.getValue();
-            if (itemStack == null || !itemStack.isOf(Items.PLAYER_HEAD)) {
+            if (itemStack == null || !itemStack.is(Items.PLAYER_HEAD)) {
 				continue;
 			}
 
-            List<Text> lore = ItemUtils.getLore(itemStack);
+            List<Component> lore = ItemUtils.getLore(itemStack);
             if (lore.isEmpty()) {
 				continue;
 			}

@@ -10,12 +10,12 @@ import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.manager.Manager;
 import fr.siroz.cariboustonks.util.Client;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
  */
 public final class SlayerManager implements Manager {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private static final Pattern SLAYER_PATTERN = Pattern.compile("Revenant Horror|Atoned Horror|Tarantula Broodfather|Sven Packmaster|Voidgloom Seraph|Inferno Demonlord|Bloodfiend");
 	private static final Pattern SLAYER_TIER_PATTERN = Pattern.compile("^(Revenant Horror|Tarantula Broodfather|Sven Packmaster|Voidgloom Seraph|Inferno Demonlord|Riftstalker Bloodfiend)\\s+(I|II|III|IV|V)$");
@@ -134,7 +134,7 @@ public final class SlayerManager implements Manager {
 	 * The main entry point for managing the various statuses of the Slayer Quest's progress.
 	 */
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onMessage(@NotNull Text text) {
+	private void onMessage(@NotNull Component text) {
 		if (!SkyBlockAPI.isOnSkyBlock()) return;
 
 		String message = text.getString();
@@ -205,26 +205,26 @@ public final class SlayerManager implements Manager {
 	 * @param equipment  no equip packet
 	 */
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
-	private void onArmorStandUpdate(@NotNull ArmorStandEntity armorStand, boolean equipment) {
+	private void onArmorStandUpdate(@NotNull ArmorStand armorStand, boolean equipment) {
 		if (!SkyBlockAPI.isOnSkyBlock() || equipment) return;
 		if (quest == null || !armorStand.hasCustomName() || (isBossSpawned() && bossFight.getBossEntity() != null)) return;
 
-		if (armorStand.getName().getString().contains(CLIENT.getSession().getUsername())) {
+		if (armorStand.getName().getString().contains(CLIENT.getUser().getName())) {
 			for (Entity otherArmorStands : getArmorStands(armorStand)) {
 				Matcher slayerMatcher = SLAYER_PATTERN.matcher(otherArmorStands.getName().getString());
 				if (slayerMatcher.find()) {
 					if (bossFight != null && bossFight.getBossEntity() == null) {
-						bossFight.tryToFindBoss((ArmorStandEntity) otherArmorStands);
+						bossFight.tryToFindBoss((ArmorStand) otherArmorStands);
 						return;
 					}
 
-					bossFight = new SlayerBossFight(this, (ArmorStandEntity) otherArmorStands);
+					bossFight = new SlayerBossFight(this, (ArmorStand) otherArmorStands);
 					return;
 				}
 			}
 		}
 
-		if (!armorStand.isInRange(CLIENT.player, 20)) {
+		if (!armorStand.closerThan(CLIENT.player, 20)) {
 			return;
 		}
 
@@ -281,31 +281,31 @@ public final class SlayerManager implements Manager {
 	}
 
 	@Nullable
-	<T extends Entity> T findClosestEntity(@Nullable EntityType<T> entityType, @Nullable ArmorStandEntity armorStand) {
+	<T extends Entity> T findClosestEntity(@Nullable EntityType<T> entityType, @Nullable ArmorStand armorStand) {
 		if (entityType == null) return null;
 		if (armorStand == null) return null;
 
-		List<T> entities = armorStand.getEntityWorld().getEntitiesByType(
+		List<T> entities = armorStand.level().getEntities(
 				entityType,
-				armorStand.getBoundingBox().expand(0, 1.5D, 0),
-				e -> e.isAlive() && !(e instanceof MobEntity mob && mob.isBaby())
+				armorStand.getBoundingBox().inflate(0, 1.5D, 0),
+				e -> e.isAlive() && !(e instanceof Mob mob && mob.isBaby())
 		);
 
-		entities.sort(Comparator.comparingDouble(armorStand::squaredDistanceTo));
+		entities.sort(Comparator.comparingDouble(armorStand::distanceToSqr));
 
 		return switch (entities.size()) {
 			case 0 -> null;
 			case 1 -> entities.getFirst();
 			default -> entities.stream()
-					.min(Comparator.comparingInt(entity -> Math.abs(entity.age - armorStand.age)))
+					.min(Comparator.comparingInt(entity -> Math.abs(entity.tickCount - armorStand.tickCount)))
 					.get();
 		};
 	}
 
 	private List<Entity> getArmorStands(@NotNull Entity entity) {
-		return entity.getEntityWorld().getOtherEntities(
+		return entity.level().getEntities(
 				entity,
-				entity.getBoundingBox().expand(0.1D, 1.5D, 0.1D),
-				e -> e instanceof ArmorStandEntity && e.hasCustomName());
+				entity.getBoundingBox().inflate(0.1D, 1.5D, 0.1D),
+				e -> e instanceof ArmorStand && e.hasCustomName());
 	}
 }

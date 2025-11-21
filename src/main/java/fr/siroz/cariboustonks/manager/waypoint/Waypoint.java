@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.util.Ticks;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.position.Position;
-import net.minecraft.util.math.Box;
+import net.minecraft.world.phys.AABB;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -82,7 +82,7 @@ import org.jetbrains.annotations.Range;
 public final class Waypoint {
 
 	private Position position;
-	private Box box;
+	private AABB box;
 	private Type type;
 	private boolean enabled;
 	private final UUID uuid;
@@ -118,7 +118,7 @@ public final class Waypoint {
 			@NotNull IconOption iconOption
 	) {
 		this.position = position;
-		this.box = new Box(position.toBlockPos());
+		this.box = new AABB(position.toBlockPos());
 		this.type = type;
 		this.enabled = enabled;
 		this.uuid = uuid;
@@ -183,7 +183,7 @@ public final class Waypoint {
 	 */
 	public void updatePosition(@NotNull Position position) {
 		this.position = position;
-		this.box = new Box(position.toBlockPos());
+		this.box = new AABB(position.toBlockPos());
 	}
 
 	public void updateType(@NotNull Type type) {
@@ -191,11 +191,11 @@ public final class Waypoint {
 	}
 
 	/**
-	 * Returns the {@link Box} associated with this {@link Waypoint}.
+	 * Returns the {@link AABB} associated with this {@link Waypoint}.
 	 *
-	 * @return the {@link Box} instance for this Waypoint
+	 * @return the {@link AABB} instance for this Waypoint
 	 */
-	public Box getBox() {
+	public AABB getBox() {
 		return box;
 	}
 

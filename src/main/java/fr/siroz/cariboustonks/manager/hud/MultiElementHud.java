@@ -5,9 +5,9 @@ import fr.siroz.cariboustonks.manager.hud.element.HudIconLine;
 import fr.siroz.cariboustonks.manager.hud.element.HudTextLine;
 import fr.siroz.cariboustonks.manager.hud.element.HudTableRow;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public final class MultiElementHud extends Hud {
 	@Override
 	public int width() {
 		int maxWidth = defaultText.stream()
-				.mapToInt(line -> CLIENT.textRenderer.getWidth(line.text()))
+				.mapToInt(line -> CLIENT.font.width(line.text()))
 				.max()
 				.orElse(0);
 		return (int) (maxWidth * scale());
@@ -61,28 +61,28 @@ public final class MultiElementHud extends Hud {
 
 	@Override
 	public int height() {
-		int lineHeight = (int) (CLIENT.textRenderer.fontHeight * scale());
+		int lineHeight = (int) (CLIENT.font.lineHeight * scale());
 		return defaultText.stream()
 				.mapToInt(t -> lineHeight + (t.spaceAfter() ? SPACING : 0))
 				.sum() - SPACING;
 	}
 
 	@Override
-	public void renderScreen(DrawContext context) {
+	public void renderScreen(GuiGraphics context) {
 		render(defaultText, context, x(), y(), scale());
 	}
 
 	@Override
-	public void renderHud(DrawContext context, RenderTickCounter tickCounter) {
+	public void renderHud(GuiGraphics guiGraphics, DeltaTracker tickCounter) {
 		// SIROZ-NOTE: un try-catch pour le rendu hud hors screen avec le système de crash en préparation
 		if (shouldRender()) {
-			render(elementSupplier.get(), context, hudConfig.x(), hudConfig.y(), hudConfig.scale());
+			render(elementSupplier.get(), guiGraphics, hudConfig.x(), hudConfig.y(), hudConfig.scale());
 		}
 	}
 
-	private void render(@NotNull List<? extends HudElement> elements, @NotNull DrawContext context, int x, int y, float scale) {
-		context.getMatrices().pushMatrix();
-		context.getMatrices().scale(scale, scale);
+	private void render(@NotNull List<? extends HudElement> elements, @NotNull GuiGraphics guiGraphics, int x, int y, float scale) {
+		guiGraphics.pose().pushMatrix();
+		guiGraphics.pose().scale(scale, scale);
 
 		// Récupère le nombre max de columns uniquement pour les HudTableRow
 		// SIROZ-NOTE: Supprimer les cells pour les elements qui en on pas besoin
@@ -96,9 +96,9 @@ public final class MultiElementHud extends Hud {
 		int[] colWidth = new int[maxCols];
 		for (HudElement element : elements) {
 			if (element instanceof HudTableRow row) {
-				Text[] cells = row.getCells();
+				Component[] cells = row.getCells();
 				for (int i = 0; i < cells.length; i++) {
-					int w = CLIENT.textRenderer.getWidth(cells[i]);
+					int w = CLIENT.font.width(cells[i]);
 					if (w > colWidth[i]) {
 						colWidth[i] = w;
 					}
@@ -109,22 +109,22 @@ public final class MultiElementHud extends Hud {
 		int baseY = (int) (y / scale);
 		int offset = 0;
 		int cellPadding = (int) (SPACING * scale);
-		int lineHeight = CLIENT.textRenderer.fontHeight;
+		int lineHeight = CLIENT.font.lineHeight;
 
 		for (HudElement element : elements) {
 			if (element instanceof HudTableRow row) {
 				// Déssine chaque cell a son tab stop
 				int cellX = (int) (x / scale);
-				Text[] cells = row.getCells();
+				Component[] cells = row.getCells();
 				for (int i = 0; i < cells.length; i++) {
-					context.drawText(CLIENT.textRenderer, cells[i], cellX, baseY + offset, Colors.WHITE.asInt(), false);
+					guiGraphics.drawString(CLIENT.font, cells[i], cellX, baseY + offset, Colors.WHITE.asInt(), false);
 					cellX += colWidth[i] + cellPadding;
 				}
 			} else if (element instanceof HudTextLine line) {
-				context.drawText(CLIENT.textRenderer, line.text(), (int) (x / scale), baseY + offset, Colors.WHITE.asInt(), false);
+				guiGraphics.drawString(CLIENT.font, line.text(), (int) (x / scale), baseY + offset, Colors.WHITE.asInt(), false);
 			} else if (element instanceof HudIconLine icon) {
-				context.drawItem(icon.stack(), (int) (x / scale), baseY + offset);
-				context.drawText(CLIENT.textRenderer, icon.text(), (int) (x / scale) + 18, baseY + offset + 4, Colors.WHITE.asInt(), false);
+				guiGraphics.renderItem(icon.stack(), (int) (x / scale), baseY + offset);
+				guiGraphics.drawString(CLIENT.font, icon.text(), (int) (x / scale) + 18, baseY + offset + 4, Colors.WHITE.asInt(), false);
 			}
 
 			// Avance verticalement : hauteur de ligne + éventuel interligne / Icon
@@ -134,6 +134,6 @@ public final class MultiElementHud extends Hud {
 			}
 		}
 
-		context.getMatrices().popMatrix();
+		guiGraphics.pose().popMatrix();
 	}
 }

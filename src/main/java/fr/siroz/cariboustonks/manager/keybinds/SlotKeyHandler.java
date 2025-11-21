@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.manager.keybinds;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.NotNull;
 
 /**

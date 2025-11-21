@@ -9,16 +9,16 @@ import fr.siroz.cariboustonks.util.render.gui.Quad;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gl.ScissorState;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.texture.TextureSetup;
-import net.minecraft.client.util.Window;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.RenderPipelines;
+import com.mojang.blaze3d.systems.ScissorState;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.render.TextureSetup;
+import com.mojang.blaze3d.platform.Window;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
@@ -34,24 +34,24 @@ public final class GuiRenderer {
 	/**
 	 * Draws a rectangular border within the specified coordinates and dimensions.
 	 *
-	 * @param context the {@code DrawContext} used for rendering the border
-	 * @param x       the x-coordinate (top-left corner)
-	 * @param y       the y-coordinate (top-left corner)
-	 * @param width   the width
-	 * @param height  the height
-	 * @param color   the color
+	 * @param guiGraphics the {@code GuiGraphics} used for rendering the border
+	 * @param x           the x-coordinate (top-left corner)
+	 * @param y           the y-coordinate (top-left corner)
+	 * @param width       the width
+	 * @param height      the height
+	 * @param color       the color
 	 */
-	public static void drawBorder(@NotNull DrawContext context, int x, int y, int width, int height, int color) {
-		context.fill(x, y, x + width, y + 1, color);
-		context.fill(x, y + height - 1, x + width, y + height, color);
-		context.fill(x, y + 1, x + 1, y + height - 1, color);
-		context.fill(x + width - 1, y + 1, x + width, y + height - 1, color);
+	public static void drawBorder(@NotNull GuiGraphics guiGraphics, int x, int y, int width, int height, int color) {
+		guiGraphics.fill(x, y, x + width, y + 1, color);
+		guiGraphics.fill(x, y + height - 1, x + width, y + height, color);
+		guiGraphics.fill(x, y + 1, x + 1, y + height - 1, color);
+		guiGraphics.fill(x + width - 1, y + 1, x + width, y + height - 1, color);
 	}
 
 	/**
 	 * Draws a scrollable text within the specified coordinates and dimensions.
 	 *
-	 * @param context      the {@code DrawContext} used for rendering the text
+	 * @param guiGraphics  the {@code GuiGraphics} used for rendering the text
 	 * @param textRenderer the {@code TextRenderer} used for rendering the text
 	 * @param text         the text to be rendered
 	 * @param startX       the x-coordinate (top-left corner)
@@ -60,46 +60,46 @@ public final class GuiRenderer {
 	 * @param endY         the y-coordinate (bottom-right corner)
 	 * @param color        the color
 	 */
-	public static void drawScrollableText(@NotNull DrawContext context, @NotNull TextRenderer textRenderer, Text text, int startX, int startY, int endX, int endY, int color) {
-		int textWidth = textRenderer.getWidth(text);
+	public static void drawScrollableText(@NotNull GuiGraphics guiGraphics, @NotNull Font textRenderer, Component text, int startX, int startY, int endX, int endY, int color) {
+		int textWidth = textRenderer.width(text);
 		int scrollAreaWidth = startY + endY;
 		int offsetY = (scrollAreaWidth - 9) / 2 + 1;
 		int textOffset = endX - startX;
 		if (textWidth > textOffset) {
 			int scrollOffset = textWidth - textOffset;
-			double timeOffset = (double) Util.getMeasuringTimeMs() / 1_000;
+			double timeOffset = (double) Util.getMillis() / 1_000;
 			double scrollAmount = Math.max((double) scrollOffset * 0.5D, 3.0D);
 			double normalizedScrollValue = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * timeOffset / scrollAmount)) / 2.0D + 0.5D;
-			double textRenderOffset = MathHelper.lerp(normalizedScrollValue, 0.0F, scrollOffset);
-			context.enableScissor(startX, startY, endX, endY);
-			context.drawTextWithShadow(textRenderer, text, startX - (int) textRenderOffset, offsetY, color);
-			context.disableScissor();
+			double textRenderOffset = Mth.lerp(normalizedScrollValue, 0.0F, scrollOffset);
+			guiGraphics.enableScissor(startX, startY, endX, endY);
+			guiGraphics.drawString(textRenderer, text, startX - (int) textRenderOffset, offsetY, color);
+			guiGraphics.disableScissor();
 		} else {
 			int centerX = (startX + endX) / 2;
-			int clampedX = MathHelper.clamp(centerX, startX + textWidth / 2, endX - textWidth / 2);
-			context.drawCenteredTextWithShadow(textRenderer, text, clampedX, offsetY, color);
+			int clampedX = Mth.clamp(centerX, startX + textWidth / 2, endX - textWidth / 2);
+			guiGraphics.drawCenteredString(textRenderer, text, clampedX, offsetY, color);
 		}
 	}
 
 	/**
-	 * Enqueues a gradient rectangle GUI element for rendering using the given {@link DrawContext}.
+	 * Enqueues a gradient rectangle GUI element for rendering using the given {@link GuiGraphics}.
 	 * <p>
 	 * This method creates a {@link GradientRectGuiElementRenderState}.
 	 *
-	 * @param context    the {@code DrawContext}
-	 * @param depth      the depth of the element
-	 * @param left       the left position of the rectangle
-	 * @param top        the top position of the rectangle
-	 * @param right      the right position of the rectangle
-	 * @param bottom     the bottom position of the rectangle
-	 * @param startColor the start color of the gradient
-	 * @param endColor   the end color of the gradient
+	 * @param guiGraphics the {@code GuiGraphics}
+	 * @param depth       the depth of the element
+	 * @param left        the left position of the rectangle
+	 * @param top         the top position of the rectangle
+	 * @param right       the right position of the rectangle
+	 * @param bottom      the bottom position of the rectangle
+	 * @param startColor  the start color of the gradient
+	 * @param endColor    the end color of the gradient
 	 */
-	public static void submitGradientRect(@NotNull DrawContext context, int depth, int left, int top, int right, int bottom, int startColor, int endColor) {
+	public static void submitGradientRect(@NotNull GuiGraphics guiGraphics, int depth, int left, int top, int right, int bottom, int startColor, int endColor) {
 		GradientRectGuiElementRenderState renderState = new GradientRectGuiElementRenderState(
 				CaribouRenderPipelines.GUI_QUADS, //RenderPipelines.GUI,
-				TextureSetup.empty(),
-				new Matrix3x2f(context.getMatrices()),
+				TextureSetup.noTexture(),
+				new Matrix3x2f(guiGraphics.pose()),
 				depth,
 				left,
 				top,
@@ -107,30 +107,30 @@ public final class GuiRenderer {
 				bottom,
 				startColor,
 				endColor,
-				context.scissorStack.peekLast()
+				guiGraphics.scissorStack.peek()
 		);
-		context.state.addSimpleElement(renderState);
+		guiGraphics.guiRenderState.submitGuiElement(renderState);
 	}
 
 	/**
-	 * Enqueues a polyline as a series of a quad GUI element for rendering using the given {@link DrawContext}.
+	 * Enqueues a polyline as a series of a quad GUI element for rendering using the given {@link GuiGraphics}.
 	 * <p>
 	 * This method creates a {@link QuadGuiElementRenderState}.
 	 *
-	 * @param context   the {@code DrawContext}
-	 * @param points    an array of Points describing the polyline
-	 * @param color     the color
-	 * @param thickness the thickness of the line in pixels
+	 * @param guiGraphics the {@code GuiGraphics}
+	 * @param points      an array of Points describing the polyline
+	 * @param color       the color
+	 * @param thickness   the thickness of the line in pixels
 	 */
 	public static void submitLinesFromPoints(
-			@NotNull DrawContext context,
+			@NotNull GuiGraphics guiGraphics,
 			@NotNull Point @NotNull [] points,
 			@NotNull Color color,
 			int thickness
 	) {
 		if (points.length < 2) return;
 
-		Matrix3x2f matrix = context.getMatrices();
+		Matrix3x2f matrix = guiGraphics.pose();
 
 		for (int i = 0; i < points.length; i++) {
 			Point currentPoint = points[i];
@@ -173,12 +173,12 @@ public final class GuiRenderer {
 
 		QuadGuiElementRenderState renderState = new QuadGuiElementRenderState(
 				RenderPipelines.GUI,
-				TextureSetup.empty(),
+				TextureSetup.noTexture(),
 				batchCopy,
 				color.getRGB(),
-				context.scissorStack.peekLast()
+				guiGraphics.scissorStack.peek()
 		);
-		context.state.addSimpleElement(renderState);
+		guiGraphics.guiRenderState.submitGuiElement(renderState);
 	}
 
 	public static void enableBlurScissor(int x, int y, int width, int height) {
@@ -190,15 +190,15 @@ public final class GuiRenderer {
 	}
 
 	public static void applyBlurScissorToRenderPass(RenderPass renderPass) {
-		if (BLUR_SCISSOR_STATE.isEnabled()) {
-			Window window = MinecraftClient.getInstance().getWindow();
-			int framebufferHeight = window.getFramebufferHeight();
-			double scaleFactor = window.getScaleFactor();
+		if (BLUR_SCISSOR_STATE.enabled()) {
+			Window window = Minecraft.getInstance().getWindow();
+			int framebufferHeight = window.getHeight();
+			double scaleFactor = window.getGuiScale();
 
-			double x = BLUR_SCISSOR_STATE.getX() * scaleFactor;
-			double y = framebufferHeight - (BLUR_SCISSOR_STATE.getY() + BLUR_SCISSOR_STATE.getHeight()) * scaleFactor;
-			double width = BLUR_SCISSOR_STATE.getWidth() * scaleFactor;
-			double height = BLUR_SCISSOR_STATE.getHeight() * scaleFactor;
+			double x = BLUR_SCISSOR_STATE.x() * scaleFactor;
+			double y = framebufferHeight - (BLUR_SCISSOR_STATE.y() + BLUR_SCISSOR_STATE.height()) * scaleFactor;
+			double width = BLUR_SCISSOR_STATE.width() * scaleFactor;
+			double height = BLUR_SCISSOR_STATE.height() * scaleFactor;
 
 			renderPass.enableScissor((int) x, (int) y, Math.max(0, (int) width), Math.max(0, (int) height));
 		}

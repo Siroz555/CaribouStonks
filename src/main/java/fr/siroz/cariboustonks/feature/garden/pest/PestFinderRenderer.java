@@ -6,15 +6,15 @@ import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.position.Position;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 final class PestFinderRenderer {
 
-    private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+    private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private final PestFinderFeature pestFinder;
 	private final Waypoint waypoint;
@@ -25,7 +25,7 @@ final class PestFinderRenderer {
 			builder.enabled(false);
 			builder.color(Colors.GREEN);
 			builder.textOption(TextOption.builder()
-					.withText(Text.literal("Guess").formatted(Formatting.GREEN))
+					.withText(Component.literal("Guess").withStyle(ChatFormatting.GREEN))
 					.withDistance(false)
 					.build());
 		});
@@ -34,7 +34,7 @@ final class PestFinderRenderer {
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")
     public void render(WorldRenderer renderer) {
         if (!pestFinder.isEnabled()) return;
-        if (CLIENT.player == null || CLIENT.world == null) return;
+        if (CLIENT.player == null || CLIENT.level == null) return;
 
 		if (pestFinder.getGuessPosition() != null) {
 			waypoint.setEnabled(true);
@@ -42,8 +42,8 @@ final class PestFinderRenderer {
 			waypoint.getRenderer().render(renderer);
 		}
 
-        for (Entity entity : CLIENT.world.getEntities()) {
-            if (!(entity instanceof ArmorStandEntity armorStand)) {
+        for (Entity entity : CLIENT.level.entitiesForRendering()) {
+            if (!(entity instanceof ArmorStand armorStand)) {
 				continue;
 			}
 
@@ -51,7 +51,7 @@ final class PestFinderRenderer {
 				continue;
 			}
 
-            renderer.submitLineFromCursor(armorStand.getEyePos(), Colors.GREEN, 1f);
+            renderer.submitLineFromCursor(armorStand.getEyePosition(), Colors.GREEN, 1f);
         }
     }
 }

@@ -7,33 +7,33 @@ import fr.siroz.cariboustonks.util.render.Texture;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.SharedConstants;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.network.chat.Component;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 record DebugRenderer(@NotNull DeveloperManager dev) {
 
 	public void render(WorldRenderer renderer) {
 		if (!dev.getTexturedArmorStands().isEmpty()) {
-			for (Object2IntMap.Entry<ArmorStandEntity> armorStand : dev.getTexturedArmorStands().object2IntEntrySet()) {
-				ArmorStandEntity entity = armorStand.getKey();
-				if (entity == null || entity.getEntityPos() == null) {
+			for (Object2IntMap.Entry<ArmorStand> armorStand : dev.getTexturedArmorStands().object2IntEntrySet()) {
+				ArmorStand entity = armorStand.getKey();
+				if (entity == null) {
 					continue;
 				}
 
-				Vec3d centerPos = entity.getEntityPos();
-				renderer.submitText(Text.literal("#" + armorStand.getIntValue()),
+				Vec3 centerPos = entity.position();
+				renderer.submitText(Component.literal("#" + armorStand.getIntValue()),
 						centerPos.add(0, 1, 0), 1, true);
 			}
 		}
 
 		renderer.submitText(
-				Text.of("CaribouStonks " + SharedConstants.getGameVersion().name()),
-				new Vec3d(-1.5, 69, 25.5), 1.3f,
+				Component.nullToEmpty("CaribouStonks " + SharedConstants.getCurrentVersion().name()),
+				new Vec3(-1.5, 69, 25.5), 1.3f,
 				true);
 
 		renderer.submitBeaconBeam(
@@ -55,19 +55,19 @@ record DebugRenderer(@NotNull DeveloperManager dev) {
 				false); // Le true marche a coup sur, mais 1.21.11 j'utilise ma propre Pipline pour
 
 		renderer.submitOutline(
-				new Box(new BlockPos(5, 70, 25)),
+				new AABB(new BlockPos(5, 70, 25)),
 				Colors.PURPLE,
 				1f,
 				true);
 
 		renderer.submitOutline(
-				new Box(new BlockPos(5, 70, 27)),
+				new AABB(new BlockPos(5, 70, 27)),
 				Colors.PINK,
 				1f,
 				false);
 
 		renderer.submitCircle(
-				new Vec3d(5, 65, 18),
+				new Vec3(5, 65, 18),
 				5,
 				16,
 				.02f,
@@ -76,7 +76,7 @@ record DebugRenderer(@NotNull DeveloperManager dev) {
 				false);
 
 		renderer.submitThickCircle(
-				new Vec3d(5, 63, 24),
+				new Vec3(5, 63, 24),
 				5,
 				2,
 				64,
@@ -84,33 +84,33 @@ record DebugRenderer(@NotNull DeveloperManager dev) {
 				false);
 
 		renderer.submitLines(
-				new Vec3d[]{
-						new Vec3d(-1, 66, 16),
-						new Vec3d(3, 69, 19),
-						new Vec3d(3, 70, 23),
-						new Vec3d(0, 73, 23)},
+				new Vec3[]{
+						new Vec3(-1, 66, 16),
+						new Vec3(3, 69, 19),
+						new Vec3(3, 70, 23),
+						new Vec3(0, 73, 23)},
 				Colors.MAGENTA,
 				1.5f,
 				true);
 
 		renderer.submitLines(
-				new Vec3d[]{
-						new Vec3d(3, 70, 23),
-						new Vec3d(0, 73, 23)},
+				new Vec3[]{
+						new Vec3(3, 70, 23),
+						new Vec3(0, 73, 23)},
 				Colors.MAGENTA,
 				1.5f,
 				true);
 
-		renderer.submitQuad(new Vec3d[]{
-						new Vec3d(4, 66, 29.5),
-						new Vec3d(4, 66, 28.5),
-						new Vec3d(4, 68, 28.5),
-						new Vec3d(4, 68, 29.5)},
+		renderer.submitQuad(new Vec3[]{
+						new Vec3(4, 66, 29.5),
+						new Vec3(4, 66, 28.5),
+						new Vec3(4, 68, 28.5),
+						new Vec3(4, 68, 29.5)},
 				Colors.YELLOW.withAlpha(0.5f),
 				true);
 
-		Vec3d centerPos = new Vec3d(3, 66, 18);
-		double distance = RenderUtils.getCamera().getCameraPos().distanceTo(centerPos);
+		Vec3 centerPos = new Vec3(3, 66, 18);
+		double distance = RenderUtils.getCamera().position().distanceTo(centerPos);
 		float scale = Math.max((float) distance / 10, 1);
 
 		renderer.submitTexture(
@@ -119,7 +119,7 @@ record DebugRenderer(@NotNull DeveloperManager dev) {
 				scale,
 				1f,
 				1f,
-				new Vec3d(0, 0, 0),
+				new Vec3(0, 0, 0),
 				Texture.NETHERITE_SWORD,
 				new Color(255, 255, 255),
 				1f,

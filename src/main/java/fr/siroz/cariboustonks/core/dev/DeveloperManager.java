@@ -28,16 +28,16 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.SharedConstants;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,11 +49,11 @@ import org.jetbrains.annotations.NotNull;
 @ApiStatus.Internal
 public final class DeveloperManager {
 
-	private final Object2IntMap<ArmorStandEntity> texturedArmorStands = new Object2IntOpenHashMap<>();
+	private final Object2IntMap<ArmorStand> texturedArmorStands = new Object2IntOpenHashMap<>();
 	private boolean dumpSound = false;
 
 	public DeveloperManager() {
-		CaribouStonks.LOGGER.warn("Debug mode enabled ({}) {}", SharedConstants.getGameVersion().name(), DeveloperTools.isSnapshot() ? "(Snapshot)" : "");
+		CaribouStonks.LOGGER.warn("Debug mode enabled ({}) {}", SharedConstants.getCurrentVersion().name(), DeveloperTools.isSnapshot() ? "(Snapshot)" : "");
 		// Debug Renderer
 		DebugRenderer debugRenderer = new DebugRenderer(this);
 		// Events
@@ -72,30 +72,30 @@ public final class DeveloperManager {
 		));
 	}
 
-	Object2IntMap<ArmorStandEntity> getTexturedArmorStands() {
+	Object2IntMap<ArmorStand> getTexturedArmorStands() {
 		return texturedArmorStands;
 	}
 
 	@EventHandler(event = "ClientPlayConnectionEvents.JOIN")
-	private void onPlayConnection(ClientPlayNetworkHandler _handler, PacketSender _sender, MinecraftClient _c) {
-		Client.sendMessageWithPrefix(Text.literal("Debug mode enabled (" + SharedConstants.getGameVersion().name() + ")").formatted(Formatting.RED)
-				.append(DeveloperTools.isSnapshot() ? Text.literal(" (Snapshot)").formatted(Formatting.DARK_RED) : Text.empty()));
+	private void onPlayConnection(ClientPacketListener _handler, PacketSender _sender, Minecraft _c) {
+		Client.sendMessageWithPrefix(Component.literal("Debug mode enabled (" + SharedConstants.getCurrentVersion().name() + ")").withStyle(ChatFormatting.RED)
+				.append(DeveloperTools.isSnapshot() ? Component.literal(" (Snapshot)").withStyle(ChatFormatting.DARK_RED) : Component.empty()));
 	}
 
 	@EventHandler(event = "WorldEvents.ALLOW_SOUND")
 	private boolean onSound(@NotNull SoundEvent soundEvent) {
 		if (dumpSound) {
-			String soundId = soundEvent.id().getPath();
+			String soundId = soundEvent.location().getPath();
 			String time = TimeUtils.formatInstant(Instant.now(), TimeUtils.TIME_HH_MM_SS);
-			Client.sendMessage(Text.literal("(Client) " + time + " :: " + soundId));
+			Client.sendMessage(Component.literal("(Client) " + time + " :: " + soundId));
 		}
 		return true;
 	}
 
 	@EventHandler(event = "NetworkEvents.PLAY_SOUND_PACKET")
-	private void onSoundPacket(PlaySoundS2CPacket packet) {
+	private void onSoundPacket(ClientboundSoundPacket packet) {
 		if (dumpSound) {
-			String soundId = packet.getSound().value().id().getPath();
+			String soundId = packet.getSound().value().location().getPath();
 			String time = TimeUtils.formatInstant(Instant.now(), TimeUtils.TIME_HH_MM_SS);
 			String pitch = BigDecimal.valueOf(packet.getPitch())
 					.setScale(3, RoundingMode.DOWN)
@@ -105,22 +105,22 @@ public final class DeveloperManager {
 					.setScale(3, RoundingMode.DOWN)
 					.stripTrailingZeros()
 					.toPlainString();
-			Client.sendMessage(Text.literal("(Server) " + time + " :: " + soundId + " Pitch: " + pitch + " Volume: " + volume));
+			Client.sendMessage(Component.literal("(Server) " + time + " :: " + soundId + " Pitch: " + pitch + " Volume: " + volume));
 		}
 	}
 
 	private LiteralArgumentBuilder<FabricClientCommandSource> dumpHeldItemSimpleCommand() {
 		return ClientCommandManager.literal("dumpHeldItemSimple").executes(ctx -> {
-			ItemStack item = ctx.getSource().getPlayer().getMainHandStack();
-			if (item == null || item.isEmpty()) {
-				ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Text.literal("Item is null or empty").formatted(Formatting.RED)));
+			ItemStack item = ctx.getSource().getPlayer().getMainHandItem();
+			if (item.isEmpty()) {
+				ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("Item is null or empty").withStyle(ChatFormatting.RED)));
 			} else {
-				MutableText message = Text.empty();
-				message.append(item.getName()).append(" :")
+				MutableComponent message = Component.empty();
+				message.append(item.getHoverName()).append(" :")
 						.append("\n")
-						.append(" - SkyBlockItemId: " + SkyBlockAPI.getSkyBlockItemId(item)).formatted(Formatting.GRAY)
+						.append(" - SkyBlockItemId: " + SkyBlockAPI.getSkyBlockItemId(item)).withStyle(ChatFormatting.GRAY)
 						.append("\n")
-						.append(" - SkyBlockApiId: " + SkyBlockAPI.getSkyBlockApiId(item)).formatted(Formatting.GRAY);
+						.append(" - SkyBlockApiId: " + SkyBlockAPI.getSkyBlockApiId(item)).withStyle(ChatFormatting.GRAY);
 
 				ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(message));
 			}
@@ -131,10 +131,10 @@ public final class DeveloperManager {
 	private LiteralArgumentBuilder<FabricClientCommandSource> dumpHeldItemCommand() {
 		return ClientCommandManager.literal("dumpHeldItem").executes(ctx -> {
 			String json = GsonProvider.standard().toJson(ItemStack.CODEC.encodeStart(
-					DeveloperTools.getRegistryLookup().getOps(JsonOps.INSTANCE),
-					ctx.getSource().getPlayer().getMainHandStack()).getOrThrow());
+					DeveloperTools.getRegistryLookup().createSerializationContext(JsonOps.INSTANCE),
+					ctx.getSource().getPlayer().getMainHandItem()).getOrThrow());
 
-			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Text.literal("Debug Held Item: " + json)));
+			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("Debug Held Item: " + json)));
 			return Command.SINGLE_SUCCESS;
 		});
 	}
@@ -144,21 +144,21 @@ public final class DeveloperManager {
 			texturedArmorStands.clear();
 			TickScheduler.getInstance().runLater(texturedArmorStands::clear, 20 * 10);
 
-			List<ArmorStandEntity> armorStands = ctx.getSource().getWorld().getEntitiesByClass(
-					ArmorStandEntity.class,
-					ctx.getSource().getPlayer().getBoundingBox().expand(8d),
-					EntityPredicates.NOT_MOUNTED
+			List<ArmorStand> armorStands = ctx.getSource().getWorld().getEntitiesOfClass(
+					ArmorStand.class,
+					ctx.getSource().getPlayer().getBoundingBox().inflate(8d),
+					EntitySelector.ENTITY_NOT_BEING_RIDDEN
 			);
 
 			int id = 0;
-			for (ArmorStandEntity armorStand : armorStands) {
+			for (ArmorStand armorStand : armorStands) {
 				texturedArmorStands.put(armorStand, id);
 				Iterable<ItemStack> equippedItems = InventoryUtils.getArmorFromEntity(armorStand);
 
-				ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Text.literal("Head texture #" + id + ": ")));
+				ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("Head texture #" + id + ": ")));
 
 				for (ItemStack stack : equippedItems) {
-					ItemUtils.getHeadTextureOptional(stack).ifPresent(texture -> ctx.getSource().sendFeedback(Text.of(texture)));
+					ItemUtils.getHeadTextureOptional(stack).ifPresent(texture -> ctx.getSource().sendFeedback(Component.nullToEmpty(texture)));
 				}
 				id++;
 			}
@@ -169,7 +169,7 @@ public final class DeveloperManager {
 	private LiteralArgumentBuilder<FabricClientCommandSource> dumpSoundCommand() {
 		return ClientCommandManager.literal("dumpSound").executes(ctx -> {
 			dumpSound = !dumpSound;
-			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Text.literal("Dump sound: " + dumpSound)));
+			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("Dump sound: " + dumpSound)));
 			return Command.SINGLE_SUCCESS;
 		});
 	}
@@ -179,9 +179,9 @@ public final class DeveloperManager {
 			String str = CaribouStonks.core().getHypixelDataSource().getElection() != null
 					? CaribouStonks.core().getHypixelDataSource().getElection().toString()
 					: "NULL";
-			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Text.literal("--")));
-			ctx.getSource().sendFeedback(Text.literal(str));
-			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Text.literal("--")));
+			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("--")));
+			ctx.getSource().sendFeedback(Component.literal(str));
+			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("--")));
 			return Command.SINGLE_SUCCESS;
 		});
 	}

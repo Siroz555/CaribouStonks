@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -133,7 +133,7 @@ public final class HypixelDataSource {
 	 * Returns an {@link ItemStack} that corresponds to the ID of the specified SkyBlock item.
 	 * <p>
 	 * This correspondence depends on whether the SkyBlock item is stored internally, with a “material” returned
-	 * by Hypixel's SkyBlock API, and is mapped with an ID from {@link net.minecraft.registry.Registries#ITEM}.
+	 * by Hypixel's SkyBlock API, and is mapped with an ID from {@link net.minecraft.core.registries.BuiltInRegistries#ITEM}.
 	 * <p>
 	 * If the specified item ID is not recognized in the list of registered SkyBlock items,
 	 * <b>OR</b> if it is impossible to retrieve the list of SkyBlock items / retrieve the mapping according to
@@ -146,14 +146,14 @@ public final class HypixelDataSource {
 	 * which is based <b>arbitrarily by Hypixel</b> and according to version <b>1.8</b>.
 	 * To do this, a mapping is performed upstream that defines {@code “material”: ID}.
 	 * For example: {@code “SKULL_ITEM”: 1156}.
-	 * “SKULL_ITEM” comes from Hypixel, and “1156” is the ID of {@link net.minecraft.registry.Registries#ITEM}.
+	 * “SKULL_ITEM” comes from Hypixel, and “1156” is the ID of {@link net.minecraft.core.registries.BuiltInRegistries#ITEM}.
 	 *
 	 * @param skyBlockItemId the ID of the SkyBlock item to check for
 	 * @return an {@link ItemStack} corresponding to the ID of the specified SkyBlock item.
 	 */
 	public @NotNull ItemStack getItemStack(@NotNull String skyBlockItemId) {
 		ItemStack fallback = new ItemStack(Items.BARRIER, 1);
-		fallback.set(DataComponentTypes.CUSTOM_NAME, Text.of(skyBlockItemId));
+		fallback.set(DataComponents.CUSTOM_NAME, Component.nullToEmpty(skyBlockItemId));
 
 		if (modDataSource.isItemsMappingError()) {
 			return fallback;
@@ -182,7 +182,7 @@ public final class HypixelDataSource {
 				itemStack = ItemUtils.createSkull(skyBlockItem.skullTexture().get());
 			}
 
-			itemStack.set(DataComponentTypes.CUSTOM_NAME, Text.of(skyBlockItemId));
+			itemStack.set(DataComponents.CUSTOM_NAME, Component.nullToEmpty(skyBlockItemId));
 
 			return itemStack;
 		} catch (Throwable ex) {
@@ -233,15 +233,15 @@ public final class HypixelDataSource {
 	@Unmodifiable
 	public List<SkyBlockItemData> getSkyBlockItems() throws HypixelDataException {
 		if (modDataSource.isItemsMappingError()) {
-			throw new HypixelDataException(Text.of("Unable to map SkyBlock Items into Minecraft."));
+			throw new HypixelDataException(Component.nullToEmpty("Unable to map SkyBlock Items into Minecraft."));
 		}
 
 		if (!itemsFetcher.isLastFetchSuccessful()) {
-			throw new HypixelDataException(Text.of("Unable to fetch SkyBlock Items from Hypixel API."));
+			throw new HypixelDataException(Component.nullToEmpty("Unable to fetch SkyBlock Items from Hypixel API."));
 		}
 
 		if (itemsFetcher.getSkyBlockItemsSnapshot().isEmpty()) {
-			throw new HypixelDataException(Text.of("No SkyBlock Items is registered."));
+			throw new HypixelDataException(Component.nullToEmpty("No SkyBlock Items is registered."));
 		}
 
 		return new ArrayList<>(itemsFetcher.getSkyBlockItemsSnapshot().values());

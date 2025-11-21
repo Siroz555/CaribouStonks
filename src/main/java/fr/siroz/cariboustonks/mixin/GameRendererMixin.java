@@ -5,8 +5,8 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.feature.vanilla.ZoomFeature;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,7 +20,7 @@ public abstract class GameRendererMixin {
 
 	@Shadow
 	@Final
-	private MinecraftClient client;
+	private Minecraft minecraft;
 
 	@Unique
 	private boolean smoothCamera = false;
@@ -38,21 +38,21 @@ public abstract class GameRendererMixin {
 		if (zoomFeature.isZooming()) {
 			if (!smoothCamera) {
 				smoothCamera = true;
-				client.options.smoothCameraEnabled = true;
+				minecraft.options.smoothCamera = true;
 			}
 
 			return (float) (fov * zoomFeature.getCurrentZoomMultiplier());
 
 		} else if (smoothCamera) {
 			smoothCamera = false;
-			client.options.smoothCameraEnabled = false;
+			minecraft.options.smoothCamera = false;
 			zoomFeature.resetZoomMultiplier();
 		}
 
 		return fov;
 	}
 
-	@Inject(method = "renderBlur", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/PostEffectProcessor;render(Lnet/minecraft/client/gl/Framebuffer;Lnet/minecraft/client/util/ObjectAllocator;)V", shift = At.Shift.AFTER))
+	@Inject(method = "processBlurEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/PostChain;process(Lcom/mojang/blaze3d/pipeline/RenderTarget;Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;)V", shift = At.Shift.AFTER))
 	private void cariboustonks$onBlurRendered(CallbackInfo ci) {
 		GuiRenderer.disableBlurScissor();
 	}

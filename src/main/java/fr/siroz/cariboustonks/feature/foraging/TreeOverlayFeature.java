@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,8 +35,8 @@ public class TreeOverlayFeature extends Feature {
 			"FIGSTONE_AXE"
 	);
 
-	private ArmorStandEntity currentTreeInfo = null;
-	private Text currentInfo = null;
+	private ArmorStand currentTreeInfo = null;
+	private Component currentInfo = null;
 
 	public TreeOverlayFeature() {
 		TickScheduler.getInstance().runRepeating(this::update, 1, TimeUnit.SECONDS);
@@ -56,7 +56,7 @@ public class TreeOverlayFeature extends Feature {
 	}
 
 	private void update() {
-		if (CLIENT.player == null || CLIENT.world == null) return;
+		if (CLIENT.player == null || CLIENT.level == null) return;
 		if (!isEnabled()) return;
 
 		ItemStack heldItem = InventoryUtils.getMainHandItem();
@@ -72,7 +72,7 @@ public class TreeOverlayFeature extends Feature {
 		if (currentTreeInfo == null) {
 			currentTreeInfo = findClosestTreeInfoInRange(CLIENT.player).orElse(null);
 		} else {
-			Optional<ArmorStandEntity> newTreeInfo = findClosestTreeInfoInRange(CLIENT.player);
+			Optional<ArmorStand> newTreeInfo = findClosestTreeInfoInRange(CLIENT.player);
 			if (newTreeInfo.isEmpty()) {
 				reset();
 			}
@@ -84,7 +84,7 @@ public class TreeOverlayFeature extends Feature {
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
-	private void onArmorstandUpdate(@NotNull ArmorStandEntity entity, boolean b) {
+	private void onArmorstandUpdate(@NotNull ArmorStand entity, boolean b) {
 		if (!isEnabled()) return;
 		if (currentTreeInfo == null) return;
 
@@ -100,20 +100,20 @@ public class TreeOverlayFeature extends Feature {
 		currentTreeInfo = null;
 	}
 
-	private Optional<ArmorStandEntity> findClosestTreeInfoInRange(@Nullable Entity entity) {
-		if (CLIENT.world == null || CLIENT.player == null || entity == null) {
+	private Optional<ArmorStand> findClosestTreeInfoInRange(@Nullable Entity entity) {
+		if (CLIENT.level == null || CLIENT.player == null || entity == null) {
 			return Optional.empty();
 		}
 
-		List<ArmorStandEntity> armorStands = CLIENT.world.getEntitiesByClass(
-				ArmorStandEntity.class,
-				entity.getBoundingBox().expand(DISTANCE_TO_TREE_INFO_IN_BLOCKS),
+		List<ArmorStand> armorStands = CLIENT.level.getEntitiesOfClass(
+				ArmorStand.class,
+				entity.getBoundingBox().inflate(DISTANCE_TO_TREE_INFO_IN_BLOCKS),
 				Entity::hasCustomName
 		);
 
-		ArmorStandEntity closestTreeInfoArmorStand = armorStands.stream()
-				.filter(as -> as.getName().getString().contains(CLIENT.getSession().getUsername()))
-				.min(Comparator.comparingDouble(as -> as.squaredDistanceTo(entity)))
+		ArmorStand closestTreeInfoArmorStand = armorStands.stream()
+				.filter(as -> as.getName().getString().contains(CLIENT.getUser().getName()))
+				.min(Comparator.comparingDouble(as -> as.distanceToSqr(entity)))
 				.orElse(null);
 
 		if (closestTreeInfoArmorStand == null) {

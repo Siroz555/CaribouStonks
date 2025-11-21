@@ -3,34 +3,34 @@ package fr.siroz.cariboustonks.screen.keyshortcut;
 import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcut;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.List;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.KeyEvent;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-class KeyShortcutListWidget extends ElementListWidget<KeyShortcutListWidget.KeyShortcutEntry> {
+class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutListWidget.KeyShortcutEntry> {
 
 	private final KeyShortcutScreen parent;
 
 	KeyShortcutListWidget(
-			MinecraftClient client,
-			@NotNull KeyShortcutScreen parent,
-			int width,
-			int height,
-			int y,
-			int itemHeight
+            Minecraft client,
+            @NotNull KeyShortcutScreen parent,
+            int width,
+            int height,
+            int y,
+            int itemHeight
 	) {
 		super(client, width, height, y, itemHeight);
 		this.parent = parent;
@@ -69,53 +69,53 @@ class KeyShortcutListWidget extends ElementListWidget<KeyShortcutListWidget.KeyS
 		}
 	}
 
-	protected class KeyShortcutEntry extends ElementListWidget.Entry<KeyShortcutEntry> {
+	protected class KeyShortcutEntry extends ContainerObjectSelectionList.Entry<KeyShortcutEntry> {
 
 		protected KeyShortcut keyShortcut;
 
-		private final List<ClickableWidget> children;
-		private final TextFieldWidget commandWidget;
-		private final ButtonWidget keyBindWidget;
+		private final List<AbstractWidget> children;
+		private final EditBox commandWidget;
+		private final Button keyBindWidget;
 
 		private boolean waitingForKey = false;
 
 		public KeyShortcutEntry(@NotNull KeyShortcut keyShortcut) {
 			this.keyShortcut = keyShortcut;
 
-			this.commandWidget = new TextFieldWidget(client.textRenderer, width / 2 - 160, 5, 150, 20, Text.literal("Command"));
-			this.commandWidget.setTooltip(Tooltip.of(Text.literal("Example: 'equipment' or '/equipment'")));
-			this.commandWidget.setText(keyShortcut.command());
+			this.commandWidget = new EditBox(minecraft.font, width / 2 - 160, 5, 150, 20, Component.literal("Command"));
+			this.commandWidget.setTooltip(Tooltip.create(Component.literal("Example: 'equipment' or '/equipment'")));
+			this.commandWidget.setValue(keyShortcut.command());
 			this.commandWidget.setMaxLength(48);
 
-			this.keyBindWidget = ButtonWidget.builder(Text.literal("" + keyShortcut.keyCode()), b -> {
+			this.keyBindWidget = Button.builder(Component.literal("" + keyShortcut.keyCode()), b -> {
 				parent.setCurrentEntry(this);
 				waitingForKey = true;
-			}).dimensions(0, 0, 56, 20).build();
+			}).bounds(0, 0, 56, 20).build();
 
 			this.children = List.of(commandWidget, keyBindWidget);
 		}
 
 		public void setKeyCode(int code) {
-			KeyShortcut shortcut = new KeyShortcut(commandWidget.getText(), code);
+			KeyShortcut shortcut = new KeyShortcut(commandWidget.getValue(), code);
 			parent.shortcuts.put(shortcut.command(), shortcut);
 			waitingForKey = false;
 		}
 
 		@Override
-		public List<? extends Selectable> selectableChildren() {
+		public List<? extends NarratableEntry> narratables() {
 			return children;
 		}
 
 		@Override
-		public List<? extends Element> children() {
+		public List<? extends GuiEventListener> children() {
 			return children;
 		}
 
-		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			// Vu que le Widget n'est pas un AlwaysSelectedEntryListWidget, le rendu ne se fait pas.
 			// Et si c'était le cas, la facon de gérer les ElementListWidget-Entry change.
 			// La facon de gérer les screen me rend fou -_-
-			if (getSelectedOrNull() != null && getSelectedOrNull() == this) {
+			if (getSelected() != null && getSelected() == this) {
 				int x1 = this.getX();
 				int x2 = this.getX() + this.getContentWidth();
 				context.fill(x1, this.getY() - 6, x2, this.getY() + this.getHeight() - 4, Colors.GRAY.asInt());
@@ -127,7 +127,7 @@ class KeyShortcutListWidget extends ElementListWidget<KeyShortcutListWidget.KeyS
 			keyBindWidget.active = !waitingForKey;
 
 			int keyCode = parent.shortcuts.values().stream()
-					.filter(shortcut -> shortcut.command().equals(commandWidget.getText()))
+					.filter(shortcut -> shortcut.command().equals(commandWidget.getValue()))
 					.map(KeyShortcut::keyCode)
 					.findFirst()
 					.orElse(-1);
@@ -139,25 +139,25 @@ class KeyShortcutListWidget extends ElementListWidget<KeyShortcutListWidget.KeyS
 				label = "?";
 			} else if (keyCode <= -2000) {
 				int mouseButton = -2000 - keyCode;
-				label = InputUtil.Type.MOUSE.createFromCode(mouseButton).getLocalizedText().getString();
+				label = InputConstants.Type.MOUSE.getOrCreate(mouseButton).getDisplayName().getString();
 			} else {
-				label = InputUtil.fromKeyCode(new KeyInput(keyCode, 0, 0)).getLocalizedText().getString();
+				label = InputConstants.getKey(new KeyEvent(keyCode, 0, 0)).getDisplayName().getString();
 			}
 
 			boolean duplicate = keyCode != -1 && parent.shortcuts.values().stream()
 					.map(KeyShortcut::keyCode)
 					.filter(c -> c == keyCode).count() > 1;
 
-			Text message = duplicate ? Text.literal(label).formatted(Formatting.RED) : Text.literal(label);
+			Component message = duplicate ? Component.literal(label).withStyle(ChatFormatting.RED) : Component.literal(label);
 			keyBindWidget.setMessage(message);
 
-			for (ClickableWidget child : children) {
+			for (AbstractWidget child : children) {
 				child.render(context, mouseX, mouseY, deltaTicks);
 			}
 		}
 
 		@Override
-		public boolean mouseClicked(Click click, boolean doubled) {
+		public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
 			if (keyBindWidget.mouseClicked(click, doubled)) {
 				return true;
 			}

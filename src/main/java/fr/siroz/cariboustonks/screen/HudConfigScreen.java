@@ -7,11 +7,11 @@ import fr.siroz.cariboustonks.manager.hud.HudManager;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.text.Text;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +28,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	private Hud selected = null;
 
 	private HudConfigScreen(@Nullable Screen parent) {
-		super(Text.of("HUD Config Screen"));
+		super(Component.nullToEmpty("HUD Config Screen"));
 		this.hudList = CaribouStonks.managers().getManager(HudManager.class).getHudList();
 		this.parent = parent;
 	}
@@ -39,33 +39,33 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onRender(DrawContext context, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
 		super.onRender(context, mouseX, mouseY, delta);
 		renderInformations(context);
 		renderElements(context);
 	}
 
-	private void renderInformations(@NotNull DrawContext context) {
-		int baseY = textRenderer.fontHeight * 8;
-		int lineSpacing = textRenderer.fontHeight + 4;
+	private void renderInformations(@NotNull GuiGraphics context) {
+		int baseY = font.lineHeight * 8;
+		int lineSpacing = font.lineHeight + 4;
 		int y = baseY;
-		context.drawCenteredTextWithShadow(textRenderer,
+		context.drawCenteredString(font,
 				"LEFT-CLICK to select an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
-		context.drawCenteredTextWithShadow(textRenderer,
+		context.drawCenteredString(font,
 				"RIGHT-CLICK to unselect an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
-		context.drawCenteredTextWithShadow(textRenderer,
+		context.drawCenteredString(font,
 				"Press +/- to scale an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
-		context.drawCenteredTextWithShadow(textRenderer,
+		context.drawCenteredString(font,
 				"Press R to reset an HUD's position & scale", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
-		context.drawCenteredTextWithShadow(textRenderer,
+		context.drawCenteredString(font,
 				"Press TAB to cycle between HUDs", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 	}
 
-	private void renderElements(@NotNull DrawContext context) {
+	private void renderElements(@NotNull GuiGraphics context) {
 		for (Hud hud : hudList) {
 			hud.renderScreen(context);
 		}
@@ -88,7 +88,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public boolean onMouseClicked(Click click, boolean doubled) {
+	public boolean onMouseClicked(MouseButtonEvent click, boolean doubled) {
 		switch (click.button()) {
 			// Select
 			case GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
@@ -116,7 +116,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public boolean mouseDragged(Click click, double offsetX, double offsetY) {
+	public boolean mouseDragged(MouseButtonEvent click, double offsetX, double offsetY) {
 		if (selected != null && click.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
 			selected.setX((int) Math.clamp(click.x() - (selected.width() >> 1), 0, this.width - selected.width()));
 			selected.setY((int) Math.clamp(click.y() - (selected.height() >> 1), 0, this.height - selected.height()));
@@ -127,12 +127,12 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 
 	@Override
 	@SuppressWarnings("checkstyle:CyclomaticComplexity")
-	public boolean keyPressed(KeyInput input) {
-		switch (input.getKeycode()) {
+	public boolean keyPressed(KeyEvent input) {
+		switch (input.input()) {
 			// Scale up
 			case GLFW.GLFW_KEY_EQUAL, GLFW.GLFW_KEY_KP_ADD -> {
 				// Pour '=' il faut Maj (AZERTY/+, sinon ignore), et pour KP_ADD jamais besoin de shift
-				if (selected != null && (input.getKeycode() != GLFW.GLFW_KEY_EQUAL || (input.modifiers() & GLFW.GLFW_MOD_SHIFT) != 0)) {
+				if (selected != null && (input.input() != GLFW.GLFW_KEY_EQUAL || (input.modifiers() & GLFW.GLFW_MOD_SHIFT) != 0)) {
 					selected.setScale(selected.scale() + 0.1f);
 					return true;
 				}
@@ -140,7 +140,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			// Scale down
 			case GLFW.GLFW_KEY_MINUS, GLFW.GLFW_KEY_KP_SUBTRACT -> {
 				// Pour '-' il faut Maj (AZERTY/+, sinon ignore), et pour KP_SUBTRACT jamais besoin de shift
-				if (selected != null && (input.getKeycode() != GLFW.GLFW_KEY_MINUS || (input.modifiers() & GLFW.GLFW_MOD_SHIFT) != 0)) {
+				if (selected != null && (input.input() != GLFW.GLFW_KEY_MINUS || (input.modifiers() & GLFW.GLFW_MOD_SHIFT) != 0)) {
 					selected.setScale(selected.scale() - 0.1f);
 					return true;
 				}
@@ -174,7 +174,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onClose() {
+	public void close() {
 		boolean changed = false;
 		for (Hud hud : hudList) {
 			if (hud.apply()) {
@@ -186,7 +186,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			ConfigManager.saveConfig();
 		}
 
-		assert client != null;
-		client.setScreen(parent);
+		assert minecraft != null;
+		minecraft.setScreen(parent);
 	}
 }

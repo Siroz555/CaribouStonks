@@ -8,22 +8,22 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.VanillaConfig;
 import fr.siroz.cariboustonks.screen.HeldItemViewConfigScreen;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.item.HeldItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(HeldItemRenderer.class)
-public abstract class HeldItemRendererMixin {
+@Mixin(ItemInHandRenderer.class) // HeldItemRenderer
+public abstract class ItemInHandRendererMixin {
 
-	@Inject(method = "renderFirstPersonItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemDisplayContext;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;I)V"))
-	private void cariboustonks$renderCustomHeldItem(CallbackInfo ci, @Local(argsOnly = true) Hand hand, @Local(argsOnly = true) MatrixStack matrices) {
+	@Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"))
+	private void cariboustonks$renderCustomHeldItem(CallbackInfo ci, @Local(argsOnly = true) InteractionHand hand, @Local(argsOnly = true) PoseStack matrices) {
 		if (ConfigManager.getConfig().vanilla.itemModelCustomization.enabled) {
 
 			VanillaConfig.ItemModelCustomization.CustomHand config = switch (hand) {
@@ -48,19 +48,19 @@ public abstract class HeldItemRendererMixin {
 		}
 	}
 
-	@ModifyExpressionValue(method = "updateHeldItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getHandEquippingProgress(F)F"))
+	@ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemSwapScale(F)F"))
 	private float cariboustonks$changeAnimationProgress(float original) {
 		return ConfigManager.getConfig().vanilla.itemModelCustomization.enabled ? 1f : original;
 	}
 
-	@Inject(method = "renderFirstPersonItem" , at = @At("HEAD"))
-	private void cariboustonks$changeHeldItemForConfigScreen(CallbackInfo ci, @Local(argsOnly = true) LocalRef<Hand> hand, @Local(argsOnly = true, ordinal = 2) LocalFloatRef swingProgress, @Local(argsOnly = true) LocalRef<ItemStack> stack, @Local(argsOnly = true, ordinal = 3) LocalFloatRef equipProgress, @Local(argsOnly = true) LocalIntRef light) {
-		if (MinecraftClient.getInstance().currentScreen instanceof HeldItemViewConfigScreen heldItemViewConfigScreen) {
+	@Inject(method = "renderArmWithItem", at = @At("HEAD"))
+	private void cariboustonks$changeHeldItemForConfigScreen(CallbackInfo ci, @Local(argsOnly = true) LocalRef<InteractionHand> hand, @Local(argsOnly = true, ordinal = 2) LocalFloatRef swingProgress, @Local(argsOnly = true) LocalRef<ItemStack> stack, @Local(argsOnly = true, ordinal = 3) LocalFloatRef equipProgress, @Local(argsOnly = true) LocalIntRef light) {
+		if (Minecraft.getInstance().screen instanceof HeldItemViewConfigScreen heldItemViewConfigScreen) {
 			hand.set(heldItemViewConfigScreen.getHand());
 			swingProgress.set(0f);
 			stack.set(heldItemViewConfigScreen.getPreviewItem());
 			equipProgress.set(0f);
-			light.set(LightmapTextureManager.MAX_LIGHT_COORDINATE);
+			light.set(LightTexture.FULL_BRIGHT);
 		}
 	}
 }

@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Formatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,9 +34,9 @@ public record Gemstones(
 
 	public static final Gemstones EMPTY = new Gemstones(List.of(), List.of());
 
-	public static Gemstones ofNbt(@NotNull NbtCompound customData) {
+	public static Gemstones ofNbt(@NotNull CompoundTag customData) {
 		try {
-			NbtCompound gemData = customData.getCompoundOrEmpty("gems");
+			CompoundTag gemData = customData.getCompoundOrEmpty("gems");
 			if (gemData.isEmpty()) {
 				return EMPTY;
 			}
@@ -179,28 +179,28 @@ public record Gemstones(
 	 * Represents the {@code type} of a {@link GemstoneApplied}.
 	 */
 	public enum GemstoneType {
-		RUBY("Ruby", "❤", Formatting.RED),
-		AMBER("Amber", "⸕", Formatting.GOLD),
-		TOPAZ("Topaz", "✧", Formatting.YELLOW),
-		JADE("Jade", "☘", Formatting.GREEN),
-		SAPPHIRE("Sapphire", "✎", Formatting.BLUE),
-		AMETHYST("Amethyst", "❈", Formatting.DARK_PURPLE),
-		JASPER("Jasper", "❁", Formatting.LIGHT_PURPLE),
-		OPAL("Opal", "❂", Formatting.WHITE),
-		AQUAMARINE("Aquamarine", "☂", Formatting.AQUA),
-		CITRINE("Citrine", "☘", Formatting.DARK_RED),
-		ONYX("Onyx", "☠", Formatting.DARK_GRAY),
-		PERIDOT("Peridot", "☘", Formatting.DARK_GREEN),
+		RUBY("Ruby", "❤", ChatFormatting.RED),
+		AMBER("Amber", "⸕", ChatFormatting.GOLD),
+		TOPAZ("Topaz", "✧", ChatFormatting.YELLOW),
+		JADE("Jade", "☘", ChatFormatting.GREEN),
+		SAPPHIRE("Sapphire", "✎", ChatFormatting.BLUE),
+		AMETHYST("Amethyst", "❈", ChatFormatting.DARK_PURPLE),
+		JASPER("Jasper", "❁", ChatFormatting.LIGHT_PURPLE),
+		OPAL("Opal", "❂", ChatFormatting.WHITE),
+		AQUAMARINE("Aquamarine", "☂", ChatFormatting.AQUA),
+		CITRINE("Citrine", "☘", ChatFormatting.DARK_RED),
+		ONYX("Onyx", "☠", ChatFormatting.DARK_GRAY),
+		PERIDOT("Peridot", "☘", ChatFormatting.DARK_GREEN),
 		;
 
 		private final String displayName;
 		private final String statIcon;
-		private final Formatting color;
+		private final ChatFormatting color;
 
 		private static final Map<String, GemstoneType> BY_NAME = Arrays.stream(values())
 				.collect(Collectors.toUnmodifiableMap(GemstoneType::name, Function.identity()));
 
-		GemstoneType(String displayName, String statIcon, Formatting color) {
+		GemstoneType(String displayName, String statIcon, ChatFormatting color) {
 			this.displayName = displayName;
 			this.statIcon = statIcon;
 			this.color = color;
@@ -218,7 +218,7 @@ public record Gemstones(
 			return statIcon;
 		}
 
-		public Formatting getColor() {
+		public ChatFormatting getColor() {
 			return color;
 		}
 	}
@@ -227,20 +227,20 @@ public record Gemstones(
 	 * Represents the {@code quality} of a {@link GemstoneApplied}.
 	 */
 	public enum GemstoneQuality {
-		ROUGH("Rough", Formatting.WHITE),
-		FLAWED("Flawed", Formatting.GREEN),
-		FINE("Fine", Formatting.BLUE),
-		FLAWLESS("Flawless", Formatting.DARK_PURPLE),
-		PERFECT("Perfect", Formatting.GOLD),
+		ROUGH("Rough", ChatFormatting.WHITE),
+		FLAWED("Flawed", ChatFormatting.GREEN),
+		FINE("Fine", ChatFormatting.BLUE),
+		FLAWLESS("Flawless", ChatFormatting.DARK_PURPLE),
+		PERFECT("Perfect", ChatFormatting.GOLD),
 		;
 
 		private final String displayName;
-		private final Formatting color;
+		private final ChatFormatting color;
 
 		private static final Map<String, GemstoneQuality> BY_NAME = Arrays.stream(values())
 				.collect(Collectors.toUnmodifiableMap(GemstoneQuality::name, Function.identity()));
 
-		GemstoneQuality(String displayName, Formatting color) {
+		GemstoneQuality(String displayName, ChatFormatting color) {
 			this.displayName = displayName;
 			this.color = color;
 		}
@@ -254,7 +254,7 @@ public record Gemstones(
 			return displayName;
 		}
 
-		public Formatting getColor() {
+		public ChatFormatting getColor() {
 			return color;
 		}
 	}

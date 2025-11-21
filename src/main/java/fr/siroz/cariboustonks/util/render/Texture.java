@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.util.render;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 
 public enum Texture {
-    NETHERITE_SWORD(Identifier.ofVanilla("textures/item/netherite_sword.png")),
+    NETHERITE_SWORD(Identifier.withDefaultNamespace("textures/item/netherite_sword.png")),
     ;
 
     private final Identifier identifier;

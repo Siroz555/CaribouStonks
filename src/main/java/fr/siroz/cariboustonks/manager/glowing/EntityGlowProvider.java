@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.manager.glowing;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 /**

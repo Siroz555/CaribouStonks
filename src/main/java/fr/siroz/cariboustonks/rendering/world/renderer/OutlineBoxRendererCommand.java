@@ -5,10 +5,10 @@ import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.OutlineBoxRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.renderer.RenderPipelines;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import com.mojang.blaze3d.vertex.PoseStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -23,7 +23,7 @@ public final class OutlineBoxRendererCommand implements RendererCommand<OutlineB
 		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline, state.lineWidth());
 
 		Matrix4f matrix4f = new Matrix4f()
-				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());
+				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());
 
 //		VertexRendering.drawBox(matrices.peek(), buffer,
 //				state.box(),
@@ -43,31 +43,31 @@ public final class OutlineBoxRendererCommand implements RendererCommand<OutlineB
 		float blue = colorComponents[2];
 		float alpha = state.color().getAlpha();
 
-		MatrixStack.Entry entry = RenderUtils.matrixToStack(matrix4f).peek();
+		PoseStack.Pose entry = RenderUtils.matrixToStack(matrix4f).last();
 
-		buffer.vertex(entry, minX, minY, minZ).color(red, green, blue, alpha).normal(entry, 1.0F, 0.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, maxX, minY, minZ).color(red, green, blue, alpha).normal(entry, 1.0F, 0.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, minX, minY, minZ).color(red, green, blue, alpha).normal(entry, 0.0F, 1.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, minX, maxY, minZ).color(red, green, blue, alpha).normal(entry, 0.0F, 1.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, minX, minY, minZ).color(red, green, blue, alpha).normal(entry, 0.0F, 0.0F, 1.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, minX, minY, maxZ).color(red, green, blue, alpha).normal(entry, 0.0F, 0.0F, 1.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, maxX, minY, minZ).color(red, green, blue, alpha).normal(entry, 0.0F, 1.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, maxX, maxY, minZ).color(red, green, blue, alpha).normal(entry, 0.0F, 1.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, maxX, maxY, minZ).color(red, green, blue, alpha).normal(entry, -1.0F, 0.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, minX, maxY, minZ).color(red, green, blue, alpha).normal(entry, -1.0F, 0.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, minX, maxY, minZ).color(red, green, blue, alpha).normal(entry, 0.0F, 0.0F, 1.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, minX, maxY, maxZ).color(red, green, blue, alpha).normal(entry, 0.0F, 0.0F, 1.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, minX, maxY, maxZ).color(red, green, blue, alpha).normal(entry, 0.0F, -1.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, minX, minY, maxZ).color(red, green, blue, alpha).normal(entry, 0.0F, -1.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, minX, minY, maxZ).color(red, green, blue, alpha).normal(entry, 1.0F, 0.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, maxX, minY, maxZ).color(red, green, blue, alpha).normal(entry, 1.0F, 0.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, maxX, minY, maxZ).color(red, green, blue, alpha).normal(entry, 0.0F, 0.0F, -1.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, maxX, minY, minZ).color(red, green, blue, alpha).normal(entry, 0.0F, 0.0F, -1.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, minX, maxY, maxZ).color(red, green, blue, alpha).normal(entry, 1.0F, 0.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, maxX, maxY, maxZ).color(red, green, blue, alpha).normal(entry, 1.0F, 0.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, maxX, minY, maxZ).color(red, green, blue, alpha).normal(entry, 0.0F, 1.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, maxX, maxY, maxZ).color(red, green, blue, alpha).normal(entry, 0.0F, 1.0F, 0.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, maxX, maxY, minZ).color(red, green, blue, alpha).normal(entry, 0.0F, 0.0F, 1.0F).lineWidth(state.lineWidth());
-		buffer.vertex(entry, maxX, maxY, maxZ).color(red, green, blue, alpha).normal(entry, 0.0F, 0.0F, 1.0F).lineWidth(state.lineWidth());
+		buffer.addVertex(entry, minX, minY, minZ).setColor(red, green, blue, alpha).setNormal(entry, 1.0F, 0.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, maxX, minY, minZ).setColor(red, green, blue, alpha).setNormal(entry, 1.0F, 0.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, minX, minY, minZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 1.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, minX, maxY, minZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 1.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, minX, minY, minZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 0.0F, 1.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, minX, minY, maxZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 0.0F, 1.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, maxX, minY, minZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 1.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, maxX, maxY, minZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 1.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, maxX, maxY, minZ).setColor(red, green, blue, alpha).setNormal(entry, -1.0F, 0.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, minX, maxY, minZ).setColor(red, green, blue, alpha).setNormal(entry, -1.0F, 0.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, minX, maxY, minZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 0.0F, 1.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, minX, maxY, maxZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 0.0F, 1.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, minX, maxY, maxZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, -1.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, minX, minY, maxZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, -1.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, minX, minY, maxZ).setColor(red, green, blue, alpha).setNormal(entry, 1.0F, 0.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, maxX, minY, maxZ).setColor(red, green, blue, alpha).setNormal(entry, 1.0F, 0.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, maxX, minY, maxZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 0.0F, -1.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, maxX, minY, minZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 0.0F, -1.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, minX, maxY, maxZ).setColor(red, green, blue, alpha).setNormal(entry, 1.0F, 0.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, maxX, maxY, maxZ).setColor(red, green, blue, alpha).setNormal(entry, 1.0F, 0.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, maxX, minY, maxZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 1.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, maxX, maxY, maxZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 1.0F, 0.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, maxX, maxY, minZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 0.0F, 1.0F).setLineWidth(state.lineWidth());
+		buffer.addVertex(entry, maxX, maxY, maxZ).setColor(red, green, blue, alpha).setNormal(entry, 0.0F, 0.0F, 1.0F).setLineWidth(state.lineWidth());
 	}
 }

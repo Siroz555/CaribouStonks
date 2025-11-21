@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.util.colors;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,12 +63,12 @@ public final class ColorUtils {
 		return Color.getHSBColor(hueComponent, saturationColor, brightnessColor).getRGB();
 	}
 
-	public static Color getAwtColor(@NotNull Formatting formatting) {
-		if (formatting.getColorValue() == null) {
+	public static Color getAwtColor(@NotNull ChatFormatting formatting) {
+		if (formatting.getColor() == null) {
 			return Color.WHITE;
 		}
 
-		float[] components = getFloatComponents(formatting.getColorValue());
+		float[] components = getFloatComponents(formatting.getColor());
 		return new Color(components[0], components[1], components[2]);
 	}
 }

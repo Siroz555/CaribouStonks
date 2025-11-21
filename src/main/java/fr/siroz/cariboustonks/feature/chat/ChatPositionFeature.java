@@ -17,8 +17,8 @@ import fr.siroz.cariboustonks.util.cooldown.Cooldown;
 import fr.siroz.cariboustonks.util.position.Position;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -65,7 +65,7 @@ public class ChatPositionFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onMessage(Text text) {
+	private void onMessage(Component text) {
 		if (!isEnabled()) {
 			return;
 		}
@@ -107,7 +107,7 @@ public class ChatPositionFeature extends Feature {
 			Client.sendChatMessage(message);
 		} else {
 			source.sendFeedback(CaribouStonks.prefix().get()
-					.append(Text.literal("Command on cooldown!").formatted(Formatting.RED)));
+					.append(Component.literal("Command on cooldown!").withStyle(ChatFormatting.RED)));
 		}
 
 		return 1;
@@ -128,9 +128,9 @@ public class ChatPositionFeature extends Feature {
 			int showTime = config.showTime;
 			Color color = config.rainbow ? Colors.RAINBOW : Color.fromInt(config.color.getRGB());
 
-			Text waypointName = playerName.isEmpty()
-					? Text.literal("- ? -").formatted(Formatting.YELLOW, Formatting.BOLD)
-					: Text.literal(playerName).formatted(Formatting.AQUA);
+			Component waypointName = playerName.isEmpty()
+					? Component.literal("- ? -").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD)
+					: Component.literal(playerName).withStyle(ChatFormatting.AQUA);
 
 			Waypoint.builder(position)
 					.color(color)

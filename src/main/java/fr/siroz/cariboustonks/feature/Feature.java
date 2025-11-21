@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.manager.Component;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -15,7 +15,7 @@ public abstract class Feature {
 	/**
 	 * Shared Minecraft client instance for all features.
 	 */
-	protected static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	protected static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private final Map<Class<? extends Component>, Component> components = new HashMap<>();
 

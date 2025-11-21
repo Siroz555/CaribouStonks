@@ -20,16 +20,16 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import java.util.regex.Pattern;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemValueTooltipFeature extends Feature implements ContainerMatcherTrait, ContainerTooltipAppender {
 
-	private final Cache<String, ItemValueResult> cache = CacheBuilder.newBuilder()
+	private final Cache<@NotNull String, @NotNull ItemValueResult> cache = CacheBuilder.newBuilder()
 			.maximumSize(555)
 			.expireAfterWrite(2, TimeUnit.MINUTES)
 			.build();
@@ -55,7 +55,7 @@ public class ItemValueTooltipFeature extends Feature implements ContainerMatcher
 	}
 
 	@Override
-	public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Text> lines) {
+	public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
 		String uuid = SkyBlockAPI.getSkyBlockItemUuid(item);
 		if (uuid.isEmpty()) {
 			return;
@@ -95,18 +95,18 @@ public class ItemValueTooltipFeature extends Feature implements ContainerMatcher
 		return priority;
 	}
 
-	private void displayItemValue(@NotNull List<Text> lines, @Nullable ItemValueResult result) {
+	private void displayItemValue(@NotNull List<Component> lines, @Nullable ItemValueResult result) {
 		if (result == null || result.calculations().isEmpty()) {
 			return;
 		}
 
 		double price = result.price();
 		if (price > 0) {
-			lines.add(Text.literal("Est. Item Value: ").formatted(Formatting.YELLOW)
-					.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(price)).formatted(Formatting.GOLD))
-					.append(Text.literal(" (").formatted(Formatting.GRAY))
-					.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(price)).formatted(Formatting.GOLD))
-					.append(Text.literal(")").formatted(Formatting.GRAY))
+			lines.add(Component.literal("Est. Item Value: ").withStyle(ChatFormatting.YELLOW)
+					.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(price)).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+					.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(price)).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 			);
 		}
 	}

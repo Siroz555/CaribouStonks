@@ -8,19 +8,19 @@ import fr.siroz.cariboustonks.feature.Feature;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.resources.Identifier;
 
 public class MuteVanillaSoundFeature extends Feature {
 
 	private static final Map<Identifier, BooleanSupplier> EXACT_SOUND_RULES = Map.of(
-			SoundEvents.ENTITY_LIGHTNING_BOLT_IMPACT.id(), () -> ConfigManager.getConfig().vanilla.sound.muteLightning,
-			SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER.id(), () -> ConfigManager.getConfig().vanilla.sound.muteLightning,
-			SoundEvents.ENTITY_PLAYER_SMALL_FALL.id(), () -> ConfigManager.getConfig().vanilla.sound.mutePlayerFall,
-			SoundEvents.ENTITY_PLAYER_BIG_FALL.id(), () -> ConfigManager.getConfig().vanilla.sound.mutePlayerFall,
-			SoundEvents.ENTITY_ENDERMAN_SCREAM.id(), () -> ConfigManager.getConfig().vanilla.sound.muteEnderman,
-			SoundEvents.ENTITY_ENDERMAN_STARE.id(), () -> ConfigManager.getConfig().vanilla.sound.muteEnderman
+			SoundEvents.LIGHTNING_BOLT_IMPACT.location(), () -> ConfigManager.getConfig().vanilla.sound.muteLightning,
+			SoundEvents.LIGHTNING_BOLT_THUNDER.location(), () -> ConfigManager.getConfig().vanilla.sound.muteLightning,
+			SoundEvents.PLAYER_SMALL_FALL.location(), () -> ConfigManager.getConfig().vanilla.sound.mutePlayerFall,
+			SoundEvents.PLAYER_BIG_FALL.location(), () -> ConfigManager.getConfig().vanilla.sound.mutePlayerFall,
+			SoundEvents.ENDERMAN_SCREAM.location(), () -> ConfigManager.getConfig().vanilla.sound.muteEnderman,
+			SoundEvents.ENDERMAN_STARE.location(), () -> ConfigManager.getConfig().vanilla.sound.muteEnderman
 	);
 
 	private static final List<PrefixRule> PREFIX_SOUND_RULES = List.of(
@@ -40,7 +40,7 @@ public class MuteVanillaSoundFeature extends Feature {
 	private boolean allowSound(SoundEvent soundEvent) {
 		if (!isEnabled()) return true;
 
-		Identifier id = soundEvent.id();
+		Identifier id = soundEvent.location();
 
 		BooleanSupplier exact = EXACT_SOUND_RULES.get(id);
 		if (exact != null && exact.getAsBoolean()) {

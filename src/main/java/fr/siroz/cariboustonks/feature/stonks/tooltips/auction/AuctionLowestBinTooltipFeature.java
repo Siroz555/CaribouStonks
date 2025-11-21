@@ -12,10 +12,10 @@ import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
 import fr.siroz.cariboustonks.manager.container.tooltip.ContainerTooltipAppender;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,9 +44,9 @@ public class AuctionLowestBinTooltipFeature extends Feature implements Container
 	}
 
 	@Override
-    public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Text> lines) {
+    public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
         if (genericDataSource.isLowestBinsInUpdate()) {
-            lines.add(Text.literal("Auction is currently updating...").formatted(Formatting.RED));
+            lines.add(Component.literal("Auction is currently updating...").withStyle(ChatFormatting.RED));
             return;
         }
 
@@ -56,7 +56,7 @@ public class AuctionLowestBinTooltipFeature extends Feature implements Container
 
             Optional<Double> lowestBin = genericDataSource.getLowestBin(key);
             if (lowestBin.isEmpty() || lowestBin.get() <= 0) {
-                lines.add(Text.literal("Auction API error.").formatted(Formatting.RED));
+                lines.add(Component.literal("Auction API error.").withStyle(ChatFormatting.RED));
                 return;
             }
 
@@ -69,28 +69,28 @@ public class AuctionLowestBinTooltipFeature extends Feature implements Container
                 case ALL -> {
                     String lowestBinPriceDisplay = StonksUtils.INTEGER_NUMBERS.format(price);
                     String lowestBinPriceShortDisplay = StonksUtils.SHORT_FLOAT_NUMBERS.format(price);
-                    lines.add(Text.literal("Auction Lowest BIN: ").formatted(Formatting.YELLOW)
-                            .append(Text.literal(lowestBinPriceDisplay + " Coins").formatted(Formatting.GOLD))
-                            .append(Text.literal(" (").formatted(Formatting.GRAY))
-                            .append(Text.literal(lowestBinPriceShortDisplay).formatted(Formatting.GOLD))
-                            .append(Text.literal(")").formatted(Formatting.GRAY)));
+                    lines.add(Component.literal("Auction Lowest BIN: ").withStyle(ChatFormatting.YELLOW)
+                            .append(Component.literal(lowestBinPriceDisplay + " Coins").withStyle(ChatFormatting.GOLD))
+                            .append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+                            .append(Component.literal(lowestBinPriceShortDisplay).withStyle(ChatFormatting.GOLD))
+                            .append(Component.literal(")").withStyle(ChatFormatting.GRAY)));
                 }
                 case SHORT -> {
                     String lowestBinPriceShortDisplay = StonksUtils.SHORT_FLOAT_NUMBERS.format(price);
-                    lines.add(Text.literal("Auction Lowest BIN: ").formatted(Formatting.YELLOW)
-                            .append(Text.literal(lowestBinPriceShortDisplay + " Coins").formatted(Formatting.GOLD)));
+                    lines.add(Component.literal("Auction Lowest BIN: ").withStyle(ChatFormatting.YELLOW)
+                            .append(Component.literal(lowestBinPriceShortDisplay + " Coins").withStyle(ChatFormatting.GOLD)));
                 }
                 case FULL -> {
                     String lowestBinPriceDisplay = StonksUtils.INTEGER_NUMBERS.format(price);
-                    lines.add(Text.literal("Auction Lowest BIN: ").formatted(Formatting.YELLOW)
-                            .append(Text.literal(lowestBinPriceDisplay + " Coins").formatted(Formatting.GOLD)));
+                    lines.add(Component.literal("Auction Lowest BIN: ").withStyle(ChatFormatting.YELLOW)
+                            .append(Component.literal(lowestBinPriceDisplay + " Coins").withStyle(ChatFormatting.GOLD)));
                 }
                 case null, default -> {
                 }
             }
 
 			if (!Client.hasShiftDown() && count > 1) {
-				lines.add(Text.literal("[Press SHIFT for x" + count + "]").formatted(Formatting.DARK_GRAY));
+				lines.add(Component.literal("[Press SHIFT for x" + count + "]").withStyle(ChatFormatting.DARK_GRAY));
 			}
         }
     }

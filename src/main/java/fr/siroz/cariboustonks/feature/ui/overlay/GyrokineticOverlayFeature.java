@@ -7,14 +7,14 @@ import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 
 public class GyrokineticOverlayFeature extends Feature {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private static final String GYROKINETIC_ITEM_ID = "GYROKINETIC_WAND";
 	private static final int REACH = 24;
@@ -31,20 +31,20 @@ public class GyrokineticOverlayFeature extends Feature {
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")
 	public void render(WorldRenderer renderer) {
-		if (CLIENT.player == null || CLIENT.world == null || CLIENT.getCameraEntity() == null) return;
+		if (CLIENT.player == null || CLIENT.level == null || CLIENT.getCameraEntity() == null) return;
 		if (!isEnabled()) return;
 
-		String skyBlockId = SkyBlockAPI.getSkyBlockItemId(CLIENT.player.getMainHandStack());
+		String skyBlockId = SkyBlockAPI.getSkyBlockItemId(CLIENT.player.getMainHandItem());
 		if (!GYROKINETIC_ITEM_ID.equals(skyBlockId)) {
 			return;
 		}
 
-		HitResult hitResult = CLIENT.getCameraEntity().raycast(REACH, 1.0F, false);
+		HitResult hitResult = CLIENT.getCameraEntity().pick(REACH, 1.0F, false);
 		if (hitResult.getType() == HitResult.Type.MISS) {
 			return;
 		}
 
-		Vec3d position = hitResult.getPos().subtract(0, 0.1D, 0);
+		Vec3 position = hitResult.getLocation().subtract(0, 0.1D, 0);
 		renderer.submitCircle(position, RADIUS, 16, .015f, Colors.MAGENTA, Direction.Axis.Y, true);
 	}
 }

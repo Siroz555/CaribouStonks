@@ -8,10 +8,10 @@ import fr.siroz.cariboustonks.event.ItemRenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import it.unimi.dsi.fastutil.Pair;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.item.ItemStack;
 
 import java.awt.Color;
 import java.util.List;
@@ -43,14 +43,14 @@ public class TooltipDecoratorFeature extends Feature {
 
 	@EventHandler(event = "ItemRenderEvents.POST_TOOLTIP")
 	private void onRenderTooltip(
-			DrawContext context,
-			ItemStack itemStack,
-			int x, int y,
-			int width, int height,
-			TextRenderer textRenderer,
-			List<TooltipComponent> components
+            GuiGraphics context,
+            ItemStack itemStack,
+            int x, int y,
+            int width, int height,
+            Font textRenderer,
+            List<ClientTooltipComponent> components
 	) {
-		if (CLIENT.player == null || CLIENT.world == null) return;
+		if (CLIENT.player == null || CLIENT.level == null) return;
 		if (!isEnabled()) return;
 		if (itemStack == null || itemStack.isEmpty()) return;
 
@@ -67,8 +67,8 @@ public class TooltipDecoratorFeature extends Feature {
 		}
 	}
 
-	private void drawBorder(DrawContext context, int x, int y, int width, int height, Pair<Integer, Integer> colors) {
-		context.getMatrices().pushMatrix();
+	private void drawBorder(GuiGraphics context, int x, int y, int width, int height, Pair<Integer, Integer> colors) {
+		context.pose().pushMatrix();
 
 		GuiRenderer.submitGradientRect(context,
 				400,
@@ -102,6 +102,6 @@ public class TooltipDecoratorFeature extends Feature {
 				y + height + 3,
 				colors.right(), colors.right());
 
-		context.getMatrices().popMatrix();
+		context.pose().popMatrix();
 	}
 }

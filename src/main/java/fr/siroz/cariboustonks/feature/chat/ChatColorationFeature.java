@@ -6,11 +6,10 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.mixin.accessors.MessageHandlerAccessor;
+import fr.siroz.cariboustonks.mixin.accessors.ChatListenerAccessor;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 
 import java.time.Instant;
 import java.util.regex.Matcher;
@@ -31,7 +30,7 @@ public class ChatColorationFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onMessage(Text message) {
+	private void onMessage(Component message) {
 		if (!isEnabled()) {
 			return;
 		}
@@ -43,8 +42,8 @@ public class ChatColorationFeature extends Feature {
 				return;
 			}
 
-			MutableText newText = message.copy();
-			((MutableText) newText.getSiblings().getLast()).withColor(config.chatPartyColor.getRGB());
+			MutableComponent newText = message.copy();
+			((MutableComponent) newText.getSiblings().getLast()).withColor(config.chatPartyColor.getRGB());
 			sendMessageToBypassEvents(newText);
 
 		} else if (plain.startsWith("Guild >")) { // Guild
@@ -58,18 +57,16 @@ public class ChatColorationFeature extends Feature {
 				return;
 			}
 
-			MutableText newText = message.copy();
-			((MutableText) newText.getSiblings().getLast()).withColor(config.chatGuildColor.getRGB());
+			MutableComponent newText = message.copy();
+			((MutableComponent) newText.getSiblings().getLast()).withColor(config.chatGuildColor.getRGB());
 			sendMessageToBypassEvents(newText);
 		}
 	}
 
-	private void sendMessageToBypassEvents(Text message) {
-		MinecraftClient client = MinecraftClient.getInstance();
-
+	private void sendMessageToBypassEvents(Component message) {
 		// Parce que mon Mixin de ChatEvents est invoké trop tot ?
 		//client.inGameHud.getChatHud().addMessage(message);
-		((MessageHandlerAccessor) client.getMessageHandler()).invokeAddToChatLog(message, Instant.now());
-		client.getNarratorManager().narrateSystemMessage(message);
+		((ChatListenerAccessor) CLIENT.getChatListener()).invokeAddToChatLog(message, Instant.now());
+		CLIENT.getNarrator().saySystemQueued(message);
 	}
 }

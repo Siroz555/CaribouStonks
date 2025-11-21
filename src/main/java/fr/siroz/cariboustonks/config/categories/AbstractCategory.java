@@ -7,18 +7,18 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.KeybindsScreen;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.Nullable;
 
 abstract class AbstractCategory {
 
 	protected static final String SPACE = "\n";
 
-	protected static final Text BETA = Text.literal(" (Beta)").formatted(Formatting.RED);
+	protected static final Component BETA = Component.literal(" (Beta)").withStyle(ChatFormatting.RED);
 
 	protected Config defaults;
     protected Config current;
@@ -31,22 +31,22 @@ abstract class AbstractCategory {
     public abstract ConfigCategory create();
 
 	protected void openScreen(@Nullable Screen screen) {
-		MinecraftClient.getInstance().setScreen(screen);
+		Minecraft.getInstance().setScreen(screen);
 	}
 
 	public ButtonOption shortcutToKeybindsOptions() {
 		return ButtonOption.createBuilder()
-				.name(Text.literal("Edit keybind"))
-				.action((screen, opt) -> MinecraftClient.getInstance()
-						.setScreen(new KeybindsScreen(screen, MinecraftClient.getInstance().options)))
-				.text(Text.literal("Open the Keybinds Options"))
+				.name(Component.literal("Edit keybind"))
+				.action((screen, opt) -> Minecraft.getInstance()
+						.setScreen(new KeyBindsScreen(screen, Minecraft.getInstance().options)))
+				.text(Component.literal("Open the Keybinds Options"))
 				.build();
 	}
 
     public BooleanControllerBuilder createBooleanController(Option<Boolean> opt) {
         return BooleanControllerBuilder.create(opt).formatValue(b -> b
-				? Text.literal("Enabled").formatted(Formatting.GREEN)
-				: Text.literal("Disabled").formatted(Formatting.RED));
+				? Component.literal("Enabled").withStyle(ChatFormatting.GREEN)
+				: Component.literal("Disabled").withStyle(ChatFormatting.RED));
     }
 
 	public BooleanControllerBuilder createYesNoController(Option<Boolean> opt) {
@@ -57,14 +57,14 @@ abstract class AbstractCategory {
 		return IntegerSliderControllerBuilder.create(opt)
 				.range(1, max)
 				.step(1)
-				.formatValue(i -> Text.of(i + " %"));
+				.formatValue(i -> Component.nullToEmpty(i + " %"));
 	}
 
 	public IntegerSliderControllerBuilder createIntegerSecondesController(Option<Integer> opt, int max) {
 		return IntegerSliderControllerBuilder.create(opt)
 				.range(1, max)
 				.step(1)
-				.formatValue(i -> i > 1 ? Text.of(i + " seconds") : Text.of(i + " second"));
+				.formatValue(i -> i > 1 ? Component.nullToEmpty(i + " seconds") : Component.nullToEmpty(i + " second"));
 	}
 
 	@SuppressWarnings("unchecked")

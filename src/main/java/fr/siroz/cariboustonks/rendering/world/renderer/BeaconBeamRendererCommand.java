@@ -2,11 +2,11 @@ package fr.siroz.cariboustonks.rendering.world.renderer;
 
 import fr.siroz.cariboustonks.rendering.world.state.BeaconBeamRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.blockentity.BeaconRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import com.mojang.blaze3d.vertex.PoseStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -14,20 +14,20 @@ public final class BeaconBeamRendererCommand implements RendererCommand<BeaconBe
 
 	@Override
 	public void emit(@NotNull BeaconBeamRenderState state, @NotNull CameraRenderState camera) {
-		double dx = state.pos().getX() - camera.pos.getX();
-		double dy = state.pos().getY() - camera.pos.getY();
-		double dz = state.pos().getZ() - camera.pos.getZ();
+		double dx = state.pos().getX() - camera.pos.x();
+		double dy = state.pos().getY() - camera.pos.y();
+		double dz = state.pos().getZ() - camera.pos.z();
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) dx, (float) dy, (float) dz);
 
-		MatrixStack matrices = RenderUtils.matrixToStack(matrix4f);
-		OrderedRenderCommandQueue commandQueue = MinecraftClient.getInstance().gameRenderer.getEntityRenderCommandQueue();
+		PoseStack matrices = RenderUtils.matrixToStack(matrix4f);
+		SubmitNodeCollector commandQueue = Minecraft.getInstance().gameRenderer.getSubmitNodeStorage();
 
-		BeaconBlockEntityRenderer.renderBeam(
+		BeaconRenderer.submitBeaconBeam(
 				matrices,
 				commandQueue,
-				BeaconBlockEntityRenderer.BEAM_TEXTURE,
+				BeaconRenderer.BEAM_LOCATION,
 				state.scale(), // 1.0f
 				state.beamRotationDegrees(),
 				0,

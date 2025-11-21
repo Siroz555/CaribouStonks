@@ -9,7 +9,7 @@
 
 package fr.siroz.cariboustonks.util.math.bezier;
 
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,16 +35,16 @@ public class ParticlePathPredictor extends BezierFitter {
 	 * derivative, and determines the parameter value using a weighted distance calculation.
 	 * If fitting the curve fails, the result is null.
 	 *
-	 * @return a {@link Vec3d} representing the computed point on the Bézier curve,
+	 * @return a {@link Vec3} representing the computed point on the Bézier curve,
 	 * or null if the curve fitting process could not generate a valid curve.
 	 */
-	public @Nullable Vec3d solve() {
+	public @Nullable Vec3 solve() {
 		BezierCurve curve = this.fit();
 		if (curve == null) {
 			return null;
 		}
 
-		Vec3d derivative = curve.getDerivative(0.0D);
+		Vec3 derivative = curve.getDerivative(0.0D);
 		double t = 3 * computePitchWeight(derivative) / derivative.length();
 
 		return curve.getPoint(t);
@@ -57,7 +57,7 @@ public class ParticlePathPredictor extends BezierFitter {
 	 * is calculated using a mathematical formula that involves the pitch angle derived
 	 * from the vector and trigonometric operations.
 	 */
-	double computePitchWeight(@NotNull Vec3d derivative) {
+	double computePitchWeight(@NotNull Vec3 derivative) {
 		return Math.sqrt(24 * Math.sin(getPitchFromDerivative(derivative) - Math.PI) + 25);
 	}
 
@@ -68,7 +68,7 @@ public class ParticlePathPredictor extends BezierFitter {
 	 * The pitch is determined by analyzing the direction of the vector and performing
 	 * an iterative computation using trigonometric functions to refine the result.
 	 */
-	double getPitchFromDerivative(@NotNull Vec3d derivative) {
+	double getPitchFromDerivative(@NotNull Vec3 derivative) {
 		double xzAbscissa = Math.sqrt(Math.pow(derivative.x, 2) + Math.pow(derivative.z, 2));
 		double pitchAngle = -Math.atan2(derivative.y, xzAbscissa);
 		double guessPitch = pitchAngle;

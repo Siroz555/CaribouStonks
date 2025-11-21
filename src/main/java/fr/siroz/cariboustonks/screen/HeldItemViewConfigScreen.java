@@ -6,23 +6,23 @@ import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.gui.DoubleSliderWidget;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.ScreenPos;
-import net.minecraft.client.gui.ScreenRect;
-import net.minecraft.client.gui.screen.ConfirmScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.EmptyWidget;
-import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.client.gui.widget.SimplePositioningWidget;
-import net.minecraft.client.gui.widget.TextWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.navigation.ScreenPosition;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.screens.ConfirmScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.layouts.SpacerElement;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,28 +40,28 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 	@Nullable
 	private final Screen parent;
 	@Nullable
-	private ThreePartsLayoutWidget layout;
-	private final Hand hand;
+	private HeaderAndFooterLayout layout;
+	private final InteractionHand hand;
 	private final ItemStack previewItem;
 	private final VanillaConfig.ItemModelCustomization.CustomHand currentHand;
 	private final VanillaConfig.ItemModelCustomization.CustomHand backupHand;
 	private boolean changed;
 
-	private HeldItemViewConfigScreen(@Nullable Screen parent, Hand hand) {
-		super(Text.literal("Customize Held Item for " + (hand == Hand.MAIN_HAND ? "Main Hand" : "Off Hand")));
+	private HeldItemViewConfigScreen(@Nullable Screen parent, InteractionHand hand) {
+		super(Component.literal("Customize Held Item for " + (hand == InteractionHand.MAIN_HAND ? "Main Hand" : "Off Hand")));
 		this.parent = parent;
 		this.hand = hand;
 		this.previewItem = new ItemStack(Items.NETHERITE_SWORD);
 		this.currentHand = switch (this.hand) {
-			case Hand.MAIN_HAND -> ConfigManager.getConfig().vanilla.itemModelCustomization.mainHand;
-			case Hand.OFF_HAND -> ConfigManager.getConfig().vanilla.itemModelCustomization.offHand;
+			case InteractionHand.MAIN_HAND -> ConfigManager.getConfig().vanilla.itemModelCustomization.mainHand;
+			case InteractionHand.OFF_HAND -> ConfigManager.getConfig().vanilla.itemModelCustomization.offHand;
 		};
 		this.backupHand = new VanillaConfig.ItemModelCustomization.CustomHand().copyFrom(this.currentHand);
 		this.changed = false;
 	}
 
 	@Contract("_, _ -> new")
-	public static @NotNull HeldItemViewConfigScreen create(@Nullable Screen parent, @NotNull Hand hand) {
+	public static @NotNull HeldItemViewConfigScreen create(@Nullable Screen parent, @NotNull InteractionHand hand) {
 		return new HeldItemViewConfigScreen(parent, hand);
 	}
 
@@ -69,42 +69,42 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 		return previewItem;
 	}
 
-	public Hand getHand() {
+	public InteractionHand getHand() {
 		return hand;
 	}
 
 	@Override
 	protected void onInit() {
-		boolean isWorldLoaded = this.client != null && this.client.world != null;
+		boolean isWorldLoaded = this.minecraft != null && this.minecraft.level != null;
 		if (!isWorldLoaded || !ConfigManager.getConfig().vanilla.itemModelCustomization.enabled) {
-			layout = new ThreePartsLayoutWidget(this);
-			layout.addHeader(new TextWidget(this.getTitle(), this.textRenderer));
+			layout = new HeaderAndFooterLayout(this);
+			layout.addToHeader(new StringWidget(this.getTitle(), this.font));
 
 			if (!isWorldLoaded) {
-				layout.addBody(new TextWidget(Text.literal("You must be in a world to use this.").withColor(Colors.ORANGE.asInt()), this.textRenderer));
+				layout.addToContents(new StringWidget(Component.literal("You must be in a world to use this.").withColor(Colors.ORANGE.asInt()), this.font));
 			} else {
-				layout.addBody(new TextWidget(Text.literal("You must enable Held Item customization to use this.").withColor(Colors.ORANGE.asInt()), this.textRenderer));
+				layout.addToContents(new StringWidget(Component.literal("You must enable Held Item customization to use this.").withColor(Colors.ORANGE.asInt()), this.font));
 			}
 
-			layout.addFooter(ButtonWidget.builder(ScreenTexts.DONE, b -> onClose()).width(210).build());
-			layout.refreshPositions();
-			layout.forEachChild(this::addDrawableChild);
+			layout.addToFooter(Button.builder(CommonComponents.GUI_DONE, b -> close()).width(210).build());
+			layout.arrangeElements();
+			layout.visitWidgets(this::addRenderableWidget);
 			return;
 		}
 
-		GridWidget grid = new GridWidget();
-		grid.setSpacing(8);
+		GridLayout grid = new GridLayout();
+		grid.spacing(8);
 
-		GridWidget.Adder adder = grid.createAdder(3);
-		adder.add(new TextWidget(this.title, this.textRenderer), 3);
-		adder.add(new EmptyWidget(0, 10), 3);
+		GridLayout.RowHelper adder = grid.createRowHelper(3);
+		adder.addChild(new StringWidget(this.title, this.font), 3);
+		adder.addChild(new SpacerElement(0, 10), 3);
 
-		adder.add(new TextWidget(Text.literal("Positions"), this.textRenderer), 3);
-		adder.add(new TextWidget(Text.literal("X"), this.textRenderer));
-		adder.add(new TextWidget(Text.literal("Y"), this.textRenderer));
-		adder.add(new TextWidget(Text.literal("Z"), this.textRenderer));
+		adder.addChild(new StringWidget(Component.literal("Positions"), this.font), 3);
+		adder.addChild(new StringWidget(Component.literal("X"), this.font));
+		adder.addChild(new StringWidget(Component.literal("Y"), this.font));
+		adder.addChild(new StringWidget(Component.literal("Z"), this.font));
 
-		adder.add(new DoubleSliderWidget(0, 0, 100, 20, Text.literal("X Position"),
+		adder.addChild(new DoubleSliderWidget(0, 0, 100, 20, Component.literal("X Position"),
 				-1.0f, 1.0f,
 				currentHand.x,
 				newValue -> {
@@ -112,7 +112,7 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 					changed = !currentHand.equals(backupHand);
 				}
 		));
-		adder.add(new DoubleSliderWidget(0, 0, 100, 20, Text.literal("Y Position"),
+		adder.addChild(new DoubleSliderWidget(0, 0, 100, 20, Component.literal("Y Position"),
 				-1.0f, 1.0f,
 				currentHand.y,
 				newValue -> {
@@ -120,7 +120,7 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 					changed = !currentHand.equals(backupHand);
 				}
 		));
-		adder.add(new DoubleSliderWidget(0, 0, 100, 20, Text.literal("Z Position"),
+		adder.addChild(new DoubleSliderWidget(0, 0, 100, 20, Component.literal("Z Position"),
 				-1.0f, 1.0f,
 				currentHand.z,
 				newValue -> {
@@ -129,8 +129,8 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 				}
 		));
 
-		adder.add(new TextWidget(Text.literal("Size"), this.textRenderer), 3);
-		adder.add(new DoubleSliderWidget(0, 0, 208, 20, Text.literal("Size"),
+		adder.addChild(new StringWidget(Component.literal("Size"), this.font), 3);
+		adder.addChild(new DoubleSliderWidget(0, 0, 208, 20, Component.literal("Size"),
 				0.1f, 1.0f,
 				currentHand.scale,
 				newValue -> {
@@ -139,101 +139,101 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 				}
 		), 3);
 
-		adder.add(new EmptyWidget(0, 20), 3);
-		adder.add(ButtonWidget.builder(Text.literal("Revert"), b -> revert())
-				.tooltip(Tooltip.of(Text.literal("Reverts to the last saved values.")))
+		adder.addChild(new SpacerElement(0, 20), 3);
+		adder.addChild(Button.builder(Component.literal("Revert"), b -> revert())
+				.tooltip(Tooltip.create(Component.literal("Reverts to the last saved values.")))
 				.width(100)
 				.build());
-		adder.add(ButtonWidget.builder(Text.literal("Reset"), b -> reset())
-				.tooltip(Tooltip.of(Text.literal("Resets to the default values.")))
+		adder.addChild(Button.builder(Component.literal("Reset"), b -> reset())
+				.tooltip(Tooltip.create(Component.literal("Resets to the default values.")))
 				.width(100)
 				.build());
-		adder.add(ButtonWidget.builder(Text.literal("Save"), b -> saveAndClose())
-				.tooltip(Tooltip.of(Text.literal("Saves and close.")))
+		adder.addChild(Button.builder(Component.literal("Save"), b -> saveAndClose())
+				.tooltip(Tooltip.create(Component.literal("Saves and close.")))
 				.width(208)
 				.build(), 3);
 
-		grid.refreshPositions();
-		ScreenRect dimensions = getEffectiveDimensions(this.width, this.height);
-		SimplePositioningWidget.setPos(grid, dimensions, 0.5f, 0.35f);
-		grid.forEachChild(this::addDrawableChild);
+		grid.arrangeElements();
+		ScreenRectangle dimensions = getEffectiveDimensions(this.width, this.height);
+		FrameLayout.alignInRectangle(grid, dimensions, 0.5f, 0.35f);
+		grid.visitWidgets(this::addRenderableWidget);
 	}
 
 	@Override
-	public void renderBackground(@NotNull DrawContext context, int mouseX, int mouseY, float deltaTicks) {
-		ScreenRect dimensions = getEffectiveDimensions(this.width, this.height);
+	public void renderBackground(@NotNull GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
+		ScreenRectangle dimensions = getEffectiveDimensions(this.width, this.height);
 
-		context.enableScissor(dimensions.getLeft(), dimensions.getTop(), dimensions.getRight(), dimensions.getBottom());
-		GuiRenderer.enableBlurScissor(dimensions.getLeft(), dimensions.getTop(), dimensions.width(), dimensions.height());
-		this.applyBlur(context);
-		this.renderDarkening(context);
+		context.enableScissor(dimensions.left(), dimensions.top(), dimensions.right(), dimensions.bottom());
+		GuiRenderer.enableBlurScissor(dimensions.left(), dimensions.top(), dimensions.width(), dimensions.height());
+		this.renderBlurredBackground(context);
+		this.renderMenuBackground(context);
 		context.disableScissor();
 
-		context.drawVerticalLine(
-				isMainHand() ? dimensions.getRight() : dimensions.getLeft(),
-				dimensions.getTop() - 1,
-				dimensions.getBottom(),
+		context.vLine(
+				isMainHand() ? dimensions.right() : dimensions.left(),
+				dimensions.top() - 1,
+				dimensions.bottom(),
 				new Color(0, 0, 0).withAlpha(190).asInt());
 
-		context.drawVerticalLine(
-				isMainHand() ? dimensions.getRight() - 1 : dimensions.getLeft() + 1,
-				dimensions.getTop() - 1,
-				dimensions.getBottom(),
+		context.vLine(
+				isMainHand() ? dimensions.right() - 1 : dimensions.left() + 1,
+				dimensions.top() - 1,
+				dimensions.bottom(),
 				new Color(255, 255, 255).withAlpha(50).asInt());
 	}
 
 	@Override
-	protected void refreshWidgetPositions() {
+	protected void repositionElements() {
 		if (layout != null) {
-			layout.refreshPositions();
+			layout.arrangeElements();
 		}
 	}
 
 	@Override
-	public void onClose() {
-		if (this.client != null) {
+	public void close() {
+		if (this.minecraft != null) {
 			if (changed) {
-				this.client.setScreen(new ConfirmScreen(confirmation -> {
+				this.minecraft.setScreen(new ConfirmScreen(confirmation -> {
 					if (confirmation) {
 						revert();
-						this.client.setScreen(parent);
+						this.minecraft.setScreen(parent);
 					} else {
-						this.client.setScreen(this);
+						this.minecraft.setScreen(this);
 					}
-				}, CONFIRM_SCREEN_UNSAVED_CHANGE, CONFIRM_SCREEN_PROMPT, CONFIRM_SCREEN_QUIT_MESSAGE, ScreenTexts.CANCEL));
+				}, CONFIRM_SCREEN_UNSAVED_CHANGE, CONFIRM_SCREEN_PROMPT, CONFIRM_SCREEN_QUIT_MESSAGE, CommonComponents.GUI_CANCEL));
 			} else {
-				this.client.setScreen(parent);
+				this.minecraft.setScreen(parent);
 			}
 		}
 	}
 
 	@Contract("_, _ -> new")
-	private @NotNull ScreenRect getEffectiveDimensions(int scaledWindowWidth, int scaledWindowHeight) {
+	private @NotNull ScreenRectangle getEffectiveDimensions(int scaledWindowWidth, int scaledWindowHeight) {
 		int x = isMainHand() ? 0 : scaledWindowWidth / 2;
 		int width = scaledWindowWidth / 2;
 
-		return new ScreenRect(new ScreenPos(x, 0), width, scaledWindowHeight);
+		return new ScreenRectangle(new ScreenPosition(x, 0), width, scaledWindowHeight);
 	}
 
 	private boolean isMainHand() {
-		return hand == Hand.MAIN_HAND;
+		return hand == InteractionHand.MAIN_HAND;
 	}
 
 	private void saveAndClose() {
 		ConfigManager.saveConfig();
 		changed = false;
-		onClose();
+		close();
 	}
 
 	private void revert() {
 		currentHand.copyFrom(backupHand);
 		changed = false;
-		this.clearAndInit();
+		this.rebuildWidgets();
 	}
 
 	private void reset() {
 		currentHand.copyFrom(new VanillaConfig.ItemModelCustomization.CustomHand());
 		changed = true;
-		this.clearAndInit();
+		this.rebuildWidgets();
 	}
 }

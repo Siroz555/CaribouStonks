@@ -1,8 +1,8 @@
 package fr.siroz.cariboustonks.manager.waypoint.options;
 
 import fr.siroz.cariboustonks.util.colors.Color;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,14 +16,14 @@ public final class IconOption {
 	private final float height;
 	private final float textureWidth;
 	private final float textureHeight;
-	private final Vec3d renderOffset;
+	private final Vec3 renderOffset;
 	private final Color color;
 	private final float alpha;
 	private final boolean scaleWithDistance;
 	private final boolean throughBlocks;
 
 	public IconOption() {
-		this(null, 1f, 1f, 1f, 1f, new Vec3d(0, 0, 0), new Color(255, 255, 255), 1f, true, true);
+		this(null, 1f, 1f, 1f, 1f, new Vec3(0, 0, 0), new Color(255, 255, 255), 1f, true, true);
 	}
 
 	public IconOption(
@@ -32,7 +32,7 @@ public final class IconOption {
 			float height,
 			float textureWidth,
 			float textureHeight,
-			@NotNull Vec3d renderOffset,
+			@NotNull Vec3 renderOffset,
 			@NotNull Color color,
 			float alpha,
 			boolean scaleWithDistance,
@@ -71,7 +71,7 @@ public final class IconOption {
 		return textureHeight;
 	}
 
-	public Vec3d getRenderOffset() {
+	public Vec3 getRenderOffset() {
 		return renderOffset;
 	}
 
@@ -103,7 +103,7 @@ public final class IconOption {
 		protected float height = 1f;
 		protected float textureWidth = 1f;
 		protected float textureHeight = 1f;
-		protected Vec3d renderOffset = new Vec3d(0, 0, 0);
+		protected Vec3 renderOffset = new Vec3(0, 0, 0);
 		protected Color color = new Color(255, 255, 255);
 		protected float alpha = 1f;
 		protected boolean scaleWithDistance = true;
@@ -134,7 +134,7 @@ public final class IconOption {
 			return this;
 		}
 
-		public Builder withRenderOffset(@NotNull Vec3d renderOffset) {
+		public Builder withRenderOffset(@NotNull Vec3 renderOffset) {
 			this.renderOffset = renderOffset;
 			return this;
 		}

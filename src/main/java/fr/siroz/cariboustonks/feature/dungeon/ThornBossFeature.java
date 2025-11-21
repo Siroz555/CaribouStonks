@@ -12,11 +12,11 @@ import fr.siroz.cariboustonks.manager.dungeon.DungeonBoss;
 import fr.siroz.cariboustonks.manager.dungeon.DungeonManager;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,7 +63,7 @@ public class ThornBossFeature extends Feature {
 	protected void onClientTick() {
 		if (spawnTicks > 0 && isEnabled()) {
 			String seconds = StonksUtils.DECIMAL_FORMAT.format(spawnTicks / 20f) + "s";
-			Text message = Text.literal(seconds).formatted(spawnTicks <= 20 ? Formatting.RED : Formatting.YELLOW);
+			Component message = Component.literal(seconds).withStyle(spawnTicks <= 20 ? ChatFormatting.RED : ChatFormatting.YELLOW);
 			Client.showTitle(message, 0, 5, 0);
 		}
 	}

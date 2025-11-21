@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.event;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -19,7 +19,7 @@ public final class RenderEvents {
 	 * <p>
 	 * {@link WorldRenderer} is provided as parameter.
 	 */
-	public static final Event<WorldRender> WORLD_RENDER = EventFactory.createArrayBacked(WorldRender.class, listeners -> renderer -> {
+	public static final Event<@NotNull WorldRender> WORLD_RENDER = EventFactory.createArrayBacked(WorldRender.class, listeners -> renderer -> {
 		for (WorldRender listener : listeners) {
 			listener.onWorldRender(renderer);
 		}
@@ -29,7 +29,7 @@ public final class RenderEvents {
 	 * Called before an entity is rendered.
 	 */
 	@OnlySkyBlock
-	public static final Event<AllowRenderEntity> ALLOW_RENDER_ENTITY = EventFactory.createArrayBacked(AllowRenderEntity.class, listeners -> entity -> {
+	public static final Event<@NotNull AllowRenderEntity> ALLOW_RENDER_ENTITY = EventFactory.createArrayBacked(AllowRenderEntity.class, listeners -> entity -> {
 		for (AllowRenderEntity listener : listeners) {
 			if (!listener.allowRenderEntity(entity)) {
 				return false;

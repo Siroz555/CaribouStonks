@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.feature.dungeon;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.util.colors.Color;
 import java.util.concurrent.TimeUnit;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
 
 enum WitherKingDragon {
 
@@ -50,7 +50,7 @@ enum WitherKingDragon {
 	private final BlockPos pos1;
 	private final BlockPos pos2;
 	private final Color color;
-	private final Box box;
+	private final AABB box;
 
 	private int spawnTime = 0;
 	private boolean spawned = false;
@@ -65,7 +65,7 @@ enum WitherKingDragon {
 		this.lbPos = lbPos;
 		this.pos1 = pos1;
 		this.pos2 = pos2;
-		this.box = Box.enclosing(pos1, pos2);
+		this.box = AABB.encapsulatingFullBlocks(pos1, pos2);
 		this.color = color;
 	}
 
@@ -97,7 +97,7 @@ enum WitherKingDragon {
 		return pos2;
 	}
 
-	public Box getBox() {
+	public AABB getBox() {
 		return box;
 	}
 

@@ -10,7 +10,7 @@ import fr.siroz.cariboustonks.core.skyblock.item.metadata.PetInfo;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.RodInfo;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.SpecialAuctionInfo;
 import java.util.Optional;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,7 +60,7 @@ public record ItemMetadata(
 	 * @return the {@code ItemMetadata} parsed from the given {@code NbtCompound}
 	 */
 	@ApiStatus.Internal
-	public static @NotNull ItemMetadata ofNbt(@NotNull NbtCompound customData) {
+	public static @NotNull ItemMetadata ofNbt(@NotNull CompoundTag customData) {
 		try {
 			// Base
 			Optional<String> reforge = customData.getString("modifier");

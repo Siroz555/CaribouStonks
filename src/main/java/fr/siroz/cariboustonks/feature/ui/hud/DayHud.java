@@ -9,8 +9,8 @@ import fr.siroz.cariboustonks.manager.hud.TextHud;
 import fr.siroz.cariboustonks.util.Client;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ public class DayHud extends Feature implements HudProvider {
 
 	public DayHud() {
 		this.hud = new TextHud(
-				Text.literal("Day: 27"),
+				Component.literal("Day: 27"),
 				this::getText,
 				ConfigManager.getConfig().uiAndVisuals.dayHud,
 				20,
@@ -45,8 +45,8 @@ public class DayHud extends Feature implements HudProvider {
 	}
 
 	@Contract(" -> new")
-	private @NotNull Text getText() {
+	private @NotNull Component getText() {
 		long day = Client.getWorldDay();
-		return Text.literal("Day: " + day);
+		return Component.literal("Day: " + day);
 	}
 }

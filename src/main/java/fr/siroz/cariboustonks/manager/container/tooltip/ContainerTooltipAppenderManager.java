@@ -7,17 +7,17 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.Manager;
 import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.mixin.accessors.HandledScreenAccessor;
+import fr.siroz.cariboustonks.mixin.accessors.AbstractContainerScreenAccessor;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,20 +51,20 @@ public final class ContainerTooltipAppenderManager implements Manager {
 
 	@EventHandler(event = "ItemTooltipCallback.EVENT")
 	private void onTooltipCallback(
-			ItemStack stack,
-			Item.TooltipContext tooltipContext,
-			TooltipType tooltipType,
-			List<Text> lines
+            ItemStack stack,
+            Item.TooltipContext tooltipContext,
+            TooltipFlag tooltipType,
+            List<Component> lines
 	) {
-		if (MinecraftClient.getInstance().currentScreen instanceof HandledScreen<?> handledScreen) {
-			appendToTooltip(((HandledScreenAccessor) handledScreen).getFocusedSlot(), stack, lines);
+		if (Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> handledScreen) {
+			appendToTooltip(((AbstractContainerScreenAccessor) handledScreen).getFocusedSlot(), stack, lines);
 		} else {
 			appendToTooltip(null, stack, lines);
 		}
 	}
 
 	@EventHandler(event = "ScreenEvents.AFTER_INIT")
-	private void onAfterInit(MinecraftClient minecraftClient, Screen screen, int scaledWidth, int scaledHeight) {
+	private void onAfterInit(Minecraft minecraftClient, Screen screen, int scaledWidth, int scaledHeight) {
 		currentContainerTooltips.clear();
 		for (Map.Entry<Feature, ContainerTooltipAppender> appender : tooltipAppenderMap.entrySet()) {
 			if (appender.getKey().isEnabled()) {
@@ -79,7 +79,7 @@ public final class ContainerTooltipAppenderManager implements Manager {
 		ScreenEvents.remove(screen).register(_screen -> currentContainerTooltips.clear());
 	}
 
-	private void appendToTooltip(Slot focusedSlot, ItemStack stack, List<Text> lines) {
+	private void appendToTooltip(Slot focusedSlot, ItemStack stack, List<Component> lines) {
 		if (!SkyBlockAPI.isOnSkyBlock()) {
 			return;
 		}

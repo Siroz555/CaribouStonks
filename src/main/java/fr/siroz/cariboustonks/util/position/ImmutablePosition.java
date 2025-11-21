@@ -1,8 +1,8 @@
 package fr.siroz.cariboustonks.util.position;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
@@ -48,13 +48,13 @@ public record ImmutablePosition(int x, int y, int z) implements Position {
 	}
 
 	@Override
-	public @NotNull Vec3d toVec3d() {
-		return new Vec3d(x, y, z);
+	public @NotNull Vec3 toVec3d() {
+		return new Vec3(x, y, z);
 	}
 
 	@Override
-	public @NotNull Box toBox() {
-		return new Box(new BlockPos(x, y, z));
+	public @NotNull AABB toBox() {
+		return new AABB(new BlockPos(x, y, z));
 	}
 
 	@Override

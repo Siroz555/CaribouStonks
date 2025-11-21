@@ -17,12 +17,12 @@ import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.command.CommandSource;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 
 public class StonksCommandFeature extends Feature {
@@ -49,7 +49,7 @@ public class StonksCommandFeature extends Feature {
 					return 1;
 				})
 				.then(ClientCommandManager.argument("item", StringArgumentType.greedyString())
-						.suggests((context, builder) -> CommandSource.suggestMatching(hypixelDataSource.getSkyBlockItemsIds(), builder))
+						.suggests((context, builder) -> SharedSuggestionProvider.suggest(hypixelDataSource.getSkyBlockItemsIds(), builder))
 						.executes(context -> handle(context.getSource(), StringArgumentType.getString(context, "item"))))
 		));
 	}
@@ -68,12 +68,12 @@ public class StonksCommandFeature extends Feature {
 		int result = 1;
 
 		if (hypixelDataSource.isBazaarInUpdate()) {
-			source.sendFeedback(Text.literal("Bazaar is currently updating.. Retry in few seconds.").formatted(Formatting.RED));
+			source.sendFeedback(Component.literal("Bazaar is currently updating.. Retry in few seconds.").withStyle(ChatFormatting.RED));
 			return result;
 		}
 
 		if (!hypixelDataSource.hasBazaarItem(item)) {
-			source.sendFeedback(Text.literal("Unable to find '" + item + "' item in the Bazaar.").formatted(Formatting.RED));
+			source.sendFeedback(Component.literal("Unable to find '" + item + "' item in the Bazaar.").withStyle(ChatFormatting.RED));
 			return result;
 		}
 
@@ -87,139 +87,139 @@ public class StonksCommandFeature extends Feature {
 	}
 
 	private void showBazaarInfo(@NotNull FabricClientCommandSource source, @NotNull String item, @NotNull BazaarProduct bazaarProduct) {
-		Client.playSound(SoundEvents.BLOCK_TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
+		Client.playSound(SoundEvents.TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
 
-		source.sendFeedback(Text.literal(SEPARATOR).formatted(Formatting.RED));
+		source.sendFeedback(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));
 
 		SkyBlockItemData skyBlockItem = hypixelDataSource.getSkyBlockItem(item);
 		if (skyBlockItem == null) {
-			source.sendFeedback(Text.empty().append(Text.literal("⭐").withColor(Colors.ORANGE.asInt()))
-					.append(" " + Text.literal(bazaarProduct.skyBlockId() + " :").formatted(Formatting.GOLD)));
+			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.ORANGE.asInt()))
+					.append(" " + Component.literal(bazaarProduct.skyBlockId() + " :").withStyle(ChatFormatting.GOLD)));
 		} else {
-			source.sendFeedback(Text.empty().append(Text.literal("⭐").withColor(Colors.ORANGE.asInt()))
-					.append(Text.literal(" " + skyBlockItem.name()).withColor(skyBlockItem.tier().getColor()))
-					.append(Text.literal(" (" + bazaarProduct.skyBlockId() + ")").formatted(Formatting.DARK_GRAY)));
+			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.ORANGE.asInt()))
+					.append(Component.literal(" " + skyBlockItem.name()).withColor(skyBlockItem.tier().getColor()))
+					.append(Component.literal(" (" + bazaarProduct.skyBlockId() + ")").withStyle(ChatFormatting.DARK_GRAY)));
 		}
 
-		source.sendFeedback(Text.empty());
+		source.sendFeedback(Component.empty());
 
 		double buyPrice = bazaarProduct.buyPrice();
 		double buyAvgPrice = bazaarProduct.weightedAverageBuyPrice();
 		double buyVelocity = bazaarProduct.buyVelocity();
 		double standardDeviationBuy = bazaarProduct.buyPriceStdDev();
-		source.sendFeedback(Text.literal("Buy: ").formatted(Formatting.YELLOW)
-				.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(buyPrice) + " Coins").formatted(Formatting.GOLD))
-				.append(Text.literal(" (").formatted(Formatting.GRAY))
-				.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyPrice)).formatted(Formatting.GOLD))
-				.append(Text.literal(")").formatted(Formatting.GRAY))
-				.append(Text.literal(" (Hover)").formatted(Formatting.AQUA))
-				.styled(style -> style.withHoverEvent(new HoverEvent.ShowText(
-						Text.literal("Buy-Avg: ").formatted(Formatting.YELLOW)
-								.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(buyAvgPrice) + " Coins").formatted(Formatting.GOLD))
-								.append(Text.literal(" (").formatted(Formatting.GRAY))
-								.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyAvgPrice)).formatted(Formatting.GOLD))
-								.append(Text.literal(")").formatted(Formatting.GRAY))
-								.append(Text.literal("\n\n"))
-								.append(Text.literal("Velocity: ").formatted(Formatting.DARK_AQUA))
-								.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(buyVelocity)).formatted(Formatting.AQUA))
-								.append(Text.literal("\n"))
-								.append(Text.literal("(Compares current volume to the daily average from the past week)").formatted(Formatting.GRAY, Formatting.ITALIC))
-								.append(Text.literal("\n"))
-								.append(Text.literal("- < 0.5    = Very low activity").formatted(Formatting.GRAY))
-								.append(Text.literal("\n"))
-								.append(Text.literal("- 0.5-1.5 = Normal activity").formatted(Formatting.GRAY))
-								.append(Text.literal("\n"))
-								.append(Text.literal("- 1.5-3   = High activity (growing interest)").formatted(Formatting.GRAY))
-								.append(Text.literal("\n"))
-								.append(Text.literal("- > 3      = Peak activity (event, speculation)").formatted(Formatting.GRAY))
-								.append(Text.literal("\n\n"))
-								.append(Text.literal("*Standard Deviation: ").formatted(Formatting.DARK_GREEN))
-								.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationBuy)).formatted(Formatting.GREEN))
-								.append(Text.literal("\n"))
-								.append(Text.literal("(This measures price volatility. Higher values indicate stronger fluctuations)").formatted(Formatting.GRAY, Formatting.ITALIC))
-								.append(Text.literal("\n\n"))
-								.append(Text.literal("* Not a true representation of all orders").formatted(Formatting.GRAY, Formatting.ITALIC))
+		source.sendFeedback(Component.literal("Buy: ").withStyle(ChatFormatting.YELLOW)
+				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(buyPrice) + " Coins").withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal(" (Hover)").withStyle(ChatFormatting.AQUA))
+				.withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(
+						Component.literal("Buy-Avg: ").withStyle(ChatFormatting.YELLOW)
+								.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(buyAvgPrice) + " Coins").withStyle(ChatFormatting.GOLD))
+								.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+								.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyAvgPrice)).withStyle(ChatFormatting.GOLD))
+								.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
+								.append(Component.literal("\n\n"))
+								.append(Component.literal("Velocity: ").withStyle(ChatFormatting.DARK_AQUA))
+								.append(Component.literal(StonksUtils.FLOAT_NUMBERS.format(buyVelocity)).withStyle(ChatFormatting.AQUA))
+								.append(Component.literal("\n"))
+								.append(Component.literal("(Compares current volume to the daily average from the past week)").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
+								.append(Component.literal("\n"))
+								.append(Component.literal("- < 0.5    = Very low activity").withStyle(ChatFormatting.GRAY))
+								.append(Component.literal("\n"))
+								.append(Component.literal("- 0.5-1.5 = Normal activity").withStyle(ChatFormatting.GRAY))
+								.append(Component.literal("\n"))
+								.append(Component.literal("- 1.5-3   = High activity (growing interest)").withStyle(ChatFormatting.GRAY))
+								.append(Component.literal("\n"))
+								.append(Component.literal("- > 3      = Peak activity (event, speculation)").withStyle(ChatFormatting.GRAY))
+								.append(Component.literal("\n\n"))
+								.append(Component.literal("*Standard Deviation: ").withStyle(ChatFormatting.DARK_GREEN))
+								.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationBuy)).withStyle(ChatFormatting.GREEN))
+								.append(Component.literal("\n"))
+								.append(Component.literal("(This measures price volatility. Higher values indicate stronger fluctuations)").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
+								.append(Component.literal("\n\n"))
+								.append(Component.literal("* Not a true representation of all orders").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
 				))));
 
 		long buyVolume = bazaarProduct.buyVolume();
 		long buyOrders = bazaarProduct.buyOrders();
 		long buyMovingWeek = bazaarProduct.buyMovingWeek();
-		source.sendFeedback(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyVolume)).formatted(Formatting.DARK_GRAY)
+		source.sendFeedback(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyVolume)).withStyle(ChatFormatting.DARK_GRAY)
 				.append(" in " + StonksUtils.SHORT_FLOAT_NUMBERS.format(buyOrders) + " orders")
-				.append(Text.literal(" | ").formatted(Formatting.GRAY))
-				.append(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyMovingWeek)).formatted(Formatting.DARK_GRAY)
-				.append(Text.literal(" insta-buys in 7d").formatted(Formatting.DARK_GRAY))
+				.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
+				.append(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyMovingWeek)).withStyle(ChatFormatting.DARK_GRAY)
+				.append(Component.literal(" insta-buys in 7d").withStyle(ChatFormatting.DARK_GRAY))
 		);
 
-		source.sendFeedback(Text.empty());
+		source.sendFeedback(Component.empty());
 
 		double sellPrice = bazaarProduct.sellPrice();
 		double sellAvgPrice = bazaarProduct.weightedAverageSellPrice();
 		double sellVelocity = bazaarProduct.sellVelocity();
 		double standardDeviationSell = bazaarProduct.sellPriceStdDev();
-		source.sendFeedback(Text.literal("Sell: ").formatted(Formatting.YELLOW)
-				.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(sellPrice) + " Coins").formatted(Formatting.GOLD))
-				.append(Text.literal(" (").formatted(Formatting.GRAY))
-				.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellPrice)).formatted(Formatting.GOLD))
-				.append(Text.literal(")").formatted(Formatting.GRAY))
-				.append(Text.literal(" (Hover)").formatted(Formatting.AQUA))
-				.styled(style -> style.withHoverEvent(new HoverEvent.ShowText(
-						Text.literal("Sell-Avg: ").formatted(Formatting.YELLOW)
-								.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(sellAvgPrice) + " Coins").formatted(Formatting.GOLD))
-								.append(Text.literal(" (").formatted(Formatting.GRAY))
-								.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellAvgPrice)).formatted(Formatting.GOLD))
-								.append(Text.literal(")").formatted(Formatting.GRAY))
-								.append(Text.literal("\n\n"))
-								.append(Text.literal("Velocity: ").formatted(Formatting.DARK_AQUA))
-								.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(sellVelocity)).formatted(Formatting.AQUA))
-								.append(Text.literal("\n"))
-								.append(Text.literal("(Compares current volume to the daily average from the past week)").formatted(Formatting.GRAY, Formatting.ITALIC))
-								.append(Text.literal("\n"))
-								.append(Text.literal("- < 0.5    = Very low activity").formatted(Formatting.GRAY))
-								.append(Text.literal("\n"))
-								.append(Text.literal("- 0.5-1.5 = Normal activity").formatted(Formatting.GRAY))
-								.append(Text.literal("\n"))
-								.append(Text.literal("- 1.5-3   = High activity (growing interest)").formatted(Formatting.GRAY))
-								.append(Text.literal("\n"))
-								.append(Text.literal("- > 3      = Peak activity (event, speculation)").formatted(Formatting.GRAY))
-								.append(Text.literal("\n\n"))
-								.append(Text.literal("*Standard Deviation: ").formatted(Formatting.DARK_GREEN))
-								.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationSell)).formatted(Formatting.GREEN))
-								.append(Text.literal("\n"))
-								.append(Text.literal("(This measures price volatility. Higher values indicate stronger fluctuations)").formatted(Formatting.GRAY, Formatting.ITALIC))
-								.append(Text.literal("\n\n"))
-								.append(Text.literal("* Not a true representation of all orders").formatted(Formatting.GRAY, Formatting.ITALIC))
+		source.sendFeedback(Component.literal("Sell: ").withStyle(ChatFormatting.YELLOW)
+				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(sellPrice) + " Coins").withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal(" (Hover)").withStyle(ChatFormatting.AQUA))
+				.withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(
+						Component.literal("Sell-Avg: ").withStyle(ChatFormatting.YELLOW)
+								.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(sellAvgPrice) + " Coins").withStyle(ChatFormatting.GOLD))
+								.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+								.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellAvgPrice)).withStyle(ChatFormatting.GOLD))
+								.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
+								.append(Component.literal("\n\n"))
+								.append(Component.literal("Velocity: ").withStyle(ChatFormatting.DARK_AQUA))
+								.append(Component.literal(StonksUtils.FLOAT_NUMBERS.format(sellVelocity)).withStyle(ChatFormatting.AQUA))
+								.append(Component.literal("\n"))
+								.append(Component.literal("(Compares current volume to the daily average from the past week)").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
+								.append(Component.literal("\n"))
+								.append(Component.literal("- < 0.5    = Very low activity").withStyle(ChatFormatting.GRAY))
+								.append(Component.literal("\n"))
+								.append(Component.literal("- 0.5-1.5 = Normal activity").withStyle(ChatFormatting.GRAY))
+								.append(Component.literal("\n"))
+								.append(Component.literal("- 1.5-3   = High activity (growing interest)").withStyle(ChatFormatting.GRAY))
+								.append(Component.literal("\n"))
+								.append(Component.literal("- > 3      = Peak activity (event, speculation)").withStyle(ChatFormatting.GRAY))
+								.append(Component.literal("\n\n"))
+								.append(Component.literal("*Standard Deviation: ").withStyle(ChatFormatting.DARK_GREEN))
+								.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationSell)).withStyle(ChatFormatting.GREEN))
+								.append(Component.literal("\n"))
+								.append(Component.literal("(This measures price volatility. Higher values indicate stronger fluctuations)").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
+								.append(Component.literal("\n\n"))
+								.append(Component.literal("* Not a true representation of all orders").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
 				)))
 		);
 
 		long sellVolume = bazaarProduct.sellVolume();
 		long sellOrders = bazaarProduct.sellOrders();
 		long sellMovingWeek = bazaarProduct.sellMovingWeek();
-		source.sendFeedback(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellVolume)).formatted(Formatting.DARK_GRAY)
+		source.sendFeedback(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellVolume)).withStyle(ChatFormatting.DARK_GRAY)
 				.append(" in " + StonksUtils.SHORT_FLOAT_NUMBERS.format(sellOrders) + " orders")
-				.append(Text.literal(" | ").formatted(Formatting.GRAY))
-				.append(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellMovingWeek)).formatted(Formatting.DARK_GRAY)
-				.append(Text.literal(" insta-sells in 7d").formatted(Formatting.DARK_GRAY))
+				.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
+				.append(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellMovingWeek)).withStyle(ChatFormatting.DARK_GRAY)
+				.append(Component.literal(" insta-sells in 7d").withStyle(ChatFormatting.DARK_GRAY))
 		);
 
-		source.sendFeedback(Text.empty());
+		source.sendFeedback(Component.empty());
 
 		double spread = bazaarProduct.spread();
 		double spreadPercentage = bazaarProduct.spreadPercentage();
-		source.sendFeedback(Text.literal("Spreed: ").formatted(Formatting.RED)
-				.append(Text.literal(StonksUtils.FLOAT_NUMBERS.format(spreadPercentage) + "%").withColor(Colors.RED.asInt()))
-				.append(Text.literal(" | ").formatted(Formatting.GRAY))
-				.append(Text.literal(StonksUtils.INTEGER_NUMBERS.format(spread)).withColor(Colors.RED.asInt()))
-				.append(Text.literal(" (").formatted(Formatting.GRAY))
-				.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(spread)).withColor(Colors.RED.asInt()))
-				.append(Text.literal(")").formatted(Formatting.GRAY))
+		source.sendFeedback(Component.literal("Spreed: ").withStyle(ChatFormatting.RED)
+				.append(Component.literal(StonksUtils.FLOAT_NUMBERS.format(spreadPercentage) + "%").withColor(Colors.RED.asInt()))
+				.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(spread)).withColor(Colors.RED.asInt()))
+				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(spread)).withColor(Colors.RED.asInt()))
+				.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 		);
-		source.sendFeedback(Text.empty());
-		source.sendFeedback(Text.literal(" Click HERE to show in the Graph Screen!").formatted(Formatting.YELLOW)
-				.styled(style -> style
-						.withHoverEvent(new HoverEvent.ShowText(Text.literal("Click to open in the Graph Screen!").formatted(Formatting.YELLOW)))
+		source.sendFeedback(Component.empty());
+		source.sendFeedback(Component.literal(" Click HERE to show in the Graph Screen!").withStyle(ChatFormatting.YELLOW)
+				.withStyle(style -> style
+						.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to open in the Graph Screen!").withStyle(ChatFormatting.YELLOW)))
 						.withClickEvent(new ClickEvent.RunCommand("/stonks"))));
 
-		source.sendFeedback(Text.literal(SEPARATOR).formatted(Formatting.RED));
+		source.sendFeedback(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));
 	}
 }

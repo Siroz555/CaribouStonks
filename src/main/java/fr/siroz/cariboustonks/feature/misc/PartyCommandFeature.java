@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
@@ -39,12 +39,12 @@ public class PartyCommandFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onChatMessage(@NotNull Text text) {
+	private void onChatMessage(@NotNull Component text) {
 		if (!isEnabled()) return;
 
 		String input = StonksUtils.stripColor(text.getString());
 		if (!input.startsWith("Party >")) return;
-		if (CLIENT.player == null || CLIENT.world == null) return;
+		if (CLIENT.player == null || CLIENT.level == null) return;
 
 		for (PartyCommand command : PartyCommand.values()) {
 			if (command.getConfig().test(ConfigManager.getConfig().misc.partyCommands)) {

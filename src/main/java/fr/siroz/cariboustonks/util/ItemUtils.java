@@ -11,18 +11,18 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.component.ComponentHolder;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.component.type.ProfileComponent;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.component.DataComponentHolder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.ResolvableProfile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,26 +35,26 @@ public final class ItemUtils {
 	}
 
 	/**
-	 * Gets the {@link NbtCompound} in the custom data component of the ItemStack.
+	 * Gets the {@link CompoundTag} in the custom data component of the ItemStack.
 	 *
-	 * @return The {@link DataComponentTypes#CUSTOM_DATA custom data} of the ItemStack,
-	 * or an empty {@link NbtCompound} if the ItemStack is missing a custom data component
+	 * @return The {@link DataComponents#CUSTOM_DATA custom data} of the ItemStack,
+	 * or an empty {@link CompoundTag} if the ItemStack is missing a custom data component
 	 */
-	public static @NotNull NbtCompound getCustomData(@NotNull ComponentHolder stack) {
-		return stack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
+	public static @NotNull CompoundTag getCustomData(@NotNull DataComponentHolder stack) {
+		return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 	}
 
 	/**
-	 * Gets an item by its id from the Minecraft {@link Registries#ITEM}.
+	 * Gets an item by its id from the Minecraft {@link BuiltInRegistries#ITEM}.
 	 *
 	 * @param id the item id
 	 * @return the item or an empty {@link Optional}
 	 */
 	public static Optional<Item> getItemById(@NotNull String id) {
 		try {
-			Identifier search = Identifier.of(id);
+			Identifier search = Identifier.parse(id);
 			//itemRegistry.getOptional(RegistryKey.of(RegistryKeys.ITEM, identifier))
-			return Registries.ITEM.getOptionalValue(search);
+			return BuiltInRegistries.ITEM.getOptional(search);
 		} catch (Exception ex) {
 			fr.siroz.cariboustonks.CaribouStonks.LOGGER.warn("[ItemUtils] Unable to find {} in Item Registry", id, ex);
 			return Optional.empty();
@@ -62,13 +62,13 @@ public final class ItemUtils {
 	}
 
 	/**
-	 * Returns the lore as a {@link List} of {@link Text} of an item.
+	 * Returns the lore as a {@link List} of {@link Component} of an item.
 	 *
 	 * @param stack the ItemStack to get the lore from
 	 * @return the list of lore
 	 */
-	public static @NotNull List<Text> getLore(@NotNull ItemStack stack) {
-		return stack.getOrDefault(DataComponentTypes.LORE, LoreComponent.DEFAULT).styledLines();
+	public static @NotNull List<Component> getLore(@NotNull ItemStack stack) {
+		return stack.getOrDefault(DataComponents.LORE, ItemLore.EMPTY).styledLines();
 	}
 
 	/**
@@ -81,7 +81,7 @@ public final class ItemUtils {
 	@Nullable
 	public static Matcher getLoreLineIfMatch(@NotNull ItemStack stack, @NotNull Pattern pattern) {
 		Matcher matcher = pattern.matcher("");
-		for (Text line : getLore(stack)) {
+		for (Component line : getLore(stack)) {
 			if (matcher.reset(line.getString()).matches()) {
 				return matcher;
 			}
@@ -99,7 +99,7 @@ public final class ItemUtils {
 	 */
 	@Nullable
 	public static String getLoreLineIf(@NotNull ItemStack stack, @NotNull Predicate<String> predicate) {
-		for (Text line : getLore(stack)) {
+		for (Component line : getLore(stack)) {
 			String string = line.getString();
 			if (predicate.test(string)) {
 				return string;
@@ -125,7 +125,7 @@ public final class ItemUtils {
 	 * @param lore the lore to concatenate
 	 * @return the concatenated lore
 	 */
-	public static @NotNull String concatenateLore(@NotNull List<Text> lore) {
+	public static @NotNull String concatenateLore(@NotNull List<Component> lore) {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (int i = 0; i < lore.size(); i++) {
 			stringBuilder.append(lore.get(i).getString());
@@ -148,8 +148,8 @@ public final class ItemUtils {
 		try {
 			PropertyMap map = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", textureB64)));
 			GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "skull", map);
-			ProfileComponent profile = ProfileComponent.ofStatic(gameProfile);
-			skull.set(DataComponentTypes.PROFILE, profile);
+			ResolvableProfile profile = ResolvableProfile.createResolved(gameProfile);
+			skull.set(DataComponents.PROFILE, profile);
 		} catch (Exception ex) {
 			fr.siroz.cariboustonks.CaribouStonks.LOGGER.error("[ItemUtils] Failed to create skull", ex);
 		}
@@ -158,23 +158,23 @@ public final class ItemUtils {
 
 	/**
 	 * Returns the {@code value} of the textures from
-	 * the {@link DataComponentTypes#PROFILE profile} component or an empty string.
+	 * the {@link DataComponents#PROFILE profile} component or an empty string.
 	 *
 	 * @param stack the ItemStack to get the texture from
 	 * @return the texture or an empty string
 	 * @see #getHeadTextureOptional(ItemStack)
 	 */
 	public static @NotNull String getHeadTexture(@NotNull ItemStack stack) {
-		if (!stack.isOf(Items.PLAYER_HEAD) || !stack.contains(DataComponentTypes.PROFILE)) {
+		if (!stack.is(Items.PLAYER_HEAD) || !stack.has(DataComponents.PROFILE)) {
 			return "";
 		}
 
-		ProfileComponent profile = stack.get(DataComponentTypes.PROFILE);
+		ResolvableProfile profile = stack.get(DataComponents.PROFILE);
 		if (profile == null) {
 			return "";
 		}
 
-		return profile.getGameProfile().properties().get("textures").stream()
+		return profile.partialProfile().properties().get("textures").stream()
 				.filter(Objects::nonNull)
 				.map(Property::value)
 				.findFirst()
@@ -183,7 +183,7 @@ public final class ItemUtils {
 
 	/**
 	 * Returns the {@code value} of the textures from the
-	 * {@link DataComponentTypes#PROFILE profile} component or an empty {@link Optional}.
+	 * {@link DataComponents#PROFILE profile} component or an empty {@link Optional}.
 	 *
 	 * @param stack the ItemStack to get the texture from
 	 * @return the texture or an empty {@link Optional}

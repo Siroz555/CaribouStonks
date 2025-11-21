@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.manager.hud;
 
-import fr.siroz.cariboustonks.mixin.accessors.PlayerListHudAccessor;
+import fr.siroz.cariboustonks.mixin.accessors.PlayerTabOverlayAccessor;
 import java.util.function.Supplier;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.DeltaTracker;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class Hud {
 
-	protected static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	protected static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private final Supplier<Boolean> enabled;
 	protected final HudConfig hudConfig;
@@ -81,11 +81,11 @@ public abstract class Hud {
 	protected boolean shouldRender() {
 		return hudConfig.shouldRender()
 				&& enabled.get()
-				&& !CLIENT.getDebugHud().shouldShowDebugHud()
-				&& !((PlayerListHudAccessor) CLIENT.inGameHud.getPlayerListHud()).isVisible();
+				&& !CLIENT.getDebugOverlay().showDebugScreen()
+				&& !((PlayerTabOverlayAccessor) CLIENT.gui.getTabList()).isVisible();
 	}
 
-	public abstract void renderScreen(DrawContext context);
+	public abstract void renderScreen(GuiGraphics guiGraphics);
 
-	public abstract void renderHud(DrawContext context, RenderTickCounter tickCounter);
+	public abstract void renderHud(GuiGraphics guiGraphics, DeltaTracker tickCounter);
 }

@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
 public enum SlayerType {
@@ -54,20 +54,20 @@ public enum SlayerType {
 	),
 	UNKNOWN(null, "Unknown", List.of(), List.of(), new int[]{});
 
-	private final EntityType<? extends Entity> entityType;
+	private final EntityType<? extends @NotNull Entity> entityType;
 	private final String bossName;
 	private final List<String> minibossNames;
-	private final List<EntityType<? extends Entity>> minibossEntityTypes;
+	private final List<EntityType<? extends @NotNull Entity>> minibossEntityTypes;
 	private final int[] expPerTier;
 
 	private static final Map<String, SlayerType> BOSS_NAME_TO_TYPE = new HashMap<>();
 
 	SlayerType(
-			EntityType<? extends Entity> entityType,
-			String bossName,
-			List<String> minibossNames,
-			List<EntityType<? extends Entity>> minibossEntityTypes,
-			int[] expPerTier
+            EntityType<? extends @NotNull Entity> entityType,
+            String bossName,
+            List<String> minibossNames,
+            List<EntityType<? extends @NotNull Entity>> minibossEntityTypes,
+            int[] expPerTier
 	) {
 		this.entityType = entityType;
 		this.bossName = bossName;
@@ -80,7 +80,7 @@ public enum SlayerType {
 		return BOSS_NAME_TO_TYPE.getOrDefault(bossName.toLowerCase(Locale.ENGLISH), UNKNOWN);
 	}
 
-	public EntityType<? extends Entity> getEntityType() {
+	public EntityType<? extends @NotNull Entity> getEntityType() {
 		return entityType;
 	}
 
@@ -92,7 +92,7 @@ public enum SlayerType {
 		return minibossNames;
 	}
 
-	public List<EntityType<? extends Entity>> getMinibossEntityTypes() {
+	public List<EntityType<? extends @NotNull Entity>> getMinibossEntityTypes() {
 		return minibossEntityTypes;
 	}
 

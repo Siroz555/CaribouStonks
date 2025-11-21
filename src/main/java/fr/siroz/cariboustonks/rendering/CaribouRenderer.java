@@ -22,17 +22,18 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.MappableRingBuffer;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BuiltBuffer;
-import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.state.WorldRenderState;
-import net.minecraft.client.texture.TextureSetup;
-import net.minecraft.client.util.BufferAllocator;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MappableRingBuffer;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.MeshData;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.state.LevelRenderState;
+import net.minecraft.client.gui.render.TextureSetup;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -45,17 +46,16 @@ import org.lwjgl.system.MemoryUtil;
 
 public final class CaribouRenderer {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final Minecraft CLIENT = Minecraft.getInstance();
 
-	// TODO DEFAULT_BUFFER_SIZE (1536)
-	private static final BufferAllocator GENERAL_ALLOCATOR = new BufferAllocator(RenderLayer.field_64010);
+	private static final ByteBufferBuilder GENERAL_ALLOCATOR = new ByteBufferBuilder(RenderType.TRANSIENT_BUFFER_SIZE);
 	private static final Vector4f COLOR_MODULATOR = new Vector4f(1f, 1f, 1f, 1f);
 	private static final Vector3f MODEL_OFFSET = new Vector3f();
 	private static final Matrix4f TEXTURE_MATRICE = new Matrix4f();
 	private static final float DEFAULT_LINE_WIDTH = 0f;
 
 	private static final List<RenderPipeline> EXCLUDED_FROM_BATCHING = new ArrayList<>();
-	private static final Int2ObjectMap<BufferAllocator> ALLOCATORS = new Int2ObjectArrayMap<>(5);
+	private static final Int2ObjectMap<ByteBufferBuilder> ALLOCATORS = new Int2ObjectArrayMap<>(5);
 	private static final Int2ObjectMap<BatchedDraw> BATCHED_DRAWS = new Int2ObjectArrayMap<>(5);
 	private static final Map<VertexFormat, MappableRingBuffer> VERTEX_BUFFERS = new Object2ObjectOpenHashMap<>();
 	private static final List<PreparedDraw> PREPARED_DRAWS = new ArrayList<>();
@@ -84,7 +84,7 @@ public final class CaribouRenderer {
 		worldRenderer.end();
 	}
 
-	public static void executeDraws(WorldRenderState worldRenderState) {
+	public static void executeDraws(LevelRenderState worldRenderState) {
 		if (worldRenderer == null) return;
 
 		worldRenderer.flush(worldRenderState.cameraRenderState);
@@ -121,11 +121,11 @@ public final class CaribouRenderer {
 	}
 
 	public static BufferBuilder getBuffer(@NotNull RenderPipeline pipeline) {
-		return getBuffer(pipeline, TextureSetup.empty(), DEFAULT_LINE_WIDTH);
+		return getBuffer(pipeline, TextureSetup.noTexture(), DEFAULT_LINE_WIDTH);
 	}
 
 	public static BufferBuilder getBuffer(@NotNull RenderPipeline pipeline, float lineWidth) {
-		return getBuffer(pipeline, TextureSetup.empty(), lineWidth);
+		return getBuffer(pipeline, TextureSetup.noTexture(), lineWidth);
 	}
 
 	public static BufferBuilder getBuffer(@NotNull RenderPipeline pipeline, @NotNull TextureSetup textureSetup) {
@@ -135,7 +135,7 @@ public final class CaribouRenderer {
 	public static void close() {
 		GENERAL_ALLOCATOR.close();
 
-		for (BufferAllocator allocator : ALLOCATORS.values()) {
+		for (ByteBufferBuilder allocator : ALLOCATORS.values()) {
 			allocator.close();
 		}
 
@@ -160,8 +160,7 @@ public final class CaribouRenderer {
 		BatchedDraw draw = BATCHED_DRAWS.get(hash);
 
 		if (draw == null) {
-			// TODO CUTOUT_BUFFER_SIZE (786432)
-			BufferAllocator allocator = ALLOCATORS.computeIfAbsent(hash, _hash -> new BufferAllocator(RenderLayer.field_64009));
+			ByteBufferBuilder allocator = ALLOCATORS.computeIfAbsent(hash, _hash -> new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE));
 			BufferBuilder bufferBuilder = new BufferBuilder(allocator, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
 			BATCHED_DRAWS.put(hash, new BatchedDraw(bufferBuilder, pipeline, textureSetup, lineWidth));
 			return bufferBuilder;
@@ -208,7 +207,7 @@ public final class CaribouRenderer {
 
 	private static void prepareBatchedDraw(@NotNull BatchedDraw draw) {
 		PREPARED_DRAWS.add(new PreparedDraw(
-				draw.bufferBuilder().end(),
+				draw.bufferBuilder().buildOrThrow(),
 				draw.pipeline(),
 				draw.textureSetup(),
 				draw.lineWidth()
@@ -220,12 +219,12 @@ public final class CaribouRenderer {
 		Object2IntMap<VertexFormat> vertexBufferPositions = new Object2IntOpenHashMap<>();
 
 		for (PreparedDraw prepared : PREPARED_DRAWS) {
-			BuiltBuffer builtBuffer = prepared.builtBuffer();
-			BuiltBuffer.DrawParameters drawParameters = builtBuffer.getDrawParameters();
+			MeshData builtBuffer = prepared.builtBuffer();
+			MeshData.DrawState drawParameters = builtBuffer.drawState();
 			VertexFormat format = drawParameters.format();
 
 			MappableRingBuffer vertices = VERTEX_BUFFERS.get(format);
-			ByteBuffer vertexData = builtBuffer.getBuffer();
+			ByteBuffer vertexData = builtBuffer.vertexBuffer();
 			int vertexBufferPosition = vertexBufferPositions.getInt(format);
 			int remainingVertexBytes = vertexData.remaining();
 
@@ -236,7 +235,7 @@ public final class CaribouRenderer {
 
 			DRAWS.add(new Draw(
 					builtBuffer,
-					vertices.getBlocking(),
+					vertices.currentBuffer(),
 					vertexBufferPosition / format.getVertexSize(),
 					drawParameters.indexCount(),
 					prepared.pipeline(),
@@ -252,7 +251,7 @@ public final class CaribouRenderer {
 	private static void copyDataInto(@NotNull MappableRingBuffer target, ByteBuffer source, int position, int remainingBytes) {
 		CommandEncoder commandEncoder = RenderSystem.getDevice().createCommandEncoder();
 
-		try (GpuBuffer.MappedView mappedView = commandEncoder.mapBuffer(target.getBlocking().slice(position, remainingBytes), false, true)) {
+		try (GpuBuffer.MappedView mappedView = commandEncoder.mapBuffer(target.currentBuffer().slice(position, remainingBytes), false, true)) {
 			MemoryUtil.memCopy(source, mappedView.data());
 		}
 	}
@@ -294,7 +293,7 @@ public final class CaribouRenderer {
 		Object2IntMap<VertexFormat> vertexSizes = new Object2IntOpenHashMap<>();
 
 		for (PreparedDraw prepared : PREPARED_DRAWS) {
-			BuiltBuffer.DrawParameters drawParameters = prepared.builtBuffer().getDrawParameters();
+			MeshData.DrawState drawParameters = prepared.builtBuffer().drawState();
 			VertexFormat format = drawParameters.format();
 
 			vertexSizes.put(format, vertexSizes.getOrDefault(format, 0) + drawParameters.vertexCount() * format.getVertexSize());
@@ -307,16 +306,16 @@ public final class CaribouRenderer {
 		GpuBuffer indices;
 		VertexFormat.IndexType indexType;
 
-		if (draw.pipeline().getVertexFormatMode() == VertexFormat.DrawMode.QUADS) {
+		if (draw.pipeline().getVertexFormatMode() == VertexFormat.Mode.QUADS) {
 			// The quads we're rendering are translucent, so they need to be sorted for our index buffer
-			draw.builtBuffer().sortQuads(GENERAL_ALLOCATOR, RenderSystem.getProjectionType().getVertexSorter());
-			indices = draw.pipeline().getVertexFormat().uploadImmediateIndexBuffer(draw.builtBuffer().getSortedBuffer());
-			indexType = draw.builtBuffer().getDrawParameters().indexType();
+			draw.builtBuffer().sortQuads(GENERAL_ALLOCATOR, RenderSystem.getProjectionType().vertexSorting());
+			indices = draw.pipeline().getVertexFormat().uploadImmediateIndexBuffer(Objects.requireNonNull(draw.builtBuffer().indexBuffer()));
+			indexType = draw.builtBuffer().drawState().indexType();
 		} else {
 			// Use a general shape index buffer for other draw modes
-			RenderSystem.ShapeIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(draw.pipeline().getVertexFormatMode());
-			indices = shapeIndexBuffer.getIndexBuffer(draw.indexCount());
-			indexType = shapeIndexBuffer.getIndexType();
+			RenderSystem.AutoStorageIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(draw.pipeline().getVertexFormatMode());
+			indices = shapeIndexBuffer.getBuffer(draw.indexCount());
+			indexType = shapeIndexBuffer.type();
 		}
 
 		draw(draw, indices, indexType);
@@ -360,7 +359,7 @@ public final class CaribouRenderer {
 	}
 
 	private static GpuBufferSlice setupDynamicTransforms(float lineWidth) {
-		return RenderSystem.getDynamicUniforms().write(
+		return RenderSystem.getDynamicUniforms().writeTransform(
 				RenderSystem.getModelViewMatrix(),
 				COLOR_MODULATOR,
 				MODEL_OFFSET,
@@ -369,17 +368,17 @@ public final class CaribouRenderer {
 	}
 
 	private static GpuTextureView getMainColorTexture() {
-		return CLIENT.getFramebuffer().getColorAttachmentView();
+		return CLIENT.getMainRenderTarget().getColorTextureView();
 	}
 
 	private static GpuTextureView getMainDepthTexture() {
-		return CLIENT.getFramebuffer().getDepthAttachmentView();
+		return CLIENT.getMainRenderTarget().getDepthTextureView();
 	}
 
 	private static void applyViewOffsetZLayering() {
 		Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
 		modelViewStack.pushMatrix();
-		RenderSystem.getProjectionType().apply(modelViewStack, 1f);
+		RenderSystem.getProjectionType().applyLayeringTransform(modelViewStack, 1f);
 	}
 
 	private static void unapplyViewOffsetZLayering() {
@@ -387,29 +386,29 @@ public final class CaribouRenderer {
 	}
 
 	private record Draw(
-			BuiltBuffer builtBuffer,
-			GpuBuffer vertices,
-			int baseVertex,
-			int indexCount,
-			RenderPipeline pipeline,
-			TextureSetup textureSetup,
-			float lineWidth
+            MeshData builtBuffer,
+            GpuBuffer vertices,
+            int baseVertex,
+            int indexCount,
+            RenderPipeline pipeline,
+            TextureSetup textureSetup,
+            float lineWidth
 	) {
 	}
 
 	private record PreparedDraw(
-			BuiltBuffer builtBuffer,
-			RenderPipeline pipeline,
-			TextureSetup textureSetup,
-			float lineWidth
+            MeshData builtBuffer,
+            RenderPipeline pipeline,
+            TextureSetup textureSetup,
+            float lineWidth
 	) {
 	}
 
 	private record BatchedDraw(
-			BufferBuilder bufferBuilder,
-			RenderPipeline pipeline,
-			TextureSetup textureSetup,
-			float lineWidth
+            BufferBuilder bufferBuilder,
+            RenderPipeline pipeline,
+            TextureSetup textureSetup,
+            float lineWidth
 	) {
 	}
 }

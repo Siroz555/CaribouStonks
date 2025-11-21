@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -96,7 +96,7 @@ public final class WaypointFeature extends Feature {
         waypoints = copy;
     }
 
-    private void onClientStarted(MinecraftClient client) {
+    private void onClientStarted(Minecraft client) {
         loadWaypoints().thenAccept(this::loadExistingWaypoints);
     }
 
@@ -106,7 +106,7 @@ public final class WaypointFeature extends Feature {
 		}
 
         return CompletableFuture.supplyAsync(() -> {
-            Type mapType = new TypeToken<Map<IslandType, List<Waypoint>>>() {}.getType();
+            Type mapType = new TypeToken<@NotNull Map<IslandType, List<Waypoint>>>() {}.getType();
 			try {
 				return CaribouStonks.core().getJsonFileService().loadMap(WAYPOINT_PATH, mapType);
 			} catch (JsonProcessingException ex) {
@@ -134,7 +134,7 @@ public final class WaypointFeature extends Feature {
         waypoints.putAll(waypointMap);
     }
 
-    public void saveWaypoints(MinecraftClient client) {
+    public void saveWaypoints(Minecraft client) {
 		try {
 			CaribouStonks.core().getJsonFileService().save(WAYPOINT_PATH, waypoints);
 		} catch (JsonProcessingException ex) {

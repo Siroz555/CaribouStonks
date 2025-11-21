@@ -25,12 +25,12 @@ import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
 public class CocoonedWarningFeature extends Feature {
@@ -51,7 +51,7 @@ public class CocoonedWarningFeature extends Feature {
 	private final SlayerManager slayerManager;
 
 	// chaîne temporaire des apparitions successives (ordre d'apparition)
-	private final Deque<ArmorStandEntity> chain = new ArrayDeque<>();
+	private final Deque<ArmorStand> chain = new ArrayDeque<>();
 	private final List<BlockPos> cocoonPositions = new ArrayList<>();
 	private long lastWorldChange = 0;
 	private boolean canBeTriggered = false;
@@ -91,18 +91,18 @@ public class CocoonedWarningFeature extends Feature {
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
-	private void onUpdateArmorStand(@NotNull ArmorStandEntity armorStandEntity, boolean equipment) {
+	private void onUpdateArmorStand(@NotNull ArmorStand armorStandEntity, boolean equipment) {
 		if (equipment || (System.currentTimeMillis() - lastWorldChange < WORLD_CHANGE_THRESHOLD)) return;
 		if (!isEnabled()) return;
 		if (!matchesCocoonCriteria(armorStandEntity)) return;
 
-		for (ArmorStandEntity as : chain) {
+		for (ArmorStand as : chain) {
 			if (as.getId() == armorStandEntity.getId()) {
 				return;
 			}
 		}
 
-		chain.removeIf(a -> a.isRemoved() || a.isDead());
+		chain.removeIf(a -> a.isRemoved() || a.isDeadOrDying());
 
 		// Si la chain est vide, ce spawn devient le premier élément
 		if (chain.isEmpty()) {
@@ -112,8 +112,8 @@ public class CocoonedWarningFeature extends Feature {
 
 		// Si le nouveau spawn est assez proche d'au moins un élément de la chain, il est ajouté
 		boolean closeToAny = false;
-		for (ArmorStandEntity as : chain) {
-			if (as.squaredDistanceTo(armorStandEntity) <= MAX_ARMORSTAND_PAIR_DISTANCE_SQ) {
+		for (ArmorStand as : chain) {
+			if (as.distanceToSqr(armorStandEntity) <= MAX_ARMORSTAND_PAIR_DISTANCE_SQ) {
 				closeToAny = true;
 				break;
 			}
@@ -128,7 +128,7 @@ public class CocoonedWarningFeature extends Feature {
 			}
 
 			if (chain.size() == 3) {
-				onMobCocooned(chain.element().getBlockPos());
+				onMobCocooned(chain.element().blockPosition());
 				chain.clear(); // Réinitialise la chain pour éviter de trigger à nouveau
 			}
 		} else {
@@ -139,27 +139,27 @@ public class CocoonedWarningFeature extends Feature {
 	}
 
 	@EventHandler(event = "WorldEvents.ARMORSTAND_REMOVED")
-	private void onRemoveArmorStand(@NotNull ArmorStandEntity armorStand) {
+	private void onRemoveArmorStand(@NotNull ArmorStand armorStand) {
 		chain.removeIf(a -> a.getId() == armorStand.getId());
 	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")
 	public void render(WorldRenderer renderer) {
 		for (BlockPos pos : cocoonPositions) {
-			final BlockPos finalPos = pos.toImmutable().add(0, -4, 0);
+			final BlockPos finalPos = pos.immutable().offset(0, -4, 0);
 			renderer.submitBeaconBeam(finalPos, Colors.RED);
 		}
 	}
 
 	private void onMobCocooned(BlockPos pos) {
-		Client.sendMessageWithPrefix(Text.literal("A mob has been cocooned!").formatted(Formatting.RED, Formatting.BOLD));
+		Client.sendMessageWithPrefix(Component.literal("A mob has been cocooned!").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
 
 		if (configSoundEnabled.getAsBoolean()) {
-			Client.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE, 1f, 1f);
+			Client.playSound(SoundEvents.ELDER_GUARDIAN_CURSE, 1f, 1f);
 		}
 
 		if (configTitleEnabled.getAsBoolean()) {
-			Client.showTitle(Text.literal("Cocooned!").formatted(Formatting.RED, Formatting.BOLD), 0, 27, 0);
+			Client.showTitle(Component.literal("Cocooned!").withStyle(ChatFormatting.RED, ChatFormatting.BOLD), 0, 27, 0);
 		}
 
 		if (configBeamEnabled.getAsBoolean() && pos != null) {
@@ -169,17 +169,17 @@ public class CocoonedWarningFeature extends Feature {
 		}
 	}
 
-	private boolean matchesCocoonCriteria(@NotNull ArmorStandEntity as) {
-		if (as.isCustomNameVisible() || !as.hasStackEquipped(EquipmentSlot.HEAD)) {
+	private boolean matchesCocoonCriteria(@NotNull ArmorStand as) {
+		if (as.isCustomNameVisible() || !as.hasItemInSlot(EquipmentSlot.HEAD)) {
 			return false;
 		}
 
-		String headTexture = ItemUtils.getHeadTexture(as.getEquippedStack(EquipmentSlot.HEAD));
+		String headTexture = ItemUtils.getHeadTexture(as.getItemBySlot(EquipmentSlot.HEAD));
 		if (headTexture.isBlank()) {
 			return false;
 		}
 
-		if (CLIENT.player != null && CLIENT.player.getEntityPos().squaredDistanceTo(as.getEntityPos()) > MAX_PLAYER_COCOON_DISTANCE_SQ) {
+		if (CLIENT.player != null && CLIENT.player.position().distanceToSqr(as.position()) > MAX_PLAYER_COCOON_DISTANCE_SQ) {
 			return false;
 		}
 

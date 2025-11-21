@@ -4,9 +4,9 @@ import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.CuboidOutlineRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import com.mojang.blaze3d.vertex.PoseStack;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -23,10 +23,10 @@ public final class CuboidOutlineRendererCommand implements RendererCommand<Cuboi
 		BufferBuilder buffer = CaribouRenderer.getBuffer(CaribouRenderPipelines.LINE_STRIP, state.lineWidth());
 
 		Matrix4f matrix4f = new Matrix4f()
-				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());
+				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());
 
-		MatrixStack matrices = RenderUtils.matrixToStack(matrix4f);
-		MatrixStack.Entry entry = matrices.peek();
+		PoseStack matrices = RenderUtils.matrixToStack(matrix4f);
+		PoseStack.Pose entry = matrices.last();
 
 		double chunkX = Math.floor((state.center().x + state.depth()) / state.size());
 		double chunkZ = Math.floor((state.center().z + state.depth()) / state.size());
@@ -41,65 +41,65 @@ public final class CuboidOutlineRendererCommand implements RendererCommand<Cuboi
 			for (int j = 0; j <= state.size(); j += state.size()) {
 				float x = chunkMinX + i;
 				float z = chunkMinZ + j;
-				buffer.vertex(entry, x, y1, z)
-						.color(1.0F, 0.0F, 0.0F, 0.0F)
-						.normal(entry, x, y1, z)
-						.lineWidth(state.lineWidth());
+				buffer.addVertex(entry, x, y1, z)
+						.setColor(1.0F, 0.0F, 0.0F, 0.0F)
+						.setNormal(entry, x, y1, z)
+						.setLineWidth(state.lineWidth());
 
-				buffer.vertex(entry, x, y1, z)
-						.color(1.0F, 0.0F, 0.0F, 0.5F)
-						.normal(entry, x, y1, z)
-						.lineWidth(state.lineWidth());
+				buffer.addVertex(entry, x, y1, z)
+						.setColor(1.0F, 0.0F, 0.0F, 0.5F)
+						.setNormal(entry, x, y1, z)
+						.setLineWidth(state.lineWidth());
 
-				buffer.vertex(entry, x, y2, z)
-						.color(1.0F, 0.0F, 0.0F, 0.5F)
-						.normal(entry, x, y2, z)
-						.lineWidth(state.lineWidth());
+				buffer.addVertex(entry, x, y2, z)
+						.setColor(1.0F, 0.0F, 0.0F, 0.5F)
+						.setNormal(entry, x, y2, z)
+						.setLineWidth(state.lineWidth());
 
-				buffer.vertex(entry, x, y2, z)
-						.color(1.0F, 0.0F, 0.0F, 0.0F)
-						.normal(entry, x, y2, z)
-						.lineWidth(state.lineWidth());
+				buffer.addVertex(entry, x, y2, z)
+						.setColor(1.0F, 0.0F, 0.0F, 0.0F)
+						.setNormal(entry, x, y2, z)
+						.setLineWidth(state.lineWidth());
 			}
 		}
 
 		for (int i = state.minY(); i <= state.maxY() + 1; i += 2) {
 			float y = (float) ((double) i);
 			int color = i % 8 == 0 ? state.mainColor().asInt() : state.secondColor().asInt();
-			buffer.vertex(entry, chunkMinX, y, chunkMinZ)
-					.color(1.0F, 1.0F, 0.0F, 0.0F)
-					.normal(entry, chunkMinX, y, chunkMinZ)
-					.lineWidth(state.lineWidth());
+			buffer.addVertex(entry, chunkMinX, y, chunkMinZ)
+					.setColor(1.0F, 1.0F, 0.0F, 0.0F)
+					.setNormal(entry, chunkMinX, y, chunkMinZ)
+					.setLineWidth(state.lineWidth());
 
-			buffer.vertex(entry, chunkMinX, y, chunkMinZ)
-					.color(color)
-					.normal(entry, chunkMinX, y, chunkMinZ)
-					.lineWidth(state.lineWidth());
+			buffer.addVertex(entry, chunkMinX, y, chunkMinZ)
+					.setColor(color)
+					.setNormal(entry, chunkMinX, y, chunkMinZ)
+					.setLineWidth(state.lineWidth());
 
-			buffer.vertex(entry, chunkMinX, y, chunkMinZ + state.size())
-					.color(color).
-					normal(entry, chunkMinX, y, chunkMinZ + state.size())
-					.lineWidth(state.lineWidth());
+			buffer.addVertex(entry, chunkMinX, y, chunkMinZ + state.size())
+					.setColor(color).
+                    setNormal(entry, chunkMinX, y, chunkMinZ + state.size())
+					.setLineWidth(state.lineWidth());
 
-			buffer.vertex(entry, chunkMinX + state.size(), y, chunkMinZ + state.size())
-					.color(color)
-					.normal(entry, chunkMinX + state.size(), y, chunkMinZ + state.size())
-					.lineWidth(state.lineWidth());
+			buffer.addVertex(entry, chunkMinX + state.size(), y, chunkMinZ + state.size())
+					.setColor(color)
+					.setNormal(entry, chunkMinX + state.size(), y, chunkMinZ + state.size())
+					.setLineWidth(state.lineWidth());
 
-			buffer.vertex(entry, chunkMinX + state.size(), y, chunkMinZ)
-					.color(color)
-					.normal(entry, chunkMinX + state.size(), y, chunkMinZ)
-					.lineWidth(state.lineWidth());
+			buffer.addVertex(entry, chunkMinX + state.size(), y, chunkMinZ)
+					.setColor(color)
+					.setNormal(entry, chunkMinX + state.size(), y, chunkMinZ)
+					.setLineWidth(state.lineWidth());
 
-			buffer.vertex(entry, chunkMinX, y, chunkMinZ)
-					.color(color)
-					.normal(entry, chunkMinX, y, chunkMinZ)
-					.lineWidth(state.lineWidth());
+			buffer.addVertex(entry, chunkMinX, y, chunkMinZ)
+					.setColor(color)
+					.setNormal(entry, chunkMinX, y, chunkMinZ)
+					.setLineWidth(state.lineWidth());
 
-			buffer.vertex(entry, chunkMinX, y, chunkMinZ)
-					.color(1.0F, 1.0F, 0.0F, 0.0F)
-					.normal(entry, chunkMinX, y, chunkMinZ)
-					.lineWidth(state.lineWidth());
+			buffer.addVertex(entry, chunkMinX, y, chunkMinZ)
+					.setColor(1.0F, 1.0F, 0.0F, 0.0F)
+					.setNormal(entry, chunkMinX, y, chunkMinZ)
+					.setLineWidth(state.lineWidth());
 		}
 	}
 }

@@ -17,11 +17,11 @@ import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
 import net.minecraft.SharedConstants;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +51,7 @@ final class UpdateChecker {
 
 	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STARTED")
 	private void checkUpdateOnModrinth() {
-		final String mcVersion = SharedConstants.getGameVersion().id();
+		final String mcVersion = SharedConstants.getCurrentVersion().id();
 		CompletableFuture.runAsync(() -> {
 			try (HttpResponse response = Http.request(MODRINTH_VERSION_CHECKER_URL + "[%22" + mcVersion + "%22]")) {
 				if (!response.success()) {
@@ -105,20 +105,20 @@ final class UpdateChecker {
 		notified = true;
 
 		TickScheduler.getInstance().runLater(() -> {
-			Client.sendMessage(Text.empty());
-			Client.sendMessageWithPrefix(Text.empty()
-					.append(Text.literal("?i").formatted(Formatting.GOLD, Formatting.OBFUSCATED))
-					.append(Text.literal(" Update Available! ").formatted(Formatting.YELLOW))
-					.append(Text.literal("i?").formatted(Formatting.GOLD, Formatting.OBFUSCATED)));
-			Client.sendMessageWithPrefix(Text.empty()
-					.append(Text.literal(newestModrinthVersionInfo.name()).formatted(Formatting.AQUA))
-					.append(Text.literal(" CLICK").formatted(Formatting.YELLOW, Formatting.BOLD))
-					.styled(style -> style
-							.withHoverEvent(new HoverEvent.ShowText(Text.literal("Click to open on Modrinth!").formatted(Formatting.YELLOW)))
+			Client.sendMessage(Component.empty());
+			Client.sendMessageWithPrefix(Component.empty()
+					.append(Component.literal("?i").withStyle(ChatFormatting.GOLD, ChatFormatting.OBFUSCATED))
+					.append(Component.literal(" Update Available! ").withStyle(ChatFormatting.YELLOW))
+					.append(Component.literal("i?").withStyle(ChatFormatting.GOLD, ChatFormatting.OBFUSCATED)));
+			Client.sendMessageWithPrefix(Component.empty()
+					.append(Component.literal(newestModrinthVersionInfo.name()).withStyle(ChatFormatting.AQUA))
+					.append(Component.literal(" CLICK").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
+					.withStyle(style -> style
+							.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to open on Modrinth!").withStyle(ChatFormatting.YELLOW)))
 							.withClickEvent(new ClickEvent.OpenUrl(URI.create(MODRINTH_VERSION_URL + newestModrinthVersionInfo.id())))));
-			Client.sendMessage(Text.empty());
+			Client.sendMessage(Component.empty());
 
-			Client.playSound(SoundEvents.BLOCK_TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
+			Client.playSound(SoundEvents.TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
 			Client.showNotificationSystem("CaribouStonks Update Available!", "Update to " + newestModrinthVersionInfo.version().getFriendlyString());
 		}, 3, TimeUnit.SECONDS);
 	}

@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.core.skyblock.item;
 
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -26,8 +26,8 @@ public record SkyblockItemStack(
 	 * @return the {@code SkyblockItemStack} parsed from the given {@code ItemStack}
 	 */
 	public static @NotNull SkyblockItemStack of(@NotNull ItemStack itemStack) {
-		NbtCompound customData = itemStack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT).copyNbt();
-		String skyBlockId = customData.getString("id", "");
+		CompoundTag customData = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+		String skyBlockId = customData.getStringOr("id", "");
 		return new SkyblockItemStack(skyBlockId, itemStack.getCount(), ItemMetadata.ofNbt(customData));
 	}
 }

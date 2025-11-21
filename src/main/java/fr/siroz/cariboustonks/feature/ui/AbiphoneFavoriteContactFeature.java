@@ -14,14 +14,14 @@ import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.cooldown.Cooldown;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,12 +62,12 @@ public class AbiphoneFavoriteContactFeature
 		for (Int2ObjectMap.Entry<ItemStack> entry : slots.int2ObjectEntrySet()) {
 
 			ItemStack itemStack = entry.getValue();
-			if (itemStack == null || itemStack.isOf(Items.BLACK_STAINED_GLASS_PANE)) {
+			if (itemStack == null || itemStack.is(Items.BLACK_STAINED_GLASS_PANE)) {
 				continue;
 			}
 
 			if (isContact(itemStack)) {
-				String name = StonksUtils.stripColor(itemStack.getName().getString());
+				String name = StonksUtils.stripColor(itemStack.getHoverName().getString());
 				if (ConfigManager.getConfig().uiAndVisuals.favoriteAbiphoneContacts.contains(name)) {
 					highlights.add(ColorHighlight.yellow(entry.getIntKey(), 0.25f));
 				}
@@ -78,18 +78,18 @@ public class AbiphoneFavoriteContactFeature
 	}
 
 	@Override
-	public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Text> lines) {
+	public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
 		if (isContact(item)) {
-			String name = StonksUtils.stripColor(item.getName().getString());
+			String name = StonksUtils.stripColor(item.getHoverName().getString());
 			if (ConfigManager.getConfig().uiAndVisuals.favoriteAbiphoneContacts.contains(name)) {
-				lines.add(Text.literal("SHIFT").formatted(Formatting.YELLOW, Formatting.BOLD)
-						.append(Text.literal(" To remove from favourite contacts").formatted(Formatting.YELLOW)));
+				lines.add(Component.literal("SHIFT").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD)
+						.append(Component.literal(" To remove from favourite contacts").withStyle(ChatFormatting.YELLOW)));
 			} else {
-				lines.add(Text.literal("SHIFT").formatted(Formatting.YELLOW, Formatting.BOLD)
-						.append(Text.literal(" To add to favourite contacts").formatted(Formatting.YELLOW)));
+				lines.add(Component.literal("SHIFT").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD)
+						.append(Component.literal(" To add to favourite contacts").withStyle(ChatFormatting.YELLOW)));
 			}
 
-			lines.add(Text.literal("(from CaribouStonks)").formatted(Formatting.DARK_GRAY));
+			lines.add(Component.literal("(from CaribouStonks)").withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}
 
@@ -99,19 +99,15 @@ public class AbiphoneFavoriteContactFeature
 	}
 
 	@EventHandler(event = "CustomScreenEvents.KEY_PRESSED")
-	private void onKeyPressed(Screen screen, KeyInput input, @NotNull Slot slot) {
+	private void onKeyPressed(Screen screen, KeyEvent input, @NotNull Slot slot) {
 		if (!isEnabled() || screen == null) return;
 		if (!matches(screen)) return;
 
 		if (Client.hasShiftDown() && COOLDOWN.test()) {
-			ItemStack itemStack = slot.getStack();
-			if (itemStack == null) {
-				return;
-			}
-
+			ItemStack itemStack = slot.getItem();
 			if (isContact(itemStack)) {
-				String name = StonksUtils.stripColor(itemStack.getName().getString());
-				toggleFavouriteContact(itemStack.getName(), name);
+				String name = StonksUtils.stripColor(itemStack.getHoverName().getString());
+				toggleFavouriteContact(itemStack.getHoverName(), name);
 			}
 		}
 	}
@@ -125,24 +121,24 @@ public class AbiphoneFavoriteContactFeature
 
 	private boolean isContact(ItemStack itemStack) {
 		return ItemUtils.getLore(itemStack).stream()
-				.map(Text::getString)
+				.map(Component::getString)
 				.anyMatch(s -> s.equals("Left-click to call!") || s.equals("Click to call!"));
 	}
 
-	private void toggleFavouriteContact(Text rawContactName, String contactName) {
+	private void toggleFavouriteContact(Component rawContactName, String contactName) {
 		updated = true;
 		if (ConfigManager.getConfig().uiAndVisuals.favoriteAbiphoneContacts.contains(contactName)) {
 			ConfigManager.getConfig().uiAndVisuals.favoriteAbiphoneContacts.remove(contactName);
-			Client.sendMessageWithPrefix(Text.literal("Removed ").formatted(Formatting.RED)
+			Client.sendMessageWithPrefix(Component.literal("Removed ").withStyle(ChatFormatting.RED)
 					.append(rawContactName)
-					.append(" from favourite contacts.").formatted(Formatting.RED));
-			Client.playSound(SoundEvents.ENTITY_VILLAGER_NO, 1f, 1f);
+					.append(" from favourite contacts.").withStyle(ChatFormatting.RED));
+			Client.playSound(SoundEvents.VILLAGER_NO, 1f, 1f);
 		} else {
 			ConfigManager.getConfig().uiAndVisuals.favoriteAbiphoneContacts.add(contactName);
-			Client.sendMessageWithPrefix(Text.literal("Added ").formatted(Formatting.GREEN)
+			Client.sendMessageWithPrefix(Component.literal("Added ").withStyle(ChatFormatting.GREEN)
 					.append(rawContactName)
-					.append(" to favourite contacts.").formatted(Formatting.GREEN));
-			Client.playSound(SoundEvents.ENTITY_VILLAGER_YES, 1f, 1f);
+					.append(" to favourite contacts.").withStyle(ChatFormatting.GREEN));
+			Client.playSound(SoundEvents.VILLAGER_YES, 1f, 1f);
 		}
 	}
 }

@@ -18,7 +18,7 @@ import java.util.Optional;
  * including a message field. The {@code message} may be either:
  * <ul>
  *   <li>A simple plain text (e.g., "Ubik's Cube"), which can be directly used in notifications</li>
- *   <li>A JSON-serialized {@link net.minecraft.text.Text}, allowing for dynamic and rich descriptions</li>
+ *   <li>A JSON-serialized {@link net.minecraft.network.chat.Component}, allowing for dynamic and rich descriptions</li>
  * </ul>
  * The {@link #onExpire(TimedObject)} method must properly handle both serialization formats
  * depending on the reminder's requirements.
@@ -84,7 +84,7 @@ public interface Reminder {
      * Called when a {@link TimedObject} associated with this reminder expires.
      * <p>
      * The {@link TimedObject#message()} field may contain either a plain text value or
-     * a JSON representation of a {@link net.minecraft.text.Text}.
+     * a JSON representation of a {@link net.minecraft.network.chat.Component}.
      * Implementations should handle both scenarios accordingly, e.g., by attempting to
      * parse the message as JSON first and falling back to plain text if parsing fails.
      *

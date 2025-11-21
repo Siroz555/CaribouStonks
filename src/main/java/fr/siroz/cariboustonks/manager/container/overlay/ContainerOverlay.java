@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.manager.container.overlay;
 import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
  * This interface follows a two-phase rendering architecture:
  * <ol>
  *   <li>The {@link #content(Int2ObjectMap)} method analyzes container items and collects data</li>
- *   <li>The {@link #render(DrawContext, int, int, int, int)} method uses this data to render visual elements</li>
+ *   <li>The {@link #render(GuiGraphics, int, int, int, int)} method uses this data to render visual elements</li>
  * </ol>
  * <p>
  * Even when no highlights are needed, the {@code content} method provides access to container
@@ -58,13 +58,13 @@ public interface ContainerOverlay {
 	/**
 	 * Renders the overlay visuals within the container.
 	 *
-	 * @param context      the {@link DrawContext} used for rendering graphical elements.
+	 * @param guiGraphics  the {@link GuiGraphics} used for rendering graphical elements.
 	 * @param screenWidth  the width of the screen in pixels
 	 * @param screenHeight the height of the screen in pixels
 	 * @param x            the X-coordinate offset from the screen
 	 * @param y            the Y-coordinate offset from the screen
 	 */
-	default void render(@NotNull DrawContext context, int screenWidth, int screenHeight, int x, int y) {
+	default void render(@NotNull GuiGraphics guiGraphics, int screenWidth, int screenHeight, int x, int y) {
 	}
 
 	/**

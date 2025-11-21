@@ -18,13 +18,13 @@ import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -73,20 +73,20 @@ public final class ChocolateLimitReminderFeature
 	@Override
 	public @NotNull ReminderDisplay display() {
 		return ReminderDisplay.of(
-				Text.literal("Max Chocolate Factory").formatted(Formatting.GOLD, Formatting.BOLD, Formatting.UNDERLINE),
-				Text.literal("The chocolate limit is reached!").formatted(Formatting.RED),
+				Component.literal("Max Chocolate Factory").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
+				Component.literal("The chocolate limit is reached!").withStyle(ChatFormatting.RED),
 				ICON
 		);
 	}
 
 	@Override
 	public void onExpire(@NotNull TimedObject timedObject) {
-		Text text = Text.literal("The chocolate limit is reached!").formatted(Formatting.RESET, Formatting.RED);
+		Component text = Component.literal("The chocolate limit is reached!").withStyle(ChatFormatting.RESET, ChatFormatting.RED);
 
-		Client.sendMessageWithPrefix(Text.literal("[Chocolate Factory] ").formatted(Formatting.GOLD)
+		Client.sendMessageWithPrefix(Component.literal("[Chocolate Factory] ").withStyle(ChatFormatting.GOLD)
 				.append(text));
 
-		Client.showNotification(Text.literal("Chocolate Factory\n").formatted(Formatting.GOLD, Formatting.BOLD)
+		Client.showNotification(Component.literal("Chocolate Factory\n").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
 				.append(text), ICON);
 	}
 
@@ -97,13 +97,13 @@ public final class ChocolateLimitReminderFeature
 
 	@Override
 	public void onPreExpire(@NotNull TimedObject timedObject) {
-		MutableText text = Text.literal("The chocolate limit will be reached soon!").formatted(Formatting.RED);
-		MutableText message = Text.empty()
-				.append(Text.literal("[Chocolate Factory] ").formatted(Formatting.GOLD, Formatting.BOLD))
+		MutableComponent text = Component.literal("The chocolate limit will be reached soon!").withStyle(ChatFormatting.RED);
+		MutableComponent message = Component.empty()
+				.append(Component.literal("[Chocolate Factory] ").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD))
 				.append(text);
-		MutableText notification = Text.empty()
-				.append(Text.literal("Chocolate Factory").formatted(Formatting.GOLD, Formatting.BOLD))
-				.append(Text.literal("\n"))
+		MutableComponent notification = Component.empty()
+				.append(Component.literal("Chocolate Factory").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD))
+				.append(Component.literal("\n"))
 				.append(text);
 
 		Client.sendMessageWithPrefix(message);
@@ -113,7 +113,7 @@ public final class ChocolateLimitReminderFeature
 	@Override
 	public @NotNull List<ColorHighlight> content(@NotNull Int2ObjectMap<ItemStack> slots) {
 
-		String info = slots.get(CHOCOLATE_SLOT).getName().getString();
+		String info = slots.get(CHOCOLATE_SLOT).getHoverName().getString();
 		Matcher chocolateMatcher = CHOCOLATE_PATTERN.matcher(info);
 		if (chocolateMatcher.find()) {
 			totalChocolate = Long.parseLong(chocolateMatcher.group(1).replace(",", ""));
@@ -148,12 +148,12 @@ public final class ChocolateLimitReminderFeature
 	}
 
 	@Override
-	public void render(@NotNull DrawContext context, int screenWidth, int screenHeight, int x, int y) {
+	public void render(@NotNull GuiGraphics context, int screenWidth, int screenHeight, int x, int y) {
 		if (limitTime != null) {
-			Text limitText = Text.literal("Chocolate will be reached: ").formatted(Formatting.GOLD)
-					.append(Text.literal(TimeUtils.formatInstant(limitTime, TimeUtils.DATE_TIME_FULL)).formatted(Formatting.YELLOW));
-			context.drawCenteredTextWithShadow(
-					MinecraftClient.getInstance().textRenderer,
+			Component limitText = Component.literal("Chocolate will be reached: ").withStyle(ChatFormatting.GOLD)
+					.append(Component.literal(TimeUtils.formatInstant(limitTime, TimeUtils.DATE_TIME_FULL)).withStyle(ChatFormatting.YELLOW));
+			context.drawCenteredString(
+					Minecraft.getInstance().font,
 					limitText,
 					screenWidth >> 1,
 					20,

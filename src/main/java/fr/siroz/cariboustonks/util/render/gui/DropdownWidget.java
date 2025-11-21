@@ -2,17 +2,17 @@ package fr.siroz.cariboustonks.util.render.gui;
 
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.cursor.StandardCursors;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ContainerWidget;
-import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.components.AbstractContainerWidget;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -23,9 +23,9 @@ import java.util.function.Consumer;
 /**
  * Credits to the Skyblocker Team (<a href="https://github.com/SkyblockerMod/Skyblocker">GitHub Skyblocker</a>)
  */
-public class DropdownWidget<T> extends ContainerWidget {
+public class DropdownWidget<T> extends AbstractContainerWidget {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private static final int ENTRY_HEIGHT = 15;
 	private static final int HEADER_HEIGHT = ENTRY_HEIGHT + 4;
@@ -49,7 +49,7 @@ public class DropdownWidget<T> extends ContainerWidget {
 			@NotNull Consumer<T> selectCallback,
 			T selected
 	) {
-		super(x, y, width, HEADER_HEIGHT, Text.empty());
+		super(x, y, width, HEADER_HEIGHT, Component.empty());
 		this.maxHeight = maxHeight;
 		this.entries = entries;
 		this.selectCallback = selectCallback;
@@ -62,26 +62,26 @@ public class DropdownWidget<T> extends ContainerWidget {
 	}
 
 	@Override
-	public List<? extends Element> children() {
+	public @NotNull List<? extends GuiEventListener> children() {
 		return List.of(dropdownList);
 	}
 
 	@Override
-	protected void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
+	protected void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
 		dropdownList.visible = open;
 		dropdownList.render(context, mouseX, mouseY, delta);
 
 		context.fill(getX(), getY(), getRight(), getY() + HEADER_HEIGHT + 1, BACKGROUND_COLOR);
 		GuiRenderer.drawBorder(context, getX(), getY(), getWidth(), HEADER_HEIGHT + 1, -1);
-		context.drawText(CLIENT.textRenderer, ">", getX() + 4, getY() + 6, Colors.WHITE.asInt(), true);
-		context.drawText(CLIENT.textRenderer, selected.toString(), getX() + 12, getY() + 6, Colors.WHITE.asInt(), true);
+		context.drawString(CLIENT.font, ">", getX() + 4, getY() + 6, Colors.WHITE.asInt(), true);
+		context.drawString(CLIENT.font, selected.toString(), getX() + 12, getY() + 6, Colors.WHITE.asInt(), true);
 		if (isMouseOver(mouseX, mouseY)) {
-			context.setCursor(StandardCursors.POINTING_HAND);
+			context.requestCursor(CursorTypes.POINTING_HAND);
 		}
 	}
 
 	@Override
-	protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+	protected void updateWidgetNarration(@NotNull NarrationElementOutput builder) {
 	}
 
 	private void setOpen(boolean open) {
@@ -109,7 +109,7 @@ public class DropdownWidget<T> extends ContainerWidget {
 	public void setX(int x) {
 		super.setX(x);
 		dropdownList.setX(getX() + 1);
-		dropdownList.refreshScroll();
+		dropdownList.refreshScrollAmount();
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public class DropdownWidget<T> extends ContainerWidget {
 	}
 
 	@Override
-	public boolean mouseClicked(Click click, boolean doubled) {
+	public boolean mouseClicked(@NotNull MouseButtonEvent click, boolean doubled) {
 		if (!visible) return false;
 
 		if (getX() <= click.x() && click.x() < getX() + getWidth() && getY() <= click.y() && click.y() < getY() + HEADER_HEIGHT) {
@@ -144,12 +144,12 @@ public class DropdownWidget<T> extends ContainerWidget {
 	}
 
 	@Override
-	protected int getContentsHeightWithPadding() {
+	protected int contentHeight() {
 		return getHeight();
 	}
 
 	@Override
-	protected double getDeltaYPerScroll() {
+	protected double scrollRate() {
 		return 0;
 	}
 
@@ -157,7 +157,7 @@ public class DropdownWidget<T> extends ContainerWidget {
 	public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
 		if (!visible) return false;
 
-		if (this.hoveredElement(mouseX, mouseY)
+		if (this.getChildAt(mouseX, mouseY)
 				.filter(e -> e.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount))
 				.isPresent()) {
 			return true;
@@ -166,9 +166,9 @@ public class DropdownWidget<T> extends ContainerWidget {
 		return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 	}
 
-	private class DropdownList extends ElementListWidget<Entry> {
+	private class DropdownList extends ContainerObjectSelectionList<@NotNull Entry> {
 
-		protected DropdownList(MinecraftClient minecraftClient, int x, int y, int width, int height) {
+		protected DropdownList(Minecraft minecraftClient, int x, int y, int width, int height) {
 			super(minecraftClient, width, height, y, ENTRY_HEIGHT);
 			setX(x);
 		}
@@ -189,34 +189,34 @@ public class DropdownWidget<T> extends ContainerWidget {
 		}
 
 		@Override
-		protected void drawScrollbar(DrawContext context, int mouseX, int mouseY) {
-			if (this.overflows()) {
-				int x1 = this.getScrollbarX();
-				int heightY = this.getScrollbarThumbHeight();
-				int y1 = this.getScrollbarThumbY();
+		protected void renderScrollbar(@NotNull GuiGraphics context, int mouseX, int mouseY) {
+			if (this.scrollbarVisible()) {
+				int x1 = this.scrollBarX();
+				int heightY = this.scrollerHeight();
+				int y1 = this.scrollBarY();
 				context.fill(x1, y1 + 1, x1 + 2, y1 + heightY, -1);
 			}
 		}
 
 		@Override
-		protected int getScrollbarX() {
+		protected int scrollBarX() {
 			return getRowLeft() + getRowWidth();
 		}
 
 		@Override
-		public boolean mouseClicked(Click click, boolean doubled) {
+		public boolean mouseClicked(@NotNull MouseButtonEvent click, boolean doubled) {
 			if (!visible) return false;
 			return super.mouseClicked(click, doubled);
 		}
 
 		@Override
-		public boolean mouseReleased(Click click) {
+		public boolean mouseReleased(@NotNull MouseButtonEvent click) {
 			if (!visible) return false;
 			return super.mouseReleased(click);
 		}
 
 		@Override
-		public boolean mouseDragged(Click click, double offsetX, double offsetY) {
+		public boolean mouseDragged(@NotNull MouseButtonEvent click, double offsetX, double offsetY) {
 			if (!visible) return false;
 			return super.mouseDragged(click, offsetX, offsetY);
 		}
@@ -228,22 +228,22 @@ public class DropdownWidget<T> extends ContainerWidget {
 		}
 
 		@Override
-		protected void drawHeaderAndFooterSeparators(DrawContext context) {
+		protected void renderListSeparators(@NotNull GuiGraphics context) {
 		}
 
 		@Override
-		protected void drawMenuListBackground(@NotNull DrawContext context) {
+		protected void renderListBackground(@NotNull GuiGraphics context) {
 			context.fill(getX(), getY(), getRight(), getBottom(), BACKGROUND_COLOR);
 			GuiRenderer.drawBorder(context, getX(), getY(), getWidth(), getHeight(), -1);
 		}
 
 		@Override
-		protected void enableScissor(@NotNull DrawContext context) {
+		protected void enableScissor(@NotNull GuiGraphics context) {
 			context.enableScissor(this.getX(), this.getY() + 1, this.getRight(), this.getBottom() - 1);
 		}
 	}
 
-	private class Entry extends ElementListWidget.Entry<Entry> {
+	private class Entry extends ContainerObjectSelectionList.Entry<@NotNull Entry> {
 
 		private final T entry;
 
@@ -253,29 +253,29 @@ public class DropdownWidget<T> extends ContainerWidget {
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull @Unmodifiable List<? extends Selectable> selectableChildren() {
+		public @NotNull @Unmodifiable List<? extends NarratableEntry> narratables() {
 			return List.of();
 		}
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull @Unmodifiable List<? extends Element> children() {
+		public @NotNull @Unmodifiable List<? extends GuiEventListener> children() {
 			return List.of();
 		}
 
 		@Override
-		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			GuiRenderer.drawScrollableText(context, CLIENT.textRenderer,
-					Text.literal(entry.toString()).fillStyle(Style.EMPTY.withUnderline(hovered)),
+		public void renderContent(@NotNull GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+			GuiRenderer.drawScrollableText(context, CLIENT.font,
+					Component.literal(entry.toString()).withStyle(Style.EMPTY.withUnderlined(hovered)),
 					getX() + 10, getY(), getX() + getContentWidth(), getY() + 11, -1);
 
 			if (selected == this.entry) {
-				context.drawTextWithShadow(CLIENT.textRenderer, "->", getX() + 1, getY() + 2, 0xFFFFFFFF);
+				context.drawString(CLIENT.font, "->", getX() + 1, getY() + 2, 0xFFFFFFFF);
 			}
 		}
 
 		@Override
-		public boolean mouseClicked(Click click, boolean doubled) {
+		public boolean mouseClicked(@NotNull MouseButtonEvent click, boolean doubled) {
 			select(entry);
 			return true;
 		}

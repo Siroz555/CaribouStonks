@@ -10,12 +10,12 @@ import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public final class PestFinderFeature extends Feature {
 
 	private final List<Integer> infestedPlots = new ArrayList<>();
 	private long lastUsedVacuum = 0;
-	private Vec3d guessPosition = null;
+	private Vec3 guessPosition = null;
 
 	public PestFinderFeature() {
 		PestFinderRenderer pestFinderRenderer = new PestFinderRenderer(this);
@@ -62,7 +62,7 @@ public final class PestFinderFeature extends Feature {
 		lastUsedVacuum = 0;
 	}
 
-	public Vec3d getGuessPosition() {
+	public Vec3 getGuessPosition() {
 		return guessPosition;
 	}
 
@@ -76,9 +76,9 @@ public final class PestFinderFeature extends Feature {
 	}
 
 	@EventHandler(event = "InteractionEvents.LEFT_CLICK_AIR")
-	private void onLeftClickAir(PlayerEntity player, Hand hand) {
-		ItemStack stack = player.getStackInHand(hand);
-		if (!isEnabled() || stack == null || stack.isEmpty()) {
+	private void onLeftClickAir(Player player, InteractionHand hand) {
+		ItemStack stack = player.getItemInHand(hand);
+		if (!isEnabled() || stack.isEmpty()) {
 			return;
 		}
 
@@ -90,7 +90,7 @@ public final class PestFinderFeature extends Feature {
 	}
 
 	@EventHandler(event = "NetworkEvents.PARTICLE_RECEIVED_PACKET")
-	private void onParticleReceived(ParticleS2CPacket packet) {
+	private void onParticleReceived(ClientboundLevelParticlesPacket packet) {
 		if (!isEnabled()) return;
 
 		long currentTime = System.currentTimeMillis();
@@ -98,19 +98,19 @@ public final class PestFinderFeature extends Feature {
 			return;
 		}
 
-		if (ParticleTypes.ANGRY_VILLAGER.equals(packet.getParameters().getType())) {
-			Vec3d pos = new Vec3d(packet.getX(), packet.getY(), packet.getZ());
+		if (ParticleTypes.ANGRY_VILLAGER.equals(packet.getParticle().getType())) {
+			Vec3 pos = new Vec3(packet.getX(), packet.getY(), packet.getZ());
 			handleParticle(pos);
 		}
 	}
 
-	private void handleParticle(Vec3d position) {
+	private void handleParticle(Vec3 position) {
 		if (predictor.isEmpty()) {
 			predictor.addPoint(position);
 			return;
 		}
 
-		Vec3d lastPoint = predictor.getLastPoint();
+		Vec3 lastPoint = predictor.getLastPoint();
 		if (lastPoint == null) {
 			return;
 		}
@@ -122,7 +122,7 @@ public final class PestFinderFeature extends Feature {
 
 		predictor.addPoint(position);
 
-		Vec3d solved = predictor.solve();
+		Vec3 solved = predictor.solve();
 		if (solved == null) {
 			return;
 		}

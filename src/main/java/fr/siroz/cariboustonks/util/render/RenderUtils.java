@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.util.render;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
+import com.mojang.blaze3d.vertex.PoseStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -15,22 +15,22 @@ public final class RenderUtils {
 	}
 
 	/**
-	 * Creates a {@link MatrixStack} from the given {@link Matrix4f}.
+	 * Creates a {@link PoseStack} from the given {@link Matrix4f}.
 	 *
 	 * @param matrix4f the {@link Matrix4f}
 	 */
-	public static @NotNull MatrixStack matrixToStack(Matrix4f matrix4f) {
-		MatrixStack matrices = new MatrixStack();
-		matrices.peek().getPositionMatrix().set(matrix4f);
+	public static @NotNull PoseStack matrixToStack(Matrix4f matrix4f) {
+		PoseStack matrices = new PoseStack();
+		matrices.last().pose().set(matrix4f);
 		return matrices;
 	}
 
-	public static RenderTickCounter getTickCounter() {
-		return MinecraftClient.getInstance().getRenderTickCounter();
+	public static @NotNull DeltaTracker getTickCounter() {
+		return Minecraft.getInstance().getDeltaTracker();
 	}
 
-	public static Camera getCamera() {
-		return MinecraftClient.getInstance().gameRenderer.getCamera();
+	public static @NotNull Camera getCamera() {
+		return Minecraft.getInstance().gameRenderer.getMainCamera();
 	}
 
 	/**

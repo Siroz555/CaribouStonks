@@ -8,10 +8,10 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.Manager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +34,7 @@ import java.util.function.Consumer;
  */
 public final class KeyBindManager implements Manager {
 
-	public static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(CaribouStonks.identifier("mod"));
+	public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(CaribouStonks.identifier("mod"));
 
 	private final Set<KeyBind> enabledKeyBinds = ConcurrentHashMap.newKeySet();
 	private final Map<Feature, List<KeyBind>> keyBinds = new ConcurrentHashMap<>();
@@ -52,7 +52,7 @@ public final class KeyBindManager implements Manager {
 	}
 
 	@EventHandler(event = "CustomScreenEvents.KEY_PRESSED")
-	private void handleKeyPressed(Screen screen, KeyInput input, @NotNull Slot slot) {
+	private void handleKeyPressed(Screen screen, KeyEvent input, @NotNull Slot slot) {
 		triggerKeyBindsInScreen(screen, input, slot);
 	}
 
@@ -104,12 +104,12 @@ public final class KeyBindManager implements Manager {
 	private void triggerKeyBinds() {
 		checkAllKeyBinds(keyBind -> {
 			if (keyBind.isFirstPress()) {
-				if (keyBind.getKeyBinding().isPressed() && !keyBind.isPressed()) {
+				if (keyBind.getKeyBinding().isDown() && !keyBind.isPressed()) {
 					keyBind.onPress();
 				}
 
-				keyBind.setPressed(keyBind.getKeyBinding().isPressed());
-			} else if (keyBind.getKeyBinding().isPressed()) {
+				keyBind.setPressed(keyBind.getKeyBinding().isDown());
+			} else if (keyBind.getKeyBinding().isDown()) {
 				keyBind.onPress();
 			}
 		});
@@ -144,13 +144,13 @@ public final class KeyBindManager implements Manager {
 	 * Handles triggering key bind actions within a specific screen context.
 	 * <p>
 	 * This method is different from {@link #checkAllKeyBinds(Consumer)}, because it's not possible to match
-	 * the 'firstPress' behavior and the connections with the actual {@link net.minecraft.client.option.KeyBinding}.
+	 * the 'firstPress' behavior and the connections with the actual {@link net.minecraft.client.KeyMapping}.
 	 */
-	private void triggerKeyBindsInScreen(Screen screen, KeyInput input, Slot slot) {
+	private void triggerKeyBindsInScreen(Screen screen, KeyEvent input, Slot slot) {
 		for (Feature feature : keyBinds.keySet()) {
 			for (KeyBind keyBind : keyBinds.get(feature)) {
 				try {
-					if (keyBind.hasScreenPressHandler() && keyBind.getKeyBinding().matchesKey(input)) {
+					if (keyBind.hasScreenPressHandler() && keyBind.getKeyBinding().matches(input)) {
 						keyBind.onScreenPress(screen, slot);
 					}
 				} catch (Throwable throwable) {

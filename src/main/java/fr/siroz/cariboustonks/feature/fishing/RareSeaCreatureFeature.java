@@ -11,11 +11,11 @@ import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 
 public class RareSeaCreatureFeature extends Feature {
@@ -46,7 +46,7 @@ public class RareSeaCreatureFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onChatMessage(@NotNull Text text) {
+	private void onChatMessage(@NotNull Component text) {
 		if (!isEnabled()) return;
 		if (!hasFishingRod()) return;
 
@@ -73,18 +73,18 @@ public class RareSeaCreatureFeature extends Feature {
 	}
 
 	private void showNotification(@NotNull RareSeaCreature seaCreature, boolean doubleHook) {
-		Text seaCreatureText = Text.empty()
-				.append(Text.literal("[iL ").formatted(seaCreature.getColor(), Formatting.OBFUSCATED))
+		Component seaCreatureText = Component.empty()
+				.append(Component.literal("[iL ").withStyle(seaCreature.getColor(), ChatFormatting.OBFUSCATED))
 				.append(seaCreature.getText())
-				.append(Text.literal(" Li]").formatted(seaCreature.getColor(), Formatting.OBFUSCATED));
-		Text doubleHookText = doubleHook ? Text.literal("Double Hook").formatted(Formatting.GREEN) : Text.empty();
+				.append(Component.literal(" Li]").withStyle(seaCreature.getColor(), ChatFormatting.OBFUSCATED));
+		Component doubleHookText = doubleHook ? Component.literal("Double Hook").withStyle(ChatFormatting.GREEN) : Component.empty();
 		Client.showTitleAndSubtitle(seaCreatureText, doubleHookText, 0, 40, 5);
 
 		if (ConfigManager.getConfig().fishing.rareSeaCreatureSound) {
 			if (doubleHook) {
-				Client.playSound(SoundEvents.ENTITY_WARDEN_SONIC_BOOM, 2.5f, 1f);
+				Client.playSound(SoundEvents.WARDEN_SONIC_BOOM, 2.5f, 1f);
 			} else {
-				Client.playSound(SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE.value(), 2.5f, 1f);
+				Client.playSound(SoundEvents.ARMOR_EQUIP_NETHERITE.value(), 2.5f, 1f);
 			}
 		}
 	}
@@ -92,6 +92,6 @@ public class RareSeaCreatureFeature extends Feature {
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean hasFishingRod() {
 		ItemStack item = InventoryUtils.getHeldItem();
-		return item != null && !item.isEmpty() && item.isOf(Items.FISHING_ROD);
+		return item != null && !item.isEmpty() && item.is(Items.FISHING_ROD);
 	}
 }

@@ -13,11 +13,11 @@ import fr.siroz.cariboustonks.manager.reminder.TimedObject;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,7 +53,7 @@ public final class EnchantedCloakReminderFeature extends Feature implements Remi
 	@Override
 	public @NotNull ReminderDisplay display() {
 		return ReminderDisplay.of(
-				Text.literal("Enchanted Cloak").formatted(Formatting.YELLOW, Formatting.BOLD, Formatting.UNDERLINE),
+				Component.literal("Enchanted Cloak").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
 				null,
 				ICON
 		);
@@ -66,15 +66,15 @@ public final class EnchantedCloakReminderFeature extends Feature implements Remi
 			return;
 		}
 
-		MutableText text = Text.empty()
+		MutableComponent text = Component.empty()
 				.append(boostType.name)
-				.append(Text.literal(" is ready!").formatted(Formatting.GREEN));
-		MutableText message = Text.empty()
-				.append(Text.literal("[Enchanted Cloak] ").formatted(Formatting.GOLD))
+				.append(Component.literal(" is ready!").withStyle(ChatFormatting.GREEN));
+		MutableComponent message = Component.empty()
+				.append(Component.literal("[Enchanted Cloak] ").withStyle(ChatFormatting.GOLD))
 				.append(text);
-		MutableText notification = Text.empty()
-				.append(Text.literal("Enchanted Cloak !").formatted(Formatting.GOLD, Formatting.BOLD))
-				.append(Text.literal("\n"))
+		MutableComponent notification = Component.empty()
+				.append(Component.literal("Enchanted Cloak !").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD))
+				.append(Component.literal("\n"))
 				.append(text);
 
 		Client.sendMessageWithPrefix(message);
@@ -82,7 +82,7 @@ public final class EnchantedCloakReminderFeature extends Feature implements Remi
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onChatMessage(@NotNull Text text) {
+	private void onChatMessage(@NotNull Component text) {
 		if (!isEnabled()) {
 			return;
 		}
@@ -110,18 +110,18 @@ public final class EnchantedCloakReminderFeature extends Feature implements Remi
 	}
 
 	private enum BoostType {
-		MINIONS("Minions", Text.literal("Minions").formatted(Formatting.AQUA)),
-		CHOCOLATE_FACTORY("Chocolate Factory", Text.literal("Chocolate Factory").formatted(Formatting.GOLD)),
-		PET_TRAINING("Pet Training", Text.literal("Pet Training").formatted(Formatting.LIGHT_PURPLE)),
-		PET_SITTER("Pet Sitter", Text.literal("Pet Sitter").formatted(Formatting.RED)),
-		AGING_ITEMS("Aging Items", Text.literal("Aging Items").formatted(Formatting.YELLOW)),
-		FORGE("Forges", Text.literal("Forge").formatted(Formatting.GOLD)),
+		MINIONS("Minions", Component.literal("Minions").withStyle(ChatFormatting.AQUA)),
+		CHOCOLATE_FACTORY("Chocolate Factory", Component.literal("Chocolate Factory").withStyle(ChatFormatting.GOLD)),
+		PET_TRAINING("Pet Training", Component.literal("Pet Training").withStyle(ChatFormatting.LIGHT_PURPLE)),
+		PET_SITTER("Pet Sitter", Component.literal("Pet Sitter").withStyle(ChatFormatting.RED)),
+		AGING_ITEMS("Aging Items", Component.literal("Aging Items").withStyle(ChatFormatting.YELLOW)),
+		FORGE("Forges", Component.literal("Forge").withStyle(ChatFormatting.GOLD)),
 		;
 
 		private final String id;
-		private final Text name;
+		private final Component name;
 
-		BoostType(String id, Text name) {
+		BoostType(String id, Component name) {
 			this.id = id;
 			this.name = name;
 		}

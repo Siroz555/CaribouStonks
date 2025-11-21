@@ -3,13 +3,13 @@ package fr.siroz.cariboustonks.rendering.world;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.render.Texture;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -20,19 +20,19 @@ import org.jetbrains.annotations.Range;
 public interface WorldRenderer {
 
 	/**
-	 * Submits a {@link Text} to be rendered.
+	 * Submits a {@link Component} to be rendered.
 	 *
 	 * @param text          the text
 	 * @param position      the position
 	 * @param scale         the scale
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	default void submitText(@NotNull Text text, @NotNull Vec3d position, float scale, boolean throughBlocks) {
+	default void submitText(@NotNull Component text, @NotNull Vec3 position, float scale, boolean throughBlocks) {
 		submitText(text, position, scale, 0, throughBlocks);
 	}
 
 	/**
-	 * Submits a {@link Text} to be rendered.
+	 * Submits a {@link Component} to be rendered.
 	 *
 	 * @param text          the text
 	 * @param position      the position
@@ -40,12 +40,12 @@ public interface WorldRenderer {
 	 * @param offsetY       the offsetY
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	default void submitText(@NotNull Text text, @NotNull Vec3d position, float scale, float offsetY, boolean throughBlocks) {
-		submitText(text.asOrderedText(), position, scale, offsetY, throughBlocks);
+	default void submitText(@NotNull Component text, @NotNull Vec3 position, float scale, float offsetY, boolean throughBlocks) {
+		submitText(text.getVisualOrderText(), position, scale, offsetY, throughBlocks);
 	}
 
 	/**
-	 * Submits a {@link OrderedText} to be rendered.
+	 * Submits a {@link FormattedCharSequence} to be rendered.
 	 *
 	 * @param text          the text
 	 * @param position      the position
@@ -53,7 +53,7 @@ public interface WorldRenderer {
 	 * @param offsetY       the offsetY
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitText(@NotNull OrderedText text, @NotNull Vec3d position, float scale, float offsetY, boolean throughBlocks);
+	void submitText(@NotNull FormattedCharSequence text, @NotNull Vec3 position, float scale, float offsetY, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code Texture} to be rendered with the given {@link Texture}, facing to the player.
@@ -69,7 +69,7 @@ public interface WorldRenderer {
 	 * @param alpha         the alpha
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	default void submitTexture(@NotNull Vec3d position, float width, float height, float textureWidth, float textureHeight, @NotNull Vec3d renderOffset, @NotNull Texture texture, @NotNull Color color, float alpha, boolean throughBlocks) {
+	default void submitTexture(@NotNull Vec3 position, float width, float height, float textureWidth, float textureHeight, @NotNull Vec3 renderOffset, @NotNull Texture texture, @NotNull Color color, float alpha, boolean throughBlocks) {
 		submitTexture(position, width, height, textureWidth, textureHeight, renderOffset, texture.getIdentifier(), color, alpha, throughBlocks);
 	}
 
@@ -87,7 +87,7 @@ public interface WorldRenderer {
 	 * @param alpha         the alpha
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitTexture(@NotNull Vec3d position, float width, float height, float textureWidth, float textureHeight, @NotNull Vec3d renderOffset, @NotNull Identifier texture, @NotNull Color color, float alpha, boolean throughBlocks);
+	void submitTexture(@NotNull Vec3 position, float width, float height, float textureWidth, float textureHeight, @NotNull Vec3 renderOffset, @NotNull Identifier texture, @NotNull Color color, float alpha, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code circle} to be rendered on the plane defined by the specified axis.
@@ -112,7 +112,7 @@ public interface WorldRenderer {
 	 * @param axis             the axis
 	 * @param throughBlocks    if rendering can be done through blocks
 	 */
-	void submitCircle(@NotNull Vec3d center, @Range(from = 1, to = 32) double radius, @Range(from = 8, to = 64) int segments, float thicknessPercent, @NotNull Color color, @NotNull Direction.Axis axis, boolean throughBlocks);
+	void submitCircle(@NotNull Vec3 center, @Range(from = 1, to = 32) double radius, @Range(from = 8, to = 64) int segments, float thicknessPercent, @NotNull Color color, @NotNull Direction.Axis axis, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code thick circle (disk)} to be rendered extruding a <b>horizontal</b> circle.
@@ -124,7 +124,7 @@ public interface WorldRenderer {
 	 * @param color         the color
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitThickCircle(@NotNull Vec3d center, @Range(from = 1, to = 32) double radius, double thickness, @Range(from = 8, to = 64) int segments, @NotNull Color color, boolean throughBlocks);
+	void submitThickCircle(@NotNull Vec3 center, @Range(from = 1, to = 32) double radius, double thickness, @Range(from = 8, to = 64) int segments, @NotNull Color color, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code quad} to be rendered.
@@ -133,7 +133,7 @@ public interface WorldRenderer {
 	 * @param color         the color
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitQuad(@NotNull Vec3d[] points, @NotNull Color color, boolean throughBlocks);
+	void submitQuad(@NotNull Vec3[] points, @NotNull Color color, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code Filled Box} to be rendered.
@@ -153,7 +153,7 @@ public interface WorldRenderer {
 	 * @param color         the color
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	default void submitFilled(@NotNull Box box, @NotNull Color color, boolean throughBlocks) {
+	default void submitFilled(@NotNull AABB box, @NotNull Color color, boolean throughBlocks) {
 		submitFilled(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, color, throughBlocks);
 	}
 
@@ -187,7 +187,7 @@ public interface WorldRenderer {
 	 * @param lineWidth     the line width
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitOutline(@NotNull Box box, @NotNull Color color, float lineWidth, boolean throughBlocks);
+	void submitOutline(@NotNull AABB box, @NotNull Color color, float lineWidth, boolean throughBlocks);
 
 	/**
 	 * Submits multiple {@code Lines} to be rendered.
@@ -197,7 +197,7 @@ public interface WorldRenderer {
 	 * @param lineWidth     the line width
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitLines(Vec3d @NotNull [] points, @NotNull Color color, float lineWidth, boolean throughBlocks);
+	void submitLines(Vec3 @NotNull [] points, @NotNull Color color, float lineWidth, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code Line} from the cursor to the given point.
@@ -206,7 +206,7 @@ public interface WorldRenderer {
 	 * @param color     the color
 	 * @param lineWidth the line width
 	 */
-	void submitLineFromCursor(@NotNull Vec3d point, @NotNull Color color, float lineWidth);
+	void submitLineFromCursor(@NotNull Vec3 point, @NotNull Color color, float lineWidth);
 
 	/**
 	 * Submits a cuboid outline.
@@ -220,5 +220,5 @@ public interface WorldRenderer {
 	 * @param mainColor   the main color
 	 * @param secondColor the second color
 	 */
-	void submitCuboidOutline(@NotNull Vec3d center, int depth, int size, int minY, int maxY, float lineWidth, @NotNull Color mainColor, @NotNull Color secondColor);
+	void submitCuboidOutline(@NotNull Vec3 center, int depth, int size, int minY, int maxY, float lineWidth, @NotNull Color mainColor, @NotNull Color secondColor);
 }

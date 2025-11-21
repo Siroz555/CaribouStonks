@@ -10,14 +10,14 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 public class HotspotRadarFeature extends Feature {
@@ -27,7 +27,7 @@ public class HotspotRadarFeature extends Feature {
 	private final HotspotRadarRenderer renderer;
 	private final ParticlePathPredictor predictor = new ParticlePathPredictor(3);
 
-	private Vec3d guessPosition = null;
+	private Vec3 guessPosition = null;
 	private long lastUsedRadar = 0;
 
 	public HotspotRadarFeature() {
@@ -51,7 +51,7 @@ public class HotspotRadarFeature extends Feature {
 	}
 
 	@Nullable
-	Vec3d getGuessPosition() {
+    Vec3 getGuessPosition() {
 		return guessPosition;
 	}
 
@@ -62,9 +62,9 @@ public class HotspotRadarFeature extends Feature {
 	}
 
 	@EventHandler(event = "UseItemCallback.EVENT")
-	private ActionResult onUseItem(PlayerEntity player, World _world, Hand hand) {
-		ItemStack stack = player.getStackInHand(hand);
-		if (isEnabled() && stack != null && !stack.isEmpty()) {
+	private InteractionResult onUseItem(Player player, Level _world, InteractionHand hand) {
+		ItemStack stack = player.getItemInHand(hand);
+		if (isEnabled() && !stack.isEmpty()) {
 			if (HOTSPOT_RADAR_ITEM_ID.equals(SkyBlockAPI.getSkyBlockItemId(stack))) {
 				predictor.reset();
 				guessPosition = null;
@@ -72,11 +72,11 @@ public class HotspotRadarFeature extends Feature {
 			}
 		}
 
-		return ActionResult.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@EventHandler(event = "NetworkEvents.PARTICLE_RECEIVED_PACKET")
-	private void onParticleReceived(ParticleS2CPacket particle) {
+	private void onParticleReceived(ClientboundLevelParticlesPacket particle) {
 		if (!isEnabled()) {
 			return;
 		}
@@ -86,11 +86,11 @@ public class HotspotRadarFeature extends Feature {
 			return;
 		}
 
-		if (ParticleTypes.FLAME.equals(particle.getParameters().getType())
+		if (ParticleTypes.FLAME.equals(particle.getParticle().getType())
 				&& particle.getCount() == 1
-				&& particle.getSpeed() == 0f
+				&& particle.getMaxSpeed() == 0f
 		) {
-			Vec3d position = new Vec3d(particle.getX(), particle.getY(), particle.getZ());
+			Vec3 position = new Vec3(particle.getX(), particle.getY(), particle.getZ());
 			handleParticle(position);
 		}
 	}
@@ -100,13 +100,13 @@ public class HotspotRadarFeature extends Feature {
 		renderer.render(context);
 	}
 
-	private void handleParticle(Vec3d position) {
+	private void handleParticle(Vec3 position) {
 		if (predictor.isEmpty()) {
 			predictor.addPoint(position);
 			return;
 		}
 
-		Vec3d lastPoint = predictor.getLastPoint();
+		Vec3 lastPoint = predictor.getLastPoint();
 		if (lastPoint == null) {
 			return;
 		}
@@ -118,7 +118,7 @@ public class HotspotRadarFeature extends Feature {
 
 		predictor.addPoint(position);
 
-		Vec3d solved = predictor.solve();
+		Vec3 solved = predictor.solve();
 		if (solved == null) {
 			return;
 		}

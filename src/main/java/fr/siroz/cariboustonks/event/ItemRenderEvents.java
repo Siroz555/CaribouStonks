@@ -2,11 +2,12 @@ package fr.siroz.cariboustonks.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.component.type.LoreComponent;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -21,14 +22,14 @@ public final class ItemRenderEvents {
 
 	/**
 	 * Allows getting the last rendering phase of a Tooltip for an ItemStack in
-	 * {@link net.minecraft.client.gui.screen.ingame.HandledScreen} with {@link DrawContext}.
+	 * {@link net.minecraft.client.gui.screens.inventory.AbstractContainerScreen} with {@link GuiGraphics}.
 	 * <p>
 	 * Not to be confused with {@link net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback} which only manages
 	 * the Tooltip lines without handling the general appearance of the Tooltip, such as background or dimensions.
 	 */
-	public static final Event<PostTooltip> POST_TOOLTIP = EventFactory.createArrayBacked(PostTooltip.class, listeners -> (context, itemStack, x, y, width, height, textRenderer, components) -> {
+	public static final Event<@NotNull PostTooltip> POST_TOOLTIP = EventFactory.createArrayBacked(PostTooltip.class, listeners -> (guiGraphics, itemStack, x, y, width, height, font, components) -> {
 		for (PostTooltip listener : listeners) {
-			listener.onPostTooltip(context, itemStack, x, y, width, height, textRenderer, components);
+			listener.onPostTooltip(guiGraphics, itemStack, x, y, width, height, font, components);
 		}
 	});
 
@@ -37,7 +38,7 @@ public final class ItemRenderEvents {
 	 * <p>
 	 * Allows adding one or more lines to the Tooltip after the existing one
 	 */
-	public static final Event<TooltipAppender> TOOLTIP_APPENDER = EventFactory.createArrayBacked(TooltipAppender.class, listeners -> (itemStack, lore) -> {
+	public static final Event<@NotNull TooltipAppender> TOOLTIP_APPENDER = EventFactory.createArrayBacked(TooltipAppender.class, listeners -> (itemStack, lore) -> {
 		for (TooltipAppender listener : listeners) {
 			return listener.lines(itemStack, lore);
 		}
@@ -45,9 +46,9 @@ public final class ItemRenderEvents {
 	});
 
 	/**
-	 * Called when a {@link DrawContext} draw the ItemStack {@code Tooltips}
+	 * Called when a {@link GuiGraphics} draw the ItemStack {@code Tooltips}
 	 */
-	public static final Event<TooltipTracker> TOOLTIP_TRACKER = EventFactory.createArrayBacked(TooltipTracker.class, listeners -> (components) -> {
+	public static final Event<@NotNull TooltipTracker> TOOLTIP_TRACKER = EventFactory.createArrayBacked(TooltipTracker.class, listeners -> (components) -> {
 		for (TooltipTracker listener : listeners) {
 			listener.onTooltipTracker(components);
 		}
@@ -55,16 +56,16 @@ public final class ItemRenderEvents {
 
 	@FunctionalInterface
 	public interface PostTooltip {
-		void onPostTooltip(DrawContext context, ItemStack itemStack, int x, int y, int width, int height, TextRenderer textRenderer, List<TooltipComponent> components);
+		void onPostTooltip(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y, int width, int height, Font font, List<ClientTooltipComponent> components);
 	}
 
 	@FunctionalInterface
 	public interface TooltipAppender {
-		@Nullable LoreComponent lines(ItemStack itemStack, LoreComponent lore);
+		@Nullable ItemLore lines(ItemStack itemStack, ItemLore lore);
 	}
 
 	@FunctionalInterface
 	public interface TooltipTracker {
-		void onTooltipTracker(List<TooltipComponent> components);
+		void onTooltipTracker(List<ClientTooltipComponent> components);
 	}
 }

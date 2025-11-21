@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.manager.Manager;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class WaypointManager implements Manager {
 
-    private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+    private static final Minecraft CLIENT = Minecraft.getInstance();
 
     private final Map<UUID, Waypoint> waypoints = new ConcurrentHashMap<>();
 
@@ -68,7 +68,7 @@ public final class WaypointManager implements Manager {
     }
 
     private void render(WorldRenderer renderer) {
-        if (CLIENT.player == null || CLIENT.world == null || waypoints.isEmpty()) {
+        if (CLIENT.player == null || CLIENT.level == null || waypoints.isEmpty()) {
 			return;
 		}
 

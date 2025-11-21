@@ -1,16 +1,16 @@
 package fr.siroz.cariboustonks.manager.hud.element;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
-public record HudTableRow(Text[] cells, boolean spaceAfter) implements HudElement {
+public record HudTableRow(Component[] cells, boolean spaceAfter) implements HudElement {
 
-	public HudTableRow(@NotNull Text cell1, @NotNull Text cell2, @NotNull Text cell3, boolean spaceAfter) {
-		this(new Text[]{cell1, cell2, cell3}, spaceAfter);
+	public HudTableRow(@NotNull Component cell1, @NotNull Component cell2, @NotNull Component cell3, boolean spaceAfter) {
+		this(new Component[]{cell1, cell2, cell3}, spaceAfter);
 	}
 
 	@Override
-	public Text[] getCells() {
+	public Component[] getCells() {
 		return cells;
 	}
 

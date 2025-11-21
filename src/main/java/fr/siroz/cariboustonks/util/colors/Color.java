@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.util.colors;
 
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -95,17 +95,17 @@ public class Color {
 	}
 
 	/**
-	 * Récupère la couleur d'un {@link Formatting}.
+	 * Récupère la couleur d'un {@link ChatFormatting}.
 	 *
 	 * @param formatting le formatting type
 	 * @return la couleur obtenue
 	 */
-	public static Color fromFormatting(@NotNull Formatting formatting) {
-		if (formatting.getColorValue() == null) {
+	public static Color fromFormatting(@NotNull ChatFormatting formatting) {
+		if (formatting.getColor() == null) {
 			return DEFAULT;
 		}
 
-		return fromInt(formatting.getColorValue() | 0xFF000000);
+		return fromInt(formatting.getColor() | 0xFF000000);
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class Color {
 	 */
 	@Contract("_ -> new")
 	public static @NotNull Color fromDyeColor(@NotNull DyeColor color) {
-		return fromInt(color.getEntityColor() | 0xFF000000);
+		return fromInt(color.getTextureDiffuseColor() | 0xFF000000);
 	}
 
 	/**

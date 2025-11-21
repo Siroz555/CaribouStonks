@@ -9,8 +9,8 @@ import fr.siroz.cariboustonks.feature.Features;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +23,7 @@ public class BobberTimerFeature extends Feature {
 	private RareSeaCreatureFeature rareSeaCreatureFeature;
 
 	@Nullable
-	private ArmorStandEntity bobberTimerArmorStand;
+	private ArmorStand bobberTimerArmorStand;
 
 	public BobberTimerFeature() {
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
@@ -45,16 +45,16 @@ public class BobberTimerFeature extends Feature {
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
-	private void onArmorStandUpdate(@NotNull ArmorStandEntity armorStand, boolean equipment) {
-		if (equipment || !armorStand.hasCustomName() || armorStand.getName() == null) return;
-		if (CLIENT.player == null || CLIENT.player.fishHook == null) return;
+	private void onArmorStandUpdate(@NotNull ArmorStand armorStand, boolean equipment) {
+		if (equipment || !armorStand.hasCustomName()) return;
+		if (CLIENT.player == null || CLIENT.player.fishing == null) return;
 		if (!isEnabled()) return;
 
 		if (bobberTimerArmorStand != null) {
 			return;
 		}
 
-		if (armorStand.getEntityPos().distanceTo(CLIENT.player.fishHook.getEntityPos()) > MIN_BOBBER_TIMER_DISTANCE) {
+		if (armorStand.position().distanceTo(CLIENT.player.fishing.position()) > MIN_BOBBER_TIMER_DISTANCE) {
 			return;
 		}
 
@@ -73,11 +73,11 @@ public class BobberTimerFeature extends Feature {
 			return;
 		}
 
-		if (CLIENT.player == null || CLIENT.player.fishHook == null || bobberTimerArmorStand == null) {
+		if (CLIENT.player == null || CLIENT.player.fishing == null || bobberTimerArmorStand == null) {
 			return;
 		}
 
-		Text bobberTimerText = bobberTimerArmorStand.getCustomName();
+		Component bobberTimerText = bobberTimerArmorStand.getCustomName();
 		if (isEnabled() && bobberTimerText != null) {
 			// Priorité pour RareSeaCreatureFeature
 			if (rareSeaCreatureFeature == null || !rareSeaCreatureFeature.hasFoundCreature()) {

@@ -7,12 +7,12 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import java.util.concurrent.TimeUnit;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 public final class BoosterCookieReminderFeature extends Feature /*implements Reminder*/ {
 
@@ -65,16 +65,16 @@ public final class BoosterCookieReminderFeature extends Feature /*implements Rem
 		if (footer.contains("Not active! Obtain booster cookies from the community")) {
 			notified = true;
 
-			Text message = Text.literal("You don't have a").formatted(Formatting.RED, Formatting.BOLD)
-					.append(Text.literal(" Booster Cookie ").formatted(Formatting.LIGHT_PURPLE, Formatting.BOLD))
-					.append(Text.literal("active!").formatted(Formatting.RED, Formatting.BOLD));
+			Component message = Component.literal("You don't have a").withStyle(ChatFormatting.RED, ChatFormatting.BOLD)
+					.append(Component.literal(" Booster Cookie ").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD))
+					.append(Component.literal("active!").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
 
 			Client.sendMessageWithPrefix(message);
 
 			Client.showNotification(message.copy(), ICON);
 
 			AnimationUtils.showSpecialEffect(ICON, ParticleTypes.OMINOUS_SPAWNING, 10,
-					SoundEvents.ENTITY_BLAZE_DEATH, 1f, 0.75f);
+					SoundEvents.BLAZE_DEATH, 1f, 0.75f);
 		}
 	}
 }

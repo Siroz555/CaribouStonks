@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
@@ -60,7 +60,7 @@ public class KeyShortcutFeature extends Feature {
 	}
 
 	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STOPPING") // + KeyShortcutScreen#saveShortcuts
-	public void saveShortcuts(MinecraftClient client) {
+	public void saveShortcuts(Minecraft client) {
 		Map<String, Integer> shortcutsToSave = new HashMap<>();
 		// Jcp pk, j'ai mis un record pour gérer en interne les shortcuts,
 		// mais c'est beaucoup plus agréable à gérer dans le Screen -_-
@@ -76,7 +76,7 @@ public class KeyShortcutFeature extends Feature {
 	}
 
 	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STARTED")
-	private void onClientStarted(MinecraftClient client) {
+	private void onClientStarted(Minecraft client) {
 		loadKeyShortcuts().thenAccept(this::loadExistingKeyShortcuts);
 	}
 
@@ -86,7 +86,7 @@ public class KeyShortcutFeature extends Feature {
 		}
 
 		return CompletableFuture.supplyAsync(() -> {
-			Type mapType = new TypeToken<Map<String, Integer>>() {}.getType();
+			Type mapType = new TypeToken<@NotNull Map<String, Integer>>() {}.getType();
 			try {
 				return CaribouStonks.core().getJsonFileService().loadMap(SHORTCUTS_PATH, mapType);
 			} catch (JsonProcessingException ex) {
@@ -113,9 +113,9 @@ public class KeyShortcutFeature extends Feature {
 	}
 
 	@EventHandler(event = "ClientTickEvents.END_CLIENT_TICK")
-	private void onTick(MinecraftClient client) {
-		if (client.player == null || client.world == null) return;
-		if (client.currentScreen != null) return;
+	private void onTick(Minecraft client) {
+		if (client.player == null || client.level == null) return;
+		if (client.screen != null) return;
 		if (!isEnabled()) return;
 		if (System.currentTimeMillis() - lastKeyPressed < COOLDOWN) return;
 
@@ -127,7 +127,7 @@ public class KeyShortcutFeature extends Feature {
 			boolean pressed;
 			if (shortcut.keyCode() <= -2000) {
 				int mouseButton = -2000 - shortcut.keyCode();
-				pressed = GLFW.glfwGetMouseButton(client.getWindow().getHandle(), mouseButton) == GLFW.GLFW_PRESS;
+				pressed = GLFW.glfwGetMouseButton(client.getWindow().handle(), mouseButton) == GLFW.GLFW_PRESS;
 			} else {
 				pressed = Client.isKeyPressed(shortcut.keyCode());
 			}
@@ -139,11 +139,11 @@ public class KeyShortcutFeature extends Feature {
 		}
 	}
 
-	private void handleShortcut(@NotNull MinecraftClient client, @NotNull KeyShortcut shortcut) {
-		if (client.player != null && client.player.networkHandler != null) {
+	private void handleShortcut(@NotNull Minecraft client, @NotNull KeyShortcut shortcut) {
+		if (client.player != null) {
 			String shortcutCommand = shortcut.command();
 			String command = shortcutCommand.startsWith("/") ? shortcutCommand.substring(1) : shortcutCommand;
-			client.player.networkHandler.sendChatCommand(command);
+			client.player.connection.sendCommand(command);
 		}
 	}
 }

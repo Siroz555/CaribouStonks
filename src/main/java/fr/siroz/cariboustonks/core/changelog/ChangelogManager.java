@@ -31,11 +31,11 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -72,7 +72,7 @@ public final class ChangelogManager {
 	}
 
 	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STARTED")
-	private void onClientStarted(MinecraftClient client) {
+	private void onClientStarted(Minecraft client) {
 		lastSeenVersion = loadLastSeenVersion();
 		// La dernière version vu depuis le fichier :
 		//  Si elle est présente et que la version actuelle du mod est different > fetch changelog depuis GitHub
@@ -93,20 +93,20 @@ public final class ChangelogManager {
 		if (notified || lastSeenVersion == null || changelogEntries.isEmpty()) return;
 		notified = true;
 		TickScheduler.getInstance().runLater(() -> {
-			Client.sendMessage(Text.empty());
-			Client.sendMessageWithPrefix(Text.empty()
-					.append(Text.literal("Updated!").formatted(Formatting.GREEN))
-					.append(Text.literal(" " + lastSeenVersion + " ").formatted(Formatting.YELLOW))
-					.append(Text.literal("->").formatted(Formatting.GRAY))
-					.append(Text.literal(" " + CURRENT_VERSION + " ").formatted(Formatting.GREEN)));
-			Client.sendMessageWithPrefix(Text.empty()
-					.append(Text.literal("Click").formatted(Formatting.YELLOW))
-					.append(Text.literal(" HERE ").formatted(Formatting.YELLOW, Formatting.BOLD))
-					.append(Text.literal("to see the changelogs in-game!").formatted(Formatting.YELLOW))
-					.styled(style -> style
-							.withHoverEvent(new HoverEvent.ShowText(Text.literal("Click to see the changelogs!").formatted(Formatting.YELLOW)))
+			Client.sendMessage(Component.empty());
+			Client.sendMessageWithPrefix(Component.empty()
+					.append(Component.literal("Updated!").withStyle(ChatFormatting.GREEN))
+					.append(Component.literal(" " + lastSeenVersion + " ").withStyle(ChatFormatting.YELLOW))
+					.append(Component.literal("->").withStyle(ChatFormatting.GRAY))
+					.append(Component.literal(" " + CURRENT_VERSION + " ").withStyle(ChatFormatting.GREEN)));
+			Client.sendMessageWithPrefix(Component.empty()
+					.append(Component.literal("Click").withStyle(ChatFormatting.YELLOW))
+					.append(Component.literal(" HERE ").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
+					.append(Component.literal("to see the changelogs in-game!").withStyle(ChatFormatting.YELLOW))
+					.withStyle(style -> style
+							.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to see the changelogs!").withStyle(ChatFormatting.YELLOW)))
 							.withClickEvent(new ClickEvent.RunCommand("/stonksviewchangelog"))));
-			Client.sendMessage(Text.empty());
+			Client.sendMessage(Component.empty());
 		}, 3, TimeUnit.SECONDS);
 	}
 

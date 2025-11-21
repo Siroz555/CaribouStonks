@@ -1,8 +1,8 @@
 package fr.siroz.cariboustonks.util.position;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,8 +33,8 @@ public interface Position extends Comparable<Position> {
     }
 
     @Contract("_ -> new")
-    static @NotNull Position of(@NotNull Vec3d vec3d) {
-        return of((int) vec3d.getX(), (int) vec3d.getY(), (int) vec3d.getZ());
+    static @NotNull Position of(@NotNull Vec3 vec3d) {
+        return of((int) vec3d.x(), (int) vec3d.y(), (int) vec3d.z());
     }
 
     int x();
@@ -53,9 +53,9 @@ public interface Position extends Comparable<Position> {
 
     @NotNull BlockPos toBlockPos();
 
-    @NotNull Vec3d toVec3d();
+    @NotNull Vec3 toVec3d();
 
-    @NotNull Box toBox();
+    @NotNull AABB toBox();
 
     default @NotNull String asChatCoordinates() {
         return "x: " + x() + ", y: " + y() + ", z: " + z();

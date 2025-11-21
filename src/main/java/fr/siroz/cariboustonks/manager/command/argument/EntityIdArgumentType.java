@@ -9,15 +9,15 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import net.minecraft.command.CommandSource;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public final class EntityIdArgumentType implements ArgumentType<String> {
 
-	private static final List<String> ENTITY_ID_LIST = Registries.ENTITY_TYPE.getIds().stream()
+	private static final List<String> ENTITY_ID_LIST = BuiltInRegistries.ENTITY_TYPE.keySet().stream()
 			.map(Identifier::getPath)
 			.toList();
 
@@ -40,8 +40,8 @@ public final class EntityIdArgumentType implements ArgumentType<String> {
 
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(@NotNull CommandContext<S> context, SuggestionsBuilder builder) {
-		return context.getSource() instanceof CommandSource
-				? CommandSource.suggestMatching(ENTITY_ID_LIST.stream().map(String::toLowerCase), builder)
+		return context.getSource() instanceof SharedSuggestionProvider
+				? SharedSuggestionProvider.suggest(ENTITY_ID_LIST.stream().map(String::toLowerCase), builder)
 				: Suggestions.empty();
 	}
 

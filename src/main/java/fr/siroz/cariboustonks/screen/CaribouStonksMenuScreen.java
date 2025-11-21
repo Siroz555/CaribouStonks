@@ -7,23 +7,23 @@ import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
 import fr.siroz.cariboustonks.screen.reminders.ReminderScreen;
 import fr.siroz.cariboustonks.screen.waypoints.WaypointScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.client.gui.widget.TextWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Language;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.Identifier;
+import net.minecraft.locale.Language;
 
 public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 
@@ -34,102 +34,102 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 	private static final int BUTTON_WIDTH = 210;
 	private static final int HALF_BUTTON_WIDTH = 100;
 
-	private ThreePartsLayoutWidget layout;
+	private HeaderAndFooterLayout layout;
 
 	public CaribouStonksMenuScreen() {
-		super(Text.literal("CaribouStonks").formatted(Formatting.BOLD));
+		super(Component.literal("CaribouStonks").withStyle(ChatFormatting.BOLD));
 	}
 
 	@Override
 	protected void onInit() {
-		layout = new ThreePartsLayoutWidget(this, 50, 100);
-		layout.addHeader(new IconTextWidget(this.getTitle(), this.textRenderer, ICON));
+		layout = new HeaderAndFooterLayout(this, 50, 100);
+		layout.addToHeader(new IconTextWidget(this.getTitle(), this.font, ICON));
 
-		GridWidget gridWidget = layout.addBody(new GridWidget()).setSpacing(SPACING);
-		gridWidget.getMainPositioner().alignHorizontalCenter();
-		GridWidget.Adder adder = gridWidget.createAdder(2);
+		GridLayout gridWidget = layout.addToContents(new GridLayout()).spacing(SPACING);
+		gridWidget.defaultCellSetting().alignHorizontallyCenter();
+		GridLayout.RowHelper adder = gridWidget.createRowHelper(2);
 
 		// LINE #1
 
-		adder.add(ButtonWidget.builder(Text.literal("Configuration"),
+		adder.addChild(Button.builder(Component.literal("Configuration"),
 						button -> openScreen(ConfigManager.createConfigGUI(this)))
 				.width(BUTTON_WIDTH)
 				.build(), 2);
 
 		// LINE #2
 
-		adder.add(ButtonWidget.builder(Text.literal("Reminders"),
+		adder.addChild(Button.builder(Component.literal("Reminders"),
 						button -> openScreen(ReminderScreen.create(this)))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
-		adder.add(ButtonWidget.builder(Text.literal("Waypoints"),
+		adder.addChild(Button.builder(Component.literal("Waypoints"),
 						button -> openScreen(WaypointScreen.create(this)))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
 		// LINE #3
 
-		adder.add(ButtonWidget.builder(Text.literal("Stonks"),
+		adder.addChild(Button.builder(Component.literal("Stonks"),
 						button -> openScreen(new StonksSearchScreen(this)))
-				.tooltip(Tooltip.of(Text.literal("Search a SkyBlock item to show more informations about.")))
+				.tooltip(Tooltip.create(Component.literal("Search a SkyBlock item to show more informations about.")))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
-		ButtonWidget keybinds = ButtonWidget.builder(Text.literal("Key Shortcuts"),
+		Button keybinds = Button.builder(Component.literal("Key Shortcuts"),
 						button -> openScreen(KeyShortcutScreen.create(this)))
-				.tooltip(Tooltip.of(Text.literal("Link Keybinds to commands to be executed.")))
+				.tooltip(Tooltip.create(Component.literal("Link Keybinds to commands to be executed.")))
 				.width(HALF_BUTTON_WIDTH)
 				.build();
-		adder.add(keybinds);
+		adder.addChild(keybinds);
 
 		// LINE #4
 
-		adder.add(ButtonWidget.builder(ScreenTexts.DONE,
+		adder.addChild(Button.builder(CommonComponents.GUI_DONE,
 						button -> this.close())
 				.width(BUTTON_WIDTH)
 				.build(), 2);
 
 		// LINE FOOTER
 
-		GridWidget footerGridWidget = layout.addFooter(new GridWidget()).setSpacing(SPACING).setRowSpacing(0);
-		footerGridWidget.getMainPositioner().alignHorizontalCenter();
-		GridWidget.Adder footerAdder = footerGridWidget.createAdder(2);
+		GridLayout footerGridWidget = layout.addToFooter(new GridLayout()).spacing(SPACING).rowSpacing(0);
+		footerGridWidget.defaultCellSetting().alignHorizontallyCenter();
+		GridLayout.RowHelper footerAdder = footerGridWidget.createRowHelper(2);
 
-		footerAdder.add(ButtonWidget.builder(Text.literal("Modrinth"),
-						ConfirmLinkScreen.opening(this, "https://modrinth.com/mod/cariboustonks"))
+		footerAdder.addChild(Button.builder(Component.literal("Modrinth"),
+						ConfirmLinkScreen.confirmLink(this, "https://modrinth.com/mod/cariboustonks"))
 				.build());
 
-		footerAdder.add(ButtonWidget.builder(Text.literal("GitHub"),
-						ConfirmLinkScreen.opening(this, "https://github.com/Siroz555/CaribouStonks"))
+		footerAdder.addChild(Button.builder(Component.literal("GitHub"),
+						ConfirmLinkScreen.confirmLink(this, "https://github.com/Siroz555/CaribouStonks"))
 				.build());
 
-		Text version = Text.literal(" Version: " + CaribouStonks.VERSION.getFriendlyString());
-		addDrawableChild(new TextWidget(2, this.height - 15,
-				this.textRenderer.getWidth(version), 10, version, this.textRenderer));
+		Component version = Component.literal(" Version: " + CaribouStonks.VERSION.getFriendlyString());
+		addRenderableWidget(new StringWidget(2, this.height - 15,
+				this.font.width(version), 10, version, this.font));
 
-		Text cMwa = Text.literal("@Siroz555 ");
-		addDrawableChild(new TextWidget(this.width - this.textRenderer.getWidth(cMwa) - 2, height - 15,
-				this.textRenderer.getWidth(cMwa), 10, cMwa, this.textRenderer));
+		Component cMwa = Component.literal("@Siroz555 ");
+		addRenderableWidget(new StringWidget(this.width - this.font.width(cMwa) - 2, height - 15,
+				this.font.width(cMwa), 10, cMwa, this.font));
 
-		layout.refreshPositions();
-		layout.forEachChild(this::addDrawableChild);
+		layout.arrangeElements();
+		layout.visitWidgets(this::addRenderableWidget);
 	}
 
 	@Override
-	protected void refreshWidgetPositions() {
-		super.refreshWidgetPositions();
-		layout.refreshPositions();
+	protected void repositionElements() {
+		super.repositionElements();
+		layout.arrangeElements();
 	}
 
 	private void openScreen(Screen screen) {
-		if (this.client != null) {
-			this.client.setScreen(screen);
+		if (this.minecraft != null) {
+			this.minecraft.setScreen(screen);
 		}
 	}
 
 	@Override
-	public void onRender(DrawContext context, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
 		//this.renderBackground(context, mouseX, mouseY, delta);
         /*RenderSystem.enableBlend();
         context.drawTexture(BACKGROUND_TEXTURE,
@@ -138,38 +138,38 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 		super.onRender(context, mouseX, mouseY, delta);
 	}
 
-	private static class IconTextWidget extends TextWidget {
+	private static class IconTextWidget extends StringWidget {
 		private final Identifier icon;
 
-		IconTextWidget(Text message, TextRenderer textRenderer, Identifier icon) {
+		IconTextWidget(Component message, Font textRenderer, Identifier icon) {
 			super(message, textRenderer);
 			this.icon = icon;
 		}
 
 		@Override
-		public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-			Text text = this.getMessage();
-			TextRenderer textRenderer = this.getTextRenderer();
+		public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+			Component text = this.getMessage();
+			Font textRenderer = this.getFont();
 
 			int width = this.getWidth();
-			int textWidth = textRenderer.getWidth(text);
+			int textWidth = textRenderer.width(text);
 			float horizontalAlignment = 0.5f;
 			int x = this.getX() + 17 + Math.round(horizontalAlignment * (float) (width - textWidth));
-			int y = this.getY() + (this.getHeight() - textRenderer.fontHeight) / 2;
-			OrderedText orderedText = textWidth > width ? trim(text, width) : text.asOrderedText();
+			int y = this.getY() + (this.getHeight() - textRenderer.lineHeight) / 2;
+			FormattedCharSequence orderedText = textWidth > width ? trim(text, width) : text.getVisualOrderText();
 
 			int iconX = x - 34;
 			int iconY = y - 13;
 
-			context.drawTextWithShadow(textRenderer, orderedText, x, y, Colors.WHITE.asInt());
-			context.drawTexture(RenderPipelines.GUI_TEXTURED, icon, iconX, iconY, 0, 0, 32, 32, 32, 32);
+			context.drawString(textRenderer, orderedText, x, y, Colors.WHITE.asInt());
+			context.blit(RenderPipelines.GUI_TEXTURED, icon, iconX, iconY, 0, 0, 32, 32, 32, 32);
 		}
 
-		private OrderedText trim(Text text, int width) {
-			TextRenderer textRenderer = this.getTextRenderer();
-			StringVisitable stringVisitable = textRenderer.trimToWidth(
-					text, width - textRenderer.getWidth(ScreenTexts.ELLIPSIS));
-			return Language.getInstance().reorder(StringVisitable.concat(stringVisitable, ScreenTexts.ELLIPSIS));
+		private FormattedCharSequence trim(Component text, int width) {
+			Font textRenderer = this.getFont();
+			FormattedText stringVisitable = textRenderer.substrByWidth(
+					text, width - textRenderer.width(CommonComponents.ELLIPSIS));
+			return Language.getInstance().getVisualOrder(FormattedText.composite(stringVisitable, CommonComponents.ELLIPSIS));
 		}
 	}
 }

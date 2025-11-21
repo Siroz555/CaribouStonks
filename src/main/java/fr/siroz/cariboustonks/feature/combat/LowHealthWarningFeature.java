@@ -6,8 +6,8 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
-import net.minecraft.text.Text;
-import net.minecraft.world.border.WorldBorder;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.border.WorldBorder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
@@ -33,7 +33,7 @@ public class LowHealthWarningFeature extends Feature { // TODO - Mettre uniqueme
 	}
 
 	@EventHandler(event = "ClientReceiveMessageEvents.ALLOW_GAME")
-	private boolean allowActionBar(Text text, boolean overlay) {
+	private boolean allowActionBar(Component text, boolean overlay) {
 		if (overlay) { // pour 'forcer' c'est pour toujours retourner true sans avoir d'alerte
 			if (isEnabled()) {
 				Matcher healthActionBarMatcher = HEALTH_ACTION_BAR_PATTERN.matcher(text.getString());
@@ -48,7 +48,7 @@ public class LowHealthWarningFeature extends Feature { // TODO - Mettre uniqueme
 
 	@Override
 	protected void onClientTick() {
-		if (!isEnabled() || CLIENT.player == null || CLIENT.world == null) {
+		if (!isEnabled() || CLIENT.player == null || CLIENT.level == null) {
 			return;
 		}
 
@@ -102,15 +102,15 @@ public class LowHealthWarningFeature extends Feature { // TODO - Mettre uniqueme
 		if (CLIENT.player == null) return;
 
 		// C'est incroyable de faire comme ça, mais bon ça marche lul
-		WorldBorder worldBorder = CLIENT.player.getEntityWorld().getWorldBorder();
+		WorldBorder worldBorder = CLIENT.player.level().getWorldBorder();
 		worldBorder.setSize(1D);
 		worldBorder.setCenter(CLIENT.player.getX() + 5_555, CLIENT.player.getZ() + 5_555);
 	}
 
 	private void remove() {
 		if (CLIENT.player == null) return;
-		WorldBorder.Properties properties = WorldBorder.Properties.DEFAULT;
-		WorldBorder worldBorder = CLIENT.player.getEntityWorld().getWorldBorder();
+		WorldBorder.Settings properties = WorldBorder.Settings.DEFAULT;
+		WorldBorder worldBorder = CLIENT.player.level().getWorldBorder();
 
 		worldBorder.setCenter(properties.centerX(), properties.centerZ());
 		worldBorder.setSize(properties.size());

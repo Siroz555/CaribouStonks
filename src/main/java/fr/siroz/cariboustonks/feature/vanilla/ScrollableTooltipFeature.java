@@ -7,15 +7,15 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.ItemRenderEvents;
 import fr.siroz.cariboustonks.event.MouseEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.mixin.accessors.OrderedTextTooltipComponentAccessor;
+import fr.siroz.cariboustonks.mixin.accessors.ClientTextTooltipAccessor;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import fr.siroz.cariboustonks.util.cooldown.Cooldown;
-import net.minecraft.client.gui.tooltip.OrderedTextTooltipComponent;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.text.CharacterVisitor;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTextTooltip;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.util.FormattedCharSink;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.network.chat.Style;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +41,7 @@ public class ScrollableTooltipFeature extends Feature {
 	private double yOffset = 0;
 	private boolean hasMoved = false;
 	@Nullable
-	private List<TooltipComponent> currentTooltips;
+	private List<ClientTooltipComponent> currentTooltips;
 
 	public ScrollableTooltipFeature() {
 		CustomScreenEvents.CLOSE.register(screen -> this.reset());
@@ -116,7 +116,7 @@ public class ScrollableTooltipFeature extends Feature {
 	}
 
 	@EventHandler(event = "ItemRenderEvents.TOOLTIP_TRACKER")
-	private void onTooltipTracker(List<TooltipComponent> tooltipComponents) {
+	private void onTooltipTracker(List<ClientTooltipComponent> tooltipComponents) {
 		if (!isEnabled()) return;
 
 		if (tooltipComponents != null && tooltipComponents.size() < MIN_SCROLLABLE_TOOLTIPS) {
@@ -139,7 +139,7 @@ public class ScrollableTooltipFeature extends Feature {
 		currentYOffset += (yOffset - currentYOffset) * SMOOTHNESS_MULTIPLIER;
 	}
 
-	private void setTooltipComponents(List<TooltipComponent> tooltipComponents) {
+	private void setTooltipComponents(List<ClientTooltipComponent> tooltipComponents) {
 		if (!isEqual(currentTooltips, tooltipComponents)) {
 			resetScroll();
 			currentTooltips = tooltipComponents;
@@ -174,29 +174,29 @@ public class ScrollableTooltipFeature extends Feature {
 		hasMoved = false;
 	}
 
-	private boolean isEqual(@Nullable List<TooltipComponent> item1, @Nullable List<TooltipComponent> item2) {
+	private boolean isEqual(@Nullable List<ClientTooltipComponent> item1, @Nullable List<ClientTooltipComponent> item2) {
 		if (item1 == null || item2 == null || item1.size() != item2.size()) {
 			return false;
 		}
 
 		for (int i = 0; i < item1.size(); ++i) {
-			if (item1.get(i) instanceof OrderedTextTooltipComponent
-					&& !(item2.get(i) instanceof OrderedTextTooltipComponent)) {
+			if (item1.get(i) instanceof ClientTextTooltip
+					&& !(item2.get(i) instanceof ClientTextTooltip)) {
 				return false;
 			}
 
-			if (item2.get(i) instanceof OrderedTextTooltipComponent
-					&& !(item1.get(i) instanceof OrderedTextTooltipComponent)) {
+			if (item2.get(i) instanceof ClientTextTooltip
+					&& !(item1.get(i) instanceof ClientTextTooltip)) {
 				return false;
 			}
 
-			if (!(item1.get(i) instanceof OrderedTextTooltipComponent)
-					&& !(item2.get(i) instanceof OrderedTextTooltipComponent)) {
+			if (!(item1.get(i) instanceof ClientTextTooltip)
+					&& !(item2.get(i) instanceof ClientTextTooltip)) {
 				continue;
 			}
 
-			String text1 = OrderedTextReader.read(((OrderedTextTooltipComponentAccessor) item1.get(i)).getText());
-			String text2 = OrderedTextReader.read(((OrderedTextTooltipComponentAccessor) item2.get(i)).getText());
+			String text1 = OrderedTextReader.read(((ClientTextTooltipAccessor) item1.get(i)).getText());
+			String text2 = OrderedTextReader.read(((ClientTextTooltipAccessor) item2.get(i)).getText());
 			if (!text1.equals(text2)) {
 				return false;
 			}
@@ -206,7 +206,7 @@ public class ScrollableTooltipFeature extends Feature {
 	}
 
 	private static final class OrderedTextReader {
-		private static class Visitor implements CharacterVisitor {
+		private static class Visitor implements FormattedCharSink {
 			private int finalIndex = -1;
 			private final StringBuilder builder = new StringBuilder();
 
@@ -214,7 +214,7 @@ public class ScrollableTooltipFeature extends Feature {
 			}
 
 			@Override
-			public boolean accept(int index, Style style, int codePoint) {
+			public boolean accept(int index, @NotNull Style style, int codePoint) {
 				if (index > finalIndex) finalIndex = index;
 				else return false;
 
@@ -228,7 +228,7 @@ public class ScrollableTooltipFeature extends Feature {
 			}
 		}
 
-		public static @NotNull String read(@NotNull OrderedText text) {
+		public static @NotNull String read(@NotNull FormattedCharSequence text) {
 			Visitor visitor = new Visitor();
 			text.accept(visitor);
 			return visitor.getString();

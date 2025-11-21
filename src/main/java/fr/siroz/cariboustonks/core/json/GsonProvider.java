@@ -6,8 +6,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.siroz.cariboustonks.core.json.adapters.CodecTypeAdapter;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextCodecs;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,14 +15,14 @@ public final class GsonProvider {
 
 	private static final Gson STANDARD_GSON = new GsonBuilder()
 			.registerTypeAdapterFactory(CustomTypeAdapterFactory.INSTANCE)
-			.registerTypeHierarchyAdapter(Text.class, new CodecTypeAdapter<>(TextCodecs.CODEC))
+			.registerTypeHierarchyAdapter(Component.class, new CodecTypeAdapter<>(ComponentSerialization.CODEC))
 			.serializeNulls()
 			.disableHtmlEscaping()
 			.create();
 
 	private static final Gson PRETTY_PRINTING_GSON = new GsonBuilder()
 			.registerTypeAdapterFactory(CustomTypeAdapterFactory.INSTANCE)
-			.registerTypeHierarchyAdapter(Text.class, new CodecTypeAdapter<>(TextCodecs.CODEC))
+			.registerTypeHierarchyAdapter(Component.class, new CodecTypeAdapter<>(ComponentSerialization.CODEC))
 			.serializeNulls()
 			.disableHtmlEscaping()
 			.setPrettyPrinting()

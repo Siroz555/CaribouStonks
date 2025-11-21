@@ -11,12 +11,12 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import java.util.Collections;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
@@ -34,13 +34,13 @@ public class StonksFeature extends Feature {
 	}
 
 	private void onKeyPressed(Screen screen, Slot slot) {
-		if (isEnabled() && slot.getStack() != null && !slot.getStack().isEmpty()) {
-			stonksItem(slot.getStack());
+		if (isEnabled() && !slot.getItem().isEmpty()) {
+			stonksItem(slot.getItem());
 		}
 	}
 
 	public void stonksItem(@NotNull ItemStack stack) {
-		Client.sendMessageWithPrefix(stack.getName().copy().append(Text.literal(" ..")));
+		Client.sendMessageWithPrefix(stack.getHoverName().copy().append(Component.literal(" ..")));
 
 		String neuId = NotEnoughUpdatesUtils.getNeuId(stack);
 		String hypixelSkyBlockId = SkyBlockAPI.getSkyBlockApiId(stack);
@@ -50,17 +50,17 @@ public class StonksFeature extends Feature {
 			String neuIdError = neuId.isEmpty() ? "EMPTY" : neuId;
 			String hypixelSkyBlockIdError = hypixelSkyBlockId.isEmpty() ? "EMPTY" : hypixelSkyBlockId;
 
-			Client.sendErrorMessage("Unable to identify item " + stack.getName().getString(), false);
+			Client.sendErrorMessage("Unable to identify item " + stack.getHoverName().getString(), false);
 			if (DeveloperTools.isInDevelopment()) {
 				String extra = "(id: " + neuIdError + " | skyBlockApiId: " + hypixelSkyBlockIdError + ")";
-				Client.sendMessage(Text.literal(extra).formatted(Formatting.DARK_GRAY));
+				Client.sendMessage(Component.literal(extra).withStyle(ChatFormatting.DARK_GRAY));
 			}
 
 			CaribouStonks.LOGGER.error("[StonksFeature] Unable to identify ItemStack IDs. Minecraft ItemStack: " +
 							"{} NEU ID: {}, Hypixel SkyBlock API ID: {}",
-					stack.getName().getString(), neuIdError, hypixelSkyBlockIdError);
+					stack.getHoverName().getString(), neuIdError, hypixelSkyBlockIdError);
 		} else {
-			MinecraftClient.getInstance().setScreen(StonksScreen.create(ItemLookupKey.of(neuId, hypixelSkyBlockId)));
+			Minecraft.getInstance().setScreen(StonksScreen.create(ItemLookupKey.of(neuId, hypixelSkyBlockId)));
 		}
 	}
 }

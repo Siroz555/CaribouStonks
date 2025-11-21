@@ -4,7 +4,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 
 import fr.siroz.cariboustonks.util.colors.ColorUtils;
 import java.awt.Color;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
 
 public class MiscConfig {
 
@@ -15,7 +15,7 @@ public class MiscConfig {
 	public Color highlightPartyMembersColor = Color.GREEN;
 
 	@SerialEntry
-	public Color highlighterColor = ColorUtils.getAwtColor(Formatting.AQUA);
+	public Color highlighterColor = ColorUtils.getAwtColor(ChatFormatting.AQUA);
 
 	@SerialEntry
 	public Compatibility compatibility = new Compatibility();

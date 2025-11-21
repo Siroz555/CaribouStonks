@@ -1,11 +1,11 @@
 package fr.siroz.cariboustonks.mixin.accessors;
 
-import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.core.particles.DustParticleOptions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(DustParticleEffect.class)
-public interface DurstParticleEffectAccessor {
+@Mixin(DustParticleOptions.class)
+public interface DustParticleOptionsAccessor {
 
 	@Accessor("color")
 	int getColor();

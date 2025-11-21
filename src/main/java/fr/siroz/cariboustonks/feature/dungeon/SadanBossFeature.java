@@ -17,11 +17,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FlowerPotBlock;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +57,7 @@ public class SadanBossFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onChatMessage(@NotNull Text text) {
+	private void onChatMessage(@NotNull Component text) {
 		if (inBoss && text.getString().equals(GIANT_TRIGGER_MESSAGE)) {
 			terracottaFlowerPots = null;
 		}
@@ -99,8 +99,8 @@ public class SadanBossFeature extends Feature {
 				continue;
 			}
 
-			Text message = getTimeFrom(terracotta.getTicks());
-			renderer.submitText(message, terracotta.getPos().toCenterPos(), 1.5f, true);
+			Component message = getTimeFrom(terracotta.getTicks());
+			renderer.submitText(message, terracotta.getPos().getCenter(), 1.5f, true);
 		}
 	}
 
@@ -110,9 +110,9 @@ public class SadanBossFeature extends Feature {
 		terracottaFlowerPots = null;
 	}
 
-	private Text getTimeFrom(int ticks) {
+	private Component getTimeFrom(int ticks) {
 		String seconds = StonksUtils.DECIMAL_FORMAT.format(ticks / 20f) + "s";
-		return Text.literal(seconds).formatted(ticks <= 20 ? Formatting.RED : Formatting.YELLOW);
+		return Component.literal(seconds).withStyle(ticks <= 20 ? ChatFormatting.RED : ChatFormatting.YELLOW);
 	}
 
 	private static class Terracotta {

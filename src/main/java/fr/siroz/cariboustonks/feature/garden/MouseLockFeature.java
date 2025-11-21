@@ -12,8 +12,8 @@ import fr.siroz.cariboustonks.manager.keybinds.KeyBindComponent;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.Collections;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.lwjgl.glfw.GLFW;
 
 public final class MouseLockFeature extends Feature {
@@ -49,7 +49,7 @@ public final class MouseLockFeature extends Feature {
 		if (locked) {
 			locked = false;
 			Client.sendMessageWithPrefix(
-					Text.literal("The mouse is no longer blocked due to a server change.").formatted(Formatting.RED));
+					Component.literal("The mouse is no longer blocked due to a server change.").withStyle(ChatFormatting.RED));
 		}
 	}
 
@@ -57,10 +57,10 @@ public final class MouseLockFeature extends Feature {
 		if (!isEnabled()) return;
 
 		locked = !locked;
-		Text extra = Text.literal(" (/cariboustonks lockMouse)").formatted(Formatting.GRAY, Formatting.ITALIC);
-		Text message = locked ?
-				Text.literal("The Mouse is locked").formatted(Formatting.RED).append(extra) :
-				Text.literal("The Mouse is unlocked").formatted(Formatting.GREEN);
+		Component extra = Component.literal(" (/cariboustonks lockMouse)").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
+		Component message = locked ?
+				Component.literal("The Mouse is locked").withStyle(ChatFormatting.RED).append(extra) :
+				Component.literal("The Mouse is unlocked").withStyle(ChatFormatting.GREEN);
 		Client.sendMessageWithPrefix(message);
 	}
 }

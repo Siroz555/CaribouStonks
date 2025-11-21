@@ -6,10 +6,10 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.manager.glowing.EntityGlowProvider;
 import fr.siroz.cariboustonks.manager.glowing.GlowingManager;
-import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.state.EntityRenderState;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,10 +32,10 @@ public abstract class EntityRendererMixin {
 		}
 	}
 
-	@Inject(method = "updateRenderState", at = @At("TAIL"))
+	@Inject(method = "extractRenderState", at = @At("TAIL"))
 	private void cariboustonks$updateOutlineColorWhenRenderStateUpdate(CallbackInfo ci, @Local(argsOnly = true) Entity entity, @Local(argsOnly = true) EntityRenderState state) {
 		boolean hasModGlow = glowingManager.hasOrComputeEntity(entity);
-		boolean updateGlow = state.hasOutline() || hasModGlow;
+		boolean updateGlow = state.appearsGlowing() || hasModGlow;
 		if (updateGlow && hasModGlow) {
 			state.outlineColor = glowingManager.getEntityColorOrDefault(entity, EntityGlowProvider.DEFAULT);
 		} else if (!updateGlow) {

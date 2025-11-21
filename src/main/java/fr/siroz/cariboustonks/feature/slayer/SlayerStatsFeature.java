@@ -9,8 +9,8 @@ import fr.siroz.cariboustonks.manager.slayer.SlayerTier;
 import fr.siroz.cariboustonks.manager.slayer.SlayerType;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,14 +48,14 @@ public class SlayerStatsFeature extends Feature {
 	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_SPAWN")
 	private void onBossSpawn(@NotNull SlayerType type, @NotNull SlayerTier tier) {
 		if (ConfigManager.getConfig().slayer.bossSpawnAlert) {
-			Client.showTitle(Text.literal("Boss spawned!").formatted(Formatting.DARK_RED), 1, 20, 1);
+			Client.showTitle(Component.literal("Boss spawned!").withStyle(ChatFormatting.DARK_RED), 1, 20, 1);
 		}
 	}
 
 	@EventHandler(event = "SkyBlockEvents.SLAYER_MINIBOSS_SPAWN")
 	private void onMinibossSpawn(@NotNull SlayerType type, @NotNull SlayerTier tier) {
 		if (ConfigManager.getConfig().slayer.minibossSpawnAlert) {
-			Client.showTitle(Text.literal("Miniboss spawned!").formatted(Formatting.RED), 1, 20, 1);
+			Client.showTitle(Component.literal("Miniboss spawned!").withStyle(ChatFormatting.RED), 1, 20, 1);
 		}
 	}
 
@@ -108,15 +108,15 @@ public class SlayerStatsFeature extends Feature {
 	}
 
 	private void showBreakdown(@NotNull SlayerBossRun currentRun) {
-		Text message = Text.empty()
-				.append(Text.literal("BREAKDOWN ").formatted(Formatting.RED, Formatting.BOLD))
-				.append(Text.literal("Spawn: ").formatted(Formatting.GREEN))
-				.append(Text.literal(simpleFormatMillis(currentRun.timeToSpawn().toMillis())).formatted(Formatting.YELLOW))
-				.append(Text.literal(" Kill: ").formatted(Formatting.RED))
-				.append(Text.literal(simpleFormatMillis(currentRun.timeToKill().toMillis())).formatted(Formatting.YELLOW))
-				.append(Text.literal(" (Total: ").formatted(Formatting.GRAY))
-				.append(Text.literal(simpleFormatMillis(currentRun.cycleDuration().toMillis())).formatted(Formatting.YELLOW))
-				.append(Text.literal(")").formatted(Formatting.GRAY));
+		Component message = Component.empty()
+				.append(Component.literal("BREAKDOWN ").withStyle(ChatFormatting.RED, ChatFormatting.BOLD))
+				.append(Component.literal("Spawn: ").withStyle(ChatFormatting.GREEN))
+				.append(Component.literal(simpleFormatMillis(currentRun.timeToSpawn().toMillis())).withStyle(ChatFormatting.YELLOW))
+				.append(Component.literal(" Kill: ").withStyle(ChatFormatting.RED))
+				.append(Component.literal(simpleFormatMillis(currentRun.timeToKill().toMillis())).withStyle(ChatFormatting.YELLOW))
+				.append(Component.literal(" (Total: ").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal(simpleFormatMillis(currentRun.cycleDuration().toMillis())).withStyle(ChatFormatting.YELLOW))
+				.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 		Client.sendMessage(message);
 	}
 
@@ -131,16 +131,16 @@ public class SlayerStatsFeature extends Feature {
 		String textBossPerHour = bph.isPresent() ? String.format("%.2f", bph.getAsDouble()) : "N/A";
 		String textExpPerHour = xph.isPresent() ? StonksUtils.SHORT_FLOAT_NUMBERS.format(xph.getAsDouble()) : "N/A";
 
-		Text message = Text.empty()
-				.append(Text.literal("STATS ").formatted(Formatting.RED, Formatting.BOLD))
-				.append(Text.literal("Spawn Avg: ").formatted(Formatting.DARK_GREEN))
-				.append(Text.literal(textSpawnAvg).formatted(Formatting.YELLOW))
-				.append(Text.literal(" Kill Avg: ").formatted(Formatting.DARK_RED))
-				.append(Text.literal(textKillAvg).formatted(Formatting.YELLOW))
-				.append(Text.literal(" Boss/h: ").formatted(Formatting.RED))
-				.append(Text.literal(textBossPerHour).formatted(Formatting.YELLOW))
-				.append(Text.literal(" EXP/h: ").formatted(Formatting.AQUA))
-				.append(Text.literal(textExpPerHour).formatted(Formatting.YELLOW));
+		Component message = Component.empty()
+				.append(Component.literal("STATS ").withStyle(ChatFormatting.RED, ChatFormatting.BOLD))
+				.append(Component.literal("Spawn Avg: ").withStyle(ChatFormatting.DARK_GREEN))
+				.append(Component.literal(textSpawnAvg).withStyle(ChatFormatting.YELLOW))
+				.append(Component.literal(" Kill Avg: ").withStyle(ChatFormatting.DARK_RED))
+				.append(Component.literal(textKillAvg).withStyle(ChatFormatting.YELLOW))
+				.append(Component.literal(" Boss/h: ").withStyle(ChatFormatting.RED))
+				.append(Component.literal(textBossPerHour).withStyle(ChatFormatting.YELLOW))
+				.append(Component.literal(" EXP/h: ").withStyle(ChatFormatting.AQUA))
+				.append(Component.literal(textExpPerHour).withStyle(ChatFormatting.YELLOW));
 		Client.sendMessage(message);
 	}
 

@@ -12,9 +12,9 @@ import fr.siroz.cariboustonks.util.Client;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 
 public class SlayerCocoonedWarningFeature extends Feature {
@@ -47,7 +47,7 @@ public class SlayerCocoonedWarningFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onMessage(@NotNull Text text) {
+	private void onMessage(@NotNull Component text) {
 		if (!isEnabled()) return;
 
 		String message = text.getString();
@@ -55,8 +55,8 @@ public class SlayerCocoonedWarningFeature extends Feature {
 
 		Matcher cocoonBossMatcher = COCOONED_BOSS_PATTERN.matcher(message);
 		if (cocoonBossMatcher.matches()) {
-			Client.showTitle(Text.literal("Slayer Boss Cocooned!").formatted(Formatting.RED, Formatting.BOLD), 1, 60, 1);
-			Client.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE, 1f, 1f);
+			Client.showTitle(Component.literal("Slayer Boss Cocooned!").withStyle(ChatFormatting.RED, ChatFormatting.BOLD), 1, 60, 1);
+			Client.playSound(SoundEvents.ELDER_GUARDIAN_CURSE, 1f, 1f);
 			cocoonedBoss = true;
 			TickScheduler.getInstance().runLater(() -> cocoonedBoss = false, 3, TimeUnit.SECONDS);
 		}

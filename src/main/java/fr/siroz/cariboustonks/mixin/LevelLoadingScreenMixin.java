@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.mixin;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import net.minecraft.client.gui.screen.world.LevelLoadingScreen;
+import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

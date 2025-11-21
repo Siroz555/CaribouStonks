@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.rendering.gui.state;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import net.minecraft.client.gui.ScreenRect;
-import net.minecraft.client.gui.render.state.SimpleGuiElementRenderState;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.texture.TextureSetup;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.state.GuiElementRenderState;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.gui.render.TextureSetup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2f;
@@ -20,9 +20,9 @@ public record GradientRectGuiElementRenderState(
 		int bottom,
 		int startColor,
 		int endColor,
-		@Nullable ScreenRect scissorArea,
-		@Nullable ScreenRect bounds
-) implements SimpleGuiElementRenderState {
+		@Nullable ScreenRectangle scissorArea,
+		@Nullable ScreenRectangle bounds
+) implements GuiElementRenderState {
 
 	public GradientRectGuiElementRenderState(
 			@NotNull RenderPipeline pipeline,
@@ -35,14 +35,14 @@ public record GradientRectGuiElementRenderState(
 			int bottom,
 			int startColor,
 			int endColor,
-			@Nullable ScreenRect scissorArea
+			@Nullable ScreenRectangle scissorArea
 	) {
 		this(pipeline, textureSetup, pose, depth, left, top, right, bottom, startColor, endColor, scissorArea,
 				createBounds(left, top, right, bottom, pose, scissorArea));
 	}
 
 	@Override
-	public void setupVertices(@NotNull VertexConsumer vertices) {
+	public void buildVertices(@NotNull VertexConsumer vertices) {
 		float startAlpha = (float) (startColor >> 24 & 255) / 255.0F;
 		float startRed = (float) (startColor >> 16 & 255) / 255.0F;
 		float startGreen = (float) (startColor >> 8 & 255) / 255.0F;
@@ -52,26 +52,26 @@ public record GradientRectGuiElementRenderState(
 		float endGreen = (float) (endColor >> 8 & 255) / 255.0F;
 		float endBlue = (float) (endColor & 255) / 255.0F;
 
-		vertices.vertex(this.matrix, right, top)
-				.normal(right, top, depth)
-				.color(startRed, startGreen, startBlue, startAlpha);
+		vertices.addVertexWith2DPose(this.matrix, right, top)
+				.setNormal(right, top, depth)
+				.setColor(startRed, startGreen, startBlue, startAlpha);
 
-		vertices.vertex(this.matrix, left, top)
-				.normal(right, top, depth)
-				.color(startRed, startGreen, startBlue, startAlpha);
+		vertices.addVertexWith2DPose(this.matrix, left, top)
+				.setNormal(right, top, depth)
+				.setColor(startRed, startGreen, startBlue, startAlpha);
 
-		vertices.vertex(this.matrix, left, bottom)
-				.normal(right, top, depth)
-				.color(endRed, endGreen, endBlue, endAlpha);
+		vertices.addVertexWith2DPose(this.matrix, left, bottom)
+				.setNormal(right, top, depth)
+				.setColor(endRed, endGreen, endBlue, endAlpha);
 
-		vertices.vertex(this.matrix, right, bottom)
-				.normal(right, top, depth)
-				.color(endRed, endGreen, endBlue, endAlpha);
+		vertices.addVertexWith2DPose(this.matrix, right, bottom)
+				.setNormal(right, top, depth)
+				.setColor(endRed, endGreen, endBlue, endAlpha);
 	}
 
 	@Nullable
-	private static ScreenRect createBounds(int x0, int y0, int x1, int y1, Matrix3x2f pose, @Nullable ScreenRect scissorArea) {
-		ScreenRect screenRect = new ScreenRect(x0, y0, x1 - x0, y1 - y0).transformEachVertex(pose);
+	private static ScreenRectangle createBounds(int x0, int y0, int x1, int y1, Matrix3x2f pose, @Nullable ScreenRectangle scissorArea) {
+		ScreenRectangle screenRect = new ScreenRectangle(x0, y0, x1 - x0, y1 - y0).transformMaxBounds(pose);
 		return scissorArea != null ? scissorArea.intersection(screenRect) : screenRect;
 	}
 }

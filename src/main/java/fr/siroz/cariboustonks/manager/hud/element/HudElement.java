@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.manager.hud.element;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 /**
  * An {@code HudElement}.
@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
  */
 public interface HudElement {
 
-	Text[] getCells();
+	Component[] getCells();
 
 	boolean hasSpaceAfter();
 }

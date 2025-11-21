@@ -2,11 +2,11 @@ package fr.siroz.cariboustonks.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +21,7 @@ public final class WorldEvents {
 	/**
 	 * Called when a block state is updated.
 	 */
-	public static final Event<BlockStateUpdate> BLOCK_STATE_UPDATE = EventFactory.createArrayBacked(BlockStateUpdate.class, listeners -> (pos, oldState, newState) -> {
+	public static final Event<@NotNull BlockStateUpdate> BLOCK_STATE_UPDATE = EventFactory.createArrayBacked(BlockStateUpdate.class, listeners -> (pos, oldState, newState) -> {
 		for (BlockStateUpdate listener : listeners) {
 			listener.onBlockStateUpdate(pos, oldState, newState);
 		}
@@ -30,7 +30,7 @@ public final class WorldEvents {
 	/**
 	 * Called when the client joins the world or a new world
 	 */
-	public static final Event<Join> JOIN = EventFactory.createArrayBacked(Join.class, listeners -> world -> {
+	public static final Event<@NotNull Join> JOIN = EventFactory.createArrayBacked(Join.class, listeners -> world -> {
 		for (Join listener : listeners) {
 			listener.onJoinWorld(world);
 		}
@@ -40,7 +40,7 @@ public final class WorldEvents {
 	 * Called when the client receives a Sound
 	 */
 	@OnlySkyBlock
-	public static final Event<AllowSound> ALLOW_SOUND = EventFactory.createArrayBacked(AllowSound.class, listeners -> sound -> {
+	public static final Event<@NotNull AllowSound> ALLOW_SOUND = EventFactory.createArrayBacked(AllowSound.class, listeners -> sound -> {
 		boolean allowSound = true;
 		for (AllowSound listener : listeners) {
 			allowSound &= listener.allowSound(sound);
@@ -49,7 +49,7 @@ public final class WorldEvents {
 	});
 
 	@OnlySkyBlock
-	public static final Event<ArmorStandRemoved> ARMORSTAND_REMOVED = EventFactory.createArrayBacked(ArmorStandRemoved.class, listeners -> (armorStand) -> {
+	public static final Event<@NotNull ArmorStandRemoved> ARMORSTAND_REMOVED = EventFactory.createArrayBacked(ArmorStandRemoved.class, listeners -> (armorStand) -> {
 		for (ArmorStandRemoved listener : listeners) {
 			listener.onRemove(armorStand);
 		}
@@ -62,7 +62,7 @@ public final class WorldEvents {
 
 	@FunctionalInterface
 	public interface Join {
-		void onJoinWorld(@NotNull ClientWorld world);
+		void onJoinWorld(@NotNull ClientLevel world);
 	}
 
 	@FunctionalInterface
@@ -72,6 +72,6 @@ public final class WorldEvents {
 
 	@FunctionalInterface
 	public interface ArmorStandRemoved {
-		void onRemove(@NotNull ArmorStandEntity armorStand);
+		void onRemove(@NotNull ArmorStand armorStand);
 	}
 }

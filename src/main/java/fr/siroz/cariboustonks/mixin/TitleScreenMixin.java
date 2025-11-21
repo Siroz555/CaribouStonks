@@ -3,10 +3,10 @@ package fr.siroz.cariboustonks.mixin;
 import fr.siroz.cariboustonks.util.render.gui.SplashTextSupplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.SplashTextRenderer;
-import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.SplashRenderer;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,14 +20,14 @@ public abstract class TitleScreenMixin extends Screen {
 
 	@Shadow
 	@Nullable
-	private SplashTextRenderer splashText;
+	private SplashRenderer splash;
 
-	protected TitleScreenMixin(Text title) {
+	protected TitleScreenMixin(Component title) {
 		super(title);
 	}
 
 	@Inject(at = @At("RETURN"), method = "init")
 	protected void cariboustonks$coucou(CallbackInfo ci) {
-		SplashTextSupplier.getInstance().get().ifPresent(text -> this.splashText = text);
+		SplashTextSupplier.getInstance().get().ifPresent(text -> this.splash = text);
 	}
 }

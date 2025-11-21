@@ -26,10 +26,10 @@ import java.util.function.BooleanSupplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class SecondLifeFeature extends Feature implements HudProvider {
@@ -55,8 +55,8 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 		this.hud = new MultiElementHud(
 				() -> this.isEnabled() && !activeCooldowns.isEmpty(),
 				new HudElementTextBuilder()
-						.append(Text.literal("Spirit Mask: 42.9s").formatted(Formatting.DARK_PURPLE))
-						.append(Text.literal("Phoenix: 51.7s").formatted(Formatting.YELLOW))
+						.append(Component.literal("Spirit Mask: 42.9s").withStyle(ChatFormatting.DARK_PURPLE))
+						.append(Component.literal("Phoenix: 51.7s").withStyle(ChatFormatting.YELLOW))
 						.build(),
 				this::getHudLines,
 				ConfigManager.getConfig().combat.secondLife.cooldownHud,
@@ -87,7 +87,7 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onChatMessage(@NotNull Text text) {
+	private void onChatMessage(@NotNull Component text) {
 		if (!isEnabled()) return;
 
 		String message = StonksUtils.stripColor(text.getString());
@@ -120,7 +120,7 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 		// Il est reset ici pour permettre de trigger à nouveau, tant qu'il n'y a pas de changement de serveur.
 		serverHasChanged = false;
 
-		Client.showTitle(Text.literal(secondLife.getName() + " used!").formatted(Formatting.RED), 0, 30, 0);
+		Client.showTitle(Component.literal(secondLife.getName() + " used!").withStyle(ChatFormatting.RED), 0, 30, 0);
 
 		long cooldownEndTime = System.currentTimeMillis() + (secondLife.getCooldown() * 1000L);
 		activeCooldowns.put(secondLife, cooldownEndTime);
@@ -133,9 +133,9 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 		activeCooldowns.remove(secondLife);
 		// Pas de notification si le serveur a changé
 		if (!serverHasChanged && secondLife.isBackConfigEnabled()) {
-			Client.sendMessageWithPrefix(Text.literal(secondLife.getName() + " is back!").formatted(Formatting.GREEN));
-			Client.showTitle(Text.literal(secondLife.getName() + " ready!").formatted(Formatting.GREEN), 0, 30, 0);
-			Client.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+			Client.sendMessageWithPrefix(Component.literal(secondLife.getName() + " is back!").withStyle(ChatFormatting.GREEN));
+			Client.showTitle(Component.literal(secondLife.getName() + " ready!").withStyle(ChatFormatting.GREEN), 0, 30, 0);
+			Client.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1f, 1f);
 		}
 	}
 
@@ -160,10 +160,10 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 				if (timeRemaining > 0) {
 					SecondLife secondLife = entry.getKey();
 					String formattedTime = TIME_FORMAT.format(timeRemaining);
-					hudBuilder.appendLine(Text.empty()
-							.append(Text.literal(secondLife.getName()).formatted(secondLife.getColor()))
-							.append(Text.literal(": ").formatted(Formatting.WHITE))
-							.append(Text.literal(formattedTime + "s").formatted(getColor(timeRemaining)))
+					hudBuilder.appendLine(Component.empty()
+							.append(Component.literal(secondLife.getName()).withStyle(secondLife.getColor()))
+							.append(Component.literal(": ").withStyle(ChatFormatting.WHITE))
+							.append(Component.literal(formattedTime + "s").withStyle(getColor(timeRemaining)))
 					);
 				}
 			}
@@ -173,28 +173,28 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 		return hudBuilder.build();
 	}
 
-	private Formatting getColor(double timeRemaining) {
+	private ChatFormatting getColor(double timeRemaining) {
 		if (timeRemaining <= 10) {
-			return Formatting.GREEN;
+			return ChatFormatting.GREEN;
 		} else if (timeRemaining <= 30) {
-			return Formatting.GOLD;
+			return ChatFormatting.GOLD;
 		} else {
-			return Formatting.RED;
+			return ChatFormatting.RED;
 		}
 	}
 
 	private enum SecondLife {
-		SPIRIT_MASK(30, "Spirit Mask", Formatting.DARK_PURPLE, () -> ConfigManager.getConfig().combat.secondLife.spiritMaskBack),
-		BONZO_MASK(180, "Bonzo Mask", Formatting.RED, () -> ConfigManager.getConfig().combat.secondLife.bonzoMaskBack),
-		PHOENIX_PET(60, "Phoenix Pet", Formatting.YELLOW, () -> ConfigManager.getConfig().combat.secondLife.phoenixBack),
+		SPIRIT_MASK(30, "Spirit Mask", ChatFormatting.DARK_PURPLE, () -> ConfigManager.getConfig().combat.secondLife.spiritMaskBack),
+		BONZO_MASK(180, "Bonzo Mask", ChatFormatting.RED, () -> ConfigManager.getConfig().combat.secondLife.bonzoMaskBack),
+		PHOENIX_PET(60, "Phoenix Pet", ChatFormatting.YELLOW, () -> ConfigManager.getConfig().combat.secondLife.phoenixBack),
 		;
 
 		private final int cooldown;
 		private final String name;
-		private final Formatting color;
+		private final ChatFormatting color;
 		private final BooleanSupplier backConfig;
 
-		SecondLife(int cooldown, String name, Formatting color, BooleanSupplier backConfig) {
+		SecondLife(int cooldown, String name, ChatFormatting color, BooleanSupplier backConfig) {
 			this.cooldown = cooldown;
 			this.name = name;
 			this.color = color;
@@ -209,7 +209,7 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 			return name;
 		}
 
-		public Formatting getColor() {
+		public ChatFormatting getColor() {
 			return color;
 		}
 

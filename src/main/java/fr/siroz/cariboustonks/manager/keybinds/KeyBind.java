@@ -1,14 +1,14 @@
 package fr.siroz.cariboustonks.manager.keybinds;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Represents a custom {@link KeyBinding} that can be registered in the game control settings.
+ * Represents a custom {@link KeyMapping} that can be registered in the game control settings.
  * The KeyBinding can handle key presses both globally and within specific screens.
  * <p>
  * {@code Fabric API} does not provide an API in this way, hence the existence of this internal KeyBind API.
@@ -47,7 +47,7 @@ public class KeyBind {
 	@Nullable
 	private final SlotKeyHandler onScreenPress;
 	private final boolean firstPress;
-	private final KeyBinding keyBinding;
+	private final KeyMapping keyBinding;
 	private boolean isPressed = false;
 
 	/**
@@ -97,7 +97,7 @@ public class KeyBind {
 		this.firstPress = firstPress;
 		this.onPress = onPress;
 		this.onScreenPress = onScreenPress;
-		this.keyBinding = new KeyBinding(name, keyCode, KeyBindManager.CATEGORY);
+		this.keyBinding = new KeyMapping(name, keyCode, KeyBindManager.CATEGORY);
 	}
 
 	public String getName() {
@@ -122,7 +122,7 @@ public class KeyBind {
 	}
 
 	@ApiStatus.Internal
-	public KeyBinding getKeyBinding() {
+	public KeyMapping getKeyBinding() {
 		return keyBinding;
 	}
 

@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.config.configs;
 
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import fr.siroz.cariboustonks.util.colors.ColorUtils;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
 
 import java.awt.Color;
 
@@ -26,7 +26,7 @@ public class ChatConfig {
 		public boolean chatPartyColored = false;
 
 		@SerialEntry
-		public Color chatPartyColor = ColorUtils.getAwtColor(Formatting.BLUE);
+		public Color chatPartyColor = ColorUtils.getAwtColor(ChatFormatting.BLUE);
 	}
 
 	public static class ChatGuild {
@@ -35,6 +35,6 @@ public class ChatConfig {
 		public boolean chatGuildColored = false;
 
 		@SerialEntry
-		public Color chatGuildColor = ColorUtils.getAwtColor(Formatting.DARK_GREEN);
+		public Color chatGuildColor = ColorUtils.getAwtColor(ChatFormatting.DARK_GREEN);
 	}
 }

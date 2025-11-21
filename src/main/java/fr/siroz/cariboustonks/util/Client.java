@@ -3,32 +3,32 @@ package fr.siroz.cariboustonks.util;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.HudEvents;
-import fr.siroz.cariboustonks.mixin.accessors.PlayerListHudAccessor;
+import fr.siroz.cariboustonks.mixin.accessors.PlayerTabOverlayAccessor;
 import fr.siroz.cariboustonks.util.render.gui.StonksToast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.toast.SystemToast;
-import net.minecraft.client.toast.Toast;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.scoreboard.ScoreHolder;
-import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.scoreboard.ScoreboardDisplaySlot;
-import net.minecraft.scoreboard.ScoreboardObjective;
-import net.minecraft.scoreboard.Team;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.StringHelper;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.client.gui.components.toasts.Toast;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.scores.ScoreHolder;
+import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.DisplaySlot;
+import net.minecraft.world.scores.Objective;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.util.StringUtil;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.core.BlockPos;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -38,14 +38,14 @@ import org.jetbrains.annotations.Range;
 import org.lwjgl.glfw.GLFW;
 
 /**
- * Util lié au {@link MinecraftClient}.
+ * Util lié au {@link Minecraft}.
  * <p>
  * Les méthodes sont {@code Safe Client null} ou {@code Safe World null}.
  */
 public final class Client {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
-	private static final SystemToast.Type STONKS_SYSTEM = new SystemToast.Type(10000L); // 10000L
+	private static final Minecraft CLIENT = Minecraft.getInstance();
+	private static final SystemToast.SystemToastId STONKS_SYSTEM = new SystemToast.SystemToastId(10000L); // 10000L
 	private static final List<String> STRING_SCOREBOARD = new ArrayList<>();
 	private static final List<String> STRING_TAB = new ArrayList<>();
 
@@ -70,7 +70,7 @@ public final class Client {
 	 * @return {@code true} if the keyCode is pressed
 	 */
 	public static boolean isKeyPressed(int keyCode) {
-		return InputUtil.isKeyPressed(CLIENT.getWindow(), keyCode);
+		return InputConstants.isKeyDown(CLIENT.getWindow(), keyCode);
 	}
 
 	/**
@@ -80,17 +80,17 @@ public final class Client {
 	 * @return {@code true} if the Shift key is pressed
 	 */
 	public static boolean hasShiftDown() {
-		return InputUtil.isKeyPressed(CLIENT.getWindow(), 340) || InputUtil.isKeyPressed(CLIENT.getWindow(), 344);
+		return InputConstants.isKeyDown(CLIENT.getWindow(), 340) || InputConstants.isKeyDown(CLIENT.getWindow(), 344);
 	}
 
 	/**
 	 * Retrieves the current block position of the player.
 	 * <p>
-	 * If the player is not available, returns {@link BlockPos#ORIGIN}.
+	 * If the player is not available, returns {@link BlockPos#ZERO}.
 	 * <p>
 	 * {@code Safe Client null}
 	 *
-	 * @return the player's {@link BlockPos}, or {@link BlockPos#ORIGIN} if unavailable
+	 * @return the player's {@link BlockPos}, or {@link BlockPos#ZERO} if unavailable
 	 * @see #getCurrentPosition(boolean)
 	 */
 	public static BlockPos getCurrentPosition() {
@@ -102,7 +102,7 @@ public final class Client {
 	 * <p>
 	 * If {@code crosshairTargetAsBlockPos} is {@code true} and the crosshair is currently targeting a block,
 	 * returns the position of the targeted block. Otherwise, returns the player's current block position.
-	 * If the client or player is not available, returns {@link BlockPos#ORIGIN}.
+	 * If the client or player is not available, returns {@link BlockPos#ZERO}.
 	 * <p>
 	 * {@code Safe Client null}
 	 *
@@ -111,15 +111,15 @@ public final class Client {
 	 * @see #getCurrentPosition()
 	 */
 	public static BlockPos getCurrentPosition(boolean crosshairTargetAsBlockPos) {
-		if (CLIENT.player == null) return BlockPos.ORIGIN;
+		if (CLIENT.player == null) return BlockPos.ZERO;
 
 		if (crosshairTargetAsBlockPos
-				&& CLIENT.crosshairTarget instanceof BlockHitResult blockHitResult
-				&& CLIENT.crosshairTarget.getType() == HitResult.Type.BLOCK) {
+				&& CLIENT.hitResult instanceof BlockHitResult blockHitResult
+				&& CLIENT.hitResult.getType() == HitResult.Type.BLOCK) {
 			return blockHitResult.getBlockPos();
 		}
 
-		return CLIENT.player.getBlockPos();
+		return CLIENT.player.blockPosition();
 	}
 
 	/**
@@ -149,7 +149,7 @@ public final class Client {
 	 * @return the footer of the tab list, or {@code null}
 	 */
 	public static @Nullable String getTabListFooter() {
-		Text footer = ((PlayerListHudAccessor) MinecraftClient.getInstance().inGameHud.getPlayerListHud()).getFooter();
+		Component footer = ((PlayerTabOverlayAccessor) Minecraft.getInstance().gui.getTabList()).getFooter();
 		return footer != null ? footer.getString() : null;
 	}
 
@@ -159,9 +159,9 @@ public final class Client {
 	 * {@code Client -> Client} & {@code Safe Client null}
 	 *
 	 * @param message le message
-	 * @see #sendMessageWithPrefix(Text)
+	 * @see #sendMessageWithPrefix(Component)
 	 */
-	public static void sendMessage(@NotNull Text message) {
+	public static void sendMessage(@NotNull Component message) {
 		sendMessageInternal(message, false);
 	}
 
@@ -171,9 +171,9 @@ public final class Client {
 	 * {@code Client -> Client} & {@code Safe Client null}
 	 *
 	 * @param message le message
-	 * @see #sendMessage(Text)
+	 * @see #sendMessage(Component)
 	 */
-	public static void sendMessageWithPrefix(@NotNull Text message) {
+	public static void sendMessageWithPrefix(@NotNull Component message) {
 		sendMessageInternal(CaribouStonks.prefix().get().append(message), false);
 	}
 
@@ -188,7 +188,7 @@ public final class Client {
 	public static void sendErrorMessage(@NotNull String errorMessage, boolean notification) {
 		CaribouStonks.LOGGER.warn("Chat error message sent: {}", errorMessage);
 		sendMessageInternal(CaribouStonks.prefix().get()
-				.append(Text.literal(errorMessage).formatted(Formatting.RED)), false);
+				.append(Component.literal(errorMessage).withStyle(ChatFormatting.RED)), false);
 
 		if (notification) {
 			showNotificationSystem(errorMessage);
@@ -202,20 +202,20 @@ public final class Client {
 	 *
 	 * @param message le message
 	 */
-	public static void showActionBar(@NotNull Text message) {
+	public static void showActionBar(@NotNull Component message) {
 		sendMessageInternal(message, true);
 	}
 
 	@ApiStatus.Internal
-	private static void sendMessageInternal(@NotNull Text message, boolean overlay) {
-		if (CLIENT.player != null) CLIENT.player.sendMessage(message, overlay);
+	private static void sendMessageInternal(@NotNull Component message, boolean overlay) {
+		if (CLIENT.player != null) CLIENT.player.displayClientMessage(message, overlay);
 	}
 
 	/**
 	 * Clears the currently displayed title and subtitle.
 	 */
 	public static void clearTitleAndSubtitle() {
-		if (CLIENT.player != null && CLIENT.inGameHud != null) CLIENT.inGameHud.clearTitle();
+		if (CLIENT.player != null) CLIENT.gui.clearTitles();
 	}
 
 	/**
@@ -227,16 +227,16 @@ public final class Client {
 	 * @param fadeInTicks  durée en ticks de l'animation d'apparition du title (0 à 250).
 	 * @param stayTicks    durée en ticks pendant laquelle le title reste visible (0 à 1000)
 	 * @param fadeOutTicks durée en ticks de l'animation de disparition du title (0 à 250)
-	 * @see #showSubtitle(Text, int, int, int) showSubtitle
-	 * @see #showTitleAndSubtitle(Text, Text, int, int, int) showTitleAndSubtitle
+	 * @see #showSubtitle(Component, int, int, int) showSubtitle
+	 * @see #showTitleAndSubtitle(Component, Component, int, int, int) showTitleAndSubtitle
 	 */
 	public static void showTitle(
-			@NotNull Text title,
+			@NotNull Component title,
 			@Range(from = 0, to = 250) int fadeInTicks,
 			@Range(from = 0, to = 1000) int stayTicks,
 			@Range(from = 0, to = 250) int fadeOutTicks
 	) {
-		showTitleAndSubtitle(title, Text.empty(), fadeInTicks, stayTicks, fadeOutTicks);
+		showTitleAndSubtitle(title, Component.empty(), fadeInTicks, stayTicks, fadeOutTicks);
 	}
 
 	/**
@@ -248,16 +248,16 @@ public final class Client {
 	 * @param fadeInTicks  durée en ticks de l'animation d'apparition du subtitle (0 à 250).
 	 * @param stayTicks    durée en ticks pendant laquelle le subtitle reste visible (0 à 1000)
 	 * @param fadeOutTicks durée en ticks de l'animation de disparition du subtitle (0 à 250)
-	 * @see #showTitle(Text, int, int, int) showTitle
-	 * @see #showTitleAndSubtitle(Text, Text, int, int, int) showTitleAndSubtitle
+	 * @see #showTitle(Component, int, int, int) showTitle
+	 * @see #showTitleAndSubtitle(Component, Component, int, int, int) showTitleAndSubtitle
 	 */
 	public static void showSubtitle(
-			@NotNull Text subtitle,
+			@NotNull Component subtitle,
 			@Range(from = 0, to = 250) int fadeInTicks,
 			@Range(from = 0, to = 1000) int stayTicks,
 			@Range(from = 0, to = 250) int fadeOutTicks
 	) {
-		showTitleAndSubtitle(Text.empty(), subtitle, fadeInTicks, stayTicks, fadeOutTicks);
+		showTitleAndSubtitle(Component.empty(), subtitle, fadeInTicks, stayTicks, fadeOutTicks);
 	}
 
 	/**
@@ -270,20 +270,20 @@ public final class Client {
 	 * @param fadeInTicks  durée en ticks de l'animation d'apparition du title/subtitle (0 à 250).
 	 * @param stayTicks    durée en ticks pendant laquelle le title/subtitle reste visible (0 à 1000)
 	 * @param fadeOutTicks durée en ticks de l'animation de disparition du title/subtitle (0 à 250)
-	 * @see #showTitle(Text, int, int, int) showTitle
-	 * @see #showSubtitle(Text, int, int, int) showSubtitle
+	 * @see #showTitle(Component, int, int, int) showTitle
+	 * @see #showSubtitle(Component, int, int, int) showSubtitle
 	 */
 	public static void showTitleAndSubtitle(
-			@NotNull Text title,
-			@NotNull Text subtitle,
+			@NotNull Component title,
+			@NotNull Component subtitle,
 			@Range(from = 0, to = 250) int fadeInTicks,
 			@Range(from = 0, to = 1000) int stayTicks,
 			@Range(from = 0, to = 250) int fadeOutTicks
 	) {
 		if (CLIENT.player != null) {
-			CLIENT.inGameHud.setTitleTicks(fadeInTicks, stayTicks, fadeOutTicks);
-			CLIENT.inGameHud.setTitle(title);
-			CLIENT.inGameHud.setSubtitle(subtitle);
+			CLIENT.gui.setTimes(fadeInTicks, stayTicks, fadeOutTicks);
+			CLIENT.gui.setTitle(title);
+			CLIENT.gui.setSubtitle(subtitle);
 		}
 	}
 
@@ -308,26 +308,26 @@ public final class Client {
 	 */
 	public static void sendChatMessage(@NotNull String message, boolean hideToClient) {
 		if (CLIENT.player != null) {
-			message = StringHelper.truncateChat(StringUtils.normalizeSpace(message.trim()));
+			message = StringUtil.trimChatMessage(StringUtils.normalizeSpace(message.trim()));
 
 			if (!hideToClient) {
-				CLIENT.inGameHud.getChatHud().addToMessageHistory(message);
+				CLIENT.gui.getChat().addRecentChat(message);
 			}
 
 			if (message.startsWith("/")) {
-				CLIENT.player.networkHandler.sendChatCommand(message.substring(1));
+				CLIENT.player.connection.sendCommand(message.substring(1));
 			} else {
-				CLIENT.player.networkHandler.sendChatMessage(message);
+				CLIENT.player.connection.sendChat(message);
 			}
 		}
 	}
 
-	public static void showNotification(MutableText text, ItemStack icon) {
+	public static void showNotification(MutableComponent text, ItemStack icon) {
 		showNotification(new StonksToast(text, icon));
 	}
 
 	public static void showNotification(Toast toast) {
-		CLIENT.getToastManager().add(toast);
+		CLIENT.getToastManager().addToast(toast);
 	}
 
 	public static void showNotificationSystem(@NotNull String description) {
@@ -335,16 +335,16 @@ public final class Client {
 	}
 
 	public static void showNotificationSystem(@NotNull String title, @NotNull String description) {
-		SystemToast systemToast = SystemToast.create(CLIENT, STONKS_SYSTEM, Text.literal(title), Text.literal(description));
-		CLIENT.getToastManager().add(systemToast);
+		SystemToast systemToast = SystemToast.multiline(CLIENT, STONKS_SYSTEM, Component.literal(title), Component.literal(description));
+		CLIENT.getToastManager().addToast(systemToast);
 	}
 
 	public static long getWorldDay() {
-		return CLIENT.world != null ? CLIENT.world.getTimeOfDay() / 24000 : 0L;
+		return CLIENT.level != null ? CLIENT.level.getDayTime() / 24000 : 0L;
 	}
 
 	public static long getWorldTime() {
-		return CLIENT.world != null ? CLIENT.world.getTime() : 0;
+		return CLIENT.level != null ? CLIENT.level.getGameTime() : 0;
 	}
 
 	public static void playSound(@NotNull SoundEvent sound, float volume, float pitch) {
@@ -355,7 +355,7 @@ public final class Client {
 	 * Jouer le son {@code UI_BUTTON_CLICK}.
 	 */
 	public static void playSoundButtonClickUI() {
-		CLIENT.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+		CLIENT.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 	}
 
 	@ApiStatus.Internal
@@ -368,20 +368,20 @@ public final class Client {
 		try {
 			STRING_SCOREBOARD.clear();
 
-			if (CLIENT.world == null || CLIENT.world.getScoreboard() == null) {
+			if (CLIENT.level == null || CLIENT.level.getScoreboard() == null) {
 				return;
 			}
 
-			Scoreboard scoreboard = CLIENT.world.getScoreboard();
-			ScoreboardObjective objective = scoreboard.getObjectiveForSlot(ScoreboardDisplaySlot.FROM_ID.apply(1));
+			Scoreboard scoreboard = CLIENT.level.getScoreboard();
+			Objective objective = scoreboard.getDisplayObjective(DisplaySlot.BY_ID.apply(1));
 			List<String> stringLines = new ArrayList<>();
 
-			for (ScoreHolder scoreHolder : scoreboard.getKnownScoreHolders()) {
-				if (scoreboard.getScoreHolderObjectives(scoreHolder).containsKey(objective)) {
-					Team team = scoreboard.getScoreHolderTeam(scoreHolder.getNameForScoreboard());
+			for (ScoreHolder scoreHolder : scoreboard.getTrackedPlayers()) {
+				if (scoreboard.listPlayerScores(scoreHolder).containsKey(objective)) {
+					PlayerTeam team = scoreboard.getPlayersTeam(scoreHolder.getScoreboardName());
 
 					if (team != null) {
-						String strLine = team.getPrefix().getString() + team.getSuffix().getString();
+						String strLine = team.getPlayerPrefix().getString() + team.getPlayerSuffix().getString();
 
 						if (!strLine.trim().isEmpty()) {
 							String formatted = StonksUtils.stripColor(strLine);
@@ -408,17 +408,17 @@ public final class Client {
 		try {
 			STRING_TAB.clear();
 
-			if (CLIENT.getNetworkHandler() == null) {
+			if (CLIENT.getConnection() == null) {
 				return;
 			}
 
 			List<String> stringLines = new ArrayList<>();
-			for (PlayerListEntry playerListEntry : CLIENT.getNetworkHandler().getPlayerList()) {
-				if (playerListEntry.getDisplayName() == null) {
+			for (PlayerInfo playerListEntry : CLIENT.getConnection().getOnlinePlayers()) {
+				if (playerListEntry.getTabListDisplayName() == null) {
 					continue;
 				}
 
-				String name = playerListEntry.getDisplayName().getString();
+				String name = playerListEntry.getTabListDisplayName().getString();
 				if (name.isEmpty() || name.startsWith("[")) {
 					continue;
 				}

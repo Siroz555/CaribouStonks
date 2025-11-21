@@ -10,20 +10,20 @@ import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.fishing.radar.HotspotRadarFeature;
-import fr.siroz.cariboustonks.mixin.accessors.DurstParticleEffectAccessor;
+import fr.siroz.cariboustonks.mixin.accessors.DustParticleOptionsAccessor;
 import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.projectile.FishingBobberEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
-import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleType;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,12 +76,12 @@ public class HotspotFeature extends Feature {
 	}
 
 	private void update() {
-		if (!isEnabled() || CLIENT.player == null || CLIENT.world == null) {
+		if (!isEnabled() || CLIENT.player == null || CLIENT.level == null) {
 			return;
 		}
 
 		ItemStack item = InventoryUtils.getHeldItem();
-		if (item == null || item.isEmpty() || !item.isOf(Items.FISHING_ROD)) {
+		if (item == null || item.isEmpty() || !item.is(Items.FISHING_ROD)) {
 			reset();
 			return;
 		}
@@ -104,9 +104,9 @@ public class HotspotFeature extends Feature {
 		if (!isEnabled() || CLIENT.player == null) return;
 		if (currentHotspot == null || hotspotRadius == null) return;
 
-		FishingBobberEntity bobber = CLIENT.player.fishHook;
+		FishingHook bobber = CLIENT.player.fishing;
 		if (bobber != null && bobber.isAlive() && bobber.getOwner() == CLIENT.player) {
-			Vec3d bobberPos = bobber.getEntityPos();
+			Vec3 bobberPos = bobber.position();
 			double distanceToIgnoringY = StonksUtils.squaredDistanceToIgnoringY(currentHotspot.centerPos(), bobberPos);
 			bobberInHotspot = distanceToIgnoringY <= hotspotRadius * hotspotRadius;
 		} else {
@@ -115,62 +115,62 @@ public class HotspotFeature extends Feature {
 	}
 
 	@EventHandler(event = "NetworkEvents.PARTICLE_RECEIVED_PACKET")
-	private void onParticleReceived(ParticleS2CPacket particle) {
+	private void onParticleReceived(ClientboundLevelParticlesPacket particle) {
 		if (!isEnabled() || currentHotspot == null || hotspotRadius != null) {
 			return;
 		}
 
-		ParticleEffect params = particle.getParameters();
+		ParticleOptions params = particle.getParticle();
 		ParticleType<?> type = params.getType();
 		// Future: (Predicate<ParticleS2CPacket>, Consumer<ParticleS2CPacket>)
 		// pour itérer dessus pour rendre l'ajout de nouveaux handlers trivial.
 
 		if (ParticleTypes.SMOKE.equals(type) && matchesSmoke(particle)) {
-			handleParticle(new Vec3d(particle.getX(), particle.getY(), particle.getZ()));
+			handleParticle(new Vec3(particle.getX(), particle.getY(), particle.getZ()));
 			return;
 		}
 
 		if (ParticleTypes.DUST.equals(type) && matchesDust(particle, params)) {
-			handleParticle(new Vec3d(particle.getX(), particle.getY(), particle.getZ()));
+			handleParticle(new Vec3(particle.getX(), particle.getY(), particle.getZ()));
 		}
 	}
 
 	/**
 	 * [STDOUT]: particle: smoke count: 5 speed: 0.0
 	 */
-	private boolean matchesSmoke(@NotNull ParticleS2CPacket p) {
-		return p.getCount() == 5 && p.getSpeed() == 0f;
+	private boolean matchesSmoke(@NotNull ClientboundLevelParticlesPacket p) {
+		return p.getCount() == 5 && p.getMaxSpeed() == 0f;
 	}
 
 	/**
 	 * [STDOUT]: DUST:: color: -38476 scale:1.0 count: 0 speed: 1.0
 	 */
-	private boolean matchesDust(@NotNull ParticleS2CPacket p, ParticleEffect params) {
-		if (p.getCount() != 0 || p.getSpeed() != 1f) return false;
-		if (!(params instanceof DustParticleEffect effect)) return false;
+	private boolean matchesDust(@NotNull ClientboundLevelParticlesPacket p, ParticleOptions params) {
+		if (p.getCount() != 0 || p.getMaxSpeed() != 1f) return false;
+		if (!(params instanceof DustParticleOptions effect)) return false;
 
-		int color = ((DurstParticleEffectAccessor) effect).getColor();
+		int color = ((DustParticleOptionsAccessor) effect).getColor();
 		return color == -38476 && effect.getScale() == 1f;
 	}
 
-	private void handleParticle(Vec3d particlePos) {
+	private void handleParticle(Vec3 particlePos) {
 		hotspotRadius = currentHotspot.centerPos().distanceTo(particlePos);
 	}
 
 	private Optional<Hotspot> findClosestHotspotInRange(@Nullable Entity entity) {
-		if (CLIENT.world == null || entity == null) {
+		if (CLIENT.level == null || entity == null) {
 			return Optional.empty();
 		}
 
-		List<ArmorStandEntity> armorStands = CLIENT.world.getEntitiesByClass(
-				ArmorStandEntity.class,
-				entity.getBoundingBox().expand(DISTANCE_TO_HOTSPOT_IN_BLOCKS),
+		List<ArmorStand> armorStands = CLIENT.level.getEntitiesOfClass(
+				ArmorStand.class,
+				entity.getBoundingBox().inflate(DISTANCE_TO_HOTSPOT_IN_BLOCKS),
 				Entity::hasCustomName
 		);
 
-		ArmorStandEntity closestHotspotArmorStand = armorStands.stream()
+		ArmorStand closestHotspotArmorStand = armorStands.stream()
 				.filter(as -> "HOTSPOT".equals(as.getName().getString()))
-				.min(Comparator.comparingDouble(as -> as.squaredDistanceTo(entity)))
+				.min(Comparator.comparingDouble(as -> as.distanceToSqr(entity)))
 				.orElse(null);
 
 		if (closestHotspotArmorStand == null) {
@@ -182,11 +182,11 @@ public class HotspotFeature extends Feature {
 						&& e.getY() < closestHotspotArmorStand.getY()
 						&& closestHotspotArmorStand.getY() - e.getY() <= 1
 						&& e.getZ() == closestHotspotArmorStand.getZ()
-						&& e.getPitch() == closestHotspotArmorStand.getPitch())
+						&& e.getXRot() == closestHotspotArmorStand.getXRot())
 				.map(e -> e.getName().getString())
 				.findFirst();
 
-		Vec3d centerPos = closestHotspotArmorStand.getBlockPos().toCenterPos();
+		Vec3 centerPos = closestHotspotArmorStand.blockPosition().getCenter();
 
 		return Optional.of(new Hotspot(closestHotspotArmorStand, centerPos, perk));
 	}

@@ -5,9 +5,9 @@ import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.util.Client;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -38,36 +38,36 @@ final class WelcomeMessage {
 	}
 
 	private void sendWelcomeMessageForImposters() {
-		Client.sendMessage(Text.literal(SEPARATOR).formatted(Formatting.RED));
+		Client.sendMessage(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));
 
-		Client.sendMessage(Text.literal(" Thank you for using").formatted(Formatting.GREEN)
-				.append(Text.literal(" CaribouStonks").formatted(Formatting.RED, Formatting.BOLD))
-				.append(Text.literal(" !").formatted(Formatting.GREEN)));
+		Client.sendMessage(Component.literal(" Thank you for using").withStyle(ChatFormatting.GREEN)
+				.append(Component.literal(" CaribouStonks").withStyle(ChatFormatting.RED, ChatFormatting.BOLD))
+				.append(Component.literal(" !").withStyle(ChatFormatting.GREEN)));
 
-		Client.sendMessage(Text.empty());
+		Client.sendMessage(Component.empty());
 
-		Client.sendMessage(Text.literal("Use ").formatted(Formatting.GREEN)
-				.append(Text.literal("/cariboustonks").formatted(Formatting.YELLOW, Formatting.BOLD))
-				.append(Text.literal(" to open the main mod menu.").formatted(Formatting.GREEN)));
+		Client.sendMessage(Component.literal("Use ").withStyle(ChatFormatting.GREEN)
+				.append(Component.literal("/cariboustonks").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
+				.append(Component.literal(" to open the main mod menu.").withStyle(ChatFormatting.GREEN)));
 
-		Client.sendMessage(Text.literal(SEPARATOR).formatted(Formatting.RED));
-		Client.playSound(SoundEvents.ENTITY_PARROT_AMBIENT, 1f, 1.2f);
+		Client.sendMessage(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));
+		Client.playSound(SoundEvents.PARROT_AMBIENT, 1f, 1.2f);
 	}
 
 	private void sendWelcomeMessageForMyFrenchUsers() {
-		Client.sendMessage(Text.literal(SEPARATOR).formatted(Formatting.RED));
+		Client.sendMessage(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));
 
-		Client.sendMessage(Text.literal(" Merci d'utiliser").formatted(Formatting.GREEN)
-				.append(Text.literal(" CaribouStonks").formatted(Formatting.RED, Formatting.BOLD))
-				.append(Text.literal(" !").formatted(Formatting.GREEN)));
+		Client.sendMessage(Component.literal(" Merci d'utiliser").withStyle(ChatFormatting.GREEN)
+				.append(Component.literal(" CaribouStonks").withStyle(ChatFormatting.RED, ChatFormatting.BOLD))
+				.append(Component.literal(" !").withStyle(ChatFormatting.GREEN)));
 
-		Client.sendMessage(Text.empty());
+		Client.sendMessage(Component.empty());
 
-		Client.sendMessage(Text.literal("Utilisez ").formatted(Formatting.GREEN)
-				.append(Text.literal("/cariboustonks").formatted(Formatting.YELLOW, Formatting.BOLD))
-				.append(Text.literal(" pour ouvrir le menu principal du mod.").formatted(Formatting.GREEN)));
+		Client.sendMessage(Component.literal("Utilisez ").withStyle(ChatFormatting.GREEN)
+				.append(Component.literal("/cariboustonks").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
+				.append(Component.literal(" pour ouvrir le menu principal du mod.").withStyle(ChatFormatting.GREEN)));
 
-		Client.sendMessage(Text.literal(SEPARATOR).formatted(Formatting.RED));
-		Client.playSound(SoundEvents.ENTITY_PARROT_AMBIENT, 1f, 1.2f);
+		Client.sendMessage(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));
+		Client.playSound(SoundEvents.PARROT_AMBIENT, 1f, 1.2f);
 	}
 }

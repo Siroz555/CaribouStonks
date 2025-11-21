@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.manager.hud.builder;
 import fr.siroz.cariboustonks.manager.hud.element.HudTextLine;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -14,13 +14,13 @@ public class HudElementTextBuilder {
 	private final List<HudTextLine> elements = new ArrayList<>();
 
 	/**
-	 * Appends a single {@link Text} line to the HUD.
+	 * Appends a single {@link Component} line to the HUD.
 	 *
 	 * @param text the text of the line to append
 	 * @return this builder instance
 	 * @see #append(HudTextLine)
 	 */
-	public HudElementTextBuilder append(@NotNull Text text) {
+	public HudElementTextBuilder append(@NotNull Component text) {
 		return append(new HudTextLine(text, false));
 	}
 
@@ -29,7 +29,7 @@ public class HudElementTextBuilder {
 	 *
 	 * @param element the element of the line to append
 	 * @return this builder instance
-	 * @see #append(Text)
+	 * @see #append(Component)
 	 */
 	public HudElementTextBuilder append(@NotNull HudTextLine element) {
 		elements.add(element);

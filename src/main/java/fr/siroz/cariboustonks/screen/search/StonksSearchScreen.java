@@ -3,61 +3,61 @@ package fr.siroz.cariboustonks.screen.search;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 
 public class StonksSearchScreen extends CaribousStonksScreen {
 
 	private final Screen parent;
-	private ButtonWidget selectButton;
-	private TextFieldWidget searchBox;
+	private Button selectButton;
+	private EditBox searchBox;
 	private ItemListWidget itemListWidget;
 	private final int totalSkyBlockItemsCount;
 
 	public StonksSearchScreen(Screen parent) {
-		super(Text.literal("Search for a SkyBlock item"));
+		super(Component.literal("Search for a SkyBlock item"));
 		this.parent = parent;
 		this.totalSkyBlockItemsCount = CaribouStonks.core().getHypixelDataSource().getSkyBlockItemCounts();
 	}
 
 	@Override
 	protected void onInit() {
-		searchBox = new TextFieldWidget(this.textRenderer,
+		searchBox = new EditBox(this.font,
 				this.width / 2 - 100, 22,
 				200, 20,
-				searchBox, Text.literal("Search..."));
-		searchBox.setChangedListener((search) -> itemListWidget.setSearch(search));
-		addSelectableChild(searchBox);
+				searchBox, Component.literal("Search..."));
+		searchBox.setResponder((search) -> itemListWidget.setSearch(search));
+		addWidget(searchBox);
 
-		itemListWidget = addDrawableChild(new ItemListWidget(this, this.client,
+		itemListWidget = addRenderableWidget(new ItemListWidget(this, this.minecraft,
 				this.width, this.height - 112,
 				48, 36,
-				searchBox.getText()));
+				searchBox.getValue()));
 
-		selectButton = addDrawableChild(ButtonWidget.builder(Text.literal("Load"),
+		selectButton = addRenderableWidget(Button.builder(Component.literal("Load"),
 						(b) -> itemListWidget.getSelectedOptional()
 								.ifPresent(ItemListWidget.ItemEntry::load))
-				.dimensions(this.width / 2 - 154, this.height - 38, 150, 20).build()); // 52
+				.bounds(this.width / 2 - 154, this.height - 38, 150, 20).build()); // 52
 
-		addDrawableChild(ButtonWidget.builder(ScreenTexts.BACK, (b) -> {
-			if (this.client != null) {
-				this.client.setScreen(parent);
+		addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, (b) -> {
+			if (this.minecraft != null) {
+				this.minecraft.setScreen(parent);
 			}
-		}).dimensions(this.width / 2 + 4, this.height - 38, 150, 20).build()); // 52
+		}).bounds(this.width / 2 + 4, this.height - 38, 150, 20).build()); // 52
 
 		itemSelected(null);
 	}
 
 	@Override
-	public void onRender(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+	public void onRender(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
 		super.onRender(context, mouseX, mouseY, deltaTicks);
 		searchBox.render(context, mouseX, mouseY, deltaTicks);
-		Text title = Text.literal("Search for a SkyBlock item (" + this.totalSkyBlockItemsCount + " items)");
-		context.drawCenteredTextWithShadow(this.textRenderer, title, this.width / 2, 8, Colors.WHITE.asInt());
+		Component title = Component.literal("Search for a SkyBlock item (" + this.totalSkyBlockItemsCount + " items)");
+		context.drawCenteredString(this.font, title, this.width / 2, 8, Colors.WHITE.asInt());
 	}
 
 	@Override
@@ -66,18 +66,18 @@ public class StonksSearchScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onClose() {
-		if (this.client != null) {
-			this.client.setScreen(parent);
+	public void close() {
+		if (this.minecraft != null) {
+			this.minecraft.setScreen(parent);
 		}
 	}
 
 	public void itemSelected(Object o) {
 		if (o == null) {
-			selectButton.setMessage(Text.literal("Load"));
+			selectButton.setMessage(Component.literal("Load"));
 			selectButton.active = false;
 		} else {
-			selectButton.setMessage(Text.literal("Load"));
+			selectButton.setMessage(Component.literal("Load"));
 			selectButton.active = true;
 		}
 	}

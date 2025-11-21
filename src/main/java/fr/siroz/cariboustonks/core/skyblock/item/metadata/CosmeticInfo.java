@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.skyblock.item.metadata;
 
 import java.util.Optional;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,11 +23,11 @@ public record CosmeticInfo(
 			false
 	);
 
-	public static CosmeticInfo ofNbt(@NotNull NbtCompound customData) {
+	public static CosmeticInfo ofNbt(@NotNull CompoundTag customData) {
 		try {
 			Optional<String> skinData = customData.getString("skin");
 			Optional<String> dyeData = customData.getString("dye_item");
-			boolean isShinyData = customData.getBoolean("is_shiny", false);
+			boolean isShinyData = customData.getBooleanOr("is_shiny", false);
 
 			return new CosmeticInfo(skinData, dyeData, isShinyData);
 		} catch (Exception ignored) {

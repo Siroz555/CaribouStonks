@@ -1,61 +1,62 @@
 package fr.siroz.cariboustonks.util.render.gui;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.toast.Toast;
-import net.minecraft.client.toast.ToastManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.toasts.Toast;
+import net.minecraft.client.gui.components.toasts.ToastManager;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.CommonColors;
+import net.minecraft.resources.Identifier;
 
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class StonksToast implements Toast {
 
 	private static final Identifier TEXTURE = CaribouStonks.identifier("notification");
 
 	private long toastTime = 0;
-	private final List<OrderedText> message;
+	private final List<FormattedCharSequence> message;
 	private final int messageWidth;
 	private final ItemStack icon;
 
-	public StonksToast(Text text, ItemStack icon) {
-		TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
-		this.message = renderer.wrapLines(text, 150);
-		this.messageWidth = message.stream().mapToInt(renderer::getWidth).max().orElse(150);
+	public StonksToast(Component text, ItemStack icon) {
+		Font renderer = Minecraft.getInstance().font;
+		this.message = renderer.split(text, 150);
+		this.messageWidth = message.stream().mapToInt(renderer::width).max().orElse(150);
 		this.icon = icon;
 	}
 
 	@Override
-	public void draw(DrawContext context, TextRenderer renderer, long startTime) {
-		context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, getWidth(), getHeight());
+	public void render(GuiGraphics context, @NotNull Font renderer, long startTime) {
+		context.blitSprite(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, width(), height());
 
-		int y = (getHeight() - getInnerContentsHeight()) / 2;
+		int y = (height() - getInnerContentsHeight()) / 2;
 		drawMessage(context, y);
 
-		context.drawItemWithoutEntity(icon, 8, getHeight() / 2 - 8);
+		context.renderFakeItem(icon, 8, height() / 2 - 8);
 	}
 
-	private void drawMessage(DrawContext context, int y) {
-		TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-		for (OrderedText orderedText : message) {
-			context.drawText(textRenderer, orderedText, 30, y, Colors.WHITE, false);
-			y += textRenderer.fontHeight;
+	private void drawMessage(GuiGraphics context, int y) {
+		Font textRenderer = Minecraft.getInstance().font;
+		for (FormattedCharSequence orderedText : message) {
+			context.drawString(textRenderer, orderedText, 30, y, CommonColors.WHITE, false);
+			y += textRenderer.lineHeight;
 		}
 	}
 
 	@Override
-	public int getWidth() {
+	public int width() {
 		return messageWidth + 30 + 6;
 	}
 
 	@Override
-	public int getHeight() {
+	public int height() {
 		return Math.max(getInnerContentsHeight() + 12 + 2, 32);
 	}
 
@@ -64,12 +65,12 @@ public class StonksToast implements Toast {
 	}
 
 	@Override
-	public Visibility getVisibility() {
+	public @NotNull Visibility getWantedVisibility() {
 		return this.toastTime > 10_000 ? Visibility.HIDE : Visibility.SHOW;
 	}
 
 	@Override
-	public void update(ToastManager manager, long time) {
+	public void update(@NotNull ToastManager manager, long time) {
 		this.toastTime = time;
 	}
 }

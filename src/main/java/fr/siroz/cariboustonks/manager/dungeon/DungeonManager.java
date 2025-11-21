@@ -9,7 +9,7 @@ import fr.siroz.cariboustonks.manager.Manager;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 public final class DungeonManager implements Manager {
@@ -35,7 +35,7 @@ public final class DungeonManager implements Manager {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onMessage(@NotNull Text text) {
+	private void onMessage(@NotNull Component text) {
 		if (!SkyBlockAPI.isOnSkyBlock()) return;
 		if (SkyBlockAPI.getIsland() != IslandType.DUNGEON) return;
 

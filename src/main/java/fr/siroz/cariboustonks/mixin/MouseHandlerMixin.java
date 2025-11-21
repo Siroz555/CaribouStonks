@@ -5,10 +5,10 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.event.MouseEvents;
 import fr.siroz.cariboustonks.feature.garden.MouseLockFeature;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.Mouse;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
-import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.MouseHandler;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.player.LocalPlayer;
 import org.lwjgl.glfw.GLFW;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,13 +18,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Mouse.class)
-public abstract class MouseMixin {
+@Mixin(MouseHandler.class) // Mouse
+public abstract class MouseHandlerMixin {
 
 	@Shadow
-	private double x;
+	private double xpos;
 	@Shadow
-	private double y;
+	private double ypos;
 	@Unique
 	private double guiX;
 	@Unique
@@ -36,27 +36,27 @@ public abstract class MouseMixin {
 	/**
 	 * MouseLockFeature logic {@link MouseLockFeature}
 	 */
-	@WrapWithCondition(method = "updateMouse", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"))
-	private boolean cariboustonks$lockOrUnlockMouse(ClientPlayerEntity instance, double deltaX, double deltaY) {
+	@WrapWithCondition(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
+	private boolean cariboustonks$lockOrUnlockMouse(LocalPlayer instance, double deltaX, double deltaY) {
 		return !mouseLockFeature.isLocked();
 	}
 
-	@Inject(method = "lockCursor", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Mouse;cursorLocked:Z", opcode = Opcodes.PUTFIELD))
+	@Inject(method = "grabMouse", at = @At(value = "FIELD", target = "Lnet/minecraft/client/MouseHandler;mouseGrabbed:Z", opcode = Opcodes.PUTFIELD))
 	private void cariboustonks$setUpCursorPosition(CallbackInfo ci) {
-		this.guiX = this.x;
-		this.guiY = this.y;
+		this.guiX = this.xpos;
+		this.guiY = this.ypos;
 	}
 
-	@Inject(method = "unlockCursor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/InputUtil;setCursorParameters(Lnet/minecraft/client/util/Window;IDD)V", shift = At.Shift.AFTER))
+	@Inject(method = "releaseMouse", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/InputConstants;grabOrReleaseMouse(Lcom/mojang/blaze3d/platform/Window;IDD)V", shift = At.Shift.AFTER))
 	private void cariboustonks$unlockCursorPosition(CallbackInfo ci) {
-		if (ConfigManager.getConfig().vanilla.stopCursorResetPosition && MinecraftClient.getInstance().currentScreen instanceof GenericContainerScreen) {
-			this.x = this.guiX;
-			this.y = this.guiY;
-			GLFW.glfwSetCursorPos(MinecraftClient.getInstance().getWindow().getHandle(), this.x, this.y);
+		if (ConfigManager.getConfig().vanilla.stopCursorResetPosition && Minecraft.getInstance().screen instanceof ContainerScreen) {
+			this.xpos = this.guiX;
+			this.ypos = this.guiY;
+			GLFW.glfwSetCursorPos(Minecraft.getInstance().getWindow().handle(), this.xpos, this.ypos);
 		}
 	}
 
-	@Inject(method = "onMouseScroll", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
 	private void cariboustonks$trackWheel(long window, double horizontal, double vertical, CallbackInfo ci) {
 		if (!MouseEvents.ALLOW_MOUSE_SCROLL.invoker().allowMouseScroll(horizontal, vertical)) {
 			ci.cancel();

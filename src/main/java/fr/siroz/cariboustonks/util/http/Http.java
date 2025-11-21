@@ -24,7 +24,7 @@ public final class Http {
 
 	private static final String USER_AGENT = "CaribouStonks/"
 			+ CaribouStonks.VERSION.getFriendlyString()
-			+ " (" + SharedConstants.getGameVersion().name() + ")";
+			+ " (" + SharedConstants.getCurrentVersion().name() + ")";
 
 	private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
 			.connectTimeout(Duration.ofSeconds(10))

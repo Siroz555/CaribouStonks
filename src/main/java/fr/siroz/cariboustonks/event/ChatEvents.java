@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -16,7 +16,7 @@ public final class ChatEvents {
 	/**
      * Called when the client received a message in the chat
      */
-    public static final Event<MessageReceived> MESSAGE_RECEIVED = EventFactory.createArrayBacked(MessageReceived.class, listeners -> text -> {
+    public static final Event<@NotNull MessageReceived> MESSAGE_RECEIVED = EventFactory.createArrayBacked(MessageReceived.class, listeners -> text -> {
         for (MessageReceived listener : listeners) {
             listener.onMessageReceived(text);
         }
@@ -25,7 +25,7 @@ public final class ChatEvents {
     /**
      * Called when the client clicks on a message in the chat
      */
-    public static final Event<MessageClicked> MESSAGE_CLICKED = EventFactory.createArrayBacked(MessageClicked.class, listeners -> (mouseX, mouseY) -> {
+    public static final Event<@NotNull MessageClicked> MESSAGE_CLICKED = EventFactory.createArrayBacked(MessageClicked.class, listeners -> (mouseX, mouseY) -> {
         for (MessageClicked listener : listeners) {
             listener.onMessageClicked(mouseX, mouseY);
         }
@@ -33,7 +33,7 @@ public final class ChatEvents {
 
     @FunctionalInterface
     public interface MessageReceived {
-        void onMessageReceived(@NotNull Text text);
+        void onMessageReceived(@NotNull Component text);
     }
 
     @FunctionalInterface

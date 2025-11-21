@@ -20,9 +20,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -129,7 +129,7 @@ class GraphWidget extends AbstractStonksWidget {
 	}
 
 	@Override
-	public void render(DrawContext context, int mouseX, int mouseY, int x, int y) {
+	public void render(GuiGraphics context, int mouseX, int mouseY, int x, int y) {
 		final int x1 = x + 20;
 		final int y1 = y + 25; // 20
 		final int x2 = x1 + this.width / 2;
@@ -207,7 +207,7 @@ class GraphWidget extends AbstractStonksWidget {
 		drawHoveredItem(context, mouseX, mouseY);
 	}
 
-	private void drawLabels(DrawContext context, int x1, int y1, int x2, int y2) {
+	private void drawLabels(GuiGraphics context, int x1, int y1, int x2, int y2) {
 		int timeSteps = getGranularityStep();
 		for (int i = 0; i <= timeSteps; i++) {
 			// Calcul de l'instant correspondant au label
@@ -219,7 +219,7 @@ class GraphWidget extends AbstractStonksWidget {
 			String timeLabel = formatTimeLabel(currentTime);
 
 			// -12 vers la gauche | y2 + 10
-			context.drawTextWithShadow(textRenderer, Text.literal(timeLabel), labelX - 12, y2 + 20, Color.WHITE.getRGB());
+			context.drawString(textRenderer, Component.literal(timeLabel), labelX - 12, y2 + 20, Color.WHITE.getRGB());
 		}
 
 		int priceSteps = 5;
@@ -232,13 +232,13 @@ class GraphWidget extends AbstractStonksWidget {
 
 			String priceLabel = StonksUtils.SHORT_FLOAT_NUMBERS.format(currentPrice);
 
-			context.drawTextWithShadow(textRenderer, Text.literal(priceLabel).formatted(Formatting.GOLD),
+			context.drawString(textRenderer, Component.literal(priceLabel).withStyle(ChatFormatting.GOLD),
 					x2 + 10, labelY, Color.WHITE.getRGB());
 		}
 	}
 
 	@SuppressWarnings("ConstantConditions") // if (closestPoint != null) -> Aucune confiance
-	private void drawHoveredItem(DrawContext context, int mouseX, int mouseY) {
+	private void drawHoveredItem(GuiGraphics context, int mouseX, int mouseY) {
 		if (graphData == null || graphData.isEmpty() || graphData.size() < 3) {
 			return;
 		}
@@ -263,39 +263,39 @@ class GraphWidget extends AbstractStonksWidget {
 			if (closestPoint != null) {
 				ItemPrice item = graphData.get(closestPoint);
 
-				Text dateText = Text.literal(TimeUtils.formatInstant(item.time(), TimeUtils.DATE_TIME_FULL))
-						.formatted(Formatting.AQUA);
+				Component dateText = Component.literal(TimeUtils.formatInstant(item.time(), TimeUtils.DATE_TIME_FULL))
+						.withStyle(ChatFormatting.AQUA);
 
-				Text priceText;
-				Text secondPriceText = null;
+				Component priceText;
+				Component secondPriceText = null;
 				if (type == Type.BAZAAR) {
-					priceText = Text.literal("Bazaar Buy: ").formatted(Formatting.YELLOW)
-							.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(item.buyPrice()))
-									.formatted(Formatting.GOLD));
-					secondPriceText = Text.literal("Bazaar Sell: ").formatted(Formatting.YELLOW)
-							.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(item.sellPrice()))
-									.formatted(Formatting.GOLD));
+					priceText = Component.literal("Bazaar Buy: ").withStyle(ChatFormatting.YELLOW)
+							.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(item.buyPrice()))
+									.withStyle(ChatFormatting.GOLD));
+					secondPriceText = Component.literal("Bazaar Sell: ").withStyle(ChatFormatting.YELLOW)
+							.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(item.sellPrice()))
+									.withStyle(ChatFormatting.GOLD));
 				} else {
-					priceText = Text.literal("Price: ").formatted(Formatting.YELLOW)
-							.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(item.buyPrice()))
-									.formatted(Formatting.GOLD));
+					priceText = Component.literal("Price: ").withStyle(ChatFormatting.YELLOW)
+							.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(item.buyPrice()))
+									.withStyle(ChatFormatting.GOLD));
 				}
 
-				int textWidth = this.textRenderer.getWidth(dateText) + 10;
+				int textWidth = this.textRenderer.width(dateText) + 10;
 				int height = type == Type.BAZAAR && secondPriceText != null ? 34 : 24; // 24
 				// Border
 				GuiRenderer.drawBorder(context, mouseX + 7, mouseY - 13, textWidth, height, Color.WHITE.getRGB());
 				// Date
-				context.drawTextWithShadow(textRenderer, dateText, mouseX + 10, mouseY - 10, Color.WHITE.getRGB());
+				context.drawString(textRenderer, dateText, mouseX + 10, mouseY - 10, Color.WHITE.getRGB());
 				// Price - Auction / 1ère ligne du Bazaar
-				context.drawTextWithShadow(textRenderer, priceText, mouseX + 10, mouseY, Color.WHITE.getRGB());
+				context.drawString(textRenderer, priceText, mouseX + 10, mouseY, Color.WHITE.getRGB());
 				// Price - Deuxième ligne du Bazaar
 				if (type == Type.BAZAAR && secondPriceText != null) {
-					context.drawTextWithShadow(textRenderer, secondPriceText, mouseX + 10, mouseY + 10, Color.WHITE.getRGB());
+					context.drawString(textRenderer, secondPriceText, mouseX + 10, mouseY + 10, Color.WHITE.getRGB());
 				}
 
 				// - 32 || +- 5 border haut/bas
-				context.drawVerticalLine(mouseX, y1 - 5, y2 - 22 + 5, new Color(204, 2, 2).getRGB());
+				context.vLine(mouseX, y1 - 5, y2 - 22 + 5, new Color(204, 2, 2).getRGB());
 			}
 		}
 	}
@@ -324,12 +324,12 @@ class GraphWidget extends AbstractStonksWidget {
 	}
 
 	private void drawGradient(
-			DrawContext context,
-			List<Point> pointsToRender,
-			int startColor,
-			int endColor,
-			int y2,
-			boolean withSellerPrice
+            GuiGraphics context,
+            List<Point> pointsToRender,
+            int startColor,
+            int endColor,
+            int y2,
+            boolean withSellerPrice
 	) {
 		List<Point> gradientPoints = new ArrayList<>(pointsToRender);
 		if (this.granularity == GraphDataFilter.Granularity.DAY) {
@@ -340,12 +340,12 @@ class GraphWidget extends AbstractStonksWidget {
 	}
 
 	private void renderGradient(
-			DrawContext context,
-			@NotNull List<Point> pointsToRender,
-			int colorStart,
-			int colorEnd,
-			int y2,
-			boolean withSellerPrice
+            GuiGraphics context,
+            @NotNull List<Point> pointsToRender,
+            int colorStart,
+            int colorEnd,
+            int y2,
+            boolean withSellerPrice
 	) {
 		int minY = pointsToRender.stream().mapToInt(Point::y).min().orElse(0);
 		int maxY = pointsToRender.stream().mapToInt(Point::y).max().orElse(0);

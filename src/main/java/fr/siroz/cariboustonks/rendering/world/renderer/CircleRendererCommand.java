@@ -4,8 +4,8 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.CircleRenderState;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.state.CameraRenderState;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -20,7 +20,7 @@ public final class CircleRendererCommand implements RendererCommand<CircleRender
 		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline);
 
 		Matrix4f matrix4f = new Matrix4f()
-				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());
+				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());
 
 		// 5% du rayon (0.05) | min : 0.01f (trop faible) | max : 0.95 (la quasi-totalité du cercle)
 		float thicknessPercent = state.thicknessPercent();
@@ -63,10 +63,10 @@ public final class CircleRendererCommand implements RendererCommand<CircleRender
 				}
 			}
 
-			buffer.vertex(matrix4f, outerX, outerY, outerZ)
-					.color(state.color().r, state.color().g, state.color().b, state.color().a);
-			buffer.vertex(matrix4f, innerX, innerY, innerZ)
-					.color(state.color().r, state.color().g, state.color().b, state.color().a);
+			buffer.addVertex(matrix4f, outerX, outerY, outerZ)
+					.setColor(state.color().r, state.color().g, state.color().b, state.color().a);
+			buffer.addVertex(matrix4f, innerX, innerY, innerZ)
+					.setColor(state.color().r, state.color().g, state.color().b, state.color().a);
 		}
 	}
 }

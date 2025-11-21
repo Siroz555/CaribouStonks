@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.skyblock.item.metadata;
 
 import java.util.Optional;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,7 +23,7 @@ public record DrillInfo(
 			Optional.empty()
 	);
 
-	public static DrillInfo ofNbt(@NotNull NbtCompound customData) {
+	public static DrillInfo ofNbt(@NotNull CompoundTag customData) {
 		try {
 			Optional<String> fuelTankPart = customData.getString("drill_part_fuel_tank");
 			Optional<String> enginePart = customData.getString("drill_part_engine");

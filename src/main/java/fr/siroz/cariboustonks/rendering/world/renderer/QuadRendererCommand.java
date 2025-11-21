@@ -4,10 +4,10 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.QuadRenderState;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.RenderPipelines;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -22,14 +22,14 @@ public final class QuadRendererCommand implements RendererCommand<QuadRenderStat
 		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline);
 
 		Matrix4f matrix4f = new Matrix4f()
-				.translate((float) -camera.pos.getX(), (float) -camera.pos.getY(), (float) -camera.pos.getZ());
+				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());
 
 		float[] colorComponents = state.color().asFloatComponents();
 
-		Vec3d[] points = state.points();
+		Vec3[] points = state.points();
 		for (int i = 0; i < 4; i++) {
-			buffer.vertex(matrix4f, (float) points[i].getX(), (float) points[i].getY(), (float) points[i].getZ())
-					.color(colorComponents[0], colorComponents[1], colorComponents[2], state.color().getAlpha());
+			buffer.addVertex(matrix4f, (float) points[i].x(), (float) points[i].y(), (float) points[i].z())
+					.setColor(colorComponents[0], colorComponents[1], colorComponents[2], state.color().getAlpha());
 		}
 	}
 }

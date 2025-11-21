@@ -15,11 +15,11 @@ import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,7 +52,7 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
     @Override
     public @NotNull ReminderDisplay display() {
         return ReminderDisplay.of(
-                Text.literal("Forge").formatted(Formatting.GOLD, Formatting.BOLD, Formatting.UNDERLINE),
+                Component.literal("Forge").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
                 null,
                 ICON
         );
@@ -60,17 +60,17 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
 
     @Override
     public void onExpire(@NotNull TimedObject timedObject) {
-        Text text = StonksUtils.jsonToText(timedObject.message()).orElse(Text.literal(timedObject.message()));
-		MutableText message = Text.empty()
-				.append(Text.literal("[Forge] ").formatted(Formatting.GOLD))
+        Component text = StonksUtils.jsonToText(timedObject.message()).orElse(Component.literal(timedObject.message()));
+		MutableComponent message = Component.empty()
+				.append(Component.literal("[Forge] ").withStyle(ChatFormatting.GOLD))
 				.append(text)
-				.append(Text.literal(" was ended!").formatted(Formatting.GREEN));
-		MutableText notification = Text.empty()
-				.append(Text.literal("Forge !").formatted(Formatting.GOLD, Formatting.BOLD))
-				.append(Text.literal("\n"))
+				.append(Component.literal(" was ended!").withStyle(ChatFormatting.GREEN));
+		MutableComponent notification = Component.empty()
+				.append(Component.literal("Forge !").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD))
+				.append(Component.literal("\n"))
 				.append(text)
-				.append(Text.literal("\n"))
-				.append(Text.literal(" was ended!").formatted(Formatting.GREEN));
+				.append(Component.literal("\n"))
+				.append(Component.literal(" was ended!").withStyle(ChatFormatting.GREEN));
 
         Client.sendMessageWithPrefix(message );
         Client.showNotification(notification, ICON);
@@ -82,7 +82,7 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
         for (Int2ObjectMap.Entry<ItemStack> entry : slots.int2ObjectEntrySet()) {
 
             ItemStack itemStack = entry.getValue();
-            if (itemStack.isOf(Items.FURNACE)) {
+            if (itemStack.is(Items.FURNACE)) {
                 highlights.add(ColorHighlight.green(entry.getIntKey(), 0.5f));
             } else {
                 String lore = ItemUtils.getLoreLineIf(itemStack, s -> s.contains("Time"));
@@ -99,7 +99,7 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
 					continue;
 				}
 
-                String text = StonksUtils.textToJson(itemStack.getName()).orElse(itemStack.getName().getString());
+                String text = StonksUtils.textToJson(itemStack.getHoverName()).orElse(itemStack.getHoverName().getString());
                 Duration duration = Duration.ofHours(hours).plusMinutes(minutes).plusSeconds(seconds);
                 Instant expirationTime = Instant.now().plus(duration);
 

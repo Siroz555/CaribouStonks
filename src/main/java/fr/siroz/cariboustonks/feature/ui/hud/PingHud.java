@@ -9,8 +9,8 @@ import fr.siroz.cariboustonks.manager.hud.TextHud;
 import fr.siroz.cariboustonks.manager.network.NetworkManager;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class PingHud extends Feature implements HudProvider {
@@ -24,7 +24,7 @@ public class PingHud extends Feature implements HudProvider {
 	public PingHud() {
 		this.networkManager = CaribouStonks.managers().getManager(NetworkManager.class);
 		this.hud = new TextHud(
-				Text.literal("0 ms"),
+				Component.literal("0 ms"),
 				this::getText,
 				ConfigManager.getConfig().uiAndVisuals.pingHud,
 				58,
@@ -47,14 +47,14 @@ public class PingHud extends Feature implements HudProvider {
 		return hud;
 	}
 
-	private Text getText() {
+	private Component getText() {
 		long currentPing = networkManager.getPing();
 		String pingStr = currentPing + " ms";
 
 		int step = Math.min((int) currentPing / 150, 3); // // 0, 150, 300, 450
 		int color = getPingColor(step) | 0xFF000000;
 
-		return Text.literal(pingStr).styled(style -> style.withColor(color));
+		return Component.literal(pingStr).withStyle(style -> style.withColor(color));
 	}
 
 	private int getPingColor(int step) {

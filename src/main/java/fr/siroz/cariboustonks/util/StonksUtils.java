@@ -8,11 +8,11 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.FatalErrorScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Position;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ErrorScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.core.Position;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  */
 public final class StonksUtils {
 
-	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	/**
 	 * {@code §[0-9a-fklmnor]}
@@ -87,13 +87,13 @@ public final class StonksUtils {
 	}
 
 	/**
-	 * Permet d'afficher au client le {@link FatalErrorScreen} avec un titre et le message.
+	 * Permet d'afficher au client le {@link ErrorScreen} avec un titre et le message.
 	 *
 	 * @param title   le titre
 	 * @param message le message
 	 */
-	public static void showFatalErrorScreen(@NotNull Text title, @NotNull Text message) {
-		if (CLIENT.player != null) CLIENT.setScreen(new FatalErrorScreen(title, message));
+	public static void showFatalErrorScreen(@NotNull Component title, @NotNull Component message) {
+		if (CLIENT.player != null) CLIENT.setScreen(new ErrorScreen(title, message));
 	}
 
 	@Contract(pure = true)
@@ -109,19 +109,19 @@ public final class StonksUtils {
 	 * @return {@code true}/ {@code false}
 	 */
 	public static boolean isConnectedToHypixel() {
-		String serverAddress = CLIENT.getCurrentServerEntry() != null
-				? CLIENT.getCurrentServerEntry().address.toLowerCase(Locale.ENGLISH)
+		String serverAddress = CLIENT.getCurrentServer() != null
+				? CLIENT.getCurrentServer().ip.toLowerCase(Locale.ENGLISH)
 				: "";
 		String serverBrand = CLIENT.player != null
-				&& CLIENT.player.networkHandler != null
-				&& CLIENT.player.networkHandler.getBrand() != null
-				? CLIENT.player.networkHandler.getBrand()
+				&& CLIENT.player.connection != null
+				&& CLIENT.player.connection.serverBrand() != null
+				? CLIENT.player.connection.serverBrand()
 				: "";
 
 		return serverAddress.contains("hypixel.net") || serverBrand.contains("Hypixel BungeeCord");
 	}
 
-	public static Optional<String> textToJson(@NotNull Text text) {
+	public static Optional<String> textToJson(@NotNull Component text) {
 		try {
 			String json = GsonProvider.standard().toJson(text);
 			return Optional.ofNullable(json);
@@ -130,9 +130,9 @@ public final class StonksUtils {
 		}
 	}
 
-	public static Optional<Text> jsonToText(@NotNull String json) {
+	public static Optional<Component> jsonToText(@NotNull String json) {
 		try {
-			Text text = GsonProvider.standard().fromJson(json, Text.class);
+			Component text = GsonProvider.standard().fromJson(json, Component.class);
 			return Optional.ofNullable(text);
 		} catch (Exception ex) {
 			return Optional.empty();
@@ -191,7 +191,7 @@ public final class StonksUtils {
 	@Contract(pure = true)
 	public static @NotNull Command<FabricClientCommandSource> openScreen(@NotNull Supplier<Screen> screenSupplier) {
 		return context -> {
-			CLIENT.send(() -> CLIENT.setScreen(screenSupplier.get()));
+			CLIENT.schedule(() -> CLIENT.setScreen(screenSupplier.get()));
 			return Command.SINGLE_SUCCESS;
 		};
 	}
@@ -204,8 +204,8 @@ public final class StonksUtils {
 	 * @return the squared distance between the two positions
 	 */
 	public static double squaredDistanceToIgnoringY(@NotNull Position from, @NotNull Position to) {
-		double dx = from.getX() - to.getX();
-		double dz = from.getZ() - to.getZ();
+		double dx = from.x() - to.x();
+		double dz = from.z() - to.z();
 		return dx * dx + dz * dz;
 	}
 

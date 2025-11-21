@@ -11,17 +11,17 @@ import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.LoadingDisplay;
-import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.LoadingDotsText;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,12 +35,12 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry> {
+class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 
 	private final StonksSearchScreen parent;
 
-	public static final Identifier HIGHLIGHTED_TEXTURE = Identifier.ofVanilla("world_list/join_highlighted");
-	public static final Identifier TEXTURE = Identifier.ofVanilla("world_list/join");
+	public static final Identifier HIGHLIGHTED_TEXTURE = Identifier.withDefaultNamespace("world_list/join_highlighted");
+	public static final Identifier TEXTURE = Identifier.withDefaultNamespace("world_list/join");
 
 	private final CompletableFuture<List<ItemSummary>> itemsFuture;
 	private List<ItemSummary> items;
@@ -49,13 +49,13 @@ class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry>
 	private final LoadingEntry loadingEntry;
 
 	ItemListWidget(
-			StonksSearchScreen parent,
-			MinecraftClient client,
-			int width,
-			int height,
-			int y,
-			int itemHeight,
-			String search
+            StonksSearchScreen parent,
+            Minecraft client,
+            int width,
+            int height,
+            int y,
+            int itemHeight,
+            String search
 	) {
 		super(client, width, height, y, itemHeight);
 		this.parent = parent;
@@ -76,7 +76,7 @@ class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry>
 				List<ItemSummary> itemSummaries = new ArrayList<>(itemList.size());
 				for (SkyBlockItemData item : itemList) {
 					String skyBlockId = item.skyBlockId();
-					Formatting formatting = item.tier().getFormatting();
+					ChatFormatting formatting = item.tier().getFormatting();
 					String name = item.name();
 					ItemStack itemStack = hypixelDataSource.getItemStack(skyBlockId);
 
@@ -87,7 +87,7 @@ class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry>
 				return itemSummaries;
 			});
 		} catch (HypixelDataException exception) {
-			StonksUtils.showFatalErrorScreen(Text.literal("Unable to load items!"), exception.getMessageText());
+			StonksUtils.showFatalErrorScreen(Component.literal("Unable to load items!"), exception.getMessageText());
 			return CompletableFuture.completedFuture(Collections.emptyList());
 		}
 	}
@@ -113,7 +113,7 @@ class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry>
 	}
 
 	@Override
-	public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+	public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
 		List<ItemSummary> itemsList = tryGet();
 		if (itemsList != items) {
 			show(itemsList);
@@ -174,8 +174,8 @@ class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry>
 	}
 
 	@Override
-	public boolean keyPressed(KeyInput input) {
-		if (input.isEnter()) {
+	public boolean keyPressed(KeyEvent input) {
+		if (input.isConfirmation()) {
 			Optional<ItemEntry> itemEntry = getSelectedOptional();
 			if (itemEntry.isPresent()) {
 				Client.playSoundButtonClickUI();
@@ -188,7 +188,7 @@ class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry>
 	}
 
 	public Optional<ItemEntry> getSelectedOptional() {
-		Entry entry = this.getSelectedOrNull();
+		Entry entry = this.getSelected();
 		if (entry instanceof ItemEntry itemEntry) {
 			return Optional.of(itemEntry);
 		} else {
@@ -196,7 +196,7 @@ class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry>
 		}
 	}
 
-	abstract static class Entry extends AlwaysSelectedEntryListWidget.Entry<Entry> implements AutoCloseable {
+	abstract static class Entry extends ObjectSelectionList.Entry<Entry> implements AutoCloseable {
 		public Entry() {
 		}
 
@@ -206,32 +206,32 @@ class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry>
 	}
 
 	class ItemEntry extends Entry {
-		private final MinecraftClient client;
+		private final Minecraft client;
 		private final ItemSummary item;
 		private long time;
 
 		ItemEntry(ItemListWidget itemList, ItemSummary item) {
-			this.client = itemList.client;
+			this.client = itemList.minecraft;
 			this.item = item;
 		}
 
 		@Override
-		public Text getNarration() {
-			return Text.literal("Select " + item.name());
+		public Component getNarration() {
+			return Component.literal("Select " + item.name());
 		}
 
-		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			if (this.client == null || this.client.textRenderer == null) {
+		public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+			if (this.client == null || this.client.font == null) {
 				return;
 			}
 
 			String displayName = item.name();
 			String name = item.hypixelSkyBlockId();
-			Color color = item.color().getColorValue() == null ? Colors.WHITE : Color.fromFormatting(item.color());
+			Color color = item.color().getColor() == null ? Colors.WHITE : Color.fromFormatting(item.color());
 
-			context.drawTextWithShadow(this.client.textRenderer, displayName, this.getContentX() + 32 + 3, this.getContentY() + 1, color.asInt());
+			context.drawString(this.client.font, displayName, this.getContentX() + 32 + 3, this.getContentY() + 1, color.asInt());
 			int x1 = this.getContentX() + 32 + 3;
-			context.drawTextWithShadow(this.client.textRenderer, name, x1, this.getContentY() + 9 + 3, Color.fromHexString("#7f7f80").asInt());
+			context.drawString(this.client.font, name, x1, this.getContentY() + 9 + 3, Color.fromHexString("#7f7f80").asInt());
 
 			//context.drawItem(item.icon(), x + 7, y + 7);
 
@@ -239,21 +239,21 @@ class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry>
 				context.fill(this.getContentX(), this.getContentY(), this.getContentX() + 32, this.getContentY() + 32, -1601138544);
 				int x2 = mouseX - this.getContentX();
 				if (x2 < 32) {
-					context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ItemListWidget.HIGHLIGHTED_TEXTURE, this.getContentX(), this.getContentY(), 32, 32);
+					context.blitSprite(RenderPipelines.GUI_TEXTURED, ItemListWidget.HIGHLIGHTED_TEXTURE, this.getContentX(), this.getContentY(), 32, 32);
 				} else {
-					context.drawItem(item.icon(), this.getContentX() + 7, this.getContentY() + 7);
-					context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, ItemListWidget.TEXTURE, this.getContentX(), this.getContentY(), 32, 32);
+					context.renderItem(item.icon(), this.getContentX() + 7, this.getContentY() + 7);
+					context.blitSprite(RenderPipelines.GUI_TEXTURED, ItemListWidget.TEXTURE, this.getContentX(), this.getContentY(), 32, 32);
 				}
 			} else {
-				context.drawItem(item.icon(), this.getContentX() + 7, this.getContentY() + 7);
+				context.renderItem(item.icon(), this.getContentX() + 7, this.getContentY() + 7);
 			}
 		}
 
 		@Override
-		public boolean mouseClicked(Click click, boolean doubled) {
+		public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
 			setSelected(this);
-			if (!(click.x() - (double) getRowLeft() <= (double) 32.0F) && Util.getMeasuringTimeMs() - time >= 1000L) {
-				time = Util.getMeasuringTimeMs();
+			if (!(click.x() - (double) getRowLeft() <= (double) 32.0F) && Util.getMillis() - time >= 1000L) {
+				time = Util.getMillis();
 				return super.mouseClicked(click, doubled);
 			} else {
 				Client.playSoundButtonClickUI();
@@ -279,39 +279,39 @@ class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry>
 	}
 
 	static class LoadingEntry extends Entry {
-		private static final Text LOADING_LIST_TEXT = Text.literal("Loading..");
-		private final MinecraftClient client;
+		private static final Component LOADING_LIST_TEXT = Component.literal("Loading..");
+		private final Minecraft client;
 
-		public LoadingEntry(MinecraftClient client) {
+		public LoadingEntry(Minecraft client) {
 			this.client = client;
 		}
 
 		@Override
-		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			if (this.client == null || this.client.currentScreen == null || this.client.textRenderer == null) {
+		public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+			if (this.client == null || this.client.screen == null || this.client.font == null) {
 				return;
 			}
 
-			int x1 = (this.client.currentScreen.width - this.client.textRenderer.getWidth(LOADING_LIST_TEXT)) / 2;
+			int x1 = (this.client.screen.width - this.client.font.width(LOADING_LIST_TEXT)) / 2;
 			int y1 = this.getY() + (this.getHeight() - 9) / 2;
-			context.drawTextWithShadow(this.client.textRenderer, LOADING_LIST_TEXT, x1, y1,  Colors.WHITE.asInt());
+			context.drawString(this.client.font, LOADING_LIST_TEXT, x1, y1,  Colors.WHITE.asInt());
 
-			String string = LoadingDisplay.get(Util.getMeasuringTimeMs());
-			int x2 = (this.client.currentScreen.width - this.client.textRenderer.getWidth(string)) / 2;
+			String string = LoadingDotsText.get(Util.getMillis());
+			int x2 = (this.client.screen.width - this.client.font.width(string)) / 2;
 			int y2 = y1 + 9;
-			context.drawTextWithShadow(this.client.textRenderer, string, x2, y2, Colors.GRAY.asInt());
+			context.drawString(this.client.font, string, x2, y2, Colors.GRAY.asInt());
 		}
 
-		public Text getNarration() {
+		public Component getNarration() {
 			return LOADING_LIST_TEXT;
 		}
 	}
 
 	private record ItemSummary(
-			String hypixelSkyBlockId,
-			Formatting color,
-			String name,
-			ItemStack icon
+            String hypixelSkyBlockId,
+            ChatFormatting color,
+            String name,
+            ItemStack icon
 	) implements Comparable<ItemSummary> {
 
 		@Override

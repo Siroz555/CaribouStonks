@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -13,31 +13,31 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum RareSeaCreature {
 	// Water
-	CARROT_KING("Carrot King", "Is this even a fish? It's the Carrot King!", Formatting.AQUA),
-	WATER_HYDRA("Water Hydra", "The Water Hydra has come to test your strength.", Formatting.BLUE),
-	THE_LOCH_EMPEROR("The Loch Emperor", "The Loch Emperor arises from the depths.", Formatting.RED),
+	CARROT_KING("Carrot King", "Is this even a fish? It's the Carrot King!", ChatFormatting.AQUA),
+	WATER_HYDRA("Water Hydra", "The Water Hydra has come to test your strength.", ChatFormatting.BLUE),
+	THE_LOCH_EMPEROR("The Loch Emperor", "The Loch Emperor arises from the depths.", ChatFormatting.RED),
 	// Water - Jerry Workshop
-	YETI("Yeti", "What is this creature!?", Formatting.WHITE),
-	REINDRAKE("Reindrake", "A Reindrake forms from the depths.", Formatting.RED),
+	YETI("Yeti", "What is this creature!?", ChatFormatting.WHITE),
+	REINDRAKE("Reindrake", "A Reindrake forms from the depths.", ChatFormatting.RED),
 	// Water - Crystal Hollows
-	ABYSSAL_MINER("Abyssal Miner", "An Abyssal Miner breaks out of the water!", Formatting.AQUA),
+	ABYSSAL_MINER("Abyssal Miner", "An Abyssal Miner breaks out of the water!", ChatFormatting.AQUA),
 	// Water - Fishing Festival
-	GREAT_WHITE_SHARK("Great White Shark", "Hide no longer, a Great White Shark has tracked your scent and thirsts for your blood!", Formatting.AQUA),
+	GREAT_WHITE_SHARK("Great White Shark", "Hide no longer, a Great White Shark has tracked your scent and thirsts for your blood!", ChatFormatting.AQUA),
 	// Water - Spooky Event
-	WEREWOLF("Werewolf", "It must be a full moon, a Werewolf appears.", Formatting.GRAY),
-	PHANTOM_FISHER("Phantom Fisher", "The spirit of a long lost Phantom Fisher has come to haunt you.", Formatting.DARK_PURPLE),
-	GRIM_REAPER("Grim Reaper", "This can't be! The manifestation of death himself!", Formatting.DARK_PURPLE),
+	WEREWOLF("Werewolf", "It must be a full moon, a Werewolf appears.", ChatFormatting.GRAY),
+	PHANTOM_FISHER("Phantom Fisher", "The spirit of a long lost Phantom Fisher has come to haunt you.", ChatFormatting.DARK_PURPLE),
+	GRIM_REAPER("Grim Reaper", "This can't be! The manifestation of death himself!", ChatFormatting.DARK_PURPLE),
 	// Water - Backwater Bayou
-	ALLIGATOR("Alligator", "A long snout breaks the surface of the water. It's an Alligator!", Formatting.DARK_GREEN),
-	BLUE_RINGED_OCTOPUS("Blue Ringed Octopus", "A garish set of tentacles arise. It's a Blue Ringed Octopus!", Formatting.LIGHT_PURPLE),
-	TITANOBOA("Titanoboa", "A massive Titanoboa surfaces. Its body stretches as far as the eye can see.", Formatting.DARK_GREEN),
-	WIKI_TIKI("Wiki Tiki", "The water bubbles and froths. A massive form emerges- you have disturbed the Wiki Tiki! You shall pay the price.", Formatting.LIGHT_PURPLE),
+	ALLIGATOR("Alligator", "A long snout breaks the surface of the water. It's an Alligator!", ChatFormatting.DARK_GREEN),
+	BLUE_RINGED_OCTOPUS("Blue Ringed Octopus", "A garish set of tentacles arise. It's a Blue Ringed Octopus!", ChatFormatting.LIGHT_PURPLE),
+	TITANOBOA("Titanoboa", "A massive Titanoboa surfaces. Its body stretches as far as the eye can see.", ChatFormatting.DARK_GREEN),
+	WIKI_TIKI("Wiki Tiki", "The water bubbles and froths. A massive form emerges- you have disturbed the Wiki Tiki! You shall pay the price.", ChatFormatting.LIGHT_PURPLE),
 	// Lava - Crimson Isle
-	FIERY_SCUTTLER("Fiery Scuttler", "A Fiery Scuttler inconspicuously waddles up to you, friends in tow.", Formatting.GOLD),
-	THUNDER("Thunder", "You hear a massive rumble as Thunder emerges.", Formatting.AQUA),
-	LORD_JAWBUS("Lord Jawbus", "You have angered a legendary creature... Lord Jawbus has arrived.", Formatting.RED),
-	RAGNAROK("Ragnarok", "The sky darkens and the air thickens. The end times are upon us: Ragnarok is here.", Formatting.DARK_RED),
-	PLHLEGBLAST("Plhlegblast", "WOAH! A Plhlegblast appeared.", Formatting.DARK_RED),
+	FIERY_SCUTTLER("Fiery Scuttler", "A Fiery Scuttler inconspicuously waddles up to you, friends in tow.", ChatFormatting.GOLD),
+	THUNDER("Thunder", "You hear a massive rumble as Thunder emerges.", ChatFormatting.AQUA),
+	LORD_JAWBUS("Lord Jawbus", "You have angered a legendary creature... Lord Jawbus has arrived.", ChatFormatting.RED),
+	RAGNAROK("Ragnarok", "The sky darkens and the air thickens. The end times are upon us: Ragnarok is here.", ChatFormatting.DARK_RED),
+	PLHLEGBLAST("Plhlegblast", "WOAH! A Plhlegblast appeared.", ChatFormatting.DARK_RED),
 	;
 
 	private static final Map<String, RareSeaCreature> SEA_CREATURE_CHAT = Arrays.stream(values())
@@ -45,9 +45,9 @@ public enum RareSeaCreature {
 
 	private final String name;
 	private final String chatMessage;
-	private final Formatting color;
+	private final ChatFormatting color;
 
-	RareSeaCreature(String name, String chatMessage, Formatting color) {
+	RareSeaCreature(String name, String chatMessage, ChatFormatting color) {
 		this.name = name;
 		this.chatMessage = chatMessage;
 		this.color = color;
@@ -65,11 +65,11 @@ public enum RareSeaCreature {
 		return chatMessage;
 	}
 
-	public Formatting getColor() {
+	public ChatFormatting getColor() {
 		return color;
 	}
 
-	public Text getText() {
-		return Text.literal(name).formatted(color, Formatting.BOLD);
+	public Component getText() {
+		return Component.literal(name).withStyle(color, ChatFormatting.BOLD);
 	}
 }

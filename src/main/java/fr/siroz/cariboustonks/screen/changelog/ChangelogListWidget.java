@@ -4,23 +4,23 @@ import fr.siroz.cariboustonks.core.changelog.ChangelogEntry;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 
-class ChangelogListWidget extends ElementListWidget<ChangelogListWidget.LineEntry> {
+class ChangelogListWidget extends ContainerObjectSelectionList<ChangelogListWidget.LineEntry> {
 
 	private static final int LINE_HEIGHT = 10;
 	private static final int PADDING = 10;
-	private static final Text SPACE = Text.literal(" ");
-	private static final Text SEPARATOR = Text.literal("────────────────────────────────────").formatted(Formatting.DARK_GRAY);
+	private static final Component SPACE = Component.literal(" ");
+	private static final Component SEPARATOR = Component.literal("────────────────────────────────────").withStyle(ChatFormatting.DARK_GRAY);
 
-	ChangelogListWidget(MinecraftClient client, @NotNull List<ChangelogEntry> changelogs, int width, int height, int y) {
+	ChangelogListWidget(Minecraft client, @NotNull List<ChangelogEntry> changelogs, int width, int height, int y) {
 		super(client, width, height, y, LINE_HEIGHT);
 
 		// Au lieu de créer une Entry qui fait pour toute la version (features + improvements + fixes + backend),
@@ -28,8 +28,8 @@ class ChangelogListWidget extends ElementListWidget<ChangelogListWidget.LineEntr
 		// Cela évite qu'une Entry soit démesuré, compliqué à calculer sur les dimensions
 		// et que le scroll fasse n'importe quoi, car c'est un enfer pour moi.
 		for (ChangelogEntry entry : changelogs) {
-			List<Text> lines = formatChangelogToTexts(entry, width - 2 * PADDING);
-			for (Text text : lines) {
+			List<Component> lines = formatChangelogToTexts(entry, width - 2 * PADDING);
+			for (Component text : lines) {
 				addEntry(new LineEntry(text));
 			}
 			addEntry(new LineEntry(SPACE));
@@ -50,55 +50,55 @@ class ChangelogListWidget extends ElementListWidget<ChangelogListWidget.LineEntr
 	}
 
 	@Override
-	protected int getScrollbarX() {
+	protected int scrollBarX() {
 		return this.width - 10;
 	}
 
-	protected class LineEntry extends ElementListWidget.Entry<LineEntry> {
-		private final Text text;
+	protected class LineEntry extends ContainerObjectSelectionList.Entry<LineEntry> {
+		private final Component text;
 
-		LineEntry(Text text) {
+		LineEntry(Component text) {
 			this.text = text;
 		}
 
 		@Override
-		public List<? extends Selectable> selectableChildren() {
+		public List<? extends NarratableEntry> narratables() {
 			return List.of();
 		}
 
 		@Override
-		public List<? extends Element> children() {
+		public List<? extends GuiEventListener> children() {
 			return List.of();
 		}
 
 		@Override
-		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			int drawX = this.getX() + PADDING;
+		public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+			int drawX = this.getX() + CONTENT_PADDING;
 			// Centre verticalement la ligne dans entryHeight si besoin
-			int textHeight = client.textRenderer.fontHeight;
+			int textHeight = minecraft.font.lineHeight;
 			//int drawY = getContentY() + Math.max(0, (getContentHeight() - textHeight) / 2);
 			int drawY = this.getY() + Math.max(0, (this.getHeight() - textHeight) / 2);
-			context.drawTextWithShadow(client.textRenderer, text, drawX, drawY, Colors.WHITE.asInt());
+			context.drawString(minecraft.font, text, drawX, drawY, Colors.WHITE.asInt());
 		}
 	}
 
 	@SuppressWarnings("checkstyle:CyclomaticComplexity")
-	private @NotNull List<Text> formatChangelogToTexts(@NotNull ChangelogEntry entry, int maxWidth) {
-		List<Text> out = new ArrayList<>();
+	private @NotNull List<Component> formatChangelogToTexts(@NotNull ChangelogEntry entry, int maxWidth) {
+		List<Component> out = new ArrayList<>();
 
 		// Titre Version (+ date si présente)
-		out.add(Text.literal("✨ Version " + entry.version).formatted(Formatting.GOLD, Formatting.BOLD));
+		out.add(Component.literal("✨ Version " + entry.version).withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
 		if (entry.date != null && !entry.date.isBlank()) {
-			out.add(Text.literal("(" + entry.date + ")").formatted(Formatting.GRAY));
+			out.add(Component.literal("(" + entry.date + ")").withStyle(ChatFormatting.GRAY));
 		}
 		out.add(SPACE);
 
 		// Important Notes
 		if (!entry.notes.isEmpty()) {
-			out.add(Text.literal("Important Notes:").formatted(Formatting.RED, Formatting.BOLD));
+			out.add(Component.literal("Important Notes:").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
 			for (String item : entry.notes) {
 				for (String l : wrapText(" • " + item, maxWidth)) {
-					out.add(Text.literal(l).formatted(Formatting.RED, Formatting.BOLD));
+					out.add(Component.literal(l).withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
 				}
 			}
 			out.add(SPACE);
@@ -106,10 +106,10 @@ class ChangelogListWidget extends ElementListWidget<ChangelogListWidget.LineEntr
 
 		// Features
 		if (!entry.feature.isEmpty()) {
-			out.add(Text.literal("Features:").withColor(Colors.GREEN.asInt()).formatted(Formatting.BOLD));
+			out.add(Component.literal("Features:").withColor(Colors.GREEN.asInt()).withStyle(ChatFormatting.BOLD));
 			for (String item : entry.feature) {
 				for (String l : wrapText(" • " + item, maxWidth)) {
-					out.add(Text.literal(l).withColor(Colors.GREEN.asInt()));
+					out.add(Component.literal(l).withColor(Colors.GREEN.asInt()));
 				}
 			}
 			out.add(SPACE);
@@ -117,10 +117,10 @@ class ChangelogListWidget extends ElementListWidget<ChangelogListWidget.LineEntr
 
 		// Improvements
 		if (!entry.improvement.isEmpty()) {
-			out.add(Text.literal("Improvements:").withColor(Colors.AQUA.asInt()).formatted(Formatting.BOLD));
+			out.add(Component.literal("Improvements:").withColor(Colors.AQUA.asInt()).withStyle(ChatFormatting.BOLD));
 			for (String item : entry.improvement) {
 				for (String l : wrapText(" • " + item, maxWidth)) {
-					out.add(Text.literal(l).withColor(Colors.AQUA.asInt()));
+					out.add(Component.literal(l).withColor(Colors.AQUA.asInt()));
 				}
 			}
 			out.add(SPACE);
@@ -128,10 +128,10 @@ class ChangelogListWidget extends ElementListWidget<ChangelogListWidget.LineEntr
 
 		// Fixes
 		if (!entry.fixed.isEmpty()) {
-			out.add(Text.literal("Fixes:").withColor(Colors.YELLOW.asInt()).formatted(Formatting.BOLD));
+			out.add(Component.literal("Fixes:").withColor(Colors.YELLOW.asInt()).withStyle(ChatFormatting.BOLD));
 			for (String item : entry.fixed) {
 				for (String l : wrapText(" • " + item, maxWidth)) {
-					out.add(Text.literal(l).withColor(Colors.YELLOW.asInt()));
+					out.add(Component.literal(l).withColor(Colors.YELLOW.asInt()));
 				}
 			}
 			out.add(SPACE);
@@ -139,10 +139,10 @@ class ChangelogListWidget extends ElementListWidget<ChangelogListWidget.LineEntr
 
 		// Backend
 		if (!entry.backend.isEmpty()) {
-			out.add(Text.literal("Backend:").withColor(Colors.ORANGE.asInt()).formatted(Formatting.BOLD));
+			out.add(Component.literal("Backend:").withColor(Colors.ORANGE.asInt()).withStyle(ChatFormatting.BOLD));
 			for (String item : entry.backend) {
 				for (String l : wrapText(" • " + item, maxWidth)) {
-					out.add(Text.literal(l).withColor(Colors.ORANGE.asInt()));
+					out.add(Component.literal(l).withColor(Colors.ORANGE.asInt()));
 				}
 			}
 			out.add(SPACE);
@@ -165,7 +165,7 @@ class ChangelogListWidget extends ElementListWidget<ChangelogListWidget.LineEntr
 
 		for (String w : words) {
 			String test = current.isEmpty() ? w : current + " " + w;
-			if (client.textRenderer.getWidth(test) > maxWidth && !current.isEmpty()) {
+			if (minecraft.font.width(test) > maxWidth && !current.isEmpty()) {
 				lines.add(current.toString());
 				current = new StringBuilder("    ");
 				current.append(w);

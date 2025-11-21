@@ -9,7 +9,7 @@ import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.position.Position;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class WaypointAdapter extends TypeAdapter<Waypoint> {
 		writer.name("alpha").value(waypoint.getAlpha());
 		writer.name("color");
 		colorAdapter.write(writer, waypoint.getColor());
-		Optional<Text> text = waypoint.getTextOption().getText();
+		Optional<Component> text = waypoint.getTextOption().getText();
 		writer.name("text").value(text.isPresent() ? GsonProvider.standard().toJson(text.get()) : "");
 		writer.endObject();
 	}
@@ -51,7 +51,7 @@ public class WaypointAdapter extends TypeAdapter<Waypoint> {
 		Waypoint.Type type = Waypoint.Type.WAYPOINT;
 		float alpha = 1f;
 		Color color = Colors.RED;
-		Text text = null;
+		Component text = null;
 		while (reader.hasNext()) {
 			switch (reader.nextName()) {
 				case "uuid" -> uuid = UUID.fromString(reader.nextString());
@@ -60,7 +60,7 @@ public class WaypointAdapter extends TypeAdapter<Waypoint> {
 				case "type" -> type = Waypoint.Type.valueOf(reader.nextString());
 				case "alpha" -> alpha = Float.parseFloat(reader.nextString());
 				case "color" -> color = colorAdapter.read(reader);
-				case "text" -> text = GsonProvider.standard().fromJson(reader.nextString(), Text.class);
+				case "text" -> text = GsonProvider.standard().fromJson(reader.nextString(), Component.class);
 				case null, default -> {
 				}
 			}

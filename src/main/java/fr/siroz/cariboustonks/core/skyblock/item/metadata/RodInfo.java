@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.core.skyblock.item.metadata;
 
 import java.util.Optional;
 import java.util.function.Function;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,9 +24,9 @@ public record RodInfo(
 			Optional.empty()
 	);
 
-	private static final Function<NbtCompound, Optional<String>> MAPPER = nbt -> nbt.getString("part");
+	private static final Function<CompoundTag, Optional<String>> MAPPER = nbt -> nbt.getString("part");
 
-	public static RodInfo ofNbt(@NotNull NbtCompound customData) {
+	public static RodInfo ofNbt(@NotNull CompoundTag customData) {
 		try {
 			Optional<String> line = customData.getCompoundOrEmpty("line")
 					.asCompound()

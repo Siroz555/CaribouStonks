@@ -1,16 +1,16 @@
 package fr.siroz.cariboustonks.rendering.world.state;
 
 import fr.siroz.cariboustonks.util.colors.Color;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec3;
 
 public record CuboidOutlineRenderState(
-		Vec3d center,
-		int depth,
-		int size,
-		int minY,
-		int maxY,
-		float lineWidth,
-		Color mainColor,
-		Color secondColor
+        Vec3 center,
+        int depth,
+        int size,
+        int minY,
+        int maxY,
+        float lineWidth,
+        Color mainColor,
+        Color secondColor
 ) {
 }

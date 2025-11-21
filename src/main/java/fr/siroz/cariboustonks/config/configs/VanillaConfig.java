@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.config.configs;
 
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
-import net.minecraft.entity.LivingEntity;
 
 public class VanillaConfig {
 
@@ -77,7 +76,7 @@ public class VanillaConfig {
 		public boolean enabled = false;
 
 		@SerialEntry
-		public int swingDuration = 6; //LivingEntity.GLOWING_FLAG; // 6
+		public int swingDuration = 6; // Entity->FLAG_GLOWING (protected)
 
 		@SerialEntry
 		public boolean ignoreMiningEffects = false;

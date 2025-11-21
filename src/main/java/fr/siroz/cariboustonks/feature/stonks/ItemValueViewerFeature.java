@@ -28,12 +28,12 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +60,7 @@ public class ItemValueViewerFeature extends Feature {
 
 	@Nullable
 	private ItemStack currentItem = null;
-	private final List<Text> lines = new ArrayList<>();
+	private final List<Component> lines = new ArrayList<>();
 
 	public ItemValueViewerFeature() {
 		ItemRenderEvents.POST_TOOLTIP.register((_ctx, item, _x, _y, _w, _h, tr, _c) -> this.onPostTooltip(item));
@@ -93,22 +93,22 @@ public class ItemValueViewerFeature extends Feature {
 	}
 
 	@EventHandler(event = "ScreenEvents.afterRender")
-	private void render(Screen screen, DrawContext ctx, int mouseX, int mouseY, float tickDelta) {
+	private void render(Screen screen, GuiGraphics ctx, int mouseX, int mouseY, float tickDelta) {
 		if (currentItem == null || lines.isEmpty()) return;
 
-		ctx.getMatrices().pushMatrix();
-		ctx.getMatrices().scale(getScale(), getScale());
+		ctx.pose().pushMatrix();
+		ctx.pose().scale(getScale(), getScale());
 
 		int y = START_Y;
-		for (Text text : lines) {
-			ctx.drawTextWithShadow(CLIENT.textRenderer, text, PADDING_LEFT, y, Colors.WHITE.asInt());
+		for (Component text : lines) {
+			ctx.drawString(CLIENT.font, text, PADDING_LEFT, y, Colors.WHITE.asInt());
 			if (text.getString().isBlank()) {
 				y += (LINE_HEIGHT / 2);
 			} else {
 				y += LINE_HEIGHT;
 			}
 		}
-		ctx.getMatrices().popMatrix();
+		ctx.pose().popMatrix();
 	}
 
 	private float getScale() {
@@ -129,7 +129,7 @@ public class ItemValueViewerFeature extends Feature {
 				return;
 			}
 
-			List<Text> newLines = buildDisplayLines(item, result);
+			List<Component> newLines = buildDisplayLines(item, result);
 			lines.clear();
 			lines.addAll(newLines);
 		} catch (Exception ex) {
@@ -142,36 +142,36 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private @NotNull List<Text> buildDisplayLines(@NotNull ItemStack item, @NotNull ItemValueResult result) {
-		List<Text> out = new ArrayList<>();
+	private @NotNull List<Component> buildDisplayLines(@NotNull ItemStack item, @NotNull ItemValueResult result) {
+		List<Component> out = new ArrayList<>();
 
 		if (result.state() == ItemValueResult.State.FAIL) {
-			out.add(Text.literal("Internal error occured during the").formatted(Formatting.RED));
-			out.add(Text.literal("calculation of the item value.").formatted(Formatting.RED));
+			out.add(Component.literal("Internal error occured during the").withStyle(ChatFormatting.RED));
+			out.add(Component.literal("calculation of the item value.").withStyle(ChatFormatting.RED));
 			if (result.error() != null) {
-				out.add(Text.literal("Error: ").formatted(Formatting.RED, Formatting.BOLD));
-				out.add(Text.literal(result.error().getMessage()).formatted(Formatting.RED));
+				out.add(Component.literal("Error: ").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
+				out.add(Component.literal(result.error().getMessage()).withStyle(ChatFormatting.RED));
 			}
 			return out;
 		}
 
-		out.add(item.getName());
+		out.add(item.getHoverName());
 
 		boolean hasBase = true;
 		if (result.base() > 0) {
-			out.add(Text.empty()
-					.append(Text.literal("Base: ").formatted(Formatting.GREEN))
-					.append(priceFormat(result.base())).formatted(Formatting.GOLD)
+			out.add(Component.empty()
+					.append(Component.literal("Base: ").withStyle(ChatFormatting.GREEN))
+					.append(priceFormat(result.base())).withStyle(ChatFormatting.GOLD)
 					.append(priceShortFormat(result.base()))
 			);
 		} else {
 			hasBase = false;
-			out.add(Text.empty()
-					.append(Text.literal("Base: ").formatted(Formatting.RED))
-					.append(Text.literal("No data available at this time").formatted(Formatting.RED))
+			out.add(Component.empty()
+					.append(Component.literal("Base: ").withStyle(ChatFormatting.RED))
+					.append(Component.literal("No data available at this time").withStyle(ChatFormatting.RED))
 			);
 		}
-		out.add(Text.literal(" "));
+		out.add(Component.literal(" "));
 
 		addEnchantedBook(result, out);
 		addUltimateEnchantedBook(result, out);
@@ -205,15 +205,15 @@ public class ItemValueViewerFeature extends Feature {
 		addBoosters(result, out);
 
 		if (!result.calculations().isEmpty()) {
-			out.add(Text.literal(" "));
-			out.add(Text.empty()
-					.append(Text.literal("Est. Total: ").formatted(Formatting.GREEN))
+			out.add(Component.literal(" "));
+			out.add(Component.empty()
+					.append(Component.literal("Est. Total: ").withStyle(ChatFormatting.GREEN))
 					.append(priceFormat(result.price()))
 					.append(priceShortFormat(result.price()))
 			);
 			if (!hasBase) {
-				out.add(Text.empty()
-						.append(Text.literal("Missing base item value!").formatted(Formatting.RED))
+				out.add(Component.empty()
+						.append(Component.literal("Missing base item value!").withStyle(ChatFormatting.RED))
 				);
 			}
 		}
@@ -221,246 +221,246 @@ public class ItemValueViewerFeature extends Feature {
 		return out;
 	}
 
-	private void addCosmetic(@NotNull ItemValueResult result, List<Text> out) {
+	private void addCosmetic(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation skin = result.get(Calculation.Type.SKIN);
 		Calculation dye = result.get(Calculation.Type.DYE);
 		if (skin != null || dye != null) {
 			double total = (skin != null ? skin.price() : 0) + (dye != null ? dye.price() : 0);
-			out.add(Text.empty()
-					.append(Text.literal("Cosmetic:").formatted(Formatting.GRAY))
+			out.add(Component.empty()
+					.append(Component.literal("Cosmetic:").withStyle(ChatFormatting.GRAY))
 					.append(priceShortFormat(total))
 			);
 		}
 		if (skin != null) {
 			String displayName = StonksUtils.capitalize(skin.skyBlockId());
-			out.add(Text.empty()
-					.append(Text.literal(ARROW + " Skin: ").formatted(Formatting.GRAY, Formatting.ITALIC))
-					.append(Text.literal(displayName).formatted(Formatting.LIGHT_PURPLE))
+			out.add(Component.empty()
+					.append(Component.literal(ARROW + " Skin: ").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
+					.append(Component.literal(displayName).withStyle(ChatFormatting.LIGHT_PURPLE))
 					.append(priceShortFormat(skin.price()))
 			);
 		}
 		if (dye != null) {
 			String displayName = StonksUtils.capitalize(dye.skyBlockId());
-			out.add(Text.empty()
-					.append(Text.literal(ARROW + " Dye: ").formatted(Formatting.GRAY, Formatting.ITALIC))
-					.append(Text.literal(displayName).formatted(Formatting.LIGHT_PURPLE))
+			out.add(Component.empty()
+					.append(Component.literal(ARROW + " Dye: ").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
+					.append(Component.literal(displayName).withStyle(ChatFormatting.LIGHT_PURPLE))
 					.append(priceShortFormat(dye.price()))
 			);
 		}
 	}
 
-	private void addEnchantedBook(@NotNull ItemValueResult result, List<Text> out) {
+	private void addEnchantedBook(@NotNull ItemValueResult result, List<Component> out) {
 		List<Calculation> enchants = result.getList(Calculation.Type.ENCHANTED_BOOK);
 		if (!enchants.isEmpty()) {
-			out.add(Text.literal("Enchanted Book:").formatted(Formatting.GRAY));
+			out.add(Component.literal("Enchanted Book:").withStyle(ChatFormatting.GRAY));
 			enchants.forEach(enchant -> {
 				String enchantName = getInfos(enchant.skyBlockId().toLowerCase(Locale.ENGLISH)).left() + " " + enchant.count();
-				out.add(Text.empty()
-						.append(Text.literal(ARROW + " " + enchantName).formatted(Formatting.BLUE))
+				out.add(Component.empty()
+						.append(Component.literal(ARROW + " " + enchantName).withStyle(ChatFormatting.BLUE))
 						.append(priceShortFormat(enchant.price()))
 				);
 			});
 		}
 	}
 
-	private void addUltimateEnchantedBook(@NotNull ItemValueResult result, List<Text> out) {
+	private void addUltimateEnchantedBook(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation ultimate = result.get(Calculation.Type.ULTIMATE_ENCHANTED_BOOK);
 		if (ultimate != null) {
 			String level = ultimate.count() > 0 ? " " + RomanNumeralUtils.generate(ultimate.count()) : " " + ultimate.count();
 			String ultimateName = StonksUtils.capitalize(ultimate.skyBlockId()) + level;
-			out.add(Text.empty()
-					.append(Text.literal(" " + ultimateName).formatted(Formatting.LIGHT_PURPLE, Formatting.BOLD))
+			out.add(Component.empty()
+					.append(Component.literal(" " + ultimateName).withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD))
 					.append(priceShortFormat(ultimate.price())));
 		}
 	}
 
-	private void addReforge(@NotNull ItemValueResult result, List<Text> out) {
+	private void addReforge(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation reforge = result.get(Calculation.Type.REFORGE);
 		if (reforge != null) {
 			Pair<String, Rarity> infos = getInfos(reforge.skyBlockId());
 			String displayName = infos.left();
-			Formatting color = infos.right() == Rarity.UNKNOWN ? Formatting.BLUE : infos.right().getFormatting();
+			ChatFormatting color = infos.right() == Rarity.UNKNOWN ? ChatFormatting.BLUE : infos.right().getFormatting();
 			boolean fromBazaar = true;
 			if (displayName.equals(reforge.skyBlockId())) {
 				displayName = StonksUtils.capitalize(reforge.skyBlockId()) + "*";
-				color = Formatting.BLUE;
+				color = ChatFormatting.BLUE;
 				fromBazaar = false;
 			}
-			out.add(Text.empty()
-					.append(Text.literal("Reforge: ").formatted(Formatting.GRAY))
-					.append(Text.literal(displayName).formatted(color))
-					.append(fromBazaar ? priceShortFormat(reforge.price()) : Text.empty())
+			out.add(Component.empty()
+					.append(Component.literal("Reforge: ").withStyle(ChatFormatting.GRAY))
+					.append(Component.literal(displayName).withStyle(color))
+					.append(fromBazaar ? priceShortFormat(reforge.price()) : Component.empty())
 			);
 		}
 	}
 
-	private void addRecombobulator(@NotNull ItemValueResult result, List<Text> out) {
+	private void addRecombobulator(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation recombobulator = result.get(Calculation.Type.RECOMBOBULATOR);
 		if (recombobulator != null) {
 			out.add(formatHaving("Recombobulator", recombobulator.price()));
 		}
 	}
 
-	private void addEnrichment(@NotNull ItemValueResult result, List<Text> out) {
+	private void addEnrichment(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation enrichment = result.get(Calculation.Type.TALISMAN_ENRICHMENT);
 		if (enrichment != null) {
 			out.add(formatHaving("Enrichment", enrichment.price()));
 		}
 	}
 
-	private void addPocketSackInASack(@NotNull ItemValueResult result, List<Text> out) {
+	private void addPocketSackInASack(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation pocketSackInASack = result.get(Calculation.Type.POCKET_SACK_IN_A_SACK);
 		if (pocketSackInASack != null) {
 			out.add(formatProgress("Pocket Sack-in-a-Sack", pocketSackInASack.count(), 3, pocketSackInASack.price()));
 		}
 	}
 
-	private void addHotPotatoBook(@NotNull ItemValueResult result, List<Text> out) {
+	private void addHotPotatoBook(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation hotPotato = result.get(Calculation.Type.HOT_POTATO_BOOK);
 		if (hotPotato != null) {
 			out.add(formatProgress("Hot Potato", hotPotato.count(), 10, hotPotato.price()));
 		}
 	}
 
-	private void addFumingPotatoBook(@NotNull ItemValueResult result, List<Text> out) {
+	private void addFumingPotatoBook(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation fumingPotato = result.get(Calculation.Type.FUMING_POTATO_BOOK);
 		if (fumingPotato != null) {
 			out.add(formatProgress("Fuming", fumingPotato.count(), 5, fumingPotato.price()));
 		}
 	}
 
-	private void addArtOfWar(@NotNull ItemValueResult result, List<Text> out) {
+	private void addArtOfWar(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation war = result.get(Calculation.Type.ART_OF_WAR);
 		if (war != null) {
 			out.add(formatHaving("Art Of War", war.price()));
 		}
 	}
 
-	private void addArtOfPeace(@NotNull ItemValueResult result, List<Text> out) {
+	private void addArtOfPeace(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation peace = result.get(Calculation.Type.ART_OF_PEACE);
 		if (peace != null) {
 			out.add(formatHaving("Art Of Peace", peace.price()));
 		}
 	}
 
-	private void addWoodSingularity(@NotNull ItemValueResult result, List<Text> out) {
+	private void addWoodSingularity(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation woodSingularity = result.get(Calculation.Type.WOOD_SINGULARITY);
 		if (woodSingularity != null) {
 			out.add(formatHaving("Wood Singularity", woodSingularity.price()));
 		}
 	}
 
-	private void addFarmingForDummies(@NotNull ItemValueResult result, List<Text> out) {
+	private void addFarmingForDummies(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation farming4Dummies = result.get(Calculation.Type.FARMING_FOR_DUMMIES);
 		if (farming4Dummies != null) {
 			out.add(formatProgress("Farming For Dummies", farming4Dummies.count(), 5, farming4Dummies.price()));
 		}
 	}
 
-	private void addBookOfStats(@NotNull ItemValueResult result, List<Text> out) {
+	private void addBookOfStats(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation stats = result.get(Calculation.Type.STATS_BOOK);
 		if (stats != null) {
 			out.add(formatHaving("Book of Stats", stats.price()));
 		}
 	}
 
-	private void addPolarvoidBook(@NotNull ItemValueResult result, List<Text> out) {
+	private void addPolarvoidBook(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation polarvoid = result.get(Calculation.Type.POLARVOID_BOOK);
 		if (polarvoid != null) {
 			out.add(formatProgress("Polarvoid Book", polarvoid.count(), 5, polarvoid.price()));
 		}
 	}
 
-	private void addJalapenoBook(@NotNull ItemValueResult result, List<Text> out) {
+	private void addJalapenoBook(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation jalapeno = result.get(Calculation.Type.JALAPENO_BOOK);
 		if (jalapeno != null) {
 			out.add(formatHaving("Jalapeno Book", jalapeno.price()));
 		}
 	}
 
-	private void addWetBook(@NotNull ItemValueResult result, List<Text> out) {
+	private void addWetBook(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation wet = result.get(Calculation.Type.WET_BOOK);
 		if (wet != null) {
 			out.add(formatProgress("Wet Book", wet.count(), 5, wet.price()));
 		}
 	}
 
-	private void addManaDisintegrator(@NotNull ItemValueResult result, List<Text> out) {
+	private void addManaDisintegrator(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation manaDisintegrator = result.get(Calculation.Type.MANA_DISINTEGRATOR);
 		if (manaDisintegrator != null) {
 			out.add(formatProgress("Mana Disintegrator", manaDisintegrator.count(), 10, manaDisintegrator.price()));
 		}
 	}
 
-	private void addTransmissionTuner(@NotNull ItemValueResult result, List<Text> out) {
+	private void addTransmissionTuner(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation transmissionTuner = result.get(Calculation.Type.TRANSMISSION_TUNER);
 		if (transmissionTuner != null) {
 			out.add(formatProgress("Transmission Tuner", transmissionTuner.count(), 4, transmissionTuner.price()));
 		}
 	}
 
-	private void addEtherwarp(@NotNull ItemValueResult result, List<Text> out) {
+	private void addEtherwarp(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation etherwarp = result.get(Calculation.Type.ETHERWARP_CONDUIT);
 		if (etherwarp != null) {
 			out.add(formatHaving("Etherwarp Conduit", etherwarp.price()));
 		}
 	}
 
-	private void addDivanPowderCoating(@NotNull ItemValueResult result, List<Text> out) {
+	private void addDivanPowderCoating(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation divanPowderCoating = result.get(Calculation.Type.DIVAN_POWDER_COATING);
 		if (divanPowderCoating != null) {
 			out.add(formatHaving("Divan Powder Coating", divanPowderCoating.price()));
 		}
 	}
 
-	private void addPowerScroll(@NotNull ItemValueResult result, List<Text> out) {
+	private void addPowerScroll(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation power = result.get(Calculation.Type.POWER_SCROLL);
 		if (power != null) {
 			Pair<String, Rarity> infos = getInfos(power.skyBlockId());
 			out.add(formatHaving("Power Scroll", power.price()));
-			out.add(Text.literal(ARROW + " " + infos.left())
-					.formatted(infos.right() == Rarity.UNKNOWN ? Formatting.DARK_PURPLE : infos.right().getFormatting()));
+			out.add(Component.literal(ARROW + " " + infos.left())
+					.withStyle(infos.right() == Rarity.UNKNOWN ? ChatFormatting.DARK_PURPLE : infos.right().getFormatting()));
 		}
 	}
 
-	private void addMasterStars(@NotNull ItemValueResult result, List<Text> out) {
+	private void addMasterStars(@NotNull ItemValueResult result, List<Component> out) {
 		List<Calculation> masterStars = result.getList(Calculation.Type.MASTER_STAR);
 		if (!masterStars.isEmpty()) {
 			double price = masterStars.stream().mapToDouble(Calculation::price).sum();
 			int lvl = Math.min(masterStars.size(), 5);
-			MutableText text = Text.empty().append(Text.literal("Master Stars: ").formatted(Formatting.GRAY));
+			MutableComponent text = Component.empty().append(Component.literal("Master Stars: ").withStyle(ChatFormatting.GRAY));
 			for (int i = 0; i < lvl; i++) {
-				text.append(Text.literal(MASTER_STARS_CIRCLED[i]).formatted(Formatting.RED));
+				text.append(Component.literal(MASTER_STARS_CIRCLED[i]).withStyle(ChatFormatting.RED));
 			}
 			text.append(priceShortFormat(price));
 			out.add(text);
 		}
 	}
 
-	private void addWitherScroll(@NotNull ItemValueResult result, List<Text> out) {
+	private void addWitherScroll(@NotNull ItemValueResult result, List<Component> out) {
 		List<Calculation> wither = result.getList(Calculation.Type.WITHER_SCROLL);
 		if (!wither.isEmpty()) {
-			out.add(Text.empty().append(Text.literal("Wither Scrolls:").formatted(Formatting.GRAY)));
+			out.add(Component.empty().append(Component.literal("Wither Scrolls:").withStyle(ChatFormatting.GRAY)));
 			wither.forEach(scroll -> {
 				String displayName = getInfos(scroll.skyBlockId()).left();
-				out.add(Text.empty()
-						.append(Text.literal(ARROW + " " + displayName).formatted(Formatting.DARK_PURPLE))
+				out.add(Component.empty()
+						.append(Component.literal(ARROW + " " + displayName).withStyle(ChatFormatting.DARK_PURPLE))
 						.append(priceShortFormat(scroll.price()))
 				);
 			});
 		}
 	}
 
-	private void addGemstones(@NotNull ItemValueResult result, List<Text> out) {
+	private void addGemstones(@NotNull ItemValueResult result, List<Component> out) {
 		List<Calculation> gems = result.getList(Calculation.Type.GEMSTONE);
 		if (!gems.isEmpty()) {
-			out.add(Text.literal("Gemstones:").formatted(Formatting.GRAY));
+			out.add(Component.literal("Gemstones:").withStyle(ChatFormatting.GRAY));
 
 			List<Calculation> slotCosts = result.getList(Calculation.Type.GEMSTONE_SLOT);
 			if (!slotCosts.isEmpty()) {
 				double price = slotCosts.stream().mapToDouble(Calculation::price).sum();
-				out.add(Text.empty()
-						.append(Text.literal(ARROW + " Slot Costs:").formatted(Formatting.GRAY))
+				out.add(Component.empty()
+						.append(Component.literal(ARROW + " Slot Costs:").withStyle(ChatFormatting.GRAY))
 						.append(priceShortFormat(price))
 				);
 			}
@@ -469,17 +469,17 @@ public class ItemValueViewerFeature extends Feature {
 				Optional<Gemstones.GemstoneApplied> gemSlot = Gemstones.GemstoneApplied.fromSkyBlockGemstoneId(calc.skyBlockId());
 				if (gemSlot.isPresent()) {
 					Gemstones.GemstoneApplied gem = gemSlot.get();
-					out.add(Text.empty()
-							.append(Text.literal(" " + gem.type().getStatIcon()
+					out.add(Component.empty()
+							.append(Component.literal(" " + gem.type().getStatIcon()
 									+ " " + gem.quality().getDisplayName()
 									+ " " + gem.type().getDisplayName()
-									+ " Gemstone").formatted(gem.quality().getColor()))
+									+ " Gemstone").withStyle(gem.quality().getColor()))
 							.append(priceShortFormat(calc.price()))
 					);
 				} else {
 					String gemName = getInfos(calc.skyBlockId()).left();
-					out.add(Text.empty()
-							.append(Text.literal(" " + gemName))
+					out.add(Component.empty()
+							.append(Component.literal(" " + gemName))
 							.append(priceShortFormat(calc.price()))
 					);
 				}
@@ -487,13 +487,13 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addEnchantments(@NotNull ItemValueResult result, List<Text> out) {
+	private void addEnchantments(@NotNull ItemValueResult result, List<Component> out) {
 		Calculation ultimate = result.get(Calculation.Type.ULTIMATE_ENCHANTMENT);
 		List<Calculation> enchants = result.getList(Calculation.Type.ENCHANTMENT);
 		List<Calculation> upgrades = result.getList(Calculation.Type.ENCHANTMENT_UPGRADE);
 		boolean showEnchantSection = ultimate != null || !enchants.isEmpty() || !upgrades.isEmpty();
 		if (showEnchantSection) {
-			out.add(Text.literal("Enchantments:").formatted(Formatting.GRAY));
+			out.add(Component.literal("Enchantments:").withStyle(ChatFormatting.GRAY));
 			// Ultimate enchantment en priorité
 			if (ultimate != null) {
 				int base = CalculatorConstants.ULTIMATE_BASE_LEVELS.getOrDefault(ultimate.skyBlockId(), 1);
@@ -505,16 +505,16 @@ public class ItemValueViewerFeature extends Feature {
 				} else {
 					ultimateName = ultimateName.replace("Ultimate ", "");
 				}
-				out.add(Text.empty()
-						.append(ARROW + " " + ultimate.count() + "x").formatted(Formatting.DARK_GRAY)
-						.append(Text.literal(" " + ultimateName).formatted(Formatting.LIGHT_PURPLE, Formatting.BOLD))
+				out.add(Component.empty()
+						.append(ARROW + " " + ultimate.count() + "x").withStyle(ChatFormatting.DARK_GRAY)
+						.append(Component.literal(" " + ultimateName).withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD))
 						.append(priceShortFormat(ultimate.price())));
 			}
 			// Upgrades
 			upgrades.forEach(upgrade -> {
 				String upgradeName = getInfos(upgrade.skyBlockId()).left();
-				out.add(Text.empty()
-						.append(Text.literal(ARROW + " " + upgradeName).formatted(Formatting.DARK_PURPLE))
+				out.add(Component.empty()
+						.append(Component.literal(ARROW + " " + upgradeName).withStyle(ChatFormatting.DARK_PURPLE))
 						.append(priceShortFormat(upgrade.price()))
 				);
 			});
@@ -523,71 +523,71 @@ public class ItemValueViewerFeature extends Feature {
 					.limit(MAX_ENCHANT_DISPLAY)
 					.forEach(enchant -> {
 						String enchantName = getInfos(enchant.skyBlockId().toLowerCase(Locale.ENGLISH)).left() + " " + enchant.count();
-						out.add(Text.empty()
-								.append(Text.literal(ARROW + " " + enchantName).formatted(Formatting.BLUE))
+						out.add(Component.empty()
+								.append(Component.literal(ARROW + " " + enchantName).withStyle(ChatFormatting.BLUE))
 								.append(priceShortFormat(enchant.price()))
 						);
 					});
 			// S'il y en a plus
 			if (enchants.size() > MAX_ENCHANT_DISPLAY) {
-				out.add(Text.literal(" … and " + (enchants.size() - MAX_ENCHANT_DISPLAY) + " more").formatted(Formatting.GRAY, Formatting.ITALIC));
+				out.add(Component.literal(" … and " + (enchants.size() - MAX_ENCHANT_DISPLAY) + " more").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
 			}
 		}
 	}
 
-	private void addPrestiges(@NotNull ItemValueResult result, List<Text> out) {
+	private void addPrestiges(@NotNull ItemValueResult result, List<Component> out) {
 		List<Calculation> prestiges = result.getList(Calculation.Type.PRESTIGE);
 		if (!prestiges.isEmpty()) {
 			double price = prestiges.stream().mapToDouble(Calculation::price).sum();
-			out.add(Text.empty()
-					.append(Text.literal("Prestiges").formatted(Formatting.GRAY))
-					.append(Text.literal("*").formatted(Formatting.RED))
-					.append(Text.literal(": ").formatted(Formatting.GRAY))
-					.append(Text.literal("" + prestiges.size()).formatted(Formatting.DARK_PURPLE))
+			out.add(Component.empty()
+					.append(Component.literal("Prestiges").withStyle(ChatFormatting.GRAY))
+					.append(Component.literal("*").withStyle(ChatFormatting.RED))
+					.append(Component.literal(": ").withStyle(ChatFormatting.GRAY))
+					.append(Component.literal("" + prestiges.size()).withStyle(ChatFormatting.DARK_PURPLE))
 					.append(priceShortFormat(price))
 			);
 		}
 	}
 
-	private void addDrillParts(@NotNull ItemValueResult result, List<Text> out) {
+	private void addDrillParts(@NotNull ItemValueResult result, List<Component> out) {
 		List<Calculation> drillParts = result.getList(Calculation.Type.DRILL_PART);
 		if (!drillParts.isEmpty()) {
-			out.add(Text.literal("Drill Parts:").formatted(Formatting.GRAY));
+			out.add(Component.literal("Drill Parts:").withStyle(ChatFormatting.GRAY));
 			drillParts.forEach(drillPart -> {
 				Pair<String, Rarity> infos = getInfos(drillPart.skyBlockId());
 				String displayName = infos.left();
-				Formatting color = infos.right() == Rarity.UNKNOWN ? Formatting.GREEN : infos.right().getFormatting();
-				out.add(Text.empty()
-						.append(Text.literal(ARROW + " " + displayName).formatted(color))
+				ChatFormatting color = infos.right() == Rarity.UNKNOWN ? ChatFormatting.GREEN : infos.right().getFormatting();
+				out.add(Component.empty()
+						.append(Component.literal(ARROW + " " + displayName).withStyle(color))
 						.append(priceShortFormat(drillPart.price()))
 				);
 			});
 		}
 	}
 
-	private void addRodParts(@NotNull ItemValueResult result, List<Text> out) {
+	private void addRodParts(@NotNull ItemValueResult result, List<Component> out) {
 		List<Calculation> rodParts = result.getList(Calculation.Type.ROD_PART);
 		if (!rodParts.isEmpty()) {
-			out.add(Text.literal("Rod Parts:").formatted(Formatting.GRAY));
+			out.add(Component.literal("Rod Parts:").withStyle(ChatFormatting.GRAY));
 			rodParts.forEach(drillPart -> {
 				Pair<String, Rarity> infos = getInfos(drillPart.skyBlockId());
 				String displayName = infos.left();
-				Formatting color = infos.right() == Rarity.UNKNOWN ? Formatting.AQUA : infos.right().getFormatting();
-				out.add(Text.empty()
-						.append(Text.literal(ARROW + " " + displayName).formatted(color))
+				ChatFormatting color = infos.right() == Rarity.UNKNOWN ? ChatFormatting.AQUA : infos.right().getFormatting();
+				out.add(Component.empty()
+						.append(Component.literal(ARROW + " " + displayName).withStyle(color))
 						.append(priceShortFormat(drillPart.price()))
 				);
 			});
 		}
 	}
 
-	private void addBoosters(@NotNull ItemValueResult result, List<Text> out) {
+	private void addBoosters(@NotNull ItemValueResult result, List<Component> out) {
 		List<Calculation> boosters = result.getList(Calculation.Type.BOOSTERS);
 		if (!boosters.isEmpty()) {
 			double price = boosters.stream().mapToDouble(Calculation::price).sum();
-			out.add(Text.empty()
-					.append(Text.literal("Boosters:").formatted(Formatting.GRAY))
-					.append(Text.literal(" " + boosters.size()).formatted(Formatting.AQUA))
+			out.add(Component.empty()
+					.append(Component.literal("Boosters:").withStyle(ChatFormatting.GRAY))
+					.append(Component.literal(" " + boosters.size()).withStyle(ChatFormatting.AQUA))
 					.append(priceShortFormat(price))
 			);
 		}
@@ -607,31 +607,31 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private Text formatHaving(@NotNull String label, double price) {
-		return Text.empty()
-				.append(Text.literal(label + ": ").formatted(Formatting.GRAY))
-				.append(Text.literal("✔").formatted(Formatting.GREEN))
+	private Component formatHaving(@NotNull String label, double price) {
+		return Component.empty()
+				.append(Component.literal(label + ": ").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal("✔").withStyle(ChatFormatting.GREEN))
 				.append(priceShortFormat(price));
 	}
 
-	private Text formatProgress(@NotNull String label, int current, int max, double price) {
-		return Text.empty()
-				.append(Text.literal(label + ": ").formatted(Formatting.GRAY))
-				.append(Text.literal("" + current).formatted(Formatting.GREEN))
-				.append(Text.literal("/").formatted(Formatting.GRAY))
-				.append(Text.literal("" + max).formatted(Formatting.YELLOW))
+	private Component formatProgress(@NotNull String label, int current, int max, double price) {
+		return Component.empty()
+				.append(Component.literal(label + ": ").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal("" + current).withStyle(ChatFormatting.GREEN))
+				.append(Component.literal("/").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal("" + max).withStyle(ChatFormatting.YELLOW))
 				.append(priceShortFormat(price));
 	}
 
-	private Text priceFormat(double value) {
-		return Text.literal(StonksUtils.INTEGER_NUMBERS.format(value)).formatted(Formatting.GOLD);
+	private Component priceFormat(double value) {
+		return Component.literal(StonksUtils.INTEGER_NUMBERS.format(value)).withStyle(ChatFormatting.GOLD);
 	}
 
-	private Text priceShortFormat(double value) {
-		return Text.empty()
-				.append(Text.literal(" (").formatted(Formatting.GRAY))
-				.append(Text.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(value)).formatted(Formatting.GOLD))
-				.append(Text.literal(")").formatted(Formatting.GRAY));
+	private Component priceShortFormat(double value) {
+		return Component.empty()
+				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(value)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 	}
 
 	public void reset(boolean full) {

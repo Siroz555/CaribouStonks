@@ -22,7 +22,7 @@ public final class SkyBlockEvents {
 	 * Called when the client joins the SkyBlock
 	 */
 	@OnlySkyBlock
-	public static final Event<Join> JOIN = EventFactory.createArrayBacked(Join.class, listeners -> (serverName) -> {
+	public static final Event<@NotNull Join> JOIN = EventFactory.createArrayBacked(Join.class, listeners -> (serverName) -> {
 		for (Join listener : listeners) {
 			listener.onJoin(serverName);
 		}
@@ -32,7 +32,7 @@ public final class SkyBlockEvents {
 	 * Called when the client leaves the SkyBlock
 	 */
 	@OnlySkyBlock
-	public static final Event<Leave> LEAVE = EventFactory.createArrayBacked(Leave.class, listeners -> () -> {
+	public static final Event<@NotNull Leave> LEAVE = EventFactory.createArrayBacked(Leave.class, listeners -> () -> {
 		for (Leave listener : listeners) {
 			listener.onLeave();
 		}
@@ -42,56 +42,56 @@ public final class SkyBlockEvents {
 	 * Called when the client changes of SkyBlock Island
 	 */
 	@OnlySkyBlock
-	public static final Event<IslandChange> ISLAND_CHANGE = EventFactory.createArrayBacked(IslandChange.class, listeners -> (location) -> {
+	public static final Event<@NotNull IslandChange> ISLAND_CHANGE = EventFactory.createArrayBacked(IslandChange.class, listeners -> (location) -> {
 		for (IslandChange listener : listeners) {
 			listener.onIslandChange(location);
 		}
 	});
 
 	@OnlySkyBlock
-	public static final Event<SlayerBossSpawn> SLAYER_BOSS_SPAWN = EventFactory.createArrayBacked(SlayerBossSpawn.class, listeners -> (type, tier) -> {
+	public static final Event<@NotNull SlayerBossSpawn> SLAYER_BOSS_SPAWN = EventFactory.createArrayBacked(SlayerBossSpawn.class, listeners -> (type, tier) -> {
 		for (SlayerBossSpawn listener : listeners) {
 			listener.onSpawn(type, tier);
 		}
 	});
 
 	@OnlySkyBlock
-	public static final Event<SlayerMinibossSpawn> SLAYER_MINIBOSS_SPAWN = EventFactory.createArrayBacked(SlayerMinibossSpawn.class, listeners -> (type, tier) -> {
+	public static final Event<@NotNull SlayerMinibossSpawn> SLAYER_MINIBOSS_SPAWN = EventFactory.createArrayBacked(SlayerMinibossSpawn.class, listeners -> (type, tier) -> {
 		for (SlayerMinibossSpawn listener : listeners) {
 			listener.onSpawn(type, tier);
 		}
 	});
 
 	@OnlySkyBlock
-	public static final Event<SlayerBossDeath> SLAYER_BOSS_DEATH = EventFactory.createArrayBacked(SlayerBossDeath.class, listeners -> (type, tier, instant) -> {
+	public static final Event<@NotNull SlayerBossDeath> SLAYER_BOSS_DEATH = EventFactory.createArrayBacked(SlayerBossDeath.class, listeners -> (type, tier, instant) -> {
 		for (SlayerBossDeath listener : listeners) {
 			listener.onDeath(type, tier, instant);
 		}
 	});
 
 	@OnlySkyBlock
-	public static final Event<SlayerQuestStart> SLAYER_QUEST_START = EventFactory.createArrayBacked(SlayerQuestStart.class, listeners -> (type, tier, afterUpdate) -> {
+	public static final Event<@NotNull SlayerQuestStart> SLAYER_QUEST_START = EventFactory.createArrayBacked(SlayerQuestStart.class, listeners -> (type, tier, afterUpdate) -> {
 		for (SlayerQuestStart listener : listeners) {
 			listener.onStart(type, tier, afterUpdate);
 		}
 	});
 
 	@OnlySkyBlock
-	public static final Event<SlayerQuestFail> SLAYER_QUEST_FAIL = EventFactory.createArrayBacked(SlayerQuestFail.class, listeners -> (type, tier) -> {
+	public static final Event<@NotNull SlayerQuestFail> SLAYER_QUEST_FAIL = EventFactory.createArrayBacked(SlayerQuestFail.class, listeners -> (type, tier) -> {
 		for (SlayerQuestFail listener : listeners) {
 			listener.onFail(type, tier);
 		}
 	});
 
 	@OnlySkyBlock
-	public static final Event<DungeonStart> DUNGEON_START = EventFactory.createArrayBacked(DungeonStart.class, listeners -> () -> {
+	public static final Event<@NotNull DungeonStart> DUNGEON_START = EventFactory.createArrayBacked(DungeonStart.class, listeners -> () -> {
 		for (DungeonStart listener : listeners) {
 			listener.onDungeonStart();
 		}
 	});
 
 	@OnlySkyBlock
-	public static final Event<DungeonBossSpawn> DUNGEON_BOSS_SPAWN = EventFactory.createArrayBacked(DungeonBossSpawn.class, listeners -> (boss) -> {
+	public static final Event<@NotNull DungeonBossSpawn> DUNGEON_BOSS_SPAWN = EventFactory.createArrayBacked(DungeonBossSpawn.class, listeners -> (boss) -> {
 		for (DungeonBossSpawn listener : listeners) {
 			listener.onBossSpawn(boss);
 		}

@@ -5,13 +5,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.TextRenderState;
-import net.minecraft.client.font.TextDrawable;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.texture.TextureSetup;
+import net.minecraft.client.gui.font.TextRenderable;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.RenderPipelines;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.gui.render.TextureSetup;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -20,37 +20,37 @@ public final class TextRendererCommand implements RendererCommand<TextRenderStat
 	@Override
 	public void emit(@NotNull TextRenderState state, @NotNull CameraRenderState camera) {
 		RenderPipeline pipeline = state.throughBlocks()
-				? RenderPipelines.RENDERTYPE_TEXT_SEETHROUGH
-				: RenderPipelines.RENDERTYPE_TEXT;
+				? RenderPipelines.TEXT_SEE_THROUGH
+				: RenderPipelines.TEXT;
 
-		double dx = state.pos().getX() - camera.pos.getX();
-		double dy = state.pos().getY() - camera.pos.getY();
-		double dz = state.pos().getZ() - camera.pos.getZ();
+		double dx = state.pos().x() - camera.pos.x();
+		double dy = state.pos().y() - camera.pos.y();
+		double dz = state.pos().z() - camera.pos.z();
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) dx, (float) dy, (float) dz)
 				.rotate(camera.orientation)
 				.scale(state.scale(), -state.scale(), state.scale());
 
-		state.glyphs().draw(new TextRenderer.GlyphDrawer() {
+		state.glyphs().visit(new Font.GlyphVisitor() {
 			@Override
-			public void drawGlyph(TextDrawable.DrawnGlyphRect glyph) {
+			public void acceptGlyph(TextRenderable.Styled glyph) {
 				this.draw(glyph);
 			}
 
 			@Override
-			public void drawRectangle(TextDrawable rect) {
+			public void acceptEffect(TextRenderable rect) {
 				this.draw(rect);
 			}
 
-			private void draw(@NotNull TextDrawable glyph) {
-				TextureSetup textureSetup = TextureSetup.of(
+			private void draw(@NotNull TextRenderable glyph) {
+				TextureSetup textureSetup = TextureSetup.singleTexture(
 						glyph.textureView(),
-						RenderSystem.getSamplerCache().get(FilterMode.NEAREST)
+						RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)
 				);
 
 				BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline, textureSetup);
-				glyph.render(matrix4f, buffer, LightmapTextureManager.MAX_LIGHT_COORDINATE, false);
+				glyph.render(matrix4f, buffer, LightTexture.FULL_BRIGHT, false);
 			}
 		});
 	}

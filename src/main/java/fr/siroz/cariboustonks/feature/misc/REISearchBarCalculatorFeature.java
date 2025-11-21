@@ -8,12 +8,12 @@ import fr.siroz.cariboustonks.util.Calculator;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,15 +33,15 @@ public class REISearchBarCalculatorFeature extends Feature {
 	}
 
 	@EventHandler(event = "ScreenEvents.BEFORE_INIT")
-	private void onScreenBeforeInit(MinecraftClient client, Screen screen, int scaledWidth, int scaledHeight) {
-		if (isEnabled() && screen instanceof HandledScreen<?> handledScreen) {
+	private void onScreenBeforeInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight) {
+		if (isEnabled() && screen instanceof AbstractContainerScreen<?> handledScreen) {
 			ScreenEvents.afterRender(screen).register((_screen, context, mouseX, mouseY, tickDelta) -> {
 				String searchBarText = RoughlyEnoughItemsIntegration.getSearchBarText();
 				if (searchBarText == null || searchBarText.isBlank() || !searchBarText.matches(".*\\d.*")) {
 					return;
 				}
 
-				Text calculatorTextResult = getCalculatorTextResult(searchBarText);
+				Component calculatorTextResult = getCalculatorTextResult(searchBarText);
 				if (calculatorTextResult.getString().contains("=")) {
 					draw(context, handledScreen, calculatorTextResult);
 				}
@@ -49,11 +49,11 @@ public class REISearchBarCalculatorFeature extends Feature {
 		}
 	}
 
-	private @NotNull Text getCalculatorTextResult(String searchBarFieldText) {
+	private @NotNull Component getCalculatorTextResult(String searchBarFieldText) {
 		String result = calculate(searchBarFieldText);
-		return result == null ? Text.empty() : Text.literal(searchBarFieldText).formatted(Formatting.GREEN)
-				.append(Text.literal(" = ").formatted(Formatting.YELLOW))
-				.append(Text.literal(result).formatted(Formatting.GREEN));
+		return result == null ? Component.empty() : Component.literal(searchBarFieldText).withStyle(ChatFormatting.GREEN)
+				.append(Component.literal(" = ").withStyle(ChatFormatting.YELLOW))
+				.append(Component.literal(result).withStyle(ChatFormatting.GREEN));
 	}
 
 	private @Nullable String calculate(String searchBarInput) {
@@ -71,10 +71,10 @@ public class REISearchBarCalculatorFeature extends Feature {
 		return lastCalculatorResult;
 	}
 
-	private void draw(@NotNull DrawContext context, @NotNull HandledScreen<?> handledScreen, Text displayText) {
+	private void draw(@NotNull GuiGraphics context, @NotNull AbstractContainerScreen<?> handledScreen, Component displayText) {
 		int x = RoughlyEnoughItemsIntegration.isSearchBarAtBottomSide() ? handledScreen.width / 2 + 90 : handledScreen.width / 2 - 80;
 		int y = handledScreen.height - 32;
 
-		context.drawText(MinecraftClient.getInstance().textRenderer, displayText, x, y, Colors.WHITE.asInt(), false);
+		context.drawString(Minecraft.getInstance().font, displayText, x, y, Colors.WHITE.asInt(), false);
 	}
 }

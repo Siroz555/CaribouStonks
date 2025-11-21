@@ -4,8 +4,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import net.minecraft.client.gui.screen.SplashTextRenderer;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.SplashRenderer;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,16 +15,16 @@ public final class SplashTextSupplier {
 	private static SplashTextSupplier instance;
 
 	@Nullable
-	private SplashTextRenderer splashText = null;
+	private SplashRenderer splashText = null;
 
-	private static final List<SplashTextRenderer> PREDEFINED_SPLASH = List.of(
-			new SplashTextRenderer(Text.literal("/visit Siroz555")),
-			new SplashTextRenderer(Text.literal("Crafting like a French baker")),
-			new SplashTextRenderer(Text.literal("Foraging Update?")),
-			new SplashTextRenderer(Text.literal("3-5 Business days")),
-			new SplashTextRenderer(Text.literal("Galatea!")),
-			new SplashTextRenderer(Text.literal("People want to stay in 1.8 when the latest versions are better for SkyBlock ;'(")),
-			new SplashTextRenderer(Text.literal("SkyBlock!"))
+	private static final List<SplashRenderer> PREDEFINED_SPLASH = List.of(
+			new SplashRenderer(Component.literal("/visit Siroz555")),
+			new SplashRenderer(Component.literal("Crafting like a French baker")),
+			new SplashRenderer(Component.literal("Foraging Update?")),
+			new SplashRenderer(Component.literal("3-5 Business days")),
+			new SplashRenderer(Component.literal("Galatea!")),
+			new SplashRenderer(Component.literal("People want to stay in 1.8 when the latest versions are better for SkyBlock ;'(")),
+			new SplashRenderer(Component.literal("SkyBlock!"))
 	);
 
 	private SplashTextSupplier() {
@@ -33,7 +33,7 @@ public final class SplashTextSupplier {
 		int month = today.get(Calendar.MONTH);
 
 		if (day == 11 && month == Calendar.JUNE) {
-			this.splashText = new SplashTextRenderer(Text.literal("Happy birthday SkyBlock!"));
+			this.splashText = new SplashRenderer(Component.literal("Happy birthday SkyBlock!"));
 			return;
 		}
 
@@ -48,7 +48,7 @@ public final class SplashTextSupplier {
 	}
 
 	@Contract(pure = true)
-	public @NotNull Optional<SplashTextRenderer> get() {
+	public @NotNull Optional<SplashRenderer> get() {
 		return Optional.ofNullable(splashText);
 	}
 }

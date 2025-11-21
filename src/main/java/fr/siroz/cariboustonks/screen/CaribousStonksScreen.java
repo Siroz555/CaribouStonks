@@ -3,24 +3,33 @@ package fr.siroz.cariboustonks.screen;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.crash.CrashType;
 import fr.siroz.cariboustonks.util.Client;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * Base Mod Screen.
+ *
+ * <li>{@link #onInit()}</li>
+ * <li>{@link #onRender(GuiGraphics, int, int, float)}</li>
+ * <li>{@link #onMouseClicked(MouseButtonEvent, boolean)}</li>
+ * <li>{@link #close()}</li>
+ */
 public abstract class CaribousStonksScreen extends Screen {
 
-	protected static final Text CONFIRM_SCREEN_UNSAVED_CHANGE = Text.literal("Unsaved Changes");
-	protected static final Text CONFIRM_SCREEN_PROMPT = Text.literal("Are you sure you want to exit this screen? Any changes will not be saved!");
-	protected static final Text CONFIRM_SCREEN_QUIT_MESSAGE = Text.literal("Quit & Discard Changes");
+	protected static final Component CONFIRM_SCREEN_UNSAVED_CHANGE = Component.literal("Unsaved Changes");
+	protected static final Component CONFIRM_SCREEN_PROMPT = Component.literal("Are you sure you want to exit this screen? Any changes will not be saved!");
+	protected static final Component CONFIRM_SCREEN_QUIT_MESSAGE = Component.literal("Quit & Discard Changes");
 
-	protected CaribousStonksScreen(Text title) {
+	protected CaribousStonksScreen(Component title) {
 		super(title);
 	}
 
 	private void failure(String method, Throwable throwable) {
-		MinecraftClient.getInstance().setScreen(null);
+		Minecraft.getInstance().setScreen(null);
 		CaribouStonks.core().getCrashManager().reportCrash(CrashType.SCREEN,
 				this.getClass().getSimpleName(),
 				this.getClass().getName(),
@@ -42,20 +51,20 @@ public abstract class CaribousStonksScreen extends Screen {
 	}
 
 	@Override
-	public final void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+	public final void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTicks) {
 		try {
-			onRender(context, mouseX, mouseY, deltaTicks);
+			onRender(guiGraphics, mouseX, mouseY, deltaTicks);
 		} catch (Throwable throwable) {
 			failure("render", throwable);
 		}
 	}
 
-	public void onRender(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+	public void onRender(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
 		super.render(context, mouseX, mouseY, deltaTicks);
 	}
 
 	@Override
-	public boolean mouseClicked(Click click, boolean doubled) {
+	public boolean mouseClicked(@NotNull MouseButtonEvent click, boolean doubled) {
 		try {
 			return onMouseClicked(click, doubled);
 		} catch (Throwable throwable) {
@@ -65,25 +74,25 @@ public abstract class CaribousStonksScreen extends Screen {
 		return false;
 	}
 
-	public boolean onMouseClicked(Click click, boolean doubled) {
+	public boolean onMouseClicked(MouseButtonEvent click, boolean doubled) {
 		return super.mouseClicked(click, doubled);
 	}
 
 	@Override
-	public final void close() {
+	public final void onClose() {
 		try {
-			onClose();
+			close();
 		} catch (Throwable throwable) {
 			failure("close", throwable);
 		}
 	}
 
-	public void onClose() {
-		super.close();
+	public void close() {
+		super.onClose();
 	}
 
 	@Override
-	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-		applyBlur(context);
+	public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		renderBlurredBackground(guiGraphics);
 	}
 }

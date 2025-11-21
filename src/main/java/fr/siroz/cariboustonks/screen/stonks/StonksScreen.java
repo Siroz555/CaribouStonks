@@ -14,26 +14,26 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.LoadingDisplay;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.client.gui.widget.SimplePositioningWidget;
-import net.minecraft.client.gui.widget.TextWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Language;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.LoadingDotsText;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.Identifier;
+import net.minecraft.locale.Language;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -41,10 +41,10 @@ import org.jetbrains.annotations.NotNull;
 public class StonksScreen extends CaribousStonksScreen {
 
 	private static final Identifier MENU_LIST_BACKGROUND_TEXTURE
-			= Identifier.ofVanilla("textures/gui/inworld_menu_list_background.png");
+			= Identifier.withDefaultNamespace("textures/gui/inworld_menu_list_background.png");
 
 	private final ItemStack icon;
-	private final Text itemName;
+	private final Component itemName;
 
 	private InformationWidget itemInformationWidget;
 	private GraphWidget itemGraphWidget;
@@ -54,15 +54,15 @@ public class StonksScreen extends CaribousStonksScreen {
 	private volatile boolean notFound = false;
 
 	private StonksScreen(@NotNull ItemLookupKey key) {
-		super(Text.literal("Stonks"));
+		super(Component.literal("Stonks"));
 
 		HypixelDataSource hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
 		Optional<SkyBlockItemData> item = hypixelDataSource.getSkyBlockItemOptional(key.hypixelSkyBlockId());
 		if (item.isPresent()) {
-			this.itemName = Text.literal(item.get().name()).formatted(item.get().tier().getFormatting());
+			this.itemName = Component.literal(item.get().name()).withStyle(item.get().tier().getFormatting());
 			this.icon = hypixelDataSource.getItemStack(item.get().skyBlockId());
 		} else {
-			this.itemName = Text.literal(key.hypixelSkyBlockId() != null ? key.hypixelSkyBlockId() : "? ? ?");
+			this.itemName = Component.literal(key.hypixelSkyBlockId() != null ? key.hypixelSkyBlockId() : "? ? ?");
 			this.icon = new ItemStack(Items.BARRIER);
 		}
 
@@ -90,75 +90,75 @@ public class StonksScreen extends CaribousStonksScreen {
 
 		CompletableFuture.allOf(graphFuture, informationsFuture).thenRun(() -> {
 			synchronized (this) {
-				clearAndInit();
+				rebuildWidgets();
 			}
 		});
 	}
 
 	@Override
 	protected void onInit() {
-		ThreePartsLayoutWidget header = new ThreePartsLayoutWidget(this, 30, 0);
+		HeaderAndFooterLayout header = new HeaderAndFooterLayout(this, 30, 0);
 
-		Text headerText = graphData != null ? itemName : Text.literal("...").formatted(Formatting.WHITE);
+		Component headerText = graphData != null ? itemName : Component.literal("...").withStyle(ChatFormatting.WHITE);
 
-		header.addHeader(new IconTextWidget(headerText, textRenderer, icon));
+		header.addToHeader(new IconTextWidget(headerText, font, icon));
 
-		GridWidget gridWidget = new GridWidget();
-		gridWidget.getMainPositioner().marginX(5).marginY(2);
-		GridWidget.Adder adder = gridWidget.createAdder(3);
+		GridLayout gridWidget = new GridLayout();
+		gridWidget.defaultCellSetting().paddingHorizontal(5).paddingVertical(2);
+		GridLayout.RowHelper adder = gridWidget.createRowHelper(3);
 
-		Text granularity = itemGraphWidget != null
-				? Text.literal(itemGraphWidget.getGranularity()).formatted(Formatting.GREEN)
-				: Text.literal("?").formatted(Formatting.BOLD);
+		Component granularity = itemGraphWidget != null
+				? Component.literal(itemGraphWidget.getGranularity()).withStyle(ChatFormatting.GREEN)
+				: Component.literal("?").withStyle(ChatFormatting.BOLD);
 
-		ButtonWidget graphType = ButtonWidget.builder(Text.literal("Graph type : ").append(granularity), b -> {
+		Button graphType = Button.builder(Component.literal("Graph type : ").append(granularity), b -> {
 			if (itemGraphWidget != null && itemGraphWidget.updateGranularity()) {
-				refreshWidgetPositions();
+				repositionElements();
 			}
-		}).tooltip(Tooltip.of(Text.literal("Change Graph Display")
+		}).tooltip(Tooltip.create(Component.literal("Change Graph Display")
 				.append("\n\n")
 				.append("Hour: Price of 1 hour").append("\n")
 				.append("Day: Price of 1 day").append("\n")
 				.append("Week: Price of 1 week").append("\n")
 				.append("Month: Price of 1 month")
 		)).build();
-		adder.add(graphType);
+		adder.addChild(graphType);
 
-		ButtonWidget search = ButtonWidget.builder(Text.literal("Search an item.."), _b ->
-				Objects.requireNonNull(client).setScreen(new StonksSearchScreen(null))
+		Button search = Button.builder(Component.literal("Search an item.."), _b ->
+				Objects.requireNonNull(minecraft).setScreen(new StonksSearchScreen(null))
 		).build();
-		adder.add(search);
+		adder.addChild(search);
 
-		ButtonWidget buttonDone = ButtonWidget.builder(ScreenTexts.DONE, _b -> close()).build();
-		adder.add(buttonDone);
+		Button buttonDone = Button.builder(CommonComponents.GUI_DONE, _b -> close()).build();
+		adder.addChild(buttonDone);
 
-		gridWidget.refreshPositions();
-		SimplePositioningWidget.setPos(gridWidget, 0, this.height - 64, this.width, 64);
-		gridWidget.forEachChild(this::addDrawableChild);
+		gridWidget.arrangeElements();
+		FrameLayout.centerInRectangle(gridWidget, 0, this.height - 64, this.width, 64);
+		gridWidget.visitWidgets(this::addRenderableWidget);
 
-		header.refreshPositions();
-		header.forEachChild(this::addDrawableChild);
+		header.arrangeElements();
+		header.visitWidgets(this::addRenderableWidget);
 	}
 
 	@Override
-	public void onRender(DrawContext context, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
 		synchronized (this) {
 			super.onRender(context, mouseX, mouseY, delta);
 		}
 
 		if (graphData == null) {
 			if (notFound) {
-				Text error = Text.literal("Error ;(");
-				int x1 = (getBackgroundWidth() - textRenderer.getWidth(error)) / 2;
+				Component error = Component.literal("Error ;(");
+				int x1 = (getBackgroundWidth() - font.width(error)) / 2;
 				int y1 = getBackgroundHeight() / 2;
-				context.drawTextWithShadow(textRenderer, error, x1, y1, Color.RED.getRGB());
+				context.drawString(font, error, x1, y1, Color.RED.getRGB());
 			} else {
 				showLoadingScreen(context);
 			}
 		}
 
 		// ListWidget background texture
-		context.drawTexture(
+		context.blit(
 				RenderPipelines.GUI_TEXTURED,
 				MENU_LIST_BACKGROUND_TEXTURE,
 				getBackgroundX(), getBackgroundY(),
@@ -170,9 +170,9 @@ public class StonksScreen extends CaribousStonksScreen {
 				32);
 
 		// ListWidget separators textures - header
-		context.drawTexture(
+		context.blit(
 				RenderPipelines.GUI_TEXTURED,
-				Screen.INWORLD_HEADER_SEPARATOR_TEXTURE,
+				Screen.INWORLD_HEADER_SEPARATOR,
 				getBackgroundX(),
 				getBackgroundY() - 2,
 				0.0F,
@@ -183,9 +183,9 @@ public class StonksScreen extends CaribousStonksScreen {
 				2);
 
 		// ListWidget separators textures - footer
-		context.drawTexture(
+		context.blit(
 				RenderPipelines.GUI_TEXTURED,
-				Screen.INWORLD_FOOTER_SEPARATOR_TEXTURE,
+				Screen.INWORLD_FOOTER_SEPARATOR,
 				getBackgroundX(),
 				getBackgroundBottom(),
 				0.0F,
@@ -207,27 +207,27 @@ public class StonksScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onClose() {
-		if (client != null) {
-			client.setScreen(null);
+	public void close() {
+		if (minecraft != null) {
+			minecraft.setScreen(null);
 		}
 	}
 
-	private void showLoadingScreen(DrawContext context) {
-		if (client == null || client.currentScreen == null) {
+	private void showLoadingScreen(GuiGraphics context) {
+		if (minecraft == null || minecraft.screen == null) {
 			return;
 		}
 
-		Text loadingText = Text.literal("Loading..");
+		Component loadingText = Component.literal("Loading..");
 
-		int x1 = (client.currentScreen.width - textRenderer.getWidth(loadingText)) / 2;
+		int x1 = (minecraft.screen.width - font.width(loadingText)) / 2;
 		int y1 = getBackgroundHeight() / 2;
-		context.drawTextWithShadow(textRenderer, loadingText, x1, y1, Colors.WHITE.asInt());
+		context.drawString(font, loadingText, x1, y1, Colors.WHITE.asInt());
 
-		String string = LoadingDisplay.get(Util.getMeasuringTimeMs());
-		int x2 = (client.currentScreen.width - textRenderer.getWidth(string)) / 2;
+		String string = LoadingDotsText.get(Util.getMillis());
+		int x2 = (minecraft.screen.width - font.width(string)) / 2;
 		int y2 = y1 + 9;
-		context.drawTextWithShadow(textRenderer, string, x2, y2, Colors.WHITE.asInt());
+		context.drawString(font, string, x2, y2, Colors.WHITE.asInt());
 	}
 
 	private @NotNull CompletableFuture<Void> fetchItemData(@NotNull ItemLookupKey key) {
@@ -297,36 +297,36 @@ public class StonksScreen extends CaribousStonksScreen {
 		return (int) (getBackgroundHeight() * 1.5);
 	}
 
-	private static class IconTextWidget extends TextWidget {
+	private static class IconTextWidget extends StringWidget {
 
 		private final ItemStack icon;
 
-		IconTextWidget(Text message, TextRenderer textRenderer, ItemStack icon) {
+		IconTextWidget(Component message, Font textRenderer, ItemStack icon) {
 			super(message, textRenderer);
 			this.icon = icon;
 		}
 
 		@Override
-		public void renderWidget(@NotNull DrawContext context, int mouseX, int mouseY, float delta) {
-			Text text = this.getMessage();
-			TextRenderer textRenderer = this.getTextRenderer();
+		public void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
+			Component text = this.getMessage();
+			Font textRenderer = this.getFont();
 
 			int width = this.getWidth();
-			int textWidth = textRenderer.getWidth(text);
+			int textWidth = textRenderer.width(text);
 			float horizontalAlignment = 0.5f;
 			int x = this.getX() + 17 + Math.round(horizontalAlignment * (float) (width - textWidth));
-			int y = this.getY() + (this.getHeight() - textRenderer.fontHeight) / 2;
-			OrderedText orderedText = textWidth > width ? this.trim(text, width) : text.asOrderedText();
+			int y = this.getY() + (this.getHeight() - textRenderer.lineHeight) / 2;
+			FormattedCharSequence orderedText = textWidth > width ? this.trim(text, width) : text.getVisualOrderText();
 
-			context.drawTextWithShadow(textRenderer, orderedText, x, y, Colors.WHITE.asInt());
-			context.drawItem(icon, x - 34, y - 4);
+			context.drawString(textRenderer, orderedText, x, y, Colors.WHITE.asInt());
+			context.renderItem(icon, x - 34, y - 4);
 		}
 
-		private OrderedText trim(Text text, int width) {
-			TextRenderer textRenderer = this.getTextRenderer();
-			StringVisitable stringVisitable = textRenderer.trimToWidth(
-					text, width - textRenderer.getWidth(ScreenTexts.ELLIPSIS));
-			return Language.getInstance().reorder(StringVisitable.concat(stringVisitable, ScreenTexts.ELLIPSIS));
+		private FormattedCharSequence trim(Component text, int width) {
+			Font textRenderer = this.getFont();
+			FormattedText stringVisitable = textRenderer.substrByWidth(
+					text, width - textRenderer.width(CommonComponents.ELLIPSIS));
+			return Language.getInstance().getVisualOrder(FormattedText.composite(stringVisitable, CommonComponents.ELLIPSIS));
 		}
 	}
 }
