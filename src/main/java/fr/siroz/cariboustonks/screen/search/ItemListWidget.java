@@ -197,7 +197,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 	}
 
 	abstract static class Entry extends ObjectSelectionList.Entry<Entry> implements AutoCloseable {
-		public Entry() {
+		Entry() {
 		}
 
 		@Override
@@ -282,7 +282,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 		private static final Component LOADING_LIST_TEXT = Component.literal("Loading..");
 		private final Minecraft client;
 
-		public LoadingEntry(Minecraft client) {
+		LoadingEntry(Minecraft client) {
 			this.client = client;
 		}
 

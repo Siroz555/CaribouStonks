@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import fr.siroz.cariboustonks.util.colors.ColorUtils;
 import fr.siroz.cariboustonks.util.render.gui.Point;
-import java.awt.*;
+import java.awt.Color;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -47,7 +47,7 @@ class GraphWidget extends AbstractStonksWidget {
 	private double minPrice;
 	private double maxPrice;
 
-	public GraphWidget(@NotNull List<ItemPrice> neuData, int width, int height) {
+	GraphWidget(@NotNull List<ItemPrice> neuData, int width, int height) {
 		super(width, height);
 
 		this.granularity = GraphDataFilter.Granularity.DAY;
