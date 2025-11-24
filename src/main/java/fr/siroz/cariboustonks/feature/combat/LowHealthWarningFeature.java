@@ -1,28 +1,46 @@
 package fr.siroz.cariboustonks.feature.combat;
 
+import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.util.colors.ColorUtils;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.border.WorldBorder;
+import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LowHealthWarningFeature extends Feature { // TODO - Mettre uniquement le rendu et PAS une vraie border
+public class LowHealthWarningFeature extends Feature {
 
 	private static final Pattern HEALTH_ACTION_BAR_PATTERN = Pattern.compile(
 			"§[6c](?<health>[\\d,]+)/(?<max>[\\d,]+)❤ *(?<healing>\\+§c([\\d,]+). *)?");
+
+	// SIROZ-NOTE: Y mettre dans la config maybe
+	private static final double INTENSITY = 0.69d;
+	private static final float SPEED = 2f;
+
+	private static final int MAX_ALPHA = 200;
+	private static final int MAX_THICKNESS = 120;
 
 	private Health currentHealth = Health.DEFAULT;
 	private boolean triggered = false;
 
 	public LowHealthWarningFeature() {
 		ClientReceiveMessageEvents.ALLOW_GAME.register(this::allowActionBar);
+		HudElementRegistry.attachElementAfter(
+				VanillaHudElements.MISC_OVERLAYS,
+				CaribouStonks.identifier("low_health_overlay"),
+				(guiGraphics, _deltaTracker) -> this.renderOverlay(guiGraphics)
+		);
 	}
 
 	@Override
@@ -55,6 +73,32 @@ public class LowHealthWarningFeature extends Feature { // TODO - Mettre uniqueme
 		updateHealth(currentHealth.value, currentHealth.max, currentHealth.overflow);
 	}
 
+	private void renderOverlay(GuiGraphics guiGraphics) {
+		if (!triggered) return;
+
+		int width = guiGraphics.guiWidth();
+		int height = guiGraphics.guiHeight();
+
+		int thickness = (int) (MAX_THICKNESS * INTENSITY);
+		thickness = Math.max(8, Math.min(thickness, Math.min(width, height) / 2));
+
+		double currentTime = Util.getMillis() / 1000.0;
+		float lerpedAmount = Math.abs(Mth.sin((float) (currentTime * SPEED)));
+
+		int alpha = (int) (MAX_ALPHA * INTENSITY);
+
+		for (int i = 0; i < thickness; i++) {
+			float t = 1.0f - ((float) i / (float) thickness); // 1.0 sur les bords → 0.0 vers le centre
+			int a = (int) (alpha * t);
+			int lerpedColor = (a << 24) | ColorUtils.lerpRGB(0x00FF0000, 0x00A40000, lerpedAmount);
+
+			guiGraphics.fill(0, i, width, i + 1, lerpedColor); // top
+			guiGraphics.fill(0, height - i - 1, width, height - i, lerpedColor); // bottom
+			guiGraphics.fill(i, 0, i + 1, height, lerpedColor); // left
+			guiGraphics.fill(width - i - 1, 0, width - i, height, lerpedColor); // right
+		}
+	}
+
 	private void updateHealth(@NotNull Matcher matcher) {
 		try {
 			int health = Integer.parseInt(matcher.group("health").replace(",", ""));
@@ -79,41 +123,9 @@ public class LowHealthWarningFeature extends Feature { // TODO - Mettre uniqueme
 			int configThreshold = ConfigManager.getConfig().combat.lowHealthWarning.lowHealthWarningThreshold;
 			int threshold = (int) (currentHealth.max * (configThreshold / 100.0D));
 
-			if (currentHealth.value <= threshold) {
-				triggerLowHealthWarning();
-			} else {
-				if (triggered) {
-					remove();
-				}
-
-				triggered = false;
-			}
+			triggered = currentHealth.value <= threshold;
 		} catch (Exception ignored) { // valeurs négatives ou max incorrect, techniquement useless ?
 		}
-	}
-
-	private void triggerLowHealthWarning() {
-		if (triggered) return;
-		triggered = true;
-		show();
-	}
-
-	private void show() {
-		if (CLIENT.player == null) return;
-
-		// C'est incroyable de faire comme ça, mais bon ça marche lul
-		WorldBorder worldBorder = CLIENT.player.level().getWorldBorder();
-		worldBorder.setSize(1D);
-		worldBorder.setCenter(CLIENT.player.getX() + 5_555, CLIENT.player.getZ() + 5_555);
-	}
-
-	private void remove() {
-		if (CLIENT.player == null) return;
-		WorldBorder.Settings properties = WorldBorder.Settings.DEFAULT;
-		WorldBorder worldBorder = CLIENT.player.level().getWorldBorder();
-
-		worldBorder.setCenter(properties.centerX(), properties.centerZ());
-		worldBorder.setSize(properties.size());
 	}
 
 	private record Health(int value, int max, int overflow) {
