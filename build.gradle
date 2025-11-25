@@ -62,17 +62,17 @@ repositories {
 		}
 	}
 
-	exclusiveContent {
-		forRepository {
-			maven {
-				url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
-			}
-		}
-
-		filter {
-			includeGroup("me.djtheredstoner")
-		}
-	}
+//	exclusiveContent {
+//		forRepository {
+//			maven {
+//				url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
+//			}
+//		}
+//
+//		filter {
+//			includeGroup("me.djtheredstoner")
+//		}
+//	}
 }
 
 dependencies {
