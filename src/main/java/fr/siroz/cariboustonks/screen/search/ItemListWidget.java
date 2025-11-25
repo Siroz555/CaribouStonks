@@ -35,7 +35,7 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
+class ItemListWidget extends ObjectSelectionList<ItemListWidget.@NotNull Entry> {
 
 	private final StonksSearchScreen parent;
 
@@ -113,13 +113,13 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 	}
 
 	@Override
-	public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		List<ItemSummary> itemsList = tryGet();
 		if (itemsList != items) {
 			show(itemsList);
 		}
 
-		super.renderWidget(context, mouseX, mouseY, delta);
+		super.renderWidget(guiGraphics, mouseX, mouseY, delta);
 	}
 
 	private void show(@Nullable List<ItemSummary> items) {
@@ -196,7 +196,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 		}
 	}
 
-	abstract static class Entry extends ObjectSelectionList.Entry<Entry> implements AutoCloseable {
+	abstract static class Entry extends ObjectSelectionList.Entry<@NotNull Entry> implements AutoCloseable {
 		Entry() {
 		}
 
@@ -216,36 +216,33 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 		}
 
 		@Override
-		public Component getNarration() {
+		public @NotNull Component getNarration() {
 			return Component.literal("Select " + item.name());
 		}
 
-		public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			if (this.client == null || this.client.font == null) {
-				return;
-			}
-
+		@Override
+		public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			String displayName = item.name();
 			String name = item.hypixelSkyBlockId();
 			Color color = item.color().getColor() == null ? Colors.WHITE : Color.fromFormatting(item.color());
 
-			context.drawString(this.client.font, displayName, this.getContentX() + 32 + 3, this.getContentY() + 1, color.asInt());
+			guiGraphics.drawString(this.client.font, displayName, this.getContentX() + 32 + 3, this.getContentY() + 1, color.asInt());
 			int x1 = this.getContentX() + 32 + 3;
-			context.drawString(this.client.font, name, x1, this.getContentY() + 9 + 3, Color.fromHexString("#7f7f80").asInt());
+			guiGraphics.drawString(this.client.font, name, x1, this.getContentY() + 9 + 3, Color.fromHexString("#7f7f80").asInt());
 
 			//context.drawItem(item.icon(), x + 7, y + 7);
 
 			if (hovered) {
-				context.fill(this.getContentX(), this.getContentY(), this.getContentX() + 32, this.getContentY() + 32, -1601138544);
+				guiGraphics.fill(this.getContentX(), this.getContentY(), this.getContentX() + 32, this.getContentY() + 32, -1601138544);
 				int x2 = mouseX - this.getContentX();
 				if (x2 < 32) {
-					context.blitSprite(RenderPipelines.GUI_TEXTURED, ItemListWidget.HIGHLIGHTED_TEXTURE, this.getContentX(), this.getContentY(), 32, 32);
+					guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, ItemListWidget.HIGHLIGHTED_TEXTURE, this.getContentX(), this.getContentY(), 32, 32);
 				} else {
-					context.renderItem(item.icon(), this.getContentX() + 7, this.getContentY() + 7);
-					context.blitSprite(RenderPipelines.GUI_TEXTURED, ItemListWidget.TEXTURE, this.getContentX(), this.getContentY(), 32, 32);
+					guiGraphics.renderItem(item.icon(), this.getContentX() + 7, this.getContentY() + 7);
+					guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, ItemListWidget.TEXTURE, this.getContentX(), this.getContentY(), 32, 32);
 				}
 			} else {
-				context.renderItem(item.icon(), this.getContentX() + 7, this.getContentY() + 7);
+				guiGraphics.renderItem(item.icon(), this.getContentX() + 7, this.getContentY() + 7);
 			}
 		}
 
@@ -287,22 +284,23 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 		}
 
 		@Override
-		public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			if (this.client == null || this.client.screen == null || this.client.font == null) {
+		public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+			if (this.client == null || this.client.screen == null) {
 				return;
 			}
 
 			int x1 = (this.client.screen.width - this.client.font.width(LOADING_LIST_TEXT)) / 2;
 			int y1 = this.getY() + (this.getHeight() - 9) / 2;
-			context.drawString(this.client.font, LOADING_LIST_TEXT, x1, y1,  Colors.WHITE.asInt());
+			guiGraphics.drawString(this.client.font, LOADING_LIST_TEXT, x1, y1,  Colors.WHITE.asInt());
 
 			String string = LoadingDotsText.get(Util.getMillis());
 			int x2 = (this.client.screen.width - this.client.font.width(string)) / 2;
 			int y2 = y1 + 9;
-			context.drawString(this.client.font, string, x2, y2, Colors.GRAY.asInt());
+			guiGraphics.drawString(this.client.font, string, x2, y2, Colors.GRAY.asInt());
 		}
 
-		public Component getNarration() {
+		@Override
+		public @NotNull Component getNarration() {
 			return LOADING_LIST_TEXT;
 		}
 	}

@@ -43,21 +43,19 @@ public class StonksSearchScreen extends CaribousStonksScreen {
 								.ifPresent(ItemListWidget.ItemEntry::load))
 				.bounds(this.width / 2 - 154, this.height - 38, 150, 20).build()); // 52
 
-		addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, (b) -> {
-			if (this.minecraft != null) {
-				this.minecraft.setScreen(parent);
-			}
-		}).bounds(this.width / 2 + 4, this.height - 38, 150, 20).build()); // 52
+		addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, (b) -> this.minecraft.setScreen(parent))
+				.bounds(this.width / 2 + 4, this.height - 38, 150, 20)
+				.build()); // 52
 
 		itemSelected(null);
 	}
 
 	@Override
-	public void onRender(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
-		super.onRender(context, mouseX, mouseY, deltaTicks);
-		searchBox.render(context, mouseX, mouseY, deltaTicks);
+	public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTicks) {
+		super.onRender(guiGraphics, mouseX, mouseY, deltaTicks);
+		searchBox.render(guiGraphics, mouseX, mouseY, deltaTicks);
 		Component title = Component.literal("Search for a SkyBlock item (" + this.totalSkyBlockItemsCount + " items)");
-		context.drawCenteredString(this.font, title, this.width / 2, 8, Colors.WHITE.asInt());
+		guiGraphics.drawCenteredString(this.font, title, this.width / 2, 8, Colors.WHITE.asInt());
 	}
 
 	@Override
@@ -67,9 +65,7 @@ public class StonksSearchScreen extends CaribousStonksScreen {
 
 	@Override
 	public void close() {
-		if (this.minecraft != null) {
-			this.minecraft.setScreen(parent);
-		}
+		this.minecraft.setScreen(parent);
 	}
 
 	public void itemSelected(Object o) {

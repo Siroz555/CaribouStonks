@@ -20,7 +20,7 @@ import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutListWidget.KeyShortcutEntry> {
+class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutListWidget.@NotNull KeyShortcutEntry> {
 
 	private final KeyShortcutScreen parent;
 
@@ -69,7 +69,7 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 		}
 	}
 
-	protected class KeyShortcutEntry extends ContainerObjectSelectionList.Entry<KeyShortcutEntry> {
+	protected class KeyShortcutEntry extends ContainerObjectSelectionList.Entry<@NotNull KeyShortcutEntry> {
 
 		protected KeyShortcut keyShortcut;
 
@@ -102,24 +102,25 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 		}
 
 		@Override
-		public List<? extends NarratableEntry> narratables() {
+		public @NotNull List<? extends NarratableEntry> narratables() {
 			return children;
 		}
 
 		@Override
-		public List<? extends GuiEventListener> children() {
+		public @NotNull List<? extends GuiEventListener> children() {
 			return children;
 		}
 
-		public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		@Override
+		public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			// Vu que le Widget n'est pas un AlwaysSelectedEntryListWidget, le rendu ne se fait pas.
 			// Et si c'était le cas, la facon de gérer les ElementListWidget-Entry change.
 			// La facon de gérer les screen me rend fou -_-
 			if (getSelected() != null && getSelected() == this) {
 				int x1 = this.getX();
 				int x2 = this.getX() + this.getContentWidth();
-				context.fill(x1, this.getY() - 6, x2, this.getY() + this.getHeight() - 4, Colors.GRAY.asInt());
-				context.fill(x1 + 1, this.getY() - 5, x2 - 1, this.getY() + this.getHeight() - 5, Colors.BLACK.asInt());
+				guiGraphics.fill(x1, this.getY() - 6, x2, this.getY() + this.getHeight() - 4, Colors.GRAY.asInt());
+				guiGraphics.fill(x1 + 1, this.getY() - 5, x2 - 1, this.getY() + this.getHeight() - 5, Colors.BLACK.asInt());
 			}
 
 			commandWidget.setPosition(this.getX() + 10, this.getY() + 1);
@@ -152,17 +153,17 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 			keyBindWidget.setMessage(message);
 
 			for (AbstractWidget child : children) {
-				child.render(context, mouseX, mouseY, deltaTicks);
+				child.render(guiGraphics, mouseX, mouseY, deltaTicks);
 			}
 		}
 
 		@Override
-		public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
-			if (keyBindWidget.mouseClicked(click, doubled)) {
+		public boolean mouseClicked(@NotNull MouseButtonEvent button, boolean doubled) {
+			if (keyBindWidget.mouseClicked(button, doubled)) {
 				return true;
 			}
 
-			return super.mouseClicked(click, doubled);
+			return super.mouseClicked(button, doubled);
 		}
 	}
 }

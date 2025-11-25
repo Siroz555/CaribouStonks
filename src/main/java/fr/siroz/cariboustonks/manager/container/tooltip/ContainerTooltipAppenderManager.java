@@ -53,18 +53,18 @@ public final class ContainerTooltipAppenderManager implements Manager {
 	private void onTooltipCallback(
             ItemStack stack,
             Item.TooltipContext tooltipContext,
-            TooltipFlag tooltipType,
+            TooltipFlag _flags,
             List<Component> lines
 	) {
-		if (Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> handledScreen) {
-			appendToTooltip(((AbstractContainerScreenAccessor) handledScreen).getFocusedSlot(), stack, lines);
+		if (Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> containerScreen) {
+			appendToTooltip(((AbstractContainerScreenAccessor) containerScreen).getFocusedSlot(), stack, lines);
 		} else {
 			appendToTooltip(null, stack, lines);
 		}
 	}
 
 	@EventHandler(event = "ScreenEvents.AFTER_INIT")
-	private void onAfterInit(Minecraft minecraftClient, Screen screen, int scaledWidth, int scaledHeight) {
+	private void onAfterInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight) {
 		currentContainerTooltips.clear();
 		for (Map.Entry<Feature, ContainerTooltipAppender> appender : tooltipAppenderMap.entrySet()) {
 			if (appender.getKey().isEnabled()) {

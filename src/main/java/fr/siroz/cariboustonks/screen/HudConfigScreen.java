@@ -39,35 +39,35 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
-		super.onRender(context, mouseX, mouseY, delta);
-		renderInformations(context);
-		renderElements(context);
+	public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		super.onRender(guiGraphics, mouseX, mouseY, delta);
+		renderInformations(guiGraphics);
+		renderElements(guiGraphics);
 	}
 
-	private void renderInformations(@NotNull GuiGraphics context) {
+	private void renderInformations(@NotNull GuiGraphics guiGraphics) {
 		int baseY = font.lineHeight * 8;
 		int lineSpacing = font.lineHeight + 4;
 		int y = baseY;
-		context.drawCenteredString(font,
+		guiGraphics.drawCenteredString(font,
 				"LEFT-CLICK to select an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
-		context.drawCenteredString(font,
+		guiGraphics.drawCenteredString(font,
 				"RIGHT-CLICK to unselect an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
-		context.drawCenteredString(font,
+		guiGraphics.drawCenteredString(font,
 				"Press +/- to scale an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
-		context.drawCenteredString(font,
+		guiGraphics.drawCenteredString(font,
 				"Press R to reset an HUD's position & scale", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
-		context.drawCenteredString(font,
+		guiGraphics.drawCenteredString(font,
 				"Press TAB to cycle between HUDs", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 	}
 
-	private void renderElements(@NotNull GuiGraphics context) {
+	private void renderElements(@NotNull GuiGraphics guiGraphics) {
 		for (Hud hud : hudList) {
-			hud.renderScreen(context);
+			hud.renderScreen(guiGraphics);
 		}
 
 		if (selected != null) {
@@ -83,7 +83,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			int bWidth = Math.min(x + width + 2, this.width) - bX;
 			int bHeight = Math.min(y + height + 2, this.height) - bY;
 
-			GuiRenderer.drawBorder(context, bX, bY, bWidth, bHeight, Colors.RED.asInt());
+			GuiRenderer.drawBorder(guiGraphics, bX, bY, bWidth, bHeight, Colors.RED.asInt());
 		}
 	}
 
@@ -116,7 +116,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public boolean mouseDragged(MouseButtonEvent click, double offsetX, double offsetY) {
+	public boolean mouseDragged(@NotNull MouseButtonEvent click, double offsetX, double offsetY) {
 		if (selected != null && click.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
 			selected.setX((int) Math.clamp(click.x() - (selected.width() >> 1), 0, this.width - selected.width()));
 			selected.setY((int) Math.clamp(click.y() - (selected.height() >> 1), 0, this.height - selected.height()));
@@ -186,7 +186,6 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			ConfigManager.saveConfig();
 		}
 
-		assert minecraft != null;
 		minecraft.setScreen(parent);
 	}
 }

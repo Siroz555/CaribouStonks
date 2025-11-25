@@ -75,7 +75,7 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 
 	@Override
 	protected void onInit() {
-		boolean isWorldLoaded = this.minecraft != null && this.minecraft.level != null;
+		boolean isWorldLoaded = this.minecraft.level != null;
 		if (!isWorldLoaded || !ConfigManager.getConfig().vanilla.itemModelCustomization.enabled) {
 			layout = new HeaderAndFooterLayout(this);
 			layout.addToHeader(new StringWidget(this.getTitle(), this.font));
@@ -160,22 +160,22 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void renderBackground(@NotNull GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
+	public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTicks) {
 		ScreenRectangle dimensions = getEffectiveDimensions(this.width, this.height);
 
-		context.enableScissor(dimensions.left(), dimensions.top(), dimensions.right(), dimensions.bottom());
+		guiGraphics.enableScissor(dimensions.left(), dimensions.top(), dimensions.right(), dimensions.bottom());
 		GuiRenderer.enableBlurScissor(dimensions.left(), dimensions.top(), dimensions.width(), dimensions.height());
-		this.renderBlurredBackground(context);
-		this.renderMenuBackground(context);
-		context.disableScissor();
+		this.renderBlurredBackground(guiGraphics);
+		this.renderMenuBackground(guiGraphics);
+		guiGraphics.disableScissor();
 
-		context.vLine(
+		guiGraphics.vLine(
 				isMainHand() ? dimensions.right() : dimensions.left(),
 				dimensions.top() - 1,
 				dimensions.bottom(),
 				new Color(0, 0, 0).withAlpha(190).asInt());
 
-		context.vLine(
+		guiGraphics.vLine(
 				isMainHand() ? dimensions.right() - 1 : dimensions.left() + 1,
 				dimensions.top() - 1,
 				dimensions.bottom(),
@@ -191,19 +191,17 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 
 	@Override
 	public void close() {
-		if (this.minecraft != null) {
-			if (changed) {
-				this.minecraft.setScreen(new ConfirmScreen(confirmation -> {
-					if (confirmation) {
-						revert();
-						this.minecraft.setScreen(parent);
-					} else {
-						this.minecraft.setScreen(this);
-					}
-				}, CONFIRM_SCREEN_UNSAVED_CHANGE, CONFIRM_SCREEN_PROMPT, CONFIRM_SCREEN_QUIT_MESSAGE, CommonComponents.GUI_CANCEL));
-			} else {
-				this.minecraft.setScreen(parent);
-			}
+		if (changed) {
+			this.minecraft.setScreen(new ConfirmScreen(confirmation -> {
+				if (confirmation) {
+					revert();
+					this.minecraft.setScreen(parent);
+				} else {
+					this.minecraft.setScreen(this);
+				}
+			}, CONFIRM_SCREEN_UNSAVED_CHANGE, CONFIRM_SCREEN_PROMPT, CONFIRM_SCREEN_QUIT_MESSAGE, CommonComponents.GUI_CANCEL));
+		} else {
+			this.minecraft.setScreen(parent);
 		}
 	}
 

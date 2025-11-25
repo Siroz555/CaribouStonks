@@ -36,17 +36,17 @@ public class ChangelogScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
-		super.onRender(context, mouseX, mouseY, delta);
-		context.drawCenteredString(font,
+	public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		super.onRender(guiGraphics, mouseX, mouseY, delta);
+		guiGraphics.drawCenteredString(font,
 				Component.literal("✨ What's new since your last visit ✨").withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD),
 				this.width / 2, 10, Colors.WHITE.asInt());
 
 		if (changelogs.isEmpty()) {
-			context.drawCenteredString(font,
+			guiGraphics.drawCenteredString(font,
 					Component.literal("You are on the latest version!").withStyle(ChatFormatting.GREEN),
 					this.width / 2, 50, Colors.WHITE.asInt());
-			context.drawCenteredString(font, Component.empty()
+			guiGraphics.drawCenteredString(font, Component.empty()
 							.append(Component.literal("To see the latest changes, visit ").withStyle(ChatFormatting.GRAY))
 							.append(Component.literal("https://modrinth.com/mod/cariboustonks").withStyle(ChatFormatting.AQUA, ChatFormatting.UNDERLINE)),
 					this.width / 2, 69, Colors.WHITE.asInt());
@@ -55,8 +55,6 @@ public class ChangelogScreen extends CaribousStonksScreen {
 
 	@Override
 	public void close() {
-		if (this.minecraft == null) return;
-
 		if (!changelogs.isEmpty()) {
 			onCloseAction.run();
 		}

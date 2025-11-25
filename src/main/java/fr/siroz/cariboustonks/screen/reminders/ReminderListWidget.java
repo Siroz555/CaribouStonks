@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
 
-class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
+class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull Entry> {
 
 	private final ReminderScreen parent;
 
@@ -58,7 +58,7 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 		this.parent.itemSelected(item);
 	}
 
-	protected abstract static class Entry extends ObjectSelectionList.Entry<ReminderListWidget.Entry> {
+	protected abstract static class Entry extends ObjectSelectionList.Entry<ReminderListWidget.@NotNull Entry> {
 		public Entry() {
 		}
 	}
@@ -68,19 +68,19 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 		private static final Component TEXT = Component.literal("No reminders for the moment ;'(");
 
 		@Override
-		public Component getNarration() {
+		public @NotNull Component getNarration() {
 			return Component.literal("Nothing to show");
 		}
 
 		@Override
-		public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			if (minecraft == null || minecraft.screen == null || minecraft.font == null) {
+		public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+			if (minecraft.screen == null) {
 				return;
 			}
 
 			int x1 = (minecraft.screen.width - minecraft.font.width(TEXT)) / 2;
 			int y1 = this.getY() + (this.getHeight() - 9) / 2; // getContentHeight()
-			context.drawString(minecraft.font, TEXT, x1, y1, Colors.WHITE.asInt());
+			guiGraphics.drawString(minecraft.font, TEXT, x1, y1, Colors.WHITE.asInt());
 		}
 	}
 
@@ -112,22 +112,22 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 		}
 
 		@Override
-		public Component getNarration() {
+		public @NotNull Component getNarration() {
 			return Component.literal("Reminder " + name.getString());
 		}
 
 		@Override
-		public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			if (minecraft == null || minecraft.screen == null || minecraft.font == null) {
+		public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+			if (minecraft.screen == null) {
 				return;
 			}
 
-			context.drawString(minecraft.font, name, this.getX() + 32 + 3, this.getY() + 1, Colors.WHITE.asInt());
+			guiGraphics.drawString(minecraft.font, name, this.getX() + 32 + 3, this.getY() + 1, Colors.WHITE.asInt());
 			int x1 = this.getX() + 32 + 3;
-			context.drawString(minecraft.font, expireTime, x1, this.getY() + 12, Colors.WHITE.asInt());
-			context.drawString(minecraft.font, description, x1, this.getY() + 23, Colors.WHITE.asInt());
+			guiGraphics.drawString(minecraft.font, expireTime, x1, this.getY() + 12, Colors.WHITE.asInt());
+			guiGraphics.drawString(minecraft.font, description, x1, this.getY() + 23, Colors.WHITE.asInt());
 
-			context.renderItem(icon, this.getX() + 7, this.getY() + 7);
+			guiGraphics.renderItem(icon, this.getX() + 7, this.getY() + 7);
 		}
 	}
 }

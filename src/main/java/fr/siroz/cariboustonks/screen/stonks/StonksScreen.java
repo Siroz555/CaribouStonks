@@ -141,9 +141,9 @@ public class StonksScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		synchronized (this) {
-			super.onRender(context, mouseX, mouseY, delta);
+			super.onRender(guiGraphics, mouseX, mouseY, delta);
 		}
 
 		if (graphData == null) {
@@ -151,14 +151,14 @@ public class StonksScreen extends CaribousStonksScreen {
 				Component error = Component.literal("Error ;(");
 				int x1 = (getBackgroundWidth() - font.width(error)) / 2;
 				int y1 = getBackgroundHeight() / 2;
-				context.drawString(font, error, x1, y1, Color.RED.getRGB());
+				guiGraphics.drawString(font, error, x1, y1, Color.RED.getRGB());
 			} else {
-				showLoadingScreen(context);
+				showLoadingScreen(guiGraphics);
 			}
 		}
 
 		// ListWidget background texture
-		context.blit(
+		guiGraphics.blit(
 				RenderPipelines.GUI_TEXTURED,
 				MENU_LIST_BACKGROUND_TEXTURE,
 				getBackgroundX(), getBackgroundY(),
@@ -170,7 +170,7 @@ public class StonksScreen extends CaribousStonksScreen {
 				32);
 
 		// ListWidget separators textures - header
-		context.blit(
+		guiGraphics.blit(
 				RenderPipelines.GUI_TEXTURED,
 				Screen.INWORLD_HEADER_SEPARATOR,
 				getBackgroundX(),
@@ -183,7 +183,7 @@ public class StonksScreen extends CaribousStonksScreen {
 				2);
 
 		// ListWidget separators textures - footer
-		context.blit(
+		guiGraphics.blit(
 				RenderPipelines.GUI_TEXTURED,
 				Screen.INWORLD_FOOTER_SEPARATOR,
 				getBackgroundX(),
@@ -197,24 +197,22 @@ public class StonksScreen extends CaribousStonksScreen {
 
 		if (itemGraphWidget != null) {
 			itemGraphWidget.updateWidgetPosition(getGraphWidgetWidth(), getGraphWidgetHeight());
-			itemGraphWidget.render(context, mouseX, mouseY, getBackgroundX(), getBackgroundY());
+			itemGraphWidget.render(guiGraphics, mouseX, mouseY, getBackgroundX(), getBackgroundY());
 		}
 
 		if (itemInformationWidget != null) {
 			itemInformationWidget.updateWidgetPosition(getInformationWidgetWidth(), getInformationWidgetHeight());
-			itemInformationWidget.render(context, mouseX, mouseY, getBackgroundWidth() / 2 + 50, getBackgroundY());
+			itemInformationWidget.render(guiGraphics, mouseX, mouseY, getBackgroundWidth() / 2 + 50, getBackgroundY());
 		}
 	}
 
 	@Override
 	public void close() {
-		if (minecraft != null) {
-			minecraft.setScreen(null);
-		}
+		minecraft.setScreen(null);
 	}
 
 	private void showLoadingScreen(GuiGraphics context) {
-		if (minecraft == null || minecraft.screen == null) {
+		if (minecraft.screen == null) {
 			return;
 		}
 

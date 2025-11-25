@@ -25,11 +25,6 @@ public final class OutlineBoxRendererCommand implements RendererCommand<OutlineB
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());
 
-//		VertexRendering.drawBox(matrices.peek(), buffer,
-//				state.box(),
-//				colorComponents[0], colorComponents[1], colorComponents[2], state.color().getAlpha()
-//		);
-
 		float minX = (float) state.box().minX;
 		float minY = (float) state.box().minY;
 		float minZ = (float) state.box().minZ;

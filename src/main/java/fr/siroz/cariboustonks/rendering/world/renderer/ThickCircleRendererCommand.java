@@ -40,6 +40,7 @@ public final class ThickCircleRendererCommand implements RendererCommand<ThickCi
 
 			buffer.addVertex(matrix4f, xUpper, (float) centerTopPos.y(), zUpper)
 					.setColor(state.color().r, state.color().g, state.color().b, state.color().a);
+
 			buffer.addVertex(matrix4f, xLower, (float) state.center().y(), zLower)
 					.setColor(state.color().r, state.color().g, state.color().b, state.color().a);
 		}

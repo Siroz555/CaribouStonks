@@ -7,6 +7,9 @@ import com.mojang.blaze3d.systems.CommandEncoder;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.GpuTextureView;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.event.RenderEvents;
@@ -27,13 +30,10 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MappableRingBuffer;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.MeshData;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.LevelRenderState;
 import net.minecraft.client.gui.render.TextureSetup;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -84,10 +84,10 @@ public final class CaribouRenderer {
 		worldRenderer.end();
 	}
 
-	public static void executeDraws(LevelRenderState worldRenderState) {
+	public static void executeDraws(LevelRenderState levelRenderState) {
 		if (worldRenderer == null) return;
 
-		worldRenderer.flush(worldRenderState.cameraRenderState);
+		worldRenderer.flush(levelRenderState.cameraRenderState);
 
 		executeDraws();
 	}
@@ -358,12 +358,12 @@ public final class CaribouRenderer {
 		unapplyViewOffsetZLayering();
 	}
 
-	private static GpuBufferSlice setupDynamicTransforms(float lineWidth) {
+	private static GpuBufferSlice setupDynamicTransforms(float ignored) {
 		return RenderSystem.getDynamicUniforms().writeTransform(
 				RenderSystem.getModelViewMatrix(),
 				COLOR_MODULATOR,
 				MODEL_OFFSET,
-				TEXTURE_MATRICE // TODO RenderSystem.getModelViewMatrix()
+				TEXTURE_MATRICE // SIROZ-NOTE RenderSystem.getModelViewMatrix()
 		);
 	}
 

@@ -84,10 +84,10 @@ public final class WorldRendererImpl implements WorldRenderer {
 		if (frozen) return;
 
 		Font textRenderer = Minecraft.getInstance().font;
-		float xOffset = -textRenderer.width(text) / 2f;
-		Font.PreparedText glyphs = textRenderer.prepareText(text, xOffset, offsetY, 0xFFFFFFFF, false, false, 0);
+		float offsetX = -textRenderer.width(text) / 2f;
+		Font.PreparedText preparedText = textRenderer.prepareText(text, offsetX, offsetY, 0xFFFFFFFF, false, false, 0);
 
-		TextRenderState state = new TextRenderState(glyphs, position, scale * 0.025f, offsetY, throughBlocks);
+		TextRenderState state = new TextRenderState(preparedText, position, scale * 0.025f, offsetY, throughBlocks);
 		textRenderStates.add(state);
 	}
 
@@ -220,53 +220,53 @@ public final class WorldRendererImpl implements WorldRenderer {
 	/**
 	 * Flush all renderer commands.
 	 *
-	 * @param camera the camera state
+	 * @param cameraState the camera state
 	 */
-	public void flush(CameraRenderState camera) {
+	public void flush(CameraRenderState cameraState) {
 		if (!frozen) return;
 		// Circles
 		for (CircleRenderState state : circleRenderStates) {
-			circleRendererCommand.emit(state, camera);
+			circleRendererCommand.emit(state, cameraState);
 		}
 		// Thick circles
 		for (ThickCircleRenderState state : thickCircleRenderStates) {
-			thickCircleRendererCommand.emit(state, camera);
+			thickCircleRendererCommand.emit(state, cameraState);
 		}
 		// Quads
 		for (QuadRenderState state : quadRenderStates) {
-			quadRendererCommand.emit(state, camera);
+			quadRendererCommand.emit(state, cameraState);
 		}
 		// Filled
 		for (FilledBoxRenderState state : filledBoxRenderStates) {
-			filledBoxRendererCommand.emit(state, camera);
+			filledBoxRendererCommand.emit(state, cameraState);
 		}
 		// Beacon beams
 		for (BeaconBeamRenderState state : beaconBeamRenderStates) {
-			beaconBeamRendererCommand.emit(state, camera);
+			beaconBeamRendererCommand.emit(state, cameraState);
 		}
 		// Outline boxes
 		for (OutlineBoxRenderState state : outlineBoxRenderStates) {
-			outlineBoxRendererCommand.emit(state, camera);
+			outlineBoxRendererCommand.emit(state, cameraState);
 		}
 		// Lines
 		for (LinesRenderState state : linesRenderStates) {
-			linesRendererCommand.emit(state, camera);
+			linesRendererCommand.emit(state, cameraState);
 		}
 		// Cursor lines
 		for (CursorLineRenderState state : cursorLineRenderStates) {
-			cursorLineRendererCommand.emit(state, camera);
+			cursorLineRendererCommand.emit(state, cameraState);
 		}
 		// Text
 		for (TextRenderState state : textRenderStates) {
-			textRendererCommand.emit(state, camera);
+			textRendererCommand.emit(state, cameraState);
 		}
 		// Textures
 		for (TextureRenderState state : textureRenderStates) {
-			textureRendererCommand.emit(state, camera);
+			textureRendererCommand.emit(state, cameraState);
 		}
 		// Cuboid Outline
 		for (CuboidOutlineRenderState state : cuboidOutlineRenderStates) {
-			cuboidOutlineRendererCommand.emit(state, camera);
+			cuboidOutlineRendererCommand.emit(state, cameraState);
 		}
 	}
 }

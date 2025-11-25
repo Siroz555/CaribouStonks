@@ -32,25 +32,25 @@ public final class TextRendererCommand implements RendererCommand<TextRenderStat
 				.rotate(camera.orientation)
 				.scale(state.scale(), -state.scale(), state.scale());
 
-		state.glyphs().visit(new Font.GlyphVisitor() {
+		state.preparedText().visit(new Font.GlyphVisitor() {
 			@Override
-			public void acceptGlyph(TextRenderable.Styled glyph) {
-				this.draw(glyph);
+			public void acceptGlyph(TextRenderable.@NotNull Styled style) {
+				this.draw(style);
 			}
 
 			@Override
-			public void acceptEffect(TextRenderable rect) {
-				this.draw(rect);
+			public void acceptEffect(@NotNull TextRenderable renderer) {
+				this.draw(renderer);
 			}
 
-			private void draw(@NotNull TextRenderable glyph) {
+			private void draw(@NotNull TextRenderable renderer) {
 				TextureSetup textureSetup = TextureSetup.singleTexture(
-						glyph.textureView(),
+						renderer.textureView(),
 						RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)
 				);
 
 				BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline, textureSetup);
-				glyph.render(matrix4f, buffer, LightTexture.FULL_BRIGHT, false);
+				renderer.render(matrix4f, buffer, LightTexture.FULL_BRIGHT, false);
 			}
 		});
 	}

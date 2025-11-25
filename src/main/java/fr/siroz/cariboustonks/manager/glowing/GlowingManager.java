@@ -22,8 +22,6 @@ import java.util.Map;
  */
 public final class GlowingManager implements Manager {
 
-	// SIROZ-NOTE: Mettre une structure pour glow les blocks avec mon Plugin Bukkit
-
 	private final Map<Feature, EntityGlowProvider> entitiesGlow = new HashMap<>();
 	private final Object2IntMap<Entity> cachedEntities = new Object2IntOpenHashMap<>();
 

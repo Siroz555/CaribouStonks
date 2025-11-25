@@ -123,31 +123,29 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 	}
 
 	private void openScreen(Screen screen) {
-		if (this.minecraft != null) {
-			this.minecraft.setScreen(screen);
-		}
+		this.minecraft.setScreen(screen);
 	}
 
 	@Override
-	public void onRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		//this.renderBackground(context, mouseX, mouseY, delta);
         /*RenderSystem.enableBlend();
         context.drawTexture(BACKGROUND_TEXTURE,
                 0, 0, 0, 0, 0, width, height, width, height);
         RenderSystem.disableBlend();*/
-		super.onRender(context, mouseX, mouseY, delta);
+		super.onRender(guiGraphics, mouseX, mouseY, delta);
 	}
 
 	private static class IconTextWidget extends StringWidget {
 		private final Identifier icon;
 
-		IconTextWidget(Component message, Font textRenderer, Identifier icon) {
-			super(message, textRenderer);
+		IconTextWidget(Component message, Font font, Identifier icon) {
+			super(message, font);
 			this.icon = icon;
 		}
 
 		@Override
-		public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
+		public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 			Component text = this.getMessage();
 			Font textRenderer = this.getFont();
 
@@ -161,8 +159,8 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 			int iconX = x - 34;
 			int iconY = y - 13;
 
-			context.drawString(textRenderer, orderedText, x, y, Colors.WHITE.asInt());
-			context.blit(RenderPipelines.GUI_TEXTURED, icon, iconX, iconY, 0, 0, 32, 32, 32, 32);
+			guiGraphics.drawString(textRenderer, orderedText, x, y, Colors.WHITE.asInt());
+			guiGraphics.blit(RenderPipelines.GUI_TEXTURED, icon, iconX, iconY, 0, 0, 32, 32, 32, 32);
 		}
 
 		private FormattedCharSequence trim(Component text, int width) {

@@ -28,11 +28,6 @@ public final class FilledBoxRendererCommand implements RendererCommand<FilledBox
 
 		PoseStack matrices = RenderUtils.matrixToStack(matrix4f);
 
-//		VertexRendering.drawFilledBox(matrices, buffer,
-//				state.minX(), state.minY(), state.minZ(), state.maxX(), state.maxY(), state.maxZ(),
-//				colorComponents[0], colorComponents[1], colorComponents[2], state.color().getAlpha()
-//		);
-
 		Matrix4f positionMatrix = matrices.last().pose();
 
 		float minX = (float) state.minX();

@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
 
-class ChangelogListWidget extends ContainerObjectSelectionList<ChangelogListWidget.LineEntry> {
+class ChangelogListWidget extends ContainerObjectSelectionList<ChangelogListWidget.@NotNull LineEntry> {
 
 	private static final int LINE_HEIGHT = 10;
 	private static final int PADDING = 10;
@@ -54,7 +54,7 @@ class ChangelogListWidget extends ContainerObjectSelectionList<ChangelogListWidg
 		return this.width - 10;
 	}
 
-	protected class LineEntry extends ContainerObjectSelectionList.Entry<LineEntry> {
+	protected class LineEntry extends ContainerObjectSelectionList.Entry<@NotNull LineEntry> {
 		private final Component text;
 
 		LineEntry(Component text) {
@@ -62,23 +62,23 @@ class ChangelogListWidget extends ContainerObjectSelectionList<ChangelogListWidg
 		}
 
 		@Override
-		public List<? extends NarratableEntry> narratables() {
+		public @NotNull List<? extends NarratableEntry> narratables() {
 			return List.of();
 		}
 
 		@Override
-		public List<? extends GuiEventListener> children() {
+		public @NotNull List<? extends GuiEventListener> children() {
 			return List.of();
 		}
 
 		@Override
-		public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			int drawX = this.getX() + CONTENT_PADDING;
 			// Centre verticalement la ligne dans entryHeight si besoin
 			int textHeight = minecraft.font.lineHeight;
 			//int drawY = getContentY() + Math.max(0, (getContentHeight() - textHeight) / 2);
 			int drawY = this.getY() + Math.max(0, (this.getHeight() - textHeight) / 2);
-			context.drawString(minecraft.font, text, drawX, drawY, Colors.WHITE.asInt());
+			guiGraphics.drawString(minecraft.font, text, drawX, drawY, Colors.WHITE.asInt());
 		}
 	}
 

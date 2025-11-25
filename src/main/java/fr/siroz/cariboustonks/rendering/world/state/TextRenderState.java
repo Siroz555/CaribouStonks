@@ -4,7 +4,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.world.phys.Vec3;
 
 public record TextRenderState(
-        Font.PreparedText glyphs,
+        Font.PreparedText preparedText,
         Vec3 pos,
         float scale,
         float offsetY,

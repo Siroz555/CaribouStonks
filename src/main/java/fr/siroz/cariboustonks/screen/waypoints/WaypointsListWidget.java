@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * FUTURE UPDATE -> Waypoint Settings Screen with color codes, etc.
  */
-class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidget.WaypointEntry> {
+class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidget.@NotNull WaypointEntry> {
 
 	private static final int SPACE = 6;
 
@@ -86,10 +86,10 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 	}
 
 	void updateButtons() {
-		for (AbstractSelectionList.Entry<WaypointEntry> entry : children()) {
+		for (AbstractSelectionList.Entry<@NotNull WaypointEntry> entry : children()) {
 			if (entry instanceof WaypointEntry waypointEntry) {
 				if (waypointEntry.enabledWidget.selected() != waypointEntry.waypoint.isEnabled()) {
-					waypointEntry.enabledWidget.onPress(null); // le AbstractInput ne sert à rien
+					waypointEntry.enabledWidget.onPress(null); // TODO: "requireNonNull" mais il sert a rien
 				}
 			}
 		}
@@ -107,7 +107,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 		}
 	}
 
-	protected class WaypointEntry extends ContainerObjectSelectionList.Entry<WaypointEntry> {
+	protected class WaypointEntry extends ContainerObjectSelectionList.Entry<@NotNull WaypointEntry> {
 
 		private Waypoint waypoint;
 		private final List<AbstractWidget> children;
@@ -116,8 +116,8 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 		private final EditBox xWidget;
 		private final EditBox yWidget;
 		private final EditBox zWidget;
-		private final CycleButton<WaypointColors> colorWidget;
-		private final CycleButton<Waypoint.Type> typeWidget;
+		private final CycleButton<@NotNull WaypointColors> colorWidget;
+		private final CycleButton<Waypoint.@NotNull Type> typeWidget;
 		private final Button deleteWidget;
 
 		public WaypointEntry(@NotNull Waypoint waypoint) {
@@ -176,17 +176,17 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 		}
 
 		@Override
-		public List<? extends NarratableEntry> narratables() {
+		public @NotNull List<? extends NarratableEntry> narratables() {
 			return children;
 		}
 
 		@Override
-		public List<? extends GuiEventListener> children() {
+		public @NotNull List<? extends GuiEventListener> children() {
 			return children;
 		}
 
 		@Override
-		public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			int x = this.getX(); //getContentX();
 			int y = this.getY(); //getContentY();
 
@@ -198,15 +198,15 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 
 			int afterName = nameX + nameWidget.getWidth();
 			int xX = afterName + SPACE * 2;
-			context.drawString(minecraft.font, "X:", xX, y + 6, Colors.WHITE.asInt());
+			guiGraphics.drawString(minecraft.font, "X:", xX, y + 6, Colors.WHITE.asInt());
 			xWidget.setPosition(xX + 9, y);
 
 			int yX = xX + xWidget.getWidth() + (SPACE * 2);
-			context.drawString(minecraft.font, "Y:", yX, y + 6, Colors.WHITE.asInt());
+			guiGraphics.drawString(minecraft.font, "Y:", yX, y + 6, Colors.WHITE.asInt());
 			yWidget.setPosition(yX + 9, y);
 
 			int zX = yX + yWidget.getWidth() + (SPACE * 2);
-			context.drawString(minecraft.font, "Z:", zX, y + 6, Colors.WHITE.asInt());
+			guiGraphics.drawString(minecraft.font, "Z:", zX, y + 6, Colors.WHITE.asInt());
 			zWidget.setPosition(zX + 9, y);
 
 			int colorX = zX + zWidget.getWidth() + SPACE * 4;
@@ -219,7 +219,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 			deleteWidget.setPosition(deleteX, y);
 
 			for (AbstractWidget child : children) {
-				child.render(context, mouseX, mouseY, deltaTicks);
+				child.render(guiGraphics, mouseX, mouseY, deltaTicks);
 			}
 		}
 

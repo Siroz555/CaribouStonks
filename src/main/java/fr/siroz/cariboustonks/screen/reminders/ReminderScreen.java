@@ -52,9 +52,9 @@ public class ReminderScreen extends CaribousStonksScreen {
     }
 
     @Override
-    public void onRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        super.onRender(context, mouseX, mouseY, delta);
-        context.drawCenteredString(this.font, title, this.width / 2, 8, Colors.WHITE.asInt());
+    public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+        super.onRender(guiGraphics, mouseX, mouseY, delta);
+		guiGraphics.drawCenteredString(this.font, title, this.width / 2, 8, Colors.WHITE.asInt());
     }
 
     @Override
@@ -63,8 +63,7 @@ public class ReminderScreen extends CaribousStonksScreen {
     }
 
     private void setScreen(Screen screen) {
-        assert minecraft != null;
-        minecraft.setScreen(screen);
+		minecraft.setScreen(screen);
     }
 
     public void itemSelected(Object o) {

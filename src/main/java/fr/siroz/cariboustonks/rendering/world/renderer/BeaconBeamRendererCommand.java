@@ -24,6 +24,7 @@ public final class BeaconBeamRendererCommand implements RendererCommand<BeaconBe
 		PoseStack matrices = RenderUtils.matrixToStack(matrix4f);
 		SubmitNodeCollector commandQueue = Minecraft.getInstance().gameRenderer.getSubmitNodeStorage();
 
+		// SIROZ-NOTE: Virer ce Renderer et call directement avec le levelRenderer.blockRenderStates.add
 		BeaconRenderer.submitBeaconBeam(
 				matrices,
 				commandQueue,

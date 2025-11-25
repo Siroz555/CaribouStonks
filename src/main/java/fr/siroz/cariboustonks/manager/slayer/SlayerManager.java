@@ -224,7 +224,7 @@ public final class SlayerManager implements Manager {
 			}
 		}
 
-		if (!armorStand.closerThan(CLIENT.player, 20)) {
+		if (CLIENT.player != null && !armorStand.closerThan(CLIENT.player, 20)) {
 			return;
 		}
 
@@ -281,7 +281,7 @@ public final class SlayerManager implements Manager {
 	}
 
 	@Nullable
-	<T extends Entity> T findClosestEntity(@Nullable EntityType<T> entityType, @Nullable ArmorStand armorStand) {
+	<T extends Entity> T findClosestEntity(@Nullable EntityType<@NotNull T> entityType, @Nullable ArmorStand armorStand) {
 		if (entityType == null) return null;
 		if (armorStand == null) return null;
 

@@ -53,9 +53,9 @@ public final class ContainerOverlayManager implements Manager {
 
 	@EventHandler(event = "ScreenEvents.BEFORE_INIT")
 	private void onScreenBeforeInit(Minecraft _client, Screen screen, int _scaledWidth, int _scaledHeight) {
-		if (SkyBlockAPI.isOnSkyBlock() && screen instanceof ContainerScreen genericContainerScreen) {
+		if (SkyBlockAPI.isOnSkyBlock() && screen instanceof ContainerScreen containerScreen) {
 			ScreenEvents.remove(screen).register(_screen -> clearScreen());
-			onScreen(genericContainerScreen);
+			onScreen(containerScreen);
 		} else {
 			clearScreen();
 		}
@@ -65,7 +65,7 @@ public final class ContainerOverlayManager implements Manager {
 		highlights = null;
 	}
 
-	public void draw(GuiGraphics context, AbstractContainerScreen<@NotNull ChestMenu> handledScreen, List<Slot> slots) {
+	public void draw(GuiGraphics context, AbstractContainerScreen<@NotNull ChestMenu> containerScreen, List<Slot> slots) {
 		if (currentContainerOverlay == null) {
 			return;
 		}
@@ -83,11 +83,14 @@ public final class ContainerOverlayManager implements Manager {
 		}
 
 		context.pose().pushMatrix();
-		context.pose().translate(((AbstractContainerScreenAccessor) handledScreen).getX(), ((AbstractContainerScreenAccessor) handledScreen).getY());
+		context.pose().translate(
+				((AbstractContainerScreenAccessor) containerScreen).getX(),
+				((AbstractContainerScreenAccessor) containerScreen).getY()
+		);
 
 		if (highlights == null) {
 			highlights = currentContainerOverlay.content(
-					slotMap(slots.subList(0, handledScreen.getMenu().getRowCount() * 9))
+					slotMap(slots.subList(0, containerScreen.getMenu().getRowCount() * 9))
 			);
 		}
 

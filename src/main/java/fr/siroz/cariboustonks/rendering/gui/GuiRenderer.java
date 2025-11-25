@@ -168,7 +168,7 @@ public final class GuiRenderer {
 		// Le jeu crash si j'utilise directement les quads,
 		// avec un "IllegalStateException : BufferBuilder was empty"
 		// Je récupère donc une copy et je clear le batch juste après.
-		java.util.List<Quad> batchCopy = List.copyOf(BATCH_QUADS);
+		List<Quad> batchCopy = List.copyOf(BATCH_QUADS);
 		BATCH_QUADS.clear();
 
 		QuadGuiElementRenderState renderState = new QuadGuiElementRenderState(

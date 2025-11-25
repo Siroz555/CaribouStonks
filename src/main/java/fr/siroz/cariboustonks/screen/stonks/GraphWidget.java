@@ -129,7 +129,7 @@ class GraphWidget extends AbstractStonksWidget {
 	}
 
 	@Override
-	public void render(GuiGraphics context, int mouseX, int mouseY, int x, int y) {
+	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
 		final int x1 = x + 20;
 		final int y1 = y + 25; // 20
 		final int x2 = x1 + this.width / 2;
@@ -137,10 +137,10 @@ class GraphWidget extends AbstractStonksWidget {
 		final int borderMarge = 10;
 		int borderColor = new Color(192, 192, 192).getRGB();
 
-		context.fill(x1, y1 - borderMarge, x2, y1 - borderMarge + 1, borderColor);
-		context.fill(x1, y2 + borderMarge - 1, x2, y2 + borderMarge, borderColor);
-		context.fill(x1, y1 - borderMarge + 1, x1 + 1, y2 + borderMarge - 1, borderColor);
-		context.fill(x2 - 1, y1 - borderMarge + 1, x2, y2 + borderMarge - 1, borderColor);
+		guiGraphics.fill(x1, y1 - borderMarge, x2, y1 - borderMarge + 1, borderColor);
+		guiGraphics.fill(x1, y2 + borderMarge - 1, x2, y2 + borderMarge, borderColor);
+		guiGraphics.fill(x1, y1 - borderMarge + 1, x1 + 1, y2 + borderMarge - 1, borderColor);
+		guiGraphics.fill(x2 - 1, y1 - borderMarge + 1, x2, y2 + borderMarge - 1, borderColor);
 
 		if (prices == null || prices.isEmpty() || prices.size() < 3) {
 			return;
@@ -172,10 +172,10 @@ class GraphWidget extends AbstractStonksWidget {
 			//new Color(0x1D6517);
 			int startColor = 0x1D6517;
 			int endColor = 0x001D6517;
-			drawGradient(context, pointsBuy, startColor, endColor, y2 + 10, false);
+			drawGradient(guiGraphics, pointsBuy, startColor, endColor, y2 + 10, false);
 		}
 
-		GuiRenderer.submitLinesFromPoints(context, pointsBuy.toArray(new Point[0]), new Color(0, 222, 5), 1);
+		GuiRenderer.submitLinesFromPoints(guiGraphics, pointsBuy.toArray(new Point[0]), new Color(0, 222, 5), 1);
 
 		// Calculer de facon indépendante les points pour les prix sell, même si les calculs sont les mêmes,
 		// car s'il y a une différence en nombres (quantité), les courbes seront décalées.
@@ -197,14 +197,14 @@ class GraphWidget extends AbstractStonksWidget {
 				//new Color(0x888313);
 				int startColor = 0x888313;
 				int endColor = 0x00888313;
-				drawGradient(context, pointsSell, startColor, endColor, y2, true);
+				drawGradient(guiGraphics, pointsSell, startColor, endColor, y2, true);
 			}
 
-			GuiRenderer.submitLinesFromPoints(context, pointsSell.toArray(new Point[0]), new Color(234, 214, 7), 1);
+			GuiRenderer.submitLinesFromPoints(guiGraphics, pointsSell.toArray(new Point[0]), new Color(234, 214, 7), 1);
 		}
 
-		drawLabels(context, x1, y1, x2, y2);
-		drawHoveredItem(context, mouseX, mouseY);
+		drawLabels(guiGraphics, x1, y1, x2, y2);
+		drawHoveredItem(guiGraphics, mouseX, mouseY);
 	}
 
 	private void drawLabels(GuiGraphics context, int x1, int y1, int x2, int y2) {
@@ -238,7 +238,7 @@ class GraphWidget extends AbstractStonksWidget {
 	}
 
 	@SuppressWarnings("ConstantConditions") // if (closestPoint != null) -> Aucune confiance
-	private void drawHoveredItem(GuiGraphics context, int mouseX, int mouseY) {
+	private void drawHoveredItem(GuiGraphics guiGraphics, int mouseX, int mouseY) {
 		if (graphData == null || graphData.isEmpty() || graphData.size() < 3) {
 			return;
 		}
@@ -284,18 +284,18 @@ class GraphWidget extends AbstractStonksWidget {
 				int textWidth = this.textRenderer.width(dateText) + 10;
 				int height = type == Type.BAZAAR && secondPriceText != null ? 34 : 24; // 24
 				// Border
-				GuiRenderer.drawBorder(context, mouseX + 7, mouseY - 13, textWidth, height, Color.WHITE.getRGB());
+				GuiRenderer.drawBorder(guiGraphics, mouseX + 7, mouseY - 13, textWidth, height, Color.WHITE.getRGB());
 				// Date
-				context.drawString(textRenderer, dateText, mouseX + 10, mouseY - 10, Color.WHITE.getRGB());
+				guiGraphics.drawString(textRenderer, dateText, mouseX + 10, mouseY - 10, Color.WHITE.getRGB());
 				// Price - Auction / 1ère ligne du Bazaar
-				context.drawString(textRenderer, priceText, mouseX + 10, mouseY, Color.WHITE.getRGB());
+				guiGraphics.drawString(textRenderer, priceText, mouseX + 10, mouseY, Color.WHITE.getRGB());
 				// Price - Deuxième ligne du Bazaar
 				if (type == Type.BAZAAR && secondPriceText != null) {
-					context.drawString(textRenderer, secondPriceText, mouseX + 10, mouseY + 10, Color.WHITE.getRGB());
+					guiGraphics.drawString(textRenderer, secondPriceText, mouseX + 10, mouseY + 10, Color.WHITE.getRGB());
 				}
 
 				// - 32 || +- 5 border haut/bas
-				context.vLine(mouseX, y1 - 5, y2 - 22 + 5, new Color(204, 2, 2).getRGB());
+				guiGraphics.vLine(mouseX, y1 - 5, y2 - 22 + 5, new Color(204, 2, 2).getRGB());
 			}
 		}
 	}
@@ -324,7 +324,7 @@ class GraphWidget extends AbstractStonksWidget {
 	}
 
 	private void drawGradient(
-            GuiGraphics context,
+            GuiGraphics guiGraphics,
             List<Point> pointsToRender,
             int startColor,
             int endColor,
@@ -336,11 +336,11 @@ class GraphWidget extends AbstractStonksWidget {
 			gradientPoints = StonksUtils.reduceListToApproxSize(gradientPoints, 300);
 		}
 
-		renderGradient(context, gradientPoints, startColor, endColor, y2 + 10, withSellerPrice);
+		renderGradient(guiGraphics, gradientPoints, startColor, endColor, y2 + 10, withSellerPrice);
 	}
 
 	private void renderGradient(
-            GuiGraphics context,
+            GuiGraphics guiGraphics,
             @NotNull List<Point> pointsToRender,
             int colorStart,
             int colorEnd,
@@ -382,7 +382,7 @@ class GraphWidget extends AbstractStonksWidget {
 					startY = point.y() - 1;
 				}
 
-				context.fillGradient(startX, startY, endX, endY, color.getRGB(), colorEnd);
+				guiGraphics.fillGradient(startX, startY, endX, endY, color.getRGB(), colorEnd);
 				//context.fillGradient(point.x(), withSellerPrice ? point.y() - 1 : point.y(), point.x() + 1, y2, 0, color.getRGB(), colorEnd);
 			}
 		}
