@@ -11,8 +11,9 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 | Version             |                            Status | Notes                                                |
 |---------------------|----------------------------------:|------------------------------------------------------|
-| **1.21.10**         |                      ✅ **Latest** | Full support                                         |
-| **1.21.7 / 1.21.8** |                  ✅ **Maintained** | Still maintained: features from latest and bug fixes |
+| **1.21.11**         |                          **BETA** | Under development                                    |
+| **1.21.10**         |                      ✅ **Latest** | Still maintained: features from latest and bug fixes |
+| **1.21.7 / 1.21.8** |                  ✅ **Maintained** | Full support                                         |
 | **1.21.5**          | ⚠️ **No Longer Updated (legacy)** | No longer updated (latest version: 0.8.0)            |
 
 ### Installation
@@ -162,18 +163,6 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Highlight Cocoon Eggs summoned by the Boss with a configurable glow color.
     - Show lines from your Cursor to the Cocoon Eggs.
 
-**Events**
-
-> **SCHEDULED TO BE REMOVED** for Mythological Ritual V2 release. Use SBO instead!
-- Mythological Ritual
-    - Guess Burrow: Waypoint that predicts the location of a Burrow (like 1.8).
-    - Burrow Particle Finder: Displays a Waypoint according to the type of Burrow nearby.
-    - Line to the closest Burrow.
-    - Nearest Warp.
-    - Share Inquisitors.
-    - Inquisitor Share from other players.
-    - Highlight Inquisitors with a configurable glow color.
-
 **Misc**
 
 - Highlight entities (/highlighter)
@@ -195,7 +184,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 ### Release & Update Policy
 
 * Major features → shipped on the **master** branch first.
-* Bug fixes → backported to 1.21.5 when safe.
+* Bug fixes → backported to 1.21.7/8 | 1.21.10 when safe.
 * Small QoL features may be added to both branches.
 
 ---
