@@ -13,7 +13,6 @@ import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -153,7 +152,7 @@ public final class DeveloperManager {
 			int id = 0;
 			for (ArmorStand armorStand : armorStands) {
 				texturedArmorStands.put(armorStand, id);
-				Iterable<ItemStack> equippedItems = InventoryUtils.getArmorFromEntity(armorStand);
+				Iterable<ItemStack> equippedItems = Client.getArmorFromEntity(armorStand);
 
 				ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("Head texture #" + id + ": ")));
 

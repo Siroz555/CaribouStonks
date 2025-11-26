@@ -9,7 +9,6 @@ import fr.siroz.cariboustonks.core.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.data.mod.SkyBlockAttribute;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.Locale;
@@ -188,7 +187,7 @@ public final class SkyBlockAPI {
 	 * @return {@code true} if the currently held is not null, and the skyBlockItemId matches
 	 */
 	public static boolean isHoldingItem(@NotNull String skyBlockItemId) {
-		ItemStack held = InventoryUtils.getHeldItem();
+		ItemStack held = Client.getHeldItem();
 		return held != null && getSkyBlockItemId(held).equals(skyBlockItemId);
 	}
 

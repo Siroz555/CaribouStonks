@@ -11,7 +11,7 @@ import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.fishing.radar.HotspotRadarFeature;
 import fr.siroz.cariboustonks.mixin.accessors.DustParticleOptionsAccessor;
-import fr.siroz.cariboustonks.util.InventoryUtils;
+import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -80,7 +80,7 @@ public class HotspotFeature extends Feature {
 			return;
 		}
 
-		ItemStack item = InventoryUtils.getHeldItem();
+		ItemStack item = Client.getHeldItem();
 		if (item == null || item.isEmpty() || !item.is(Items.FISHING_ROD)) {
 			reset();
 			return;

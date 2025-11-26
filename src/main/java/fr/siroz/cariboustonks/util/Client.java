@@ -12,8 +12,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.gui.components.toasts.SystemToast;
-import net.minecraft.client.gui.components.toasts.Toast;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.ScoreHolder;
 import net.minecraft.world.scores.Scoreboard;
@@ -35,16 +37,18 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.jetbrains.annotations.Unmodifiable;
 import org.lwjgl.glfw.GLFW;
 
 /**
- * Util lié au {@link Minecraft}.
+ * Client utilities.
  * <p>
- * Les méthodes sont {@code Safe Client null} ou {@code Safe World null}.
+ * The methods are {@code Safe Client null} / {@code Safe World null}.
  */
 public final class Client {
 
 	private static final Minecraft CLIENT = Minecraft.getInstance();
+
 	private static final SystemToast.SystemToastId STONKS_SYSTEM = new SystemToast.SystemToastId(10000L); // 10000L
 	private static final List<String> STRING_SCOREBOARD = new ArrayList<>();
 	private static final List<String> STRING_TAB = new ArrayList<>();
@@ -54,6 +58,8 @@ public final class Client {
 
 	/**
 	 * Retrieves the current username of the player.
+	 * <p>
+	 * {@code Safe Client null}
 	 *
 	 * @return the player's username, or {@code null} if unavailable
 	 */
@@ -149,84 +155,114 @@ public final class Client {
 	 * @return the footer of the tab list, or {@code null}
 	 */
 	public static @Nullable String getTabListFooter() {
-		Component footer = ((PlayerTabOverlayAccessor) Minecraft.getInstance().gui.getTabList()).getFooter();
+		Component footer = ((PlayerTabOverlayAccessor) CLIENT.gui.getTabList()).getFooter();
 		return footer != null ? footer.getString() : null;
 	}
 
 	/**
-	 * Envoi un message au client.
+	 * Retrieves the currently held item in the main hand of the client.
 	 * <p>
-	 * {@code Client -> Client} & {@code Safe Client null}
+	 * {@code Safe Client null}
 	 *
-	 * @param message le message
+	 * @return the {@link ItemStack} representing the item currently held in the main hand of the client or {@code null}
+	 * @see #getHeldItem()
+	 */
+	public static @Nullable ItemStack getMainHandItem() {
+		return CLIENT.player != null ? CLIENT.player.getMainHandItem() : null;
+	}
+
+	/**
+	 * Retrieves the currently held item of the client.
+	 * <p>
+	 * {@code Safe Client null}
+	 *
+	 * @return the {@link ItemStack} representing the item currently held by the client or {@code null}
+	 * @see #getMainHandItem()
+	 */
+	@Nullable
+	public static ItemStack getHeldItem() {
+		return CLIENT.player != null ? CLIENT.player.getInventory().getSelectedItem() : null;
+	}
+
+	/**
+	 * Retrieves the {@code Day} of the current world.
+	 * <p>
+	 * {@code Safe World null}
+	 *
+	 * @return the day of the current world
+	 */
+	public static long getWorldDay() {
+		return CLIENT.level != null ? CLIENT.level.getDayTime() / 24000 : 0L;
+	}
+
+	/**
+	 * Retrieves the {@code World Time} of the current world.
+	 * <p>
+	 * {@code Safe World null}
+	 *
+	 * @return the world time of the current world
+	 */
+	public static long getWorldTime() {
+		return CLIENT.level != null ? CLIENT.level.getGameTime() : 0;
+	}
+
+	/**
+	 * Send a message to the <b>client</b>.
+	 * <p>
+	 * {@code Safe Client null}
+	 *
+	 * @param message the message
 	 * @see #sendMessageWithPrefix(Component)
 	 */
 	public static void sendMessage(@NotNull Component message) {
-		sendMessageInternal(message, false);
+		sendMessageInternal(message);
 	}
 
 	/**
-	 * Envoi un message au client.
+	 * Send a message to the <b>client</b> with the Mod prefix.
 	 * <p>
-	 * {@code Client -> Client} & {@code Safe Client null}
+	 * {@code Safe Client null}
 	 *
-	 * @param message le message
+	 * @param message the message
 	 * @see #sendMessage(Component)
 	 */
 	public static void sendMessageWithPrefix(@NotNull Component message) {
-		sendMessageInternal(CaribouStonks.prefix().get().append(message), false);
+		sendMessageInternal(CaribouStonks.prefix().get().append(message));
 	}
 
 	/**
-	 * Envoi un message au client sous la forme d'erreur. Le message contient le prefix et est coloré en rouge.
+	 * Send an error message to the <b>client</b>.
+	 * The message contains the Mod prefix and the given message in red format.
 	 * <p>
-	 * {@code Client -> Client} & {@code Safe Client null}
+	 * {@code Safe Client null}
 	 *
-	 * @param errorMessage le message d'erreur
-	 * @param notification si le message est également affiché dans un Toast de type System
+	 * @param errorMessage the error message
+	 * @param notification if the message should be displayed in a Toast Notification
 	 */
 	public static void sendErrorMessage(@NotNull String errorMessage, boolean notification) {
 		CaribouStonks.LOGGER.warn("Chat error message sent: {}", errorMessage);
 		sendMessageInternal(CaribouStonks.prefix().get()
-				.append(Component.literal(errorMessage).withStyle(ChatFormatting.RED)), false);
+				.append(Component.literal(errorMessage).withStyle(ChatFormatting.RED)));
 
 		if (notification) {
 			showNotificationSystem(errorMessage);
 		}
 	}
 
-	/**
-	 * Afficher une {@code Auction Bar}.
-	 * <p>
-	 * {@code Safe Client null}
-	 *
-	 * @param message le message
-	 */
-	public static void showActionBar(@NotNull Component message) {
-		sendMessageInternal(message, true);
-	}
-
 	@ApiStatus.Internal
-	private static void sendMessageInternal(@NotNull Component message, boolean overlay) {
-		if (CLIENT.player != null) CLIENT.player.displayClientMessage(message, overlay);
+	private static void sendMessageInternal(@NotNull Component message) {
+		if (CLIENT.player != null) CLIENT.player.displayClientMessage(message, false);
 	}
 
 	/**
-	 * Clears the currently displayed title and subtitle.
-	 */
-	public static void clearTitleAndSubtitle() {
-		if (CLIENT.player != null) CLIENT.gui.clearTitles();
-	}
-
-	/**
-	 * Afficher un {@code Title}.
+	 * Display a {@code Title}.
 	 * <p>
 	 * {@code Safe Client null}
 	 *
-	 * @param title        le title
-	 * @param fadeInTicks  durée en ticks de l'animation d'apparition du title (0 à 250).
-	 * @param stayTicks    durée en ticks pendant laquelle le title reste visible (0 à 1000)
-	 * @param fadeOutTicks durée en ticks de l'animation de disparition du title (0 à 250)
+	 * @param title        the title
+	 * @param fadeInTicks  duration in ticks of the title appearance animation (0 to 250)
+	 * @param stayTicks    duration in ticks during which the title remains visible (0 to 1000)
+	 * @param fadeOutTicks duration in ticks of the title fade-out animation (0 to 250)
 	 * @see #showSubtitle(Component, int, int, int) showSubtitle
 	 * @see #showTitleAndSubtitle(Component, Component, int, int, int) showTitleAndSubtitle
 	 */
@@ -240,14 +276,14 @@ public final class Client {
 	}
 
 	/**
-	 * Afficher un {@code Subtitle}.
+	 * Display a {@code Subtitle}.
 	 * <p>
 	 * {@code Safe Client null}
 	 *
-	 * @param subtitle     le subtitle
-	 * @param fadeInTicks  durée en ticks de l'animation d'apparition du subtitle (0 à 250).
-	 * @param stayTicks    durée en ticks pendant laquelle le subtitle reste visible (0 à 1000)
-	 * @param fadeOutTicks durée en ticks de l'animation de disparition du subtitle (0 à 250)
+	 * @param subtitle     the subtitle
+	 * @param fadeInTicks  duration in ticks of the title appearance animation (0 to 250)
+	 * @param stayTicks    duration in ticks during which the title remains visible (0 to 1000)
+	 * @param fadeOutTicks duration in ticks of the title fade-out animation (0 to 250)
 	 * @see #showTitle(Component, int, int, int) showTitle
 	 * @see #showTitleAndSubtitle(Component, Component, int, int, int) showTitleAndSubtitle
 	 */
@@ -261,15 +297,15 @@ public final class Client {
 	}
 
 	/**
-	 * Afficher un {@code Title} et un {@code Subtitle}.
+	 * Display a {@code Title} and a {@code Subtitle}.
 	 * <p>
 	 * {@code Safe Client null}
 	 *
-	 * @param title        le title
-	 * @param subtitle     le subtitle
-	 * @param fadeInTicks  durée en ticks de l'animation d'apparition du title/subtitle (0 à 250).
-	 * @param stayTicks    durée en ticks pendant laquelle le title/subtitle reste visible (0 à 1000)
-	 * @param fadeOutTicks durée en ticks de l'animation de disparition du title/subtitle (0 à 250)
+	 * @param title        the title
+	 * @param subtitle     the subtitle
+	 * @param fadeInTicks  duration in ticks of the title appearance animation (0 to 250)
+	 * @param stayTicks    duration in ticks during which the title remains visible (0 to 1000)
+	 * @param fadeOutTicks duration in ticks of the title fade-out animation (0 to 250)
 	 * @see #showTitle(Component, int, int, int) showTitle
 	 * @see #showSubtitle(Component, int, int, int) showSubtitle
 	 */
@@ -288,23 +324,24 @@ public final class Client {
 	}
 
 	/**
-	 * Envoi un {@code message} ou une {@code commande} dans le chat.
+	 * Send a {@code message} or {@code command} in the chat to the <b>server</b>.
 	 * <p>
-	 * {@code Client -> Server} & {@code Safe Client null}
+	 * {@code Safe Client null}
 	 *
-	 * @param message le message de chat/commande à envoyer
+	 * @param message the message/command
+	 * @see #sendChatMessage(String, boolean)
 	 */
 	public static void sendChatMessage(@NotNull String message) {
 		sendChatMessage(message, false);
 	}
 
 	/**
-	 * Envoi un {@code message} ou une {@code commande} dans le chat.
+	 * Send a {@code message} or {@code command} in the chat to the <b>server</b>.
 	 * <p>
-	 * {@code Client -> Server} & {@code Safe Client null}
+	 * {@code Safe Client null}
 	 *
-	 * @param message      le message de chat/commande à envoyer
-	 * @param hideToClient si le message/commande sera caché coté client
+	 * @param message      the message/command
+	 * @param hideToClient whether the message/command should be displayed in the client's chat history
 	 */
 	public static void sendChatMessage(@NotNull String message, boolean hideToClient) {
 		if (CLIENT.player != null) {
@@ -322,40 +359,69 @@ public final class Client {
 		}
 	}
 
-	public static void showNotification(MutableComponent text, ItemStack icon) {
-		showNotification(new StonksToast(text, icon));
+	/**
+	 * Display a {@code Toast Notification}.
+	 *
+	 * @param text the text
+	 * @param icon the icon
+	 */
+	public static void showNotification(@NotNull MutableComponent text, @NotNull ItemStack icon) {
+		CLIENT.getToastManager().addToast(new StonksToast(text, icon));
 	}
 
-	public static void showNotification(Toast toast) {
-		CLIENT.getToastManager().addToast(toast);
-	}
-
+	/**
+	 * Display a {@code Toast Notification System} with the Mod prefix.
+	 *
+	 * @param description the text description
+	 */
 	public static void showNotificationSystem(@NotNull String description) {
 		showNotificationSystem("CaribouStonks", description);
 	}
 
+	/**
+	 * Display a {@code Toast Notification System}.
+	 *
+	 * @param title       the text title
+	 * @param description the text description
+	 */
 	public static void showNotificationSystem(@NotNull String title, @NotNull String description) {
 		SystemToast systemToast = SystemToast.multiline(CLIENT, STONKS_SYSTEM, Component.literal(title), Component.literal(description));
 		CLIENT.getToastManager().addToast(systemToast);
 	}
 
-	public static long getWorldDay() {
-		return CLIENT.level != null ? CLIENT.level.getDayTime() / 24000 : 0L;
-	}
-
-	public static long getWorldTime() {
-		return CLIENT.level != null ? CLIENT.level.getGameTime() : 0;
-	}
-
+	/**
+	 * Play a {@code Sound}.
+	 * <p>
+	 * {@code Safe Client null}
+	 *
+	 * @param sound  the sound
+	 * @param volume the volume
+	 * @param pitch  the pitch
+	 */
 	public static void playSound(@NotNull SoundEvent sound, float volume, float pitch) {
 		if (CLIENT.player != null) CLIENT.player.playSound(sound, volume, pitch);
 	}
 
 	/**
-	 * Jouer le son {@code UI_BUTTON_CLICK}.
+	 * Play {@code UI_BUTTON_CLICK} sound.
 	 */
 	public static void playSoundButtonClickUI() {
 		CLIENT.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+	}
+
+	/**
+	 * Retrieves a list of armor items currently equipped by the given {@link LivingEntity}.
+	 *
+	 * @param entity the living entity
+	 * @return list of {@link ItemStack} representing the armor items equipped by the entity
+	 */
+	@NotNull
+	@Unmodifiable
+	public static List<ItemStack> getArmorFromEntity(@NotNull LivingEntity entity) {
+		return EquipmentSlotGroup.ARMOR.slots().stream()
+				.filter(slot -> slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
+				.map(entity::getItemBySlot)
+				.toList();
 	}
 
 	@ApiStatus.Internal
@@ -368,7 +434,7 @@ public final class Client {
 		try {
 			STRING_SCOREBOARD.clear();
 
-			if (CLIENT.level == null || CLIENT.level.getScoreboard() == null) {
+			if (CLIENT.level == null) {
 				return;
 			}
 

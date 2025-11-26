@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -91,7 +90,7 @@ public class RareSeaCreatureFeature extends Feature {
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean hasFishingRod() {
-		ItemStack item = InventoryUtils.getHeldItem();
+		ItemStack item = Client.getHeldItem();
 		return item != null && !item.isEmpty() && item.is(Items.FISHING_ROD);
 	}
 }

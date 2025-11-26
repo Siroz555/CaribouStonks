@@ -8,7 +8,6 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.util.InventoryUtils;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +58,7 @@ public class TreeOverlayFeature extends Feature {
 		if (CLIENT.player == null || CLIENT.level == null) return;
 		if (!isEnabled()) return;
 
-		ItemStack heldItem = InventoryUtils.getMainHandItem();
+		ItemStack heldItem = Client.getMainHandItem();
 		if (heldItem == null) {
 			return;
 		}

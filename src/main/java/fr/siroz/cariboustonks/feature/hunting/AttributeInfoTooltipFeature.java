@@ -10,7 +10,6 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
 import fr.siroz.cariboustonks.manager.container.tooltip.ContainerTooltipAppender;
-import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.core.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.util.RomanNumeralUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -61,7 +60,7 @@ public class AttributeInfoTooltipFeature extends Feature implements ContainerMat
 
 		Screen currentScreen = Minecraft.getInstance().screen;
 		if (focusedSlot == null || currentScreen == null || lines.isEmpty()) return;
-		if (InventoryUtils.isEdgeSlot(focusedSlot.index, 6)) return;
+		if (StonksUtils.isEdgeSlot(focusedSlot.index, 6)) return;
 
 		String title = currentScreen.getTitle().getString();
 		switch (title) {

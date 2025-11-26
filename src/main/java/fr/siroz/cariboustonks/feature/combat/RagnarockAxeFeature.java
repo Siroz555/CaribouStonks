@@ -10,7 +10,6 @@ import fr.siroz.cariboustonks.manager.hud.Hud;
 import fr.siroz.cariboustonks.manager.hud.HudProvider;
 import fr.siroz.cariboustonks.manager.hud.TextHud;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.util.InventoryUtils;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import it.unimi.dsi.fastutil.Pair;
 import java.text.DecimalFormat;
@@ -96,7 +95,7 @@ public class RagnarockAxeFeature extends Feature implements HudProvider {
 		// SoundEvents.WOLF_SOUNDS Map > sound path compare
 		if (!packet.getSound().value().location().getPath().startsWith("entity.wolf.death")) return;
 
-		ItemStack held = InventoryUtils.getHeldItem();
+		ItemStack held = Client.getHeldItem();
 		if (held == null || held.isEmpty()) {
 			return;
 		}

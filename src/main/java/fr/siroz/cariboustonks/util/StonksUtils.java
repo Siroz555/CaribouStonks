@@ -112,11 +112,13 @@ public final class StonksUtils {
 		String serverAddress = CLIENT.getCurrentServer() != null
 				? CLIENT.getCurrentServer().ip.toLowerCase(Locale.ENGLISH)
 				: "";
-		String serverBrand = CLIENT.player != null
-				&& CLIENT.player.connection != null
-				&& CLIENT.player.connection.serverBrand() != null
+		String serverBrand = CLIENT.player != null && CLIENT.player.connection.serverBrand() != null
 				? CLIENT.player.connection.serverBrand()
 				: "";
+
+		if (serverBrand == null) {
+			return false;
+		}
 
 		return serverAddress.contains("hypixel.net") || serverBrand.contains("Hypixel BungeeCord");
 	}
@@ -124,7 +126,7 @@ public final class StonksUtils {
 	public static Optional<String> textToJson(@NotNull Component text) {
 		try {
 			String json = GsonProvider.standard().toJson(text);
-			return Optional.ofNullable(json);
+			return Optional.of(json);
 		} catch (Exception ex) {
 			return Optional.empty();
 		}
@@ -207,6 +209,34 @@ public final class StonksUtils {
 		double dx = from.x() - to.x();
 		double dz = from.z() - to.z();
 		return dx * dx + dz * dz;
+	}
+
+	/**
+	 * Checks if a given slot in an inventory is located at the edge.
+	 *
+	 * @param slotId the slot ID to check, where the slots are numbered sequentially from 0
+	 * @param rows   the total number of rows in the inventory
+	 * @return {@code true} if the slot is on the edge of the inventory (first or last column, or first or last row)
+	 */
+	public static boolean isEdgeSlot(int slotId, int rows) {
+		if (slotId < 0 || slotId >= rows * 9) return false;
+		int row = slotId / 9;
+		int col = slotId % 9;
+		return col == 0 || col == 8 || row == 0 || row == rows - 1;
+	}
+
+	/**
+	 * Converts a hotbar index into the corresponding slot index in the player's inventory.
+	 *
+	 * @param hotbarIndex the index of the hotbar (0-8 inclusive)
+	 * @return the slot index in the player's inventory corresponding to the given hotbar index,
+	 * or {@code -1} if the provided hotbar index is out of the valid range
+	 */
+	@SuppressWarnings("unused")
+	public static int convertHotbarToSlotIndex(int hotbarIndex) {
+		if (hotbarIndex < 0 || hotbarIndex > 8) return -1;
+
+		return 36 + hotbarIndex;
 	}
 
 	/**
