@@ -56,7 +56,7 @@ public final class AttributeAPI {
 		//if (!item.isOf(Items.PLAYER_HEAD)) return fallback; // pas sûr de cette verification là, à voir
 
 		String title = currentScreen.getTitle().getString();
-		switch (title) {
+		switch (title) { // TODO: Dungeon Chest Reward & Kuudra Paid Chest
 			case HUNTING_BOX -> {
 				String name = item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
 				SkyBlockAttribute attribute = CaribouStonks.core().getModDataSource().getAttributeByShardName(name);

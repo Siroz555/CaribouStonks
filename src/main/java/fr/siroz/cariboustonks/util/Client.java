@@ -7,12 +7,15 @@ import fr.siroz.cariboustonks.mixin.accessors.PlayerTabOverlayAccessor;
 import fr.siroz.cariboustonks.util.render.gui.StonksToast;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
@@ -204,6 +207,59 @@ public final class Client {
 	 */
 	public static long getWorldTime() {
 		return CLIENT.level != null ? CLIENT.level.getGameTime() : 0;
+	}
+
+	/**
+	 * Returns a List of {@link Entity}s close to the player, according to the given conditions.
+	 * <p>
+	 * {@code Safe Client null} & {@code Safe World null}
+	 *
+	 * @param entity           the entity class type
+	 * @param distanceInBlocks the distance in blocks from the player's position
+	 * @param entityPredicate  the entity predicate (e.g. {@code Entity::hasCustomName})
+	 * @param <T>              the entity class type
+	 * @return a List of {@link Entity}s close to the player if the conditions are met, otherwise an empty list
+	 */
+	@SuppressWarnings("unused") // SIROZ-NOTE: Impl
+	public static <T extends Entity> List<T> findClosestEntities(
+			@NotNull Class<T> entity,
+			double distanceInBlocks,
+			@NotNull Predicate<? super T> entityPredicate
+	) {
+		if (CLIENT.player == null || CLIENT.level == null) {
+			return Collections.emptyList();
+		}
+
+		return CLIENT.level.getEntitiesOfClass(entity, CLIENT.player.getBoundingBox().inflate(distanceInBlocks), entityPredicate);
+	}
+
+	/**
+	 * Returns the {@link Entity} closest to the player, according to the given conditions.
+	 * <p>
+	 * {@code Safe Client null} & {@code Safe World null}
+	 *
+	 * @param entity           the entity class type
+	 * @param distanceInBlocks the distance in blocks from the player's position
+	 * @param entityPredicate  the entity predicate (e.g. {@code Entity::hasCustomName})
+	 * @param filterPredicate  the filter predicate (e.g. {@code e -> "King Minos".equals(e.getName().getString())})
+	 * @param <T>              the entity class type
+	 * @return the closest entity to the player if the conditions are met, otherwise null
+	 */
+	@SuppressWarnings("unused") // SIROZ-NOTE: Impl
+	public static <T extends Entity> @Nullable T findClosestEntity(
+			@NotNull Class<T> entity,
+			double distanceInBlocks,
+			@NotNull Predicate<? super T> entityPredicate,
+			@NotNull Predicate<? super T> filterPredicate
+	) {
+		if (CLIENT.player == null || CLIENT.level == null) {
+			return null;
+		}
+
+		return findClosestEntities(entity, distanceInBlocks, entityPredicate).stream()
+				.filter(filterPredicate)
+				.min(Comparator.comparingDouble(as -> as.distanceToSqr(CLIENT.player)))
+				.orElse(null);
 	}
 
 	/**
