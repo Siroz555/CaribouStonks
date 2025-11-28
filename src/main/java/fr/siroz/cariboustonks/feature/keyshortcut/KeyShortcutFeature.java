@@ -10,7 +10,6 @@ import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.StonksUtils;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -41,7 +40,7 @@ public class KeyShortcutFeature extends Feature {
 
 		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
 				.then(ClientCommandManager.literal("keyShortcuts")
-						.executes(StonksUtils.openScreen(() -> KeyShortcutScreen.create(null))))
+						.executes(Client.openScreen(() -> KeyShortcutScreen.create(null))))
 		));
 	}
 

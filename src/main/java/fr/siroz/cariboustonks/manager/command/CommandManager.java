@@ -10,6 +10,7 @@ import fr.siroz.cariboustonks.screen.CaribouStonksMenuScreen;
 import fr.siroz.cariboustonks.screen.HudConfigScreen;
 import fr.siroz.cariboustonks.manager.Manager;
 import fr.siroz.cariboustonks.screen.HeldItemViewConfigScreen;
+import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -38,20 +39,20 @@ public final class CommandManager implements Manager {
             CommandBuildContext registryAccess
 	) {
 		LiteralArgumentBuilder<FabricClientCommandSource> builder = ClientCommandManager.literal(CaribouStonks.NAMESPACE)
-				.executes(StonksUtils.openScreen(CaribouStonksMenuScreen::new))
+				.executes(Client.openScreen(CaribouStonksMenuScreen::new))
 				.then(ClientCommandManager.literal("config")
-						.executes(StonksUtils.openScreen(() -> ConfigManager.createConfigGUI(null))))
+						.executes(Client.openScreen(() -> ConfigManager.createConfigGUI(null))))
 				.then(ClientCommandManager.literal("hud")
-						.executes(StonksUtils.openScreen(() -> HudConfigScreen.create(null))))
+						.executes(Client.openScreen(() -> HudConfigScreen.create(null))))
 				.then(ClientCommandManager.literal("heldItemCustomization")
 						.executes(context -> {
 							context.getSource().sendError(Component.literal("Use /cariboustonks heldItemCustomization <mainHand/offHand>"));
 							return 1;
 						})
 						.then(ClientCommandManager.literal("mainHand")
-								.executes(StonksUtils.openScreen(() -> HeldItemViewConfigScreen.create(null, InteractionHand.MAIN_HAND))))
+								.executes(Client.openScreen(() -> HeldItemViewConfigScreen.create(null, InteractionHand.MAIN_HAND))))
 						.then(ClientCommandManager.literal("offHand")
-								.executes(StonksUtils.openScreen(() -> HeldItemViewConfigScreen.create(null, InteractionHand.OFF_HAND)))));
+								.executes(Client.openScreen(() -> HeldItemViewConfigScreen.create(null, InteractionHand.OFF_HAND)))));
 
 		LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(builder);
 		//dispatcher.register(ClientCommandManager.literal("caribou").redirect(node));

@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.util;
 
+import com.mojang.brigadier.Command;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.HudEvents;
@@ -10,7 +11,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ErrorScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.gui.components.toasts.SystemToast;
@@ -263,6 +268,21 @@ public final class Client {
 	}
 
 	/**
+	 * Create a command that queues a screen to be opened in the next tick.
+	 * Used to prevent the screen from closing immediately after the command is executed.
+	 *
+	 * @param screenSupplier the screen supplier
+	 * @return {@link Command Command with FabricClientCommandSource}
+	 */
+	@Contract(pure = true)
+	public static @NotNull Command<FabricClientCommandSource> openScreen(@NotNull Supplier<Screen> screenSupplier) {
+		return context -> {
+			CLIENT.schedule(() -> CLIENT.setScreen(screenSupplier.get()));
+			return Command.SINGLE_SUCCESS;
+		};
+	}
+
+	/**
 	 * Send a message to the <b>client</b>.
 	 * <p>
 	 * {@code Safe Client null}
@@ -451,6 +471,18 @@ public final class Client {
 	public static void showNotificationSystem(@NotNull String title, @NotNull String description) {
 		SystemToast systemToast = SystemToast.multiline(CLIENT, STONKS_SYSTEM, Component.literal(title), Component.literal(description));
 		CLIENT.getToastManager().addToast(systemToast);
+	}
+
+	/**
+	 * Display the {@code ErrorScreen} (Fatal Screen).
+	 * <p>
+	 * {@code Safe Client null}
+	 *
+	 * @param title   the title
+	 * @param message the message
+	 */
+	public static void showFatalErrorScreen(@NotNull Component title, @NotNull Component message) {
+		if (CLIENT.player != null) CLIENT.setScreen(new ErrorScreen(title, message));
 	}
 
 	/**

@@ -8,7 +8,6 @@ import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataException;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.Minecraft;
@@ -87,7 +86,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.@NotNull Entry> 
 				return itemSummaries;
 			});
 		} catch (HypixelDataException exception) {
-			StonksUtils.showFatalErrorScreen(Component.literal("Unable to load items!"), exception.getMessageText());
+			Client.showFatalErrorScreen(Component.literal("Unable to load items!"), exception.getMessageText());
 			return CompletableFuture.completedFuture(Collections.emptyList());
 		}
 	}

@@ -10,7 +10,6 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.screen.changelog.ChangelogScreen;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.http.Http;
 import fr.siroz.cariboustonks.util.http.HttpResponse;
 import java.io.BufferedReader;
@@ -67,7 +66,7 @@ public final class ChangelogManager {
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _ra) ->
 				dispatcher.register(ClientCommandManager.literal("stonksviewchangelog")
-						.executes(StonksUtils.openScreen(
+						.executes(Client.openScreen(
 								() -> ChangelogScreen.create(changelogEntries, this::markChangelogAsSeen)))));
 	}
 

@@ -1,32 +1,26 @@
 package fr.siroz.cariboustonks.util;
 
-import com.mojang.brigadier.Command;
 import fr.siroz.cariboustonks.core.json.GsonProvider;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.ErrorScreen;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.Position;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.regex.Pattern;
 
 /**
  * Stonks utilities
@@ -84,16 +78,6 @@ public final class StonksUtils {
 	public static void initUtilities() {
 		AnimationUtils.initAnimationUtilities();
 		TickScheduler.getInstance().runRepeating(Client::handleUpdates, 1, TimeUnit.SECONDS);
-	}
-
-	/**
-	 * Permet d'afficher au client le {@link ErrorScreen} avec un titre et le message.
-	 *
-	 * @param title   le titre
-	 * @param message le message
-	 */
-	public static void showFatalErrorScreen(@NotNull Component title, @NotNull Component message) {
-		if (CLIENT.player != null) CLIENT.setScreen(new ErrorScreen(title, message));
 	}
 
 	@Contract(pure = true)
@@ -181,21 +165,6 @@ public final class StonksUtils {
 		} else {
 			return (sorted.get(n / 2 - 1) + sorted.get(n / 2)) / 2.0;
 		}
-	}
-
-	/**
-	 * Créer une commande qui met en file d'attente un écran à ouvrir dans le prochain tick.
-	 * Utilisé pour éviter que l'écran ne se ferme immédiatement après l'exécution de la commande.
-	 *
-	 * @param screenSupplier le supplier de l'écran à ouvrir
-	 * @return {@link Command < FabricClientCommandSource >}
-	 */
-	@Contract(pure = true)
-	public static @NotNull Command<FabricClientCommandSource> openScreen(@NotNull Supplier<Screen> screenSupplier) {
-		return context -> {
-			CLIENT.schedule(() -> CLIENT.setScreen(screenSupplier.get()));
-			return Command.SINGLE_SUCCESS;
-		};
 	}
 
 	/**
