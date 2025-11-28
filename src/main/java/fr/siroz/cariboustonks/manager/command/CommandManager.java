@@ -11,7 +11,6 @@ import fr.siroz.cariboustonks.screen.HudConfigScreen;
 import fr.siroz.cariboustonks.manager.Manager;
 import fr.siroz.cariboustonks.screen.HeldItemViewConfigScreen;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.util.StonksUtils;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
