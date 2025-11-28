@@ -134,16 +134,8 @@ public class KeyShortcutFeature extends Feature {
 
 			if (pressed) {
 				lastKeyPressed = System.currentTimeMillis();
-				handleShortcut(client, shortcut);
+				Client.sendCommandToServer(shortcut.command(), true);
 			}
-		}
-	}
-
-	private void handleShortcut(@NotNull Minecraft client, @NotNull KeyShortcut shortcut) {
-		if (client.player != null) {
-			String shortcutCommand = shortcut.command();
-			String command = shortcutCommand.startsWith("/") ? shortcutCommand.substring(1) : shortcutCommand;
-			client.player.connection.sendCommand(command);
 		}
 	}
 }

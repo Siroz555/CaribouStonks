@@ -104,7 +104,7 @@ public class ChatPositionFeature extends Feature {
 				area = " | " + SkyBlockAPI.getArea().orElse("");
 			}
 			String message = position.asChatCoordinates() + area;
-			Client.sendChatMessage(message);
+			Client.sendChatToServer(message, false);
 		} else {
 			source.sendFeedback(CaribouStonks.prefix().get()
 					.append(Component.literal("Command on cooldown!").withStyle(ChatFormatting.RED)));

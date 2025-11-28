@@ -380,37 +380,45 @@ public final class Client {
 	}
 
 	/**
-	 * Send a {@code message} or {@code command} in the chat to the <b>server</b>.
+	 * Send a {@code message} in the chat to the <b>server</b>.
 	 * <p>
 	 * {@code Safe Client null}
 	 *
-	 * @param message the message/command
-	 * @see #sendChatMessage(String, boolean)
+	 * @param message the message
+	 * @see #sendCommandToServer(String, boolean)
 	 */
-	public static void sendChatMessage(@NotNull String message) {
-		sendChatMessage(message, false);
+	public static void sendChatToServer(@NotNull String message, boolean hideToClient) {
+		sendToServerInternal(message, hideToClient, false);
 	}
 
 	/**
-	 * Send a {@code message} or {@code command} in the chat to the <b>server</b>.
+	 * Send a {@code command} in the chat to the <b>server</b>.
+	 * <p>
+	 * The command can be: {@code /pc hello} or {@code pc hello}.
 	 * <p>
 	 * {@code Safe Client null}
 	 *
-	 * @param message      the message/command
-	 * @param hideToClient whether the message/command should be displayed in the client's chat history
+	 * @param command the command
+	 * @see #sendChatToServer(String, boolean)
 	 */
-	public static void sendChatMessage(@NotNull String message, boolean hideToClient) {
+	public static void sendCommandToServer(@NotNull String command, boolean hideToClient) {
+		sendToServerInternal(command, hideToClient, true);
+	}
+
+	@ApiStatus.Internal
+	private static void sendToServerInternal(@NotNull String content, boolean hideToClient, boolean command) {
 		if (CLIENT.player != null) {
-			message = StringUtil.trimChatMessage(StringUtils.normalizeSpace(message.trim()));
+			content = StringUtil.trimChatMessage(StringUtils.normalizeSpace(content.trim()));
 
 			if (!hideToClient) {
-				CLIENT.gui.getChat().addRecentChat(message);
+				CLIENT.gui.getChat().addRecentChat(content);
 			}
 
-			if (message.startsWith("/")) {
-				CLIENT.player.connection.sendCommand(message.substring(1));
+			if (command) {
+				content = content.startsWith("/") ? content.substring(1) : content;
+				CLIENT.player.connection.sendCommand(content);
 			} else {
-				CLIENT.player.connection.sendChat(message);
+				CLIENT.player.connection.sendChat(content);
 			}
 		}
 	}
