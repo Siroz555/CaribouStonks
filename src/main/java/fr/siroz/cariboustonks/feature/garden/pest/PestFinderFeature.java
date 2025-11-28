@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.feature.garden.pest;
 
+import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -9,6 +10,7 @@ import fr.siroz.cariboustonks.event.InteractionEvents;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -148,7 +150,10 @@ public final class PestFinderFeature extends Feature {
 					try {
 						int plotId = Integer.parseInt(plot);
 						infestedPlots.add(plotId);
-					} catch (NumberFormatException ignored) {
+					} catch (NumberFormatException nfe) {
+						if (DeveloperTools.isInDevelopment()) {
+							CaribouStonks.LOGGER.error("{} Unable to parse plot from Tab List", getShortName(), nfe);
+						}
 					}
 				}
 			}

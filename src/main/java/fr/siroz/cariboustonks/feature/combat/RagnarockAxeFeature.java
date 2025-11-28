@@ -10,6 +10,7 @@ import fr.siroz.cariboustonks.manager.hud.Hud;
 import fr.siroz.cariboustonks.manager.hud.HudProvider;
 import fr.siroz.cariboustonks.manager.hud.TextHud;
 import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import it.unimi.dsi.fastutil.Pair;
 import java.text.DecimalFormat;
@@ -131,7 +132,10 @@ public class RagnarockAxeFeature extends Feature implements HudProvider {
 				}
 			}
 			return -1;
-		} catch (Exception ignored) {
+		} catch (Exception ex) {
+			if (DeveloperTools.isInDevelopment()) {
+				CaribouStonks.LOGGER.warn("{} Unable to parse Strength from ItemStack", getShortName(), ex);
+			}
 			return -1;
 		}
 	}

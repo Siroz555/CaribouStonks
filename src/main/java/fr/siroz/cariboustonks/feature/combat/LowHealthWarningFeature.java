@@ -6,6 +6,7 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.colors.ColorUtils;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
@@ -104,7 +105,10 @@ public class LowHealthWarningFeature extends Feature {
 			int health = Integer.parseInt(matcher.group("health").replace(",", ""));
 			int max = Integer.parseInt(matcher.group("max").replace(",", ""));
 			updateHealth(health, max, Math.max(0, health - max));
-		} catch (Exception ignored) { // Si le format change
+		} catch (Exception ex) { // Si le format change
+			if (DeveloperTools.isInDevelopment()) {
+				CaribouStonks.LOGGER.warn("{} Unable to parse health. Format changed?", getShortName(), ex);
+			}
 		}
 	}
 

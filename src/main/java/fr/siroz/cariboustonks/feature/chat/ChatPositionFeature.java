@@ -88,7 +88,7 @@ public class ChatPositionFeature extends Feature {
 					String z = matcher.group("z");
 					createWaypoint(playerName, x, y, z);
 				} catch (Exception ex) {
-					CaribouStonks.LOGGER.error("[ChatPositionFeature] Unable to parse a chat waypoint", ex);
+					CaribouStonks.LOGGER.error("{} Unable to parse a chat waypoint", getShortName(), ex);
 				}
 
 				break;
@@ -142,7 +142,7 @@ public class ChatPositionFeature extends Feature {
 							.build())
 					.buildAndRegister();
 		} catch (Exception ex) { // NumberFormatException
-			CaribouStonks.LOGGER.error("[ChatPositionFeature] Unable to create waypoint", ex);
+			CaribouStonks.LOGGER.error("{} Unable to create waypoint", getShortName(), ex);
 		}
 	}
 }

@@ -67,7 +67,7 @@ public class PartyCommandFeature extends Feature {
 		try {
 			command.getAction().accept(matcher);
 		} catch (Exception ex) {
-			CaribouStonks.LOGGER.error("[PartyCommandFeature] Unable to handle {}", command.name(), ex);
+			CaribouStonks.LOGGER.warn("{} Unable to handle {}", getShortName(), command.name(), ex);
 		}
 	}
 

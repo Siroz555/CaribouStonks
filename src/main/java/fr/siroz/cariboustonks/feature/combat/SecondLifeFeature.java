@@ -15,6 +15,7 @@ import fr.siroz.cariboustonks.manager.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.manager.hud.builder.HudElementTextBuilder;
 import fr.siroz.cariboustonks.manager.hud.element.HudElement;
 import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import it.unimi.dsi.fastutil.Pair;
 import java.text.DecimalFormat;
@@ -167,7 +168,10 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 					);
 				}
 			}
-		} catch (Exception ignored) {
+		} catch (Exception ex) {
+			if (DeveloperTools.isInDevelopment()) {
+				CaribouStonks.LOGGER.warn("{} Unable to update hud lines", getShortName(), ex);
+			}
 		}
 
 		return hudBuilder.build();

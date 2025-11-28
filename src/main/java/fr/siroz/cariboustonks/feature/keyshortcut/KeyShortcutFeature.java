@@ -71,7 +71,7 @@ public class KeyShortcutFeature extends Feature {
 		try {
 			CaribouStonks.core().getJsonFileService().save(SHORTCUTS_PATH, shortcutsToSave);
 		} catch (JsonProcessingException ex) {
-			CaribouStonks.LOGGER.error("[KeyShortcuts] Unable to save shortcuts", ex);
+			CaribouStonks.LOGGER.error("{} Unable to save shortcuts", getShortName(), ex);
 		}
 	}
 
@@ -90,7 +90,7 @@ public class KeyShortcutFeature extends Feature {
 			try {
 				return CaribouStonks.core().getJsonFileService().loadMap(SHORTCUTS_PATH, mapType);
 			} catch (JsonProcessingException ex) {
-				CaribouStonks.LOGGER.error("[KeyShortcuts] Unable to load shortcuts", ex);
+				CaribouStonks.LOGGER.error("{} Unable to load shortcuts", getShortName(), ex);
 				return Collections.emptyMap();
 			}
 		});
@@ -108,7 +108,7 @@ public class KeyShortcutFeature extends Feature {
 		}
 
 		if (DeveloperTools.isInDevelopment()) {
-			CaribouStonks.LOGGER.info("[KeyShortcuts] Loaded {} KeyShortcut", loaded);
+			CaribouStonks.LOGGER.info("{} Loaded {} KeyShortcut", getShortName(), loaded);
 		}
 	}
 
