@@ -80,6 +80,14 @@ public abstract class DrawContextMixin {
 	private void cariboustonks$scrollableTooltipXYAxis(TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner, Identifier texture, CallbackInfo info, @Local(ordinal = 6) LocalIntRef refX, @Local(ordinal = 7) LocalIntRef refY) {
 		refX.set(refX.get() + getXOffset());
 		refY.set(refY.get() + getYOffset());
+
+		if (scrollableTooltipFeature.canStartFromTop()) {
+			int currentY = refY.get();
+			if (refY.get() < 5) {
+				refY.set(5);
+				scrollableTooltipFeature.initOffsetY(5 - currentY);
+			}
+		}
 	}
 
 	@Unique
