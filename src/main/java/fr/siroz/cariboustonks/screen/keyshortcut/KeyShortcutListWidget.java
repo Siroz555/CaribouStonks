@@ -48,6 +48,7 @@ class KeyShortcutListWidget extends ElementListWidget<KeyShortcutListWidget.KeyS
 	@Override
 	protected void removeEntry(KeyShortcutEntry entry) {
 		if (entry != null && entry.keyShortcut != null) {
+			super.removeEntry(entry);
 			parent.shortcuts.remove(entry.keyShortcut.command());
 		}
 	}

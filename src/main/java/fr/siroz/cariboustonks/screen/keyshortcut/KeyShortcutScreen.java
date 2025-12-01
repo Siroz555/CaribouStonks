@@ -64,15 +64,15 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 				b -> listWidget.createKeyShortcut()).build());
 
 		buttonDelete = ButtonWidget.builder(Text.translatable("selectServer.deleteButton"), b -> {
-			if (client != null && listWidget.getSelectedOrNull() instanceof KeyShortcutListWidget.KeyShortcutEntry) {
+			if (client != null && listWidget.getSelectedOrNull() instanceof KeyShortcutListWidget.KeyShortcutEntry entry) {
 				scrollBackup = listWidget.getScrollY();
 				client.setScreen(new ConfirmScreen(
-						this::deleteEntry,
+						confirmation -> deleteEntry(confirmation, entry),
 						Text.literal("Confirm?"),
 						Text.empty(),
 						Text.translatable("selectServer.deleteButton"),
-						ScreenTexts.CANCEL)
-				);
+						ScreenTexts.CANCEL
+				));
 			}
 		}).build();
 		adder.add(buttonDelete);
@@ -141,8 +141,8 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 		this.setFocused(null);
 	}
 
-	private void deleteEntry(boolean confirmed) {
-		if (confirmed && listWidget.getSelectedOrNull() instanceof KeyShortcutListWidget.KeyShortcutEntry entry) {
+	private void deleteEntry(boolean confirmed, KeyShortcutListWidget.KeyShortcutEntry entry) {
+		if (confirmed) {
 			listWidget.removeEntry(entry);
 		}
 
