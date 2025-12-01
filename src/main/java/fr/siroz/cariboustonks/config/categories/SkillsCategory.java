@@ -6,6 +6,7 @@ import dev.isxander.yacl3.api.LabelOption;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionGroup;
+import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.util.Client;
@@ -41,12 +42,24 @@ public class SkillsCategory extends AbstractCategory {
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Low Health Warning - Threshold"))
                                 .description(OptionDescription.of(
-                                        Text.literal("If the red screen display is enabled, allows you to modify in % when the warning will be triggered.")))
+                                        Text.literal("If Low Health Warning is enabled, allows you to modify in % when the warning will be triggered.")))
                                 .binding(defaults.combat.lowHealthWarning.lowHealthWarningThreshold,
                                         () -> current.combat.lowHealthWarning.lowHealthWarningThreshold,
                                         newValue -> current.combat.lowHealthWarning.lowHealthWarningThreshold = newValue)
                                 .controller(opt -> createIntegerPercentController(opt, 50))
                                 .build())
+						.option(Option.<Double>createBuilder()
+								.name(Text.literal("Low Health Warning - Red Intensity"))
+								.description(OptionDescription.of(
+										Text.literal("If Low Health Warning is enabled, allows you to modify the Red Intensity displayed.")))
+								.binding(defaults.combat.lowHealthWarning.lowHealthWarningIntensity,
+										() -> current.combat.lowHealthWarning.lowHealthWarningIntensity,
+										newValue -> current.combat.lowHealthWarning.lowHealthWarningIntensity = newValue)
+								.controller(opt -> DoubleSliderControllerBuilder.create(opt)
+										.range(0.05d, 0.8d)
+										.step(0.1d)
+										.formatValue(d -> Text.of("x " + String.format("%.1f", d))))
+								.build())
 						.option(LabelOption.create(Text.literal("| Cocooned Mobs").formatted(Formatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Cocooned Warning"))
