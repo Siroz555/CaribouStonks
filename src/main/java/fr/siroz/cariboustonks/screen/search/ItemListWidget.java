@@ -197,7 +197,7 @@ class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry>
 	}
 
 	abstract static class Entry extends AlwaysSelectedEntryListWidget.Entry<Entry> implements AutoCloseable {
-		public Entry() {
+		Entry() {
 		}
 
 		@Override
@@ -282,7 +282,7 @@ class ItemListWidget extends AlwaysSelectedEntryListWidget<ItemListWidget.Entry>
 		private static final Text LOADING_LIST_TEXT = Text.literal("Loading..");
 		private final MinecraftClient client;
 
-		public LoadingEntry(MinecraftClient client) {
+		LoadingEntry(MinecraftClient client) {
 			this.client = client;
 		}
 

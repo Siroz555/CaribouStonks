@@ -14,7 +14,7 @@ class InformationWidget extends AbstractStonksWidget {
 	@Nullable
 	private final BazaarProduct bazaarItem;
 
-	public InformationWidget(
+	InformationWidget(
 			@Nullable BazaarProduct bazaarItem,
 			int width,
 			int height
