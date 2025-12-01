@@ -36,6 +36,31 @@ public final class ColorUtils {
 	}
 
 	/**
+	 * Linearly interpolates between the RGB components of two colors while
+	 * preserving the alpha channel externally.
+	 *
+	 * @param startColor the starting color
+	 * @param endColor   the target color
+	 * @param factor     interpolation factor
+	 * @return a blended RGB color encoded as 0xRRGGBB with no alpha
+	 */
+	public static int lerpRGB(int startColor, int endColor, float factor) {
+		int rA = (startColor >> 16) & 0xFF;
+		int gA = (startColor >> 8) & 0xFF;
+		int bA = startColor & 0xFF;
+
+		int rB = (endColor >> 16) & 0xFF;
+		int gB = (endColor >> 8) & 0xFF;
+		int bB = endColor & 0xFF;
+
+		int r = (int) (rA + (rB - rA) * factor);
+		int g = (int) (gA + (gB - gA) * factor);
+		int b = (int) (bA + (bB - bA) * factor);
+
+		return (r << 16) | (g << 8) | b;
+	}
+
+	/**
 	 * Changes the alpha value of the input color while retaining its RGB components.
 	 *
 	 * @param originalColor the original color represented as an integer, where the highest-order byte is the alpha value
