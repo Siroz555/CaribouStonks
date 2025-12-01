@@ -25,8 +25,6 @@ public class LowHealthWarningFeature extends Feature {
 	private static final Pattern HEALTH_ACTION_BAR_PATTERN = Pattern.compile(
 			"§[6c](?<health>[\\d,]+)/(?<max>[\\d,]+)❤ *(?<healing>\\+§c([\\d,]+). *)?");
 
-	// SIROZ-NOTE: Y mettre dans la config maybe
-	private static final double INTENSITY = 0.69d;
 	private static final float SPEED = 2f;
 
 	private static final int MAX_ALPHA = 200;
@@ -80,13 +78,13 @@ public class LowHealthWarningFeature extends Feature {
 		int width = guiGraphics.guiWidth();
 		int height = guiGraphics.guiHeight();
 
-		int thickness = (int) (MAX_THICKNESS * INTENSITY);
+		int thickness = (int) (MAX_THICKNESS * getIntensity());
 		thickness = Math.max(8, Math.min(thickness, Math.min(width, height) / 2));
 
 		double currentTime = Util.getMillis() / 1000.0;
 		float lerpedAmount = Math.abs(Mth.sin((float) (currentTime * SPEED)));
 
-		int alpha = (int) (MAX_ALPHA * INTENSITY);
+		int alpha = (int) (MAX_ALPHA * getIntensity());
 
 		for (int i = 0; i < thickness; i++) {
 			float t = 1.0f - ((float) i / (float) thickness); // 1.0 sur les bords → 0.0 vers le centre
@@ -98,6 +96,10 @@ public class LowHealthWarningFeature extends Feature {
 			guiGraphics.fill(i, 0, i + 1, height, lerpedColor); // left
 			guiGraphics.fill(width - i - 1, 0, width - i, height, lerpedColor); // right
 		}
+	}
+
+	private double getIntensity() {
+		return ConfigManager.getConfig().combat.lowHealthWarning.lowHealthWarningIntensity;
 	}
 
 	private void updateHealth(@NotNull Matcher matcher) {

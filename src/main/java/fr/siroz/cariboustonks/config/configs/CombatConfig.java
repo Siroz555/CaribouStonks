@@ -39,6 +39,9 @@ public class CombatConfig {
 
 		@SerialEntry
 		public int lowHealthWarningThreshold = 15;
+
+		@SerialEntry
+		public double lowHealthWarningIntensity = 0.69d;
 	}
 
 	public static class RagAxe {
