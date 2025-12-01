@@ -39,7 +39,6 @@ public class WitherKingDragonFeature extends Feature {
 
 	private static final String PHASE_5_TRIGGER_1 = "[BOSS] Wither King: You... again?";
 	private static final String PHASE_5_TRIGGER_2 = "[BOSS] Wither King: Ohhh?";
-	private static final int SPAWN_COOLDOWN_TICKS = 100; // 5s
 
 	private final DungeonManager dungeonManager;
 
@@ -137,8 +136,8 @@ public class WitherKingDragonFeature extends Feature {
 			box.contract(dragon.getPos1().getX() == 41 ? 11 : 0, 0, dragon.getPos1().getZ() == 112 ? 0 : 11);
 			// Si dans le box
 			if (box.contains(packet.getX(), packet.getY(), packet.getZ())) {
-				if (dragon.getSpawnTime() <= 0) {
-					dragon.setSpawnTime(SPAWN_COOLDOWN_TICKS);
+				if (dragon.getSpawnTime() <= 0 && !dragon.isSpawned()) {
+					dragon.spawn();
 					onDragonSpawn(dragon);
 				}
 			}
