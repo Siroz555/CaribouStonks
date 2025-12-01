@@ -64,15 +64,15 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 				b -> listWidget.createKeyShortcut()).build());
 
 		buttonDelete = Button.builder(Component.translatable("selectServer.deleteButton"), b -> {
-			if (minecraft != null && listWidget.getSelected() instanceof KeyShortcutListWidget.KeyShortcutEntry) {
+			if (listWidget.getSelected() instanceof KeyShortcutListWidget.KeyShortcutEntry entry) {
 				scrollBackup = listWidget.scrollAmount();
 				minecraft.setScreen(new ConfirmScreen(
-						this::deleteEntry,
+						confirmation -> deleteEntry(confirmation, entry),
 						Component.literal("Confirm?"),
 						Component.empty(),
 						Component.translatable("selectServer.deleteButton"),
-						CommonComponents.GUI_CANCEL)
-				);
+						CommonComponents.GUI_CANCEL
+				));
 			}
 		}).build();
 		adder.addChild(buttonDelete);
@@ -95,7 +95,7 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public boolean keyPressed(KeyEvent input) {
+	public boolean keyPressed(@NotNull KeyEvent input) {
 		if (currentEntry != null) {
 			int code = (input.input() == GLFW.GLFW_KEY_ESCAPE || input.input() == GLFW.GLFW_KEY_DELETE) ? -1 : input.input();
 			currentEntry.setKeyCode(code);
@@ -128,7 +128,6 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 
 	@Override
 	public void close() {
-		assert minecraft != null;
 		minecraft.setScreen(parent);
 	}
 
@@ -141,15 +140,12 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 		this.setFocused(null);
 	}
 
-	private void deleteEntry(boolean confirmed) {
-		if (confirmed && listWidget.getSelected() instanceof KeyShortcutListWidget.KeyShortcutEntry entry) {
+	private void deleteEntry(boolean confirmed, KeyShortcutListWidget.KeyShortcutEntry entry) {
+		if (confirmed) {
 			listWidget.removeEntry(entry);
 		}
 
-		if (minecraft != null) {
-			minecraft.setScreen(this);
-		}
-
+		minecraft.setScreen(this);
 		listWidget.setScrollAmount(scrollBackup);
 	}
 
