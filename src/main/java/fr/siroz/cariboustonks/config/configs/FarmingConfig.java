@@ -14,5 +14,8 @@ public class FarmingConfig {
 
 		@SerialEntry
 		public boolean highlightInfestedPlots = false;
+
+		@SerialEntry
+		public boolean disableWateringCanPlacement = false;
 	}
 }

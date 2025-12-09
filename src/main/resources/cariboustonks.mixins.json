@@ -5,6 +5,7 @@
   "client": [
     "ChatHudMixin",
     "ClientCommonNetworkHandlerMixin",
+    "ClientPlayerInteractionManagerMixin",
     "ClientPlayNetworkHandlerMixin",
     "ClientWorldMixin",
     "DrawContextMixin",

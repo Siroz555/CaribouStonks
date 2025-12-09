@@ -209,6 +209,17 @@ public class SkillsCategory extends AbstractCategory {
                         .description(OptionDescription.of(
                                 Text.literal("Garden settings")))
                         .collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Disable Greenhouse watering can placement"))
+								.description(OptionDescription.of(
+										Text.literal("If enabled, disables the placement of watering cans in the Greenhouse."),
+										Text.literal(SPACE + "- HydroCan X").formatted(Formatting.AQUA),
+										Text.literal("- AquaMaster X").formatted(Formatting.RED)))
+								.binding(defaults.farming.garden.disableWateringCanPlacement,
+										() -> current.farming.garden.disableWateringCanPlacement,
+										newValue -> current.farming.garden.disableWateringCanPlacement = newValue)
+								.controller(this::createBooleanController)
+								.build())
                         .option(ButtonOption.createBuilder()
                                 .name(Text.literal("Locking the camera during farming"))
 								.text(Text.literal("/lockMouse"))
