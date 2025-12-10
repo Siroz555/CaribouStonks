@@ -9,12 +9,12 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 **Supported versions**
 
-| Version             |                            Status | Notes                                                |
-|---------------------|----------------------------------:|------------------------------------------------------|
-| **1.21.11**         |                          **BETA** | Under development                                    |
-| **1.21.10**         |                      ✅ **Latest** | Still maintained: features from latest and bug fixes |
-| **1.21.7 / 1.21.8** |                  ✅ **Maintained** | Full support                                         |
-| **1.21.5**          | ⚠️ **No Longer Updated (legacy)** | No longer updated (latest version: 0.8.0)            |
+| Version             |                            Status | Notes                                     |
+|---------------------|----------------------------------:|-------------------------------------------|
+| **1.21.11**         |                      ✅ **Latest** | Full support                              |
+| **1.21.10**         |                  ✅ **Maintained** | Full support                              |
+| **1.21.7 / 1.21.8** |                  ✅ **Maintained** | Full support                              |
+| **1.21.5**          | ⚠️ **No Longer Updated (legacy)** | No longer updated (latest version: 0.8.0) |
 
 ### Installation
 
@@ -124,6 +124,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
         - Display a HUD showing the time remaining, sorted and color-coded.
 
 - Farming | Garden
+    - Greenhouse: Disable Watering Can placement
     - KeyBind / Command to lock the camera during farming sessions.
     - Guess Pests and display a cursor line in the direction of the Pests.
     - Highlight Plots that are infested by pests with a border delimitation.
