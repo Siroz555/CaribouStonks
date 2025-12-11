@@ -52,7 +52,6 @@ public final class CaribouRenderer {
 	private static final Vector4f COLOR_MODULATOR = new Vector4f(1f, 1f, 1f, 1f);
 	private static final Vector3f MODEL_OFFSET = new Vector3f();
 	private static final Matrix4f TEXTURE_MATRICE = new Matrix4f();
-	private static final float DEFAULT_LINE_WIDTH = 0f;
 
 	private static final List<RenderPipeline> EXCLUDED_FROM_BATCHING = new ArrayList<>();
 	private static final Int2ObjectMap<ByteBufferBuilder> ALLOCATORS = new Int2ObjectArrayMap<>(5);
@@ -121,15 +120,11 @@ public final class CaribouRenderer {
 	}
 
 	public static BufferBuilder getBuffer(@NotNull RenderPipeline pipeline) {
-		return getBuffer(pipeline, TextureSetup.noTexture(), DEFAULT_LINE_WIDTH);
-	}
-
-	public static BufferBuilder getBuffer(@NotNull RenderPipeline pipeline, float lineWidth) {
-		return getBuffer(pipeline, TextureSetup.noTexture(), lineWidth);
+		return getBufferInternal(pipeline, TextureSetup.noTexture());
 	}
 
 	public static BufferBuilder getBuffer(@NotNull RenderPipeline pipeline, @NotNull TextureSetup textureSetup) {
-		return getBuffer(pipeline, textureSetup, DEFAULT_LINE_WIDTH);
+		return getBufferInternal(pipeline, textureSetup);
 	}
 
 	public static void close() {
@@ -147,35 +142,35 @@ public final class CaribouRenderer {
 	/**
 	 * Returns the appropriate {@code BufferBuilder} that should be used with the given pipeline, texture view, and line width.
 	 */
-	private static BufferBuilder getBuffer(RenderPipeline pipeline, TextureSetup textureSetup, float lineWidth) {
+	private static BufferBuilder getBufferInternal(RenderPipeline pipeline, TextureSetup textureSetup) {
 		if (!EXCLUDED_FROM_BATCHING.contains(pipeline)) {
-			return setupBatched(pipeline, textureSetup, lineWidth);
+			return setupBatched(pipeline, textureSetup);
 		} else {
-			return setupUnbatched(pipeline, textureSetup, lineWidth);
+			return setupUnbatched(pipeline, textureSetup);
 		}
 	}
 
-	private static BufferBuilder setupBatched(RenderPipeline pipeline, TextureSetup textureSetup, float lineWidth) {
-		int hash = hash(pipeline, textureSetup, lineWidth);
+	private static BufferBuilder setupBatched(RenderPipeline pipeline, TextureSetup textureSetup) {
+		int hash = hash(pipeline, textureSetup);
 		BatchedDraw draw = BATCHED_DRAWS.get(hash);
 
 		if (draw == null) {
 			ByteBufferBuilder allocator = ALLOCATORS.computeIfAbsent(hash, _hash -> new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE));
 			BufferBuilder bufferBuilder = new BufferBuilder(allocator, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-			BATCHED_DRAWS.put(hash, new BatchedDraw(bufferBuilder, pipeline, textureSetup, lineWidth));
+			BATCHED_DRAWS.put(hash, new BatchedDraw(bufferBuilder, pipeline, textureSetup));
 			return bufferBuilder;
 		} else {
 			return draw.bufferBuilder();
 		}
 	}
 
-	private static @NotNull BufferBuilder setupUnbatched(RenderPipeline pipeline, TextureSetup textureSetup, float lineWidth) {
+	private static @NotNull BufferBuilder setupUnbatched(RenderPipeline pipeline, TextureSetup textureSetup) {
 		if (lastUnbatchedDraw != null) {
 			prepareBatchedDraw(lastUnbatchedDraw);
 		}
 
 		BufferBuilder bufferBuilder = new BufferBuilder(GENERAL_ALLOCATOR, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-		lastUnbatchedDraw = new BatchedDraw(bufferBuilder, pipeline, textureSetup, lineWidth);
+		lastUnbatchedDraw = new BatchedDraw(bufferBuilder, pipeline, textureSetup);
 
 		return bufferBuilder;
 	}
@@ -184,12 +179,11 @@ public final class CaribouRenderer {
 	 * Calculates the hash of the given inputs which serves as the keys to our maps where we store stuff for the batched draws.
 	 * This is much faster than using an object-based key as we do not need to create any objects to find the instances we want.
 	 */
-	private static int hash(@NotNull RenderPipeline pipeline, TextureSetup textureSetup, float lineWidth) {
+	private static int hash(@NotNull RenderPipeline pipeline, TextureSetup textureSetup) {
 		// This manually calculates the hash, avoiding Objects#hash to not incur the array allocation each time
 		int hash = 1;
 		hash = 31 * hash + pipeline.hashCode();
 		hash = 31 * hash + textureSetup.hashCode();
-		hash = 31 * hash + Float.hashCode(lineWidth);
 
 		return hash;
 	}
@@ -209,8 +203,7 @@ public final class CaribouRenderer {
 		PREPARED_DRAWS.add(new PreparedDraw(
 				draw.bufferBuilder().buildOrThrow(),
 				draw.pipeline(),
-				draw.textureSetup(),
-				draw.lineWidth()
+				draw.textureSetup()
 		));
 	}
 
@@ -239,8 +232,7 @@ public final class CaribouRenderer {
 					vertexBufferPosition / format.getVertexSize(),
 					drawParameters.indexCount(),
 					prepared.pipeline(),
-					prepared.textureSetup(),
-					prepared.lineWidth()
+					prepared.textureSetup()
 			));
 		}
 	}
@@ -323,7 +315,7 @@ public final class CaribouRenderer {
 
 	private static void draw(@NotNull Draw draw, GpuBuffer indices, VertexFormat.IndexType indexType) {
 		applyViewOffsetZLayering();
-		GpuBufferSlice dynamicTransforms = setupDynamicTransforms(draw.lineWidth);
+		GpuBufferSlice dynamicTransforms = setupDynamicTransforms();
 
 		try (RenderPass renderPass = RenderSystem.getDevice()
 				.createCommandEncoder()
@@ -358,7 +350,7 @@ public final class CaribouRenderer {
 		unapplyViewOffsetZLayering();
 	}
 
-	private static GpuBufferSlice setupDynamicTransforms(float ignored) {
+	private static GpuBufferSlice setupDynamicTransforms() {
 		return RenderSystem.getDynamicUniforms().writeTransform(
 				RenderSystem.getModelViewMatrix(),
 				COLOR_MODULATOR,
@@ -391,24 +383,21 @@ public final class CaribouRenderer {
             int baseVertex,
             int indexCount,
             RenderPipeline pipeline,
-            TextureSetup textureSetup,
-            float lineWidth
+            TextureSetup textureSetup
 	) {
 	}
 
 	private record PreparedDraw(
             MeshData builtBuffer,
             RenderPipeline pipeline,
-            TextureSetup textureSetup,
-            float lineWidth
+            TextureSetup textureSetup
 	) {
 	}
 
 	private record BatchedDraw(
             BufferBuilder bufferBuilder,
             RenderPipeline pipeline,
-            TextureSetup textureSetup,
-            float lineWidth
+            TextureSetup textureSetup
 	) {
 	}
 }

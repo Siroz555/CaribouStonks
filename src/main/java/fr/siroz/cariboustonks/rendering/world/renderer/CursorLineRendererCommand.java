@@ -16,7 +16,7 @@ public final class CursorLineRendererCommand implements RendererCommand<CursorLi
 	@Override
 	public void emit(@NotNull CursorLineRenderState state, @NotNull CameraRenderState camera) {
 		RenderPipeline pipeline = CaribouRenderPipelines.LINES_THROUGH_BLOCKS;
-		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline, state.lineWidth());
+		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline);
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());

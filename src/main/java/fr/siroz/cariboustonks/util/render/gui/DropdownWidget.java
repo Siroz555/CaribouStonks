@@ -265,9 +265,10 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 
 		@Override
 		public void renderContent(@NotNull GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			GuiRenderer.drawScrollableText(context, CLIENT.font,
+			context.textRenderer(GuiGraphics.HoveredTextEffects.NONE).acceptScrollingWithDefaultCenter(
 					Component.literal(entry.toString()).withStyle(Style.EMPTY.withUnderlined(hovered)),
-					getX() + 10, getY(), getX() + getContentWidth(), getY() + 11, -1);
+					this.getX() + 10, this.getX() + this.getWidth(), this.getY(), this.getY() + 11
+			);
 
 			if (selected == this.entry) {
 				context.drawString(CLIENT.font, "->", getX() + 1, getY() + 2, 0xFFFFFFFF);

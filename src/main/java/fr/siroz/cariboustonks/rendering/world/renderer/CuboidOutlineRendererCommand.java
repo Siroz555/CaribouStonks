@@ -20,7 +20,7 @@ public final class CuboidOutlineRendererCommand implements RendererCommand<Cuboi
 
 	@Override
 	public void emit(@NotNull CuboidOutlineRenderState state, @NotNull CameraRenderState camera) {
-		BufferBuilder buffer = CaribouRenderer.getBuffer(CaribouRenderPipelines.LINE_STRIP, state.lineWidth());
+		BufferBuilder buffer = CaribouRenderer.getBuffer(CaribouRenderPipelines.LINE_STRIP);
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());

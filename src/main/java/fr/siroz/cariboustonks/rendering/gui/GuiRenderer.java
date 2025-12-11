@@ -10,15 +10,11 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.RenderPipelines;
 import com.mojang.blaze3d.systems.ScissorState;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.render.TextureSetup;
 import com.mojang.blaze3d.platform.Window;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.Util;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
@@ -46,39 +42,6 @@ public final class GuiRenderer {
 		guiGraphics.fill(x, y + height - 1, x + width, y + height, color);
 		guiGraphics.fill(x, y + 1, x + 1, y + height - 1, color);
 		guiGraphics.fill(x + width - 1, y + 1, x + width, y + height - 1, color);
-	}
-
-	/**
-	 * Draws a scrollable text within the specified coordinates and dimensions.
-	 *
-	 * @param guiGraphics  the {@code GuiGraphics} used for rendering the text
-	 * @param textRenderer the {@code TextRenderer} used for rendering the text
-	 * @param text         the text to be rendered
-	 * @param startX       the x-coordinate (top-left corner)
-	 * @param startY       the y-coordinate (top-left corner)
-	 * @param endX         the x-coordinate (bottom-right corner)
-	 * @param endY         the y-coordinate (bottom-right corner)
-	 * @param color        the color
-	 */
-	public static void drawScrollableText(@NotNull GuiGraphics guiGraphics, @NotNull Font textRenderer, Component text, int startX, int startY, int endX, int endY, int color) {
-		int textWidth = textRenderer.width(text);
-		int scrollAreaWidth = startY + endY;
-		int offsetY = (scrollAreaWidth - 9) / 2 + 1;
-		int textOffset = endX - startX;
-		if (textWidth > textOffset) {
-			int scrollOffset = textWidth - textOffset;
-			double timeOffset = (double) Util.getMillis() / 1_000;
-			double scrollAmount = Math.max((double) scrollOffset * 0.5D, 3.0D);
-			double normalizedScrollValue = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * timeOffset / scrollAmount)) / 2.0D + 0.5D;
-			double textRenderOffset = Mth.lerp(normalizedScrollValue, 0.0F, scrollOffset);
-			guiGraphics.enableScissor(startX, startY, endX, endY);
-			guiGraphics.drawString(textRenderer, text, startX - (int) textRenderOffset, offsetY, color);
-			guiGraphics.disableScissor();
-		} else {
-			int centerX = (startX + endX) / 2;
-			int clampedX = Mth.clamp(centerX, startX + textWidth / 2, endX - textWidth / 2);
-			guiGraphics.drawCenteredString(textRenderer, text, clampedX, offsetY, color);
-		}
 	}
 
 	/**
