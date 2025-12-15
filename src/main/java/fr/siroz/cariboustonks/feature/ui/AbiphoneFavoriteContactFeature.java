@@ -32,8 +32,7 @@ import java.util.regex.Pattern;
 
 public class AbiphoneFavoriteContactFeature
 		extends Feature
-		implements ContainerMatcherTrait, ContainerOverlay, ContainerTooltipAppender
-{
+		implements ContainerMatcherTrait, ContainerOverlay, ContainerTooltipAppender {
 
 	private static final Pattern TITLE_PATTERN = Pattern.compile("^Abiphone.*");
 	private static final Cooldown COOLDOWN = Cooldown.of(1, TimeUnit.SECONDS);
