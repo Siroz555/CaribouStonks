@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 public class TpsHud extends Feature implements HudProvider {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_tps");
-	private final Hud hud;
 
 	private final NetworkManager networkManager;
 
@@ -25,13 +24,6 @@ public class TpsHud extends Feature implements HudProvider {
 
 	public TpsHud() {
 		this.networkManager = CaribouStonks.managers().getManager(NetworkManager.class);
-		this.hud = new TextHud(
-				Component.literal("TPS: 20.0"),
-				this::getText,
-				ConfigManager.getConfig().uiAndVisuals.tpsHud,
-				6,
-				8
-		);
 	}
 
 	@Override
@@ -46,7 +38,13 @@ public class TpsHud extends Feature implements HudProvider {
 
 	@Override
 	public @NotNull Hud getHud() {
-		return hud;
+		return new TextHud(
+				Component.literal("TPS: 20.0"),
+				this::getText,
+				ConfigManager.getConfig().uiAndVisuals.tpsHud,
+				6,
+				8
+		);
 	}
 
 	private Component getText() {

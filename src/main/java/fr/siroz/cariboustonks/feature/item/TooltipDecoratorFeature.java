@@ -43,11 +43,11 @@ public class TooltipDecoratorFeature extends Feature {
 
 	@EventHandler(event = "ItemRenderEvents.POST_TOOLTIP")
 	private void onRenderTooltip(
-            GuiGraphics context,
+            GuiGraphics guiGraphics,
             ItemStack itemStack,
             int x, int y,
             int width, int height,
-            Font textRenderer,
+            Font font,
             List<ClientTooltipComponent> components
 	) {
 		if (CLIENT.player == null || CLIENT.level == null) return;
@@ -62,15 +62,15 @@ public class TooltipDecoratorFeature extends Feature {
 
 			Pair<Integer, Integer> colors = RARITY_COLORS.get(rarity);
 			if (colors != null) {
-				drawBorder(context, x, y, width, height, colors);
+				drawBorder(guiGraphics, x, y, width, height, colors);
 			}
 		}
 	}
 
-	private void drawBorder(GuiGraphics context, int x, int y, int width, int height, Pair<Integer, Integer> colors) {
-		context.pose().pushMatrix();
+	private void drawBorder(GuiGraphics guiGraphics, int x, int y, int width, int height, Pair<Integer, Integer> colors) {
+		guiGraphics.pose().pushMatrix();
 
-		GuiRenderer.submitGradientRect(context,
+		GuiRenderer.submitGradientRect(guiGraphics,
 				400,
 				x - 3,
 				y - 3 + 1,
@@ -78,7 +78,7 @@ public class TooltipDecoratorFeature extends Feature {
 				y + height + 3 - 1,
 				colors.left(), colors.right());
 
-		GuiRenderer.submitGradientRect(context,
+		GuiRenderer.submitGradientRect(guiGraphics,
 				400,
 				x + width + 2,
 				y - 3 + 1,
@@ -86,7 +86,7 @@ public class TooltipDecoratorFeature extends Feature {
 				y + height + 3 - 1,
 				colors.left(), colors.right());
 
-		GuiRenderer.submitGradientRect(context,
+		GuiRenderer.submitGradientRect(guiGraphics,
 				400,
 				x - 3,
 				y - 3,
@@ -94,7 +94,7 @@ public class TooltipDecoratorFeature extends Feature {
 				y - 3 + 1,
 				colors.left(), colors.left());
 
-		GuiRenderer.submitGradientRect(context,
+		GuiRenderer.submitGradientRect(guiGraphics,
 				400,
 				x - 3,
 				y + height + 2,
@@ -102,6 +102,6 @@ public class TooltipDecoratorFeature extends Feature {
 				y + height + 3,
 				colors.right(), colors.right());
 
-		context.pose().popMatrix();
+		guiGraphics.pose().popMatrix();
 	}
 }

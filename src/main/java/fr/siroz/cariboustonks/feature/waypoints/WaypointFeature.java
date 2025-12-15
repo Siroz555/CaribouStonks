@@ -58,13 +58,12 @@ public final class WaypointFeature extends Feature {
 
     @Override
     public boolean isEnabled() {
-        return SkyBlockAPI.isOnSkyBlock();
+        return SkyBlockAPI.isOnSkyBlock() && !waypoints.isEmpty();
     }
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")
     public void render(WorldRenderer renderer) {
         if (!isEnabled()) return;
-        if (waypoints.isEmpty()) return;
 
         List<Waypoint> currentWaypoints = new ArrayList<>(waypoints.get(SkyBlockAPI.getIsland()));
         currentWaypoints.addAll(new ArrayList<>(waypoints.get(IslandType.ANY)));

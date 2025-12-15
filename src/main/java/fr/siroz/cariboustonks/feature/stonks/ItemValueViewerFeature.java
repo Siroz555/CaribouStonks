@@ -93,22 +93,22 @@ public class ItemValueViewerFeature extends Feature {
 	}
 
 	@EventHandler(event = "ScreenEvents.afterRender")
-	private void render(Screen screen, GuiGraphics ctx, int mouseX, int mouseY, float tickDelta) {
+	private void render(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
 		if (currentItem == null || lines.isEmpty()) return;
 
-		ctx.pose().pushMatrix();
-		ctx.pose().scale(getScale(), getScale());
+		guiGraphics.pose().pushMatrix();
+		guiGraphics.pose().scale(getScale(), getScale());
 
 		int y = START_Y;
 		for (Component text : lines) {
-			ctx.drawString(CLIENT.font, text, PADDING_LEFT, y, Colors.WHITE.asInt());
+			guiGraphics.drawString(CLIENT.font, text, PADDING_LEFT, y, Colors.WHITE.asInt());
 			if (text.getString().isBlank()) {
 				y += (LINE_HEIGHT / 2);
 			} else {
 				y += LINE_HEIGHT;
 			}
 		}
-		ctx.pose().popMatrix();
+		guiGraphics.pose().popMatrix();
 	}
 
 	private float getScale() {

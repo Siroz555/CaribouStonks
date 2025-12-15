@@ -7,14 +7,11 @@ import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 
 public class GyrokineticOverlayFeature extends Feature {
-
-	private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private static final String GYROKINETIC_ITEM_ID = "GYROKINETIC_WAND";
 	private static final int REACH = 24;

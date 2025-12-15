@@ -17,17 +17,6 @@ import org.jetbrains.annotations.NotNull;
 public class DayHud extends Feature implements HudProvider {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_day");
-	private final Hud hud;
-
-	public DayHud() {
-		this.hud = new TextHud(
-				Component.literal("Day: 27"),
-				this::getText,
-				ConfigManager.getConfig().uiAndVisuals.dayHud,
-				20,
-				64
-		);
-	}
 
 	@Override
 	public boolean isEnabled() {
@@ -41,7 +30,13 @@ public class DayHud extends Feature implements HudProvider {
 
 	@Override
 	public @NotNull Hud getHud() {
-		return hud;
+		return new TextHud(
+				Component.literal("Day: 27"),
+				this::getText,
+				ConfigManager.getConfig().uiAndVisuals.dayHud,
+				20,
+				64
+		);
 	}
 
 	@Contract(" -> new")

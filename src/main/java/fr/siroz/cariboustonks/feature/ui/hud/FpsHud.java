@@ -8,7 +8,6 @@ import fr.siroz.cariboustonks.manager.hud.HudProvider;
 import fr.siroz.cariboustonks.manager.hud.TextHud;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Contract;
@@ -17,17 +16,6 @@ import org.jetbrains.annotations.NotNull;
 public class FpsHud extends Feature implements HudProvider {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_fps");
-	private final Hud hud;
-
-	public FpsHud() {
-		this.hud = new TextHud(
-				Component.literal("555 FPS"),
-				this::getText,
-				ConfigManager.getConfig().uiAndVisuals.fpsHud,
-				6,
-				64
-		);
-	}
 
 	@Override
 	public boolean isEnabled() {
@@ -41,11 +29,17 @@ public class FpsHud extends Feature implements HudProvider {
 
 	@Override
 	public @NotNull Hud getHud() {
-		return hud;
+		return new TextHud(
+				Component.literal("555 FPS"),
+				this::getText,
+				ConfigManager.getConfig().uiAndVisuals.fpsHud,
+				6,
+				64
+		);
 	}
 
 	@Contract(" -> new")
 	private @NotNull Component getText() {
-		return Component.literal(Minecraft.getInstance().getFps() + " FPS");
+		return Component.literal(CLIENT.getFps() + " FPS");
 	}
 }

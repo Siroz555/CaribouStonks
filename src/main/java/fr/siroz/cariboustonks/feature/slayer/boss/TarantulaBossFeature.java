@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 
 public class TarantulaBossFeature extends Feature implements EntityGlowProvider {
 
+	// TODO - Je crois que le nombre des egg a changé
 	private static final Pattern COCOON_EGG_PATTERN = Pattern.compile("(\\d+)s (\\d)/3");
 
 	private final SlayerManager slayerManager;

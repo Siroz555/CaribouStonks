@@ -94,7 +94,7 @@ public class RagnarockAxeFeature extends Feature implements HudProvider {
 		// 1.4920635f
 		if (packet.getPitch() != 1.4920635f) return;
 		// SoundEvents.WOLF_SOUNDS Map > sound path compare
-		if (!packet.getSound().value().location().getPath().startsWith("entity.wolf.death")) return;
+		if (!Client.convertSoundPacketToName(packet).startsWith("entity.wolf.death")) return;
 
 		ItemStack held = Client.getHeldItem();
 		if (held == null || held.isEmpty()) {

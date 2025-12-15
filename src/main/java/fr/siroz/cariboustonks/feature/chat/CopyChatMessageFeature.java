@@ -10,7 +10,7 @@ import net.minecraft.client.GuiMessage;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-public class CopyChatMessageFeature extends Feature {
+public class CopyChatMessageFeature extends Feature { // TODO
 
 	public CopyChatMessageFeature() {
 		ChatEvents.MESSAGE_CLICKED.register(this::onChatClick);
@@ -34,7 +34,7 @@ public class CopyChatMessageFeature extends Feature {
 		GuiMessage message = getMessageAt(mouseX, mouseY);
 		if (message != null) {
 			String toClipboard = StonksUtils.stripColor(message.content().getString());
-			CLIENT.keyboardHandler.setClipboard(toClipboard);
+			Client.setToClipboard(toClipboard);
 		}
 	}
 

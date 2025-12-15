@@ -17,19 +17,10 @@ public class PingHud extends Feature implements HudProvider {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_ping");
 
-	private final Hud hud;
-
 	private final NetworkManager networkManager;
 
 	public PingHud() {
 		this.networkManager = CaribouStonks.managers().getManager(NetworkManager.class);
-		this.hud = new TextHud(
-				Component.literal("0 ms"),
-				this::getText,
-				ConfigManager.getConfig().uiAndVisuals.pingHud,
-				58,
-				8
-		);
 	}
 
 	@Override
@@ -44,7 +35,13 @@ public class PingHud extends Feature implements HudProvider {
 
 	@Override
 	public @NotNull Hud getHud() {
-		return hud;
+		return new TextHud(
+				Component.literal("0 ms"),
+				this::getText,
+				ConfigManager.getConfig().uiAndVisuals.pingHud,
+				58,
+				8
+		);
 	}
 
 	private Component getText() {

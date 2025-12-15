@@ -181,6 +181,7 @@ public interface CalculatorConstants {
 		map.put("submerged", "DEEP_SEA_ORB");
 		map.put("undead", "PREMIUM_FLESH");
 		map.put("hyper", "ENDSTONE_GEODE");
+		map.put("sunny", "SUNSTONE");
 		// Equipment (https://wiki.hypixel.net/Reforging#Equipment_)
 		map.put("blazing", "BLAZEN_SPHERE");
 		map.put("blood_soaked", "PRESUMED_GALLON_OF_RED_PAINT");
@@ -194,6 +195,7 @@ public interface CalculatorConstants {
 		map.put("squeaky", "SQUEAKY_TOY");
 		map.put("strengthened", "SEARING_STONE");
 		map.put("waxed", "BLAZE_WAX");
+		map.put("lunar", "MOONSTONE");
 		// Fishing Rods (https://wiki.hypixel.net/Reforging#Fishing_Rods_)
 		map.put("chomp", "KUUDRA_MANDIBLE");
 		map.put("lucky", "LUCKY_DICE");

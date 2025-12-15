@@ -11,7 +11,6 @@ import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import java.util.Set;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
@@ -24,8 +23,6 @@ public class EtherWarpOverlayFeature extends Feature {
 
 	// Rajouter un petit Zoom quand le target est good comme en 1.8, en reprenant le code du ZoomFeature
 	// en ayant un event lié entre ces 2 features ?
-
-	private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private static final Set<String> ETHER_WARP_ITEMS = Set.of(
 			"ASPECT_OF_THE_END",

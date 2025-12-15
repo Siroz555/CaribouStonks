@@ -94,7 +94,7 @@ public final class DeveloperManager {
 	@EventHandler(event = "NetworkEvents.PLAY_SOUND_PACKET")
 	private void onSoundPacket(ClientboundSoundPacket packet) {
 		if (dumpSound) {
-			String soundId = packet.getSound().value().location().getPath();
+			String soundId = Client.convertSoundPacketToName(packet);
 			String time = TimeUtils.formatInstant(Instant.now(), TimeUtils.TIME_HH_MM_SS);
 			String pitch = BigDecimal.valueOf(packet.getPitch())
 					.setScale(3, RoundingMode.DOWN)

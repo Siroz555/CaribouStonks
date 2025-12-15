@@ -20,6 +20,7 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -46,6 +47,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.jetbrains.annotations.Unmodifiable;
+import org.jspecify.annotations.NonNull;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -134,6 +136,15 @@ public final class Client {
 		}
 
 		return CLIENT.player.blockPosition();
+	}
+
+	/**
+	 * Set the given {@code String} to the Client Clipboard.
+	 *
+	 * @param toClipboard the string
+	 */
+	public static void setToClipboard(@NotNull String toClipboard) {
+		CLIENT.keyboardHandler.setClipboard(toClipboard);
 	}
 
 	/**
@@ -483,6 +494,19 @@ public final class Client {
 	 */
 	public static void showFatalErrorScreen(@NotNull Component title, @NotNull Component message) {
 		if (CLIENT.player != null) CLIENT.setScreen(new ErrorScreen(title, message));
+	}
+
+	/**
+	 * Retrieve the {@code Sound Name} of the given Sound Packet.
+	 * <p>
+	 * {@code entity.warden.death}
+	 *
+	 * @param soundPacket the sound packet
+	 * @return the sound name of an empty String
+	 */
+	public static @NonNull String convertSoundPacketToName(@Nullable ClientboundSoundPacket soundPacket) {
+		if (soundPacket == null) return "";
+		return soundPacket.getSound().value().location().getPath();
 	}
 
 	/**

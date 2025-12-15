@@ -89,7 +89,8 @@ public class TreeOverlayFeature extends Feature {
 
 		if (entity.getX() == currentTreeInfo.getX()
 				&& entity.getY() > currentTreeInfo.getY()
-				&& entity.getZ() == currentTreeInfo.getZ()) {
+				&& entity.getZ() == currentTreeInfo.getZ()
+		) {
 			currentInfo = entity.getName();
 		}
 	}
