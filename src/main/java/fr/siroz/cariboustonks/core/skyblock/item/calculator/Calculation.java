@@ -72,6 +72,7 @@ public record Calculation(
 		DIVAN_POWDER_COATING,
 		POWER_SCROLL,
 		WITHER_SCROLL,
+		OVERCLOCKER,
 		// Gemstones
 		GEMSTONE,
 		GEMSTONE_SLOT,

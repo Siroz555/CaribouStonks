@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
  * @param dungeonItemTier    the dungeon tier (Mobs Drops)
  * @param dungeonItemLevel   the dungeon level (Essence Upgrades)
  * @param boosters           the boosters (Boosters)
+ * @param overclockers       the overclockers (Overclocker 3000)
  */
 public record Modifiers(
 		int rarityUpgrades,
@@ -39,7 +40,8 @@ public record Modifiers(
 		Optional<List<String>> abilityScrolls,
 		OptionalInt dungeonItemTier,
 		OptionalInt dungeonItemLevel,
-		Optional<List<String>> boosters
+		Optional<List<String>> boosters,
+		OptionalInt overclockers
 ) {
 
 	public static final Modifiers EMPTY = new Modifiers(
@@ -56,7 +58,8 @@ public record Modifiers(
 			Optional.empty(),
 			OptionalInt.empty(),
 			OptionalInt.empty(),
-			Optional.empty()
+			Optional.empty(),
+			OptionalInt.empty()
 	);
 
 	public boolean isRecombobulated() {
@@ -105,6 +108,9 @@ public record Modifiers(
 							.flatMap(Optional::stream)
 							.toList())
 					.filter(list -> !list.isEmpty());
+			OptionalInt overclockData = customData.getInt("levelable_overclocks")
+					.map(OptionalInt::of)
+					.orElse(OptionalInt.empty());
 
 			return new Modifiers(
 					rarityUpgradeData,
@@ -120,7 +126,8 @@ public record Modifiers(
 					abilityScrollsData,
 					dungeonItemTierData,
 					dungeonItemLevelData,
-					boostersData
+					boostersData,
+					overclockData
 			);
 		} catch (Exception ignored) {
 			return EMPTY;

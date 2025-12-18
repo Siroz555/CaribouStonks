@@ -203,6 +203,7 @@ public class ItemValueViewerFeature extends Feature {
 		addDrillParts(result, out);
 		addRodParts(result, out);
 		addBoosters(result, out);
+		addOverclockers(result, out);
 
 		if (!result.calculations().isEmpty()) {
 			out.add(Text.literal(" "));
@@ -590,6 +591,13 @@ public class ItemValueViewerFeature extends Feature {
 					.append(Text.literal(" " + boosters.size()).formatted(Formatting.AQUA))
 					.append(priceShortFormat(price))
 			);
+		}
+	}
+
+	private void addOverclockers(@NotNull ItemValueResult result, List<Text> out) {
+		Calculation overclocker = result.get(Calculation.Type.OVERCLOCKER);
+		if (overclocker != null) {
+			out.add(formatProgress("Overclocker 3000", overclocker.count(), 10, overclocker.price()));
 		}
 	}
 
