@@ -64,7 +64,6 @@ final class PlotInfestedRenderer {
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")
 	public void render(WorldRenderer renderer) {
-		if (!pestFinderFeature.isEnabled()) return;
 		if (!pestFinderFeature.highlightInfestedPlots()) return;
 		if (pestFinderFeature.getInfestedPlots().isEmpty()) return;
 
