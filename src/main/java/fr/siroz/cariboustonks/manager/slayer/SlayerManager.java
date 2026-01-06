@@ -1,5 +1,7 @@
 package fr.siroz.cariboustonks.manager.slayer;
 
+import fr.siroz.cariboustonks.core.data.hypixel.election.Mayor;
+import fr.siroz.cariboustonks.core.data.hypixel.election.Perk;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -10,12 +12,14 @@ import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.manager.Manager;
 import fr.siroz.cariboustonks.util.Client;
+import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -131,6 +135,32 @@ public final class SlayerManager implements Manager {
 	}
 
 	/**
+	 * Returns the {@code XP} reward from the given slayer type/tier.
+	 * The reward change if the Mayor Aatrox with the "Slayer XP Buff" (x 1.25) is present.
+	 *
+	 * @param type the type
+	 * @param tier the tier
+	 * @return the final xp reward
+	 */
+	public double getXpReward(@NotNull SlayerType type, @NotNull SlayerTier tier) {
+		double xp = type.getExpPerTier()[tier.ordinal() - 1]; // -1 car UNKNOWN est en premier
+		if (SkyBlockAPI.isMayorOrMinister(Mayor.AATROX, Perk.SLAYER_XP_BUFF)) {
+			xp *= 1.25f;
+		}
+
+		return xp;
+	}
+
+	@ApiStatus.Internal
+	public void invokeEntityBossDeath(UUID uuid) {
+		if (quest == null || bossFight == null) return;
+		if (getBossEntity() == null) return;
+		if (!getBossEntity().getUUID().equals(uuid)) return;
+
+		SkyBlockEvents.SLAYER_BOSS_DEATH.invoker().onDeath(quest.getSlayerType(), quest.getSlayerTier());
+	}
+
+	/**
 	 * The main entry point for managing the various statuses of the Slayer Quest's progress.
 	 */
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
@@ -152,21 +182,18 @@ public final class SlayerManager implements Manager {
 				if (quest == null) {
 					quest = new SlayerQuest(this);
 				}
-				SkyBlockEvents.SLAYER_QUEST_START.invoker()
-						.onStart(quest.getSlayerType(), quest.getSlayerTier(), false);
+				SkyBlockEvents.SLAYER_QUEST_START.invoker().onStart(quest.getSlayerType(), quest.getSlayerTier(), false);
 				bossFight = null;
 			}
 			case BOSS_SLAIN -> {
 				if (quest != null && bossFight != null) {
 					bossFight.setSlain(true);
-					SkyBlockEvents.SLAYER_BOSS_DEATH.invoker()
-							.onDeath(quest.getSlayerType(), quest.getSlayerTier(), bossFight.getBossSpawnTime());
+					SkyBlockEvents.SLAYER_BOSS_END.invoker().onEnd(quest.getSlayerType(), quest.getSlayerTier(), bossFight.getBossSpawnTime());
 				}
 			}
 			case QUEST_COMPLETE -> {
 				if (quest != null && bossFight != null && !bossFight.isSlain()) {
-					SkyBlockEvents.SLAYER_BOSS_DEATH.invoker()
-							.onDeath(quest.getSlayerType(), quest.getSlayerTier(), bossFight.getBossSpawnTime());
+					SkyBlockEvents.SLAYER_BOSS_END.invoker().onEnd(quest.getSlayerType(), quest.getSlayerTier(), bossFight.getBossSpawnTime());
 				}
 				bossFight = null;
 			}
