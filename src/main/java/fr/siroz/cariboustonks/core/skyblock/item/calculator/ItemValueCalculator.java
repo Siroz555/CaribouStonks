@@ -660,6 +660,18 @@ public final class ItemValueCalculator {
 					acc.push(calc);
 				}
 			}
+			// Overclocker 3000
+			if (modifiers.overclockers().isPresent()) {
+				int overclockers = modifiers.overclockers().getAsInt();
+				Calculation calc = Calculation.of(
+						Calculation.Type.OVERCLOCKER,
+						"OVERCLOCKER_3000",
+						ctx.prices().applyAsDouble("OVERCLOCKER_3000") * overclockers * worth("overclocker", ctx.networth()),
+						overclockers
+				);
+				acc.add(calc.price());
+				acc.push(calc);
+			}
 			return ComponentDecision.CONTINUE;
 		};
 	}

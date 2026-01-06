@@ -66,6 +66,7 @@ public interface CalculatorConstants {
 		map.put("divanPowderCoating", 0.8);
 		map.put("powerScroll", 0.6); // 0.5
 		map.put("witherScroll", 1);
+		map.put("overclocker", 0.8); // -
 		// Gemstones
 		map.put("gemstones", 1);
 		map.put("gemstoneSlots", 0.75); // 0.6
