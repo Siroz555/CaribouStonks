@@ -102,9 +102,9 @@ public class NecronBossFeature extends Feature implements HudProvider {
 
 	@EventHandler(event = "NetworkEvents.SERVER_TICK")
 	private void onServerTick() {
-		if (goldorTicks >= 0) goldorTicks--; // tick tick
-		if (goldorStartTime >= 0) goldorStartTime--; // tick tick
 		if (goldorTicks == 0 && goldorStartTime <= 0) goldorTicks = GOLDOR_TICKS; // restart tick tick
+		if (goldorStartTime >= 0) goldorStartTime--; // tick tick
+		if (goldorTicks >= 0) goldorTicks--; // tick tick
 	}
 
 	private Formatting getColor(int goldorTicks) {
