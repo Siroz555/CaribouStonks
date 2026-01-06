@@ -123,6 +123,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
         - Display a HUD showing the time remaining, sorted and color-coded.
 
 - Farming | Garden
+    - Greenhouse: Next Growth Stage Reminder & Pre Reminder (5 minutes).
     - KeyBind / Command to lock the camera during farming sessions.
     - Guess Pests and display a cursor line in the direction of the Pests.
     - Highlight Plots that are infested by pests with a border delimitation.

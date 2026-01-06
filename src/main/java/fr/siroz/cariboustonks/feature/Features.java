@@ -21,6 +21,7 @@ import fr.siroz.cariboustonks.feature.fishing.radar.HotspotRadarFeature;
 import fr.siroz.cariboustonks.feature.foraging.BreakTreeAnimationFeature;
 import fr.siroz.cariboustonks.feature.foraging.TreeOverlayFeature;
 import fr.siroz.cariboustonks.feature.garden.DisableWateringCanPlacementFeature;
+import fr.siroz.cariboustonks.feature.garden.GreenhouseGrowthStageFeature;
 import fr.siroz.cariboustonks.feature.garden.MouseLockFeature;
 import fr.siroz.cariboustonks.feature.garden.pest.PestFinderFeature;
 import fr.siroz.cariboustonks.feature.hunting.AttributeInfoTooltipFeature;
@@ -96,6 +97,7 @@ public final class Features {
 		// Garden
 		registerFeature(new PestFinderFeature());
 		registerFeature(new DisableWateringCanPlacementFeature());
+		registerFeature(new GreenhouseGrowthStageFeature());
 		registerFeature(new MouseLockFeature());
 		// Hunting
 		registerFeature(new AttributeInfoTooltipFeature(3));
