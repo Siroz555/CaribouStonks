@@ -60,18 +60,6 @@ repositories {
 			includeGroup "dev.architectury"
 		}
 	}
-
-	exclusiveContent {
-		forRepository {
-			maven {
-				url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
-			}
-		}
-
-		filter {
-			includeGroup("me.djtheredstoner")
-		}
-	}
 }
 
 dependencies {
@@ -95,9 +83,6 @@ dependencies {
 	modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") {
 		exclude group: "net.fabricmc.fabric-api"
 	}
-
-	// DevAuth - DEVELOPMENT ONLY (https://github.com/DJtheRedstoner/DevAuth)
-	modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
 }
 
 test {
