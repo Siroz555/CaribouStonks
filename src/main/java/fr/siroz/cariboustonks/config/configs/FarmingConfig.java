@@ -14,5 +14,13 @@ public class FarmingConfig {
 
 		@SerialEntry
 		public boolean highlightInfestedPlots = false;
+
+		@SerialEntry
+		public boolean disableWateringCanPlacement = false;
+
+		@SerialEntry
+		public boolean greenhouseGrowthStageReminder = false;
+
+		public boolean greenhouseGrowthStagePreReminder = true;
 	}
 }

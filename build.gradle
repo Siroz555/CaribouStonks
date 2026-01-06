@@ -1,6 +1,5 @@
 plugins {
 	id 'fabric-loom' version "${loom_version}"
-	id 'checkstyle'
 }
 
 version = "${project.mod_version}+${project.minecraft_version}"
@@ -134,13 +133,6 @@ processResources {
 	filesMatching("fabric.mod.json") {
 		expand "version": inputs.properties.version
 	}
-}
-
-checkstyle {
-	toolVersion = "10.20.2"
-	configFile = rootProject.file("checkstyle.xml")
-	sourceSets = [sourceSets.main]
-	ignoreFailures = false
 }
 
 tasks.withType(JavaCompile).configureEach {

@@ -3,7 +3,9 @@ package fr.siroz.cariboustonks.event;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import org.jetbrains.annotations.NotNull;
 
 public final class InteractionEvents {
 
@@ -20,13 +22,15 @@ public final class InteractionEvents {
 	});
 
 	/**
-	 * Invoked whenever a player right-clicks the air
+	 * Invoked whenever the player interact on a block.
 	 */
-	@Deprecated
-	public static final Event<RightClickAir> RIGHT_CLICK_AIR = EventFactory.createArrayBacked(RightClickAir.class, listeners -> (player, hand) -> {
-		for (RightClickAir listener : listeners) {
-			listener.onClick(player, hand);
+	public static final Event<AllowInteractBlock> ALLOW_INTERACT_BLOCK = EventFactory.createArrayBacked(AllowInteractBlock.class, listeners -> (heldItem) -> {
+		for (AllowInteractBlock listener : listeners) {
+			if (!listener.onInteract(heldItem)) {
+				return false;
+			}
 		}
+		return true;
 	});
 
 	@FunctionalInterface
@@ -34,9 +38,9 @@ public final class InteractionEvents {
 		void onClick(PlayerEntity player, Hand hand);
 	}
 
-	@Deprecated
 	@FunctionalInterface
-	public interface RightClickAir {
-		void onClick(PlayerEntity player, Hand hand);
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	public interface AllowInteractBlock {
+		boolean onInteract(@NotNull ItemStack heldItem);
 	}
 }

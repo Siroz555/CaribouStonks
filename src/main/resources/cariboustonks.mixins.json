@@ -5,10 +5,12 @@
   "client": [
     "ChatHudMixin",
     "ClientCommonNetworkHandlerMixin",
+    "ClientPlayerInteractionManagerMixin",
     "ClientPlayNetworkHandlerMixin",
     "ClientWorldMixin",
     "DownloadingTerrainScreenMixin",
     "DrawContextMixin",
+    "EntityMixin",
     "EntityRenderDispatcherMixin",
     "EntityRendererMixin",
     "GameMenuScreenMixin",
