@@ -37,7 +37,7 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 
 	public TarantulaBossFeature() {
 		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
-		SkyBlockEvents.SLAYER_BOSS_DEATH.register((_type, _tier, _startTime) -> this.bossEggs.clear());
+		SkyBlockEvents.SLAYER_BOSS_END.register((_type, _tier, _startTime) -> this.bossEggs.clear());
 		RenderEvents.WORLD_RENDER.register(this::render);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
 		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);

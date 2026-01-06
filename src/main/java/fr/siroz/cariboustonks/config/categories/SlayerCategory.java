@@ -24,6 +24,16 @@ public class SlayerCategory extends AbstractCategory {
 				.name(Text.literal("Slayers"))
 				.tooltip(Text.literal("Slayers-related Settings"))
 				.option(Option.<Boolean>createBuilder()
+						.name(Text.literal("Slayer Stats HUD"))
+						.description(OptionDescription.of(
+								Text.literal("Displays a HUD on the screen, which shows statistics for the current session."),
+								Text.literal(SPACE + "This displays average spawn/kill times, the number of bosses per hour, and XP per hour.")))
+						.binding(defaults.slayer.statsHud.enabled,
+								() -> current.slayer.statsHud.enabled,
+								newValue -> current.slayer.statsHud.enabled = newValue)
+						.controller(this::createYesNoController)
+						.build())
+				.option(Option.<Boolean>createBuilder()
 						.name(Text.literal("Slayer Boss Cocooned Warning"))
 						.description(OptionDescription.of(
 								Text.literal("Show a Title and play a Sound when your Slayer Boss is cocooned!"),

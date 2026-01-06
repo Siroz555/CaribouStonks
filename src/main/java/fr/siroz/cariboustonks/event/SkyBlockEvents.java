@@ -63,9 +63,16 @@ public final class SkyBlockEvents {
 	});
 
 	@OnlySkyBlock
-	public static final Event<SlayerBossDeath> SLAYER_BOSS_DEATH = EventFactory.createArrayBacked(SlayerBossDeath.class, listeners -> (type, tier, instant) -> {
+	public static final Event<SlayerBossEnd> SLAYER_BOSS_END = EventFactory.createArrayBacked(SlayerBossEnd.class, listeners -> (type, tier, instant) -> {
+		for (SlayerBossEnd listener : listeners) {
+			listener.onEnd(type, tier, instant);
+		}
+	});
+
+	@OnlySkyBlock
+	public static final Event<SlayerBossDeath> SLAYER_BOSS_DEATH = EventFactory.createArrayBacked(SlayerBossDeath.class, listeners -> (type, tier) -> {
 		for (SlayerBossDeath listener : listeners) {
-			listener.onDeath(type, tier, instant);
+			listener.onDeath(type, tier);
 		}
 	});
 
@@ -123,8 +130,13 @@ public final class SkyBlockEvents {
 	}
 
 	@FunctionalInterface
+	public interface SlayerBossEnd {
+		void onEnd(@NotNull SlayerType type, @NotNull SlayerTier tier, @Nullable Instant startTime);
+	}
+
+	@FunctionalInterface
 	public interface SlayerBossDeath {
-		void onDeath(@NotNull SlayerType type, @NotNull SlayerTier tier, @Nullable Instant startTime);
+		void onDeath(@NotNull SlayerType type, @NotNull SlayerTier tier);
 	}
 
 	@FunctionalInterface
