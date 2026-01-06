@@ -62,17 +62,17 @@ repositories {
 		}
 	}
 
-//	exclusiveContent {
-//		forRepository {
-//			maven {
-//				url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
-//			}
-//		}
-//
-//		filter {
-//			includeGroup("me.djtheredstoner")
-//		}
-//	}
+	exclusiveContent {
+		forRepository {
+			maven {
+				url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
+			}
+		}
+
+		filter {
+			includeGroup("me.djtheredstoner")
+		}
+	}
 }
 
 dependencies {
@@ -98,7 +98,7 @@ dependencies {
 	}
 
 	// DevAuth - DEVELOPMENT ONLY (https://github.com/DJtheRedstoner/DevAuth)
-	//modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
+	modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
 }
 
 test {
