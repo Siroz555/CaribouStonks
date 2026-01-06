@@ -209,6 +209,36 @@ public class SkillsCategory extends AbstractCategory {
                         .description(OptionDescription.of(
                                 Component.literal("Garden settings")))
                         .collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Greenhouse Growth Stage Reminder"))
+								.description(OptionDescription.of(
+										Component.literal("Allows you to activate a reminder when your Greenhouse reaches the Next Growth Stage."),
+										Component.literal(SPACE + "You must use your Crop Diagnostics at least once to begin detection.").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.farming.garden.greenhouseGrowthStageReminder,
+										() -> current.farming.garden.greenhouseGrowthStageReminder,
+										newValue -> current.farming.garden.greenhouseGrowthStageReminder = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Greenhouse Growth Stage Pre Reminder)"))
+								.description(OptionDescription.of(
+										Component.literal("If the Greenhouse Growth Stage Reminder option is enabled, it allows you to set a reminder 5 minutes before the Next Growth Stage is reached.")))
+								.binding(defaults.farming.garden.greenhouseGrowthStagePreReminder,
+										() -> current.farming.garden.greenhouseGrowthStagePreReminder,
+										newValue -> current.farming.garden.greenhouseGrowthStagePreReminder = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Disable Greenhouse watering can placement"))
+								.description(OptionDescription.of(
+										Component.literal("If enabled, disables the placement of watering cans in the Greenhouse."),
+										Component.literal(SPACE + "- HydroCan X").withStyle(ChatFormatting.AQUA),
+										Component.literal("- AquaMaster X").withStyle(ChatFormatting.RED)))
+								.binding(defaults.farming.garden.disableWateringCanPlacement,
+										() -> current.farming.garden.disableWateringCanPlacement,
+										newValue -> current.farming.garden.disableWateringCanPlacement = newValue)
+								.controller(this::createBooleanController)
+								.build())
                         .option(ButtonOption.createBuilder()
                                 .name(Component.literal("Locking the camera during farming"))
 								.text(Component.literal("/lockMouse"))
