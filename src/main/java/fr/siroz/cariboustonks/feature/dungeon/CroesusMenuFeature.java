@@ -57,7 +57,7 @@ public class CroesusMenuFeature extends Feature implements ContainerMatcherTrait
 				String line = text.getString();
 				if (line.contains("No chests opened yet!")) notOpenedYet = true;
 				if (line.contains("Opened Chest:")) opened = true;
-				if (line.contains("No more chests to open!")) noMoreChest = true;
+				if (line.contains("No more chests to open!")) noMoreChest = true; // SIROZ-NOTE: bah c'est plus présent?
 				if (line.contains("Kismet Feather")) {
 					List<Component> kismetText = text.getSiblings();
 					for (Component kismetLine : kismetText) {
@@ -83,7 +83,7 @@ public class CroesusMenuFeature extends Feature implements ContainerMatcherTrait
 		// Priorité des couleurs : Kismet > Opened > NoMoreChest
 		// Pas de "else-if", car c'est pour mieux contrôler chaque option dans la config, d'où le "highlight == null"
 		ColorHighlight highlight = null;
-		if (kismetAvailable && !notOpenedYet && kismetAvailableConfig.getAsBoolean()) {
+		if (kismetAvailable && notOpenedYet && kismetAvailableConfig.getAsBoolean()) {
 			highlight = new ColorHighlight(entry.getIntKey(), kismetAvailableColor());
 		}
 
