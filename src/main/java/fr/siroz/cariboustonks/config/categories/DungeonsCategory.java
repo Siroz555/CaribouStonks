@@ -22,7 +22,7 @@ public class DungeonsCategory extends AbstractCategory {
 	public ConfigCategory create() {
 		return ConfigCategory.createBuilder()
 				.name(Component.literal("Dungeons"))
-				.tooltip(Component.literal("Dungeons-related Settings"))
+				.tooltip(Component.literal("Instances-related Settings"))
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Croesus").withStyle(ChatFormatting.BOLD))
 						.description(OptionDescription.of(

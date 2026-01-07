@@ -23,7 +23,7 @@ public class SkillsCategory extends AbstractCategory {
     @Override
     public ConfigCategory create() {
         return ConfigCategory.createBuilder()
-                .name(Component.literal("Skills"))
+                .name(Component.literal("Skills-related"))
                 .tooltip(Component.literal("Skills-related Settings"))
                 .group(OptionGroup.createBuilder()
                         .name(Component.literal("Combat").withStyle(ChatFormatting.BOLD))
@@ -205,7 +205,7 @@ public class SkillsCategory extends AbstractCategory {
 								.build())
                         .build())
                 .group(OptionGroup.createBuilder()
-                        .name(Component.literal("Farming - Garden").withStyle(ChatFormatting.BOLD))
+                        .name(Component.literal("Garden").withStyle(ChatFormatting.BOLD))
                         .description(OptionDescription.of(
                                 Component.literal("Garden settings")))
                         .collapsed(false)
