@@ -5,7 +5,6 @@ import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcut;
 import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.GuiGraphics;
@@ -42,7 +41,7 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 		super(Component.literal("Key Shortcuts").withStyle(ChatFormatting.BOLD));
 		this.parent = parent;
 		this.keyShortcutFeature = CaribouStonks.features().getFeature(KeyShortcutFeature.class);
-		this.shortcuts = new HashMap<>(this.keyShortcutFeature.getShortcutsCopy());
+		this.shortcuts = this.keyShortcutFeature.getShortcutsCopy();
 	}
 
 	@Contract("_ -> new")

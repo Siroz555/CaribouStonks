@@ -50,7 +50,7 @@ public class KeyShortcutFeature extends Feature {
 	}
 
 	public Map<String, KeyShortcut> getShortcutsCopy() {
-		return Map.copyOf(shortcuts);
+		return new HashMap<>(shortcuts);
 	}
 
 	public void updateShortcuts(@NotNull Map<String, KeyShortcut> newShortcuts) {
