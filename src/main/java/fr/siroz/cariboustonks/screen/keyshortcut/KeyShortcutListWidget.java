@@ -62,10 +62,7 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 	void createKeyShortcut() {
 		// Pour éviter d'avoir plusieurs KeyShortcut vide
 		KeyShortcut keyShortcut = new KeyShortcut("", -1);
-		boolean hasShortcut = parent.shortcuts.containsKey(keyShortcut.command());
-		boolean hasEntry = children().stream()
-				.anyMatch(entry -> entry.keyShortcut.command().equals(keyShortcut.command()));
-		if (!hasShortcut && !hasEntry) {
+		if (!parent.shortcuts.containsKey(keyShortcut.command())) {
 			addEntry(new KeyShortcutEntry(keyShortcut));
 		}
 	}
