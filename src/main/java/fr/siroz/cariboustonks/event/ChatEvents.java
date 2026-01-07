@@ -22,22 +22,8 @@ public final class ChatEvents {
         }
     });
 
-    /**
-     * Called when the client clicks on a message in the chat
-     */
-    public static final Event<@NotNull MessageClicked> MESSAGE_CLICKED = EventFactory.createArrayBacked(MessageClicked.class, listeners -> (mouseX, mouseY) -> {
-        for (MessageClicked listener : listeners) {
-            listener.onMessageClicked(mouseX, mouseY);
-        }
-    });
-
     @FunctionalInterface
     public interface MessageReceived {
         void onMessageReceived(@NotNull Component text);
-    }
-
-    @FunctionalInterface
-    public interface MessageClicked {
-        void onMessageClicked(double mouseX, double mouseY);
     }
 }
