@@ -43,6 +43,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Bazaar: Press ENTER to validate the last input.
 
 - Reminders
+    - Greenhouse: Growth Stage Reminder & Pre-Reminder.
     - Chocolate Factory: Reminders when the number of chocolates reaches the limit.
     - Split or Steal: Reminder when the Ubik's Cube is ready.
     - Forge: Reminder when a forge item is completed.
@@ -124,7 +125,8 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
         - Display a HUD showing the time remaining, sorted and color-coded.
 
 - Farming | Garden
-    - Greenhouse: Disable Watering Can placement
+    - Greenhouse: Growth Stage Reminder & Pre-Reminder.
+    - Greenhouse: Disable Watering Can placement.
     - KeyBind / Command to lock the camera during farming sessions.
     - Guess Pests and display a cursor line in the direction of the Pests.
     - Highlight Plots that are infested by pests with a border delimitation.
@@ -153,11 +155,13 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Spawn Time
     - Kill Time
     - Total Time
-- Statistics Average: Displays a message to show:
+- Statistics HUD: Displays averages in a HUD.
+- Statistics message: Displays averages in a message.
+- Statistics Averages:
     - Spawn Avg
     - Kill Avg
     - Boss/h
-    - EXP/h
+    - XP/h
     - RNGMeter/h
 
 - Tarantula Broodfather (Tier V):
