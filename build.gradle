@@ -29,12 +29,12 @@ repositories {
 	exclusiveContent {
 		forRepository {
 			maven {
-				url = "https://maven.azureaaron.net/releases"
+				url = "https://repo.hypixel.net/repository/Hypixel/"
 			}
 		}
 
 		filter {
-			includeGroup "net.azureaaron"
+			includeGroup "net.hypixel"
 		}
 	}
 
@@ -86,8 +86,8 @@ dependencies {
 	// YetAnotherConfigLib (https://github.com/isXander/YetAnotherConfigLib)
 	include modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}")
 
-	// Hypixel Mod API (https://github.com/AzureAaron/hm-api)
-	include modImplementation("net.azureaaron:hm-api:${project.hm_api_version}")
+	// Hypixel Mod API (https://github.com/HypixelDev/ModAPI)
+	modImplementation("net.hypixel:mod-api:${project.hypixel_mod_api_version}")
 
 	// ModMenu (https://github.com/TerraformersMC/ModMenu)
 	modCompileOnly "com.terraformersmc:modmenu:${modmenu_version}"

@@ -199,7 +199,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - **Fabric** & **Yarn** for the development environment.
 - **YACL** (for the system and configuration GUI) as a library.
-- **HypixelModAPI** (by AzureAaron) as a library.
+- **HypixelModAPI** Official Hypixel Mod API as a dependency.
 - **Skyblocker** (<3) & **Wynntils** (<3) for some code logic in the latest version of Minecraft, such as Mixins.
 - **SkyHanni** & **NotEnoughUpdates** for ideas and adaptations since version 1.8.
 
@@ -210,7 +210,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 | [YACL](https://github.com/isXander/YetAnotherConfigLib)                  | [LGPL-3.0 license](https://github.com/isXander/YetAnotherConfigLib/blob/multiversion/dev/LICENSE) |
 | [Skyblocker](https://github.com/SkyblockerMod/Skyblocker)                | [LGPL-3.0](https://github.com/SkyblockerMod/Skyblocker/blob/master/LICENSE)                       |
 | [Wynntils](https://github.com/Wynntils/Wynntils)                         | [AGPL 3.0](https://github.com/Wynntils/Wynntils/blob/development/LICENSE)                         |
-| [HypixelModAPI](https://github.com/azureaaron/hm-api)                    | [Apache-2.0 license ](https://github.com/AzureAaron/hm-api/blob/master/LICENSE)                   |
+| [HypixelModAPI](https://github.com/HypixelDev/ModAPI)                    | [MIT license](https://github.com/HypixelDev/ModAPI/blob/master/LICENSE)                           |
 | [SkyHanni](https://github.com/hannibal002/SkyHanni)                      | [LGPL-2.1 license](https://github.com/hannibal002/SkyHanni/blob/beta/LICENSE)                     |
 | [SoopyV2](https://github.com/Soopyboo32/SoopyV2)                         | [GPL-3.0 license](https://github.com/Soopyboo32/SoopyV2/blob/master/LICENSE)                      |
 | [Skytils](https://github.com/Skytils/SkytilsMod)                         | [AGPL-3.0 license ](https://github.com/Skytils/SkytilsMod/blob/1.x/LICENSE.md)                    |
