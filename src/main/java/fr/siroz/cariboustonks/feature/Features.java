@@ -54,6 +54,7 @@ import fr.siroz.cariboustonks.feature.ui.hud.PingHud;
 import fr.siroz.cariboustonks.feature.ui.hud.TpsHud;
 import fr.siroz.cariboustonks.feature.ui.overlay.EtherWarpOverlayFeature;
 import fr.siroz.cariboustonks.feature.ui.overlay.GyrokineticOverlayFeature;
+import fr.siroz.cariboustonks.feature.vanilla.HideStatusEffectsFeature;
 import fr.siroz.cariboustonks.feature.vanilla.MuteVanillaSoundFeature;
 import fr.siroz.cariboustonks.feature.vanilla.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.feature.vanilla.ZoomFeature;
@@ -144,6 +145,7 @@ public final class Features {
 		registerFeature(new PartyCommandFeature());
 		registerFeature(new REISearchBarCalculatorFeature());
 		// Vanilla
+		registerFeature(new HideStatusEffectsFeature());
 		registerFeature(new MuteVanillaSoundFeature());
 		registerFeature(new ScrollableTooltipFeature());
 		registerFeature(new ZoomFeature());

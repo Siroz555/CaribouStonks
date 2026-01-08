@@ -47,6 +47,9 @@ public class VanillaConfig {
 
 		@SerialEntry
 		public boolean hideFoodOverlay = false;
+
+		@SerialEntry
+		public boolean hideStatusEffectsOverlay = false;
 	}
 
 	public static class Zoom {
