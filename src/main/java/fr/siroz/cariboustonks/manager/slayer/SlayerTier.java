@@ -4,7 +4,7 @@ import net.minecraft.ChatFormatting;
 
 public enum SlayerTier {
 
-	UNKNOWN("unknown", ChatFormatting.GRAY),
+	UNKNOWN("?", ChatFormatting.GRAY),
 	I("I", ChatFormatting.GREEN),
 	II("II", ChatFormatting.YELLOW),
 	III("III", ChatFormatting.RED),

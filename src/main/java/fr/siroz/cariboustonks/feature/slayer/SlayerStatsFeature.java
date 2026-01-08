@@ -2,6 +2,8 @@ package fr.siroz.cariboustonks.feature.slayer;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.data.hypixel.election.Mayor;
+import fr.siroz.cariboustonks.core.data.hypixel.election.Perk;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
@@ -49,6 +51,7 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 	private final Deque<SlayerBossRun> runs = new ArrayDeque<>();
 	private SlayerBossRun currentRun = null;
 	private final Stats stats = new Stats();
+	private boolean xpBuffActive = false;
 
 	public SlayerStatsFeature() {
 		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
@@ -95,21 +98,21 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_SPAWN")
 	private void onBossSpawn(@NotNull SlayerType type, @NotNull SlayerTier tier) {
 		if (ConfigManager.getConfig().slayer.bossSpawnAlert) {
-			Client.showTitle(Component.literal("Boss spawned!").withStyle(ChatFormatting.DARK_RED), 1, 20, 1);
+			Client.showTitle(Component.literal("Boss spawned!").withStyle(ChatFormatting.DARK_RED), 1, 15, 1);
 		}
 	}
 
 	@EventHandler(event = "SkyBlockEvents.SLAYER_MINIBOSS_SPAWN")
 	private void onMinibossSpawn(@NotNull SlayerType type, @NotNull SlayerTier tier) {
 		if (ConfigManager.getConfig().slayer.minibossSpawnAlert) {
-			Client.showTitle(Component.literal("Miniboss spawned!").withStyle(ChatFormatting.RED), 1, 20, 1);
+			Client.showTitle(Component.literal("Miniboss spawned!").withStyle(ChatFormatting.RED), 1, 15, 1);
 		}
 	}
 
 	@EventHandler(event = "SkyBlockEvents.SLAYER_QUEST_START")
 	private void onQuestStart(@NotNull SlayerType type, @NotNull SlayerTier tier, boolean afterUpdate) {
 		// Permet de reset si le type de slayer change ou le tier
-		if (!runs.isEmpty() && afterUpdate) {
+		if (!runs.isEmpty()) {
 			if (runs.getFirst().getSlayerType() != type || runs.getFirst().getSlayerTier() != tier) {
 				runs.clear();
 			}
@@ -158,12 +161,19 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 			return hudBuilder.build();
 		}
 
-		hudBuilder.appendIconLine(currentRun.getSlayerType().getIcon(), Component.literal(currentRun.getSlayerType().getBossName()).withStyle(currentRun.getSlayerTier().getColor()));
+		hudBuilder.appendIconLine(currentRun.getSlayerType().getIcon(), Component.literal(currentRun.getSlayerType().getBossName() + " " + currentRun.getSlayerTier().getName()).withStyle(currentRun.getSlayerTier().getColor()));
 		hudBuilder.appendSpace();
 		hudBuilder.appendTableRow(Component.literal(ARROW + " Spawn Avg: ").withStyle(ChatFormatting.DARK_GREEN), Component.literal(stats.spawnAverage).withStyle(ChatFormatting.YELLOW), Component.empty());
 		hudBuilder.appendTableRow(Component.literal(ARROW + " Kill Avg: ").withStyle(ChatFormatting.DARK_RED), Component.literal(stats.killAverage).withStyle(ChatFormatting.YELLOW), Component.empty());
 		hudBuilder.appendTableRow(Component.literal(ARROW + " Boss/h: ").withStyle(ChatFormatting.RED), Component.literal(stats.bossPerHour).withStyle(ChatFormatting.YELLOW), Component.empty());
 		hudBuilder.appendTableRow(Component.literal(ARROW + " XP/h: ").withStyle(ChatFormatting.AQUA), Component.literal(stats.xpPerHour).withStyle(ChatFormatting.YELLOW), Component.empty());
+		if (xpBuffActive) {
+			hudBuilder.appendLine(Component.empty()
+					.append(Component.literal(" x1.25").withStyle(ChatFormatting.LIGHT_PURPLE))
+					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+					.append(Component.literal("Aatrox XP Buff").withStyle(ChatFormatting.DARK_AQUA))
+					.append(Component.literal(")").withStyle(ChatFormatting.GRAY)));
+		}
 		hudBuilder.appendSpace();
 		hudBuilder.appendLine(Component.literal("Session Count: " + stats.sessionCount).withStyle(ChatFormatting.YELLOW));
 
@@ -174,9 +184,12 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 		if (runs.size() >= MAX_RUNS_STORED) {
 			runs.removeFirst();
 		}
-
+		// Update all stats
 		updateStats();
+		// Simply add this run to the list
 		runs.addLast(run);
+		// Update if the Aatrox XP Buff is present
+		xpBuffActive = SkyBlockAPI.isMayorOrMinister(Mayor.AATROX, Perk.SLAYER_XP_BUFF);
 	}
 
 	private void showBreakdown(@NotNull SlayerBossRun currentRun) {
