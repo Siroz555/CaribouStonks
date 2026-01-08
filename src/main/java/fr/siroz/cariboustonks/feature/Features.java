@@ -29,6 +29,7 @@ import fr.siroz.cariboustonks.feature.item.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.feature.misc.HighlightMobFeature;
+import fr.siroz.cariboustonks.feature.misc.HoppityEggFinderFeature;
 import fr.siroz.cariboustonks.feature.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.feature.misc.REISearchBarCalculatorFeature;
 import fr.siroz.cariboustonks.feature.reminders.BoosterCookieReminderFeature;
@@ -142,6 +143,7 @@ public final class Features {
 		registerFeature(new WaypointFeature());
 		// Misc
 		registerFeature(new HighlightMobFeature());
+		registerFeature(new HoppityEggFinderFeature());
 		registerFeature(new PartyCommandFeature());
 		registerFeature(new REISearchBarCalculatorFeature());
 		// Vanilla

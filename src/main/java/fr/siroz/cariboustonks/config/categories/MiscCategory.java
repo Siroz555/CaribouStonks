@@ -43,24 +43,14 @@ public class MiscCategory extends AbstractCategory {
 						.controller(ColorControllerBuilder::create)
 						.build())
                 .option(Option.<Boolean>createBuilder()
-                        .name(Component.literal("Highlighting party members"))
+                        .name(Component.literal("Locating Hoppity Eggs"))
                         .available(false)
                         .description(OptionDescription.of(
-                                Component.literal("Used to highlight party members.")))
-                        .binding(defaults.misc.highlightPartyMembers,
-                                () -> current.misc.highlightPartyMembers,
-                                newValue -> current.misc.highlightPartyMembers = newValue)
+                                Component.literal("Locate Hoppity Eggs with your Egg Locator, creating a Guess Waypoint.")))
+                        .binding(defaults.misc.hoppityEggFinderGuess,
+                                () -> current.misc.hoppityEggFinderGuess,
+                                newValue -> current.misc.hoppityEggFinderGuess = newValue)
                         .controller(this::createBooleanController)
-                        .build())
-                .option(Option.<Color>createBuilder()
-                        .name(Component.literal("Party member color"))
-                        .available(false)
-                        .description(OptionDescription.of(
-                                Component.literal("Change the color to highlight party members.")))
-                        .binding(defaults.misc.highlightPartyMembersColor,
-                                () -> current.misc.highlightPartyMembersColor,
-                                newValue -> current.misc.highlightPartyMembersColor = newValue)
-                        .controller(ColorControllerBuilder::create)
                         .build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Other Mods").withStyle(ChatFormatting.BOLD))

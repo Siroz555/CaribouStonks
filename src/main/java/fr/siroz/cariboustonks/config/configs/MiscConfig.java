@@ -9,10 +9,7 @@ import net.minecraft.ChatFormatting;
 public class MiscConfig {
 
 	@SerialEntry
-	public boolean highlightPartyMembers = false;
-
-	@SerialEntry
-	public Color highlightPartyMembersColor = Color.GREEN;
+	public boolean hoppityEggFinderGuess = false;
 
 	@SerialEntry
 	public Color highlighterColor = ColorUtils.getAwtColor(ChatFormatting.AQUA);
