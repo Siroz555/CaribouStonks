@@ -38,6 +38,7 @@ public class CocoonedWarningFeature extends Feature {
 	private static final long WORLD_CHANGE_THRESHOLD = 10_000;
 	private static final double MAX_ARMORSTAND_PAIR_DISTANCE_SQ = 2f * 2f;
 	private static final double MAX_PLAYER_COCOON_DISTANCE_SQ = 15f * 15f;
+	//private static final int MAX_Y_CHECK = 6;
 
 	private final BooleanSupplier configSoundEnabled =
 			() -> ConfigManager.getConfig().combat.cocoonedMob.cocoonedWarningSound;
@@ -170,6 +171,19 @@ public class CocoonedWarningFeature extends Feature {
 	}
 
 	private boolean matchesCocoonCriteria(@NotNull ArmorStand as) {
+		if (CLIENT.player == null) {
+			return false;
+		}
+
+		// Si l'Armorstand est +/- au-dessus du joueur.
+		// C'est pour empêcher la détection des cocoons des Spiders Slayer des autres joueurs,
+		// Mais ça ne va pas bloquer complètement la détection.
+		// SIROZ-NOTE: a voir, mais peut être check aussi if Spider Den / Crimson Isle
+//		double deltaY = as.position().y() - CLIENT.player.position().y();
+//		if (deltaY >= MAX_Y_CHECK) {
+//			return false;
+//		}
+
 		if (as.isCustomNameVisible() || !as.hasItemInSlot(EquipmentSlot.HEAD)) {
 			return false;
 		}
@@ -179,7 +193,7 @@ public class CocoonedWarningFeature extends Feature {
 			return false;
 		}
 
-		if (CLIENT.player != null && CLIENT.player.position().distanceToSqr(as.position()) > MAX_PLAYER_COCOON_DISTANCE_SQ) {
+		if (CLIENT.player.position().distanceToSqr(as.position()) > MAX_PLAYER_COCOON_DISTANCE_SQ) {
 			return false;
 		}
 
