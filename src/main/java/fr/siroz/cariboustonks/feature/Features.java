@@ -76,6 +76,7 @@ public final class Features {
 		registerFeature(new ChatPositionFeature());
 		registerFeature(new CopyChatMessageFeature());
 		// Combat
+		//registerFeature(new MobTrackingFeature());
 		registerFeature(new CocoonedWarningFeature());
 		registerFeature(new LowHealthWarningFeature());
 		registerFeature(new RagnarockAxeFeature());

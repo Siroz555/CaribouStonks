@@ -20,7 +20,9 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -494,6 +496,44 @@ public final class Client {
 	 */
 	public static void showFatalErrorScreen(@NotNull Component title, @NotNull Component message) {
 		if (CLIENT.player != null) CLIENT.setScreen(new ErrorScreen(title, message));
+	}
+
+	/**
+	 * Display a {@link BossEvent} to the client.
+	 * <p>
+	 * {@code Safe Client null}
+	 *
+	 * @param bossBar the bossBar to show
+	 */
+	public static void showBossBar(@NotNull BossEvent bossBar) {
+		if (CLIENT.player != null) {
+			try {
+				CLIENT.gui.getBossOverlay().update(ClientboundBossEventPacket.createAddPacket(bossBar));
+			} catch (Exception ex) {
+				if (DeveloperTools.isInDevelopment()) {
+					CaribouStonks.LOGGER.error("Unable to update bossBar handler (ADD)", ex);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Remove the given {@link BossEvent} to the client.
+	 * <p>
+	 * {@code Safe Client null}
+	 *
+	 * @param bossBar the bossBar to remove
+	 */
+	public static void removeBossBar(@NotNull BossEvent bossBar) {
+		if (CLIENT.player != null) {
+			try {
+				CLIENT.gui.getBossOverlay().update(ClientboundBossEventPacket.createRemovePacket(bossBar.getId()));
+			} catch (Exception ex) {
+				if (DeveloperTools.isInDevelopment()) {
+					CaribouStonks.LOGGER.error("Unable to update bossBar handler (REMOVE)", ex);
+				}
+			}
+		}
 	}
 
 	/**
