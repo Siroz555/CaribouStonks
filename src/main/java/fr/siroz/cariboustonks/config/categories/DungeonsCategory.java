@@ -109,16 +109,6 @@ public class DungeonsCategory extends AbstractCategory {
 										newValue -> current.instance.theCatacombs.bossSadanTerracottaTimers = newValue)
 								.controller(this::createBooleanController)
 								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Necron - F7/M7 - Goldor Tick Timer"))
-								.description(OptionDescription.of(
-										Component.literal("Displays a timer at the Goldor phase. In other words, the 3-second “Goldor Tick.”"),
-										Component.literal(SPACE + "Adapted according to the server's TPS.").withStyle(ChatFormatting.AQUA)))
-								.binding(defaults.instance.theCatacombs.necronTimerHud.enabled,
-										() -> current.instance.theCatacombs.necronTimerHud.enabled,
-										newValue -> current.instance.theCatacombs.necronTimerHud.enabled = newValue)
-								.controller(this::createBooleanController)
-								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Wither King - M7").withStyle(ChatFormatting.BOLD))

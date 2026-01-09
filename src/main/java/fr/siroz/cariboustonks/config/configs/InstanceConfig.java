@@ -45,9 +45,6 @@ public class InstanceConfig {
 		@SerialEntry
 		public WitherKing witherKing = new WitherKing();
 
-		@SerialEntry
-		public NecronTimerHud necronTimerHud = new NecronTimerHud();
-
 		public static class WitherKing {
 
 			@SerialEntry
@@ -70,56 +67,6 @@ public class InstanceConfig {
 
 			@SerialEntry
 			public boolean showLastBreathTarget = false;
-		}
-
-		public static class NecronTimerHud implements HudConfig {
-
-			@SerialEntry
-			public boolean enabled = false;
-
-			@SerialEntry
-			public int x = 250;
-
-			@SerialEntry
-			public int y = 50;
-
-			@SerialEntry
-			public float scale = 1f;
-
-			@Override
-			public int x() {
-				return this.x;
-			}
-
-			@Override
-			public void setX(int x) {
-				this.x = x;
-			}
-
-			@Override
-			public int y() {
-				return this.y;
-			}
-
-			@Override
-			public void setY(int y) {
-				this.y = y;
-			}
-
-			@Override
-			public float scale() {
-				return this.scale;
-			}
-
-			@Override
-			public void setScale(float scale) {
-				this.scale = scale;
-			}
-
-			@Override
-			public boolean shouldRender() {
-				return this.enabled;
-			}
 		}
 	}
 }
