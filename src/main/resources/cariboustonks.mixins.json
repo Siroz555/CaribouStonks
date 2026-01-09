@@ -10,7 +10,6 @@
     "ClientCommonPacketListenerImplMixin",
     "ClientLevelMixin",
     "ClientPacketListenerMixin",
-    "EntityMixin",
     "EntityRenderDispatcherMixin",
     "EntityRendererMixin",
     "GameRendererMixin",

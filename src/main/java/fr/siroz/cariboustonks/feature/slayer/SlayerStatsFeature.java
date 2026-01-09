@@ -60,7 +60,6 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 		SkyBlockEvents.SLAYER_MINIBOSS_SPAWN.register(this::onMinibossSpawn);
 		SkyBlockEvents.SLAYER_QUEST_START.register(this::onQuestStart);
 		SkyBlockEvents.SLAYER_QUEST_FAIL.register((_type, _tier) -> this.currentRun = null);
-		SkyBlockEvents.SLAYER_BOSS_DEATH.register(this::onBossDeath);
 		SkyBlockEvents.SLAYER_BOSS_END.register(this::onBossEnd);
 	}
 
@@ -127,17 +126,22 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 		}
 	}
 
-	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_DEATH")
-	private void onBossDeath(@NotNull SlayerType type, @NotNull SlayerTier tier) {
-		if (currentRun != null && type != SlayerType.UNKNOWN && tier != SlayerTier.UNKNOWN) {
-			currentRun.setBossKill(Instant.now());
-		}
-	}
-
 	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_END")
 	private void onBossEnd(@NotNull SlayerType type, @NotNull SlayerTier tier, @Nullable Instant startTime) {
 		if (currentRun != null && type != SlayerType.UNKNOWN && tier != SlayerTier.UNKNOWN) {
 			currentRun.setBossSpawn(startTime);
+			// SIROZ-NOTE FUTURE UPDATE
+			//  (without -1350ms = wrong time (like skyblocker)
+			//  -1350ms = OKAY
+			//  Mixin detection = ~perfect
+			// Le boss end est trigger par le message auto d'Hypixel APRES le kill.
+			// Techniquement, le boss kill est quand la vie du boss est à 0.
+			// La détection ne peut pas se faire lorsque le boss est remove,
+			// car il y a un délai entre le boss avec 0 health est la suppression du boss coté client.
+			// De plus le Mixin marche en 1.21.10 mais pas en 1.21.11
+			// Ce délai est de ~1.3/1.5s. Le problème, c'est que je n'ai pas de Mixin qui me
+			// permettrai de détecter la vie du boss à 0 en 1.21.11
+			currentRun.setBossKill(Instant.now().minusMillis(1350));
 			currentRun.setExpReward(slayerManager.getXpReward(type, tier));
 
 			finalizeRun(currentRun);
@@ -196,11 +200,11 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 		Component message = Component.empty()
 				.append(Component.literal("BREAKDOWN ").withStyle(ChatFormatting.RED, ChatFormatting.BOLD))
 				.append(Component.literal("Spawn: ").withStyle(ChatFormatting.GREEN))
-				.append(Component.literal(simpleFormatMillis(currentRun.timeToSpawn().toMillis())).withStyle(ChatFormatting.YELLOW))
+				.append(Component.literal(currentRun.timeToSpawn() != null ? simpleFormatMillis(currentRun.timeToSpawn().toMillis()) : "N/A").withStyle(ChatFormatting.YELLOW))
 				.append(Component.literal(" Kill: ").withStyle(ChatFormatting.RED))
-				.append(Component.literal(simpleFormatMillis(currentRun.timeToKill().toMillis())).withStyle(ChatFormatting.YELLOW))
+				.append(Component.literal(currentRun.timeToKill() != null ? simpleFormatMillis(currentRun.timeToKill().toMillis()) : "N/A").withStyle(ChatFormatting.YELLOW))
 				.append(Component.literal(" (Total: ").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(simpleFormatMillis(currentRun.cycleDuration().toMillis())).withStyle(ChatFormatting.YELLOW))
+				.append(Component.literal(currentRun.cycleDuration() != null ? simpleFormatMillis(currentRun.cycleDuration().toMillis()) : "N/A").withStyle(ChatFormatting.YELLOW))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 		Client.sendMessage(message);
 	}
