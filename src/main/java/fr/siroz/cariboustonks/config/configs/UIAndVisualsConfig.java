@@ -15,6 +15,9 @@ public class UIAndVisualsConfig {
 	public boolean highlightSelectedPet = false;
 
 	@SerialEntry
+	public MobTracking mobTracking = new MobTracking();
+
+	@SerialEntry
 	public ObjectOpenHashSet<String> favoriteAbiphoneContacts = new ObjectOpenHashSet<>();
 
 	@SerialEntry
@@ -40,6 +43,18 @@ public class UIAndVisualsConfig {
 
 	@SerialEntry
 	public DayHud dayHud = new DayHud();
+
+	public static class MobTracking {
+
+		@SerialEntry
+		public boolean enabled = false;
+
+		@SerialEntry
+		public boolean enableSlayer = true;
+
+		@SerialEntry
+		public boolean playSoundWhenSpawn = false;
+	}
 
 	public static class Overlay {
 

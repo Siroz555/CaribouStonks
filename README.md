@@ -74,6 +74,12 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 **UI & Visuals**
 
+- Mob Tracking (BETA Preview):
+    - That allow you to view information about a specific Mob in real time.
+    - Display of mob health and other information in a Boss Bar or via a HUD.
+    - Works for Slayer Bosses.
+    - Alert when a mob is detected near you.
+    - Dedicated menu for configuring each Mob.
 - Highlight selected Pet in the Pet Menu.
 - Create & highlight favorite contacts in the Abiphone Menu
 - Create and customize Waypoints.

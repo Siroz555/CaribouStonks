@@ -110,7 +110,7 @@ public class SkillsCategory extends AbstractCategory {
 								.binding(defaults.combat.witherShield.hud.enabled,
 										() -> current.combat.witherShield.hud.enabled,
 										newValue -> current.combat.witherShield.hud.enabled = newValue)
-								.controller(this::createYesNoController)
+								.controller(this::createBooleanController)
 								.build())
 						.option(LabelOption.create(Component.literal("| Ragnarock Axe").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()

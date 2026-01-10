@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.feature.combat.tracking;
+package fr.siroz.cariboustonks.feature.ui.tracking;
 
 import net.minecraft.world.entity.decoration.ArmorStand;
 import org.jetbrains.annotations.NotNull;

@@ -55,6 +55,7 @@ import fr.siroz.cariboustonks.feature.ui.hud.PingHud;
 import fr.siroz.cariboustonks.feature.ui.hud.TpsHud;
 import fr.siroz.cariboustonks.feature.ui.overlay.EtherWarpOverlayFeature;
 import fr.siroz.cariboustonks.feature.ui.overlay.GyrokineticOverlayFeature;
+import fr.siroz.cariboustonks.feature.ui.tracking.MobTrackingFeature;
 import fr.siroz.cariboustonks.feature.vanilla.HideStatusEffectsFeature;
 import fr.siroz.cariboustonks.feature.vanilla.MuteVanillaSoundFeature;
 import fr.siroz.cariboustonks.feature.vanilla.ScrollableTooltipFeature;
@@ -77,7 +78,6 @@ public final class Features {
 		registerFeature(new ChatPositionFeature());
 		registerFeature(new CopyChatMessageFeature());
 		// Combat
-		//registerFeature(new MobTrackingFeature());
 		registerFeature(new CocoonedWarningFeature());
 		registerFeature(new LowHealthWarningFeature());
 		registerFeature(new RagnarockAxeFeature());
@@ -131,6 +131,7 @@ public final class Features {
 		registerFeature(new AuctionLowestBinTooltipFeature(2));
 		registerFeature(new ItemValueTooltipFeature(4));
 		// UI
+		registerFeature(new MobTrackingFeature());
 		registerFeature(new AbiphoneFavoriteContactFeature(0));
 		// UI - HUDs
 		registerFeature(new FpsHud());

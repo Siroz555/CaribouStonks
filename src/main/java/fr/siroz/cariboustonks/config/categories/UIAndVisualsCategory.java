@@ -8,6 +8,7 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.screen.HudConfigScreen;
+import fr.siroz.cariboustonks.screen.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -45,6 +46,50 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								() -> current.uiAndVisuals.highlightSelectedPet,
 								newValue -> current.uiAndVisuals.highlightSelectedPet = newValue)
 						.controller(this::createBooleanController)
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Component.literal("Mob Tracking").withStyle(ChatFormatting.BOLD).append(BETA))
+						.description(OptionDescription.of(
+								Component.literal("Mob Tracking combines features that allow you to view information about a specific Mob in real time."),
+								Component.literal(SPACE + "Allow the display of mob health and other information in a custom Boss Bar or via a HUD. Also allows you to be alerted when a mob spawns."),
+								Component.literal(SPACE + "These features are in BETA. Adjustments will be made.").withStyle(ChatFormatting.RED)))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Enable Mob Tracking"))
+								.description(OptionDescription.of(
+										Component.literal("Once activated, mobs such as Slayers, rare fishing mobs, and others will be displayed in the form of a Boss Bar or HUD."),
+										Component.literal(SPACE + "The display shows the life and other information of the mob being tracked in real time."),
+										Component.literal(SPACE + "Each mob can be activated or deactivated, display an alert, in the dedicated menu."),
+										Component.literal(SPACE + "These features are in BETA. Adjustments will be made.").withStyle(ChatFormatting.RED)))
+								.binding(defaults.uiAndVisuals.mobTracking.enabled,
+										() -> current.uiAndVisuals.mobTracking.enabled,
+										newValue -> current.uiAndVisuals.mobTracking.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Track Slayer Boss"))
+								.description(OptionDescription.of(
+										Component.literal("If Mob Tracking is enabled, this allows you to view Slayer Boss information.")))
+								.binding(defaults.uiAndVisuals.mobTracking.enableSlayer,
+										() -> current.uiAndVisuals.mobTracking.enableSlayer,
+										newValue -> current.uiAndVisuals.mobTracking.enableSlayer = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Track Spawn Sound"))
+								.description(OptionDescription.of(
+										Component.literal("If Mob Tracking is enabled, this allows a sound to be played."),
+										Component.literal(SPACE + "The sound is not played for the Slayers. You can enable the “Notify when spawned” option in the dedicated menu.")))
+								.binding(defaults.uiAndVisuals.mobTracking.playSoundWhenSpawn,
+										() -> current.uiAndVisuals.mobTracking.playSoundWhenSpawn,
+										newValue -> current.uiAndVisuals.mobTracking.playSoundWhenSpawn = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(ButtonOption.createBuilder()
+								.name(Component.literal("Configure each tracked mob"))
+								.text(Component.literal("Open"))
+								.action((screen, opt) -> Minecraft.getInstance().setScreen(MobTrackingScreen.create(screen)))
+								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Colored Enchantments").withStyle(ChatFormatting.BOLD))

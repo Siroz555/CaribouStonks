@@ -6,9 +6,11 @@ import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import fr.siroz.cariboustonks.core.json.adapters.ColorAdapter;
 import fr.siroz.cariboustonks.core.json.adapters.InstantAdapter;
+import fr.siroz.cariboustonks.core.json.adapters.MobTrackingEntryAdapter;
 import fr.siroz.cariboustonks.core.json.adapters.PositionAdapter;
 import fr.siroz.cariboustonks.core.json.adapters.TimedObjectAdapter;
 import fr.siroz.cariboustonks.core.json.adapters.WaypointAdapter;
+import fr.siroz.cariboustonks.feature.ui.tracking.MobTrackingRegistry;
 import fr.siroz.cariboustonks.manager.reminder.TimedObject;
 import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.util.colors.Color;
@@ -39,6 +41,7 @@ public final class CustomTypeAdapterFactory implements TypeAdapterFactory {
 		// "Class Adapters"
 		this.adapters.put(TimedObject.class, new TimedObjectAdapter(instantAdapter));
 		this.adapters.put(Waypoint.class, new WaypointAdapter(positionAdapter, colorAdapter));
+		this.adapters.put(MobTrackingRegistry.MobTrackingEntry.class, new MobTrackingEntryAdapter());
 	}
 
 	@SuppressWarnings("unchecked")

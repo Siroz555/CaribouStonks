@@ -1,21 +1,27 @@
-package fr.siroz.cariboustonks.feature.combat.tracking;
+package fr.siroz.cariboustonks.feature.ui.tracking;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.manager.command.CommandComponent;
 import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
+import fr.siroz.cariboustonks.screen.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
+import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import org.jetbrains.annotations.ApiStatus;
@@ -23,11 +29,6 @@ import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Experimental
 public class MobTrackingFeature extends Feature /*implements HudProvider*/ {
-
-	// SIROZ-NOTE: Faire le menu custom
-	//  Gérer les Islands (MobTrackingRegistry)
-	//  Vérifier avec Spark les performances -> registry.findMob()
-	//  Mettre en place le HUD customizable / et config ..
 
 	private static final int MAX_TRACKED_ENTITIES = 3;
 
@@ -48,13 +49,24 @@ public class MobTrackingFeature extends Feature /*implements HudProvider*/ {
 
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
 		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
+
+		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
+				.then(ClientCommandManager.literal("mobTracking")
+						.executes(Client.openScreen(() -> MobTrackingScreen.create(null))))
+		));
+	}
+
+	@ApiStatus.Internal
+	public MobTrackingRegistry getRegistry() {
+		return registry;
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
-				&& SkyBlockAPI.getIsland() != IslandType.KUUDRA_HOLLOW; // SIROZ-NOTE: a voir jcp
+				&& SkyBlockAPI.getIsland() != IslandType.KUUDRA_HOLLOW
+				&& ConfigManager.getConfig().uiAndVisuals.mobTracking.enabled;
 	}
 
 	@Override
@@ -69,7 +81,7 @@ public class MobTrackingFeature extends Feature /*implements HudProvider*/ {
 
 		if (slayerManager.isInQuest()) {
 			ArmorStand slayerBoss = slayerManager.getBossArmorStand();
-			if (slayerBoss != null) {
+			if (slayerBoss != null && ConfigManager.getConfig().uiAndVisuals.mobTracking.enableSlayer) {
 				updateSlayerBoss(slayerBoss);
 			}
 		}
@@ -98,9 +110,17 @@ public class MobTrackingFeature extends Feature /*implements HudProvider*/ {
 		if (isAlreadyTracked(armorStand)) return;
 
 		try {
-			MobTrackingRegistry.MobTrackingEntry mobEntry = registry.findMob(armorStand.getCustomName().getString());
+			// La recherche se fait uniquement si (dans l'ordre).
+			// - La config est activé.
+			// - L'Island actuel est présent dans sa liste.
+			// Le nom est présent.
+			MobTrackingRegistry.MobTrackingEntry mobEntry = registry.findMob(
+					armorStand.getCustomName().getString(),
+					SkyBlockAPI.getIsland()
+			);
 			if (mobEntry != null) {
 				addTrackedEntity(new TrackedEntity(armorStand, mobEntry.priority()));
+				onTrackEntity(mobEntry);
 			}
 		} catch (Exception ex) {
 			if (DeveloperTools.isInDevelopment()) {
@@ -149,6 +169,19 @@ public class MobTrackingFeature extends Feature /*implements HudProvider*/ {
 
 		while (tracked.size() > MAX_TRACKED_ENTITIES) {
 			tracked.removeLast();
+		}
+	}
+
+	private void onTrackEntity(@NotNull MobTrackingRegistry.MobTrackingEntry mobEntry) {
+		if (mobEntry.config().notifyOnSpawn) {
+			Client.showTitleAndSubtitle(
+					mobEntry.displayName(),
+					Component.literal("Nearby!").withColor(Colors.AQUA.asInt()),
+					1, 20, 1
+			);
+			if (ConfigManager.getConfig().uiAndVisuals.mobTracking.playSoundWhenSpawn) {
+				Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+			}
 		}
 	}
 }
