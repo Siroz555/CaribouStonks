@@ -103,7 +103,6 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Thorn - F4/M4 - Spirit Bear Spawn Timer.
 - Sadan - F6/M6 - Terracotta Timers.
-- Necron - F7/M7 - Goldor Tick Timer
 - Wither King - M7:
     - Dragon Priority & Spawn alerts.
     - Dragon Spawn Time.
@@ -123,6 +122,8 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Spirit Mask / Bonzo Mask / Phoenix Pet:
         - Displays a Title when a Mask/Pet is used or ready back.
         - Display a HUD showing the time remaining, sorted and color-coded.
+    - Wither Shield:
+        - Displays a HUD that shows the cooldowns of the Wither Shield Ability.
 
 - Farming | Garden
     - Greenhouse: Growth Stage Reminder & Pre-Reminder.

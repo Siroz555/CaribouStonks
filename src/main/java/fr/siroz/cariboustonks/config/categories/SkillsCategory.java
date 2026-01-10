@@ -101,6 +101,17 @@ public class SkillsCategory extends AbstractCategory {
 										newValue -> current.combat.cocoonedMob.cocoonedWarningBeam = newValue)
 								.controller(this::createYesNoController)
 								.build())
+						.option(LabelOption.create(Component.literal("| Wither Shield").withStyle(ChatFormatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Wither Shield Cooldown HUD"))
+								.description(OptionDescription.of(
+										Component.literal("Displays a HUD that shows the cooldowns of the Wither Shield Ability."),
+										Component.literal(SPACE + "The HUD is displayed only when the ability is activated for 5 seconds. Once the cooldown is reached, the HUD displays READY for 2 seconds before disappearing.")))
+								.binding(defaults.combat.witherShield.hud.enabled,
+										() -> current.combat.witherShield.hud.enabled,
+										newValue -> current.combat.witherShield.hud.enabled = newValue)
+								.controller(this::createYesNoController)
+								.build())
 						.option(LabelOption.create(Component.literal("| Ragnarock Axe").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Ragnarock Axe - Cast Title"))

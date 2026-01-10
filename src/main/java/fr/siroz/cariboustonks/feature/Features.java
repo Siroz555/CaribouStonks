@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.feature.combat.CocoonedWarningFeature;
 import fr.siroz.cariboustonks.feature.combat.LowHealthWarningFeature;
 import fr.siroz.cariboustonks.feature.combat.RagnarockAxeFeature;
 import fr.siroz.cariboustonks.feature.combat.SecondLifeFeature;
+import fr.siroz.cariboustonks.feature.combat.WitherShieldFeature;
 import fr.siroz.cariboustonks.feature.dungeon.CroesusMenuFeature;
 import fr.siroz.cariboustonks.feature.dungeon.SadanBossFeature;
 import fr.siroz.cariboustonks.feature.dungeon.ThornBossFeature;
@@ -81,6 +82,7 @@ public final class Features {
 		registerFeature(new LowHealthWarningFeature());
 		registerFeature(new RagnarockAxeFeature());
 		registerFeature(new SecondLifeFeature());
+		registerFeature(new WitherShieldFeature());
 		// Dungeons
 		registerFeature(new CroesusMenuFeature());
 		registerFeature(new ThornBossFeature());
