@@ -44,7 +44,6 @@ public class MiscCategory extends AbstractCategory {
 						.build())
                 .option(Option.<Boolean>createBuilder()
                         .name(Component.literal("Locating Hoppity Eggs"))
-                        .available(false)
                         .description(OptionDescription.of(
                                 Component.literal("Locate Hoppity Eggs with your Egg Locator, creating a Guess Waypoint.")))
                         .binding(defaults.misc.hoppityEggFinderGuess,
