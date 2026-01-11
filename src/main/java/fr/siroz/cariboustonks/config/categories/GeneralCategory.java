@@ -270,6 +270,16 @@ public class GeneralCategory extends AbstractCategory {
 								Component.literal("Activate reminders for different aspects of the game.")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Greenhouse Growth Stage Reminder"))
+								.description(OptionDescription.of(
+										Component.literal("Allows you to activate a reminder when your Greenhouse reaches the Next Growth Stage."),
+										Component.literal(SPACE + "See Skill > Farming - Garden for more options.").withStyle(ChatFormatting.YELLOW)))
+								.binding(defaults.farming.garden.greenhouseGrowthStageReminder,
+										() -> current.farming.garden.greenhouseGrowthStageReminder,
+										newValue -> current.farming.garden.greenhouseGrowthStageReminder = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Booster Cookie").append(BETA))
 								.description(OptionDescription.of(
 										Component.literal("Activate a reminder when your Booster Cookie time is low.")))
