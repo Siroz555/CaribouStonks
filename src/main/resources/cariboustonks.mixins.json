@@ -9,7 +9,6 @@
     "ClientPlayNetworkHandlerMixin",
     "ClientWorldMixin",
     "DrawContextMixin",
-    "EntityMixin",
     "EntityRendererMixin",
     "EntityRenderManagerMixin",
     "GameMenuScreenMixin",

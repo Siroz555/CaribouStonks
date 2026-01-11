@@ -126,12 +126,12 @@ public class HotspotFeature extends Feature {
 		// pour itérer dessus pour rendre l'ajout de nouveaux handlers trivial.
 
 		if (ParticleTypes.SMOKE.equals(type) && matchesSmoke(particle)) {
-			handleParticle(new Vec3d(particle.getX(), particle.getY(), particle.getZ()));
+			handleParticle(new Vec3d(particle.getX(), particle.getY(), particle.getZ()), ParticleTypes.SMOKE);
 			return;
 		}
 
 		if (ParticleTypes.DUST.equals(type) && matchesDust(particle, params)) {
-			handleParticle(new Vec3d(particle.getX(), particle.getY(), particle.getZ()));
+			handleParticle(new Vec3d(particle.getX(), particle.getY(), particle.getZ()), ParticleTypes.DUST);
 		}
 	}
 
@@ -153,8 +153,11 @@ public class HotspotFeature extends Feature {
 		return color == -38476 && effect.getScale() == 1f;
 	}
 
-	private void handleParticle(Vec3d particlePos) {
+	private void handleParticle(Vec3d particlePos, ParticleType<?> particleType) {
 		hotspotRadius = currentHotspot.centerPos().distanceTo(particlePos);
+		if (particleType == ParticleTypes.DUST) {
+			hotspotRadius -= - 0.2D;
+		}
 	}
 
 	private Optional<Hotspot> findClosestHotspotInRange(@Nullable Entity entity) {

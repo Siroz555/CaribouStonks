@@ -14,6 +14,8 @@ class SlayerBossFight {
 	private boolean slain = false;
 	@Nullable
 	private Entity boss = null;
+	@Nullable
+	private ArmorStandEntity bossArmorStand = null;
 
 	SlayerBossFight(SlayerManager slayerManager, @Nullable ArmorStandEntity bossArmorStand) {
 		this.slayerManager = slayerManager;
@@ -22,6 +24,8 @@ class SlayerBossFight {
 	}
 
 	public void tryToFindBoss(@Nullable ArmorStandEntity armorStand) {
+		this.bossArmorStand = armorStand;
+
 		SlayerQuest slayerQuest = slayerManager.getQuest();
 		if (armorStand != null && slayerQuest != null) {
 			EntityType<? extends Entity> entityType = slayerQuest.getSlayerType().getEntityType();
@@ -48,5 +52,10 @@ class SlayerBossFight {
 	@Nullable
 	public Entity getBossEntity() {
 		return boss;
+	}
+
+	@Nullable
+	public ArmorStandEntity getBossArmorStand() {
+		return bossArmorStand;
 	}
 }

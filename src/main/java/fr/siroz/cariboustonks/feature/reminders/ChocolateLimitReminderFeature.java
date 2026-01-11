@@ -22,6 +22,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -88,6 +89,10 @@ public final class ChocolateLimitReminderFeature
 
 		Client.showNotification(Text.literal("Chocolate Factory\n").formatted(Formatting.GOLD, Formatting.BOLD)
 				.append(text), ICON);
+
+		if (ConfigManager.getConfig().general.reminders.playSound) {
+			Client.playSound(SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 1f, 1f);
+		}
 	}
 
 	@Override

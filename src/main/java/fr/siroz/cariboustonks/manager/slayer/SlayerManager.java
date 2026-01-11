@@ -37,7 +37,6 @@ import java.util.regex.Pattern;
  * @see SlayerType
  * @see SlayerTier
  * @see SkyBlockEvents#SLAYER_BOSS_SPAWN
- * @see SkyBlockEvents#SLAYER_BOSS_END
  * @see SkyBlockEvents#SLAYER_MINIBOSS_SPAWN
  * @see SkyBlockEvents#SLAYER_QUEST_START
  * @see SkyBlockEvents#SLAYER_QUEST_FAIL
@@ -135,6 +134,16 @@ public final class SlayerManager implements Manager {
 	}
 
 	/**
+	 * Gets the {@link ArmorStandEntity} representing the Slayer Boss.
+	 *
+	 * @return the boss armorstand or null if no Boss Fight is active
+	 */
+	@Nullable
+	public ArmorStandEntity getBossArmorStand() {
+		return bossFight != null ? bossFight.getBossArmorStand() : null;
+	}
+
+	/**
 	 * Returns the {@code XP} reward from the given slayer type/tier.
 	 * The reward change if the Mayor Aatrox with the "Slayer XP Buff" (x 1.25) is present.
 	 *
@@ -149,15 +158,6 @@ public final class SlayerManager implements Manager {
 		}
 
 		return xp;
-	}
-
-	@ApiStatus.Internal
-	public void invokeEntityBossDeath(UUID uuid) {
-		if (quest == null || bossFight == null) return;
-		if (getBossEntity() == null) return;
-		if (!getBossEntity().getUuid().equals(uuid)) return;
-
-		SkyBlockEvents.SLAYER_BOSS_DEATH.invoker().onDeath(quest.getSlayerType(), quest.getSlayerTier());
 	}
 
 	/**

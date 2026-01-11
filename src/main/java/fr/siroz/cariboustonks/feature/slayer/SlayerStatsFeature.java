@@ -2,6 +2,8 @@ package fr.siroz.cariboustonks.feature.slayer;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.data.hypixel.election.Mayor;
+import fr.siroz.cariboustonks.core.data.hypixel.election.Perk;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
@@ -49,6 +51,7 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 	private final Deque<SlayerBossRun> runs = new ArrayDeque<>();
 	private SlayerBossRun currentRun = null;
 	private final Stats stats = new Stats();
+	private boolean xpBuffActive = false;
 
 	public SlayerStatsFeature() {
 		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
@@ -57,7 +60,6 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 		SkyBlockEvents.SLAYER_MINIBOSS_SPAWN.register(this::onMinibossSpawn);
 		SkyBlockEvents.SLAYER_QUEST_START.register(this::onQuestStart);
 		SkyBlockEvents.SLAYER_QUEST_FAIL.register((_type, _tier) -> this.currentRun = null);
-		SkyBlockEvents.SLAYER_BOSS_DEATH.register(this::onBossDeath);
 		SkyBlockEvents.SLAYER_BOSS_END.register(this::onBossEnd);
 	}
 
@@ -109,7 +111,7 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 	@EventHandler(event = "SkyBlockEvents.SLAYER_QUEST_START")
 	private void onQuestStart(@NotNull SlayerType type, @NotNull SlayerTier tier, boolean afterUpdate) {
 		// Permet de reset si le type de slayer change ou le tier
-		if (!runs.isEmpty() && afterUpdate) {
+		if (!runs.isEmpty()) {
 			if (runs.getFirst().getSlayerType() != type || runs.getFirst().getSlayerTier() != tier) {
 				runs.clear();
 			}
@@ -124,17 +126,22 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 		}
 	}
 
-	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_DEATH")
-	private void onBossDeath(@NotNull SlayerType type, @NotNull SlayerTier tier) {
-		if (currentRun != null && type != SlayerType.UNKNOWN && tier != SlayerTier.UNKNOWN) {
-			currentRun.setBossKill(Instant.now());
-		}
-	}
-
 	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_END")
 	private void onBossEnd(@NotNull SlayerType type, @NotNull SlayerTier tier, @Nullable Instant startTime) {
 		if (currentRun != null && type != SlayerType.UNKNOWN && tier != SlayerTier.UNKNOWN) {
 			currentRun.setBossSpawn(startTime);
+			// SIROZ-NOTE FUTURE UPDATE
+			//  (without -1350ms = wrong time (like skyblocker)
+			//  -1350ms = OKAY
+			//  Mixin detection = ~perfect
+			// Le boss end est trigger par le message auto d'Hypixel APRES le kill.
+			// Techniquement, le boss kill est quand la vie du boss est à 0.
+			// La détection ne peut pas se faire lorsque le boss est remove,
+			// car il y a un délai entre le boss avec 0 health est la suppression du boss coté client.
+			// De plus le Mixin marche en 1.21.10 mais pas en 1.21.11
+			// Ce délai est de ~1.3/1.5s. Le problème, c'est que je n'ai pas de Mixin qui me
+			// permettrai de détecter la vie du boss à 0 en 1.21.11
+			currentRun.setBossKill(Instant.now().minusMillis(1350));
 			currentRun.setExpReward(slayerManager.getXpReward(type, tier));
 
 			finalizeRun(currentRun);
@@ -164,6 +171,13 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 		hudBuilder.appendTableRow(Text.literal(ARROW + " Kill Avg: ").formatted(Formatting.DARK_RED), Text.literal(stats.killAverage).formatted(Formatting.YELLOW), Text.empty());
 		hudBuilder.appendTableRow(Text.literal(ARROW + " Boss/h: ").formatted(Formatting.RED), Text.literal(stats.bossPerHour).formatted(Formatting.YELLOW), Text.empty());
 		hudBuilder.appendTableRow(Text.literal(ARROW + " XP/h: ").formatted(Formatting.AQUA), Text.literal(stats.xpPerHour).formatted(Formatting.YELLOW), Text.empty());
+		if (xpBuffActive) {
+			hudBuilder.appendLine(Text.empty()
+					.append(Text.literal(" x1.25").formatted(Formatting.LIGHT_PURPLE))
+					.append(Text.literal(" (").formatted(Formatting.GRAY))
+					.append(Text.literal("Aatrox XP Buff").formatted(Formatting.DARK_AQUA))
+					.append(Text.literal(")").formatted(Formatting.GRAY)));
+		}
 		hudBuilder.appendSpace();
 		hudBuilder.appendLine(Text.literal("Session Count: " + stats.sessionCount).formatted(Formatting.YELLOW));
 
@@ -174,20 +188,23 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 		if (runs.size() >= MAX_RUNS_STORED) {
 			runs.removeFirst();
 		}
-
+		// Update all stats
 		updateStats();
+		// Simply add this run to the list
 		runs.addLast(run);
+		// Update if the Aatrox XP Buff is present
+		xpBuffActive = SkyBlockAPI.isMayorOrMinister(Mayor.AATROX, Perk.SLAYER_XP_BUFF);
 	}
 
 	private void showBreakdown(@NotNull SlayerBossRun currentRun) {
 		Text message = Text.empty()
 				.append(Text.literal("BREAKDOWN ").formatted(Formatting.RED, Formatting.BOLD))
 				.append(Text.literal("Spawn: ").formatted(Formatting.GREEN))
-				.append(Text.literal(simpleFormatMillis(currentRun.timeToSpawn().toMillis())).formatted(Formatting.YELLOW))
+				.append(Text.literal(currentRun.timeToSpawn() != null ? simpleFormatMillis(currentRun.timeToSpawn().toMillis()) : "N/A").formatted(Formatting.YELLOW))
 				.append(Text.literal(" Kill: ").formatted(Formatting.RED))
-				.append(Text.literal(simpleFormatMillis(currentRun.timeToKill().toMillis())).formatted(Formatting.YELLOW))
+				.append(Text.literal(currentRun.timeToKill() != null ? simpleFormatMillis(currentRun.timeToKill().toMillis()) : "N/A").formatted(Formatting.YELLOW))
 				.append(Text.literal(" (Total: ").formatted(Formatting.GRAY))
-				.append(Text.literal(simpleFormatMillis(currentRun.cycleDuration().toMillis())).formatted(Formatting.YELLOW))
+				.append(Text.literal(currentRun.cycleDuration() != null ? simpleFormatMillis(currentRun.cycleDuration().toMillis()) : "N/A").formatted(Formatting.YELLOW))
 				.append(Text.literal(")").formatted(Formatting.GRAY));
 		Client.sendMessage(message);
 	}

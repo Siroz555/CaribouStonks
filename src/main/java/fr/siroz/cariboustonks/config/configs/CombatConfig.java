@@ -17,6 +17,9 @@ public class CombatConfig {
 	@SerialEntry
 	public SecondLife secondLife = new SecondLife();
 
+	@SerialEntry
+	public WitherShield witherShield = new WitherShield();
+
 	public static class CocoonedMob {
 
 		@SerialEntry
@@ -139,6 +142,62 @@ public class CombatConfig {
 
 			@SerialEntry
 			public int y = 50;
+
+			@SerialEntry
+			public float scale = 1f;
+
+			@Override
+			public int x() {
+				return this.x;
+			}
+
+			@Override
+			public void setX(int x) {
+				this.x = x;
+			}
+
+			@Override
+			public int y() {
+				return this.y;
+			}
+
+			@Override
+			public void setY(int y) {
+				this.y = y;
+			}
+
+			@Override
+			public float scale() {
+				return this.scale;
+			}
+
+			@Override
+			public void setScale(float scale) {
+				this.scale = scale;
+			}
+
+			@Override
+			public boolean shouldRender() {
+				return this.enabled;
+			}
+		}
+	}
+
+	public static class WitherShield {
+
+		@SerialEntry
+		public WitherShieldHud hud = new WitherShieldHud();
+
+		public static class WitherShieldHud implements HudConfig {
+
+			@SerialEntry
+			public boolean enabled = false;
+
+			@SerialEntry
+			public int x = 50;
+
+			@SerialEntry
+			public int y = 100;
 
 			@SerialEntry
 			public float scale = 1f;

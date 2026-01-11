@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.screen;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.screen.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.screen.search.StonksSearchScreen;
 import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
 import fr.siroz.cariboustonks.screen.reminders.ReminderScreen;
@@ -83,6 +84,19 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 		adder.add(keybinds);
 
 		// LINE #4
+
+		adder.add(ButtonWidget.builder(Text.literal("Mob Tracking"),
+						button -> openScreen(MobTrackingScreen.create(this)))
+				.tooltip(Tooltip.of(Text.literal("Configure all Mob Tracking")))
+				.width(HALF_BUTTON_WIDTH)
+				.build());
+
+		ButtonWidget surprise = ButtonWidget.builder(Text.literal("?"), button -> {})
+				.tooltip(Tooltip.of(Text.literal("Mmmmm ?")))
+				.width(HALF_BUTTON_WIDTH)
+				.build();
+		surprise.active = false;
+		adder.add(surprise);
 
 		adder.add(ButtonWidget.builder(ScreenTexts.DONE,
 						button -> this.close())

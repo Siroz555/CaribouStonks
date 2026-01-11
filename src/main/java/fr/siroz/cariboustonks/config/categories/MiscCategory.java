@@ -43,24 +43,13 @@ public class MiscCategory extends AbstractCategory {
 						.controller(ColorControllerBuilder::create)
 						.build())
                 .option(Option.<Boolean>createBuilder()
-                        .name(Text.literal("Highlighting party members"))
-                        .available(false)
+                        .name(Text.literal("Locating Hoppity Eggs"))
                         .description(OptionDescription.of(
-                                Text.literal("Used to highlight party members.")))
-                        .binding(defaults.misc.highlightPartyMembers,
-                                () -> current.misc.highlightPartyMembers,
-                                newValue -> current.misc.highlightPartyMembers = newValue)
+								Text.literal("Locate Hoppity Eggs with your Egg Locator, creating a Guess Waypoint.")))
+                        .binding(defaults.misc.hoppityEggFinderGuess,
+                                () -> current.misc.hoppityEggFinderGuess,
+                                newValue -> current.misc.hoppityEggFinderGuess = newValue)
                         .controller(this::createBooleanController)
-                        .build())
-                .option(Option.<Color>createBuilder()
-                        .name(Text.literal("Party member color"))
-                        .available(false)
-                        .description(OptionDescription.of(
-                                Text.literal("Change the color to highlight party members.")))
-                        .binding(defaults.misc.highlightPartyMembersColor,
-                                () -> current.misc.highlightPartyMembersColor,
-                                newValue -> current.misc.highlightPartyMembersColor = newValue)
-                        .controller(ColorControllerBuilder::create)
                         .build())
 				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Other Mods").formatted(Formatting.BOLD))
