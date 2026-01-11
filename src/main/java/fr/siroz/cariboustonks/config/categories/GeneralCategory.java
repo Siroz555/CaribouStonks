@@ -324,6 +324,15 @@ public class GeneralCategory extends AbstractCategory {
 										newValue -> current.general.reminders.forge = newValue)
 								.controller(this::createBooleanController)
 								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Play Sound"))
+								.description(OptionDescription.of(
+										Component.literal("Play a Sound for Reminders.")))
+								.binding(defaults.general.reminders.playSound,
+										() -> current.general.reminders.playSound,
+										newValue -> current.general.reminders.playSound = newValue)
+								.controller(this::createYesNoController)
+								.build())
 						.option(LabelOption.create(Component.empty()))
 						.build())
 				.group(OptionGroup.createBuilder()

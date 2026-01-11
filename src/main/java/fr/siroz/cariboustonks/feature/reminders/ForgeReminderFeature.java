@@ -15,6 +15,7 @@ import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.network.chat.MutableComponent;
@@ -74,6 +75,9 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
 
         Client.sendMessageWithPrefix(message );
         Client.showNotification(notification, ICON);
+		if (ConfigManager.getConfig().general.reminders.playSound) {
+			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+		}
     }
 
     @Override

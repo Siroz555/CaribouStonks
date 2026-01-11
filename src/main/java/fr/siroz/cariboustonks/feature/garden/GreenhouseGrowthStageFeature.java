@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.ApiStatus;
@@ -113,6 +114,9 @@ public class GreenhouseGrowthStageFeature extends Feature implements ContainerMa
 
 		Client.sendMessageWithPrefix(message);
 		Client.showNotification(notification, ICON);
+		if (ConfigManager.getConfig().general.reminders.playSound) {
+			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+		}
 	}
 
 	@Override
@@ -134,5 +138,8 @@ public class GreenhouseGrowthStageFeature extends Feature implements ContainerMa
 
 		Client.sendMessageWithPrefix(message);
 		Client.showNotification(notification, ICON);
+		if (ConfigManager.getConfig().general.reminders.playSound) {
+			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+		}
 	}
 }

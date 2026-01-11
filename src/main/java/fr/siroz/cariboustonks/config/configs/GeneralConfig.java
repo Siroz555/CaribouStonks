@@ -76,6 +76,9 @@ public class GeneralConfig {
 	public static class Reminders {
 
 		@SerialEntry
+		public boolean playSound = true;
+
+		@SerialEntry
 		public boolean boosterCookie = true;
 
 		@SerialEntry

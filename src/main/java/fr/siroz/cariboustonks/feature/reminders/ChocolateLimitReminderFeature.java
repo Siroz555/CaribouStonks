@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.network.chat.MutableComponent;
@@ -88,6 +89,10 @@ public final class ChocolateLimitReminderFeature
 
 		Client.showNotification(Component.literal("Chocolate Factory\n").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
 				.append(text), ICON);
+
+		if (ConfigManager.getConfig().general.reminders.playSound) {
+			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+		}
 	}
 
 	@Override

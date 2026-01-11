@@ -13,6 +13,7 @@ import fr.siroz.cariboustonks.manager.reminder.TimedObject;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.util.StonksUtils;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.network.chat.MutableComponent;
@@ -79,6 +80,9 @@ public final class EnchantedCloakReminderFeature extends Feature implements Remi
 
 		Client.sendMessageWithPrefix(message);
 		Client.showNotification(notification, ICON);
+		if (ConfigManager.getConfig().general.reminders.playSound) {
+			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+		}
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
