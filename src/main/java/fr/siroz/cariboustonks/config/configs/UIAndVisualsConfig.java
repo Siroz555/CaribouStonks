@@ -50,10 +50,69 @@ public class UIAndVisualsConfig {
 		public boolean enabled = false;
 
 		@SerialEntry
+		public boolean showInBossBar = true;
+
+		@SerialEntry
 		public boolean enableSlayer = true;
 
 		@SerialEntry
+		public String spawnMessage = "§bNearby!";
+
+		@SerialEntry
 		public boolean playSoundWhenSpawn = false;
+
+		@SerialEntry
+		public TrackingHud hud = new TrackingHud();
+
+		public static class TrackingHud implements HudConfig {
+
+			@SerialEntry
+			public boolean showInHud = false;
+
+			@SerialEntry
+			public int x = 125;
+
+			@SerialEntry
+			public int y = 25;
+
+			@SerialEntry
+			public float scale = 1f;
+
+			@Override
+			public int x() {
+				return this.x;
+			}
+
+			@Override
+			public void setX(int x) {
+				this.x = x;
+			}
+
+			@Override
+			public int y() {
+				return this.y;
+			}
+
+			@Override
+			public void setY(int y) {
+				this.y = y;
+			}
+
+			@Override
+			public float scale() {
+				return this.scale;
+			}
+
+			@Override
+			public void setScale(float scale) {
+				this.scale = scale;
+			}
+
+			@Override
+			public boolean shouldRender() {
+				return this.showInHud;
+			}
+		}
 	}
 
 	public static class Overlay {

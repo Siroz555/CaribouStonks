@@ -191,6 +191,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - /cariboustonks heldItemCustomization <mainHand/offHand>: Customize the appearance of Held Item.
 - /cariboustonks keyShortcuts: Link Keybinds to commands to be executed.
 - /cariboustonks waypoints: Manage Waypoints.
+- /cariboustonks mobTracking: Manage Mob Tracking options.
 
 ---
 

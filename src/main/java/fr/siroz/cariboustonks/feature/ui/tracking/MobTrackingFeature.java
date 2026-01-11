@@ -9,18 +9,26 @@ import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.command.CommandComponent;
+import fr.siroz.cariboustonks.manager.hud.Hud;
+import fr.siroz.cariboustonks.manager.hud.HudProvider;
+import fr.siroz.cariboustonks.manager.hud.MultiElementHud;
+import fr.siroz.cariboustonks.manager.hud.builder.HudElementBuilder;
+import fr.siroz.cariboustonks.manager.hud.builder.HudElementTextBuilder;
+import fr.siroz.cariboustonks.manager.hud.element.HudElement;
 import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
 import fr.siroz.cariboustonks.screen.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.colors.Colors;
+import it.unimi.dsi.fastutil.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -28,15 +36,18 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Experimental
-public class MobTrackingFeature extends Feature /*implements HudProvider*/ {
+public class MobTrackingFeature extends Feature implements HudProvider {
 
+	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_mob_tracking");
 	private static final int MAX_TRACKED_ENTITIES = 3;
 
 	private final SlayerManager slayerManager;
 	private final MobTrackingRegistry registry;
 	private final BossEvent bossEvent;
+	private final HudElementBuilder hudBuilder;
 
 	private final List<TrackedEntity> tracked = new ArrayList<>(MAX_TRACKED_ENTITIES);
+	private boolean showingBossBar = false;
 
 	public MobTrackingFeature() {
 		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
@@ -46,6 +57,7 @@ public class MobTrackingFeature extends Feature /*implements HudProvider*/ {
 				BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS,
 				false, false, false
 		);
+		this.hudBuilder = new HudElementBuilder();
 
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
 		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
@@ -72,6 +84,10 @@ public class MobTrackingFeature extends Feature /*implements HudProvider*/ {
 	@Override
 	protected void onClientJoinServer() {
 		tracked.clear();
+		if (showingBossBar) {
+			Client.removeBossBar(bossEvent);
+			showingBossBar = false;
+		}
 	}
 
 	@Override
@@ -94,12 +110,34 @@ public class MobTrackingFeature extends Feature /*implements HudProvider*/ {
 			return;
 		}
 
-		TrackedEntity topPriority = tracked.getFirst();
-		Component name = topPriority.armorStand().getCustomName();
-		if (name != null) {
-			bossEvent.setName(name);
-			Client.showBossBar(bossEvent);
+		if (ConfigManager.getConfig().uiAndVisuals.mobTracking.showInBossBar) {
+			Component name = tracked.getFirst().armorStand().getCustomName();
+			if (name != null) {
+				bossEvent.setName(name);
+				Client.showBossBar(bossEvent);
+				showingBossBar = true;
+			}
 		}
+	}
+
+	@Override
+	public @NotNull Pair<Identifier, Identifier> getAttachLayerAfter() {
+		return Pair.of(VanillaHudElements.STATUS_EFFECTS, HUD_ID);
+	}
+
+	@Override
+	public @NotNull Hud getHud() {
+		return new MultiElementHud(
+				() -> this.isEnabled() && !tracked.isEmpty() && ConfigManager.getConfig().uiAndVisuals.mobTracking.hud.showInHud,
+				new HudElementTextBuilder()
+						.append(Component.literal("§8[§7Lv750§8] §2✿§e✰§d❃ §2Exalted Minos Inquisitor §a45.8M§f/§a50M§c❤"))
+						.append(Component.literal("§e﴾ §8[§7Lv200§8] §8☠§f\uD83E\uDDB4§5♃ §8§lBladesoul§r §a50M§f/§a50M§c❤ §e﴿"))
+						.build(),
+				this::getHudLines,
+				ConfigManager.getConfig().uiAndVisuals.mobTracking.hud,
+				125,
+				25
+		);
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
@@ -176,12 +214,26 @@ public class MobTrackingFeature extends Feature /*implements HudProvider*/ {
 		if (mobEntry.config().notifyOnSpawn) {
 			Client.showTitleAndSubtitle(
 					mobEntry.displayName(),
-					Component.literal("Nearby!").withColor(Colors.AQUA.asInt()),
+					Component.literal(ConfigManager.getConfig().uiAndVisuals.mobTracking.spawnMessage),
 					1, 20, 1
 			);
 			if (ConfigManager.getConfig().uiAndVisuals.mobTracking.playSoundWhenSpawn) {
 				Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 			}
 		}
+	}
+
+	private List<? extends HudElement> getHudLines() {
+		hudBuilder.clear();
+
+		// SIROZ-NOTE: mettre une option si on affiche tout, 1 seul ou de facon custom a l'avenir
+		for (TrackedEntity entity : tracked) {
+			Component customName = entity.armorStand().getCustomName();
+			if (customName != null) {
+				hudBuilder.appendLine(customName);
+			}
+		}
+
+		return hudBuilder.build();
 	}
 }

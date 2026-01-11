@@ -36,6 +36,7 @@ public final class MobTrackingRegistry {
 	}
 
 	private void loadDefaultMobs() {
+		// Slayer Boss "register" en temps réel
 		// Crimson Isle - Minibosses
 		register("Bladesoul", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Bladesoul").withStyle(ChatFormatting.GRAY), false, IslandType.CRIMSON_ISLE);
 		register("Magma Boss", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Magma Boss").withStyle(ChatFormatting.DARK_RED), false, IslandType.CRIMSON_ISLE);
@@ -45,6 +46,7 @@ public final class MobTrackingRegistry {
 		// Crimson Isle - Special
 		register("Vanquisher", 1, MobCategory.SPECIAL, Component.literal("Vanquisher").withStyle(ChatFormatting.DARK_PURPLE), true, IslandType.CRIMSON_ISLE);
 		// Mythological Ritual
+		register("Manticore", 50, MobCategory.MYTHOLOGICAL, Component.literal("Manticore").withStyle(ChatFormatting.DARK_GREEN), false, IslandType.HUB);
 		register("Minos Inquisitor", 50, MobCategory.MYTHOLOGICAL, Component.literal("Minos Inquisitor").withStyle(ChatFormatting.LIGHT_PURPLE), false, IslandType.HUB);
 		register("King Minos", 55, MobCategory.MYTHOLOGICAL, Component.literal("King Minos").withStyle(ChatFormatting.RED), false, IslandType.HUB);
 		// Rare Fishing Mobs

@@ -6,6 +6,7 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
+import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.screen.HudConfigScreen;
 import fr.siroz.cariboustonks.screen.mobtracking.MobTrackingScreen;
@@ -67,6 +68,24 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Show in Boss Bar"))
+								.description(OptionDescription.of(
+										Component.literal("If Mob Tracking is enabled, this allows you to view the highest Mob Tracking in a custom Boss Bar.")))
+								.binding(defaults.uiAndVisuals.mobTracking.showInBossBar,
+										() -> current.uiAndVisuals.mobTracking.showInBossBar,
+										newValue -> current.uiAndVisuals.mobTracking.showInBossBar = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Show in a HUD"))
+								.description(OptionDescription.of(
+										Component.literal("If Mob Tracking is enabled, this allows you to view all Mob Tracking in a HUD.")))
+								.binding(defaults.uiAndVisuals.mobTracking.hud.showInHud,
+										() -> current.uiAndVisuals.mobTracking.hud.showInHud,
+										newValue -> current.uiAndVisuals.mobTracking.hud.showInHud = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Track Slayer Boss"))
 								.description(OptionDescription.of(
 										Component.literal("If Mob Tracking is enabled, this allows you to view Slayer Boss information.")))
@@ -74,6 +93,16 @@ public class UIAndVisualsCategory extends AbstractCategory {
 										() -> current.uiAndVisuals.mobTracking.enableSlayer,
 										newValue -> current.uiAndVisuals.mobTracking.enableSlayer = newValue)
 								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<String>createBuilder()
+								.name(Component.literal("Track Spawn Message"))
+								.description(OptionDescription.of(
+										Component.literal("If Mob Tracking is enabled, this allows you to customize the spawn message. Supports Minecraft color codes (§c, §b, etc)."),
+										Component.literal(SPACE + "Note: The message appears just above the mob's name; it does not contain the mob's name.").withStyle(ChatFormatting.YELLOW)))
+								.binding(defaults.uiAndVisuals.mobTracking.spawnMessage,
+										() -> current.uiAndVisuals.mobTracking.spawnMessage,
+										newValue -> current.uiAndVisuals.mobTracking.spawnMessage = newValue)
+								.controller(StringControllerBuilder::create)
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Track Spawn Sound"))
