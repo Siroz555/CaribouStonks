@@ -19,7 +19,7 @@ public class FarmingConfig {
 		public boolean disableWateringCanPlacement = false;
 
 		@SerialEntry
-		public boolean greenhouseGrowthStageReminder = false;
+		public boolean greenhouseGrowthStageReminder = true;
 
 		public boolean greenhouseGrowthStagePreReminder = true;
 	}

@@ -1,0 +1,20 @@
+package fr.siroz.cariboustonks.feature.vanilla;
+
+import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.feature.Feature;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+
+public class HideStatusEffectsFeature extends Feature {
+
+	public HideStatusEffectsFeature() {
+		HudElementRegistry.replaceElement(VanillaHudElements.STATUS_EFFECTS,
+				hud -> isEnabled() ? (guiGraphics, deltaTracker) -> {} : hud
+		);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return ConfigManager.getConfig().vanilla.overlay.hideStatusEffectsOverlay;
+	}
+}

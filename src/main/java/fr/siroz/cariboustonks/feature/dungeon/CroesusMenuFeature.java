@@ -83,7 +83,7 @@ public class CroesusMenuFeature extends Feature implements ContainerMatcherTrait
 		// Priorité des couleurs : Kismet > Opened > NoMoreChest
 		// Pas de "else-if", car c'est pour mieux contrôler chaque option dans la config, d'où le "highlight == null"
 		ColorHighlight highlight = null;
-		if (kismetAvailable && !notOpenedYet && kismetAvailableConfig.getAsBoolean()) {
+		if (kismetAvailable && notOpenedYet && kismetAvailableConfig.getAsBoolean()) {
 			highlight = new ColorHighlight(entry.getIntKey(), kismetAvailableColor());
 		}
 

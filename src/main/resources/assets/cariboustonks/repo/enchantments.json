@@ -587,52 +587,67 @@
   {
     "id": "turbo_cactus",
     "name": "Turbo-Cacti",
-    "maxLevel": 4
+    "maxLevel": 5
   },
   {
     "id": "turbo_cane",
     "name": "Turbo-Cane",
-    "maxLevel": 4
+    "maxLevel": 5
   },
   {
     "id": "turbo_carrot",
     "name": "Turbo-Carrot",
-    "maxLevel": 4
+    "maxLevel": 5
   },
   {
     "id": "turbo_cocoa",
     "name": "Turbo-Cocoa",
-    "maxLevel": 4
+    "maxLevel": 5
   },
   {
     "id": "turbo_melon",
     "name": "Turbo-Melon",
-    "maxLevel": 4
+    "maxLevel": 5
   },
   {
     "id": "turbo_mushrooms",
     "name": "Turbo-Mushrooms",
-    "maxLevel": 4
+    "maxLevel": 5
   },
   {
     "id": "turbo_potato",
     "name": "Turbo-Potato",
-    "maxLevel": 4
+    "maxLevel": 5
   },
   {
     "id": "turbo_pumpkin",
     "name": "Turbo-Pumpkin",
-    "maxLevel": 4
+    "maxLevel": 5
   },
   {
     "id": "turbo_warts",
     "name": "Turbo-Warts",
-    "maxLevel": 4
+    "maxLevel": 5
   },
   {
     "id": "turbo_wheat",
     "name": "Turbo-Wheat",
-    "maxLevel": 4
+    "maxLevel": 5
+  },
+  {
+    "id": "turbo_sunflower",
+    "name": "Turbo-Sunflower",
+    "maxLevel": 5
+  },
+  {
+    "id": "turbo_moonflower",
+    "name": "Turbo-Moonflower",
+    "maxLevel": 5
+  },
+  {
+    "id": "turbo_rose",
+    "name": "Turbo-Rose",
+    "maxLevel": 5
   },
   {
     "id": "vampirism",

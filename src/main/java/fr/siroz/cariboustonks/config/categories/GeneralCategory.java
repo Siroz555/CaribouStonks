@@ -270,6 +270,16 @@ public class GeneralCategory extends AbstractCategory {
 								Text.literal("Activate reminders for different aspects of the game.")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Greenhouse Growth Stage Reminder"))
+								.description(OptionDescription.of(
+										Text.literal("Allows you to activate a reminder when your Greenhouse reaches the Next Growth Stage."),
+										Text.literal(SPACE + "See Skill > Farming - Garden for more options.").formatted(Formatting.YELLOW)))
+								.binding(defaults.farming.garden.greenhouseGrowthStageReminder,
+										() -> current.farming.garden.greenhouseGrowthStageReminder,
+										newValue -> current.farming.garden.greenhouseGrowthStageReminder = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Booster Cookie").append(BETA))
 								.description(OptionDescription.of(
 										Text.literal("Activate a reminder when your Booster Cookie time is low.")))
@@ -313,6 +323,15 @@ public class GeneralCategory extends AbstractCategory {
 										() -> current.general.reminders.forge,
 										newValue -> current.general.reminders.forge = newValue)
 								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Play Sound"))
+								.description(OptionDescription.of(
+										Text.literal("Play a Sound for Reminders.")))
+								.binding(defaults.general.reminders.playSound,
+										() -> current.general.reminders.playSound,
+										newValue -> current.general.reminders.playSound = newValue)
+								.controller(this::createYesNoController)
 								.build())
 						.option(LabelOption.create(Text.empty()))
 						.build())

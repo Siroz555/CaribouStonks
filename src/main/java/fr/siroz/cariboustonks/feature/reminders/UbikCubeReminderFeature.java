@@ -14,6 +14,7 @@ import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -75,6 +76,9 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
 
         Client.sendMessageWithPrefix(message);
         Client.showNotification(notification, ubikCube);
+		if (ConfigManager.getConfig().general.reminders.playSound) {
+			Client.playSound(SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 1f, 1f);
+		}
     }
 
     private void onChatMessage(@NotNull Text text) {

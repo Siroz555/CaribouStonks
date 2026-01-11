@@ -6,7 +6,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.Toast;
+import net.minecraft.entity.boss.BossBar;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.s2c.play.BossBarS2CPacket;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
@@ -267,6 +269,30 @@ public final class Client {
 	public static void showNotificationSystem(@NotNull String title, @NotNull String description) {
 		SystemToast systemToast = SystemToast.create(CLIENT, STONKS_SYSTEM, Text.literal(title), Text.literal(description));
 		CLIENT.getToastManager().add(systemToast);
+	}
+
+	public static void showBossBar(@NotNull BossBar bossBar) {
+		if (CLIENT.player != null) {
+			try {
+				CLIENT.inGameHud.getBossBarHud().handlePacket(BossBarS2CPacket.add(bossBar));
+			} catch (Exception ex) {
+				if (DeveloperTools.isInDevelopment()) {
+					CaribouStonks.LOGGER.error("Unable to update bossBar handler (ADD)", ex);
+				}
+			}
+		}
+	}
+
+	public static void removeBossBar(@NotNull BossBar bossBar) {
+		if (CLIENT.player != null) {
+			try {
+				CLIENT.inGameHud.getBossBarHud().handlePacket(BossBarS2CPacket.remove(bossBar.getUuid()));
+			} catch (Exception ex) {
+				if (DeveloperTools.isInDevelopment()) {
+					CaribouStonks.LOGGER.error("Unable to update bossBar handler (REMOVE)", ex);
+				}
+			}
+		}
 	}
 
 	public static long getWorldDay() {

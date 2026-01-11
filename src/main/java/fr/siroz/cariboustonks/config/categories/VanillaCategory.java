@@ -163,6 +163,15 @@ public class VanillaCategory extends AbstractCategory {
 										newValue -> current.vanilla.overlay.hideFoodOverlay = newValue)
 								.controller(this::createBooleanController)
 								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Hide Status Effects (Potions Effects)"))
+								.description(OptionDescription.of(
+										Text.literal("Hides Status Effects (Potions Effects) displayed next to the inventory, or at the top of the screen.")))
+								.binding(defaults.vanilla.overlay.hideStatusEffectsOverlay,
+										() -> current.vanilla.overlay.hideStatusEffectsOverlay,
+										newValue -> current.vanilla.overlay.hideStatusEffectsOverlay = newValue)
+								.controller(this::createBooleanController)
+								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Customize Held Item Appearance").formatted(Formatting.BOLD))

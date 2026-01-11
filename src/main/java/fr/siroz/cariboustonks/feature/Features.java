@@ -8,8 +8,8 @@ import fr.siroz.cariboustonks.feature.combat.CocoonedWarningFeature;
 import fr.siroz.cariboustonks.feature.combat.LowHealthWarningFeature;
 import fr.siroz.cariboustonks.feature.combat.RagnarockAxeFeature;
 import fr.siroz.cariboustonks.feature.combat.SecondLifeFeature;
+import fr.siroz.cariboustonks.feature.combat.WitherShieldFeature;
 import fr.siroz.cariboustonks.feature.dungeon.CroesusMenuFeature;
-import fr.siroz.cariboustonks.feature.dungeon.NecronBossFeature;
 import fr.siroz.cariboustonks.feature.dungeon.SadanBossFeature;
 import fr.siroz.cariboustonks.feature.dungeon.ThornBossFeature;
 import fr.siroz.cariboustonks.feature.dungeon.WitherKingDragonFeature;
@@ -29,6 +29,7 @@ import fr.siroz.cariboustonks.feature.item.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.feature.misc.HighlightMobFeature;
+import fr.siroz.cariboustonks.feature.misc.HoppityEggFinderFeature;
 import fr.siroz.cariboustonks.feature.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.feature.misc.REISearchBarCalculatorFeature;
 import fr.siroz.cariboustonks.feature.reminders.BoosterCookieReminderFeature;
@@ -54,6 +55,8 @@ import fr.siroz.cariboustonks.feature.ui.hud.PingHud;
 import fr.siroz.cariboustonks.feature.ui.hud.TpsHud;
 import fr.siroz.cariboustonks.feature.ui.overlay.EtherWarpOverlayFeature;
 import fr.siroz.cariboustonks.feature.ui.overlay.GyrokineticOverlayFeature;
+import fr.siroz.cariboustonks.feature.ui.tracking.MobTrackingFeature;
+import fr.siroz.cariboustonks.feature.vanilla.HideStatusEffectsFeature;
 import fr.siroz.cariboustonks.feature.vanilla.MuteVanillaSoundFeature;
 import fr.siroz.cariboustonks.feature.vanilla.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.feature.vanilla.ZoomFeature;
@@ -79,11 +82,11 @@ public final class Features {
 		registerFeature(new LowHealthWarningFeature());
 		registerFeature(new RagnarockAxeFeature());
 		registerFeature(new SecondLifeFeature());
+		registerFeature(new WitherShieldFeature());
 		// Dungeons
 		registerFeature(new CroesusMenuFeature());
 		registerFeature(new ThornBossFeature());
 		registerFeature(new SadanBossFeature());
-		registerFeature(new NecronBossFeature());
 		registerFeature(new WitherKingDragonFeature());
 		// Fishing
 		registerFeature(new RareSeaCreatureFeature());
@@ -128,6 +131,7 @@ public final class Features {
 		registerFeature(new AuctionLowestBinTooltipFeature(2));
 		registerFeature(new ItemValueTooltipFeature(4));
 		// UI
+		registerFeature(new MobTrackingFeature());
 		registerFeature(new AbiphoneFavoriteContactFeature(0));
 		// UI - HUDs
 		registerFeature(new FpsHud());
@@ -141,9 +145,11 @@ public final class Features {
 		registerFeature(new WaypointFeature());
 		// Misc
 		registerFeature(new HighlightMobFeature());
+		registerFeature(new HoppityEggFinderFeature());
 		registerFeature(new PartyCommandFeature());
 		registerFeature(new REISearchBarCalculatorFeature());
 		// Vanilla
+		registerFeature(new HideStatusEffectsFeature());
 		registerFeature(new MuteVanillaSoundFeature());
 		registerFeature(new ScrollableTooltipFeature());
 		registerFeature(new ZoomFeature());

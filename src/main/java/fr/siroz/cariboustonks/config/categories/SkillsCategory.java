@@ -41,7 +41,7 @@ public class SkillsCategory extends AbstractCategory {
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.literal("Low Health Warning - Threshold"))
                                 .description(OptionDescription.of(
-                                        Text.literal("If the red screen display is enabled, allows you to modify in % when the warning will be triggered.")))
+                                        Text.literal("If Low Health Warning is enabled, allows you to modify in % when the warning will be triggered.")))
                                 .binding(defaults.combat.lowHealthWarning.lowHealthWarningThreshold,
                                         () -> current.combat.lowHealthWarning.lowHealthWarningThreshold,
                                         newValue -> current.combat.lowHealthWarning.lowHealthWarningThreshold = newValue)
@@ -87,6 +87,17 @@ public class SkillsCategory extends AbstractCategory {
 										() -> current.combat.cocoonedMob.cocoonedWarningBeam,
 										newValue -> current.combat.cocoonedMob.cocoonedWarningBeam = newValue)
 								.controller(this::createYesNoController)
+								.build())
+						.option(LabelOption.create(Text.literal("| Wither Shield").formatted(Formatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Wither Shield Cooldown HUD"))
+								.description(OptionDescription.of(
+										Text.literal("Displays a HUD that shows the cooldowns of the Wither Shield Ability."),
+										Text.literal(SPACE + "The HUD is displayed only when the ability is activated for 5 seconds. Once the cooldown is reached, the HUD displays READY for 2 seconds before disappearing.")))
+								.binding(defaults.combat.witherShield.hud.enabled,
+										() -> current.combat.witherShield.hud.enabled,
+										newValue -> current.combat.witherShield.hud.enabled = newValue)
+								.controller(this::createBooleanController)
 								.build())
 						.option(LabelOption.create(Text.literal("| Ragnarock Axe").formatted(Formatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()

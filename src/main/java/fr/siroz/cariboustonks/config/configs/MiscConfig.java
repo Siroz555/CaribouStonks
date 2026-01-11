@@ -9,10 +9,7 @@ import net.minecraft.util.Formatting;
 public class MiscConfig {
 
 	@SerialEntry
-	public boolean highlightPartyMembers = false;
-
-	@SerialEntry
-	public Color highlightPartyMembersColor = Color.GREEN;
+	public boolean hoppityEggFinderGuess = false;
 
 	@SerialEntry
 	public Color highlighterColor = ColorUtils.getAwtColor(Formatting.AQUA);
