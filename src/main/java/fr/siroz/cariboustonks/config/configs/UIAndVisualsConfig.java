@@ -9,6 +9,9 @@ import java.awt.Color;
 public class UIAndVisualsConfig {
 
 	@SerialEntry
+	public boolean shadowTextHud = true;
+
+	@SerialEntry
 	public boolean beaconBeamWithNoDepthTest = true;
 
 	@SerialEntry

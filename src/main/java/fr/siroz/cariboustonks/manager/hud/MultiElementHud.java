@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.manager.hud;
 
+import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.manager.hud.element.HudElement;
 import fr.siroz.cariboustonks.manager.hud.element.HudIconLine;
 import fr.siroz.cariboustonks.manager.hud.element.HudTextLine;
@@ -8,6 +9,7 @@ import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -117,14 +119,14 @@ public final class MultiElementHud extends Hud {
 				int cellX = (int) (x / scale);
 				Component[] cells = row.getCells();
 				for (int i = 0; i < cells.length; i++) {
-					guiGraphics.drawString(CLIENT.font, cells[i], cellX, baseY + offset, Colors.WHITE.asInt(), false);
+					guiGraphics.drawString(CLIENT.font, cells[i], cellX, baseY + offset, Colors.WHITE.asInt(), useShadow());
 					cellX += colWidth[i] + cellPadding;
 				}
 			} else if (element instanceof HudTextLine line) {
-				guiGraphics.drawString(CLIENT.font, line.text(), (int) (x / scale), baseY + offset, Colors.WHITE.asInt(), false);
+				guiGraphics.drawString(CLIENT.font, line.text(), (int) (x / scale), baseY + offset, Colors.WHITE.asInt(), useShadow());
 			} else if (element instanceof HudIconLine icon) {
 				guiGraphics.renderItem(icon.stack(), (int) (x / scale), baseY + offset);
-				guiGraphics.drawString(CLIENT.font, icon.text(), (int) (x / scale) + 18, baseY + offset + 4, Colors.WHITE.asInt(), false);
+				guiGraphics.drawString(CLIENT.font, icon.text(), (int) (x / scale) + 18, baseY + offset + 4, Colors.WHITE.asInt(), useShadow());
 			}
 
 			// Avance verticalement : hauteur de ligne + éventuel interligne / Icon
@@ -135,5 +137,10 @@ public final class MultiElementHud extends Hud {
 		}
 
 		guiGraphics.pose().popMatrix();
+	}
+
+	@ApiStatus.Experimental
+	private boolean useShadow() {
+		return ConfigManager.getConfig().uiAndVisuals.shadowTextHud;
 	}
 }
