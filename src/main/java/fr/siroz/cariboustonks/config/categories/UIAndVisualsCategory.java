@@ -30,6 +30,15 @@ public class UIAndVisualsCategory extends AbstractCategory {
 				.name(Text.literal("UI & Visuals"))
 				.tooltip(Text.literal("User Interface and Visual Settings"))
 				.option(Option.<Boolean>createBuilder()
+						.name(Text.literal("Display a Shadow on HUD text"))
+						.description(OptionDescription.of(
+								Text.literal("Display a Shadow on all HUD text of the Mod.")))
+						.binding(defaults.uiAndVisuals.shadowTextHud,
+								() -> current.uiAndVisuals.shadowTextHud,
+								newValue -> current.uiAndVisuals.shadowTextHud = newValue)
+						.controller(this::createBooleanController)
+						.build())
+				.option(Option.<Boolean>createBuilder()
 						.name(Text.literal("Beacon Beams through blocks"))
 						.description(OptionDescription.of(
 								Text.literal("If enabled, Beacon Beams will always be visible through blocks."),
