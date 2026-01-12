@@ -11,7 +11,7 @@ import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.util.Client;
-import java.awt.*;
+import java.awt.Color;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 
