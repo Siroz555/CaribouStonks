@@ -11,14 +11,16 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 | Version             |                            Status | Notes                                     |
 |---------------------|----------------------------------:|-------------------------------------------|
-| **1.21.11**         |                      ✅ **Latest** | Full support (Stable beta)                |
+| **1.21.11**         |                      ✅ **Latest** | Full support                              |
 | **1.21.10**         |                  ✅ **Maintained** | Full support                              |
-| **1.21.7 / 1.21.8** |                  ✅ **Maintained** | Full support                              |
-| **1.21.5**          | ⚠️ **No Longer Updated (legacy)** | No longer updated (latest version: 0.8.0) |
+| **1.21.7 / 1.21.8** |                 ⚠️ **Maintained** | Maintained (Soon to be discontinued)      |
+| **1.21.5**          | ⚠️ **No Longer Updated (legacy)** | No longer updated (Latest version: 0.8.0) |
 
 ### Installation
 
-1. Requirement: [Fabric API](https://modrinth.com/mod/fabric-api)
+1. Requirements:
+    - [Fabric API](https://modrinth.com/mod/fabric-api)
+    - [Hypixel Mod API](https://modrinth.com/mod/hypixel-mod-api) (Minecraft 1.21.11+)
 2. Install directly in the `mods` folder
 
 > [!IMPORTANT]
@@ -64,6 +66,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Hide fire on the screen.
     - Hide armor above inventory-hotbar.
     - Hide food above inventory-hotbar.
+    - Hide Potions Effects on top of the screen
 - Mobs:
     - Hide fire on entities
 - Customize Held Item Appearance:
@@ -99,22 +102,6 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Ping HUD
     - Tps HUD
     - Day HUD
-
-**Dungeons**
-
-- Croesus:
-    - Highlight Opened Chests.
-    - Highlight Kismet Feather Available.
-    - Highlight No more Chests.
-
-- Thorn - F4/M4 - Spirit Bear Spawn Timer.
-- Sadan - F6/M6 - Terracotta Timers.
-- Wither King - M7:
-    - Dragon Priority & Spawn alerts.
-    - Dragon Spawn Time.
-    - Dragons' colored boxes.
-    - Target Line.
-    - Last Breath Target.
 
 **Skills**
 
@@ -174,6 +161,23 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - Tarantula Broodfather (Tier V):
     - Highlight Cocoon Eggs summoned by the Boss with a configurable glow color.
     - Show lines from your Cursor to the Cocoon Eggs.
+
+**Dungeons**
+
+- Croesus:
+    - Highlight Opened Chests.
+    - Highlight Kismet Feather Available.
+    - Highlight No more Chests.
+
+- Thorn - F4/M4 - Spirit Bear Spawn Timer.
+- Sadan - F6/M6 - Terracotta Timers.
+- Wither King - M7:
+    - Dragon Priority & Spawn alerts.
+    - Dragon Spawn Time.
+    - Dragons' colored boxes.
+    - Target Line.
+    - Last Breath Target.
+
 
 **Misc**
 
