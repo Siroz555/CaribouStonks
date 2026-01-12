@@ -2,6 +2,9 @@ package fr.siroz.cariboustonks.config.configs;
 
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import fr.siroz.cariboustonks.manager.hud.HudConfig;
+import fr.siroz.cariboustonks.util.colors.ColorUtils;
+import java.awt.Color;
+import net.minecraft.util.Formatting;
 
 public class CombatConfig {
 
@@ -184,6 +187,12 @@ public class CombatConfig {
 	}
 
 	public static class WitherShield {
+
+		@SerialEntry
+		public boolean onlyShowTimer = false;
+
+		@SerialEntry
+		public Color timerColor = ColorUtils.getAwtColor(Formatting.YELLOW);
 
 		@SerialEntry
 		public WitherShieldHud hud = new WitherShieldHud();

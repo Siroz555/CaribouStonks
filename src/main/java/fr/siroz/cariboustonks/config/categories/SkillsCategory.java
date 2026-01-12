@@ -6,10 +6,12 @@ import dev.isxander.yacl3.api.LabelOption;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionGroup;
+import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.util.Client;
+import java.awt.Color;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -103,7 +105,7 @@ public class SkillsCategory extends AbstractCategory {
 								.build())
 						.option(LabelOption.create(Text.literal("| Wither Shield").formatted(Formatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Wither Shield Cooldown HUD"))
+								.name(Text.literal("Wither Shield - Cooldown HUD"))
 								.description(OptionDescription.of(
 										Text.literal("Displays a HUD that shows the cooldowns of the Wither Shield Ability."),
 										Text.literal(SPACE + "The HUD is displayed only when the ability is activated for 5 seconds. Once the cooldown is reached, the HUD displays READY for 2 seconds before disappearing.")))
@@ -111,6 +113,24 @@ public class SkillsCategory extends AbstractCategory {
 										() -> current.combat.witherShield.hud.enabled,
 										newValue -> current.combat.witherShield.hud.enabled = newValue)
 								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Wither Shield - Only Show Timer"))
+								.description(OptionDescription.of(
+										Text.literal("If enabled, only displays the timer on the screen, not “Wither Shield: 3.4s.”")))
+								.binding(defaults.combat.witherShield.onlyShowTimer,
+										() -> current.combat.witherShield.onlyShowTimer,
+										newValue -> current.combat.witherShield.onlyShowTimer = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Color>createBuilder()
+								.name(Text.literal("Wither Shield - Timer Color"))
+								.description(OptionDescription.of(
+										Text.literal("Change the color of the timer.")))
+								.binding(defaults.combat.witherShield.timerColor,
+										() -> current.combat.witherShield.timerColor,
+										newValue -> current.combat.witherShield.timerColor = newValue)
+								.controller(ColorControllerBuilder::create)
 								.build())
 						.option(LabelOption.create(Text.literal("| Ragnarock Axe").formatted(Formatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
