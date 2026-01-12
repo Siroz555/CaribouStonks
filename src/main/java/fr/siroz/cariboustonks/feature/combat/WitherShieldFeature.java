@@ -94,9 +94,13 @@ public class WitherShieldFeature extends Feature implements HudProvider {
 		// Si ability est active
 		if (abilityEnd > now) {
 			double timeRemaining = (abilityEnd - now) / 1000.0d;
-			return Component.empty()
+			Component timer = Component.literal(DECIMAL_FORMAT.format(timeRemaining) + "s")
+					.withColor(ConfigManager.getConfig().combat.witherShield.timerColor.getRGB());
+			return onlyShowTimer()
+					? Component.empty().append(timer)
+					: Component.empty()
 					.append(Component.literal("Wither Shield: ").withStyle(ChatFormatting.DARK_PURPLE))
-					.append(Component.literal(DECIMAL_FORMAT.format(timeRemaining) + "s").withStyle(ChatFormatting.YELLOW));
+					.append(timer);
 		}
 
 		// Si abilityEnd était défini mais est maintenant expiré -> READY
@@ -108,9 +112,12 @@ public class WitherShieldFeature extends Feature implements HudProvider {
 		abilityEnd = -1L;
 		// Afficher READY si dans la fenêtre readyUntil
 		if (readyUntil > now) {
-			return Component.empty()
+			Component ready = Component.literal("READY").withStyle(ChatFormatting.GREEN);
+			return onlyShowTimer()
+					? Component.empty().append(ready)
+					: Component.empty()
 					.append(Component.literal("Wither Shield: ").withStyle(ChatFormatting.DARK_PURPLE))
-					.append(Component.literal("READY").withStyle(ChatFormatting.GREEN));
+					.append(ready);
 		}
 
 		return Component.empty();
@@ -128,5 +135,9 @@ public class WitherShieldFeature extends Feature implements HudProvider {
 		}
 
 		return modifiers.abilityScrolls().get().contains("WITHER_SHIELD_SCROLL");
+	}
+
+	private boolean onlyShowTimer() {
+		return ConfigManager.getConfig().combat.witherShield.onlyShowTimer;
 	}
 }
