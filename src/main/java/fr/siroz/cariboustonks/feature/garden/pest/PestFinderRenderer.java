@@ -47,7 +47,7 @@ final class PestFinderRenderer {
 				continue;
 			}
 
-            if (!armorStand.hasCustomName() || !armorStand.getName().getString().contains("ൠ")) {
+            if (!armorStand.hasCustomName() || !armorStand.getName().getString().startsWith("ൠ")) {
 				continue;
 			}
 
