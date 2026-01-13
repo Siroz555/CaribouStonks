@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Credits to AzureAaron (<a href="https://github.com/AzureAaron">GitHub AzureAaron</a>).
@@ -112,7 +113,7 @@ public class ColoredEnchantmentFeature extends Feature {
 					ListIterator<Component> iterator = line.getSiblings().listIterator();
 					while (iterator.hasNext()) {
 						Component currentText = iterator.next();
-						String enchant = currentText.getString().trim();
+						String enchant = trimEnchantName(currentText.getString());
 
 						//noinspection DataFlowIssue
 						if (maxEnchantmentColors.containsKey(enchant)
@@ -125,7 +126,7 @@ public class ColoredEnchantmentFeature extends Feature {
 					}
 				} else {
 					for (Component currentText : line.getSiblings()) {
-						String enchant = currentText.getString().trim();
+						String enchant = trimEnchantName(currentText.getString());
 
 						//noinspection DataFlowIssue
 						if (maxEnchantmentColors.containsKey(enchant)
@@ -143,7 +144,7 @@ public class ColoredEnchantmentFeature extends Feature {
 					&& goodEnchantmentColors.keySet().stream().anyMatch(line.getString()::contains)
 			) {
 				for (Component currentText : line.getSiblings()) {
-					String enchant = currentText.getString().trim();
+					String enchant = trimEnchantName(currentText.getString());
 
 					//noinspection DataFlowIssue
 					if (goodEnchantmentColors.containsKey(enchant)
@@ -183,5 +184,11 @@ public class ColoredEnchantmentFeature extends Feature {
 		}
 
 		return copy;
+	}
+
+	@NotNull
+	private String trimEnchantName(@NonNull String enchantName) {
+		int commaIndex = enchantName.indexOf(',');
+		return commaIndex > -1 ? enchantName.substring(0, commaIndex) : enchantName;
 	}
 }
