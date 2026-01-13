@@ -112,13 +112,22 @@ public class ColoredEnchantmentFeature extends Feature {
 					ListIterator<Text> iterator = line.getSiblings().listIterator();
 					while (iterator.hasNext()) {
 						Text currentText = iterator.next();
-						String enchant = trimEnchantName(currentText.getString());
+						String fullText = currentText.getString();
+						String enchant = trimEnchantName(fullText);
 
 						//noinspection DataFlowIssue
 						if (maxEnchantmentColors.containsKey(enchant)
 								&& currentText.getStyle().getColor().getRgb() == Formatting.BLUE.getColorValue()
 						) {
-							iterator.set(AnimationUtils.applyRainbow(enchant));
+							// Extraire la partie après l'enchantement (virgule, espace)
+							String suffix = fullText.substring(enchant.length());
+							// Créer le nouveau component avec rainbow + le suffixe original
+							MutableText newComponent = (MutableText) AnimationUtils.applyRainbow(enchant);
+							if (!suffix.isEmpty()) {
+								newComponent.append(Text.literal(suffix).setStyle(currentText.getStyle()));
+							}
+
+							iterator.set(newComponent);
 							maxEnchantmentColors.removeInt(enchant);
 							applied = true;
 						}
@@ -188,6 +197,6 @@ public class ColoredEnchantmentFeature extends Feature {
 	@NotNull
 	private String trimEnchantName(@NotNull String enchantName) {
 		int commaIndex = enchantName.indexOf(',');
-		return commaIndex > -1 ? enchantName.substring(0, commaIndex) : enchantName;
+		return commaIndex > -1 ? enchantName.substring(0, commaIndex).trim() : enchantName.trim();
 	}
 }
