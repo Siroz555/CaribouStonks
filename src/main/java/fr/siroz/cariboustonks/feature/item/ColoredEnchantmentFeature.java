@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
-import org.jspecify.annotations.NonNull;
 
 /**
  * Credits to AzureAaron (<a href="https://github.com/AzureAaron">GitHub AzureAaron</a>).
@@ -113,13 +112,22 @@ public class ColoredEnchantmentFeature extends Feature {
 					ListIterator<Component> iterator = line.getSiblings().listIterator();
 					while (iterator.hasNext()) {
 						Component currentText = iterator.next();
-						String enchant = trimEnchantName(currentText.getString());
+						String fullText = currentText.getString();
+						String enchant = trimEnchantName(fullText);
 
 						//noinspection DataFlowIssue
 						if (maxEnchantmentColors.containsKey(enchant)
 								&& currentText.getStyle().getColor().getValue() == ChatFormatting.BLUE.getColor()
 						) {
-							iterator.set(AnimationUtils.applyRainbow(enchant));
+							// Extraire la partie après l'enchantement (virgule, espace)
+							String suffix = fullText.substring(enchant.length());
+							// Créer le nouveau component avec rainbow + le suffixe original
+							MutableComponent newComponent = (MutableComponent) AnimationUtils.applyRainbow(enchant);
+							if (!suffix.isEmpty()) {
+								newComponent.append(Component.literal(suffix).withStyle(currentText.getStyle()));
+							}
+
+							iterator.set(newComponent);
 							maxEnchantmentColors.removeInt(enchant);
 							applied = true;
 						}
@@ -187,8 +195,8 @@ public class ColoredEnchantmentFeature extends Feature {
 	}
 
 	@NotNull
-	private String trimEnchantName(@NonNull String enchantName) {
+	private String trimEnchantName(@NotNull String enchantName) {
 		int commaIndex = enchantName.indexOf(',');
-		return commaIndex > -1 ? enchantName.substring(0, commaIndex) : enchantName;
+		return commaIndex > -1 ? enchantName.substring(0, commaIndex).trim() : enchantName.trim();
 	}
 }
