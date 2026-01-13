@@ -67,6 +67,13 @@ abstract class AbstractCategory {
 				.formatValue(i -> i > 1 ? Text.of(i + " seconds") : Text.of(i + " second"));
 	}
 
+	public IntegerSliderControllerBuilder createIntegerMinutesController(Option<Integer> opt, int max) {
+		return IntegerSliderControllerBuilder.create(opt)
+				.range(1, max)
+				.step(1)
+				.formatValue(i -> i > 1 ? Text.of(i + " minutes") : Text.of(i + " minute"));
+	}
+
 	@SuppressWarnings("unchecked")
 	public <E extends Enum<E>> EnumControllerBuilder<E> createEnumCyclingController(Option<E> opt) {
 		return EnumControllerBuilder.create(opt).enumClass((Class<E>) opt.stateManager().get().getClass());

@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.manager.hud;
 
+import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.manager.hud.element.HudElement;
 import fr.siroz.cariboustonks.manager.hud.element.HudIconLine;
 import fr.siroz.cariboustonks.manager.hud.element.HudTextLine;
@@ -8,6 +9,7 @@ import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -117,14 +119,14 @@ public final class MultiElementHud extends Hud {
 				int cellX = (int) (x / scale);
 				Text[] cells = row.getCells();
 				for (int i = 0; i < cells.length; i++) {
-					context.drawText(CLIENT.textRenderer, cells[i], cellX, baseY + offset, Colors.WHITE.asInt(), false);
+					context.drawText(CLIENT.textRenderer, cells[i], cellX, baseY + offset, Colors.WHITE.asInt(), useShadow());
 					cellX += colWidth[i] + cellPadding;
 				}
 			} else if (element instanceof HudTextLine line) {
-				context.drawText(CLIENT.textRenderer, line.text(), (int) (x / scale), baseY + offset, Colors.WHITE.asInt(), false);
+				context.drawText(CLIENT.textRenderer, line.text(), (int) (x / scale), baseY + offset, Colors.WHITE.asInt(), useShadow());
 			} else if (element instanceof HudIconLine icon) {
 				context.drawItem(icon.stack(), (int) (x / scale), baseY + offset);
-				context.drawText(CLIENT.textRenderer, icon.text(), (int) (x / scale) + 18, baseY + offset + 4, Colors.WHITE.asInt(), false);
+				context.drawText(CLIENT.textRenderer, icon.text(), (int) (x / scale) + 18, baseY + offset + 4, Colors.WHITE.asInt(), useShadow());
 			}
 
 			// Avance verticalement : hauteur de ligne + éventuel interligne / Icon
@@ -135,5 +137,10 @@ public final class MultiElementHud extends Hud {
 		}
 
 		context.getMatrices().popMatrix();
+	}
+
+	@ApiStatus.Experimental
+	private boolean useShadow() {
+		return ConfigManager.getConfig().uiAndVisuals.shadowTextHud;
 	}
 }
