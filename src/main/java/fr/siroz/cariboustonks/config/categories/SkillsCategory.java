@@ -8,6 +8,7 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
+import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.util.Client;
@@ -258,6 +259,15 @@ public class SkillsCategory extends AbstractCategory {
 										() -> current.farming.garden.greenhouseGrowthStagePreReminder,
 										newValue -> current.farming.garden.greenhouseGrowthStagePreReminder = newValue)
 								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Integer>createBuilder()
+								.name(Component.literal("Greenhouse Growth Stage Pre Reminder Time"))
+								.description(OptionDescription.of(
+										Component.literal("Allows you to choose how long before the next Growth Stage the Pre Reminder should be activated. Default to 5 minutes.")))
+								.binding(defaults.farming.garden.greenhouseGrowthStagePreReminderTime,
+										() -> current.farming.garden.greenhouseGrowthStagePreReminderTime,
+										newValue -> current.farming.garden.greenhouseGrowthStagePreReminderTime = newValue)
+								.controller(opt -> createIntegerMinutesController(opt, 30))
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Disable Greenhouse watering can placement"))

@@ -121,7 +121,7 @@ public class GreenhouseGrowthStageFeature extends Feature implements ContainerMa
 
 	@Override
 	public Optional<Duration> preNotifyDuration() {
-		return Optional.of(Duration.ofMinutes(5));
+		return Optional.of(Duration.ofMinutes(ConfigManager.getConfig().farming.garden.greenhouseGrowthStagePreReminderTime));
 	}
 
 	@Override
