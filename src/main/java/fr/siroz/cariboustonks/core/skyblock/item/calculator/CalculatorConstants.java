@@ -106,7 +106,8 @@ public interface CalculatorConstants {
 
 	Map<String, Integer> ULTIMATE_BASE_LEVELS = Map.of(
 			"ULTIMATE_THE_ONE", 4,
-			"ULTIMATE_BOBBIN_TIME", 3
+			"ULTIMATE_BOBBIN_TIME", 3,
+			"ULTIMATE_HABANERO_TACTICS", 4
 	);
 
 	Set<String> STACKING_ENCHANTMENTS = Set.of(
