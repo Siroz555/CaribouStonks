@@ -112,7 +112,7 @@ public class ColoredEnchantmentFeature extends Feature {
 					ListIterator<Text> iterator = line.getSiblings().listIterator();
 					while (iterator.hasNext()) {
 						Text currentText = iterator.next();
-						String enchant = currentText.getString().trim();
+						String enchant = trimEnchantName(currentText.getString());
 
 						//noinspection DataFlowIssue
 						if (maxEnchantmentColors.containsKey(enchant)
@@ -125,7 +125,7 @@ public class ColoredEnchantmentFeature extends Feature {
 					}
 				} else {
 					for (Text currentText : line.getSiblings()) {
-						String enchant = currentText.getString().trim();
+						String enchant = trimEnchantName(currentText.getString());
 
 						//noinspection DataFlowIssue
 						if (maxEnchantmentColors.containsKey(enchant)
@@ -143,7 +143,7 @@ public class ColoredEnchantmentFeature extends Feature {
 					&& goodEnchantmentColors.keySet().stream().anyMatch(line.getString()::contains)
 			) {
 				for (Text currentText : line.getSiblings()) {
-					String enchant = currentText.getString().trim();
+					String enchant = trimEnchantName(currentText.getString());
 
 					//noinspection DataFlowIssue
 					if (goodEnchantmentColors.containsKey(enchant)
@@ -183,5 +183,11 @@ public class ColoredEnchantmentFeature extends Feature {
 		}
 
 		return copy;
+	}
+
+	@NotNull
+	private String trimEnchantName(@NotNull String enchantName) {
+		int commaIndex = enchantName.indexOf(',');
+		return commaIndex > -1 ? enchantName.substring(0, commaIndex) : enchantName;
 	}
 }

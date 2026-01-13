@@ -25,7 +25,7 @@ public class SkillsCategory extends AbstractCategory {
     @Override
     public ConfigCategory create() {
         return ConfigCategory.createBuilder()
-                .name(Text.literal("Skills"))
+                .name(Text.literal("Skills-related"))
                 .tooltip(Text.literal("Skills-related Settings"))
                 .group(OptionGroup.createBuilder()
                         .name(Text.literal("Combat").formatted(Formatting.BOLD))
@@ -258,6 +258,15 @@ public class SkillsCategory extends AbstractCategory {
 										() -> current.farming.garden.greenhouseGrowthStagePreReminder,
 										newValue -> current.farming.garden.greenhouseGrowthStagePreReminder = newValue)
 								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Integer>createBuilder()
+								.name(Text.literal("Greenhouse Growth Stage Pre Reminder Time"))
+								.description(OptionDescription.of(
+										Text.literal("Allows you to choose how long before the next Growth Stage the Pre Reminder should be activated. Default to 5 minutes.")))
+								.binding(defaults.farming.garden.greenhouseGrowthStagePreReminderTime,
+										() -> current.farming.garden.greenhouseGrowthStagePreReminderTime,
+										newValue -> current.farming.garden.greenhouseGrowthStagePreReminderTime = newValue)
+								.controller(opt -> createIntegerMinutesController(opt, 30))
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Disable Greenhouse watering can placement"))
