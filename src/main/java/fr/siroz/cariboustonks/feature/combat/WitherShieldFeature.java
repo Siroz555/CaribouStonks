@@ -112,7 +112,7 @@ public class WitherShieldFeature extends Feature implements HudProvider {
 		abilityEnd = -1L;
 		// Afficher READY si dans la fenêtre readyUntil
 		if (readyUntil > now) {
-			Component ready = Component.literal("READY").withStyle(ChatFormatting.GREEN);
+			Component ready = Component.literal(ConfigManager.getConfig().combat.witherShield.readyMessage);
 			return onlyShowTimer()
 					? Component.empty().append(ready)
 					: Component.empty()

@@ -103,6 +103,16 @@ public class SkillsCategory extends AbstractCategory {
 										newValue -> current.combat.cocoonedMob.cocoonedWarningBeam = newValue)
 								.controller(this::createYesNoController)
 								.build())
+						.option(Option.<String>createBuilder()
+								.name(Component.literal("Cocooned Warning - Message"))
+								.description(OptionDescription.of(
+										Component.literal("Change the message when a mob is Cocooned."),
+										Component.literal(SPACE + "Support Minecraft color codes (§)").withStyle(ChatFormatting.ITALIC)))
+								.binding(defaults.combat.cocoonedMob.message,
+										() -> current.combat.cocoonedMob.message,
+										newValue -> current.combat.cocoonedMob.message = newValue)
+								.controller(StringControllerBuilder::create)
+								.build())
 						.option(LabelOption.create(Component.literal("| Wither Shield").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Wither Shield - Cooldown HUD"))
@@ -122,6 +132,16 @@ public class SkillsCategory extends AbstractCategory {
 										() -> current.combat.witherShield.onlyShowTimer,
 										newValue -> current.combat.witherShield.onlyShowTimer = newValue)
 								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<String>createBuilder()
+								.name(Component.literal("Wither Shield - Ready Message"))
+								.description(OptionDescription.of(
+										Component.literal("Change the “READY” message."),
+										Component.literal(SPACE + "Support Minecraft color codes (§)").withStyle(ChatFormatting.ITALIC)))
+								.binding(defaults.combat.witherShield.readyMessage,
+										() -> current.combat.witherShield.readyMessage,
+										newValue -> current.combat.witherShield.readyMessage = newValue)
+								.controller(StringControllerBuilder::create)
 								.build())
 						.option(Option.<Color>createBuilder()
 								.name(Component.literal("Wither Shield - Timer Color"))

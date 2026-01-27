@@ -29,6 +29,9 @@ public class CombatConfig {
 		public boolean cocoonedWarning = false;
 
 		@SerialEntry
+		public String message = "§c§lCocooned!";
+
+		@SerialEntry
 		public boolean cocoonedWarningTitle = true;
 
 		@SerialEntry
@@ -190,6 +193,9 @@ public class CombatConfig {
 
 		@SerialEntry
 		public boolean onlyShowTimer = false;
+
+		@SerialEntry
+		public String readyMessage = "§aREADY";
 
 		@SerialEntry
 		public Color timerColor = ColorUtils.getAwtColor(ChatFormatting.YELLOW);
