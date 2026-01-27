@@ -36,6 +36,7 @@ import fr.siroz.cariboustonks.feature.reminders.BoosterCookieReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.ChocolateLimitReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.EnchantedCloakReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.ForgeReminderFeature;
+import fr.siroz.cariboustonks.feature.reminders.StonksAuctionReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.UbikCubeReminderFeature;
 import fr.siroz.cariboustonks.feature.slayer.HighlightSlayerMobFeature;
 import fr.siroz.cariboustonks.feature.slayer.SlayerCocoonedWarningFeature;
@@ -116,6 +117,7 @@ public final class Features {
 		registerFeature(new ChocolateLimitReminderFeature());
 		registerFeature(new EnchantedCloakReminderFeature());
 		registerFeature(new ForgeReminderFeature());
+		registerFeature(new StonksAuctionReminderFeature());
 		registerFeature(new UbikCubeReminderFeature());
 		// Slayer
 		registerFeature(new HighlightSlayerMobFeature());

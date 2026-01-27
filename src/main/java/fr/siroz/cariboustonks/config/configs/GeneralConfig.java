@@ -94,6 +94,9 @@ public class GeneralConfig {
 		public boolean enchantedCloak = true;
 
 		@SerialEntry
+		public boolean stonksAuction = true;
+
+		@SerialEntry
 		public boolean forge = true;
 	}
 

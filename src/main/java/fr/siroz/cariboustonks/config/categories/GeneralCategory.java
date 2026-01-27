@@ -333,6 +333,15 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Stonks Auction"))
+								.description(OptionDescription.of(
+										Component.literal("Activate a reminder when the Diaz Stonks Auction is ready to bid or recovered.")))
+								.binding(defaults.general.reminders.stonksAuction,
+										() -> current.general.reminders.stonksAuction,
+										newValue -> current.general.reminders.stonksAuction = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Forge"))
 								.description(OptionDescription.of(
 										Component.literal("Activate a reminder when an item in the forge is finished.")))

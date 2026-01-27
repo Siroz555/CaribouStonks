@@ -48,6 +48,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Greenhouse: Growth Stage Reminder & Pre-Reminder.
     - Chocolate Factory: Reminders when the number of chocolates reaches the limit.
     - Split or Steal: Reminder when the Ubik's Cube is ready.
+    - Stonks Auction: Reminder when the Diaz Stonks Auction is ready to bid or recovered.
     - Forge: Reminder when a forge item is completed.
     - Enchanted Cloak: Reminders when a boost is ready.
 
