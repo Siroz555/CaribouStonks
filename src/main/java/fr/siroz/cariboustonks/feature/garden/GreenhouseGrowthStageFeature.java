@@ -15,10 +15,8 @@ import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -31,7 +29,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@ApiStatus.Experimental // TODO - Une fois que Hypixel aura patch le "bug de 4h", avoir quelque chose de continu.
+@ApiStatus.Experimental
 public class GreenhouseGrowthStageFeature extends Feature implements ContainerMatcherTrait, ContainerOverlay, Reminder {
 
 	private static final Pattern TITLE_PATTERN = Pattern.compile("^Crop Diagnostics$");
@@ -111,30 +109,6 @@ public class GreenhouseGrowthStageFeature extends Feature implements ContainerMa
 				.append(Component.literal("Greenhouse").withStyle(ChatFormatting.DARK_GREEN))
 				.append(Component.literal("\n"))
 				.append(Component.literal("Next Growth Stage is reached!").withStyle(ChatFormatting.GREEN));
-
-		Client.sendMessageWithPrefix(message);
-		Client.showNotification(notification, ICON);
-		if (ConfigManager.getConfig().general.reminders.playSound) {
-			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
-		}
-	}
-
-	@Override
-	public Optional<Duration> preNotifyDuration() {
-		return Optional.of(Duration.ofMinutes(ConfigManager.getConfig().farming.garden.greenhouseGrowthStagePreReminderTime));
-	}
-
-	@Override
-	public void onPreExpire(@NotNull TimedObject timedObject) {
-		if (!ConfigManager.getConfig().farming.garden.greenhouseGrowthStagePreReminder) return;
-
-		MutableComponent message = Component.empty()
-				.append(Component.literal("[Greenhouse] ").withStyle(ChatFormatting.DARK_GREEN))
-				.append(Component.literal("The Next Growth Stage will be reached in 5 minutes!").withStyle(ChatFormatting.GREEN));
-		MutableComponent notification = Component.empty()
-				.append(Component.literal("Greenhouse").withStyle(ChatFormatting.DARK_GREEN))
-				.append(Component.literal("\n"))
-				.append(Component.literal("The Next Growth Stage will be reached in 5 minutes!").withStyle(ChatFormatting.GREEN));
 
 		Client.sendMessageWithPrefix(message);
 		Client.showNotification(notification, ICON);

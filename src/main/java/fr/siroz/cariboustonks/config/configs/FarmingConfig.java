@@ -20,11 +20,5 @@ public class FarmingConfig {
 
 		@SerialEntry
 		public boolean greenhouseGrowthStageReminder = true;
-
-		@SerialEntry
-		public boolean greenhouseGrowthStagePreReminder = true;
-
-		@SerialEntry
-		public int greenhouseGrowthStagePreReminderTime = 5;
 	}
 }

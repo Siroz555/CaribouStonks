@@ -271,24 +271,6 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Greenhouse Growth Stage Pre Reminder)"))
-								.description(OptionDescription.of(
-										Component.literal("If the Greenhouse Growth Stage Reminder option is enabled, it allows you to set a reminder 5 minutes before the Next Growth Stage is reached.")))
-								.binding(defaults.farming.garden.greenhouseGrowthStagePreReminder,
-										() -> current.farming.garden.greenhouseGrowthStagePreReminder,
-										newValue -> current.farming.garden.greenhouseGrowthStagePreReminder = newValue)
-								.controller(this::createYesNoController)
-								.build())
-						.option(Option.<Integer>createBuilder()
-								.name(Component.literal("Greenhouse Growth Stage Pre Reminder Time"))
-								.description(OptionDescription.of(
-										Component.literal("Allows you to choose how long before the next Growth Stage the Pre Reminder should be activated. Default to 5 minutes.")))
-								.binding(defaults.farming.garden.greenhouseGrowthStagePreReminderTime,
-										() -> current.farming.garden.greenhouseGrowthStagePreReminderTime,
-										newValue -> current.farming.garden.greenhouseGrowthStagePreReminderTime = newValue)
-								.controller(opt -> createIntegerMinutesController(opt, 30))
-								.build())
-						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Disable Greenhouse watering can placement"))
 								.description(OptionDescription.of(
 										Component.literal("If enabled, disables the placement of watering cans in the Greenhouse."),
