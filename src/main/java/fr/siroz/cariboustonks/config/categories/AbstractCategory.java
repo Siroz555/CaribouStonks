@@ -67,11 +67,11 @@ abstract class AbstractCategory {
 				.formatValue(i -> i > 1 ? Component.nullToEmpty(i + " seconds") : Component.nullToEmpty(i + " second"));
 	}
 
-	public IntegerSliderControllerBuilder createIntegerMinutesController(Option<Integer> opt, int max) {
+	public IntegerSliderControllerBuilder createIntegerMsController(Option<Integer> opt, int max) {
 		return IntegerSliderControllerBuilder.create(opt)
 				.range(1, max)
 				.step(1)
-				.formatValue(i -> i > 1 ? Component.nullToEmpty(i + " minutes") : Component.nullToEmpty(i + " minute"));
+				.formatValue(i -> Component.nullToEmpty(i + " ms"));
 	}
 
 	@SuppressWarnings("unchecked")

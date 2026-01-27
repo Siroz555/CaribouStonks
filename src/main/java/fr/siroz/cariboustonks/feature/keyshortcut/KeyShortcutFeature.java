@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.feature.keyshortcut;
 
 import com.google.common.reflect.TypeToken;
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.json.JsonProcessingException;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
@@ -28,7 +29,6 @@ import org.lwjgl.glfw.GLFW;
 public class KeyShortcutFeature extends Feature {
 
 	private static final Path SHORTCUTS_PATH = CaribouStonks.CONFIG_DIR.resolve("shortcuts.json");
-	private static final long COOLDOWN = 500;
 
 	private final Map<String, KeyShortcut> shortcuts = new ConcurrentHashMap<>();
 	private long lastKeyPressed = 0;
@@ -46,7 +46,7 @@ public class KeyShortcutFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock();
+		return SkyBlockAPI.isOnSkyBlock() && !shortcuts.isEmpty();
 	}
 
 	public Map<String, KeyShortcut> getShortcutsCopy() {
@@ -116,7 +116,7 @@ public class KeyShortcutFeature extends Feature {
 		if (client.player == null || client.level == null) return;
 		if (client.screen != null) return;
 		if (!isEnabled()) return;
-		if (System.currentTimeMillis() - lastKeyPressed < COOLDOWN) return;
+		if (System.currentTimeMillis() - lastKeyPressed < ConfigManager.getConfig().general.keyShortcutCooldown) return;
 
 		for (KeyShortcut shortcut : shortcuts.values()) {
 			if (shortcut.command().isBlank() || shortcut.keyCode() == -1) {

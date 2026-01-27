@@ -41,6 +41,17 @@ public class GeneralCategory extends AbstractCategory {
 						.text(Component.literal("Open"))
 						.action((screen, opt) -> Minecraft.getInstance().setScreen(HudConfigScreen.create(screen)))
 						.build())
+				.option(LabelOption.create(Component.literal("| Key Shortcuts").withStyle(ChatFormatting.BOLD)))
+				.option(Option.<Integer>createBuilder()
+						.name(Component.literal("KeyShortcut Cooldown"))
+						.description(OptionDescription.of(
+								Component.literal("Allows you to change the cooldown in milliseconds between each action."),
+								Component.literal(SPACE + "Note: It is possible to be kicked for spamming if this value is too low. Generally, when it's “instant,” even though Hypixel prevents you by default.").withStyle(ChatFormatting.GOLD)))
+						.binding(defaults.general.keyShortcutCooldown,
+								() -> current.general.keyShortcutCooldown,
+								newValue -> current.general.keyShortcutCooldown = newValue)
+						.controller(opt -> createIntegerMsController(opt, 2500))
+						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Stonks").withStyle(ChatFormatting.BOLD))
 						.description(OptionDescription.of(

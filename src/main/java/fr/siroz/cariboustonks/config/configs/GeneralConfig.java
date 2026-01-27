@@ -11,6 +11,9 @@ public class GeneralConfig {
 	public boolean firstTimeWithTheMod = true;
 
 	@SerialEntry
+	public int keyShortcutCooldown = 500;
+
+	@SerialEntry
 	public Stonks stonks = new Stonks();
 
 	@SerialEntry
