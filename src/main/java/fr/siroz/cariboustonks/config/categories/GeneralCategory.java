@@ -13,6 +13,7 @@ import fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar.BazaarTooltipPriceT
 import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.screen.CaribouStonksMenuScreen;
 import fr.siroz.cariboustonks.screen.HudConfigScreen;
+import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.Minecraft;
@@ -42,6 +43,11 @@ public class GeneralCategory extends AbstractCategory {
 						.action((screen, opt) -> Minecraft.getInstance().setScreen(HudConfigScreen.create(screen)))
 						.build())
 				.option(LabelOption.create(Component.literal("| Key Shortcuts").withStyle(ChatFormatting.BOLD)))
+				.option(ButtonOption.createBuilder()
+						.name(Component.literal("KeyShortcut Menu"))
+						.text(Component.literal("Open"))
+						.action((screen, opt) -> Minecraft.getInstance().setScreen(KeyShortcutScreen.create(screen)))
+						.build())
 				.option(Option.<Integer>createBuilder()
 						.name(Component.literal("KeyShortcut Cooldown"))
 						.description(OptionDescription.of(
