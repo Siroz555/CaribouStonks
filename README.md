@@ -7,14 +7,7 @@ Siroz555's Mod – Fabric mod for Hypixel SkyBlock on the latest versions of Min
 The main features are Bazaar/Auctions price displays on items, a graphical representation of prices over time,
 in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
-**Supported versions**
-
-| Version             |                            Status | Notes                                     |
-|---------------------|----------------------------------:|-------------------------------------------|
-| **1.21.11**         |                      ✅ **Latest** | Full support                              |
-| **1.21.10**         |                  ✅ **Maintained** | Full support                              |
-| **1.21.7 / 1.21.8** |                 ⚠️ **Maintained** | Maintained (Soon to be discontinued)      |
-| **1.21.5**          | ⚠️ **No Longer Updated (legacy)** | No longer updated (Latest version: 0.8.0) |
+**✅ Supported Minecraft Versions**: **1.21.11** & **1.21.10**
 
 ### Installation
 
@@ -203,8 +196,19 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 ### Release & Update Policy
 
 * Major features → shipped on the **master** branch first.
-* Bug fixes → backported to 1.21.7/8 | 1.21.10 when safe.
+* Bug fixes → backported to 1.21.10 when safe.
 * Small QoL features may be added to both branches.
+
+---
+
+### Minecraft Versions History
+
+| Version             |                   Status | Notes                      |
+|---------------------|-------------------------:|----------------------------|
+| **1.21.11**         |            ✅ **Current** | Latest                     |
+| **1.21.10**         |            ✅ **Current** | Maintained                 |
+| **1.21.7 / 1.21.8** | ⚠️ **No Longer Updated** | Latest Mod Version: 0.10.1 |
+| **1.21.5**          | ⚠️ **No Longer Updated** | Latest Mod Version: 0.8.0  |
 
 ---
 
