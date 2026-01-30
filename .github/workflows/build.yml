@@ -32,18 +32,6 @@ jobs:
           path: |
             **/build/reports/checkstyle/
 
-#      - name: Run Tests
-#        run: ./gradlew test
-#
-#      - name: Capture test results
-#        uses: actions/upload-artifact@v4
-#        if: failure()
-#        with:
-#          name: test-results
-#          path: |
-#            **/build/reports/tests/
-#            **/build/test-results/
-
       - name: Gradle Build
         run: ./gradlew build -x test
 

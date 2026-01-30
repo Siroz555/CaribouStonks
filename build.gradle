@@ -76,8 +76,6 @@ repositories {
 }
 
 dependencies {
-	testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
-
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
@@ -101,10 +99,6 @@ dependencies {
 	modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
 }
 
-test {
-	useJUnitPlatform()
-}
-
 loom {
 	runs {
 		client {
@@ -112,15 +106,6 @@ loom {
 				property("devauth.configDir", file(".devauth").absolutePath)
 			}
 		}
-	}
-}
-
-fabricApi {
-	configureTests {
-		createSourceSet = true
-		modId = "cariboustonks-test"
-		enableGameTests = false
-		eula = true
 	}
 }
 
