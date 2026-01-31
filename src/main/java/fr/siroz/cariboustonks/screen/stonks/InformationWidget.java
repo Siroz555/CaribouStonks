@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.screen.stonks;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.gui.GuiGraphics;

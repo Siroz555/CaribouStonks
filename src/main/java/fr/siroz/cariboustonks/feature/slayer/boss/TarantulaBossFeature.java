@@ -2,17 +2,17 @@ package fr.siroz.cariboustonks.feature.slayer.boss;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.glowing.EntityGlowProvider;
-import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
-import fr.siroz.cariboustonks.manager.slayer.SlayerTier;
-import fr.siroz.cariboustonks.manager.slayer.SlayerType;
+import fr.siroz.cariboustonks.system.glowing.EntityGlowProvider;
+import fr.siroz.cariboustonks.skyblock.slayer.SlayerManager;
+import fr.siroz.cariboustonks.skyblock.slayer.SlayerTier;
+import fr.siroz.cariboustonks.skyblock.slayer.SlayerType;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
@@ -37,7 +37,7 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 	private final Set<ArmorStand> bossEggs = new HashSet<>();
 
 	public TarantulaBossFeature() {
-		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
+		this.slayerManager = CaribouStonks.skyBlock().getSlayerManager();
 		SkyBlockEvents.SLAYER_BOSS_END.register((_type, _tier, _startTime) -> this.bossEggs.clear());
 		RenderEvents.WORLD_RENDER.register(this::render);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);

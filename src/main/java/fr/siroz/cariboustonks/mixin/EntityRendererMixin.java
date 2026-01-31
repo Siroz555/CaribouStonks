@@ -2,10 +2,10 @@ package fr.siroz.cariboustonks.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.RenderEvents;
-import fr.siroz.cariboustonks.manager.glowing.EntityGlowProvider;
-import fr.siroz.cariboustonks.manager.glowing.GlowingManager;
+import fr.siroz.cariboustonks.system.glowing.EntityGlowProvider;
+import fr.siroz.cariboustonks.system.glowing.GlowingSystem;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class EntityRendererMixin {
 
 	@Unique
-	private final GlowingManager glowingManager = CaribouStonks.managers().getManager(GlowingManager.class);
+	private final GlowingSystem glowingSystem = CaribouStonks.systems().getSystem(GlowingSystem.class);
 
 	@Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
 	private void cariboustonks$shouldRenderEntity(Entity entity, Frustum frustum, double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {
@@ -34,10 +34,10 @@ public abstract class EntityRendererMixin {
 
 	@Inject(method = "extractRenderState", at = @At("TAIL"))
 	private void cariboustonks$updateOutlineColorWhenRenderStateUpdate(CallbackInfo ci, @Local(argsOnly = true) Entity entity, @Local(argsOnly = true) EntityRenderState state) {
-		boolean hasModGlow = glowingManager.hasOrComputeEntity(entity);
+		boolean hasModGlow = glowingSystem.hasOrComputeEntity(entity);
 		boolean updateGlow = state.appearsGlowing() || hasModGlow;
 		if (updateGlow && hasModGlow) {
-			state.outlineColor = glowingManager.getEntityColorOrDefault(entity, EntityGlowProvider.DEFAULT);
+			state.outlineColor = glowingSystem.getEntityColorOrDefault(entity, EntityGlowProvider.DEFAULT);
 		} else if (!updateGlow) {
 			state.outlineColor = EntityRenderState.NO_OUTLINE;
 		}

@@ -2,21 +2,21 @@ package fr.siroz.cariboustonks.feature.slayer;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.data.hypixel.election.Mayor;
-import fr.siroz.cariboustonks.core.data.hypixel.election.Perk;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.election.Mayor;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.election.Perk;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.hud.Hud;
-import fr.siroz.cariboustonks.manager.hud.HudProvider;
-import fr.siroz.cariboustonks.manager.hud.MultiElementHud;
-import fr.siroz.cariboustonks.manager.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.manager.hud.builder.HudElementTextBuilder;
-import fr.siroz.cariboustonks.manager.hud.element.HudElement;
-import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
-import fr.siroz.cariboustonks.manager.slayer.SlayerTier;
-import fr.siroz.cariboustonks.manager.slayer.SlayerType;
+import fr.siroz.cariboustonks.system.hud.Hud;
+import fr.siroz.cariboustonks.system.hud.HudProvider;
+import fr.siroz.cariboustonks.system.hud.MultiElementHud;
+import fr.siroz.cariboustonks.system.hud.builder.HudElementBuilder;
+import fr.siroz.cariboustonks.system.hud.builder.HudElementTextBuilder;
+import fr.siroz.cariboustonks.system.hud.element.HudElement;
+import fr.siroz.cariboustonks.skyblock.slayer.SlayerManager;
+import fr.siroz.cariboustonks.skyblock.slayer.SlayerTier;
+import fr.siroz.cariboustonks.skyblock.slayer.SlayerType;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import it.unimi.dsi.fastutil.Pair;
@@ -54,7 +54,7 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 	private boolean xpBuffActive = false;
 
 	public SlayerStatsFeature() {
-		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
+		this.slayerManager = CaribouStonks.skyBlock().getSlayerManager();
 
 		SkyBlockEvents.SLAYER_BOSS_SPAWN.register(this::onBossSpawn);
 		SkyBlockEvents.SLAYER_MINIBOSS_SPAWN.register(this::onMinibossSpawn);

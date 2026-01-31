@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.util;
 
 import com.mojang.brigadier.Command;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.HudEvents;
 import fr.siroz.cariboustonks.mixin.accessors.PlayerTabOverlayAccessor;
 import fr.siroz.cariboustonks.util.render.gui.StonksToast;

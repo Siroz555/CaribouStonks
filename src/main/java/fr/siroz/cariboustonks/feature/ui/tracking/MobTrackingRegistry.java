@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.feature.ui.tracking;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.json.JsonProcessingException;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.skyblock.IslandType;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.fishing.RareSeaCreature;
 import fr.siroz.cariboustonks.util.DeveloperTools;

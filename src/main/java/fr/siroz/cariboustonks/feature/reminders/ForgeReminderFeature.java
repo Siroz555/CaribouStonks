@@ -2,13 +2,13 @@ package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.manager.container.overlay.ContainerOverlay;
-import fr.siroz.cariboustonks.manager.reminder.Reminder;
-import fr.siroz.cariboustonks.manager.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.manager.reminder.ReminderManager;
-import fr.siroz.cariboustonks.manager.reminder.TimedObject;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
+import fr.siroz.cariboustonks.system.container.overlay.ContainerOverlay;
+import fr.siroz.cariboustonks.system.reminder.Reminder;
+import fr.siroz.cariboustonks.system.reminder.ReminderDisplay;
+import fr.siroz.cariboustonks.system.reminder.ReminderSystem;
+import fr.siroz.cariboustonks.system.reminder.TimedObject;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
@@ -113,8 +113,8 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
                         expirationTime,
                         reminderType());
 
-                CaribouStonks.managers()
-                        .getManager(ReminderManager.class)
+                CaribouStonks.systems()
+                        .getSystem(ReminderSystem.class)
                         .addTimedObject(timedObject, true);
             }
         }

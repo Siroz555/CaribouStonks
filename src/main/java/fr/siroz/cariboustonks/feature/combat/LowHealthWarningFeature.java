@@ -2,8 +2,8 @@ package fr.siroz.cariboustonks.feature.combat;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.IslandType;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.DeveloperTools;

@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.feature.dungeon;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.manager.container.overlay.ContainerOverlay;
+import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
+import fr.siroz.cariboustonks.system.container.overlay.ContainerOverlay;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;

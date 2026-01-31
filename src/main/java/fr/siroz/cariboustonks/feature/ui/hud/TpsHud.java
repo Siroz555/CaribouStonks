@@ -3,10 +3,10 @@ package fr.siroz.cariboustonks.feature.ui.hud;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.hud.Hud;
-import fr.siroz.cariboustonks.manager.hud.HudProvider;
-import fr.siroz.cariboustonks.manager.hud.TextHud;
-import fr.siroz.cariboustonks.manager.network.NetworkManager;
+import fr.siroz.cariboustonks.system.hud.Hud;
+import fr.siroz.cariboustonks.system.hud.HudProvider;
+import fr.siroz.cariboustonks.system.hud.TextHud;
+import fr.siroz.cariboustonks.system.network.NetworkSystem;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.network.chat.Component;
@@ -17,13 +17,13 @@ public class TpsHud extends Feature implements HudProvider {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_tps");
 
-	private final NetworkManager networkManager;
+	private final NetworkSystem networkSystem;
 
 	private int lastTruncatedTps = -1;
 	private String cachedText = null;
 
 	public TpsHud() {
-		this.networkManager = CaribouStonks.managers().getManager(NetworkManager.class);
+		this.networkSystem = CaribouStonks.systems().getSystem(NetworkSystem.class);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class TpsHud extends Feature implements HudProvider {
 	}
 
 	private Component getText() {
-		float tps = networkManager.getTickRate();
+		float tps = networkSystem.getTickRate();
 
 		// Troncature à une décimale (sans arrondi)
 		int truncatedTps = (int) (tps * 10);

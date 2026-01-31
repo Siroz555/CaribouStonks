@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.event.CustomScreenEvents;
-import fr.siroz.cariboustonks.manager.container.overlay.ContainerOverlayManager;
+import fr.siroz.cariboustonks.system.container.overlay.ContainerOverlaySystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -35,7 +35,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 	protected T menu;
 
 	@Unique
-	private final ContainerOverlayManager overlayManager = CaribouStonks.managers().getManager(ContainerOverlayManager.class);
+	private final ContainerOverlaySystem overlayManager = CaribouStonks.systems().getSystem(ContainerOverlaySystem.class);
 
 	protected AbstractContainerScreenMixin(Component title) {
 		super(title);

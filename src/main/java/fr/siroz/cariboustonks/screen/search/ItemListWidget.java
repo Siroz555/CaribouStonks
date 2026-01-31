@@ -1,11 +1,11 @@
 package fr.siroz.cariboustonks.screen.search;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.screen.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
-import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataException;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.HypixelDataException;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.colors.Color;
@@ -67,7 +67,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.@NotNull Entry> 
 
 	private CompletableFuture<List<ItemSummary>> loadItems() {
 		try {
-			HypixelDataSource hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
+			HypixelDataSource hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
 			List<SkyBlockItemData> itemList = hypixelDataSource.getSkyBlockItems(); // HypixelDataException
 
 			return CompletableFuture.supplyAsync(() -> {

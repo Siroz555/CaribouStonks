@@ -1,14 +1,14 @@
 package fr.siroz.cariboustonks.feature.garden;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.IslandType;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.WorldEvents;
-import fr.siroz.cariboustonks.manager.command.CommandComponent;
-import fr.siroz.cariboustonks.manager.keybinds.KeyBind;
+import fr.siroz.cariboustonks.system.command.CommandComponent;
+import fr.siroz.cariboustonks.system.keybinds.KeyBind;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.keybinds.KeyBindComponent;
+import fr.siroz.cariboustonks.system.keybinds.KeyBindComponent;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.Collections;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;

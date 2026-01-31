@@ -3,11 +3,11 @@ package fr.siroz.cariboustonks.feature.slayer;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
+import fr.siroz.cariboustonks.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -26,7 +26,7 @@ public class SlayerCocoonedWarningFeature extends Feature {
 	private static boolean cocoonedBoss = false;
 
 	public SlayerCocoonedWarningFeature() {
-		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
+		this.slayerManager = CaribouStonks.skyBlock().getSlayerManager();
 		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
 	}
 

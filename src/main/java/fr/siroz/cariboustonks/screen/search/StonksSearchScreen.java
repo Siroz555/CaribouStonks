@@ -21,7 +21,7 @@ public class StonksSearchScreen extends CaribousStonksScreen {
 	public StonksSearchScreen(Screen parent) {
 		super(Component.literal("Search for a SkyBlock item"));
 		this.parent = parent;
-		this.totalSkyBlockItemsCount = CaribouStonks.core().getHypixelDataSource().getSkyBlockItemCounts();
+		this.totalSkyBlockItemsCount = CaribouStonks.skyBlock().getHypixelDataSource().getSkyBlockItemCounts();
 	}
 
 	@Override

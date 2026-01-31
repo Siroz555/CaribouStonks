@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.screen.stonks;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
-import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
-import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.skyblock.data.generic.ItemPrice;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.HypixelDataSource;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.bazaar.BazaarProduct;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.screen.search.StonksSearchScreen;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
@@ -56,7 +56,7 @@ public class StonksScreen extends CaribousStonksScreen {
 	private StonksScreen(@NotNull ItemLookupKey key) {
 		super(Component.literal("Stonks"));
 
-		HypixelDataSource hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
+		HypixelDataSource hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
 		Optional<SkyBlockItemData> item = hypixelDataSource.getSkyBlockItemOptional(key.hypixelSkyBlockId());
 		if (item.isPresent()) {
 			this.itemName = Component.literal(item.get().name()).withStyle(item.get().tier().getFormatting());
@@ -229,14 +229,14 @@ public class StonksScreen extends CaribousStonksScreen {
 	}
 
 	private @NotNull CompletableFuture<Void> fetchItemData(@NotNull ItemLookupKey key) {
-		CompletableFuture<Void> priceHistory = CaribouStonks.core().getGenericDataSource()
+		CompletableFuture<Void> priceHistory = CaribouStonks.skyBlock().getGenericDataSource()
 				.loadGraphData(key)
 				.thenAccept(data -> {
 					if (data == null || data.isEmpty()) notFound = true;
 					graphData = data;
 				});
 
-		bazaarItem = CaribouStonks.core().getHypixelDataSource()
+		bazaarItem = CaribouStonks.skyBlock().getHypixelDataSource()
 				.getBazaarItem(key.hypixelSkyBlockId())
 				.orElse(null);
 

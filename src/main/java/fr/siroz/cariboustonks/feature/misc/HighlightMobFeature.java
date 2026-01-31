@@ -2,12 +2,12 @@ package fr.siroz.cariboustonks.feature.misc;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.IslandType;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.command.CommandComponent;
-import fr.siroz.cariboustonks.manager.command.argument.EntityIdArgumentType;
-import fr.siroz.cariboustonks.manager.glowing.EntityGlowProvider;
+import fr.siroz.cariboustonks.system.command.CommandComponent;
+import fr.siroz.cariboustonks.system.command.argument.EntityIdArgumentType;
+import fr.siroz.cariboustonks.system.glowing.EntityGlowProvider;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;

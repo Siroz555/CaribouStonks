@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.event;
 
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.manager.dungeon.DungeonBoss;
-import fr.siroz.cariboustonks.manager.slayer.SlayerTier;
-import fr.siroz.cariboustonks.manager.slayer.SlayerType;
+import fr.siroz.cariboustonks.skyblock.IslandType;
+import fr.siroz.cariboustonks.skyblock.dungeon.DungeonBoss;
+import fr.siroz.cariboustonks.skyblock.slayer.SlayerTier;
+import fr.siroz.cariboustonks.skyblock.slayer.SlayerType;
 import java.time.Instant;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;

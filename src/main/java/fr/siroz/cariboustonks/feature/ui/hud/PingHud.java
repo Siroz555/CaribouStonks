@@ -3,10 +3,10 @@ package fr.siroz.cariboustonks.feature.ui.hud;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.hud.Hud;
-import fr.siroz.cariboustonks.manager.hud.HudProvider;
-import fr.siroz.cariboustonks.manager.hud.TextHud;
-import fr.siroz.cariboustonks.manager.network.NetworkManager;
+import fr.siroz.cariboustonks.system.hud.Hud;
+import fr.siroz.cariboustonks.system.hud.HudProvider;
+import fr.siroz.cariboustonks.system.hud.TextHud;
+import fr.siroz.cariboustonks.system.network.NetworkSystem;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.network.chat.Component;
@@ -17,10 +17,10 @@ public class PingHud extends Feature implements HudProvider {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_ping");
 
-	private final NetworkManager networkManager;
+	private final NetworkSystem networkSystem;
 
 	public PingHud() {
-		this.networkManager = CaribouStonks.managers().getManager(NetworkManager.class);
+		this.networkSystem = CaribouStonks.systems().getSystem(NetworkSystem.class);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class PingHud extends Feature implements HudProvider {
 	}
 
 	private Component getText() {
-		long currentPing = networkManager.getPing();
+		long currentPing = networkSystem.getPing();
 		String pingStr = currentPing + " ms";
 
 		int step = Math.min((int) currentPing / 150, 3); // // 0, 150, 300, 450

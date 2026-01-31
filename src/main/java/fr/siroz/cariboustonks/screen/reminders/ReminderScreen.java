@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.screen.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.manager.reminder.Reminder;
-import fr.siroz.cariboustonks.manager.reminder.ReminderManager;
-import fr.siroz.cariboustonks.manager.reminder.TimedObject;
+import fr.siroz.cariboustonks.system.reminder.Reminder;
+import fr.siroz.cariboustonks.system.reminder.ReminderSystem;
+import fr.siroz.cariboustonks.system.reminder.TimedObject;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import it.unimi.dsi.fastutil.Pair;
@@ -29,7 +29,7 @@ public class ReminderScreen extends CaribousStonksScreen {
     private ReminderScreen(@Nullable Screen parent) {
         super(Component.literal("Reminders").withStyle(ChatFormatting.BOLD));
         this.parent = parent;
-        this.reminders = CaribouStonks.managers().getManager(ReminderManager.class).getReminders();
+        this.reminders = CaribouStonks.systems().getSystem(ReminderSystem.class).getReminders();
     }
 
     @Contract("_ -> new")

@@ -2,12 +2,12 @@ package fr.siroz.cariboustonks.feature.stonks;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
-import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.HypixelDataSource;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.bazaar.BazaarProduct;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.command.CommandComponent;
+import fr.siroz.cariboustonks.system.command.CommandComponent;
 import fr.siroz.cariboustonks.screen.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
@@ -36,7 +36,7 @@ public class StonksCommandFeature extends Feature {
 	private String lastItem = "";
 
 	public StonksCommandFeature() {
-		this.hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
+		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
 
 		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal("stonks")
 				.executes(context -> {

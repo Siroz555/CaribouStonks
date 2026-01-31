@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.util;
 
-import fr.siroz.cariboustonks.core.data.hypixel.item.PetInfo;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.item.PetInfo;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.ApiStatus;

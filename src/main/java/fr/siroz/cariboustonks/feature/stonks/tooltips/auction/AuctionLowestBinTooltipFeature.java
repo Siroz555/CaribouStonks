@@ -2,14 +2,14 @@ package fr.siroz.cariboustonks.feature.stonks.tooltips.auction;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.data.generic.GenericDataSource;
+import fr.siroz.cariboustonks.skyblock.data.generic.GenericDataSource;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
-import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.manager.container.tooltip.ContainerTooltipAppender;
+import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
+import fr.siroz.cariboustonks.system.container.tooltip.ContainerTooltipAppender;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +30,7 @@ public class AuctionLowestBinTooltipFeature extends Feature implements Container
 
     public AuctionLowestBinTooltipFeature(int priority) {
         this.priority = priority;
-        this.genericDataSource = CaribouStonks.core().getGenericDataSource();
+        this.genericDataSource = CaribouStonks.skyBlock().getGenericDataSource();
     }
 
     @Override

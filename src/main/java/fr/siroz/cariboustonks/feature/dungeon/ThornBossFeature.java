@@ -2,14 +2,14 @@ package fr.siroz.cariboustonks.feature.dungeon;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.IslandType;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.dungeon.DungeonBoss;
-import fr.siroz.cariboustonks.manager.dungeon.DungeonManager;
+import fr.siroz.cariboustonks.skyblock.dungeon.DungeonBoss;
+import fr.siroz.cariboustonks.skyblock.dungeon.DungeonManager;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,7 +29,7 @@ public class ThornBossFeature extends Feature {
 	private int spawnTicks = 0;
 
 	public ThornBossFeature() {
-		this.dungeonManager = CaribouStonks.managers().getManager(DungeonManager.class);
+		this.dungeonManager = CaribouStonks.skyBlock().getDungeonManager();
 
 		WorldEvents.BLOCK_STATE_UPDATE.register(this::onBlockUpdate);
 		NetworkEvents.SERVER_TICK.register(this::onServerTick);

@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.feature.item;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.core.data.hypixel.item.Rarity;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.event.ItemRenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;

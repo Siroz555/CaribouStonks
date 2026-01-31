@@ -4,8 +4,8 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.MouseEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.keybinds.KeyBind;
-import fr.siroz.cariboustonks.manager.keybinds.KeyBindComponent;
+import fr.siroz.cariboustonks.system.keybinds.KeyBind;
+import fr.siroz.cariboustonks.system.keybinds.KeyBindComponent;
 import java.util.Collections;
 import org.lwjgl.glfw.GLFW;
 

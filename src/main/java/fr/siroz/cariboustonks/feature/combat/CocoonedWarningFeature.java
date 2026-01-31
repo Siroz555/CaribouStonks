@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.feature.combat;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.IslandType;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
@@ -12,8 +12,8 @@ import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.slayer.SlayerCocoonedWarningFeature;
-import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
-import fr.siroz.cariboustonks.manager.slayer.SlayerType;
+import fr.siroz.cariboustonks.skyblock.slayer.SlayerManager;
+import fr.siroz.cariboustonks.skyblock.slayer.SlayerType;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.HeadTextures;
@@ -61,7 +61,7 @@ public class CocoonedWarningFeature extends Feature {
 	private boolean canBeTriggered = false;
 
 	public CocoonedWarningFeature() {
-		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
+		this.slayerManager = CaribouStonks.skyBlock().getSlayerManager();
 		SkyBlockEvents.ISLAND_CHANGE.register(this::onChangeIsland);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
 		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);

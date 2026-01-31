@@ -2,13 +2,13 @@ package fr.siroz.cariboustonks.feature.combat;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.core.skyblock.item.metadata.Modifiers;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.item.metadata.Modifiers;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.hud.Hud;
-import fr.siroz.cariboustonks.manager.hud.HudProvider;
-import fr.siroz.cariboustonks.manager.hud.TextHud;
+import fr.siroz.cariboustonks.system.hud.Hud;
+import fr.siroz.cariboustonks.system.hud.HudProvider;
+import fr.siroz.cariboustonks.system.hud.TextHud;
 import it.unimi.dsi.fastutil.Pair;
 import java.text.DecimalFormat;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;

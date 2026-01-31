@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.screen.stonks;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
+import fr.siroz.cariboustonks.skyblock.data.generic.ItemPrice;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;

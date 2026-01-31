@@ -1,13 +1,13 @@
 package fr.siroz.cariboustonks.feature.misc;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
-import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
+import fr.siroz.cariboustonks.system.waypoint.Waypoint;
+import fr.siroz.cariboustonks.system.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.math.bezier.ParticlePathPredictor;

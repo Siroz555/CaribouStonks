@@ -1,9 +1,10 @@
 package fr.siroz.cariboustonks;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.CaribouCore;
+import fr.siroz.cariboustonks.core.CaribouManager;
 import fr.siroz.cariboustonks.feature.Features;
-import fr.siroz.cariboustonks.manager.Managers;
+import fr.siroz.cariboustonks.skyblock.SkyBlockManager;
+import fr.siroz.cariboustonks.system.Systems;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.fabricmc.api.ClientModInitializer;
@@ -37,8 +38,9 @@ public final class CaribouStonks implements ClientModInitializer {
 
 	private static CaribouStonks instance;
 
-	private CaribouCore caribouCore;
-	private Managers managers;
+	private CaribouManager caribouManager;
+	private SkyBlockManager skyBlockManager;
+	private Systems systems;
 	private Features features;
 
 	@ApiStatus.Internal
@@ -50,38 +52,52 @@ public final class CaribouStonks implements ClientModInitializer {
 	public void onInitializeClient() {
 		// Mod Configuration
 		ConfigManager.loadConfig();
+		// Mod components
+		this.caribouManager = new CaribouManager();
+		// SkyBlock related-content
+		this.skyBlockManager = new SkyBlockManager();
+		// Features
+		this.systems = new Systems();
+		this.features = new Features();
 		// Utilities
 		StonksUtils.initUtilities();
 		// Rendering
 		CaribouRenderer.init();
-		// Main
-		this.caribouCore = new CaribouCore();
-		this.managers = new Managers();
-		this.features = new Features();
 		// Developer Mode
-		this.caribouCore.initDeveloperMode();
+		this.caribouManager.initDeveloperMode();
 	}
 
 	/**
-	 * Returns the {@link CaribouCore} instance of the mod.
-	 * This instance is used to retrieve and manage all core functionalities.
+	 * Returns the {@link CaribouManager} instance of the mod.
+	 * This instance is used to retrieve and manage all internal mod functionalities.
 	 *
-	 * @return the {@link CaribouCore} instance
+	 * @return the {@link CaribouManager} instance
 	 */
 	@Contract(pure = true)
-	public static CaribouCore core() {
-		return instance.caribouCore;
+	public static CaribouManager core() {
+		return instance.caribouManager;
 	}
 
 	/**
-	 * Returns the {@link Managers} instance of the mod.
-	 * This instance is used to retrieve and manage all registered manager components.
+	 * Returns the {@link SkyBlockManager} instance of the mod.
+	 * This instance is used to retrieve and manage all SkyBlock managers.
 	 *
-	 * @return the {@link Managers} instance
+	 * @return the {@link SkyBlockManager} instance
 	 */
 	@Contract(pure = true)
-	public static Managers managers() {
-		return instance.managers;
+	public static SkyBlockManager skyBlock() {
+		return instance.skyBlockManager;
+	}
+
+	/**
+	 * Returns the {@link Systems} instance of the mod.
+	 * This instance is used to retrieve and manage all registered systems components.
+	 *
+	 * @return the {@link Systems} instance
+	 */
+	@Contract(pure = true)
+	public static Systems systems() {
+		return instance.systems;
 	}
 
 	/**

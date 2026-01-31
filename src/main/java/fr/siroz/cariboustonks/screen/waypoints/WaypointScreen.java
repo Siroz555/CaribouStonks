@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.screen.waypoints;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.IslandType;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.waypoints.WaypointFeature;
-import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
+import fr.siroz.cariboustonks.system.waypoint.Waypoint;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.gui.DropdownWidget;

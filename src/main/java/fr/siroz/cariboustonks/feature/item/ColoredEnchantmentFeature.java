@@ -2,9 +2,9 @@ package fr.siroz.cariboustonks.feature.item;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.data.mod.ModDataSource;
-import fr.siroz.cariboustonks.core.data.mod.SkyBlockEnchantment;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.ModDataSource;
+import fr.siroz.cariboustonks.skyblock.item.SkyBlockEnchantment;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.ItemRenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;

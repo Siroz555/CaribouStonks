@@ -2,14 +2,14 @@ package fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
-import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.HypixelDataSource;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.bazaar.BazaarProduct;
+import fr.siroz.cariboustonks.skyblock.AttributeAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
-import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.manager.container.tooltip.ContainerTooltipAppender;
+import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
+import fr.siroz.cariboustonks.system.container.tooltip.ContainerTooltipAppender;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
@@ -31,7 +31,7 @@ public class BazaarPriceTooltipFeature extends Feature implements ContainerMatch
 
 	public BazaarPriceTooltipFeature(int priority) {
 		this.priority = priority;
-		this.hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
+		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
 	}
 
 	@Override

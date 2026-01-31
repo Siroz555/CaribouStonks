@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.screen.reminders;
 
-import fr.siroz.cariboustonks.manager.reminder.Reminder;
-import fr.siroz.cariboustonks.manager.reminder.TimedObject;
+import fr.siroz.cariboustonks.system.reminder.Reminder;
+import fr.siroz.cariboustonks.system.reminder.TimedObject;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;

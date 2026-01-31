@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.screen.stonks;
 
-import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
+import fr.siroz.cariboustonks.skyblock.data.generic.ItemPrice;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

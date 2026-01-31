@@ -1,13 +1,13 @@
 package fr.siroz.cariboustonks.feature.ui;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.CustomScreenEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.manager.container.overlay.ContainerOverlay;
-import fr.siroz.cariboustonks.manager.container.tooltip.ContainerTooltipAppender;
+import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
+import fr.siroz.cariboustonks.system.container.overlay.ContainerOverlay;
+import fr.siroz.cariboustonks.system.container.tooltip.ContainerTooltipAppender;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;

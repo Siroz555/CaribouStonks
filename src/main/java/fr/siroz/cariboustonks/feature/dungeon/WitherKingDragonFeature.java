@@ -3,16 +3,16 @@ package fr.siroz.cariboustonks.feature.dungeon;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.IslandType;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.dungeon.DungeonBoss;
-import fr.siroz.cariboustonks.manager.dungeon.DungeonManager;
+import fr.siroz.cariboustonks.skyblock.dungeon.DungeonBoss;
+import fr.siroz.cariboustonks.skyblock.dungeon.DungeonManager;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -49,7 +49,7 @@ public class WitherKingDragonFeature extends Feature {
 	private WitherKingDragon target = null;
 
 	public WitherKingDragonFeature() {
-		this.dungeonManager = CaribouStonks.managers().getManager(DungeonManager.class);
+		this.dungeonManager = CaribouStonks.skyBlock().getDungeonManager();
 
 		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
 		NetworkEvents.SERVER_TICK.register(this::onServerTick);

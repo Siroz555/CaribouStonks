@@ -2,17 +2,17 @@ package fr.siroz.cariboustonks.feature.stonks;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.data.hypixel.item.Rarity;
-import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
-import fr.siroz.cariboustonks.core.data.mod.SkyBlockEnchantment;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.item.Rarity;
+import fr.siroz.cariboustonks.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.skyblock.item.SkyBlockEnchantment;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.core.skyblock.item.SkyblockItemStack;
-import fr.siroz.cariboustonks.core.skyblock.item.calculator.Calculation;
-import fr.siroz.cariboustonks.core.skyblock.item.calculator.CalculatorConstants;
-import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueCalculator;
-import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueResult;
-import fr.siroz.cariboustonks.core.skyblock.item.metadata.Gemstones;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.item.SkyblockItemStack;
+import fr.siroz.cariboustonks.skyblock.item.calculator.Calculation;
+import fr.siroz.cariboustonks.skyblock.item.calculator.CalculatorConstants;
+import fr.siroz.cariboustonks.skyblock.item.calculator.ItemValueCalculator;
+import fr.siroz.cariboustonks.skyblock.item.calculator.ItemValueResult;
+import fr.siroz.cariboustonks.skyblock.item.metadata.Gemstones;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.ItemRenderEvents;
 import fr.siroz.cariboustonks.feature.Feature;
@@ -602,7 +602,7 @@ public class ItemValueViewerFeature extends Feature {
 	}
 
 	private @NotNull Pair<String, Rarity> getInfos(String skyBlockId) {
-		SkyBlockItemData itemData = CaribouStonks.core().getHypixelDataSource().getSkyBlockItem(skyBlockId);
+		SkyBlockItemData itemData = CaribouStonks.skyBlock().getHypixelDataSource().getSkyBlockItem(skyBlockId);
 		if (itemData != null) {
 			return Pair.of(itemData.name(), itemData.tier());
 		} else {

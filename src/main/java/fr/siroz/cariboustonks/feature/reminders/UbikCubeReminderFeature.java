@@ -2,14 +2,14 @@ package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.IslandType;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.reminder.Reminder;
-import fr.siroz.cariboustonks.manager.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.manager.reminder.ReminderManager;
-import fr.siroz.cariboustonks.manager.reminder.TimedObject;
+import fr.siroz.cariboustonks.system.reminder.Reminder;
+import fr.siroz.cariboustonks.system.reminder.ReminderDisplay;
+import fr.siroz.cariboustonks.system.reminder.ReminderSystem;
+import fr.siroz.cariboustonks.system.reminder.TimedObject;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
@@ -98,8 +98,8 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
                     expirationTime,
                     reminderType());
 
-            CaribouStonks.managers()
-                    .getManager(ReminderManager.class)
+            CaribouStonks.systems()
+                    .getSystem(ReminderSystem.class)
                     .addTimedObject(timedObject);
         }
     }

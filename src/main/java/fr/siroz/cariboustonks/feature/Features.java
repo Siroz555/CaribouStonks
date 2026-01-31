@@ -171,7 +171,7 @@ public final class Features {
 	private void registerFeature(@NotNull Feature feature) {
 		FEATURE_INSTANCES.put(feature.getClass(), feature);
 
-		CaribouStonks.managers().handleFeatureRegistration(feature);
+		CaribouStonks.systems().handleFeatureRegistration(feature);
 	}
 
 	private void postInitialize() {

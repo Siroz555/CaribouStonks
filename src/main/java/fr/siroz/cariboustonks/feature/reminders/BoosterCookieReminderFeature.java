@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;

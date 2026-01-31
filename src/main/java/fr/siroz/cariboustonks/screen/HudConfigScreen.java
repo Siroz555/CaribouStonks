@@ -2,8 +2,8 @@ package fr.siroz.cariboustonks.screen;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.manager.hud.Hud;
-import fr.siroz.cariboustonks.manager.hud.HudManager;
+import fr.siroz.cariboustonks.system.hud.Hud;
+import fr.siroz.cariboustonks.system.hud.HudSystem;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
@@ -29,7 +29,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 
 	private HudConfigScreen(@Nullable Screen parent) {
 		super(Component.nullToEmpty("HUD Config Screen"));
-		this.hudList = CaribouStonks.managers().getManager(HudManager.class).getHudList();
+		this.hudList = CaribouStonks.systems().getSystem(HudSystem.class).getHudList();
 		this.parent = parent;
 	}
 

@@ -3,11 +3,11 @@ package fr.siroz.cariboustonks.feature.misc;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.MiscConfig;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.network.NetworkManager;
+import fr.siroz.cariboustonks.system.network.NetworkSystem;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.position.Position;
@@ -98,7 +98,7 @@ public class PartyCommandFeature extends Feature {
 			}
 		}),
 		TPS(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !tps"), cmd -> cmd.tps, matcher -> {
-			float tps = CaribouStonks.managers().getManager(NetworkManager.class).getTickRate();
+			float tps = CaribouStonks.systems().getSystem(NetworkSystem.class).getTickRate();
 			String message = String.format("TPS: %.1f", tps);
 			Client.sendCommandToServer("/pc " + message, true);
 		}),

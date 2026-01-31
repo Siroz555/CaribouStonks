@@ -1,8 +1,8 @@
 package fr.siroz.cariboustonks.feature.fishing.radar;
 
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
-import fr.siroz.cariboustonks.manager.waypoint.options.TextOption;
+import fr.siroz.cariboustonks.system.waypoint.Waypoint;
+import fr.siroz.cariboustonks.system.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.position.Position;

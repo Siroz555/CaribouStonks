@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.feature;
 
-import fr.siroz.cariboustonks.manager.Component;
+import fr.siroz.cariboustonks.system.Component;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.multiplayer.ClientLevel;

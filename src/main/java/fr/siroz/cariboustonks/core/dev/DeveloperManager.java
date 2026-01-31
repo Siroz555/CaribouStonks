@@ -6,7 +6,7 @@ import com.mojang.serialization.JsonOps;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.json.GsonProvider;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
@@ -175,8 +175,8 @@ public final class DeveloperManager {
 
 	private LiteralArgumentBuilder<FabricClientCommandSource> dumpMayorCommand() {
 		return ClientCommandManager.literal("dumpMayor").executes(ctx -> {
-			String str = CaribouStonks.core().getHypixelDataSource().getElection() != null
-					? CaribouStonks.core().getHypixelDataSource().getElection().toString()
+			String str = CaribouStonks.skyBlock().getHypixelDataSource().getElection() != null
+					? CaribouStonks.skyBlock().getHypixelDataSource().getElection().toString()
 					: "NULL";
 			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("--")));
 			ctx.getSource().sendFeedback(Component.literal(str));

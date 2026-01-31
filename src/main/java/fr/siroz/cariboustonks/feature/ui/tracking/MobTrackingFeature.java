@@ -2,20 +2,20 @@ package fr.siroz.cariboustonks.feature.ui.tracking;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.skyblock.IslandType;
+import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.manager.command.CommandComponent;
-import fr.siroz.cariboustonks.manager.hud.Hud;
-import fr.siroz.cariboustonks.manager.hud.HudProvider;
-import fr.siroz.cariboustonks.manager.hud.MultiElementHud;
-import fr.siroz.cariboustonks.manager.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.manager.hud.builder.HudElementTextBuilder;
-import fr.siroz.cariboustonks.manager.hud.element.HudElement;
-import fr.siroz.cariboustonks.manager.slayer.SlayerManager;
+import fr.siroz.cariboustonks.system.command.CommandComponent;
+import fr.siroz.cariboustonks.system.hud.Hud;
+import fr.siroz.cariboustonks.system.hud.HudProvider;
+import fr.siroz.cariboustonks.system.hud.MultiElementHud;
+import fr.siroz.cariboustonks.system.hud.builder.HudElementBuilder;
+import fr.siroz.cariboustonks.system.hud.builder.HudElementTextBuilder;
+import fr.siroz.cariboustonks.system.hud.element.HudElement;
+import fr.siroz.cariboustonks.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.screen.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
@@ -50,7 +50,7 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 	private boolean showingBossBar = false;
 
 	public MobTrackingFeature() {
-		this.slayerManager = CaribouStonks.managers().getManager(SlayerManager.class);
+		this.slayerManager = CaribouStonks.skyBlock().getSlayerManager();
 		this.registry = new MobTrackingRegistry();
 		this.bossEvent = new LerpingBossEvent(
 				UUID.randomUUID(), Component.empty(), 1f,
