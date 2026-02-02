@@ -185,23 +185,9 @@ public class SkillsCategory extends AbstractCategory {
 								.build())
 						.option(LabelOption.create(Component.literal("| Second Life").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Spirit/Bonzo/Phoenix Cooldowns HUD"))
-								.description(OptionDescription.of(
-										Component.literal("Displays a HUD that shows the cooldowns for Second Life abilities. Multiple cooldowns can be displayed, sorted and colored according to the time remaining."),
-										Component.literal(SPACE + "- §5Spirit Mask"),
-										Component.literal("- §cBonzo Mask"),
-										Component.literal("- §ePhoenix Pet"),
-										Component.literal(SPACE + "Note: The HUD will only be displayed if at least one of the above options (used) is enabled.").withStyle(ChatFormatting.GOLD)))
-								.binding(defaults.combat.secondLife.cooldownHud.enabled,
-										() -> current.combat.secondLife.cooldownHud.enabled,
-										newValue -> current.combat.secondLife.cooldownHud.enabled = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Spirit Mask - Used"))
 								.description(OptionDescription.of(
-										Component.literal("Shows a Title when the Spirit Mask is used."),
-										Component.literal(SPACE + "If this option is enabled, it can be displayed in the Cooldowns HUD.").withStyle(ChatFormatting.ITALIC)))
+										Component.literal("Shows a Title when the Spirit Mask is used.")))
 								.binding(defaults.combat.secondLife.spiritMaskUsed,
 										() -> current.combat.secondLife.spiritMaskUsed,
 										newValue -> current.combat.secondLife.spiritMaskUsed = newValue)
@@ -210,17 +196,17 @@ public class SkillsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Spirit Mask - Back"))
 								.description(OptionDescription.of(
-										Component.literal("Shows a Title when the Spirit Mask is ready.")))
+										Component.literal("Shows a Title/Message when the Spirit Mask is ready."),
+										Component.literal(SPACE + "See “Show Back Title” or “Show Back Message” settings.")))
 								.binding(defaults.combat.secondLife.spiritMaskBack,
 										() -> current.combat.secondLife.spiritMaskBack,
 										newValue -> current.combat.secondLife.spiritMaskBack = newValue)
-								.controller(this::createYesNoController)
+								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Bonzo Mask - Used"))
 								.description(OptionDescription.of(
-										Component.literal("Shows a Title when the Bonzo Mask is used."),
-										Component.literal(SPACE + "If this option is enabled, it can be displayed in the Cooldowns HUD.").withStyle(ChatFormatting.ITALIC)))
+										Component.literal("Shows a Title when the Bonzo Mask is used.")))
 								.binding(defaults.combat.secondLife.bonzoMaskUsed,
 										() -> current.combat.secondLife.bonzoMaskUsed,
 										newValue -> current.combat.secondLife.bonzoMaskUsed = newValue)
@@ -229,17 +215,17 @@ public class SkillsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Bonzo Mask - Back"))
 								.description(OptionDescription.of(
-										Component.literal("Shows a Title when the Bonzo Mask is ready.")))
+										Component.literal("Shows a Title/Message when the Bonzo Mask is ready."),
+										Component.literal(SPACE + "See “Show Back Title” or “Show Back Message” settings.")))
 								.binding(defaults.combat.secondLife.bonzoMaskBack,
 										() -> current.combat.secondLife.bonzoMaskBack,
 										newValue -> current.combat.secondLife.bonzoMaskBack = newValue)
-								.controller(this::createYesNoController)
+								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Phoenix Pet - Used"))
 								.description(OptionDescription.of(
-										Component.literal("Shows a Title when the Phoenix Pet is used."),
-										Component.literal(SPACE + "If this option is enabled, it can be displayed in the Cooldowns HUD.").withStyle(ChatFormatting.ITALIC)))
+										Component.literal("Shows a Title when the Phoenix Pet is used.")))
 								.binding(defaults.combat.secondLife.phoenixUsed,
 										() -> current.combat.secondLife.phoenixUsed,
 										newValue -> current.combat.secondLife.phoenixUsed = newValue)
@@ -248,10 +234,51 @@ public class SkillsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Phoenix Pet - Back"))
 								.description(OptionDescription.of(
-										Component.literal("Shows a Title when the Phoenix Pet is ready.")))
+										Component.literal("Shows a Title/Message when the Phoenix Pet is ready."),
+										Component.literal(SPACE + "See “Show Back Title” or “Show Back Message” settings.")))
 								.binding(defaults.combat.secondLife.phoenixBack,
 										() -> current.combat.secondLife.phoenixBack,
 										newValue -> current.combat.secondLife.phoenixBack = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Cooldowns HUD"))
+								.description(OptionDescription.of(
+										Component.literal("Displays a HUD that shows the cooldowns for Second Life abilities. Multiple cooldowns can be displayed, sorted and colored according to the time remaining."),
+										Component.literal(SPACE + "- §5Spirit Mask"),
+										Component.literal("- §cBonzo Mask"),
+										Component.literal("- §ePhoenix Pet"),
+										Component.literal(SPACE + "Note: The HUD can function without having to activate the options above.").withStyle(ChatFormatting.GREEN)))
+								.binding(defaults.combat.secondLife.cooldownHud.enabled,
+										() -> current.combat.secondLife.cooldownHud.enabled,
+										newValue -> current.combat.secondLife.cooldownHud.enabled = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Back - Show Title"))
+								.description(OptionDescription.of(
+										Component.literal("Shows a Title when any second life is ready.")))
+								.binding(defaults.combat.secondLife.backTitle,
+										() -> current.combat.secondLife.backTitle,
+										newValue -> current.combat.secondLife.backTitle = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Back - Show Message"))
+								.description(OptionDescription.of(
+										Component.literal("Shows a Message when any second life is ready.")))
+								.binding(defaults.combat.secondLife.backMessage,
+										() -> current.combat.secondLife.backMessage,
+										newValue -> current.combat.secondLife.backMessage = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Back - Play Sound"))
+								.description(OptionDescription.of(
+										Component.literal("Plays a Sound when any second life is ready.")))
+								.binding(defaults.combat.secondLife.backSound,
+										() -> current.combat.secondLife.backSound,
+										newValue -> current.combat.secondLife.backSound = newValue)
 								.controller(this::createYesNoController)
 								.build())
                         .build())

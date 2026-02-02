@@ -121,6 +121,15 @@ public class CombatConfig {
 		public CooldownHud cooldownHud = new CooldownHud();
 
 		@SerialEntry
+		public boolean backMessage = false;
+
+		@SerialEntry
+		public boolean backTitle = true;
+
+		@SerialEntry
+		public boolean backSound = true;
+
+		@SerialEntry
 		public boolean spiritMaskUsed = true;
 
 		@SerialEntry

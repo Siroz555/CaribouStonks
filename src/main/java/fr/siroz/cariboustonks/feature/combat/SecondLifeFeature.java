@@ -94,24 +94,17 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 		String message = StonksUtils.stripColor(text.getString());
 		Matcher matcher = PLACEHOLDER_PATTERN.matcher(message);
 
-		if (ConfigManager.getConfig().combat.secondLife.spiritMaskUsed
-				&& matcher.usePattern(SPIRIT_MASK_PATTERN).matches()
-		) {
+		if (matcher.usePattern(SPIRIT_MASK_PATTERN).matches()) {
 			onSecondLife(SecondLife.SPIRIT_MASK);
 			return;
 		}
 
-		if (ConfigManager.getConfig().combat.secondLife.phoenixUsed
-				&& matcher.usePattern(PHOENIX_PET_PATTERN).matches()
-		) {
+		if (matcher.usePattern(PHOENIX_PET_PATTERN).matches()) {
 			onSecondLife(SecondLife.PHOENIX_PET);
 			return;
 		}
 
-		if (SkyBlockAPI.getIsland() == IslandType.DUNGEON
-				&& ConfigManager.getConfig().combat.secondLife.bonzoMaskUsed
-				&& matcher.usePattern(BONZO_MASK_PATTERN).matches()
-		) {
+		if (SkyBlockAPI.getIsland() == IslandType.DUNGEON && matcher.usePattern(BONZO_MASK_PATTERN).matches()) {
 			onSecondLife(SecondLife.BONZO_MASK);
 		}
 	}
@@ -121,7 +114,11 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 		// Il est reset ici pour permettre de trigger à nouveau, tant qu'il n'y a pas de changement de serveur.
 		serverHasChanged = false;
 
-		Client.showTitle(Component.literal(secondLife.getName() + " used!").withStyle(ChatFormatting.RED), 0, 30, 0);
+		if (secondLife.isUseConfig()) {
+			Client.showTitleAndSubtitle(Component.literal(secondLife.getName()).withStyle(secondLife.getColor()),
+					Component.literal("Used!").withStyle(ChatFormatting.RED),
+					0, 25, 0);
+		}
 
 		long cooldownEndTime = System.currentTimeMillis() + (secondLife.getCooldown() * 1000L);
 		activeCooldowns.put(secondLife, cooldownEndTime);
@@ -134,9 +131,17 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 		activeCooldowns.remove(secondLife);
 		// Pas de notification si le serveur a changé
 		if (!serverHasChanged && secondLife.isBackConfigEnabled()) {
-			Client.sendMessageWithPrefix(Component.literal(secondLife.getName() + " is back!").withStyle(ChatFormatting.GREEN));
-			Client.showTitle(Component.literal(secondLife.getName() + " ready!").withStyle(ChatFormatting.GREEN), 0, 30, 0);
-			Client.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1f, 1f);
+			if (ConfigManager.getConfig().combat.secondLife.backMessage) {
+				Client.sendMessageWithPrefix(Component.literal(secondLife.getName() + " is back!").withStyle(ChatFormatting.GREEN));
+			}
+			if (ConfigManager.getConfig().combat.secondLife.backTitle) {
+				Client.showTitleAndSubtitle(Component.literal(secondLife.getName()).withStyle(secondLife.getColor()),
+						Component.literal("Ready!").withStyle(ChatFormatting.GREEN),
+						0, 25, 0);
+			}
+			if (ConfigManager.getConfig().combat.secondLife.backSound) {
+				Client.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1f, 1f);
+			}
 		}
 	}
 
@@ -188,20 +193,28 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 	}
 
 	private enum SecondLife {
-		SPIRIT_MASK(30, "Spirit Mask", ChatFormatting.DARK_PURPLE, () -> ConfigManager.getConfig().combat.secondLife.spiritMaskBack),
-		BONZO_MASK(180, "Bonzo Mask", ChatFormatting.RED, () -> ConfigManager.getConfig().combat.secondLife.bonzoMaskBack),
-		PHOENIX_PET(60, "Phoenix Pet", ChatFormatting.YELLOW, () -> ConfigManager.getConfig().combat.secondLife.phoenixBack),
+		SPIRIT_MASK(30, "Spirit Mask", ChatFormatting.DARK_PURPLE,
+				() -> ConfigManager.getConfig().combat.secondLife.spiritMaskUsed,
+				() -> ConfigManager.getConfig().combat.secondLife.spiritMaskBack),
+		BONZO_MASK(180, "Bonzo Mask", ChatFormatting.RED,
+				() -> ConfigManager.getConfig().combat.secondLife.bonzoMaskUsed,
+				() -> ConfigManager.getConfig().combat.secondLife.bonzoMaskBack),
+		PHOENIX_PET(60, "Phoenix Pet", ChatFormatting.YELLOW,
+				() -> ConfigManager.getConfig().combat.secondLife.phoenixUsed,
+				() -> ConfigManager.getConfig().combat.secondLife.phoenixBack),
 		;
 
 		private final int cooldown;
 		private final String name;
 		private final ChatFormatting color;
+		private final BooleanSupplier useConfig;
 		private final BooleanSupplier backConfig;
 
-		SecondLife(int cooldown, String name, ChatFormatting color, BooleanSupplier backConfig) {
+		SecondLife(int cooldown, String name, ChatFormatting color, BooleanSupplier useConfig, BooleanSupplier backConfig) {
 			this.cooldown = cooldown;
 			this.name = name;
 			this.color = color;
+			this.useConfig = useConfig;
 			this.backConfig = backConfig;
 		}
 
@@ -215,6 +228,10 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 
 		public ChatFormatting getColor() {
 			return color;
+		}
+
+		public boolean isUseConfig() {
+			return useConfig.getAsBoolean();
 		}
 
 		public boolean isBackConfigEnabled() {
