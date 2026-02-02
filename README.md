@@ -107,7 +107,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
         - Cast Title / Personalized message
         - HUD displays the remaining time and Strength gained.
     - Spirit Mask / Bonzo Mask / Phoenix Pet:
-        - Displays a Title when a Mask/Pet is used or ready back.
+        - Displays a Title/Message when a Mask/Pet is used or ready back.
         - Display a HUD showing the time remaining, sorted and color-coded.
     - Wither Shield:
         - Displays a HUD that shows the cooldowns of the Wither Shield Ability.
@@ -124,7 +124,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Hide the entities forming the Tree Break Animation.
 
 - Hunting
-    - Display Shard prices in Hunting Box, Attribute Menu, and Fusion Machine.
+    - Display Shard prices in Hunting Box, Attribute Menu and Fusion Machine.
     - Display the number of missing Shards and the price to max it out.
 
 - Fishing
@@ -177,6 +177,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Highlight entities (/highlighter)
 - Guess Hoppity Eggs: Predict the location of Hoppity Eggs.
+- Show Hex Color on Dyed Items.
 - Party Commands (!warp, !coords, !dice, ..)
 - RoughlyEnoughItems (REI) Search Bar Calculator
 
