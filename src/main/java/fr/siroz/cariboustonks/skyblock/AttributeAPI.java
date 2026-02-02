@@ -26,6 +26,7 @@ public final class AttributeAPI {
 	public static final String ATTRIBUTE_MENU = "Attribute Menu";
 	public static final String FUSION_BOX = "Fusion Box";
 	public static final String SHARD_FUSION = "Shard Fusion";
+	public static final String CONFIRM_FUSION = "Confirm Fusion";
 	public static final Pattern SHARD_GUI_PATTERN = Pattern.compile("(" + HUNTING_BOX + "|" + ATTRIBUTE_MENU + ")");
 	public static final Pattern SOURCE_PATTERN = Pattern.compile("Source: (?<shardName>[A-Za-z ]+?) Shard \\((?<id>[CUREL]\\d+)\\)");
 	public static final Pattern RARITY_AND_ID_PATTERN = Pattern.compile("(COMMON|UNCOMMON|RARE|EPIC|LEGENDARY).*?SHARD \\(ID ([CUREL]\\d+)\\)");
@@ -79,7 +80,7 @@ public final class AttributeAPI {
 
 				return getAttributeId(id, fallback);
 			}
-			case FUSION_BOX, SHARD_FUSION -> {
+			case FUSION_BOX, SHARD_FUSION, CONFIRM_FUSION -> {
 				String id = null;
 				for (Component line : lines) {
 					String lineText = line.getString();
@@ -96,7 +97,7 @@ public final class AttributeAPI {
 
 				return getAttributeId(id, fallback);
 			}
-			case null, default -> {
+			default -> {
 				return fallback;
 			}
 		}
