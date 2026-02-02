@@ -51,6 +51,15 @@ public class MiscCategory extends AbstractCategory {
                                 newValue -> current.misc.hoppityEggFinderGuess = newValue)
                         .controller(this::createBooleanController)
                         .build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Show Hex Color on Items"))
+						.description(OptionDescription.of(
+								Component.literal("Add the #HEX on TOP of all Dyed Item tooltip everywhere.")))
+						.binding(defaults.misc.showHexOnDyedItemEverywhere,
+								() -> current.misc.showHexOnDyedItemEverywhere,
+								newValue -> current.misc.showHexOnDyedItemEverywhere = newValue)
+						.controller(this::createBooleanController)
+						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Other Mods").withStyle(ChatFormatting.BOLD))
 						.collapsed(false)

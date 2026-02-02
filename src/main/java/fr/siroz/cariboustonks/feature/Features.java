@@ -28,6 +28,7 @@ import fr.siroz.cariboustonks.feature.hunting.AttributeInfoTooltipFeature;
 import fr.siroz.cariboustonks.feature.item.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
+import fr.siroz.cariboustonks.feature.misc.HexTooltipFeature;
 import fr.siroz.cariboustonks.feature.misc.HighlightMobFeature;
 import fr.siroz.cariboustonks.feature.misc.HoppityEggFinderFeature;
 import fr.siroz.cariboustonks.feature.misc.PartyCommandFeature;
@@ -146,6 +147,7 @@ public final class Features {
 		// Waypoint
 		registerFeature(new WaypointFeature());
 		// Misc
+		registerFeature(new HexTooltipFeature(5));
 		registerFeature(new HighlightMobFeature());
 		registerFeature(new HoppityEggFinderFeature());
 		registerFeature(new PartyCommandFeature());

@@ -15,6 +15,9 @@ public class MiscConfig {
 	public Color highlighterColor = ColorUtils.getAwtColor(ChatFormatting.AQUA);
 
 	@SerialEntry
+	public boolean showHexOnDyedItemEverywhere = false;
+
+	@SerialEntry
 	public Compatibility compatibility = new Compatibility();
 
 	@SerialEntry
