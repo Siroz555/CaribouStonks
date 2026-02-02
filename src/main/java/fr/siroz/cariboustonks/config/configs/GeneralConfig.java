@@ -11,6 +11,9 @@ public class GeneralConfig {
 	public boolean firstTimeWithTheMod = true;
 
 	@SerialEntry
+	public int keyShortcutCooldown = 500;
+
+	@SerialEntry
 	public Stonks stonks = new Stonks();
 
 	@SerialEntry
@@ -89,6 +92,9 @@ public class GeneralConfig {
 
 		@SerialEntry
 		public boolean enchantedCloak = true;
+
+		@SerialEntry
+		public boolean stonksAuction = true;
 
 		@SerialEntry
 		public boolean forge = true;

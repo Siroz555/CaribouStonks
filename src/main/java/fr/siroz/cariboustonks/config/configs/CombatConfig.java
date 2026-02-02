@@ -29,6 +29,9 @@ public class CombatConfig {
 		public boolean cocoonedWarning = false;
 
 		@SerialEntry
+		public String message = "§c§lCocooned!";
+
+		@SerialEntry
 		public boolean cocoonedWarningTitle = true;
 
 		@SerialEntry
@@ -118,6 +121,15 @@ public class CombatConfig {
 		public CooldownHud cooldownHud = new CooldownHud();
 
 		@SerialEntry
+		public boolean backMessage = false;
+
+		@SerialEntry
+		public boolean backTitle = true;
+
+		@SerialEntry
+		public boolean backSound = true;
+
+		@SerialEntry
 		public boolean spiritMaskUsed = true;
 
 		@SerialEntry
@@ -190,6 +202,9 @@ public class CombatConfig {
 
 		@SerialEntry
 		public boolean onlyShowTimer = false;
+
+		@SerialEntry
+		public String readyMessage = "§aREADY";
 
 		@SerialEntry
 		public Color timerColor = ColorUtils.getAwtColor(Formatting.YELLOW);

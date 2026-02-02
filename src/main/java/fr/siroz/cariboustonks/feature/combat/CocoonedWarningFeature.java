@@ -25,11 +25,11 @@ import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,6 +47,9 @@ public class CocoonedWarningFeature extends Feature {
 
 	private final BooleanSupplier configBeamEnabled =
 			() -> ConfigManager.getConfig().combat.cocoonedMob.cocoonedWarningBeam;
+
+	private final Supplier<String> configMessage =
+			() -> ConfigManager.getConfig().combat.cocoonedMob.message;
 
 	private final SlayerManager slayerManager;
 
@@ -152,14 +155,14 @@ public class CocoonedWarningFeature extends Feature {
 	}
 
 	private void onMobCocooned(BlockPos pos) {
-		Client.sendMessageWithPrefix(Text.literal("A mob has been cocooned!").formatted(Formatting.RED, Formatting.BOLD));
+		Client.sendMessageWithPrefix(Text.literal(configMessage.get()));
 
 		if (configSoundEnabled.getAsBoolean()) {
 			Client.playSound(SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE, 1f, 1f);
 		}
 
 		if (configTitleEnabled.getAsBoolean()) {
-			Client.showTitle(Text.literal("Cocooned!").formatted(Formatting.RED, Formatting.BOLD), 0, 27, 0);
+			Client.showTitle(Text.literal(configMessage.get()), 0, 27, 0);
 		}
 
 		if (configBeamEnabled.getAsBoolean() && pos != null) {

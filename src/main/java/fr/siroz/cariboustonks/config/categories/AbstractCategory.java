@@ -67,11 +67,11 @@ abstract class AbstractCategory {
 				.formatValue(i -> i > 1 ? Text.of(i + " seconds") : Text.of(i + " second"));
 	}
 
-	public IntegerSliderControllerBuilder createIntegerMinutesController(Option<Integer> opt, int max) {
+	public IntegerSliderControllerBuilder createIntegerMsController(Option<Integer> opt, int max) {
 		return IntegerSliderControllerBuilder.create(opt)
 				.range(1, max)
 				.step(1)
-				.formatValue(i -> i > 1 ? Text.of(i + " minutes") : Text.of(i + " minute"));
+				.formatValue(i -> Text.of(i + " ms"));
 	}
 
 	@SuppressWarnings("unchecked")

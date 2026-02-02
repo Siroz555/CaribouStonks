@@ -103,6 +103,16 @@ public class SkillsCategory extends AbstractCategory {
 										newValue -> current.combat.cocoonedMob.cocoonedWarningBeam = newValue)
 								.controller(this::createYesNoController)
 								.build())
+						.option(Option.<String>createBuilder()
+								.name(Text.literal("Cocooned Warning - Message"))
+								.description(OptionDescription.of(
+										Text.literal("Change the message when a mob is Cocooned."),
+										Text.literal(SPACE + "Support Minecraft color codes (§)").formatted(Formatting.ITALIC)))
+								.binding(defaults.combat.cocoonedMob.message,
+										() -> current.combat.cocoonedMob.message,
+										newValue -> current.combat.cocoonedMob.message = newValue)
+								.controller(StringControllerBuilder::create)
+								.build())
 						.option(LabelOption.create(Text.literal("| Wither Shield").formatted(Formatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Wither Shield - Cooldown HUD"))
@@ -131,6 +141,16 @@ public class SkillsCategory extends AbstractCategory {
 										() -> current.combat.witherShield.timerColor,
 										newValue -> current.combat.witherShield.timerColor = newValue)
 								.controller(ColorControllerBuilder::create)
+								.build())
+						.option(Option.<String>createBuilder()
+								.name(Text.literal("Wither Shield - Ready Message"))
+								.description(OptionDescription.of(
+										Text.literal("Change the “READY” message."),
+										Text.literal(SPACE + "Support Minecraft color codes (§)").formatted(Formatting.ITALIC)))
+								.binding(defaults.combat.witherShield.readyMessage,
+										() -> current.combat.witherShield.readyMessage,
+										newValue -> current.combat.witherShield.readyMessage = newValue)
+								.controller(StringControllerBuilder::create)
 								.build())
 						.option(LabelOption.create(Text.literal("| Ragnarock Axe").formatted(Formatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
@@ -165,23 +185,9 @@ public class SkillsCategory extends AbstractCategory {
 								.build())
 						.option(LabelOption.create(Text.literal("| Second Life").formatted(Formatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Spirit/Bonzo/Phoenix Cooldowns HUD"))
-								.description(OptionDescription.of(
-										Text.literal("Displays a HUD that shows the cooldowns for Second Life abilities. Multiple cooldowns can be displayed, sorted and colored according to the time remaining."),
-										Text.literal(SPACE + "- §5Spirit Mask"),
-										Text.literal("- §cBonzo Mask"),
-										Text.literal("- §ePhoenix Pet"),
-										Text.literal(SPACE + "Note: The HUD will only be displayed if at least one of the above options (used) is enabled.").formatted(Formatting.GOLD)))
-								.binding(defaults.combat.secondLife.cooldownHud.enabled,
-										() -> current.combat.secondLife.cooldownHud.enabled,
-										newValue -> current.combat.secondLife.cooldownHud.enabled = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Spirit Mask - Used"))
 								.description(OptionDescription.of(
-										Text.literal("Shows a Title when the Spirit Mask is used."),
-										Text.literal(SPACE + "If this option is enabled, it can be displayed in the Cooldowns HUD.").formatted(Formatting.ITALIC)))
+										Text.literal("Shows a Title when the Spirit Mask is used.")))
 								.binding(defaults.combat.secondLife.spiritMaskUsed,
 										() -> current.combat.secondLife.spiritMaskUsed,
 										newValue -> current.combat.secondLife.spiritMaskUsed = newValue)
@@ -190,17 +196,17 @@ public class SkillsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Spirit Mask - Back"))
 								.description(OptionDescription.of(
-										Text.literal("Shows a Title when the Spirit Mask is ready.")))
+										Text.literal("Shows a Title/Message when the Spirit Mask is ready."),
+										Text.literal(SPACE + "See “Show Back Title” or “Show Back Message” settings.")))
 								.binding(defaults.combat.secondLife.spiritMaskBack,
 										() -> current.combat.secondLife.spiritMaskBack,
 										newValue -> current.combat.secondLife.spiritMaskBack = newValue)
-								.controller(this::createYesNoController)
+								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Bonzo Mask - Used"))
 								.description(OptionDescription.of(
-										Text.literal("Shows a Title when the Bonzo Mask is used."),
-										Text.literal(SPACE + "If this option is enabled, it can be displayed in the Cooldowns HUD.").formatted(Formatting.ITALIC)))
+										Text.literal("Shows a Title when the Bonzo Mask is used.")))
 								.binding(defaults.combat.secondLife.bonzoMaskUsed,
 										() -> current.combat.secondLife.bonzoMaskUsed,
 										newValue -> current.combat.secondLife.bonzoMaskUsed = newValue)
@@ -209,17 +215,17 @@ public class SkillsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Bonzo Mask - Back"))
 								.description(OptionDescription.of(
-										Text.literal("Shows a Title when the Bonzo Mask is ready.")))
+										Text.literal("Shows a Title/Message when the Bonzo Mask is ready."),
+										Text.literal(SPACE + "See “Show Back Title” or “Show Back Message” settings.")))
 								.binding(defaults.combat.secondLife.bonzoMaskBack,
 										() -> current.combat.secondLife.bonzoMaskBack,
 										newValue -> current.combat.secondLife.bonzoMaskBack = newValue)
-								.controller(this::createYesNoController)
+								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Phoenix Pet - Used"))
 								.description(OptionDescription.of(
-										Text.literal("Shows a Title when the Phoenix Pet is used."),
-										Text.literal(SPACE + "If this option is enabled, it can be displayed in the Cooldowns HUD.").formatted(Formatting.ITALIC)))
+										Text.literal("Shows a Title when the Phoenix Pet is used.")))
 								.binding(defaults.combat.secondLife.phoenixUsed,
 										() -> current.combat.secondLife.phoenixUsed,
 										newValue -> current.combat.secondLife.phoenixUsed = newValue)
@@ -228,10 +234,51 @@ public class SkillsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Phoenix Pet - Back"))
 								.description(OptionDescription.of(
-										Text.literal("Shows a Title when the Phoenix Pet is ready.")))
+										Text.literal("Shows a Title/Message when the Phoenix Pet is ready."),
+										Text.literal(SPACE + "See “Show Back Title” or “Show Back Message” settings.")))
 								.binding(defaults.combat.secondLife.phoenixBack,
 										() -> current.combat.secondLife.phoenixBack,
 										newValue -> current.combat.secondLife.phoenixBack = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Cooldowns HUD"))
+								.description(OptionDescription.of(
+										Text.literal("Displays a HUD that shows the cooldowns for Second Life abilities. Multiple cooldowns can be displayed, sorted and colored according to the time remaining."),
+										Text.literal(SPACE + "- §5Spirit Mask"),
+										Text.literal("- §cBonzo Mask"),
+										Text.literal("- §ePhoenix Pet"),
+										Text.literal(SPACE + "Note: The HUD can function without having to activate the options above.").formatted(Formatting.GREEN)))
+								.binding(defaults.combat.secondLife.cooldownHud.enabled,
+										() -> current.combat.secondLife.cooldownHud.enabled,
+										newValue -> current.combat.secondLife.cooldownHud.enabled = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Back - Show Title"))
+								.description(OptionDescription.of(
+										Text.literal("Shows a Title when any second life is ready.")))
+								.binding(defaults.combat.secondLife.backTitle,
+										() -> current.combat.secondLife.backTitle,
+										newValue -> current.combat.secondLife.backTitle = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Back - Show Message"))
+								.description(OptionDescription.of(
+										Text.literal("Shows a Message when any second life is ready.")))
+								.binding(defaults.combat.secondLife.backMessage,
+										() -> current.combat.secondLife.backMessage,
+										newValue -> current.combat.secondLife.backMessage = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Back - Play Sound"))
+								.description(OptionDescription.of(
+										Text.literal("Plays a Sound when any second life is ready.")))
+								.binding(defaults.combat.secondLife.backSound,
+										() -> current.combat.secondLife.backSound,
+										newValue -> current.combat.secondLife.backSound = newValue)
 								.controller(this::createYesNoController)
 								.build())
                         .build())
@@ -249,24 +296,6 @@ public class SkillsCategory extends AbstractCategory {
 										() -> current.farming.garden.greenhouseGrowthStageReminder,
 										newValue -> current.farming.garden.greenhouseGrowthStageReminder = newValue)
 								.controller(this::createBooleanController)
-								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Greenhouse Growth Stage Pre Reminder)"))
-								.description(OptionDescription.of(
-										Text.literal("If the Greenhouse Growth Stage Reminder option is enabled, it allows you to set a reminder 5 minutes before the Next Growth Stage is reached.")))
-								.binding(defaults.farming.garden.greenhouseGrowthStagePreReminder,
-										() -> current.farming.garden.greenhouseGrowthStagePreReminder,
-										newValue -> current.farming.garden.greenhouseGrowthStagePreReminder = newValue)
-								.controller(this::createYesNoController)
-								.build())
-						.option(Option.<Integer>createBuilder()
-								.name(Text.literal("Greenhouse Growth Stage Pre Reminder Time"))
-								.description(OptionDescription.of(
-										Text.literal("Allows you to choose how long before the next Growth Stage the Pre Reminder should be activated. Default to 5 minutes.")))
-								.binding(defaults.farming.garden.greenhouseGrowthStagePreReminderTime,
-										() -> current.farming.garden.greenhouseGrowthStagePreReminderTime,
-										newValue -> current.farming.garden.greenhouseGrowthStagePreReminderTime = newValue)
-								.controller(opt -> createIntegerMinutesController(opt, 30))
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Disable Greenhouse watering can placement"))

@@ -13,6 +13,7 @@ import fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar.BazaarTooltipPriceT
 import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.screen.CaribouStonksMenuScreen;
 import fr.siroz.cariboustonks.screen.HudConfigScreen;
+import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.client.MinecraftClient;
@@ -40,6 +41,22 @@ public class GeneralCategory extends AbstractCategory {
 						.name(Text.literal("Change HUD positions"))
 						.text(Text.literal("Open"))
 						.action((screen, opt) -> MinecraftClient.getInstance().setScreen(HudConfigScreen.create(screen)))
+						.build())
+				.option(LabelOption.create(Text.literal("| Key Shortcuts").formatted(Formatting.BOLD)))
+				.option(ButtonOption.createBuilder()
+						.name(Text.literal("KeyShortcut Menu"))
+						.text(Text.literal("Open"))
+						.action((screen, opt) -> MinecraftClient.getInstance().setScreen(KeyShortcutScreen.create(screen)))
+						.build())
+				.option(Option.<Integer>createBuilder()
+						.name(Text.literal("KeyShortcut Cooldown"))
+						.description(OptionDescription.of(
+								Text.literal("Allows you to change the cooldown in milliseconds between each action."),
+								Text.literal(SPACE + "Note: It is possible to be kicked for spamming if this value is too low. Generally, when it's “instant,” even though Hypixel prevents you by default.").formatted(Formatting.GOLD)))
+						.binding(defaults.general.keyShortcutCooldown,
+								() -> current.general.keyShortcutCooldown,
+								newValue -> current.general.keyShortcutCooldown = newValue)
+						.controller(opt -> createIntegerMsController(opt, 2500))
 						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Stonks").formatted(Formatting.BOLD))
@@ -313,6 +330,15 @@ public class GeneralCategory extends AbstractCategory {
 								.binding(defaults.general.reminders.enchantedCloak,
 										() -> current.general.reminders.enchantedCloak,
 										newValue -> current.general.reminders.enchantedCloak = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Stonks Auction"))
+								.description(OptionDescription.of(
+										Text.literal("Activate a reminder when the Diaz Stonks Auction is ready to bid or recovered.")))
+								.binding(defaults.general.reminders.stonksAuction,
+										() -> current.general.reminders.stonksAuction,
+										newValue -> current.general.reminders.stonksAuction = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
