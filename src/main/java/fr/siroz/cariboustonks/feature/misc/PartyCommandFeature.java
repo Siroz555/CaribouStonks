@@ -3,11 +3,11 @@ package fr.siroz.cariboustonks.feature.misc;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.MiscConfig;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.network.NetworkSystem;
+import fr.siroz.cariboustonks.system.NetworkSystem;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.position.Position;
@@ -16,11 +16,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class PartyCommandFeature extends Feature {
 

@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.config.configs;
 
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
-import fr.siroz.cariboustonks.system.hud.HudConfig;
+import fr.siroz.cariboustonks.core.module.hud.HudConfig;
 import fr.siroz.cariboustonks.util.colors.ColorUtils;
 import java.awt.Color;
 import net.minecraft.ChatFormatting;

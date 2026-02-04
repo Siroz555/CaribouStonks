@@ -1,10 +1,9 @@
 package fr.siroz.cariboustonks.util.cooldown;
 
 import fr.siroz.cariboustonks.util.TimeUtils;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.OptionalLong;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a simple cooldown

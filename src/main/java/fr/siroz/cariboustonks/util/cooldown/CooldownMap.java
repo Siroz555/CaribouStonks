@@ -1,8 +1,7 @@
 package fr.siroz.cariboustonks.util.cooldown;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A self-populating map of cooldown instances

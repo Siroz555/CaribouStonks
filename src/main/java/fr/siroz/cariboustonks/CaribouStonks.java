@@ -1,28 +1,27 @@
 package fr.siroz.cariboustonks;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.CaribouManager;
-import fr.siroz.cariboustonks.feature.Features;
-import fr.siroz.cariboustonks.skyblock.SkyBlockManager;
-import fr.siroz.cariboustonks.system.Systems;
+import fr.siroz.cariboustonks.core.feature.FeatureManager;
+import fr.siroz.cariboustonks.core.mod.CaribouManager;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockManager;
+import fr.siroz.cariboustonks.core.system.SystemManager;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.util.StonksUtils;
+import java.nio.file.Path;
+import java.util.function.Supplier;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.nio.file.Path;
-import java.util.function.Supplier;
 
 /**
  * The Main entrypoint of the CaribouStonks Mod
@@ -38,10 +37,10 @@ public final class CaribouStonks implements ClientModInitializer {
 
 	private static CaribouStonks instance;
 
-	private CaribouManager caribouManager;
+	private CaribouManager modManager;
 	private SkyBlockManager skyBlockManager;
-	private Systems systems;
-	private Features features;
+	private SystemManager systemManager;
+	private FeatureManager featureManager;
 
 	@ApiStatus.Internal
 	public CaribouStonks() {
@@ -52,19 +51,14 @@ public final class CaribouStonks implements ClientModInitializer {
 	public void onInitializeClient() {
 		// Mod Configuration
 		ConfigManager.loadConfig();
-		// Mod components
-		this.caribouManager = new CaribouManager();
-		// SkyBlock related-content
-		this.skyBlockManager = new SkyBlockManager();
-		// Features
-		this.systems = new Systems();
-		this.features = new Features();
 		// Utilities
 		StonksUtils.initUtilities();
 		// Rendering
 		CaribouRenderer.init();
-		// Developer Mode
-		this.caribouManager.initDeveloperMode();
+		this.modManager = new CaribouManager();
+		this.skyBlockManager = new SkyBlockManager();
+		this.systemManager = new SystemManager();
+		this.featureManager = new FeatureManager();
 	}
 
 	/**
@@ -74,8 +68,8 @@ public final class CaribouStonks implements ClientModInitializer {
 	 * @return the {@link CaribouManager} instance
 	 */
 	@Contract(pure = true)
-	public static CaribouManager core() {
-		return instance.caribouManager;
+	public static CaribouManager mod() {
+		return instance.modManager;
 	}
 
 	/**
@@ -90,25 +84,25 @@ public final class CaribouStonks implements ClientModInitializer {
 	}
 
 	/**
-	 * Returns the {@link Systems} instance of the mod.
+	 * Returns the {@link SystemManager} instance of the mod.
 	 * This instance is used to retrieve and manage all registered systems components.
 	 *
-	 * @return the {@link Systems} instance
+	 * @return the {@link SystemManager} instance
 	 */
 	@Contract(pure = true)
-	public static Systems systems() {
-		return instance.systems;
+	public static SystemManager systems() {
+		return instance.systemManager;
 	}
 
 	/**
-	 * Returns the {@link Features} instance of the mod.
+	 * Returns the {@link FeatureManager} instance of the mod.
 	 * This instance is used to retrieve and manage all registered features.
 	 *
-	 * @return the {@link Features} instance
+	 * @return the {@link FeatureManager} instance
 	 */
 	@Contract(pure = true)
-	public static Features features() {
-		return instance.features;
+	public static FeatureManager features() {
+		return instance.featureManager;
 	}
 
 	/**

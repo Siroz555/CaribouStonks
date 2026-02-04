@@ -2,32 +2,31 @@ package fr.siroz.cariboustonks.feature.item;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.ModDataSource;
-import fr.siroz.cariboustonks.skyblock.item.SkyBlockEnchantment;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.mod.ModDataSource;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockEnchantment;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.ItemRenderEvents;
-import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.RomanNumeralUtils;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import java.util.function.BooleanSupplier;
-import net.minecraft.world.item.component.ItemLore;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemLore;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Credits to AzureAaron (<a href="https://github.com/AzureAaron">GitHub AzureAaron</a>).
@@ -54,7 +53,7 @@ public class ColoredEnchantmentFeature extends Feature {
 			() -> ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.maxEnchantsRainbow;
 
 	public ColoredEnchantmentFeature() {
-		this.modDataSource = CaribouStonks.core().getModDataSource();
+		this.modDataSource = CaribouStonks.mod().getModDataSource();
 		ItemRenderEvents.TOOLTIP_APPENDER.register(this::onTooltipLine);
 	}
 

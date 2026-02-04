@@ -1,8 +1,7 @@
 package fr.siroz.cariboustonks.util;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 
 public final class Ticks {
 

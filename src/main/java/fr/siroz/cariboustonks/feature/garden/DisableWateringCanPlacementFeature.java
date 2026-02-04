@@ -1,11 +1,11 @@
 package fr.siroz.cariboustonks.feature.garden;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.IslandType;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.InteractionEvents;
-import fr.siroz.cariboustonks.feature.Feature;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;

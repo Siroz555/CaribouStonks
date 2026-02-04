@@ -1,18 +1,18 @@
 package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
 
 public final class BoosterCookieReminderFeature extends Feature /*implements Reminder*/ {
 

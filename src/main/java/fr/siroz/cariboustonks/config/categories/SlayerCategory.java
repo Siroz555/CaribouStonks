@@ -8,8 +8,8 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import java.awt.Color;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 
 @SuppressWarnings("checkstyle:linelength")
 public class SlayerCategory extends AbstractCategory {

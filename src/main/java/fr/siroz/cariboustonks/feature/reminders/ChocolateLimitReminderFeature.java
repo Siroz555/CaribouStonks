@@ -2,42 +2,39 @@ package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.system.container.overlay.ContainerOverlay;
-import fr.siroz.cariboustonks.system.reminder.Reminder;
-import fr.siroz.cariboustonks.system.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.system.reminder.ReminderSystem;
-import fr.siroz.cariboustonks.system.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
+import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
+import fr.siroz.cariboustonks.core.component.ReminderComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
+import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.system.ReminderSystem;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public final class ChocolateLimitReminderFeature
-		extends Feature
-		implements ContainerMatcherTrait, Reminder, ContainerOverlay {
+public final class ChocolateLimitReminderFeature extends Feature {
 
 	private static final Pattern TITLE_PATTERN = Pattern.compile("^Chocolate Factory$");
+	private static final String REMINDER_TYPE = "MAX_CHOCOLATE";
 
 	private static final Pattern CHOCOLATE_PATTERN = Pattern.compile("^([\\d,]+) Chocolate$");
 	private static final Pattern CHOCOLATE_SECOND_PATTERN = Pattern.compile("([\\d,.]+) Chocolate per second");
@@ -53,6 +50,22 @@ public final class ChocolateLimitReminderFeature
 	private Instant limitTime = null;
 
 	public ChocolateLimitReminderFeature() {
+		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
+				.display(getReminderDisplay())
+				.onExpire(this::onReminderExpire)
+				.preNotify(Duration.ofHours(24), this::onReminderPreNotify)
+				.build());
+
+		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.of(TITLE_PATTERN));
+		this.addComponent(ContainerOverlayComponent.class, ContainerOverlayComponent.builder()
+				.content(this::contentAnalyzer)
+				.render(this::render)
+				.onReset(() -> {
+					totalChocolate = -1;
+					chocolatePerSeconds = -1;
+					limitTime = null;
+				})
+				.build());
 	}
 
 	@Override
@@ -61,63 +74,7 @@ public final class ChocolateLimitReminderFeature
 				&& ConfigManager.getConfig().general.reminders.chocolateFactoryMaxChocolates;
 	}
 
-	@Override
-	public Pattern getTitlePattern() {
-		return TITLE_PATTERN;
-	}
-
-	@Override
-	public @NotNull String reminderType() {
-		return "MAX_CHOCOLATE";
-	}
-
-	@Override
-	public @NotNull ReminderDisplay display() {
-		return ReminderDisplay.of(
-				Component.literal("Max Chocolate Factory").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
-				Component.literal("The chocolate limit is reached!").withStyle(ChatFormatting.RED),
-				ICON
-		);
-	}
-
-	@Override
-	public void onExpire(@NotNull TimedObject timedObject) {
-		Component text = Component.literal("The chocolate limit is reached!").withStyle(ChatFormatting.RESET, ChatFormatting.RED);
-
-		Client.sendMessageWithPrefix(Component.literal("[Chocolate Factory] ").withStyle(ChatFormatting.GOLD)
-				.append(text));
-
-		Client.showNotification(Component.literal("Chocolate Factory\n").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
-				.append(text), ICON);
-
-		if (ConfigManager.getConfig().general.reminders.playSound) {
-			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
-		}
-	}
-
-	@Override
-	public Optional<Duration> preNotifyDuration() {
-		return Optional.of(Duration.ofHours(24));
-	}
-
-	@Override
-	public void onPreExpire(@NotNull TimedObject timedObject) {
-		MutableComponent text = Component.literal("The chocolate limit will be reached soon!").withStyle(ChatFormatting.RED);
-		MutableComponent message = Component.empty()
-				.append(Component.literal("[Chocolate Factory] ").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD))
-				.append(text);
-		MutableComponent notification = Component.empty()
-				.append(Component.literal("Chocolate Factory").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD))
-				.append(Component.literal("\n"))
-				.append(text);
-
-		Client.sendMessageWithPrefix(message);
-		Client.showNotification(notification, ICON);
-	}
-
-	@Override
-	public @NotNull List<ColorHighlight> content(@NotNull Int2ObjectMap<ItemStack> slots) {
-
+	private @NonNull List<ColorHighlight> contentAnalyzer(@NonNull Int2ObjectMap<ItemStack> slots) {
 		String info = slots.get(CHOCOLATE_SLOT).getHoverName().getString();
 		Matcher chocolateMatcher = CHOCOLATE_PATTERN.matcher(info);
 		if (chocolateMatcher.find()) {
@@ -142,7 +99,7 @@ public final class ChocolateLimitReminderFeature
 					"cf::limit",
 					"empty",
 					expirationTime,
-					reminderType());
+					REMINDER_TYPE);
 
 			CaribouStonks.systems()
 					.getSystem(ReminderSystem.class)
@@ -152,24 +109,54 @@ public final class ChocolateLimitReminderFeature
 		return List.of();
 	}
 
-	@Override
-	public void render(@NotNull GuiGraphics context, int screenWidth, int screenHeight, int x, int y) {
+	private void render(@NonNull GuiGraphics context, int screenWidth, int screenHeight, int x, int y) {
 		if (limitTime != null) {
-			Component limitText = Component.literal("Chocolate will be reached: ").withStyle(ChatFormatting.GOLD)
-					.append(Component.literal(TimeUtils.formatInstant(limitTime, TimeUtils.DATE_TIME_FULL)).withStyle(ChatFormatting.YELLOW));
+			Component text = Component.empty()
+					.append(Component.literal("Chocolate will be reached: ")
+							.withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(TimeUtils.formatInstant(limitTime, TimeUtils.DATE_TIME_FULL))
+							.withStyle(ChatFormatting.YELLOW));
 			context.drawCenteredString(
 					Minecraft.getInstance().font,
-					limitText,
+					text,
 					screenWidth >> 1,
 					20,
 					Colors.WHITE.asInt());
 		}
 	}
 
-	@Override
-	public void reset() {
-		totalChocolate = -1;
-		chocolatePerSeconds = -1;
-		limitTime = null;
+	private ReminderDisplay getReminderDisplay() {
+		return ReminderDisplay.of(
+				Component.literal("Max Chocolate Factory").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
+				Component.literal("The chocolate limit is reached!").withStyle(ChatFormatting.RED),
+				ICON);
+	}
+
+	private void onReminderExpire(TimedObject timedObject) {
+		Component text = Component.literal("The chocolate limit is reached!").withStyle(ChatFormatting.RESET, ChatFormatting.RED);
+
+		Client.sendMessageWithPrefix(Component.literal("[Chocolate Factory] ").withStyle(ChatFormatting.GOLD)
+				.append(text));
+
+		Client.showNotification(Component.literal("Chocolate Factory\n").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
+				.append(text), ICON);
+
+		if (ConfigManager.getConfig().general.reminders.playSound) {
+			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+		}
+	}
+
+	private void onReminderPreNotify(TimedObject timedObject) {
+		MutableComponent text = Component.literal("The chocolate limit will be reached soon!").withStyle(ChatFormatting.RED);
+		MutableComponent message = Component.empty()
+				.append(Component.literal("[Chocolate Factory] ").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD))
+				.append(text);
+		MutableComponent notification = Component.empty()
+				.append(Component.literal("Chocolate Factory").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD))
+				.append(Component.literal("\n"))
+				.append(text);
+
+		Client.sendMessageWithPrefix(message);
+		Client.showNotification(notification, ICON);
 	}
 }

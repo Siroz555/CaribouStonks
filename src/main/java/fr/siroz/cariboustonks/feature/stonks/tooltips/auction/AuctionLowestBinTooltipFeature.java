@@ -2,35 +2,37 @@ package fr.siroz.cariboustonks.feature.stonks.tooltips.auction;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.data.generic.GenericDataSource;
+import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
+import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.data.generic.GenericDataSource;
+import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
-import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.system.container.tooltip.ContainerTooltipAppender;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.network.chat.Component;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Pattern;
-
-public class AuctionLowestBinTooltipFeature extends Feature implements ContainerMatcherTrait, ContainerTooltipAppender {
+public class AuctionLowestBinTooltipFeature extends Feature {
 
     private final GenericDataSource genericDataSource;
-    private final int priority;
 
     public AuctionLowestBinTooltipFeature(int priority) {
-        this.priority = priority;
         this.genericDataSource = CaribouStonks.skyBlock().getGenericDataSource();
+
+		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.empty());
+		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
+				.priority(priority)
+				.appender(this::appendToTooltip)
+				.build());
     }
 
     @Override
@@ -38,13 +40,7 @@ public class AuctionLowestBinTooltipFeature extends Feature implements Container
         return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().general.stonks.auctionTooltipPrice;
     }
 
-	@Override
-	public @Nullable Pattern getTitlePattern() {
-		return null;
-	}
-
-	@Override
-    public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
+    private void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
         if (genericDataSource.isLowestBinsInUpdate()) {
             lines.add(Component.literal("Auction is currently updating...").withStyle(ChatFormatting.RED));
             return;
@@ -93,10 +89,5 @@ public class AuctionLowestBinTooltipFeature extends Feature implements Container
 				lines.add(Component.literal("[Press SHIFT for x" + count + "]").withStyle(ChatFormatting.DARK_GRAY));
 			}
         }
-    }
-
-    @Override
-    public int getPriority() {
-        return priority;
     }
 }

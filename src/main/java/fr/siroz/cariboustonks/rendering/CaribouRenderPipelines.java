@@ -2,11 +2,11 @@ package fr.siroz.cariboustonks.rendering;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.integration.IrisIntegration;
+import fr.siroz.cariboustonks.core.mod.integration.IrisIntegration;
 import net.minecraft.client.renderer.RenderPipelines;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import org.jetbrains.annotations.ApiStatus;
 
 public final class CaribouRenderPipelines {

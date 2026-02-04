@@ -1,9 +1,8 @@
 package fr.siroz.cariboustonks.config.configs;
 
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
-import fr.siroz.cariboustonks.system.hud.HudConfig;
+import fr.siroz.cariboustonks.core.module.hud.HudConfig;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-
 import java.awt.Color;
 
 public class UIAndVisualsConfig {

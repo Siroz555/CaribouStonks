@@ -1,12 +1,11 @@
 package fr.siroz.cariboustonks.util.colors;
 
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.ChatFormatting;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.item.DyeColor;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Représente une couleur {@code R G B A}.

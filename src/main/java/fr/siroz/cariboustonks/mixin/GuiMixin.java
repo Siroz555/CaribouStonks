@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.mixin;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

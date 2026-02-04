@@ -2,20 +2,20 @@ package fr.siroz.cariboustonks.feature.stonks;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.item.Rarity;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.item.SkyBlockItemData;
-import fr.siroz.cariboustonks.skyblock.item.SkyBlockEnchantment;
-import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.skyblock.item.SkyblockItemStack;
-import fr.siroz.cariboustonks.skyblock.item.calculator.Calculation;
-import fr.siroz.cariboustonks.skyblock.item.calculator.CalculatorConstants;
-import fr.siroz.cariboustonks.skyblock.item.calculator.ItemValueCalculator;
-import fr.siroz.cariboustonks.skyblock.item.calculator.ItemValueResult;
-import fr.siroz.cariboustonks.skyblock.item.metadata.Gemstones;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockEnchantment;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyblockItemStack;
+import fr.siroz.cariboustonks.core.skyblock.item.calculator.Calculation;
+import fr.siroz.cariboustonks.core.skyblock.item.calculator.CalculatorConstants;
+import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueCalculator;
+import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueResult;
+import fr.siroz.cariboustonks.core.skyblock.item.metadata.Gemstones;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.ItemRenderEvents;
-import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.RomanNumeralUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -28,12 +28,12 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -606,7 +606,7 @@ public class ItemValueViewerFeature extends Feature {
 		if (itemData != null) {
 			return Pair.of(itemData.name(), itemData.tier());
 		} else {
-			SkyBlockEnchantment enchantment = CaribouStonks.core().getModDataSource().getSkyBlockEnchantment(skyBlockId);
+			SkyBlockEnchantment enchantment = CaribouStonks.mod().getModDataSource().getSkyBlockEnchantment(skyBlockId);
 			if (enchantment != null) {
 				return Pair.of(enchantment.name(), Rarity.UNKNOWN);
 			} else {

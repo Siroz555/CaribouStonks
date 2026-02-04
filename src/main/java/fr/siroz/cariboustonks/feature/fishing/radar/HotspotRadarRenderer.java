@@ -1,14 +1,14 @@
 package fr.siroz.cariboustonks.feature.fishing.radar;
 
+import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
+import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.system.waypoint.Waypoint;
-import fr.siroz.cariboustonks.system.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.position.Position;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
 
 final class HotspotRadarRenderer {
 

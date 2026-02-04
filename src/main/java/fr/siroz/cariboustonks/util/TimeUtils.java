@@ -1,7 +1,5 @@
 package fr.siroz.cariboustonks.util;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.Instant;
@@ -14,6 +12,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jetbrains.annotations.NotNull;
 
 public final class TimeUtils {
 

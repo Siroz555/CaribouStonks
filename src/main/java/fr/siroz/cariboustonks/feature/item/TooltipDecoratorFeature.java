@@ -1,21 +1,20 @@
 package fr.siroz.cariboustonks.feature.item;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.event.ItemRenderEvents;
-import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import it.unimi.dsi.fastutil.Pair;
+import java.awt.Color;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.item.ItemStack;
-
-import java.awt.Color;
-import java.util.List;
-import java.util.Map;
 
 public class TooltipDecoratorFeature extends Feature {
 

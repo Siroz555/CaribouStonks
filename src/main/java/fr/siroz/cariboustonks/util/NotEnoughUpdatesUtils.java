@@ -1,14 +1,13 @@
 package fr.siroz.cariboustonks.util;
 
-import fr.siroz.cariboustonks.skyblock.data.hypixel.item.PetInfo;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import net.minecraft.world.item.ItemStack;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.PetInfo;
+import java.util.Locale;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Locale;
 
 /**
  * Utility class for handling operations related to NotEnoughUpdates (NEU).

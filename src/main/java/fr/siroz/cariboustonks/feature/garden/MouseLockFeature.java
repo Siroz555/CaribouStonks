@@ -1,19 +1,16 @@
 package fr.siroz.cariboustonks.feature.garden;
 
-import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.skyblock.IslandType;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.component.CommandComponent;
+import fr.siroz.cariboustonks.core.component.KeybindComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.input.KeyBind;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.WorldEvents;
-import fr.siroz.cariboustonks.system.command.CommandComponent;
-import fr.siroz.cariboustonks.system.keybinds.KeyBind;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.keybinds.KeyBindComponent;
 import fr.siroz.cariboustonks.util.Client;
-import java.util.Collections;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public final class MouseLockFeature extends Feature {
@@ -23,16 +20,16 @@ public final class MouseLockFeature extends Feature {
 	public MouseLockFeature() {
 		WorldEvents.JOIN.register(world -> onJoinWorld());
 
-		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
-				.then(ClientCommandManager.literal("lockMouse").executes(context -> {
+		this.addComponent(CommandComponent.class, CommandComponent.builder()
+				.namespaced("lockMouse", ctx -> {
 					updateLockState();
 					return 1;
-				}))
-		));
+				})
+				.build());
 
-		addComponent(KeyBindComponent.class, () -> Collections.singletonList(
-				new KeyBind("Garden Lock Mouse", GLFW.GLFW_KEY_MINUS, true, this::updateLockState)
-		));
+		this.addComponent(KeybindComponent.class, KeybindComponent.builder()
+				.add(new KeyBind("Garden Lock Mouse", GLFW.GLFW_KEY_MINUS, true, this::updateLockState))
+				.build());
 	}
 
 	@Override

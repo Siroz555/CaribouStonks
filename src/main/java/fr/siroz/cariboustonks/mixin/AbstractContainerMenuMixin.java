@@ -1,12 +1,12 @@
 package fr.siroz.cariboustonks.mixin;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ItemEvents;
-import fr.siroz.cariboustonks.system.container.overlay.ContainerOverlaySystem;
+import fr.siroz.cariboustonks.system.ContainerOverlaySystem;
 import java.util.List;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.feature.dungeon;
 
-import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.util.colors.Color;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.core.BlockPos;

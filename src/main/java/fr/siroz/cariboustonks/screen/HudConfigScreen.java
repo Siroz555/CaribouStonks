@@ -2,22 +2,21 @@ package fr.siroz.cariboustonks.screen;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.system.hud.Hud;
-import fr.siroz.cariboustonks.system.hud.HudSystem;
+import fr.siroz.cariboustonks.core.module.hud.Hud;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
+import fr.siroz.cariboustonks.system.HudSystem;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
-import net.minecraft.client.input.MouseButtonEvent;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.List;
 
 public final class HudConfigScreen extends CaribousStonksScreen {
 

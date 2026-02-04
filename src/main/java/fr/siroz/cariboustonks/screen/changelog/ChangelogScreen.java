@@ -1,13 +1,13 @@
 package fr.siroz.cariboustonks.screen.changelog;
 
-import fr.siroz.cariboustonks.core.changelog.ChangelogEntry;
+import fr.siroz.cariboustonks.core.mod.changelog.ChangelogEntry;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

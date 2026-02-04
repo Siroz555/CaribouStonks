@@ -2,30 +2,26 @@ package fr.siroz.cariboustonks.feature.ui.tracking;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.IslandType;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.component.CommandComponent;
+import fr.siroz.cariboustonks.core.component.HudComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
+import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
+import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
+import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.command.CommandComponent;
-import fr.siroz.cariboustonks.system.hud.Hud;
-import fr.siroz.cariboustonks.system.hud.HudProvider;
-import fr.siroz.cariboustonks.system.hud.MultiElementHud;
-import fr.siroz.cariboustonks.system.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.system.hud.builder.HudElementTextBuilder;
-import fr.siroz.cariboustonks.system.hud.element.HudElement;
-import fr.siroz.cariboustonks.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.screen.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import it.unimi.dsi.fastutil.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -36,7 +32,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Experimental
-public class MobTrackingFeature extends Feature implements HudProvider {
+public class MobTrackingFeature extends Feature {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_mob_tracking");
 	private static final int MAX_TRACKED_ENTITIES = 3;
@@ -62,10 +58,26 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
 		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
 
-		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
-				.then(ClientCommandManager.literal("mobTracking")
-						.executes(Client.openScreen(() -> MobTrackingScreen.create(null))))
-		));
+		this.addComponent(CommandComponent.class, CommandComponent.builder()
+				.namespaced("mobTracking", ctx -> {
+					ctx.executes(Client.openScreen(() -> MobTrackingScreen.create(null)));
+				})
+				.build());
+
+		this.addComponent(HudComponent.class, HudComponent.builder()
+				.attachAfterStatusEffects(HUD_ID)
+				.hud(new MultiElementHud(
+						() -> this.isEnabled() && !tracked.isEmpty() && ConfigManager.getConfig().uiAndVisuals.mobTracking.hud.showInHud,
+						new HudElementTextBuilder()
+								.append(Component.literal("§8[§7Lv750§8] §2✿§e✰§d❃ §2Exalted Minos Inquisitor §a45.8M§f/§a50M§c❤"))
+								.append(Component.literal("§e﴾ §8[§7Lv200§8] §8☠§f\uD83E\uDDB4§5♃ §8§lBladesoul§r §a50M§f/§a50M§c❤ §e﴿"))
+								.build(),
+						this::getHudLines,
+						ConfigManager.getConfig().uiAndVisuals.mobTracking.hud,
+						125,
+						25
+				))
+				.build());
 	}
 
 	@ApiStatus.Internal
@@ -118,26 +130,6 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 				showingBossBar = true;
 			}
 		}
-	}
-
-	@Override
-	public @NotNull Pair<Identifier, Identifier> getAttachLayerAfter() {
-		return Pair.of(VanillaHudElements.STATUS_EFFECTS, HUD_ID);
-	}
-
-	@Override
-	public @NotNull Hud getHud() {
-		return new MultiElementHud(
-				() -> this.isEnabled() && !tracked.isEmpty() && ConfigManager.getConfig().uiAndVisuals.mobTracking.hud.showInHud,
-				new HudElementTextBuilder()
-						.append(Component.literal("§8[§7Lv750§8] §2✿§e✰§d❃ §2Exalted Minos Inquisitor §a45.8M§f/§a50M§c❤"))
-						.append(Component.literal("§e﴾ §8[§7Lv200§8] §8☠§f\uD83E\uDDB4§5♃ §8§lBladesoul§r §a50M§f/§a50M§c❤ §e﴿"))
-						.build(),
-				this::getHudLines,
-				ConfigManager.getConfig().uiAndVisuals.mobTracking.hud,
-				125,
-				25
-		);
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")

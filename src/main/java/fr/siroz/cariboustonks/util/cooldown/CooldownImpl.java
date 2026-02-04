@@ -1,9 +1,8 @@
 package fr.siroz.cariboustonks.util.cooldown;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.OptionalLong;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 
 final class CooldownImpl implements Cooldown {
 

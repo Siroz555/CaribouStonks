@@ -1,16 +1,16 @@
 package fr.siroz.cariboustonks.feature.garden.pest;
 
+import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
+import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.system.waypoint.Waypoint;
-import fr.siroz.cariboustonks.system.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.position.Position;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
 
 final class PestFinderRenderer {
 

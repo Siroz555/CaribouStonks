@@ -2,22 +2,20 @@ package fr.siroz.cariboustonks.feature.combat;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.skyblock.IslandType;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.component.HudComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
+import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
+import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
+import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
+import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.hud.Hud;
-import fr.siroz.cariboustonks.system.hud.HudProvider;
-import fr.siroz.cariboustonks.system.hud.MultiElementHud;
-import fr.siroz.cariboustonks.system.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.system.hud.builder.HudElementTextBuilder;
-import fr.siroz.cariboustonks.system.hud.element.HudElement;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import it.unimi.dsi.fastutil.Pair;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -26,14 +24,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
 import org.jetbrains.annotations.NotNull;
 
-public class SecondLifeFeature extends Feature implements HudProvider {
+public class SecondLifeFeature extends Feature {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_second_life");
 
@@ -47,38 +44,31 @@ public class SecondLifeFeature extends Feature implements HudProvider {
 	private final Map<SecondLife, Long> activeCooldowns = new HashMap<>();
 	private boolean serverHasChanged = false;
 	private final HudElementBuilder hudBuilder;
-	private final Hud hud;
 
 	public SecondLifeFeature() {
+		this.hudBuilder = new HudElementBuilder();
+
 		ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
 
-		this.hudBuilder = new HudElementBuilder();
-		this.hud = new MultiElementHud(
-				() -> this.isEnabled() && !activeCooldowns.isEmpty(),
-				new HudElementTextBuilder()
-						.append(Component.literal("Spirit Mask: 42.9s").withStyle(ChatFormatting.DARK_PURPLE))
-						.append(Component.literal("Phoenix: 51.7s").withStyle(ChatFormatting.YELLOW))
-						.build(),
-				this::getHudLines,
-				ConfigManager.getConfig().combat.secondLife.cooldownHud,
-				150,
-				50
-		);
+		this.addComponent(HudComponent.class, HudComponent.builder()
+				.attachAfterStatusEffects(HUD_ID)
+				.hud(new MultiElementHud(
+						() -> this.isEnabled() && !activeCooldowns.isEmpty(),
+						new HudElementTextBuilder()
+								.append(Component.literal("Spirit Mask: 42.9s").withStyle(ChatFormatting.DARK_PURPLE))
+								.append(Component.literal("Phoenix: 51.7s").withStyle(ChatFormatting.YELLOW))
+								.build(),
+						this::getHudLines,
+						ConfigManager.getConfig().combat.secondLife.cooldownHud,
+						150,
+						50
+				))
+				.build());
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock();
-	}
-
-	@Override
-	public @NotNull Pair<Identifier, Identifier> getAttachLayerAfter() {
-		return Pair.of(VanillaHudElements.STATUS_EFFECTS, HUD_ID);
-	}
-
-	@Override
-	public @NotNull Hud getHud() {
-		return hud;
 	}
 
 	@Override

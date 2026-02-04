@@ -2,15 +2,15 @@ package fr.siroz.cariboustonks.feature.garden;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.IslandType;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.system.container.overlay.ContainerOverlay;
-import fr.siroz.cariboustonks.system.reminder.Reminder;
-import fr.siroz.cariboustonks.system.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.system.reminder.ReminderSystem;
-import fr.siroz.cariboustonks.system.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
+import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
+import fr.siroz.cariboustonks.core.component.ReminderComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
+import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.system.ReminderSystem;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
@@ -25,18 +25,28 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
-@ApiStatus.Experimental
-public class GreenhouseGrowthStageFeature extends Feature implements ContainerMatcherTrait, ContainerOverlay, Reminder {
+public class GreenhouseGrowthStageFeature extends Feature {
 
 	private static final Pattern TITLE_PATTERN = Pattern.compile("^Crop Diagnostics$");
+	private static final String REMINDER_TYPE = "GREENHOUSE_GROWTH_STAGE";
 
 	private static final Pattern GROWTH_STAGE_PATTERN = Pattern.compile("Next Stage:\\s*(?:(\\d+)\\s*h)?\\s*(?:(\\d+)\\s*m)?\\s*(?:(\\d+)\\s*s)?");
 	private static final int GROWTH_STAGE_SLOT = 20;
 	private static final ItemStack ICON = new ItemStack(Items.JUNGLE_SAPLING);
+
+	public GreenhouseGrowthStageFeature() {
+		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
+				.display(getReminderDisplay())
+				.onExpire(this::onReminderExpire)
+				.build());
+
+		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.of(TITLE_PATTERN));
+		this.addComponent(ContainerOverlayComponent.class, ContainerOverlayComponent.builder()
+				.content(this::contentAnalyzer)
+				.build());
+	}
 
 	@Override
 	public boolean isEnabled() {
@@ -45,14 +55,8 @@ public class GreenhouseGrowthStageFeature extends Feature implements ContainerMa
 				&& ConfigManager.getConfig().farming.garden.greenhouseGrowthStageReminder;
 	}
 
-	@Override
-	public @Nullable Pattern getTitlePattern() {
-		return TITLE_PATTERN;
-	}
-
-	@Override
-	public @NotNull List<ColorHighlight> content(@NotNull Int2ObjectMap<ItemStack> slots) {
-
+	@NonNull
+	private List<ColorHighlight> contentAnalyzer(@NonNull Int2ObjectMap<ItemStack> slots) {
 		String growthStage = ItemUtils.getConcatenatedLore(slots.get(GROWTH_STAGE_SLOT));
 		Matcher growthStageMatcher = GROWTH_STAGE_PATTERN.matcher(growthStage);
 		if (growthStageMatcher.find()) {
@@ -76,7 +80,7 @@ public class GreenhouseGrowthStageFeature extends Feature implements ContainerMa
 					"greenhouse::next",
 					"empty",
 					nextStage,
-					reminderType());
+					REMINDER_TYPE);
 
 			CaribouStonks.systems()
 					.getSystem(ReminderSystem.class)
@@ -86,13 +90,7 @@ public class GreenhouseGrowthStageFeature extends Feature implements ContainerMa
 		return List.of();
 	}
 
-	@Override
-	public @NotNull String reminderType() {
-		return "GREENHOUSE_GROWTH_STAGE";
-	}
-
-	@Override
-	public @NotNull ReminderDisplay display() {
+	private @NonNull ReminderDisplay getReminderDisplay() {
 		return ReminderDisplay.of(
 				Component.literal("Greenhouse").withStyle(ChatFormatting.DARK_GREEN, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
 				Component.literal("Next Growth Stage").withStyle(ChatFormatting.GREEN),
@@ -100,8 +98,7 @@ public class GreenhouseGrowthStageFeature extends Feature implements ContainerMa
 		);
 	}
 
-	@Override
-	public void onExpire(@NotNull TimedObject timedObject) {
+	private void onReminderExpire(@NonNull TimedObject timedObject) {
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Greenhouse] ").withStyle(ChatFormatting.DARK_GREEN))
 				.append(Component.literal("Next Growth Stage is reached!").withStyle(ChatFormatting.GREEN));

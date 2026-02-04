@@ -2,9 +2,8 @@ package fr.siroz.cariboustonks.config.configs;
 
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import fr.siroz.cariboustonks.util.colors.ColorUtils;
-import net.minecraft.ChatFormatting;
-
 import java.awt.Color;
+import net.minecraft.ChatFormatting;
 
 public class ChatConfig {
 

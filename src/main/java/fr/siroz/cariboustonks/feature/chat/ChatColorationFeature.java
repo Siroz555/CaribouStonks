@@ -2,18 +2,17 @@ package fr.siroz.cariboustonks.feature.chat;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.ChatConfig;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.mixin.accessors.ChatListenerAccessor;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-
 import java.time.Instant;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public class ChatColorationFeature extends Feature {
 

@@ -2,41 +2,47 @@ package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.component.ReminderComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
+import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.reminder.Reminder;
-import fr.siroz.cariboustonks.system.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.system.reminder.ReminderSystem;
-import fr.siroz.cariboustonks.system.reminder.TimedObject;
+import fr.siroz.cariboustonks.system.ReminderSystem;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.skyblock.IslandType;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public final class EnchantedCloakReminderFeature extends Feature implements Reminder {
+public final class EnchantedCloakReminderFeature extends Feature {
 
 	private static final Pattern CHAT_BOOST_USED_PATTERN = Pattern.compile(
 			"TIME WARP! You have successfully warped time for your (?<type>.+?)!");
+
+	private static final String REMINDER_TYPE = "ENCHANTED_CLOAK";
 
 	private static final ItemStack ICON = new ItemStack(Items.CLOCK);
 
 	public EnchantedCloakReminderFeature() {
 		ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
+
+		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
+				.display(getReminderDisplay())
+				.onExpire(this::onReminderExpire)
+				.build());
 	}
 
 	@Override
@@ -46,13 +52,7 @@ public final class EnchantedCloakReminderFeature extends Feature implements Remi
 				&& ConfigManager.getConfig().general.reminders.enchantedCloak;
 	}
 
-	@Override
-	public @NotNull String reminderType() {
-		return "ENCHANTED_CLOAK";
-	}
-
-	@Override
-	public @NotNull ReminderDisplay display() {
+	private @NotNull ReminderDisplay getReminderDisplay() {
 		return ReminderDisplay.of(
 				Component.literal("Enchanted Cloak").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
 				null,
@@ -60,8 +60,7 @@ public final class EnchantedCloakReminderFeature extends Feature implements Remi
 		);
 	}
 
-	@Override
-	public void onExpire(@NotNull TimedObject timedObject) {
+	private void onReminderExpire(@NotNull TimedObject timedObject) {
 		BoostType boostType = BoostType.getByName(timedObject.id().replace("cloak::", ""));
 		if (boostType == null) {
 			return;
@@ -104,7 +103,7 @@ public final class EnchantedCloakReminderFeature extends Feature implements Remi
 						"cloak::" + boostType.name(),
 						message,
 						Instant.now().plus(Duration.ofHours(48)),
-						reminderType());
+						REMINDER_TYPE);
 
 				CaribouStonks.systems()
 						.getSystem(ReminderSystem.class)

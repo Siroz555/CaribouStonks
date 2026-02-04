@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.util;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.data.registries.VanillaRegistries;
 
 public final class DeveloperTools {
 

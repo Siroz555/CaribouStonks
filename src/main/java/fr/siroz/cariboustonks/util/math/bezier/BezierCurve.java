@@ -9,11 +9,10 @@
 
 package fr.siroz.cariboustonks.util.math.bezier;
 
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.stream.IntStream;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a 3D Bézier curve with associated coefficients for each dimension.

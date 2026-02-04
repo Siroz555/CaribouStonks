@@ -1,14 +1,14 @@
 package fr.siroz.cariboustonks.feature.ui.overlay;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.RenderEvents;
-import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class GyrokineticOverlayFeature extends Feature {

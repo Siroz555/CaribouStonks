@@ -2,15 +2,15 @@ package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.IslandType;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.system.container.overlay.ContainerOverlay;
-import fr.siroz.cariboustonks.system.reminder.Reminder;
-import fr.siroz.cariboustonks.system.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.system.reminder.ReminderSystem;
-import fr.siroz.cariboustonks.system.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
+import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
+import fr.siroz.cariboustonks.core.component.ReminderComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
+import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.system.ReminderSystem;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
@@ -27,13 +27,26 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
-public final class StonksAuctionReminderFeature extends Feature implements ContainerMatcherTrait, ContainerOverlay, Reminder {
+public final class StonksAuctionReminderFeature extends Feature {
 
 	private static final Pattern TITLE_PATTERN = Pattern.compile("^Stonks Auction$");
 
 	private static final Pattern NEXT_AUCTION_PATTERN = Pattern.compile("Auction ends in\\s*(?:(\\d+)\\s*h)?\\s*(?:(\\d+)\\s*m)?\\s*(?:(\\d+)\\s*s)?");
 	private static final int BID_SLOT = 11;
+	private static final String REMINDER_TYPE = "NEXT_STONKS_AUCTION";
 	private static final ItemStack ICON = new ItemStack(Items.PAPER);
+
+	public StonksAuctionReminderFeature() {
+		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
+				.display(getReminderDisplay())
+				.onExpire(this::onReminderExpire)
+				.build());
+
+		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.of(TITLE_PATTERN));
+		this.addComponent(ContainerOverlayComponent.class, ContainerOverlayComponent.builder()
+				.content(this::contentAnalyzer)
+				.build());
+	}
 
 	@Override
 	public boolean isEnabled() {
@@ -42,13 +55,7 @@ public final class StonksAuctionReminderFeature extends Feature implements Conta
 				&& ConfigManager.getConfig().general.reminders.stonksAuction;
 	}
 
-	@Override
-	public Pattern getTitlePattern() {
-		return TITLE_PATTERN;
-	}
-
-	@Override
-	public @NotNull List<ColorHighlight> content(@NotNull Int2ObjectMap<ItemStack> slots) {
+	private @NotNull List<ColorHighlight> contentAnalyzer(@NotNull Int2ObjectMap<ItemStack> slots) {
 		String bidItem = ItemUtils.getConcatenatedLore(slots.get(BID_SLOT));
 		Matcher bidItemMatcher = NEXT_AUCTION_PATTERN.matcher(bidItem);
 		if (bidItemMatcher.find()) {
@@ -71,7 +78,7 @@ public final class StonksAuctionReminderFeature extends Feature implements Conta
 					"stonksauctions::next",
 					"empty",
 					nextStage,
-					reminderType());
+					REMINDER_TYPE);
 
 			CaribouStonks.systems()
 					.getSystem(ReminderSystem.class)
@@ -81,13 +88,7 @@ public final class StonksAuctionReminderFeature extends Feature implements Conta
 		return List.of();
 	}
 
-	@Override
-	public @NotNull String reminderType() {
-		return "NEXT_STONKS_AUCTION";
-	}
-
-	@Override
-	public @NotNull ReminderDisplay display() {
+	private @NotNull ReminderDisplay getReminderDisplay() {
 		return ReminderDisplay.of(
 				Component.literal("Stonks Auction").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
 				Component.literal("Diaz Stonks Auction").withStyle(ChatFormatting.DARK_PURPLE),
@@ -95,8 +96,7 @@ public final class StonksAuctionReminderFeature extends Feature implements Conta
 		);
 	}
 
-	@Override
-	public void onExpire(@NotNull TimedObject timedObject) {
+	private void onReminderExpire(@NotNull TimedObject timedObject) {
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Stonks Auction] ").withStyle(ChatFormatting.LIGHT_PURPLE))
 				.append(Component.literal("Diaz Stonks Auction available!").withStyle(ChatFormatting.DARK_PURPLE));

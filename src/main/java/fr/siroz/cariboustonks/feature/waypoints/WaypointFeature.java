@@ -2,36 +2,35 @@ package fr.siroz.cariboustonks.feature.waypoints;
 
 import com.google.common.reflect.TypeToken;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.json.JsonProcessingException;
-import fr.siroz.cariboustonks.skyblock.IslandType;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.component.CommandComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
+import fr.siroz.cariboustonks.core.service.json.JsonFileService;
+import fr.siroz.cariboustonks.core.service.json.JsonProcessingException;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.RenderEvents;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.command.CommandComponent;
-import fr.siroz.cariboustonks.system.waypoint.Waypoint;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.screen.waypoints.WaypointScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public final class WaypointFeature extends Feature {
 
@@ -50,10 +49,11 @@ public final class WaypointFeature extends Feature {
         ClientLifecycleEvents.CLIENT_STOPPING.register(this::saveWaypoints);
         RenderEvents.WORLD_RENDER.register(this::render);
 
-		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
-				.then(ClientCommandManager.literal("waypoints")
-						.executes(Client.openScreen(() -> WaypointScreen.create(null))))
-		));
+		this.addComponent(CommandComponent.class, CommandComponent.builder()
+				.namespaced("waypoints", ctx -> {
+					ctx.executes(Client.openScreen(() -> WaypointScreen.create(null)));
+				})
+				.build());
     }
 
     @Override
@@ -107,7 +107,7 @@ public final class WaypointFeature extends Feature {
         return CompletableFuture.supplyAsync(() -> {
             Type mapType = new TypeToken<@NotNull Map<IslandType, List<Waypoint>>>() {}.getType();
 			try {
-				return CaribouStonks.core().getJsonFileService().loadMap(WAYPOINT_PATH, mapType);
+				return JsonFileService.get().loadMap(WAYPOINT_PATH, mapType);
 			} catch (JsonProcessingException ex) {
 				CaribouStonks.LOGGER.error("[WaypointFeature] Unable to load waypoints", ex);
 				return Collections.emptyMap();
@@ -135,7 +135,7 @@ public final class WaypointFeature extends Feature {
 
     public void saveWaypoints(Minecraft client) {
 		try {
-			CaribouStonks.core().getJsonFileService().save(WAYPOINT_PATH, waypoints);
+			JsonFileService.get().save(WAYPOINT_PATH, waypoints);
 		} catch (JsonProcessingException ex) {
 			CaribouStonks.LOGGER.error("[WaypointFeature] Unable to save waypoints", ex);
 		}

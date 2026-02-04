@@ -1,10 +1,6 @@
 package fr.siroz.cariboustonks.util.http;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import net.minecraft.SharedConstants;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -16,6 +12,9 @@ import java.time.Duration;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
+import net.minecraft.SharedConstants;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Utilitaire pour manipuler les requests {@code HTTP} avec l'API {@code java.net.http}.

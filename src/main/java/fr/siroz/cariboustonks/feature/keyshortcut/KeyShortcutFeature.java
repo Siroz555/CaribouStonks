@@ -3,11 +3,12 @@ package fr.siroz.cariboustonks.feature.keyshortcut;
 import com.google.common.reflect.TypeToken;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.json.JsonProcessingException;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.component.CommandComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.service.json.JsonFileService;
+import fr.siroz.cariboustonks.core.service.json.JsonProcessingException;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.command.CommandComponent;
 import fr.siroz.cariboustonks.screen.keyshortcut.KeyShortcutScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
@@ -19,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
@@ -38,10 +38,11 @@ public class KeyShortcutFeature extends Feature {
 		ClientLifecycleEvents.CLIENT_STOPPING.register(this::saveShortcuts);
 		ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
 
-		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
-				.then(ClientCommandManager.literal("keyShortcuts")
-						.executes(Client.openScreen(() -> KeyShortcutScreen.create(null))))
-		));
+		this.addComponent(CommandComponent.class, CommandComponent.builder()
+				.namespaced("keyShortcuts", ctx -> {
+					ctx.executes(Client.openScreen(() -> KeyShortcutScreen.create(null)));
+				})
+				.build());
 	}
 
 	@Override
@@ -68,7 +69,7 @@ public class KeyShortcutFeature extends Feature {
 		}
 
 		try {
-			CaribouStonks.core().getJsonFileService().save(SHORTCUTS_PATH, shortcutsToSave);
+			JsonFileService.get().save(SHORTCUTS_PATH, shortcutsToSave);
 		} catch (JsonProcessingException ex) {
 			CaribouStonks.LOGGER.error("{} Unable to save shortcuts", getShortName(), ex);
 		}
@@ -87,7 +88,7 @@ public class KeyShortcutFeature extends Feature {
 		return CompletableFuture.supplyAsync(() -> {
 			Type mapType = new TypeToken<@NotNull Map<String, Integer>>() {}.getType();
 			try {
-				return CaribouStonks.core().getJsonFileService().loadMap(SHORTCUTS_PATH, mapType);
+				return JsonFileService.get().loadMap(SHORTCUTS_PATH, mapType);
 			} catch (JsonProcessingException ex) {
 				CaribouStonks.LOGGER.error("{} Unable to load shortcuts", getShortName(), ex);
 				return Collections.emptyMap();

@@ -2,30 +2,29 @@ package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.IslandType;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.component.ReminderComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
+import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.reminder.Reminder;
-import fr.siroz.cariboustonks.system.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.system.reminder.ReminderSystem;
-import fr.siroz.cariboustonks.system.reminder.TimedObject;
+import fr.siroz.cariboustonks.system.ReminderSystem;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import org.jetbrains.annotations.NotNull;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-public final class UbikCubeReminderFeature extends Feature implements Reminder {
+public final class UbikCubeReminderFeature extends Feature {
 
     // You earned 45,000 Motes in this match!
     private static final Pattern UBIK_CUBE_MESSAGE = Pattern.compile("You earned ([\\d,]+) Motes in this match!");
@@ -34,11 +33,18 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
             .append(Component.literal(" or ").withStyle(ChatFormatting.WHITE))
             .append(Component.literal("Steal").withStyle(ChatFormatting.RED));
 
+	private static final String REMINDER_TYPE = "RIFT_UBIK_CUBE";
+
 	private final ItemStack ubikCube;
 
     public UbikCubeReminderFeature() {
 		this.ubikCube = ItemUtils.createSkull(HeadTextures.UBIK_CUBE);
         ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
+
+		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
+				.display(getReminderDisplay())
+				.onExpire(this::onReminderExpire)
+				.build());
     }
 
     @Override
@@ -48,13 +54,7 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
                 && ConfigManager.getConfig().general.reminders.ubikCube;
     }
 
-    @Override
-    public @NotNull String reminderType() {
-        return "RIFT_UBIK_CUBE";
-    }
-
-    @Override
-    public @NotNull ReminderDisplay display() {
+    private @NotNull ReminderDisplay getReminderDisplay() {
         return ReminderDisplay.of(
                 Component.literal("Ubik's Cube").withStyle(ChatFormatting.RED, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
                 SPLIT_OR_STEAL_TEXT,
@@ -62,8 +62,7 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
         );
     }
 
-    @Override
-    public void onExpire(@NotNull TimedObject timedObject) {
+    private void onReminderExpire(@NotNull TimedObject timedObject) {
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Ubik's Cube] ").withStyle(ChatFormatting.GOLD))
 				.append(Component.literal("Ready to play ").withStyle(ChatFormatting.GREEN))
@@ -96,7 +95,7 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
                     "rift::ubikCube",
                     "empty",
                     expirationTime,
-                    reminderType());
+                    REMINDER_TYPE);
 
             CaribouStonks.systems()
                     .getSystem(ReminderSystem.class)

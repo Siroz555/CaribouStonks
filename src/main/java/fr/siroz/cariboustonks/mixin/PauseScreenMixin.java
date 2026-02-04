@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.mixin;
 
 import fr.siroz.cariboustonks.screen.CaribouStonksMenuScreen;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

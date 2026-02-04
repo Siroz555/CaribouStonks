@@ -1,11 +1,10 @@
 package fr.siroz.cariboustonks.util.colors;
 
 import com.mojang.serialization.Codec;
+import java.awt.Color;
 import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-
-import java.awt.Color;
 
 public final class ColorUtils {
 

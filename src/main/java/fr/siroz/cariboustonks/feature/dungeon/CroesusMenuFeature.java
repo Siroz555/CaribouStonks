@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.feature.dungeon;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.system.container.overlay.ContainerOverlay;
+import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
+import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
@@ -13,13 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.regex.Pattern;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.item.ItemStack;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-public class CroesusMenuFeature extends Feature implements ContainerMatcherTrait, ContainerOverlay {
+public class CroesusMenuFeature extends Feature {
 
 	private static final Pattern CROESUS_PATTERN = Pattern.compile("^Croesus$");
 
@@ -30,18 +29,22 @@ public class CroesusMenuFeature extends Feature implements ContainerMatcherTrait
 	private final BooleanSupplier kismetAvailableConfig =
 			() -> ConfigManager.getConfig().instance.croesus.mainMenuKismetAvailable;
 
+	public CroesusMenuFeature() {
+		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.builder()
+				.titlePattern(CROESUS_PATTERN)
+				.build());
+		this.addComponent(ContainerOverlayComponent.class, ContainerOverlayComponent.builder()
+				.content(this::contentAnalyzer)
+				.build());
+	}
+
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock() && (openedChestConfig.getAsBoolean() || noMoreChestConfig.getAsBoolean() || kismetAvailableConfig.getAsBoolean());
 	}
 
-	@Override
-	public @Nullable Pattern getTitlePattern() {
-		return CROESUS_PATTERN;
-	}
-
-	@Override
-	public @NotNull List<ColorHighlight> content(@NotNull Int2ObjectMap<ItemStack> slots) {
+	@NonNull
+	private List<ColorHighlight> contentAnalyzer(@NonNull Int2ObjectMap<ItemStack> slots) {
 		List<ColorHighlight> highlights = new ArrayList<>();
 		for (Int2ObjectMap.Entry<ItemStack> entry : slots.int2ObjectEntrySet()) {
 			List<Component> lore = ItemUtils.getLore(entry.getValue());
@@ -98,18 +101,15 @@ public class CroesusMenuFeature extends Feature implements ContainerMatcherTrait
 		return highlight;
 	}
 
-	@Contract(" -> new")
-	private @NotNull Color openedChestColor() {
+	private @NonNull Color openedChestColor() {
 		return Color.fromAwtColor(ConfigManager.getConfig().instance.croesus.mainMenuOpenedChestColor);
 	}
 
-	@Contract(" -> new")
-	private @NotNull Color noMoreChestColor() {
+	private @NonNull Color noMoreChestColor() {
 		return Color.fromAwtColor(ConfigManager.getConfig().instance.croesus.mainMenuNoMoreChestColor);
 	}
 
-	@Contract(" -> new")
-	private @NotNull Color kismetAvailableColor() {
+	private @NonNull Color kismetAvailableColor() {
 		return Color.fromAwtColor(ConfigManager.getConfig().instance.croesus.mainMenuKismetAvailableColor);
 	}
 }

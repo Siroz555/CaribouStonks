@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.config.configs;
 
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
+import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.auction.AuctionTooltipPriceType;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar.BazaarTooltipPriceType;
-import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
 
 public class GeneralConfig {
 

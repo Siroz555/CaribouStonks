@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.feature.vanilla;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.core.feature.Feature;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 

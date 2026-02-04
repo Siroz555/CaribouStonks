@@ -11,11 +11,10 @@ import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.screen.HudConfigScreen;
 import fr.siroz.cariboustonks.screen.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
+import java.awt.Color;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-
-import java.awt.Color;
 
 @SuppressWarnings("checkstyle:linelength")
 public class UIAndVisualsCategory extends AbstractCategory {

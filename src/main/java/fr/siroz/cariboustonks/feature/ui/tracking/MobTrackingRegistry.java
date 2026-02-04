@@ -1,8 +1,9 @@
 package fr.siroz.cariboustonks.feature.ui.tracking;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.json.JsonProcessingException;
-import fr.siroz.cariboustonks.skyblock.IslandType;
+import fr.siroz.cariboustonks.core.service.json.JsonFileService;
+import fr.siroz.cariboustonks.core.service.json.JsonProcessingException;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.feature.fishing.RareSeaCreature;
 import fr.siroz.cariboustonks.util.DeveloperTools;
@@ -83,7 +84,7 @@ public final class MobTrackingRegistry {
 				boolean notifyOnSpawn = entry.getValue().config().notifyOnSpawn;
 				configs.add(new MobTrackingConfig(mobName, enabled, notifyOnSpawn));
 			}
-			CaribouStonks.core().getJsonFileService().save(MOB_TRACKING_PATH, configs);
+			JsonFileService.get().save(MOB_TRACKING_PATH, configs);
 		} catch (JsonProcessingException ex) {
 			CaribouStonks.LOGGER.error("[MobTrackingFeature] Unable to save tracked config", ex);
 		}
@@ -139,7 +140,7 @@ public final class MobTrackingRegistry {
 
 		return CompletableFuture.supplyAsync(() -> {
 			try {
-				return CaribouStonks.core().getJsonFileService().loadList(MOB_TRACKING_PATH, MobTrackingConfig.class);
+				return JsonFileService.get().loadList(MOB_TRACKING_PATH, MobTrackingConfig.class);
 			} catch (JsonProcessingException ex) {
 				CaribouStonks.LOGGER.error("[MobTrackingFeature] Unable to load mob tracking configs", ex);
 				return Collections.emptyList();

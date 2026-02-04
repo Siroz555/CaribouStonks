@@ -2,33 +2,32 @@ package fr.siroz.cariboustonks.feature.slayer.boss;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
+import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerTier;
+import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerType;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.glowing.EntityGlowProvider;
-import fr.siroz.cariboustonks.skyblock.slayer.SlayerManager;
-import fr.siroz.cariboustonks.skyblock.slayer.SlayerTier;
-import fr.siroz.cariboustonks.skyblock.slayer.SlayerType;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import org.jetbrains.annotations.NotNull;
 
-public class TarantulaBossFeature extends Feature implements EntityGlowProvider {
+public class TarantulaBossFeature extends Feature {
 
 	// TODO - Je crois que le nombre des egg a changé
 	private static final Pattern COCOON_EGG_PATTERN = Pattern.compile("(\\d+)s (\\d)/3");
@@ -42,6 +41,13 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 		RenderEvents.WORLD_RENDER.register(this::render);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
 		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
+
+		this.addComponent(EntityGlowComponent.class, EntityGlowComponent.of(entity -> {
+			if (entity instanceof ArmorStand armorStand && isTarantulaBossEgg(armorStand)) {
+				return ConfigManager.getConfig().slayer.tarantulaBoss.highlightBossEggsColor.getRGB();
+			}
+			return EntityGlowComponent.EntityGlowStrategy.DEFAULT;
+		}));
 	}
 
 	@Override
@@ -66,15 +72,6 @@ public class TarantulaBossFeature extends Feature implements EntityGlowProvider 
 		for (ArmorStand egg : bossEggs) {
 			renderer.submitLineFromCursor(egg.position(), Colors.PURPLE, 1.2f);
 		}
-	}
-
-	@Override
-	public int getEntityGlowColor(@NotNull Entity entity) {
-		if (entity instanceof ArmorStand armorStand && isTarantulaBossEgg(armorStand)) {
-			return ConfigManager.getConfig().slayer.tarantulaBoss.highlightBossEggsColor.getRGB();
-		}
-
-		return DEFAULT;
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")

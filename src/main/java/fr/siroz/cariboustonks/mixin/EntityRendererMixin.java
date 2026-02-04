@@ -2,10 +2,10 @@ package fr.siroz.cariboustonks.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.RenderEvents;
-import fr.siroz.cariboustonks.system.glowing.EntityGlowProvider;
-import fr.siroz.cariboustonks.system.glowing.GlowingSystem;
+import fr.siroz.cariboustonks.system.GlowingSystem;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
@@ -37,7 +37,7 @@ public abstract class EntityRendererMixin {
 		boolean hasModGlow = glowingSystem.hasOrComputeEntity(entity);
 		boolean updateGlow = state.appearsGlowing() || hasModGlow;
 		if (updateGlow && hasModGlow) {
-			state.outlineColor = glowingSystem.getEntityColorOrDefault(entity, EntityGlowProvider.DEFAULT);
+			state.outlineColor = glowingSystem.getEntityColorOrDefault(entity, EntityGlowComponent.EntityGlowStrategy.DEFAULT);
 		} else if (!updateGlow) {
 			state.outlineColor = EntityRenderState.NO_OUTLINE;
 		}

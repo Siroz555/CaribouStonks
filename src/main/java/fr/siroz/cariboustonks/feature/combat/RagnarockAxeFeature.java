@@ -2,31 +2,29 @@ package fr.siroz.cariboustonks.feature.combat;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.component.HudComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.hud.TextHud;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.hud.Hud;
-import fr.siroz.cariboustonks.system.hud.HudProvider;
-import fr.siroz.cariboustonks.system.hud.TextHud;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtils;
-import it.unimi.dsi.fastutil.Pair;
 import java.text.DecimalFormat;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public class RagnarockAxeFeature extends Feature implements HudProvider {
+public class RagnarockAxeFeature extends Feature {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_rag_axe");
 
@@ -42,27 +40,23 @@ public class RagnarockAxeFeature extends Feature implements HudProvider {
 
 	public RagnarockAxeFeature() {
 		NetworkEvents.PLAY_SOUND_PACKET.register(this::onPlaySound);
+
+		this.addComponent(HudComponent.class, HudComponent.builder()
+				.attachAfter(VanillaHudElements.STATUS_EFFECTS, HUD_ID)
+				.hud(new TextHud(
+						Component.literal("§cRag Casted! §e8.4s §f(§c+765.1§f)"),
+						this::getText,
+						ConfigManager.getConfig().combat.ragAxe.hud,
+						200,
+						10
+				))
+				.build()
+		);
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().combat.ragAxe.enabled;
-	}
-
-	@Override
-	public @NotNull Pair<Identifier, Identifier> getAttachLayerAfter() {
-		return Pair.of(VanillaHudElements.STATUS_EFFECTS, HUD_ID);
-	}
-
-	@Override
-	public @NotNull Hud getHud() {
-		return new TextHud(
-				Component.literal("§cRag Casted! §e8.4s §f(§c+765.1§f)"),
-				this::getText,
-				ConfigManager.getConfig().combat.ragAxe.hud,
-				200,
-				10
-		);
 	}
 
 	@Contract(pure = true)

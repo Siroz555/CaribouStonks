@@ -1,6 +1,8 @@
 package fr.siroz.cariboustonks.rendering.gui;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderPass;
+import com.mojang.blaze3d.systems.ScissorState;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.gui.state.GradientRectGuiElementRenderState;
 import fr.siroz.cariboustonks.rendering.gui.state.QuadGuiElementRenderState;
@@ -10,11 +12,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderPipelines;
-import com.mojang.blaze3d.systems.ScissorState;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.render.TextureSetup;
-import com.mojang.blaze3d.platform.Window;
+import net.minecraft.client.renderer.RenderPipelines;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;

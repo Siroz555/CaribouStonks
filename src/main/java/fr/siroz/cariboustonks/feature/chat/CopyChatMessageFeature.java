@@ -2,8 +2,8 @@ package fr.siroz.cariboustonks.feature.chat;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.mixin.accessors.ChatComponentAccessor;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;

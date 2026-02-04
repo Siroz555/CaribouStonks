@@ -1,12 +1,11 @@
 package fr.siroz.cariboustonks.util.position;
 
+import java.util.Comparator;
+import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Comparator;
-import java.util.Objects;
 
 public record ImmutablePosition(int x, int y, int z) implements Position {
 

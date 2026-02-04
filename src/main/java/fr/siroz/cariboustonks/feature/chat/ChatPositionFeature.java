@@ -3,28 +3,26 @@ package fr.siroz.cariboustonks.feature.chat;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.UIAndVisualsConfig;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.component.CommandComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
+import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.system.command.CommandComponent;
-import fr.siroz.cariboustonks.system.waypoint.Waypoint;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.cooldown.Cooldown;
 import fr.siroz.cariboustonks.util.position.Position;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 public class ChatPositionFeature extends Feature {
 
@@ -48,14 +46,14 @@ public class ChatPositionFeature extends Feature {
 	public ChatPositionFeature() {
 		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
 
-		addComponent(CommandComponent.class, dispatcher -> {
-			dispatcher.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
-					.then(ClientCommandManager.literal("sharePosition")
-							.executes(context -> shareCurrentPosition(context.getSource())))
-			);
-			dispatcher.register(ClientCommandManager.literal("sendCoords")
-					.executes(context -> shareCurrentPosition(context.getSource())));
-		});
+		this.addComponent(CommandComponent.class, CommandComponent.builder()
+				.namespaced("sendCoords", ctx -> {
+					return shareCurrentPosition(ctx.getSource());
+				})
+				.standalone("sendCoords", builder -> {
+					builder.executes(ctx -> shareCurrentPosition(ctx.getSource()));
+				})
+				.build());
 	}
 
 	@Override

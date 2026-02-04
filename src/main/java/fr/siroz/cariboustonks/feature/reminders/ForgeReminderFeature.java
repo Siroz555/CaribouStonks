@@ -2,56 +2,56 @@ package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.system.container.overlay.ContainerOverlay;
-import fr.siroz.cariboustonks.system.reminder.Reminder;
-import fr.siroz.cariboustonks.system.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.system.reminder.ReminderSystem;
-import fr.siroz.cariboustonks.system.reminder.TimedObject;
-import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
+import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
+import fr.siroz.cariboustonks.core.component.ReminderComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
+import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.system.ReminderSystem;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import org.jspecify.annotations.NonNull;
 
-public final class ForgeReminderFeature extends Feature implements ContainerMatcherTrait, Reminder, ContainerOverlay {
+public final class ForgeReminderFeature extends Feature {
 
 	private static final Pattern TITLE_PATTERN = Pattern.compile("^The Forge");
+	private static final String REMINDER_TYPE = "FORGE_ITEM";
     private static final ItemStack ICON = new ItemStack(Items.FURNACE);
 
-    @Override
+	public ForgeReminderFeature() {
+		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
+				.display(getReminderDisplay())
+				.onExpire(this::onReminderExpire)
+				.build());
+
+		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.of(TITLE_PATTERN));
+		this.addComponent(ContainerOverlayComponent.class, ContainerOverlayComponent.builder()
+				.content(this::contentAnalyzer)
+				.build());
+	}
+
+	@Override
     public boolean isEnabled() {
         return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().general.reminders.forge;
     }
 
-	@Override
-	public Pattern getTitlePattern() {
-		return TITLE_PATTERN;
-	}
-
-	@Override
-    public @NotNull String reminderType() {
-        return "FORGE_ITEM";
-    }
-
-    @Override
-    public @NotNull ReminderDisplay display() {
+    private @NonNull ReminderDisplay getReminderDisplay() {
         return ReminderDisplay.of(
                 Component.literal("Forge").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
                 null,
@@ -59,8 +59,7 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
         );
     }
 
-    @Override
-    public void onExpire(@NotNull TimedObject timedObject) {
+    private void onReminderExpire(@NonNull TimedObject timedObject) {
         Component text = StonksUtils.jsonToText(timedObject.message()).orElse(Component.literal(timedObject.message()));
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Forge] ").withStyle(ChatFormatting.GOLD))
@@ -80,8 +79,7 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
 		}
     }
 
-    @Override
-    public @NotNull List<ColorHighlight> content(@NotNull Int2ObjectMap<ItemStack> slots) {
+    private @NonNull List<ColorHighlight> contentAnalyzer(@NonNull Int2ObjectMap<ItemStack> slots) {
         List<ColorHighlight> highlights = new ArrayList<>();
         for (Int2ObjectMap.Entry<ItemStack> entry : slots.int2ObjectEntrySet()) {
 
@@ -111,7 +109,7 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
                         "forge::" + entry.getIntKey(),
                         text,
                         expirationTime,
-                        reminderType());
+                       REMINDER_TYPE);
 
                 CaribouStonks.systems()
                         .getSystem(ReminderSystem.class)
@@ -122,8 +120,7 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
         return highlights;
     }
 
-    @Contract("_ -> new")
-    private int @NotNull [] extractTime(@NotNull String input) {
+    private int @NonNull [] extractTime(@NonNull String input) {
         int hours = 0;
 		int minutes = 0;
 		int seconds = 0;

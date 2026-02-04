@@ -1,21 +1,20 @@
 package fr.siroz.cariboustonks.screen.reminders;
 
-import fr.siroz.cariboustonks.system.reminder.Reminder;
-import fr.siroz.cariboustonks.system.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.component.ReminderComponent;
+import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import it.unimi.dsi.fastutil.Pair;
+import java.time.Instant;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.time.Instant;
 
 class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull Entry> {
 
@@ -35,7 +34,7 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull
 		if (parent.reminders.isEmpty()) {
 			addEntry(new NothingToShow());
 		} else {
-			for (Pair<Reminder, TimedObject> reminder : parent.reminders) {
+			for (Pair<ReminderComponent, TimedObject> reminder : parent.reminders) {
 				addEntry(new ReminderEntry(reminder));
 			}
 		}
@@ -50,7 +49,7 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull
 	public void setSelected(@Nullable Entry entry) {
 		super.setSelected(entry);
 
-		Pair<Reminder, TimedObject> item = null;
+		Pair<ReminderComponent, TimedObject> item = null;
 		if (entry instanceof ReminderEntry reminderEntry) {
 			item = reminderEntry.reminder;
 		}
@@ -86,15 +85,15 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull
 
 	protected class ReminderEntry extends Entry {
 
-		protected Pair<Reminder, TimedObject> reminder;
+		protected Pair<ReminderComponent, TimedObject> reminder;
 		private final Component name;
 		private final Component expireTime;
 		private final Component description;
 		private final ItemStack icon;
 
-		public ReminderEntry(@NotNull Pair<Reminder, TimedObject> reminder) {
+		public ReminderEntry(@NotNull Pair<ReminderComponent, TimedObject> reminder) {
 			this.reminder = reminder;
-			this.name = reminder.left().display().title();
+			this.name = reminder.left().getDisplay().title();
 
 			Instant expiration = reminder.right().expirationTime();
 			String time = TimeUtils.formatInstant(expiration, TimeUtils.DATE_FULL);
@@ -104,11 +103,11 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull
 					.append(Component.literal(time).withStyle(ChatFormatting.AQUA))
 					.append(Component.literal(" (In " + relative + ")").withStyle(ChatFormatting.GRAY));
 
-			this.description = reminder.left().display().description() != null
-					? reminder.left().display().description()
+			this.description = reminder.left().getDisplay().description() != null
+					? reminder.left().getDisplay().description()
 					: StonksUtils.jsonToText(reminder.right().message()).orElse(Component.literal(reminder.right().message()));
 
-			this.icon = reminder.left().display().icon();
+			this.icon = reminder.left().getDisplay().icon();
 		}
 
 		@Override

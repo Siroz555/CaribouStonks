@@ -2,44 +2,40 @@ package fr.siroz.cariboustonks.feature.slayer;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.election.Mayor;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.election.Perk;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.component.HudComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
+import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
+import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
+import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Mayor;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Perk;
+import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
+import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerTier;
+import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerType;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.hud.Hud;
-import fr.siroz.cariboustonks.system.hud.HudProvider;
-import fr.siroz.cariboustonks.system.hud.MultiElementHud;
-import fr.siroz.cariboustonks.system.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.system.hud.builder.HudElementTextBuilder;
-import fr.siroz.cariboustonks.system.hud.element.HudElement;
-import fr.siroz.cariboustonks.skyblock.slayer.SlayerManager;
-import fr.siroz.cariboustonks.skyblock.slayer.SlayerTier;
-import fr.siroz.cariboustonks.skyblock.slayer.SlayerType;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import it.unimi.dsi.fastutil.Pair;
-import java.util.List;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.DoubleSummaryStatistics;
+import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.Objects;
 import java.util.OptionalDouble;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.Experimental
-public class SlayerStatsFeature extends Feature implements HudProvider {
+public class SlayerStatsFeature extends Feature {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_slayer");
 	private static final int MAX_RUNS_STORED = 11;
@@ -61,37 +57,33 @@ public class SlayerStatsFeature extends Feature implements HudProvider {
 		SkyBlockEvents.SLAYER_QUEST_START.register(this::onQuestStart);
 		SkyBlockEvents.SLAYER_QUEST_FAIL.register((_type, _tier) -> this.currentRun = null);
 		SkyBlockEvents.SLAYER_BOSS_END.register(this::onBossEnd);
+
+		this.addComponent(HudComponent.class, HudComponent.builder()
+				.attachAfterStatusEffects(HUD_ID)
+				.hud(new MultiElementHud(
+						() -> this.isEnabled() && slayerManager.isInQuest(),
+						new HudElementTextBuilder()
+								.append(Component.literal("Revenant Horror").withStyle(ChatFormatting.DARK_PURPLE))
+								.appendSpace()
+								.append(Component.literal("§c" + ARROW + " Spawn Avg: §e16.4s"))
+								.append(Component.literal("§c" + ARROW + " Kill Avg: §e0.87s"))
+								.append(Component.literal("§c" + ARROW + " Boss/h: §e211"))
+								.append(Component.literal("§c" + ARROW + " XP/h: §e314K"))
+								.appendSpace()
+								.append(Component.literal("Session Count: 364").withStyle(ChatFormatting.YELLOW))
+								.build(),
+						this::getHudLines,
+						ConfigManager.getConfig().slayer.statsHud,
+						250,
+						50
+				))
+				.build()
+		);
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock();
-	}
-
-	@Override
-	public @NotNull Pair<Identifier, Identifier> getAttachLayerAfter() {
-		return Pair.of(VanillaHudElements.STATUS_EFFECTS, HUD_ID);
-	}
-
-	@Override
-	public @NotNull Hud getHud() {
-		return new MultiElementHud(
-				() -> this.isEnabled() && slayerManager.isInQuest(),
-				new HudElementTextBuilder()
-						.append(Component.literal("Revenant Horror").withStyle(ChatFormatting.DARK_PURPLE))
-						.appendSpace()
-						.append(Component.literal("§c" + ARROW + " Spawn Avg: §e16.4s"))
-						.append(Component.literal("§c" + ARROW + " Kill Avg: §e0.87s"))
-						.append(Component.literal("§c" + ARROW + " Boss/h: §e211"))
-						.append(Component.literal("§c" + ARROW + " XP/h: §e314K"))
-						.appendSpace()
-						.append(Component.literal("Session Count: 364").withStyle(ChatFormatting.YELLOW))
-						.build(),
-				this::getHudLines,
-				ConfigManager.getConfig().slayer.statsHud,
-				250,
-				50
-		);
 	}
 
 	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_SPAWN")

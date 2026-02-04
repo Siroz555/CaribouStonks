@@ -1,16 +1,16 @@
 package fr.siroz.cariboustonks.feature.vanilla;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.WorldEvents;
-import fr.siroz.cariboustonks.feature.Feature;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.resources.Identifier;
 
 public class MuteVanillaSoundFeature extends Feature {
 

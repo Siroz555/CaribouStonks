@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.mixin;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.system.network.NetworkSystem;
+import fr.siroz.cariboustonks.system.NetworkSystem;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.network.protocol.common.ClientboundPingPacket;
 import org.spongepowered.asm.mixin.Mixin;

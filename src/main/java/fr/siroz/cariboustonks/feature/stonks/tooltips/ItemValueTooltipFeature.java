@@ -4,14 +4,14 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.skyblock.item.SkyblockItemStack;
-import fr.siroz.cariboustonks.skyblock.item.calculator.ItemValueCalculator;
-import fr.siroz.cariboustonks.skyblock.item.calculator.ItemValueResult;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.system.container.tooltip.ContainerTooltipAppender;
+import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
+import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyblockItemStack;
+import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueCalculator;
+import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueResult;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.HashSet;
@@ -19,15 +19,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
-import java.util.regex.Pattern;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemValueTooltipFeature extends Feature implements ContainerMatcherTrait, ContainerTooltipAppender {
+public class ItemValueTooltipFeature extends Feature {
 
 	private final Cache<@NotNull String, @NotNull ItemValueResult> cache = CacheBuilder.newBuilder()
 			.maximumSize(555)
@@ -37,11 +36,15 @@ public class ItemValueTooltipFeature extends Feature implements ContainerMatcher
 	private final BooleanSupplier configUseNetworth = () -> ConfigManager.getConfig().general.stonks.useNetworthItemValue;
 
 	private final Set<String> failedCalculations = new HashSet<>();
-	private final int priority;
 
 	public ItemValueTooltipFeature(int priority) {
-		this.priority = priority;
 		TickScheduler.getInstance().runRepeating(failedCalculations::clear, 5, TimeUnit.MINUTES);
+
+		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.empty());
+		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
+				.priority(priority)
+				.appender(this::appendToTooltip)
+				.build());
 	}
 
 	@Override
@@ -49,13 +52,7 @@ public class ItemValueTooltipFeature extends Feature implements ContainerMatcher
 		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().general.stonks.itemValueTooltip;
 	}
 
-	@Override
-	public @Nullable Pattern getTitlePattern() {
-		return null;
-	}
-
-	@Override
-	public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
+	private void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
 		String uuid = SkyBlockAPI.getSkyBlockItemUuid(item);
 		if (uuid.isEmpty()) {
 			return;
@@ -88,11 +85,6 @@ public class ItemValueTooltipFeature extends Feature implements ContainerMatcher
 				CaribouStonks.LOGGER.error("[ItemValueTooltipFeature] An error occured while appending item value tooltip", ex);
 			}
 		}
-	}
-
-	@Override
-	public int getPriority() {
-		return priority;
 	}
 
 	private void displayItemValue(@NotNull List<Component> lines, @Nullable ItemValueResult result) {

@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.util;
 
-import fr.siroz.cariboustonks.core.json.GsonProvider;
-import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.core.service.json.GsonProvider;
+import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -15,8 +15,8 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.minecraft.core.Position;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

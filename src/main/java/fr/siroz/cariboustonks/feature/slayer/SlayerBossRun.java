@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.feature.slayer;
 
-import fr.siroz.cariboustonks.skyblock.slayer.SlayerTier;
-import fr.siroz.cariboustonks.skyblock.slayer.SlayerType;
+import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerTier;
+import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerType;
 import java.time.Duration;
 import java.time.Instant;
 

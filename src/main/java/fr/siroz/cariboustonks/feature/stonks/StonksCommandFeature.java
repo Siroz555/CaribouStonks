@@ -2,12 +2,12 @@ package fr.siroz.cariboustonks.feature.stonks;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.bazaar.BazaarProduct;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.item.SkyBlockItemData;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.command.CommandComponent;
+import fr.siroz.cariboustonks.core.component.CommandComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.screen.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
@@ -17,12 +17,12 @@ import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.sounds.SoundEvents;
 import org.jetbrains.annotations.NotNull;
 
 public class StonksCommandFeature extends Feature {
@@ -38,20 +38,22 @@ public class StonksCommandFeature extends Feature {
 	public StonksCommandFeature() {
 		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
 
-		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal("stonks")
-				.executes(context -> {
-					if (lastItem != null && !lastItem.isBlank()) {
-						context.getSource().getClient().setScreen(StonksScreen.create(ItemLookupKey.of(
-								NotEnoughUpdatesUtils.getNeuIdFromSkyBlockId(lastItem),
-								lastItem
-						)));
-					}
-					return 1;
+		this.addComponent(CommandComponent.class, CommandComponent.builder()
+				.standalone("stonks", builder -> {
+					builder.executes(ctx -> {
+						if (lastItem != null && !lastItem.isBlank()) {
+							ctx.getSource().getClient().setScreen(StonksScreen.create(ItemLookupKey.of(
+									NotEnoughUpdatesUtils.getNeuIdFromSkyBlockId(lastItem),
+									lastItem
+							)));
+						}
+						return 1;
+					});
+					builder.then(ClientCommandManager.argument("item", StringArgumentType.greedyString())
+							.suggests((context, suggestionsBuilder) -> SharedSuggestionProvider.suggest(hypixelDataSource.getSkyBlockItemsIds(), suggestionsBuilder))
+							.executes(context -> handle(context.getSource(), StringArgumentType.getString(context, "item"))));
 				})
-				.then(ClientCommandManager.argument("item", StringArgumentType.greedyString())
-						.suggests((context, builder) -> SharedSuggestionProvider.suggest(hypixelDataSource.getSkyBlockItemsIds(), builder))
-						.executes(context -> handle(context.getSource(), StringArgumentType.getString(context, "item"))))
-		));
+				.build());
 	}
 
 	@Override

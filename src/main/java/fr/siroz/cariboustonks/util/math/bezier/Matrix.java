@@ -9,12 +9,11 @@
 
 package fr.siroz.cariboustonks.util.math.bezier;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.ToDoubleBiFunction;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A Matrix implementation optimized for {@code Bézier curve} calculations.

@@ -2,16 +2,13 @@ package fr.siroz.cariboustonks.feature.combat;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.skyblock.item.metadata.Modifiers;
+import fr.siroz.cariboustonks.core.component.HudComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.hud.TextHud;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.metadata.Modifiers;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.hud.Hud;
-import fr.siroz.cariboustonks.system.hud.HudProvider;
-import fr.siroz.cariboustonks.system.hud.TextHud;
-import it.unimi.dsi.fastutil.Pair;
 import java.text.DecimalFormat;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -27,7 +24,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class WitherShieldFeature extends Feature implements HudProvider {
+public class WitherShieldFeature extends Feature {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_shield");
 
@@ -41,6 +38,17 @@ public class WitherShieldFeature extends Feature implements HudProvider {
 
 	public WitherShieldFeature() {
 		UseItemCallback.EVENT.register(this::onUseItem);
+
+		this.addComponent(HudComponent.class, HudComponent.builder()
+				.attachAfterStatusEffects(HUD_ID)
+				.hud(new TextHud(
+						Component.literal("§5Wither Shield: §e3.4s"),
+						this::getText,
+						ConfigManager.getConfig().combat.witherShield.hud,
+						50,
+						100
+				))
+				.build());
 	}
 
 	@Override
@@ -53,22 +61,6 @@ public class WitherShieldFeature extends Feature implements HudProvider {
 		abilityEnd = -1;
 		cooldownEnd = -1;
 		readyUntil = -1;
-	}
-
-	@Override
-	public @NotNull Pair<Identifier, Identifier> getAttachLayerAfter() {
-		return Pair.of(VanillaHudElements.STATUS_EFFECTS, HUD_ID);
-	}
-
-	@Override
-	public @NotNull Hud getHud() {
-		return new TextHud(
-				Component.literal("§5Wither Shield: §e3.4s"),
-				this::getText,
-				ConfigManager.getConfig().combat.witherShield.hud,
-				50,
-				100
-		);
 	}
 
 	@EventHandler(event = "UseItemCallback.EVENT")

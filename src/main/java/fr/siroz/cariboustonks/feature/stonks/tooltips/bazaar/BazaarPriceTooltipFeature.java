@@ -2,36 +2,38 @@ package fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.bazaar.BazaarProduct;
-import fr.siroz.cariboustonks.skyblock.AttributeAPI;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.feature.Feature;
+import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
+import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.feature.stonks.tooltips.TooltipPriceDisplayType;
-import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.system.container.tooltip.ContainerTooltipAppender;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.network.chat.Component;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Pattern;
-
-public class BazaarPriceTooltipFeature extends Feature implements ContainerMatcherTrait, ContainerTooltipAppender {
+public class BazaarPriceTooltipFeature extends Feature {
 
 	private final HypixelDataSource hypixelDataSource;
-	private final int priority;
 
 	public BazaarPriceTooltipFeature(int priority) {
-		this.priority = priority;
 		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
+
+		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.empty());
+		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
+				.priority(priority)
+				.appender(this::appendToTooltip)
+				.build());
 	}
 
 	@Override
@@ -39,13 +41,7 @@ public class BazaarPriceTooltipFeature extends Feature implements ContainerMatch
 		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().general.stonks.bazaarTooltipPrice;
 	}
 
-	@Override
-	public @Nullable Pattern getTitlePattern() {
-		return null;
-	}
-
-	@Override
-	public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
+	private void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
 		if (hypixelDataSource.isBazaarInUpdate()) {
 			lines.add(Component.literal("Bazaar is currently updating...").withStyle(ChatFormatting.RED));
 			return;
@@ -107,11 +103,6 @@ public class BazaarPriceTooltipFeature extends Feature implements ContainerMatch
 				lines.add(spread);
 			}
 		}
-	}
-
-	@Override
-	public int getPriority() {
-		return priority;
 	}
 
 	private void addBazaarLine(@NotNull List<Component> lines, @NotNull String label, double value, int count) {

@@ -2,18 +2,14 @@ package fr.siroz.cariboustonks.feature.ui.hud;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.hud.Hud;
-import fr.siroz.cariboustonks.system.hud.HudProvider;
-import fr.siroz.cariboustonks.system.hud.TextHud;
-import fr.siroz.cariboustonks.system.network.NetworkSystem;
-import it.unimi.dsi.fastutil.Pair;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import fr.siroz.cariboustonks.core.component.HudComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.hud.TextHud;
+import fr.siroz.cariboustonks.system.NetworkSystem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
-public class TpsHud extends Feature implements HudProvider {
+public class TpsHud extends Feature {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_tps");
 
@@ -24,27 +20,22 @@ public class TpsHud extends Feature implements HudProvider {
 
 	public TpsHud() {
 		this.networkSystem = CaribouStonks.systems().getSystem(NetworkSystem.class);
+
+		this.addComponent(HudComponent.class, HudComponent.builder()
+				.attachAfterStatusEffects(HUD_ID)
+				.hud(new TextHud(
+						Component.literal("TPS: 20.0"),
+						this::getText,
+						ConfigManager.getConfig().uiAndVisuals.tpsHud,
+						6,
+						8
+				))
+				.build());
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return true;
-	}
-
-	@Override
-	public @NotNull Pair<Identifier, Identifier> getAttachLayerAfter() {
-		return Pair.of(VanillaHudElements.STATUS_EFFECTS, HUD_ID);
-	}
-
-	@Override
-	public @NotNull Hud getHud() {
-		return new TextHud(
-				Component.literal("TPS: 20.0"),
-				this::getText,
-				ConfigManager.getConfig().uiAndVisuals.tpsHud,
-				6,
-				8
-		);
 	}
 
 	private Component getText() {

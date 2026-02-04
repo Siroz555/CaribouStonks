@@ -2,15 +2,15 @@ package fr.siroz.cariboustonks.feature.hunting;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.bazaar.BazaarProduct;
-import fr.siroz.cariboustonks.skyblock.item.SkyBlockAttribute;
-import fr.siroz.cariboustonks.skyblock.AttributeAPI;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.container.ContainerMatcherTrait;
-import fr.siroz.cariboustonks.system.container.tooltip.ContainerTooltipAppender;
-import fr.siroz.cariboustonks.skyblock.data.hypixel.item.Rarity;
+import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
+import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.util.RomanNumeralUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.List;
@@ -18,16 +18,13 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class AttributeInfoTooltipFeature extends Feature implements ContainerMatcherTrait, ContainerTooltipAppender {
+public class AttributeInfoTooltipFeature extends Feature {
 
 	private static final Pattern NAME_AND_LEVEL_PATTERN = Pattern.compile(".*? ([IVX]+) \\(.*\\)");
 	private static final Pattern OWNED_PATTERN = Pattern.compile("Owned: ([\\d,]+) Shards?");
@@ -37,43 +34,34 @@ public class AttributeInfoTooltipFeature extends Feature implements ContainerMat
 	private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("");
 
 	private final HypixelDataSource hypixelDataSource;
-	private final int priority;
 
 	public AttributeInfoTooltipFeature(int priority) {
-		this.priority = priority;
 		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
+
+		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.of(AttributeAPI.SHARD_GUI_PATTERN));
+		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
+				.priority(priority)
+				.appender((focusedSlot, item, lines) -> {
+					if (hypixelDataSource.isBazaarInUpdate()) return;
+
+					Screen currentScreen = Minecraft.getInstance().screen;
+					if (focusedSlot == null || currentScreen == null || lines.isEmpty()) return;
+					if (StonksUtils.isEdgeSlot(focusedSlot.index, 6)) return;
+
+					String title = currentScreen.getTitle().getString();
+					switch (title) {
+						case AttributeAPI.HUNTING_BOX -> handleHuntingBox(lines);
+						case AttributeAPI.ATTRIBUTE_MENU -> handleAttributeMenu(lines);
+						default -> {
+						}
+					}
+				})
+				.build());
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().hunting.attributeInfos;
-	}
-
-	@Override
-	public @Nullable Pattern getTitlePattern() {
-		return AttributeAPI.SHARD_GUI_PATTERN;
-	}
-
-	@Override
-	public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
-		if (hypixelDataSource.isBazaarInUpdate()) return;
-
-		Screen currentScreen = Minecraft.getInstance().screen;
-		if (focusedSlot == null || currentScreen == null || lines.isEmpty()) return;
-		if (StonksUtils.isEdgeSlot(focusedSlot.index, 6)) return;
-
-		String title = currentScreen.getTitle().getString();
-		switch (title) {
-			case AttributeAPI.HUNTING_BOX -> handleHuntingBox(lines);
-			case AttributeAPI.ATTRIBUTE_MENU -> handleAttributeMenu(lines);
-			default -> {
-			}
-		}
-	}
-
-	@Override
-	public int getPriority() {
-		return priority;
 	}
 
 	private void handleHuntingBox(@NotNull List<Component> lines) {
@@ -204,7 +192,7 @@ public class AttributeInfoTooltipFeature extends Feature implements ContainerMat
 				.append(Component.literal("Shards Until Maxed: ").withStyle(ChatFormatting.GREEN))
 				.append(Component.literal(String.valueOf(required)).withStyle(ChatFormatting.AQUA)));
 
-		SkyBlockAttribute attribute = CaribouStonks.core().getModDataSource().getAttributeById(id);
+		SkyBlockAttribute attribute = CaribouStonks.mod().getModDataSource().getAttributeById(id);
 		if (attribute != null) {
 			addTotalCost(lines, required - owned, attribute.skyBlockApiId());
 		}

@@ -1,12 +1,12 @@
 package fr.siroz.cariboustonks.rendering.world.renderer;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import fr.siroz.cariboustonks.rendering.world.state.BeaconBeamRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import com.mojang.blaze3d.vertex.PoseStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 

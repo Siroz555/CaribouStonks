@@ -3,10 +3,9 @@ package fr.siroz.cariboustonks.util.cooldown;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 
 final class CooldownMapImpl<T> implements CooldownMap<T> {
 

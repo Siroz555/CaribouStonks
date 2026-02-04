@@ -1,12 +1,12 @@
 package fr.siroz.cariboustonks.screen;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.crash.CrashType;
+import fr.siroz.cariboustonks.core.mod.crash.CrashType;
 import fr.siroz.cariboustonks.util.Client;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +30,7 @@ public abstract class CaribousStonksScreen extends Screen {
 
 	private void failure(String method, Throwable throwable) {
 		Minecraft.getInstance().setScreen(null);
-		CaribouStonks.core().getCrashManager().reportCrash(CrashType.SCREEN,
+		CaribouStonks.mod().getCrashManager().reportCrash(CrashType.SCREEN,
 				this.getClass().getSimpleName(),
 				this.getClass().getName(),
 				method, throwable);

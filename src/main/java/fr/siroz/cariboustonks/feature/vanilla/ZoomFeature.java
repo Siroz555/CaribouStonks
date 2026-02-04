@@ -1,12 +1,11 @@
 package fr.siroz.cariboustonks.feature.vanilla;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.component.KeybindComponent;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.input.KeyBind;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.MouseEvents;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.system.keybinds.KeyBind;
-import fr.siroz.cariboustonks.system.keybinds.KeyBindComponent;
-import java.util.Collections;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -32,7 +31,9 @@ public final class ZoomFeature extends Feature {
         this.currentZoomMultiplier = ZOOM_MULTIPLIER;
         MouseEvents.ALLOW_MOUSE_SCROLL.register(this::allowMouseScroll);
 
-		addComponent(KeyBindComponent.class, () -> Collections.singletonList(zoomKeyBind));
+		this.addComponent(KeybindComponent.class, KeybindComponent.builder()
+				.add(this.zoomKeyBind)
+				.build());
     }
 
     @Override

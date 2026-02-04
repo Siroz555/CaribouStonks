@@ -11,21 +11,20 @@ import fr.siroz.cariboustonks.config.categories.SkillsCategory;
 import fr.siroz.cariboustonks.config.categories.SlayerCategory;
 import fr.siroz.cariboustonks.config.categories.UIAndVisualsCategory;
 import fr.siroz.cariboustonks.config.categories.VanillaCategory;
-import fr.siroz.cariboustonks.core.json.adapters.CodecTypeAdapter;
+import fr.siroz.cariboustonks.core.service.json.adapters.CodecTypeAdapter;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.colors.ColorUtils;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Nullable;
-
 import java.awt.Color;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Manages the CaribouStonks Config.

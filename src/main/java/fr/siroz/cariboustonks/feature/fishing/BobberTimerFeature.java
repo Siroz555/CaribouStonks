@@ -1,16 +1,16 @@
 package fr.siroz.cariboustonks.feature.fishing;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.feature.FeatureManager;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
-import fr.siroz.cariboustonks.feature.Feature;
-import fr.siroz.cariboustonks.feature.Features;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +35,7 @@ public class BobberTimerFeature extends Feature {
 	}
 
 	@Override
-	protected void postInitialize(@NotNull Features features) {
+	protected void postInitialize(@NotNull FeatureManager features) {
 		rareSeaCreatureFeature = features.getFeature(RareSeaCreatureFeature.class);
 	}
 
