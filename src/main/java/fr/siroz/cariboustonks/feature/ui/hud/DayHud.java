@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.ui.hud;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.TextHud;
@@ -21,7 +20,7 @@ public class DayHud extends Feature {
 				.hud(new TextHud(
 						Component.literal("Day: 27"),
 						this::getText,
-						ConfigManager.getConfig().uiAndVisuals.dayHud,
+						this.config().uiAndVisuals.dayHud,
 						20,
 						64
 				))

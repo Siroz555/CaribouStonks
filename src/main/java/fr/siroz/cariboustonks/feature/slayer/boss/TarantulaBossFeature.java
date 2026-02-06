@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.slayer.boss;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -44,7 +43,7 @@ public class TarantulaBossFeature extends Feature {
 
 		this.addComponent(EntityGlowComponent.class, EntityGlowComponent.of(entity -> {
 			if (entity instanceof ArmorStand armorStand && isTarantulaBossEgg(armorStand)) {
-				return ConfigManager.getConfig().slayer.tarantulaBoss.highlightBossEggsColor.getRGB();
+				return this.config().slayer.tarantulaBoss.highlightBossEggsColor.getRGB();
 			}
 			return EntityGlowComponent.EntityGlowStrategy.DEFAULT;
 		}));
@@ -53,7 +52,7 @@ public class TarantulaBossFeature extends Feature {
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
-				&& ConfigManager.getConfig().slayer.tarantulaBoss.highlightBossEggs
+				&& this.config().slayer.tarantulaBoss.highlightBossEggs
 				&& slayerManager.isInQuestWithBoss(SlayerType.SPIDER)
 				&& slayerManager.isSlayerTier(SlayerTier.V);
 	}
@@ -67,7 +66,7 @@ public class TarantulaBossFeature extends Feature {
 	public void render(WorldRenderer renderer) {
 		if (!isEnabled()) return;
 		if (bossEggs.isEmpty()) return;
-		if (!ConfigManager.getConfig().slayer.tarantulaBoss.showCursorLineToBossEggs) return;
+		if (!this.config().slayer.tarantulaBoss.showCursorLineToBossEggs) return;
 
 		for (ArmorStand egg : bossEggs) {
 			renderer.submitLineFromCursor(egg.position(), Colors.PURPLE, 1.2f);

@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.feature.stonks.tooltips;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -33,7 +32,8 @@ public class ItemValueTooltipFeature extends Feature {
 			.expireAfterWrite(2, TimeUnit.MINUTES)
 			.build();
 
-	private final BooleanSupplier configUseNetworth = () -> ConfigManager.getConfig().general.stonks.useNetworthItemValue;
+	private final BooleanSupplier configUseNetworth =
+			() -> this.config().general.stonks.useNetworthItemValue;
 
 	private final Set<String> failedCalculations = new HashSet<>();
 
@@ -49,7 +49,7 @@ public class ItemValueTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().general.stonks.itemValueTooltip;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.itemValueTooltip;
 	}
 
 	private void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {

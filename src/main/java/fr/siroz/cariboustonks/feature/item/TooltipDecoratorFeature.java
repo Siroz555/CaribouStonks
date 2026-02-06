@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.item;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
@@ -37,7 +36,7 @@ public class TooltipDecoratorFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().uiAndVisuals.toolTipDecorator.enabled;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.toolTipDecorator.enabled;
 	}
 
 	@EventHandler(event = "ItemRenderEvents.POST_TOOLTIP")

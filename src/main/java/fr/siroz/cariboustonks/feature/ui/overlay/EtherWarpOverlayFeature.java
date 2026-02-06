@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.ui.overlay;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
@@ -36,7 +35,7 @@ public class EtherWarpOverlayFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().uiAndVisuals.overlay.etherWarp;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.overlay.etherWarp;
 	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")

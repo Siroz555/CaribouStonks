@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.ui.hud;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.TextHud;
@@ -26,7 +25,7 @@ public class TpsHud extends Feature {
 				.hud(new TextHud(
 						Component.literal("TPS: 20.0"),
 						this::getText,
-						ConfigManager.getConfig().uiAndVisuals.tpsHud,
+						this.config().uiAndVisuals.tpsHud,
 						6,
 						8
 				))

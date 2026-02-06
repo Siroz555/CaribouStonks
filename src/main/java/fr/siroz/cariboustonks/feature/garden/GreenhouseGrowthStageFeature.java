@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.garden;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
@@ -52,7 +51,7 @@ public class GreenhouseGrowthStageFeature extends Feature {
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() == IslandType.GARDEN
-				&& ConfigManager.getConfig().farming.garden.greenhouseGrowthStageReminder;
+				&& this.config().farming.garden.greenhouseGrowthStageReminder;
 	}
 
 	@NonNull
@@ -109,7 +108,8 @@ public class GreenhouseGrowthStageFeature extends Feature {
 
 		Client.sendMessageWithPrefix(message);
 		Client.showNotification(notification, ICON);
-		if (ConfigManager.getConfig().general.reminders.playSound) {
+
+		if (this.config().general.reminders.playSound) {
 			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}
 	}

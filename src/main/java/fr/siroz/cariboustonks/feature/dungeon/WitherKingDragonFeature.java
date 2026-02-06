@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.dungeon;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
@@ -97,9 +96,9 @@ public class WitherKingDragonFeature extends Feature {
 		if (!isPhase5) return;
 		if (!isEnabled()) return;
 
-		boolean canShowBoundingBox = ConfigManager.getConfig().instance.theCatacombs.witherKing.showDragBoundingBox;
-		boolean canShowLastBreathTarget = ConfigManager.getConfig().instance.theCatacombs.witherKing.showLastBreathTarget;
-		boolean canShowSpawnTime = ConfigManager.getConfig().instance.theCatacombs.witherKing.showSpawnTime;
+		boolean canShowBoundingBox = this.config().instance.theCatacombs.witherKing.showDragBoundingBox;
+		boolean canShowLastBreathTarget = this.config().instance.theCatacombs.witherKing.showLastBreathTarget;
+		boolean canShowSpawnTime = this.config().instance.theCatacombs.witherKing.showSpawnTime;
 
 		for (WitherKingDragon dragon : WitherKingDragon.VALUES) {
 			if (canShowBoundingBox) {
@@ -145,7 +144,7 @@ public class WitherKingDragonFeature extends Feature {
 	}
 
 	private void onDragonSpawn(WitherKingDragon dragon) {
-		if (!ConfigManager.getConfig().instance.theCatacombs.witherKing.dragPrio) {
+		if (!this.config().instance.theCatacombs.witherKing.dragPrio) {
 			return;
 		}
 
@@ -168,12 +167,12 @@ public class WitherKingDragonFeature extends Feature {
 		String dragonName = dragon.getName().toUpperCase(Locale.ENGLISH);
 		int color = dragon.getColor().asInt();
 
-		if (ConfigManager.getConfig().instance.theCatacombs.witherKing.showDragTargetLine) {
+		if (this.config().instance.theCatacombs.witherKing.showDragTargetLine) {
 			target = dragon;
 			TickScheduler.getInstance().runLater(() -> target = null, 3, TimeUnit.SECONDS);
 		}
 
-		if (ConfigManager.getConfig().instance.theCatacombs.witherKing.dragPrioTitle) {
+		if (this.config().instance.theCatacombs.witherKing.dragPrioTitle) {
 			Client.showTitleAndSubtitle(
 					Component.literal(dragonName).withColor(color).withStyle(ChatFormatting.BOLD),
 					Component.literal("is Spawning!").withColor(color),
@@ -182,7 +181,7 @@ public class WitherKingDragonFeature extends Feature {
 			Client.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 5f, 1f);
 		}
 
-		if (ConfigManager.getConfig().instance.theCatacombs.witherKing.dragPrioMessage) {
+		if (this.config().instance.theCatacombs.witherKing.dragPrioMessage) {
 			if (split) {
 				Client.sendMessageWithPrefix(Component.literal(dragonName + " is Spawning! (Split Prio)").withColor(color));
 			} else {

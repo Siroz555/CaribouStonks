@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
@@ -48,7 +47,7 @@ public final class ForgeReminderFeature extends Feature {
 
 	@Override
     public boolean isEnabled() {
-        return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().general.reminders.forge;
+        return SkyBlockAPI.isOnSkyBlock() && this.config().general.reminders.forge;
     }
 
     private @NonNull ReminderDisplay getReminderDisplay() {
@@ -74,7 +73,7 @@ public final class ForgeReminderFeature extends Feature {
 
         Client.sendMessageWithPrefix(message );
         Client.showNotification(notification, ICON);
-		if (ConfigManager.getConfig().general.reminders.playSound) {
+		if (this.config().general.reminders.playSound) {
 			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}
     }

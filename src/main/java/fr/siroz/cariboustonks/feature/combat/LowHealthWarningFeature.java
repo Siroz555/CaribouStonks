@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.feature.combat;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.config.ConfigValue;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Util;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class LowHealthWarningFeature extends Feature {
 
@@ -25,9 +25,12 @@ public class LowHealthWarningFeature extends Feature {
 			"§[6c](?<health>[\\d,]+)/(?<max>[\\d,]+)❤ *(?<healing>\\+§c([\\d,]+). *)?");
 
 	private static final float SPEED = 2f;
-
 	private static final int MAX_ALPHA = 200;
 	private static final int MAX_THICKNESS = 120;
+
+	private final ConfigValue<Double> configIntensity = ConfigValue.of(
+			() -> this.config().combat.lowHealthWarning.lowHealthWarningIntensity
+	);
 
 	private Health currentHealth = Health.DEFAULT;
 	private boolean triggered = false;
@@ -45,17 +48,15 @@ public class LowHealthWarningFeature extends Feature {
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() != IslandType.THE_RIFT
-				&& ConfigManager.getConfig().combat.lowHealthWarning.lowHealthWarningEnabled;
+				&& this.config().combat.lowHealthWarning.lowHealthWarningEnabled;
 	}
 
 	@EventHandler(event = "ClientReceiveMessageEvents.ALLOW_GAME")
 	private boolean allowActionBar(Component text, boolean overlay) {
-		if (overlay) { // pour 'forcer' c'est pour toujours retourner true sans avoir d'alerte
-			if (isEnabled()) {
-				Matcher healthActionBarMatcher = HEALTH_ACTION_BAR_PATTERN.matcher(text.getString());
-				if (healthActionBarMatcher.find()) {
-					updateHealth(healthActionBarMatcher);
-				}
+		if (overlay && isEnabled()) {
+			Matcher healthActionBarMatcher = HEALTH_ACTION_BAR_PATTERN.matcher(text.getString());
+			if (healthActionBarMatcher.find()) {
+				updateHealth(healthActionBarMatcher);
 			}
 		}
 
@@ -64,11 +65,9 @@ public class LowHealthWarningFeature extends Feature {
 
 	@Override
 	protected void onClientTick() {
-		if (!isEnabled() || CLIENT.player == null || CLIENT.level == null) {
-			return;
+		if (isEnabled() && CLIENT.player != null && CLIENT.level != null) {
+			updateHealth(currentHealth.value(), currentHealth.max(), currentHealth.overflow());
 		}
-
-		updateHealth(currentHealth.value, currentHealth.max, currentHealth.overflow);
 	}
 
 	private void renderOverlay(GuiGraphics guiGraphics) {
@@ -77,13 +76,13 @@ public class LowHealthWarningFeature extends Feature {
 		int width = guiGraphics.guiWidth();
 		int height = guiGraphics.guiHeight();
 
-		int thickness = (int) (MAX_THICKNESS * getIntensity());
+		int thickness = (int) (MAX_THICKNESS * configIntensity.get());
 		thickness = Math.max(8, Math.min(thickness, Math.min(width, height) / 2));
 
-		double currentTime = Util.getMillis() / 1000.0;
+		double currentTime = Util.getMillis() / 1000.0D;
 		float lerpedAmount = Math.abs(Mth.sin((float) (currentTime * SPEED)));
 
-		int alpha = (int) (MAX_ALPHA * getIntensity());
+		int alpha = (int) (MAX_ALPHA * configIntensity.get());
 
 		for (int i = 0; i < thickness; i++) {
 			float t = 1.0f - ((float) i / (float) thickness); // 1.0 sur les bords → 0.0 vers le centre
@@ -97,11 +96,7 @@ public class LowHealthWarningFeature extends Feature {
 		}
 	}
 
-	private double getIntensity() {
-		return ConfigManager.getConfig().combat.lowHealthWarning.lowHealthWarningIntensity;
-	}
-
-	private void updateHealth(@NotNull Matcher matcher) {
+	private void updateHealth(@NonNull Matcher matcher) {
 		try {
 			int health = Integer.parseInt(matcher.group("health").replace(",", ""));
 			int max = Integer.parseInt(matcher.group("max").replace(",", ""));
@@ -125,10 +120,10 @@ public class LowHealthWarningFeature extends Feature {
 
 	private void lowHealthCheck() {
 		try {
-			int configThreshold = ConfigManager.getConfig().combat.lowHealthWarning.lowHealthWarningThreshold;
-			int threshold = (int) (currentHealth.max * (configThreshold / 100.0D));
+			int configThreshold = this.config().combat.lowHealthWarning.lowHealthWarningThreshold;
+			int threshold = (int) (currentHealth.max() * (configThreshold / 100.0D));
 
-			triggered = currentHealth.value <= threshold;
+			triggered = currentHealth.value() <= threshold;
 		} catch (Exception ignored) { // valeurs négatives ou max incorrect, techniquement useless ?
 		}
 	}

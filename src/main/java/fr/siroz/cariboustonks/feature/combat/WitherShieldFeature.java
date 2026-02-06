@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.combat;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.TextHud;
@@ -9,6 +8,7 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.Modifiers;
 import fr.siroz.cariboustonks.event.EventHandler;
 import java.text.DecimalFormat;
+import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class WitherShieldFeature extends Feature {
 
@@ -31,6 +31,9 @@ public class WitherShieldFeature extends Feature {
 	private static final long ABSORPTION_COOLDOWN = 5_000L;
 	private static final long READY_DISPLAY = 2_000L;
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.0");
+
+	private final BooleanSupplier configOnlyShowTimer =
+			() -> this.config().combat.witherShield.onlyShowTimer;
 
 	private long abilityEnd = -1L; // not active
 	private long cooldownEnd = -1L; // no cooldown
@@ -44,7 +47,7 @@ public class WitherShieldFeature extends Feature {
 				.hud(new TextHud(
 						Component.literal("§5Wither Shield: §e3.4s"),
 						this::getText,
-						ConfigManager.getConfig().combat.witherShield.hud,
+						this.config().combat.witherShield.hud,
 						50,
 						100
 				))
@@ -53,7 +56,7 @@ public class WitherShieldFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock();
+		return SkyBlockAPI.isOnSkyBlock(); // non-config-check :: hud config
 	}
 
 	@Override
@@ -87,8 +90,9 @@ public class WitherShieldFeature extends Feature {
 		if (abilityEnd > now) {
 			double timeRemaining = (abilityEnd - now) / 1000.0d;
 			Component timer = Component.literal(DECIMAL_FORMAT.format(timeRemaining) + "s")
-					.withColor(ConfigManager.getConfig().combat.witherShield.timerColor.getRGB());
-			return onlyShowTimer()
+					.withColor(this.config().combat.witherShield.timerColor.getRGB());
+
+			return configOnlyShowTimer.getAsBoolean()
 					? Component.empty().append(timer)
 					: Component.empty()
 					.append(Component.literal("Wither Shield: ").withStyle(ChatFormatting.DARK_PURPLE))
@@ -104,8 +108,9 @@ public class WitherShieldFeature extends Feature {
 		abilityEnd = -1L;
 		// Afficher READY si dans la fenêtre readyUntil
 		if (readyUntil > now) {
-			Component ready = Component.literal(ConfigManager.getConfig().combat.witherShield.readyMessage);
-			return onlyShowTimer()
+			Component ready = Component.literal(this.config().combat.witherShield.readyMessage);
+
+			return configOnlyShowTimer.getAsBoolean()
 					? Component.empty().append(ready)
 					: Component.empty()
 					.append(Component.literal("Wither Shield: ").withStyle(ChatFormatting.DARK_PURPLE))
@@ -115,21 +120,13 @@ public class WitherShieldFeature extends Feature {
 		return Component.empty();
 	}
 
-	private boolean hasWitherShieldScroll(@NotNull ItemStack stack) {
+	private boolean hasWitherShieldScroll(@NonNull ItemStack stack) {
 		CompoundTag customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
-		if (customData.isEmpty()) {
-			return false;
-		}
+		if (customData.isEmpty()) return false;
 
 		Modifiers modifiers = Modifiers.ofNbt(customData);
-		if (modifiers.abilityScrolls().isEmpty()) {
-			return false;
-		}
+		if (modifiers.abilityScrolls().isEmpty()) return false;
 
 		return modifiers.abilityScrolls().get().contains("WITHER_SHIELD_SCROLL");
-	}
-
-	private boolean onlyShowTimer() {
-		return ConfigManager.getConfig().combat.witherShield.onlyShowTimer;
 	}
 }

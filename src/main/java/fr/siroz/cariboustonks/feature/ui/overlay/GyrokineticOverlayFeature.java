@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.ui.overlay;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
@@ -23,7 +22,7 @@ public class GyrokineticOverlayFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().uiAndVisuals.overlay.gyrokineticWand;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.overlay.gyrokineticWand;
 	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")

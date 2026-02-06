@@ -7,7 +7,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.CommandComponent;
 import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -38,7 +37,7 @@ public class HighlightMobFeature extends Feature {
 	public HighlightMobFeature() {
 		this.addComponent(EntityGlowComponent.class, EntityGlowComponent.of(entity -> {
 			if (currentEntityTypeGlow != null && currentEntityTypeGlow == entity.getType()) {
-				return ConfigManager.getConfig().misc.highlighterColor.getRGB();
+				return this.config().misc.highlighterColor.getRGB();
 			}
 			return EntityGlowComponent.EntityGlowStrategy.DEFAULT;
 		}));

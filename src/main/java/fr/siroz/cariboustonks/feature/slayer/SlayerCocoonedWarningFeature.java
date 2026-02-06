@@ -42,7 +42,7 @@ public class SlayerCocoonedWarningFeature extends Feature {
 		cocoonedBoss = false;
 	}
 
-	public static boolean isCocoonedBoss() {
+	public boolean isCocoonedBoss() {
 		return cocoonedBoss;
 	}
 

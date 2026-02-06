@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.reminders;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -26,7 +25,7 @@ public final class BoosterCookieReminderFeature extends Feature /*implements Rem
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().general.reminders.boosterCookie;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().general.reminders.boosterCookie;
 	}
 
 	/*@Override

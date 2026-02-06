@@ -1,7 +1,5 @@
 package fr.siroz.cariboustonks.feature.chat;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.config.configs.ChatConfig;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
@@ -30,42 +28,30 @@ public class ChatColorationFeature extends Feature {
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
 	private void onMessage(Component message) {
-		if (!isEnabled()) {
-			return;
-		}
+		if (!isEnabled()) return;
 
 		String plain = StonksUtils.stripColor(message.getString());
 		if (plain.startsWith("Party >")) { // Party
-			ChatConfig.ChatParty config = ConfigManager.getConfig().chat.chatParty;
-			if (!config.chatPartyColored) {
-				return;
+			if (this.config().chat.chatParty.chatPartyColored) {
+				queueMessage(message, this.config().chat.chatParty.chatPartyColor.getRGB());
 			}
-
-			MutableComponent newText = message.copy();
-			((MutableComponent) newText.getSiblings().getLast()).withColor(config.chatPartyColor.getRGB());
-			sendMessageToBypassEvents(newText);
-
 		} else if (plain.startsWith("Guild >")) { // Guild
-			ChatConfig.ChatGuild config = ConfigManager.getConfig().chat.chatGuild;
-			if (!config.chatGuildColored) {
-				return;
-			}
+			if (this.config().chat.chatGuild.chatGuildColored) {
+				Matcher guildJoinLeaveMatcher = GUILD_JOIN_LEAVE_PATTERN.matcher(plain);
+				if (guildJoinLeaveMatcher.matches()) return;
 
-			Matcher guildJoinLeaveMatcher = GUILD_JOIN_LEAVE_PATTERN.matcher(plain);
-			if (guildJoinLeaveMatcher.matches()) {
-				return;
+				queueMessage(message, this.config().chat.chatGuild.chatGuildColor.getRGB());
 			}
-
-			MutableComponent newText = message.copy();
-			((MutableComponent) newText.getSiblings().getLast()).withColor(config.chatGuildColor.getRGB());
-			sendMessageToBypassEvents(newText);
 		}
 	}
 
-	private void sendMessageToBypassEvents(Component message) {
+	private void queueMessage(Component original, int color) {
+		MutableComponent newText = original.copy();
+		((MutableComponent) newText.getSiblings().getLast()).withColor(color);
+
 		// Parce que mon Mixin de ChatEvents est invoké trop tot ?
 		//client.inGameHud.getChatHud().addMessage(message);
-		((ChatListenerAccessor) CLIENT.getChatListener()).invokeAddToChatLog(message, Instant.now());
-		CLIENT.getNarrator().saySystemQueued(message);
+		((ChatListenerAccessor) CLIENT.getChatListener()).invokeAddToChatLog(newText, Instant.now());
+		CLIENT.getNarrator().saySystemQueued(newText);
 	}
 }

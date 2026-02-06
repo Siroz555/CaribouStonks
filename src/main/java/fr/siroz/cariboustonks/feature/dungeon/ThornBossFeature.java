@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.dungeon;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -40,23 +39,7 @@ public class ThornBossFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() == IslandType.DUNGEON
 				&& dungeonManager.getBoss() == DungeonBoss.THORN
-				&& ConfigManager.getConfig().instance.theCatacombs.bossThornSpiritBearTimers;
-	}
-
-	@EventHandler(event = "WorldEvents.BLOCK_STATE_UPDATE")
-	private void onBlockUpdate(@NotNull BlockPos pos, @Nullable BlockState oldState, @NotNull BlockState newState) {
-		if (!isEnabled()) return;
-
-		if (pos.equals(SEA_LANTERN_TARGET) && newState.getBlock().equals(Blocks.SEA_LANTERN)) {
-			spawnTicks = SPIRIT_BEAR_SPAWN_DELAY;
-		}
-	}
-
-	@EventHandler(event = "NetworkEvents.SERVER_TICK")
-	private void onServerTick() {
-		if (spawnTicks > 0) {
-			spawnTicks--;
-		}
+				&& this.config().instance.theCatacombs.bossThornSpiritBearTimers;
 	}
 
 	@Override
@@ -71,5 +54,19 @@ public class ThornBossFeature extends Feature {
 	@Override
 	protected void onClientJoinServer() {
 		spawnTicks = 0;
+	}
+
+	@EventHandler(event = "WorldEvents.BLOCK_STATE_UPDATE")
+	private void onBlockUpdate(@NotNull BlockPos pos, @Nullable BlockState oldState, @NotNull BlockState newState) {
+		if (isEnabled() && pos.equals(SEA_LANTERN_TARGET) && newState.getBlock().equals(Blocks.SEA_LANTERN)) {
+			spawnTicks = SPIRIT_BEAR_SPAWN_DELAY;
+		}
+	}
+
+	@EventHandler(event = "NetworkEvents.SERVER_TICK")
+	private void onServerTick() {
+		if (spawnTicks > 0) {
+			spawnTicks--;
+		}
 	}
 }

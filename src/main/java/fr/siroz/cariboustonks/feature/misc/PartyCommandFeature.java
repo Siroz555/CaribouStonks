@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.misc;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.MiscConfig;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -34,7 +33,7 @@ public class PartyCommandFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().misc.partyCommands.enabled;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().misc.partyCommands.enabled;
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
@@ -46,7 +45,7 @@ public class PartyCommandFeature extends Feature {
 		if (CLIENT.player == null || CLIENT.level == null) return;
 
 		for (PartyCommand command : PartyCommand.values()) {
-			if (command.getConfig().test(ConfigManager.getConfig().misc.partyCommands)) {
+			if (command.getConfig().test(this.config().misc.partyCommands)) {
 				Matcher matcher = command.getPattern().matcher(input);
 				if (matcher.find()) {
 					long now = System.currentTimeMillis();

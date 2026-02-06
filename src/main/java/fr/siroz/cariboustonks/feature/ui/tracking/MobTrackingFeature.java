@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.feature.ui.tracking;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.core.component.CommandComponent;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -28,10 +28,9 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-@ApiStatus.Experimental
+@Experimental
 public class MobTrackingFeature extends Feature {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_mob_tracking");
@@ -67,20 +66,19 @@ public class MobTrackingFeature extends Feature {
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(HUD_ID)
 				.hud(new MultiElementHud(
-						() -> this.isEnabled() && !tracked.isEmpty() && ConfigManager.getConfig().uiAndVisuals.mobTracking.hud.showInHud,
+						() -> this.isEnabled() && !tracked.isEmpty() && this.config().uiAndVisuals.mobTracking.hud.showInHud,
 						new HudElementTextBuilder()
 								.append(Component.literal("§8[§7Lv750§8] §2✿§e✰§d❃ §2Exalted Minos Inquisitor §a45.8M§f/§a50M§c❤"))
 								.append(Component.literal("§e﴾ §8[§7Lv200§8] §8☠§f\uD83E\uDDB4§5♃ §8§lBladesoul§r §a50M§f/§a50M§c❤ §e﴿"))
 								.build(),
 						this::getHudLines,
-						ConfigManager.getConfig().uiAndVisuals.mobTracking.hud,
+						this.config().uiAndVisuals.mobTracking.hud,
 						125,
 						25
 				))
 				.build());
 	}
 
-	@ApiStatus.Internal
 	public MobTrackingRegistry getRegistry() {
 		return registry;
 	}
@@ -90,7 +88,7 @@ public class MobTrackingFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
 				&& SkyBlockAPI.getIsland() != IslandType.KUUDRA_HOLLOW
-				&& ConfigManager.getConfig().uiAndVisuals.mobTracking.enabled;
+				&& this.config().uiAndVisuals.mobTracking.enabled;
 	}
 
 	@Override
@@ -109,7 +107,7 @@ public class MobTrackingFeature extends Feature {
 
 		if (slayerManager.isInQuest()) {
 			ArmorStand slayerBoss = slayerManager.getBossArmorStand();
-			if (slayerBoss != null && ConfigManager.getConfig().uiAndVisuals.mobTracking.enableSlayer) {
+			if (slayerBoss != null && this.config().uiAndVisuals.mobTracking.enableSlayer) {
 				updateSlayerBoss(slayerBoss);
 			}
 		}
@@ -122,7 +120,7 @@ public class MobTrackingFeature extends Feature {
 			return;
 		}
 
-		if (ConfigManager.getConfig().uiAndVisuals.mobTracking.showInBossBar) {
+		if (this.config().uiAndVisuals.mobTracking.showInBossBar) {
 			Component name = tracked.getFirst().armorStand().getCustomName();
 			if (name != null) {
 				bossEvent.setName(name);
@@ -206,10 +204,10 @@ public class MobTrackingFeature extends Feature {
 		if (mobEntry.config().notifyOnSpawn) {
 			Client.showTitleAndSubtitle(
 					mobEntry.displayName(),
-					Component.literal(ConfigManager.getConfig().uiAndVisuals.mobTracking.spawnMessage),
+					Component.literal(this.config().uiAndVisuals.mobTracking.spawnMessage),
 					1, 20, 1
 			);
-			if (ConfigManager.getConfig().uiAndVisuals.mobTracking.playSoundWhenSpawn) {
+			if (this.config().uiAndVisuals.mobTracking.playSoundWhenSpawn) {
 				Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 			}
 		}

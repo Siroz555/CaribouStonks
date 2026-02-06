@@ -36,6 +36,11 @@ public final class ContainerMatcherComponent implements Component {
 		return titlePattern == null || titlePattern.matcher(containerTitle).matches();
 	}
 
+	@Nullable
+	public Pattern getTitlePattern() {
+		return titlePattern;
+	}
+
 	@NonNull
 	public static Builder builder() {
 		return new Builder();

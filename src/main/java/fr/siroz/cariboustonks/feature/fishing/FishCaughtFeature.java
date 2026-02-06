@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.fishing;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -26,7 +25,7 @@ public class FishCaughtFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().fishing.fishCaughtWarning;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().fishing.fishCaughtWarning;
 	}
 
 	@Override

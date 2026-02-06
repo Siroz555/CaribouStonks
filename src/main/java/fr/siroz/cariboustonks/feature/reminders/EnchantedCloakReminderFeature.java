@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
@@ -49,7 +48,7 @@ public final class EnchantedCloakReminderFeature extends Feature {
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
-				&& ConfigManager.getConfig().general.reminders.enchantedCloak;
+				&& this.config().general.reminders.enchantedCloak;
 	}
 
 	private @NotNull ReminderDisplay getReminderDisplay() {
@@ -79,7 +78,7 @@ public final class EnchantedCloakReminderFeature extends Feature {
 
 		Client.sendMessageWithPrefix(message);
 		Client.showNotification(notification, ICON);
-		if (ConfigManager.getConfig().general.reminders.playSound) {
+		if (this.config().general.reminders.playSound) {
 			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}
 	}

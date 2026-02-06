@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.vanilla;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.KeybindComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.input.KeyBind;
@@ -38,8 +37,7 @@ public final class ZoomFeature extends Feature {
 
     @Override
     public boolean isEnabled() {
-        // Ignore isOnSkyBlock
-        return ConfigManager.getConfig().vanilla.zoom.enabled;
+        return this.config().vanilla.zoom.enabled;
     }
 
     public boolean isZooming() {
@@ -61,7 +59,7 @@ public final class ZoomFeature extends Feature {
 	@EventHandler(event = "MouseEvents.ALLOW_MOUSE_SCROLL")
     private boolean allowMouseScroll(double horizontal, double vertical) {
         if (!isZooming()) return true;
-        if (!ConfigManager.getConfig().vanilla.zoom.mouseScrolling) return true;
+        if (!this.config().vanilla.zoom.mouseScrolling) return true;
 
         if (vertical > 0) {
 			decreaseZoom();

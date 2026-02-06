@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
@@ -51,7 +50,7 @@ public final class UbikCubeReminderFeature extends Feature {
     public boolean isEnabled() {
         return SkyBlockAPI.isOnSkyBlock()
                 && SkyBlockAPI.getIsland() == IslandType.THE_RIFT
-                && ConfigManager.getConfig().general.reminders.ubikCube;
+                && this.config().general.reminders.ubikCube;
     }
 
     private @NotNull ReminderDisplay getReminderDisplay() {
@@ -75,7 +74,7 @@ public final class UbikCubeReminderFeature extends Feature {
 
         Client.sendMessageWithPrefix(message);
         Client.showNotification(notification, ubikCube);
-		if (ConfigManager.getConfig().general.reminders.playSound) {
+		if (this.config().general.reminders.playSound) {
 			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}
     }

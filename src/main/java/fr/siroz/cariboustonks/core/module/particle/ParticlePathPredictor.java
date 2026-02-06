@@ -1,20 +1,17 @@
-/*
- * This implementation is adapted from the original code in the project
- * SkyHanni (<a href="https://github.com/hannibal002/SkyHanni">GitHub</a>)
- * a Minecraft 1.8 Mod written in Kotlin, which was licensed under LGPL-2.1
- * <p>
- * Original authors: [SkyHanni Contributors]
- * Adaptations by: [Siroz555]
- */
+package fr.siroz.cariboustonks.core.module.particle;
 
-package fr.siroz.cariboustonks.util.math.bezier;
-
+import fr.siroz.cariboustonks.util.math.bezier.BezierCurve;
+import fr.siroz.cariboustonks.util.math.bezier.BezierFitter;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Predicts the path of a particle using Bézier curve fitting techniques.
+ * <p>
+ * This implementation is adapted from the original code in the project
+ * SkyHanni (<a href="https://github.com/hannibal002/SkyHanni">GitHub</a>)
+ * a Minecraft 1.8 Mod written in Kotlin.
  */
 public class ParticlePathPredictor extends BezierFitter {
 

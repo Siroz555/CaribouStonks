@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.feature.slayer;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
@@ -30,11 +30,10 @@ import java.util.OptionalDouble;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@ApiStatus.Experimental
+@Experimental
 public class SlayerStatsFeature extends Feature {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_slayer");
@@ -73,7 +72,7 @@ public class SlayerStatsFeature extends Feature {
 								.append(Component.literal("Session Count: 364").withStyle(ChatFormatting.YELLOW))
 								.build(),
 						this::getHudLines,
-						ConfigManager.getConfig().slayer.statsHud,
+						this.config().slayer.statsHud,
 						250,
 						50
 				))
@@ -88,14 +87,14 @@ public class SlayerStatsFeature extends Feature {
 
 	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_SPAWN")
 	private void onBossSpawn(@NotNull SlayerType type, @NotNull SlayerTier tier) {
-		if (ConfigManager.getConfig().slayer.bossSpawnAlert) {
+		if (this.config().slayer.bossSpawnAlert) {
 			Client.showTitle(Component.literal("Boss spawned!").withStyle(ChatFormatting.DARK_RED), 1, 15, 1);
 		}
 	}
 
 	@EventHandler(event = "SkyBlockEvents.SLAYER_MINIBOSS_SPAWN")
 	private void onMinibossSpawn(@NotNull SlayerType type, @NotNull SlayerTier tier) {
-		if (ConfigManager.getConfig().slayer.minibossSpawnAlert) {
+		if (this.config().slayer.minibossSpawnAlert) {
 			Client.showTitle(Component.literal("Miniboss spawned!").withStyle(ChatFormatting.RED), 1, 15, 1);
 		}
 	}
@@ -138,11 +137,11 @@ public class SlayerStatsFeature extends Feature {
 
 			finalizeRun(currentRun);
 
-			if (ConfigManager.getConfig().slayer.showStatsBreakdown) {
+			if (this.config().slayer.showStatsBreakdown) {
 				showBreakdown(currentRun);
 			}
 
-			if (ConfigManager.getConfig().slayer.showStatsInChat) {
+			if (this.config().slayer.showStatsInChat) {
 				showStats();
 			}
 

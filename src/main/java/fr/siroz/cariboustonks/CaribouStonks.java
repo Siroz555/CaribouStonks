@@ -17,9 +17,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +40,6 @@ public final class CaribouStonks implements ClientModInitializer {
 	private SystemManager systemManager;
 	private FeatureManager featureManager;
 
-	@ApiStatus.Internal
 	public CaribouStonks() {
 		instance = this;
 	}
@@ -67,8 +64,7 @@ public final class CaribouStonks implements ClientModInitializer {
 	 *
 	 * @return the {@link CaribouManager} instance
 	 */
-	@Contract(pure = true)
-	public static CaribouManager mod() {
+	public static @NonNull CaribouManager mod() {
 		return instance.modManager;
 	}
 
@@ -78,8 +74,7 @@ public final class CaribouStonks implements ClientModInitializer {
 	 *
 	 * @return the {@link SkyBlockManager} instance
 	 */
-	@Contract(pure = true)
-	public static SkyBlockManager skyBlock() {
+	public static @NonNull SkyBlockManager skyBlock() {
 		return instance.skyBlockManager;
 	}
 
@@ -89,8 +84,7 @@ public final class CaribouStonks implements ClientModInitializer {
 	 *
 	 * @return the {@link SystemManager} instance
 	 */
-	@Contract(pure = true)
-	public static SystemManager systems() {
+	public static @NonNull SystemManager systems() {
 		return instance.systemManager;
 	}
 
@@ -100,8 +94,7 @@ public final class CaribouStonks implements ClientModInitializer {
 	 *
 	 * @return the {@link FeatureManager} instance
 	 */
-	@Contract(pure = true)
-	public static FeatureManager features() {
+	public static @NonNull FeatureManager features() {
 		return instance.featureManager;
 	}
 
@@ -111,8 +104,7 @@ public final class CaribouStonks implements ClientModInitializer {
 	 * @param path the path
 	 * @return the {@link Identifier}
 	 */
-	@Contract("_ -> new")
-	public static @NotNull Identifier identifier(@NotNull String path) {
+	public static @NonNull Identifier identifier(@NonNull String path) {
 		return Identifier.fromNamespaceAndPath(NAMESPACE, path);
 	}
 
@@ -123,8 +115,7 @@ public final class CaribouStonks implements ClientModInitializer {
 	 *
 	 * @return the text prefix
 	 */
-	@Contract(pure = true)
-	public static @NotNull Supplier<MutableComponent> prefix() {
+	public static @NonNull Supplier<MutableComponent> prefix() {
 		return () -> Component.empty()
 				.append(Component.literal("[").withStyle(ChatFormatting.DARK_GRAY))
 				.append(Component.literal("C").withColor(0xe13333))

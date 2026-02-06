@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
@@ -71,7 +70,7 @@ public final class ChocolateLimitReminderFeature extends Feature {
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
-				&& ConfigManager.getConfig().general.reminders.chocolateFactoryMaxChocolates;
+				&& this.config().general.reminders.chocolateFactoryMaxChocolates;
 	}
 
 	private @NonNull List<ColorHighlight> contentAnalyzer(@NonNull Int2ObjectMap<ItemStack> slots) {
@@ -141,7 +140,7 @@ public final class ChocolateLimitReminderFeature extends Feature {
 		Client.showNotification(Component.literal("Chocolate Factory\n").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
 				.append(text), ICON);
 
-		if (ConfigManager.getConfig().general.reminders.playSound) {
+		if (this.config().general.reminders.playSound) {
 			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}
 	}

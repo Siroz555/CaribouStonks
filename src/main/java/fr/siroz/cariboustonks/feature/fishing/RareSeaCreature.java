@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents all Rare Sea Creatures. (Legendary+)
@@ -69,7 +70,7 @@ public enum RareSeaCreature {
 		return color;
 	}
 
-	public Component getText() {
+	public @NonNull Component getText() {
 		return Component.literal(name).withStyle(color, ChatFormatting.BOLD);
 	}
 }

@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.misc;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.mod.integration.RoughlyEnoughItemsIntegration;
 import fr.siroz.cariboustonks.event.EventHandler;
@@ -28,7 +27,7 @@ public class REISearchBarCalculatorFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return ConfigManager.getConfig().misc.compatibility.reiSearchBarCalculator
+		return this.config().misc.compatibility.reiSearchBarCalculator
 				&& RoughlyEnoughItemsIntegration.isModLoaded();
 	}
 

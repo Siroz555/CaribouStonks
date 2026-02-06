@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.stonks.tooltips.auction;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -37,7 +36,7 @@ public class AuctionLowestBinTooltipFeature extends Feature {
 
     @Override
     public boolean isEnabled() {
-        return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().general.stonks.auctionTooltipPrice;
+        return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.auctionTooltipPrice;
     }
 
     private void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
@@ -60,7 +59,7 @@ public class AuctionLowestBinTooltipFeature extends Feature {
 			double price = lowestBin.get();
 			if (Client.hasShiftDown() && count > 1) price *= count;
 
-            TooltipPriceDisplayType displayType = ConfigManager.getConfig().general.stonks.auctionTooltipPriceDisplayType;
+            TooltipPriceDisplayType displayType = this.config().general.stonks.auctionTooltipPriceDisplayType;
             switch (displayType) {
                 case ALL -> {
                     String lowestBinPriceDisplay = StonksUtils.INTEGER_NUMBERS.format(price);

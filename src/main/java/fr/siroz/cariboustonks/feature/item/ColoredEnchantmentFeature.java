@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.item;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.mod.ModDataSource;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -13,7 +12,6 @@ import fr.siroz.cariboustonks.util.RomanNumeralUtils;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -44,13 +42,10 @@ public class ColoredEnchantmentFeature extends Feature {
 	private final ModDataSource modDataSource;
 
 	private final BooleanSupplier configShowMaxEnchants =
-			() -> ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.showMaxEnchants;
+			() -> this.config().uiAndVisuals.coloredEnchantment.showMaxEnchants;
 
 	private final BooleanSupplier configShowGoodEnchants =
-			() -> ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.showGoodEnchants;
-
-	private final BooleanSupplier configMaxEnchantsRainbow =
-			() -> ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.maxEnchantsRainbow;
+			() -> this.config().uiAndVisuals.coloredEnchantment.showGoodEnchants;
 
 	public ColoredEnchantmentFeature() {
 		this.modDataSource = CaribouStonks.mod().getModDataSource();
@@ -86,9 +81,12 @@ public class ColoredEnchantmentFeature extends Feature {
 
 				String name = enchantment.name() + " " + RomanNumeralUtils.generate(level);
 				if (enchantment.isMaxLevel(level)) {
-					maxEnchantmentColors.put(name, maxEnchantsColor().getRGB());
+					maxEnchantmentColors.put(name,
+							this.config().uiAndVisuals.coloredEnchantment.maxEnchantsColor.getRGB());
+
 				} else if (enchantment.isGoodLevel(level) && configShowGoodEnchants.getAsBoolean()) {
-					goodEnchantmentColors.put(name, goodEnchantsColor().getRGB());
+					goodEnchantmentColors.put(name,
+							this.config().uiAndVisuals.coloredEnchantment.goodEnchantsColor.getRGB());
 				}
 			}
 		}
@@ -107,7 +105,7 @@ public class ColoredEnchantmentFeature extends Feature {
 			if (configShowMaxEnchants.getAsBoolean() && !maxEnchantmentColors.isEmpty()
 					&& maxEnchantmentColors.keySet().stream().anyMatch(line.getString()::contains)
 			) {
-				if (configMaxEnchantsRainbow.getAsBoolean()) {
+				if (this.config().uiAndVisuals.coloredEnchantment.maxEnchantsRainbow) {
 					ListIterator<Component> iterator = line.getSiblings().listIterator();
 					while (iterator.hasNext()) {
 						Component currentText = iterator.next();
@@ -171,14 +169,6 @@ public class ColoredEnchantmentFeature extends Feature {
 		}
 
 		return null;
-	}
-
-	private Color maxEnchantsColor() {
-		return ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.maxEnchantsColor;
-	}
-
-	private Color goodEnchantsColor() {
-		return ConfigManager.getConfig().uiAndVisuals.coloredEnchantment.goodEnchantsColor;
 	}
 
 	@NotNull

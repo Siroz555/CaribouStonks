@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.ui;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -36,7 +35,7 @@ public class SelectedPetHighlightFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().uiAndVisuals.highlightSelectedPet;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.highlightSelectedPet;
 	}
 
 	private boolean isSelected(ItemStack itemStack) {

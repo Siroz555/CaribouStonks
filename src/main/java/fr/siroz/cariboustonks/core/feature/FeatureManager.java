@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.core.feature;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.feature.chat.ChatColorationFeature;
 import fr.siroz.cariboustonks.feature.chat.ChatPositionFeature;
 import fr.siroz.cariboustonks.feature.chat.CopyChatMessageFeature;
@@ -24,6 +25,7 @@ import fr.siroz.cariboustonks.feature.garden.DisableWateringCanPlacementFeature;
 import fr.siroz.cariboustonks.feature.garden.GreenhouseGrowthStageFeature;
 import fr.siroz.cariboustonks.feature.garden.MouseLockFeature;
 import fr.siroz.cariboustonks.feature.garden.pest.PestFinderFeature;
+import fr.siroz.cariboustonks.feature.garden.pest.PlotInfestedFeature;
 import fr.siroz.cariboustonks.feature.hunting.AttributeInfoTooltipFeature;
 import fr.siroz.cariboustonks.feature.item.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
@@ -64,10 +66,11 @@ import fr.siroz.cariboustonks.feature.vanilla.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.feature.vanilla.ZoomFeature;
 import fr.siroz.cariboustonks.feature.waypoints.WaypointFeature;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public final class FeatureManager {
 
@@ -100,6 +103,7 @@ public final class FeatureManager {
 		registerFeature(new TreeOverlayFeature());
 		// Garden
 		registerFeature(new PestFinderFeature());
+		registerFeature(new PlotInfestedFeature());
 		registerFeature(new DisableWateringCanPlacementFeature());
 		registerFeature(new GreenhouseGrowthStageFeature());
 		registerFeature(new MouseLockFeature());
@@ -165,12 +169,14 @@ public final class FeatureManager {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Feature> T getFeature(@NotNull Class<T> featureClass) {
+	public <T extends Feature> T getFeature(@NonNull Class<T> featureClass) {
 		return (T) FEATURE_INSTANCES.get(featureClass);
 	}
 
-	private void registerFeature(@NotNull Feature feature) {
+	private void registerFeature(@NonNull Feature feature) {
 		FEATURE_INSTANCES.put(feature.getClass(), feature);
+
+		warnIfExperimental(feature);
 
 		CaribouStonks.systems().handleFeatureRegistration(feature);
 	}
@@ -196,5 +202,13 @@ public final class FeatureManager {
 		for (Feature feature : FEATURE_INSTANCES.values()) {
 			feature.onClientJoinServer();
 		}
+	}
+
+	private void warnIfExperimental(Feature feature) {
+		Experimental annotation = getClass().getAnnotation(Experimental.class);
+
+		Optional<String> experimental = annotation != null ? Optional.of(annotation.value()) : Optional.empty();
+		experimental.ifPresent(s -> CaribouStonks.LOGGER.warn("[FeatureManager] {} is marked as Experimental {}",
+				feature.getClass().getSimpleName(), "(" + s + ")"));
 	}
 }

@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -38,7 +37,7 @@ public class BazaarPriceTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().general.stonks.bazaarTooltipPrice;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.bazaarTooltipPrice;
 	}
 
 	private void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
@@ -62,7 +61,7 @@ public class BazaarPriceTooltipFeature extends Feature {
 
 			int count = item.getCount();
 
-			switch (ConfigManager.getConfig().general.stonks.bazaarTooltipPriceType) {
+			switch (this.config().general.stonks.bazaarTooltipPriceType) {
 				case ALL -> {
 					addBazaarLine(lines, "Bazaar Buy: ", product.get().buyPrice(), count);
 					addBazaarLine(lines, "Bazaar Sell: ", product.get().sellPrice(), count);
@@ -89,7 +88,7 @@ public class BazaarPriceTooltipFeature extends Feature {
 				}
 			}
 
-			if (ConfigManager.getConfig().general.stonks.bazaarTooltipMoreData) {
+			if (this.config().general.stonks.bazaarTooltipMoreData) {
 				double absoluteSpread = product.get().spread();
 				double spreadPercentage = product.get().spreadPercentage();
 				Component spread = Component.empty()
@@ -112,7 +111,7 @@ public class BazaarPriceTooltipFeature extends Feature {
 			return;
 		}
 
-		TooltipPriceDisplayType displayType = ConfigManager.getConfig().general.stonks.bazaarTooltipPriceDisplayType;
+		TooltipPriceDisplayType displayType = this.config().general.stonks.bazaarTooltipPriceDisplayType;
 		String display;
 		if (value < 100) {
 			display = StonksUtils.FLOAT_NUMBERS.format(value);

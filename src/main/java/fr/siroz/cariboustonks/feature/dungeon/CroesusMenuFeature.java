@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.dungeon;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -22,12 +21,14 @@ public class CroesusMenuFeature extends Feature {
 
 	private static final Pattern CROESUS_PATTERN = Pattern.compile("^Croesus$");
 
-	private final BooleanSupplier openedChestConfig =
-			() -> ConfigManager.getConfig().instance.croesus.mainMenuOpenedChest;
-	private final BooleanSupplier noMoreChestConfig =
-			() -> ConfigManager.getConfig().instance.croesus.mainMenuNoMoreChest;
-	private final BooleanSupplier kismetAvailableConfig =
-			() -> ConfigManager.getConfig().instance.croesus.mainMenuKismetAvailable;
+	private final BooleanSupplier configOpenedChest =
+			() -> this.config().instance.croesus.mainMenuOpenedChest;
+
+	private final BooleanSupplier configNoMoreChest =
+			() ->  this.config().instance.croesus.mainMenuNoMoreChest;
+
+	private final BooleanSupplier configKismetAvailable =
+			() ->  this.config().instance.croesus.mainMenuKismetAvailable;
 
 	public CroesusMenuFeature() {
 		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.builder()
@@ -40,7 +41,8 @@ public class CroesusMenuFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && (openedChestConfig.getAsBoolean() || noMoreChestConfig.getAsBoolean() || kismetAvailableConfig.getAsBoolean());
+		return SkyBlockAPI.isOnSkyBlock()
+				&& (configOpenedChest.getAsBoolean() || configNoMoreChest.getAsBoolean() || configKismetAvailable.getAsBoolean());
 	}
 
 	@NonNull
@@ -86,30 +88,18 @@ public class CroesusMenuFeature extends Feature {
 		// Priorité des couleurs : Kismet > Opened > NoMoreChest
 		// Pas de "else-if", car c'est pour mieux contrôler chaque option dans la config, d'où le "highlight == null"
 		ColorHighlight highlight = null;
-		if (kismetAvailable && notOpenedYet && kismetAvailableConfig.getAsBoolean()) {
-			highlight = new ColorHighlight(entry.getIntKey(), kismetAvailableColor());
+		if (kismetAvailable && notOpenedYet && configKismetAvailable.getAsBoolean()) {
+			highlight = new ColorHighlight(entry.getIntKey(), Color.fromAwtColor(this.config().instance.croesus.mainMenuKismetAvailableColor));
 		}
 
-		if (highlight == null && opened && !kismetAvailable && openedChestConfig.getAsBoolean()) {
-			highlight = new ColorHighlight(entry.getIntKey(), openedChestColor());
+		if (highlight == null && opened && !kismetAvailable && configOpenedChest.getAsBoolean()) {
+			highlight = new ColorHighlight(entry.getIntKey(), Color.fromAwtColor(this.config().instance.croesus.mainMenuOpenedChestColor));
 		}
 
-		if (highlight == null && noMoreChest && !kismetAvailable && noMoreChestConfig.getAsBoolean()) {
-			highlight = new ColorHighlight(entry.getIntKey(), noMoreChestColor());
+		if (highlight == null && noMoreChest && !kismetAvailable && configNoMoreChest.getAsBoolean()) {
+			highlight = new ColorHighlight(entry.getIntKey(), Color.fromAwtColor(this.config().instance.croesus.mainMenuNoMoreChestColor));
 		}
 
 		return highlight;
-	}
-
-	private @NonNull Color openedChestColor() {
-		return Color.fromAwtColor(ConfigManager.getConfig().instance.croesus.mainMenuOpenedChestColor);
-	}
-
-	private @NonNull Color noMoreChestColor() {
-		return Color.fromAwtColor(ConfigManager.getConfig().instance.croesus.mainMenuNoMoreChestColor);
-	}
-
-	private @NonNull Color kismetAvailableColor() {
-		return Color.fromAwtColor(ConfigManager.getConfig().instance.croesus.mainMenuKismetAvailableColor);
 	}
 }

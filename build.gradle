@@ -95,8 +95,11 @@ dependencies {
 		exclude group: "net.fabricmc.fabric-api"
 	}
 
-	// DevAuth - DEVELOPMENT ONLY (https://github.com/DJtheRedstoner/DevAuth)
+	// DevAuth - DEV (https://github.com/DJtheRedstoner/DevAuth)
 	modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
+
+	// JSpecify - DEV (https://github.com/jspecify/jspecify)
+	compileOnly 'org.jspecify:jspecify:1.0.0'
 }
 
 loom {

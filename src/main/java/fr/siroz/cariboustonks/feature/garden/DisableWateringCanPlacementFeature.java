@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.garden;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -23,7 +22,7 @@ public class DisableWateringCanPlacementFeature extends Feature {
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() == IslandType.GARDEN
-				&& ConfigManager.getConfig().farming.garden.disableWateringCanPlacement;
+				&& this.config().farming.garden.disableWateringCanPlacement;
 	}
 
 	@EventHandler(event = "InteractionEvents.ALLOW_INTERACT_BLOCK")
@@ -32,9 +31,7 @@ public class DisableWateringCanPlacementFeature extends Feature {
 		if (itemStack.getItem() != Items.PLAYER_HEAD) return true;
 
 		String skyBlockItemId = SkyBlockAPI.getSkyBlockItemId(itemStack);
-		if (skyBlockItemId.isEmpty()) {
-			return true;
-		}
+		if (skyBlockItemId.isEmpty()) return true;
 
 		return !skyBlockItemId.startsWith(HYDRO_CAN_ID) && !skyBlockItemId.startsWith(AQUA_MASTER_ID);
 	}

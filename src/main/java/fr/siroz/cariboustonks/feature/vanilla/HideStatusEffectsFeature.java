@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.vanilla;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
@@ -15,6 +14,6 @@ public class HideStatusEffectsFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return ConfigManager.getConfig().vanilla.overlay.hideStatusEffectsOverlay;
+		return this.config().vanilla.overlay.hideStatusEffectsOverlay;
 	}
 }

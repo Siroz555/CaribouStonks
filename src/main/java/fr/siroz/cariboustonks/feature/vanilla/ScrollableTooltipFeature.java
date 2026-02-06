@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.vanilla;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.CustomScreenEvents;
@@ -32,7 +31,7 @@ public class ScrollableTooltipFeature extends Feature {
 	private static final int MIN_SCROLLABLE_TOOLTIPS = 25;
 
 	private final BooleanSupplier reverseScrollConfig =
-			() -> ConfigManager.getConfig().vanilla.scrollableTooltip.reverseScroll;
+			() -> this.config().vanilla.scrollableTooltip.reverseScroll;
 
 	private double currentXOffset = 0;
 	private double currentYOffset = 0;
@@ -50,7 +49,7 @@ public class ScrollableTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().vanilla.scrollableTooltip.enabled;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().vanilla.scrollableTooltip.enabled;
 	}
 
 	public int getXOffset() {
@@ -67,7 +66,7 @@ public class ScrollableTooltipFeature extends Feature {
 	}
 
 	public boolean canStartFromTop() {
-		return ConfigManager.getConfig().vanilla.scrollableTooltip.startOnTop && !hasMoved;
+		return this.config().vanilla.scrollableTooltip.startOnTop && !hasMoved;
 	}
 
 	@EventHandler(event = "CustomScreenEvents.CLOSE")

@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.dungeon;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -22,8 +21,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class SadanBossFeature extends Feature {
 
@@ -46,18 +45,24 @@ public class SadanBossFeature extends Feature {
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() == IslandType.DUNGEON
-				&& ConfigManager.getConfig().instance.theCatacombs.bossSadanTerracottaTimers;
+				&& this.config().instance.theCatacombs.bossSadanTerracottaTimers;
+	}
+
+	@Override
+	protected void onClientJoinServer() {
+		inBoss = false;
+		terracottaFlowerPots = null;
 	}
 
 	@EventHandler(event = "SkyBlockEvents.DUNGEON_BOSS_SPAWN")
-	private void onDungeonBossSpawn(@NotNull DungeonBoss boss) {
+	private void onDungeonBossSpawn(@NonNull DungeonBoss boss) {
 		if (boss == DungeonBoss.SADAN) {
 			inBoss = true;
 		}
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onChatMessage(@NotNull Component text) {
+	private void onChatMessage(@NonNull Component text) {
 		if (inBoss && text.getString().equals(GIANT_TRIGGER_MESSAGE)) {
 			terracottaFlowerPots = null;
 		}
@@ -78,7 +83,7 @@ public class SadanBossFeature extends Feature {
 	}
 
 	@EventHandler(event = "WorldEvents.BLOCK_STATE_UPDATE")
-	private void onBlockUpdate(@NotNull BlockPos pos, @Nullable BlockState oldState, @NotNull BlockState newState) {
+	private void onBlockUpdate(@NonNull BlockPos pos, @Nullable BlockState oldState, @NonNull BlockState newState) {
 		if (!inBoss || !isEnabled()) return;
 
 		// Le .equals(Blocks.FLOWER_POT) marche pas
@@ -102,12 +107,6 @@ public class SadanBossFeature extends Feature {
 			Component message = getTimeFrom(terracotta.getTicks());
 			renderer.submitText(message, terracotta.getPos().getCenter(), 1.5f, true);
 		}
-	}
-
-	@Override
-	protected void onClientJoinServer() {
-		inBoss = false;
-		terracottaFlowerPots = null;
 	}
 
 	private Component getTimeFrom(int ticks) {

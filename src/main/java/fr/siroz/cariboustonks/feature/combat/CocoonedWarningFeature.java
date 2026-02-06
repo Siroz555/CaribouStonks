@@ -1,12 +1,12 @@
 package fr.siroz.cariboustonks.feature.combat;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.config.ConfigValue;
 import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerType;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
@@ -24,35 +24,27 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class CocoonedWarningFeature extends Feature {
 
-	private static final long WORLD_CHANGE_THRESHOLD = 10_000;
+	private static final long WORLD_CHANGE_THRESHOLD_MS = 10_000;
 	private static final double MAX_ARMORSTAND_PAIR_DISTANCE_SQ = 2f * 2f;
 	private static final double MAX_PLAYER_COCOON_DISTANCE_SQ = 15f * 15f;
 	//private static final int MAX_Y_CHECK = 6;
 
-	private final BooleanSupplier configSoundEnabled =
-			() -> ConfigManager.getConfig().combat.cocoonedMob.cocoonedWarningSound;
+	private final ConfigValue<String> configMessage = ConfigValue.of(
+			() -> this.config().combat.cocoonedMob.message
+	);
 
-	private final BooleanSupplier configTitleEnabled =
-			() -> ConfigManager.getConfig().combat.cocoonedMob.cocoonedWarningTitle;
-
-	private final BooleanSupplier configBeamEnabled =
-			() -> ConfigManager.getConfig().combat.cocoonedMob.cocoonedWarningBeam;
-
-	private final Supplier<String> configMessage =
-			() -> ConfigManager.getConfig().combat.cocoonedMob.message;
-
-	private final SlayerManager slayerManager;
+	@Nullable
+	private SlayerCocoonedWarningFeature slayerCocoonedWarningFeature;
 
 	// chaîne temporaire des apparitions successives (ordre d'apparition)
 	private final Deque<ArmorStand> chain = new ArrayDeque<>();
@@ -61,7 +53,6 @@ public class CocoonedWarningFeature extends Feature {
 	private boolean canBeTriggered = false;
 
 	public CocoonedWarningFeature() {
-		this.slayerManager = CaribouStonks.skyBlock().getSlayerManager();
 		SkyBlockEvents.ISLAND_CHANGE.register(this::onChangeIsland);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
 		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
@@ -74,10 +65,15 @@ public class CocoonedWarningFeature extends Feature {
 				&& canBeTriggered
 				// --start-- Pour détecter les cocoons depuis les Slayers Minibosses
 				//&& !slayerManager.isInQuest()
-				&& !slayerManager.isInQuestWithBoss(SlayerType.SPIDER)
-				&& !SlayerCocoonedWarningFeature.isCocoonedBoss()
+				&& !CaribouStonks.skyBlock().getSlayerManager().isInQuestWithBoss(SlayerType.SPIDER)
+				&& (slayerCocoonedWarningFeature != null && !slayerCocoonedWarningFeature.isCocoonedBoss())
 				// --end--
-				&& ConfigManager.getConfig().combat.cocoonedMob.cocoonedWarning;
+				&& this.config().combat.cocoonedMob.cocoonedWarning;
+	}
+
+	@Override
+	protected void postInitialize(@NonNull FeatureManager features) {
+		slayerCocoonedWarningFeature = features.getFeature(SlayerCocoonedWarningFeature.class);
 	}
 
 	@Override
@@ -88,15 +84,15 @@ public class CocoonedWarningFeature extends Feature {
 	}
 
 	@EventHandler(event = "SkyBlockEvents.ISLAND_CHANGE")
-	private void onChangeIsland(@NotNull IslandType islandType) {
+	private void onChangeIsland(@NonNull IslandType islandType) {
 		canBeTriggered = islandType != IslandType.DUNGEON
 				&& islandType != IslandType.KUUDRA_HOLLOW
 				&& islandType != IslandType.THE_RIFT; // Parce que dans le rift il y a les mêmes cocoons
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
-	private void onUpdateArmorStand(@NotNull ArmorStand armorStandEntity, boolean equipment) {
-		if (equipment || (System.currentTimeMillis() - lastWorldChange < WORLD_CHANGE_THRESHOLD)) return;
+	private void onUpdateArmorStand(@NonNull ArmorStand armorStandEntity, boolean equipment) {
+		if (equipment || (System.currentTimeMillis() - lastWorldChange < WORLD_CHANGE_THRESHOLD_MS)) return;
 		if (!isEnabled()) return;
 		if (!matchesCocoonCriteria(armorStandEntity)) return;
 
@@ -143,7 +139,7 @@ public class CocoonedWarningFeature extends Feature {
 	}
 
 	@EventHandler(event = "WorldEvents.ARMORSTAND_REMOVED")
-	private void onRemoveArmorStand(@NotNull ArmorStand armorStand) {
+	private void onRemoveArmorStand(@NonNull ArmorStand armorStand) {
 		chain.removeIf(a -> a.getId() == armorStand.getId());
 	}
 
@@ -158,22 +154,22 @@ public class CocoonedWarningFeature extends Feature {
 	private void onMobCocooned(BlockPos pos) {
 		Client.sendMessageWithPrefix(Component.literal(configMessage.get()));
 
-		if (configSoundEnabled.getAsBoolean()) {
+		if (this.config().combat.cocoonedMob.cocoonedWarningSound) {
 			Client.playSound(SoundEvents.ELDER_GUARDIAN_CURSE, 1f, 1f);
 		}
 
-		if (configTitleEnabled.getAsBoolean()) {
+		if (this.config().combat.cocoonedMob.cocoonedWarningTitle) {
 			Client.showTitle(Component.literal(configMessage.get()), 0, 27, 0);
 		}
 
-		if (configBeamEnabled.getAsBoolean() && pos != null) {
+		if (pos != null && this.config().combat.cocoonedMob.cocoonedWarningBeam) {
 			cocoonPositions.add(pos);
 			final BlockPos finalPos = pos;
 			TickScheduler.getInstance().runLater(() -> cocoonPositions.remove(finalPos), 4, TimeUnit.SECONDS);
 		}
 	}
 
-	private boolean matchesCocoonCriteria(@NotNull ArmorStand as) {
+	private boolean matchesCocoonCriteria(@NonNull ArmorStand as) {
 		if (CLIENT.player == null) {
 			return false;
 		}

@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.hunting;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -61,7 +60,7 @@ public class AttributeInfoTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().hunting.attributeInfos;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().hunting.attributeInfos;
 	}
 
 	private void handleHuntingBox(@NotNull List<Component> lines) {

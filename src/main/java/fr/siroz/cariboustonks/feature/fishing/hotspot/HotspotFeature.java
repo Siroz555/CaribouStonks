@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.fishing.hotspot;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
@@ -51,7 +50,7 @@ public class HotspotFeature extends Feature {
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
-				&& ConfigManager.getConfig().fishing.hotspotHighlight
+				&& this.config().fishing.hotspotHighlight
 				&& SkyBlockAPI.isOnIslands(IslandType.CRIMSON_ISLE, IslandType.BACKWATER_BAYOU);
 	}
 

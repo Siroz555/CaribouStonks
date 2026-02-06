@@ -28,7 +28,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class SecondLifeFeature extends Feature {
 
@@ -43,11 +43,9 @@ public class SecondLifeFeature extends Feature {
 
 	private final Map<SecondLife, Long> activeCooldowns = new HashMap<>();
 	private boolean serverHasChanged = false;
-	private final HudElementBuilder hudBuilder;
+	private final HudElementBuilder hudBuilder = new HudElementBuilder();
 
 	public SecondLifeFeature() {
-		this.hudBuilder = new HudElementBuilder();
-
 		ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
@@ -59,7 +57,7 @@ public class SecondLifeFeature extends Feature {
 								.append(Component.literal("Phoenix: 51.7s").withStyle(ChatFormatting.YELLOW))
 								.build(),
 						this::getHudLines,
-						ConfigManager.getConfig().combat.secondLife.cooldownHud,
+						this.config().combat.secondLife.cooldownHud,
 						150,
 						50
 				))
@@ -78,7 +76,7 @@ public class SecondLifeFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onChatMessage(@NotNull Component text) {
+	private void onChatMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 
 		String message = StonksUtils.stripColor(text.getString());
@@ -99,7 +97,7 @@ public class SecondLifeFeature extends Feature {
 		}
 	}
 
-	private void onSecondLife(@NotNull SecondLife secondLife) {
+	private void onSecondLife(@NonNull SecondLife secondLife) {
 		// Ce "state" permet d'éviter que le runLater run après un changement de serveur.
 		// Il est reset ici pour permettre de trigger à nouveau, tant qu'il n'y a pas de changement de serveur.
 		serverHasChanged = false;
@@ -117,19 +115,19 @@ public class SecondLifeFeature extends Feature {
 				() -> onSecondLifeBack(secondLife), secondLife.getCooldown(), TimeUnit.SECONDS);
 	}
 
-	private void onSecondLifeBack(@NotNull SecondLife secondLife) {
+	private void onSecondLifeBack(@NonNull SecondLife secondLife) {
 		activeCooldowns.remove(secondLife);
 		// Pas de notification si le serveur a changé
 		if (!serverHasChanged && secondLife.isBackConfigEnabled()) {
-			if (ConfigManager.getConfig().combat.secondLife.backMessage) {
+			if (this.config().combat.secondLife.backMessage) {
 				Client.sendMessageWithPrefix(Component.literal(secondLife.getName() + " is back!").withStyle(ChatFormatting.GREEN));
 			}
-			if (ConfigManager.getConfig().combat.secondLife.backTitle) {
+			if (this.config().combat.secondLife.backTitle) {
 				Client.showTitleAndSubtitle(Component.literal(secondLife.getName()).withStyle(secondLife.getColor()),
 						Component.literal("Ready!").withStyle(ChatFormatting.GREEN),
 						0, 25, 0);
 			}
-			if (ConfigManager.getConfig().combat.secondLife.backSound) {
+			if (this.config().combat.secondLife.backSound) {
 				Client.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1f, 1f);
 			}
 		}

@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.chat;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.UIAndVisualsConfig;
 import fr.siroz.cariboustonks.core.component.CommandComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -22,16 +21,13 @@ import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 public class ChatPositionFeature extends Feature {
 
 	private static final Pattern SIMPLE_COORDS_PATTERN = Pattern.compile(
 			"(?<playerName>.*): (?<x>-?[0-9]+) (?<y>[0-9]+) (?<z>-?[0-9]+)");
-
 	private static final Pattern SIMPLE_COMMA_COORDS_PATTERN = Pattern.compile(
 			"(?<playerName>.*): (?<x>-?[0-9]+), (?<y>[0-9]+), (?<z>-?[0-9]+)");
-
 	private static final Pattern GENERIC_POSITION_PATTERN = Pattern.compile(
 			"(?<playerName>.*): x: (?<x>-?[0-9]+), y: (?<y>[0-9]+), z: (?<z>-?[0-9]+)");
 
@@ -58,20 +54,15 @@ public class ChatPositionFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& ConfigManager.getConfig().uiAndVisuals.sharedPositionWaypoint.enabled;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.sharedPositionWaypoint.enabled;
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
 	private void onMessage(Component text) {
-		if (!isEnabled()) {
-			return;
-		}
+		if (!isEnabled()) return;
 
 		String message = text.getString();
-		if (message.startsWith("[CaribouStonks]")) {
-			return;
-		}
+		if (message.startsWith("[CaribouStonks]")) return;
 
 		for (Pattern pattern : PATTERNS) {
 			Matcher matcher = pattern.matcher(message);
@@ -94,11 +85,11 @@ public class ChatPositionFeature extends Feature {
 		}
 	}
 
-	private int shareCurrentPosition(@NotNull FabricClientCommandSource source) {
+	private int shareCurrentPosition(FabricClientCommandSource source) {
 		if (COOLDOWN.test()) {
 			Position position = Position.of(source.getPosition());
 			String area = "";
-			if (ConfigManager.getConfig().uiAndVisuals.sharedPositionWaypoint.shareWithArea) {
+			if (this.config().uiAndVisuals.sharedPositionWaypoint.shareWithArea) {
 				area = " | " + SkyBlockAPI.getArea().orElse("");
 			}
 			String message = position.asChatCoordinates() + area;
@@ -112,9 +103,7 @@ public class ChatPositionFeature extends Feature {
 	}
 
 	private void createWaypoint(String playerName, String x, String y, String z) {
-		if (x.isEmpty() && y.isEmpty() && z.isEmpty()) {
-			return;
-		}
+		if (x.isEmpty() && y.isEmpty() && z.isEmpty()) return;
 
 		try {
 			int positionX = Integer.parseInt(x);
@@ -122,7 +111,7 @@ public class ChatPositionFeature extends Feature {
 			int positionZ = Integer.parseInt(z);
 			Position position = Position.of(positionX, positionY, positionZ);
 
-			UIAndVisualsConfig.SharedPositionWaypoint config = ConfigManager.getConfig().uiAndVisuals.sharedPositionWaypoint;
+			UIAndVisualsConfig.SharedPositionWaypoint config = this.config().uiAndVisuals.sharedPositionWaypoint;
 			int showTime = config.showTime;
 			Color color = config.rainbow ? Colors.RAINBOW : Color.fromInt(config.color.getRGB());
 

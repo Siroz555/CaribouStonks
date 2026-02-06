@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.chat;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.mixin.accessors.ChatComponentAccessor;
@@ -34,7 +33,7 @@ public class CopyChatMessageFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return ConfigManager.getConfig().chat.copyChat;
+		return this.config().chat.copyChat;
 	}
 
 	@EventHandler(event = "ScreenMouseEvents.afterMouseClick")

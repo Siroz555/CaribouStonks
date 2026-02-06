@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.ui.hud;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.TextHud;
@@ -23,7 +22,7 @@ public class PingHud extends Feature {
 				.hud(new TextHud(
 						Component.literal("0 ms"),
 						this::getText,
-						ConfigManager.getConfig().uiAndVisuals.pingHud,
+						this.config().uiAndVisuals.pingHud,
 						58,
 						8
 				))

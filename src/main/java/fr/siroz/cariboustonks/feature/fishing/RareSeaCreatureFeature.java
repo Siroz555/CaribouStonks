@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.fishing;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -30,7 +29,7 @@ public class RareSeaCreatureFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().fishing.rareSeaCreatureWarning;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().fishing.rareSeaCreatureWarning;
 	}
 
 	@Override
@@ -79,7 +78,7 @@ public class RareSeaCreatureFeature extends Feature {
 		Component doubleHookText = doubleHook ? Component.literal("Double Hook").withStyle(ChatFormatting.GREEN) : Component.empty();
 		Client.showTitleAndSubtitle(seaCreatureText, doubleHookText, 0, 40, 5);
 
-		if (ConfigManager.getConfig().fishing.rareSeaCreatureSound) {
+		if (this.config().fishing.rareSeaCreatureSound) {
 			if (doubleHook) {
 				Client.playSound(SoundEvents.WARDEN_SONIC_BOOM, 2.5f, 1f);
 			} else {

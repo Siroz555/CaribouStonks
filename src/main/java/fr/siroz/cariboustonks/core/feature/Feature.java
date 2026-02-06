@@ -1,5 +1,7 @@
 package fr.siroz.cariboustonks.core.feature;
 
+import fr.siroz.cariboustonks.config.Config;
+import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.Component;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +10,13 @@ import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Base class for all features.
+ * Base class for all feature implementations.
+ * <p>
+ * Features are modular units of functionality that can be enabled/disabled
+ * and composed using {@link Component}s.
+ *
+ * @see Component
+ * @see FeatureManager
  */
 public abstract class Feature {
 
@@ -35,26 +43,6 @@ public abstract class Feature {
 	public abstract boolean isEnabled();
 
 	/**
-	 * Called after all features have been initialized.
-	 *
-	 * @param features the feature manager instance
-	 */
-	protected void postInitialize(@NotNull FeatureManager features) {
-	}
-
-	/**
-	 * Called every tick by the client.
-	 */
-	protected void onClientTick() {
-	}
-
-	/**
-	 * Called when the client joins a server.
-	 */
-	protected void onClientJoinServer() {
-	}
-
-	/**
 	 * Attaches a {@link Component} to this feature.
 	 * <p>
 	 * Contract:
@@ -70,11 +58,11 @@ public abstract class Feature {
 	 * @throws IllegalStateException if a component of the same {@code type} is already attached
 	 */
 	protected <C extends Component> void addComponent(@NotNull Class<C> type, @NotNull C component) {
-		if (components.containsKey(type)) {
-			throw new IllegalStateException("Component of type " + type.getSimpleName() + " already registered");
+		Component current = components.putIfAbsent(type, component);
+		if (current != null) {
+			throw new IllegalStateException("Component of type %s already registered for feature %s"
+					.formatted(type.getSimpleName(), getShortName()));
 		}
-
-		components.put(type, component);
 	}
 
 	/**
@@ -92,6 +80,35 @@ public abstract class Feature {
 	 */
 	public <C extends Component> Optional<C> getComponent(@NotNull Class<C> type) {
 		return Optional.ofNullable(type.cast(components.get(type)));
+	}
+
+	/**
+	 * Gets the root configuration.
+	 *
+	 * @return the root configuration
+	 */
+	protected final Config config() {
+		return ConfigManager.getConfig();
+	}
+
+	/**
+	 * Called after all features have been initialized.
+	 *
+	 * @param features the feature manager instance
+	 */
+	protected void postInitialize(@NotNull FeatureManager features) {
+	}
+
+	/**
+	 * Called every tick by the client.
+	 */
+	protected void onClientTick() {
+	}
+
+	/**
+	 * Called when the client joins a server.
+	 */
+	protected void onClientJoinServer() {
 	}
 
 	/**

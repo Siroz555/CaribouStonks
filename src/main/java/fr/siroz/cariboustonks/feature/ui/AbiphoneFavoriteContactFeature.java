@@ -44,7 +44,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 				.appender((focusedSlot, item, lines) -> {
 					if (isContact(item)) {
 						String name = StonksUtils.stripColor(item.getHoverName().getString());
-						if (ConfigManager.getConfig().uiAndVisuals.favoriteAbiphoneContacts.contains(name)) {
+						if (this.config().uiAndVisuals.favoriteAbiphoneContacts.contains(name)) {
 							lines.add(Component.literal("SHIFT").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD)
 									.append(Component.literal(" To remove from favourite contacts").withStyle(ChatFormatting.YELLOW)));
 						} else {
@@ -61,7 +61,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 					slots.forEach((slotIndex, itemStack) -> {
 						if (isContact(itemStack)) {
 							String name = StonksUtils.stripColor(itemStack.getHoverName().getString());
-							if (ConfigManager.getConfig().uiAndVisuals.favoriteAbiphoneContacts.contains(name)) {
+							if (this.config().uiAndVisuals.favoriteAbiphoneContacts.contains(name)) {
 								highlights.add(ColorHighlight.yellow(slotIndex, 0.25f));
 							}
 						}

@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.slayer;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -15,14 +14,14 @@ public class HighlightSlayerMobFeature extends Feature {
 		this.slayerManager = CaribouStonks.skyBlock().getSlayerManager();
 
 		this.addComponent(EntityGlowComponent.class, EntityGlowComponent.builder()
-				.when(entity -> ConfigManager.getConfig().slayer.highlightMiniboss
+				.when(entity -> this.config().slayer.highlightMiniboss
 								&& slayerManager.getMinibosses().contains(entity),
-						ConfigManager.getConfig().slayer.highlightMinibossColor.getRGB())
+						this.config().slayer.highlightMinibossColor.getRGB())
 
-				.when(entity -> ConfigManager.getConfig().slayer.highlightBoss
+				.when(entity -> this.config().slayer.highlightBoss
 						&& slayerManager.getBossEntity() != null
 						&& slayerManager.getBossEntity() == entity,
-						ConfigManager.getConfig().slayer.highlightBossColor.getRGB())
+						this.config().slayer.highlightBossColor.getRGB())
 				.build());
 	}
 
@@ -30,6 +29,6 @@ public class HighlightSlayerMobFeature extends Feature {
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& slayerManager.isInQuest()
-				&& (ConfigManager.getConfig().slayer.highlightBoss || ConfigManager.getConfig().slayer.highlightMiniboss);
+				&& (this.config().slayer.highlightBoss || this.config().slayer.highlightMiniboss);
 	}
 }

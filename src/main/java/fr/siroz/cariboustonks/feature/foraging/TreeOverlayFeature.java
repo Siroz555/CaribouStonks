@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.foraging;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
@@ -46,7 +45,7 @@ public class TreeOverlayFeature extends Feature {
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() == IslandType.GALATEA
-				&& ConfigManager.getConfig().foraging.showTreeOverlayInfo;
+				&& this.config().foraging.showTreeOverlayInfo;
 	}
 
 	@Override
@@ -59,14 +58,10 @@ public class TreeOverlayFeature extends Feature {
 		if (!isEnabled()) return;
 
 		ItemStack heldItem = Client.getMainHandItem();
-		if (heldItem == null) {
-			return;
-		}
+		if (heldItem == null) return;
 
 		String itemId = SkyBlockAPI.getSkyBlockItemId(heldItem);
-		if (!AXES.contains(itemId)) {
-			return;
-		}
+		if (!AXES.contains(itemId)) return;
 
 		if (currentTreeInfo == null) {
 			currentTreeInfo = findClosestTreeInfoInRange(CLIENT.player).orElse(null);

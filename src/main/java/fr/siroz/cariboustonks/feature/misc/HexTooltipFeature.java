@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.misc;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -33,6 +32,6 @@ public class HexTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().misc.showHexOnDyedItemEverywhere;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().misc.showHexOnDyedItemEverywhere;
 	}
 }

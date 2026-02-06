@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.feature.stonks;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -56,7 +55,8 @@ public class ItemValueViewerFeature extends Feature {
 	private static final String ARROW = "⤷";
 	private static final String[] MASTER_STARS_CIRCLED = {"➊", "➋", "➌", "➍", "➎"};
 
-	private final BooleanSupplier configUseNetworth = () -> ConfigManager.getConfig().general.stonks.useNetworthItemValue;
+	private final BooleanSupplier configUseNetworth =
+			() -> this.config().general.stonks.useNetworthItemValue;
 
 	@Nullable
 	private ItemStack currentItem = null;
@@ -73,7 +73,7 @@ public class ItemValueViewerFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().general.stonks.itemValueViewer.enabled;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.itemValueViewer.enabled;
 	}
 
 	@EventHandler(event = "ItemRenderEvents.POST_TOOLTIP")
@@ -97,7 +97,8 @@ public class ItemValueViewerFeature extends Feature {
 		if (currentItem == null || lines.isEmpty()) return;
 
 		guiGraphics.pose().pushMatrix();
-		guiGraphics.pose().scale(getScale(), getScale());
+		final float scale = this.config().general.stonks.itemValueViewer.scale;
+		guiGraphics.pose().scale(scale, scale);
 
 		int y = START_Y;
 		for (Component text : lines) {
@@ -109,10 +110,6 @@ public class ItemValueViewerFeature extends Feature {
 			}
 		}
 		guiGraphics.pose().popMatrix();
-	}
-
-	private float getScale() {
-		return ConfigManager.getConfig().general.stonks.itemValueViewer.scale;
 	}
 
 	private void updateForItem(@NotNull ItemStack item) {

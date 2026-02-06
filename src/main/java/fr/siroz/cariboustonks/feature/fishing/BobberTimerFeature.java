@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.fishing;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -31,7 +30,7 @@ public class BobberTimerFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().fishing.bobberTimerDisplay;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().fishing.bobberTimerDisplay;
 	}
 
 	@Override
@@ -48,15 +47,11 @@ public class BobberTimerFeature extends Feature {
 	private void onArmorStandUpdate(@NotNull ArmorStand armorStand, boolean equipment) {
 		if (equipment || !armorStand.hasCustomName()) return;
 		if (CLIENT.player == null || CLIENT.player.fishing == null) return;
+		if (bobberTimerArmorStand != null) return;
 		if (!isEnabled()) return;
 
-		if (bobberTimerArmorStand != null) {
-			return;
-		}
-
-		if (armorStand.position().distanceTo(CLIENT.player.fishing.position()) > MIN_BOBBER_TIMER_DISTANCE) {
-			return;
-		}
+		double distance = armorStand.position().distanceTo(CLIENT.player.fishing.position());
+		if (distance > MIN_BOBBER_TIMER_DISTANCE) return;
 
 		Matcher timerMatcher = TIMER_PATTERN.matcher(armorStand.getName().getString());
 		if (timerMatcher.matches()) {
