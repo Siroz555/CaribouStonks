@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.event.CustomScreenEvents;
+import fr.siroz.cariboustonks.event.GuiEvents;
 import fr.siroz.cariboustonks.system.ContainerOverlaySystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -53,7 +53,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 		}
 
 		if (this.hoveredSlot != null && input.input() != 256 && !this.minecraft.options.keyInventory.matches(input)) {
-			CustomScreenEvents.KEY_PRESSED.invoker().onKeyPressed(this, input, this.hoveredSlot);
+			GuiEvents.SCREEN_KEY_PRESS_EVENT.invoker().onKeyPressed(this, input, this.hoveredSlot);
 		}
 	}
 }

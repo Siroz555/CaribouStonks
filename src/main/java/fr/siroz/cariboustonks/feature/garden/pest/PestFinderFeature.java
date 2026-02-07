@@ -54,9 +54,9 @@ public final class PestFinderFeature extends Feature {
 				.onTrackingReset(() -> this.waypoint.setEnabled(false))
 				.build();
 
-		InteractionEvents.LEFT_CLICK_AIR.register(this::onLeftClickAir);
+		InteractionEvents.LEFT_CLICK_AIR_EVENT.register(this::onLeftClickAir);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
-		RenderEvents.WORLD_RENDER.register(this::onWorldRender);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::onWorldRender);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public final class PestFinderFeature extends Feature {
 		tracker.reset();
 	}
 
-	@EventHandler(event = "InteractionEvents.LEFT_CLICK_AIR")
+	@EventHandler(event = "InteractionEvents.LEFT_CLICK_AIR_EVENT")
 	private void onLeftClickAir(Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 		if (isEnabled() && !stack.isEmpty() && SkyBlockAPI.getSkyBlockItemId(stack).contains(VACUUM_ID_PREFIX)) {
@@ -93,7 +93,7 @@ public final class PestFinderFeature extends Feature {
 		));
 	}
 
-	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	private void onWorldRender(WorldRenderer renderer) {
 		if (!isEnabled()) return;
 		if (CLIENT.player == null || CLIENT.level == null) return;

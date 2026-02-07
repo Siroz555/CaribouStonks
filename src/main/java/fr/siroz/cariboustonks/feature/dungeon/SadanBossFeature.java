@@ -34,11 +34,11 @@ public class SadanBossFeature extends Feature {
 	private boolean inBoss = false;
 
 	public SadanBossFeature() {
-		SkyBlockEvents.DUNGEON_BOSS_SPAWN.register(this::onDungeonBossSpawn);
-		ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
+		SkyBlockEvents.DUNGEON_BOSS_SPAWN_EVENT.register(this::onDungeonBossSpawn);
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
 		NetworkEvents.SERVER_TICK.register(this::onServerTick);
-		WorldEvents.BLOCK_STATE_UPDATE.register(this::onBlockUpdate);
-		RenderEvents.WORLD_RENDER.register(this::render);
+		WorldEvents.BLOCK_STATE_UPDATE_EVENT.register(this::onBlockUpdate);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 	}
 
 	@Override
@@ -54,14 +54,14 @@ public class SadanBossFeature extends Feature {
 		terracottaFlowerPots = null;
 	}
 
-	@EventHandler(event = "SkyBlockEvents.DUNGEON_BOSS_SPAWN")
+	@EventHandler(event = "SkyBlockEvents.DUNGEON_BOSS_SPAWN_EVENT")
 	private void onDungeonBossSpawn(@NonNull DungeonBoss boss) {
 		if (boss == DungeonBoss.SADAN) {
 			inBoss = true;
 		}
 	}
 
-	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onChatMessage(@NonNull Component text) {
 		if (inBoss && text.getString().equals(GIANT_TRIGGER_MESSAGE)) {
 			terracottaFlowerPots = null;
@@ -82,7 +82,7 @@ public class SadanBossFeature extends Feature {
 		}
 	}
 
-	@EventHandler(event = "WorldEvents.BLOCK_STATE_UPDATE")
+	@EventHandler(event = "WorldEvents.BLOCK_STATE_UPDATE_EVENT")
 	private void onBlockUpdate(@NonNull BlockPos pos, @Nullable BlockState oldState, @NonNull BlockState newState) {
 		if (!inBoss || !isEnabled()) return;
 
@@ -95,7 +95,7 @@ public class SadanBossFeature extends Feature {
 		}
 	}
 
-	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	public void render(WorldRenderer renderer) {
 		if (!inBoss || !isEnabled() || terracottaFlowerPots == null) return;
 

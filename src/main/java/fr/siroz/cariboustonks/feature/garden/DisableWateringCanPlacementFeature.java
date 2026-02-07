@@ -15,7 +15,7 @@ public class DisableWateringCanPlacementFeature extends Feature {
 	private static final String AQUA_MASTER_ID = "AQUAMASTER";
 
 	public DisableWateringCanPlacementFeature() {
-		InteractionEvents.ALLOW_INTERACT_BLOCK.register(this::allowInteractBlock);
+		InteractionEvents.ALLOW_INTERACT_BLOCK_EVENT.register(this::allowInteractBlock);
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class DisableWateringCanPlacementFeature extends Feature {
 				&& this.config().farming.garden.disableWateringCanPlacement;
 	}
 
-	@EventHandler(event = "InteractionEvents.ALLOW_INTERACT_BLOCK")
+	@EventHandler(event = "InteractionEvents.ALLOW_INTERACT_BLOCK_EVENT")
 	private boolean allowInteractBlock(@NonNull ItemStack itemStack) {
 		if (!isEnabled()) return true;
 		if (itemStack.getItem() != Items.PLAYER_HEAD) return true;

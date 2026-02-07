@@ -53,10 +53,10 @@ public class CocoonedWarningFeature extends Feature {
 	private boolean canBeTriggered = false;
 
 	public CocoonedWarningFeature() {
-		SkyBlockEvents.ISLAND_CHANGE.register(this::onChangeIsland);
+		SkyBlockEvents.ISLAND_CHANGE_EVENT.register(this::onChangeIsland);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
-		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
-		RenderEvents.WORLD_RENDER.register(this::render);
+		WorldEvents.ARMORSTAND_REMOVE_EVENT.register(this::onRemoveArmorStand);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class CocoonedWarningFeature extends Feature {
 		cocoonPositions.clear();
 	}
 
-	@EventHandler(event = "SkyBlockEvents.ISLAND_CHANGE")
+	@EventHandler(event = "SkyBlockEvents.ISLAND_CHANGE_EVENT")
 	private void onChangeIsland(@NonNull IslandType islandType) {
 		canBeTriggered = islandType != IslandType.DUNGEON
 				&& islandType != IslandType.KUUDRA_HOLLOW
@@ -138,13 +138,13 @@ public class CocoonedWarningFeature extends Feature {
 		}
 	}
 
-	@EventHandler(event = "WorldEvents.ARMORSTAND_REMOVED")
+	@EventHandler(event = "WorldEvents.ARMORSTAND_REMOVE_EVENT")
 	private void onRemoveArmorStand(@NonNull ArmorStand armorStand) {
 		chain.removeIf(a -> a.getId() == armorStand.getId());
 	}
 
-	@EventHandler(event = "RenderEvents.WORLD_RENDER")
-	public void render(WorldRenderer renderer) {
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
+	private void render(WorldRenderer renderer) {
 		for (BlockPos pos : cocoonPositions) {
 			final BlockPos finalPos = pos.immutable().offset(0, -4, 0);
 			renderer.submitBeaconBeam(finalPos, Colors.RED);

@@ -14,7 +14,7 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Provides methods to render various visual elements in the world with
- * the {@link RenderEvents#WORLD_RENDER}.
+ * the {@link RenderEvents#WORLD_RENDER_EVENT}.
  */
 public interface WorldRenderer {
 

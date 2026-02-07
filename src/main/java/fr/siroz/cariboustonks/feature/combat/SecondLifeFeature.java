@@ -46,7 +46,7 @@ public class SecondLifeFeature extends Feature {
 	private final HudElementBuilder hudBuilder = new HudElementBuilder();
 
 	public SecondLifeFeature() {
-		ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(HUD_ID)
@@ -75,7 +75,7 @@ public class SecondLifeFeature extends Feature {
 		activeCooldowns.clear();
 	}
 
-	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onChatMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 

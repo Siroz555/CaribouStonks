@@ -188,20 +188,16 @@ public final class FeatureManager {
 	}
 
 	private void registerListeners() {
-		ClientTickEvents.END_CLIENT_TICK.register(_mc -> onTick());
-		ClientPlayConnectionEvents.JOIN.register((_h, _ps, _mc) -> onJoin());
-	}
-
-	private void onTick() {
-		for (Feature feature : FEATURE_INSTANCES.values()) {
-			feature.onClientTick();
-		}
-	}
-
-	private void onJoin() {
-		for (Feature feature : FEATURE_INSTANCES.values()) {
-			feature.onClientJoinServer();
-		}
+		ClientTickEvents.END_CLIENT_TICK.register(_mc -> {
+			for (Feature feature : FEATURE_INSTANCES.values()) {
+				feature.onClientTick();
+			}
+		});
+		ClientPlayConnectionEvents.JOIN.register((_h, _ps, _mc) -> {
+			for (Feature feature : FEATURE_INSTANCES.values()) {
+				feature.onClientJoinServer();
+			}
+		});
 	}
 
 	private void warnIfExperimental(Feature feature) {

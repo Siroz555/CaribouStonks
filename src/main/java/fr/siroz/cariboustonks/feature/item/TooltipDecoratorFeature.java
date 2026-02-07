@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.event.ItemRenderEvents;
+import fr.siroz.cariboustonks.event.GuiEvents;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import it.unimi.dsi.fastutil.Pair;
 import java.awt.Color;
@@ -31,7 +31,7 @@ public class TooltipDecoratorFeature extends Feature {
 	);
 
 	public TooltipDecoratorFeature() {
-		ItemRenderEvents.POST_TOOLTIP.register(this::onRenderTooltip);
+		GuiEvents.POST_TOOLTIP_EVENT.register(this::onRenderTooltip);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class TooltipDecoratorFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.toolTipDecorator.enabled;
 	}
 
-	@EventHandler(event = "ItemRenderEvents.POST_TOOLTIP")
+	@EventHandler(event = "GuiEvents.POST_TOOLTIP_EVENT")
 	private void onRenderTooltip(
             GuiGraphics guiGraphics,
             ItemStack itemStack,

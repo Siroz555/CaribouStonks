@@ -33,7 +33,7 @@ class SlayerBossFight {
 		}
 
 		if (slayerQuest != null) {
-			SkyBlockEvents.SLAYER_BOSS_SPAWN.invoker().onSpawn(slayerQuest.getSlayerType(), slayerQuest.getSlayerTier());
+			SkyBlockEvents.SLAYER_BOSS_SPAWN_EVENT.invoker().onSpawn(slayerQuest.getSlayerType(), slayerQuest.getSlayerTier());
 		}
 	}
 

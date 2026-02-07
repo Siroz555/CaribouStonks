@@ -77,7 +77,7 @@ public final class CaribouRenderer {
 		if (worldRenderer == null) return;
 
 		worldRenderer.begin(frustum);
-		RenderEvents.WORLD_RENDER.invoker().onWorldRender(worldRenderer);
+		RenderEvents.WORLD_RENDER_EVENT.invoker().onWorldRender(worldRenderer);
 		worldRenderer.end();
 	}
 

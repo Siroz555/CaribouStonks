@@ -18,11 +18,11 @@ final class WelcomeMessage {
 
 	WelcomeMessage() {
 		if (ConfigManager.getConfig().general.firstTimeWithTheMod) {
-			SkyBlockEvents.JOIN.register(_s -> onJoin());
+			SkyBlockEvents.JOIN_EVENT.register(_s -> onJoin());
 		}
 	}
 
-	@EventHandler(event = "SkyBlockEvents.JOIN")
+	@EventHandler(event = "SkyBlockEvents.JOIN_EVENT")
 	private void onJoin() {
 		TickScheduler.getInstance().runLater(() -> {
 			if (LOCALE.getLanguage().equalsIgnoreCase("fr")) {

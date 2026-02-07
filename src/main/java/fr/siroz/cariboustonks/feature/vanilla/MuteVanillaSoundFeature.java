@@ -28,7 +28,7 @@ public class MuteVanillaSoundFeature extends Feature {
 	);
 
 	public MuteVanillaSoundFeature() {
-		WorldEvents.ALLOW_SOUND.register(this::allowSound);
+		WorldEvents.ALLOW_SOUND_EVENT.register(this::allowSound);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class MuteVanillaSoundFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock();
 	}
 
-	@EventHandler(event = "WorldEvents.ALLOW_SOUND")
+	@EventHandler(event = "WorldEvents.ALLOW_SOUND_EVENT")
 	private boolean allowSound(SoundEvent soundEvent) {
 		if (!isEnabled()) return true;
 

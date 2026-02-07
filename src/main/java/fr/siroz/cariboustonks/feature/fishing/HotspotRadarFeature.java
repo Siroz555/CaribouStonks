@@ -57,7 +57,7 @@ public class HotspotRadarFeature extends Feature {
 
 		UseItemCallback.EVENT.register(this::onUseItem);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
-		RenderEvents.WORLD_RENDER.register(this::render);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class HotspotRadarFeature extends Feature {
 		));
 	}
 
-	@EventHandler(event = "WorldRenderEvents.AFTER_TRANSLUCENT")
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	private void render(WorldRenderer renderer) {
 		if (isEnabled() && waypoint.isEnabled()) {
 			waypoint.getRenderer().render(renderer);

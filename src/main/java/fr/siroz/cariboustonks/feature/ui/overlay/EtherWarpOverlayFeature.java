@@ -30,7 +30,7 @@ public class EtherWarpOverlayFeature extends Feature {
 	private static final int RANGE = 57;
 
 	public EtherWarpOverlayFeature() {
-		RenderEvents.WORLD_RENDER.register(this::render);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class EtherWarpOverlayFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.overlay.etherWarp;
 	}
 
-	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	private void render(WorldRenderer renderer) {
 		if (CLIENT.player == null || CLIENT.level == null) return;
 		if (!isEnabled() || !CLIENT.options.keyShift.isDown()) return;

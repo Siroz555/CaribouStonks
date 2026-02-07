@@ -46,7 +46,7 @@ public final class WaypointFeature extends Feature {
     public WaypointFeature() {
         ClientLifecycleEvents.CLIENT_STARTED.register(this::onClientStarted);
         ClientLifecycleEvents.CLIENT_STOPPING.register(this::onClientStopping);
-        RenderEvents.WORLD_RENDER.register(this::render);
+        RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
 				.namespaced("waypoints", ctx -> {
@@ -94,7 +94,7 @@ public final class WaypointFeature extends Feature {
 		saveWaypoints();
 	}
 
-	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	private void render(WorldRenderer renderer) {
 		if (!isEnabled()) return;
 

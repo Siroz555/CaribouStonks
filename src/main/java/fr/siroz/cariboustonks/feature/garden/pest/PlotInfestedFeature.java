@@ -4,8 +4,8 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.event.ClientEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.event.HudEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.DeveloperTools;
@@ -44,8 +44,8 @@ public class PlotInfestedFeature extends Feature {
 
 	public PlotInfestedFeature() {
 		this.createPlots();
-		HudEvents.TAB_LIST_UPDATE.register(this::onTabListUpdate);
-		RenderEvents.WORLD_RENDER.register(this::onWorldRender);
+		ClientEvents.TAB_LIST_UPDATE_EVENT.register(this::onTabListUpdate);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::onWorldRender);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class PlotInfestedFeature extends Feature {
 		infestedPlots.clear();
 	}
 
-	@EventHandler(event = "TabListEvents.UPDATE")
+	@EventHandler(event = "ClientEvents.TAB_LIST_UPDATE_EVENT")
 	private void onTabListUpdate(@NonNull List<String> lines) {
 		if (!isEnabled()) return;
 
@@ -84,7 +84,7 @@ public class PlotInfestedFeature extends Feature {
 		}
 	}
 
-	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	private void onWorldRender(WorldRenderer renderer) {
 		if (!isEnabled()) return;
 		if (infestedPlots.isEmpty()) return;

@@ -6,8 +6,8 @@ import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.event.CustomScreenEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
+import fr.siroz.cariboustonks.event.GuiEvents;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -34,8 +34,8 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 	private boolean updated = false;
 
 	public AbiphoneFavoriteContactFeature(int priority) {
-		CustomScreenEvents.KEY_PRESSED.register(this::onKeyPressed);
-		CustomScreenEvents.CLOSE.register(this::onClose);
+		GuiEvents.SCREEN_KEY_PRESS_EVENT.register(this::onKeyPressed);
+		GuiEvents.SCREEN_CLOSE_EVENT.register(this::onClose);
 
 		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.of(TITLE_PATTERN));
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
@@ -75,7 +75,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock();
 	}
 
-	@EventHandler(event = "CustomScreenEvents.KEY_PRESSED")
+	@EventHandler(event = "GuiEvents.SCREEN_KEY_PRESS_EVENT")
 	private void onKeyPressed(Screen screen, KeyEvent input, Slot slot) {
 		if (!isEnabled() || screen == null) return;
 		if (isMatcherBlocking(screen)) return;
@@ -89,7 +89,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 		}
 	}
 
-	@EventHandler(event = "CustomScreenEvents.CLOSE")
+	@EventHandler(event = "GuiEvents.SCREEN_CLOSE_EVENT")
 	private void onClose(Screen screen) {
 		if (!isMatcherBlocking(screen) && updated) {
 			updated = false;

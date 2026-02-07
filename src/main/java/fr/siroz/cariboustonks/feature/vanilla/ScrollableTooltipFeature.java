@@ -2,10 +2,9 @@ package fr.siroz.cariboustonks.feature.vanilla;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.event.CustomScreenEvents;
+import fr.siroz.cariboustonks.event.ClientEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.event.ItemRenderEvents;
-import fr.siroz.cariboustonks.event.MouseEvents;
+import fr.siroz.cariboustonks.event.GuiEvents;
 import fr.siroz.cariboustonks.mixin.accessors.ClientTextTooltipAccessor;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.cooldown.Cooldown;
@@ -41,9 +40,9 @@ public class ScrollableTooltipFeature extends Feature {
 	private List<ClientTooltipComponent> currentTooltips;
 
 	public ScrollableTooltipFeature() {
-		CustomScreenEvents.CLOSE.register(screen -> this.reset());
-		MouseEvents.ALLOW_MOUSE_SCROLL.register(this::allowMouseScroll);
-		ItemRenderEvents.TOOLTIP_TRACKER.register(this::onTooltipTracker);
+		GuiEvents.SCREEN_CLOSE_EVENT.register(screen -> this.reset());
+		ClientEvents.ALLOW_MOUSE_SCROLL_EVENT.register(this::allowMouseScroll);
+		GuiEvents.TOOLTIP_TRACKER_EVENT.register(this::onTooltipTracker);
 	}
 
 	@Override
@@ -74,7 +73,7 @@ public class ScrollableTooltipFeature extends Feature {
 		currentTooltips = null;
 	}
 
-	@EventHandler(event = "MouseEvents.ALLOW_MOUSE_SCROLL")
+	@EventHandler(event = "ClientEvents.ALLOW_MOUSE_SCROLL_EVENT")
 	private boolean allowMouseScroll(double horizontal, double vertical) {
 		boolean allowScroll = true;
 		if (!isEnabled()) {
@@ -112,7 +111,7 @@ public class ScrollableTooltipFeature extends Feature {
 		return allowScroll;
 	}
 
-	@EventHandler(event = "ItemRenderEvents.TOOLTIP_TRACKER")
+	@EventHandler(event = "GuiEvents.TOOLTIP_TRACKER_EVENT")
 	private void onTooltipTracker(List<ClientTooltipComponent> tooltipComponents) {
 		if (!isEnabled()) return;
 

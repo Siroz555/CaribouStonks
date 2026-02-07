@@ -5,11 +5,11 @@ import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.system.System;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.RenderEvents;
-import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.minecraft.client.Minecraft;
 import org.jspecify.annotations.NonNull;
 
@@ -43,8 +43,8 @@ public final class WaypointSystem implements System {
     private final Map<UUID, Waypoint> waypoints = new ConcurrentHashMap<>();
 
     public WaypointSystem() {
-		WorldEvents.JOIN.register(world -> this.resetWaypoints());
-        RenderEvents.WORLD_RENDER.register(this::render);
+		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((event, world) -> this.resetWaypoints());
+        RenderEvents.WORLD_RENDER_EVENT.register(this::render);
         TickScheduler.getInstance().runRepeating(this::onTick, 1);
     }
 
@@ -66,7 +66,7 @@ public final class WaypointSystem implements System {
         waypoints.remove(waypoint.getUuid());
     }
 
-	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
     private void render(WorldRenderer renderer) {
         if (CLIENT.player == null || CLIENT.level == null || waypoints.isEmpty()) {
 			return;

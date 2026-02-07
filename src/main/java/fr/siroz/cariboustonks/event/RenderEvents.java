@@ -7,7 +7,7 @@ import net.minecraft.world.entity.Entity;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Events related to rendering.
+ * Events related to world rendering.
  */
 public final class RenderEvents {
 
@@ -19,7 +19,7 @@ public final class RenderEvents {
 	 * <p>
 	 * {@link WorldRenderer} is provided as parameter.
 	 */
-	public static final Event<WorldRender> WORLD_RENDER = EventFactory.createArrayBacked(WorldRender.class, listeners -> renderer -> {
+	public static final Event<WorldRender> WORLD_RENDER_EVENT = EventFactory.createArrayBacked(WorldRender.class, listeners -> renderer -> {
 		for (WorldRender listener : listeners) {
 			listener.onWorldRender(renderer);
 		}
@@ -28,8 +28,7 @@ public final class RenderEvents {
 	/**
 	 * Called before an entity is rendered.
 	 */
-	@OnlySkyBlock
-	public static final Event<AllowRenderEntity> ALLOW_RENDER_ENTITY = EventFactory.createArrayBacked(AllowRenderEntity.class, listeners -> entity -> {
+	public static final Event<AllowRenderEntity> ALLOW_RENDER_ENTITY_EVENT = EventFactory.createArrayBacked(AllowRenderEntity.class, listeners -> entity -> {
 		for (AllowRenderEntity listener : listeners) {
 			if (!listener.allowRenderEntity(entity)) {
 				return false;

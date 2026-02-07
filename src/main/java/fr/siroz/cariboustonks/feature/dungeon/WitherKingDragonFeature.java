@@ -50,11 +50,11 @@ public class WitherKingDragonFeature extends Feature {
 	public WitherKingDragonFeature() {
 		this.dungeonManager = CaribouStonks.skyBlock().getDungeonManager();
 
-		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onMessage);
 		NetworkEvents.SERVER_TICK.register(this::onServerTick);
-		RenderEvents.WORLD_RENDER.register(this::render);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticle);
-		SkyBlockEvents.DUNGEON_START.register(this::reset);
+		SkyBlockEvents.DUNGEON_START_EVENT.register(this::reset);
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class WitherKingDragonFeature extends Feature {
 		reset();
 	}
 
-	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 
@@ -91,8 +91,8 @@ public class WitherKingDragonFeature extends Feature {
 		}
 	}
 
-	@EventHandler(event = "RenderEvents.WORLD_RENDER")
-	public void render(WorldRenderer renderer) {
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
+	private void render(WorldRenderer renderer) {
 		if (!isPhase5) return;
 		if (!isEnabled()) return;
 

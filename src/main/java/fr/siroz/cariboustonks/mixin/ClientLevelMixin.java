@@ -23,7 +23,7 @@ public abstract class ClientLevelMixin implements BlockGetter {
 	@Inject(method = "playSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZJ)V", at = @At("HEAD"), cancellable = true)
 	private void cariboustonks$cancelSoundEvents(CallbackInfo ci, @Local(argsOnly = true) SoundEvent soundEvent) {
 		if (SkyBlockAPI.isOnSkyBlock()) {
-			if (!WorldEvents.ALLOW_SOUND.invoker().allowSound(soundEvent)) {
+			if (!WorldEvents.ALLOW_SOUND_EVENT.invoker().allowSound(soundEvent)) {
 				ci.cancel();
 			}
 		}
@@ -32,7 +32,7 @@ public abstract class ClientLevelMixin implements BlockGetter {
 	@Inject(method = "removeEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onClientRemoval()V"))
 	private void cariboustonks$onRemoveEntityEvent(int entityId, Entity.RemovalReason removalReason, CallbackInfo ci, @Local Entity entity) {
 		if (SkyBlockAPI.isOnSkyBlock() && entity instanceof ArmorStand armorStand) {
-			WorldEvents.ARMORSTAND_REMOVED.invoker().onRemove(armorStand);
+			WorldEvents.ARMORSTAND_REMOVE_EVENT.invoker().onRemove(armorStand);
 		}
 	}
 
@@ -44,7 +44,7 @@ public abstract class ClientLevelMixin implements BlockGetter {
 	@Inject(method = "setServerVerifiedBlockState", at = @At("RETURN"))
 	private void cariboustonks$handleBlockUpdateEvent(CallbackInfo ci, @Local(argsOnly = true) BlockPos pos, @Local(argsOnly = true) BlockState state, @Share("old") LocalRef<BlockState> oldState) {
 		if (pos != null) {
-			WorldEvents.BLOCK_STATE_UPDATE.invoker().onBlockStateUpdate(pos, oldState.get(), state);
+			WorldEvents.BLOCK_STATE_UPDATE_EVENT.invoker().onBlockStateUpdate(pos, oldState.get(), state);
 		}
 	}
 }

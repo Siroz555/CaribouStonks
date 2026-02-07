@@ -40,7 +40,7 @@ public class ChatPositionFeature extends Feature {
 	private static final Cooldown COOLDOWN = Cooldown.of(10, TimeUnit.SECONDS);
 
 	public ChatPositionFeature() {
-		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onMessage);
 
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
 				.namespaced("sendCoords", ctx -> {
@@ -57,7 +57,7 @@ public class ChatPositionFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.sharedPositionWaypoint.enabled;
 	}
 
-	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onMessage(Component text) {
 		if (!isEnabled()) return;
 

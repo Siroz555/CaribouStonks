@@ -22,7 +22,7 @@ public class BreakTreeAnimationFeature extends Feature {
 	);
 
 	public BreakTreeAnimationFeature() {
-		RenderEvents.ALLOW_RENDER_ENTITY.register(this::allowRenderEntity);
+		RenderEvents.ALLOW_RENDER_ENTITY_EVENT.register(this::allowRenderEntity);
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class BreakTreeAnimationFeature extends Feature {
 				&& this.config().foraging.hideTreeBreakAnimation;
 	}
 
-	@EventHandler(event = "RenderEvents.ALLOW_RENDER_ENTITY")
+	@EventHandler(event = "RenderEvents.ALLOW_RENDER_ENTITY_EVENT")
 	private boolean allowRenderEntity(@NonNull Entity entity) {
 		if (!isEnabled()) return true;
 		if (!(entity instanceof Display.BlockDisplay blockDisplayEntity)) return true;

@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.mixin;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.event.MouseEvents;
+import fr.siroz.cariboustonks.event.ClientEvents;
 import fr.siroz.cariboustonks.feature.garden.MouseLockFeature;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -58,7 +58,7 @@ public abstract class MouseHandlerMixin {
 
 	@Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
 	private void cariboustonks$trackWheel(long window, double horizontal, double vertical, CallbackInfo ci) {
-		if (!MouseEvents.ALLOW_MOUSE_SCROLL.invoker().allowMouseScroll(horizontal, vertical)) {
+		if (!ClientEvents.ALLOW_MOUSE_SCROLL_EVENT.invoker().allowMouseScroll(horizontal, vertical)) {
 			ci.cancel();
 		}
 	}

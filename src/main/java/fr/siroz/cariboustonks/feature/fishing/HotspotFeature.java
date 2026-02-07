@@ -45,7 +45,7 @@ public class HotspotFeature extends Feature {
 	public HotspotFeature() {
 		TickScheduler.getInstance().runRepeating(this::update, 2, TimeUnit.SECONDS);
 		TickScheduler.getInstance().runRepeating(this::updateBobber, 500, TimeUnit.MILLISECONDS);
-		RenderEvents.WORLD_RENDER.register(this::render);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
 	}
 
@@ -100,7 +100,7 @@ public class HotspotFeature extends Feature {
 		}
 	}
 
-	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	private void render(WorldRenderer renderer) {
 		if (!isEnabled() || currentHotspot == null) return;
 

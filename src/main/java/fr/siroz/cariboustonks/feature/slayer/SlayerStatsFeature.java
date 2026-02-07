@@ -31,6 +31,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 @Experimental
 public class SlayerStatsFeature extends Feature {
@@ -50,11 +51,11 @@ public class SlayerStatsFeature extends Feature {
 	public SlayerStatsFeature() {
 		this.slayerManager = CaribouStonks.skyBlock().getSlayerManager();
 
-		SkyBlockEvents.SLAYER_BOSS_SPAWN.register(this::onBossSpawn);
-		SkyBlockEvents.SLAYER_MINIBOSS_SPAWN.register(this::onMinibossSpawn);
-		SkyBlockEvents.SLAYER_QUEST_START.register(this::onQuestStart);
-		SkyBlockEvents.SLAYER_QUEST_FAIL.register((_type, _tier) -> this.currentRun = null);
-		SkyBlockEvents.SLAYER_BOSS_END.register(this::onBossEnd);
+		SkyBlockEvents.SLAYER_BOSS_SPAWN_EVENT.register(this::onBossSpawn);
+		SkyBlockEvents.SLAYER_MINIBOSS_SPAWN_EVENT.register(this::onMinibossSpawn);
+		SkyBlockEvents.SLAYER_QUEST_START_EVENT.register(this::onQuestStart);
+		SkyBlockEvents.SLAYER_QUEST_FAIL_EVENT.register((_type, _tier) -> this.currentRun = null);
+		SkyBlockEvents.SLAYER_BOSS_END_EVENT.register(this::onBossEnd);
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(HUD_ID)
@@ -84,21 +85,21 @@ public class SlayerStatsFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock();
 	}
 
-	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_SPAWN")
+	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_SPAWN_EVENT")
 	private void onBossSpawn(@NonNull SlayerType type, @NonNull SlayerTier tier) {
 		if (this.config().slayer.bossSpawnAlert) {
 			Client.showTitle(Component.literal("Boss spawned!").withStyle(ChatFormatting.DARK_RED), 1, 15, 1);
 		}
 	}
 
-	@EventHandler(event = "SkyBlockEvents.SLAYER_MINIBOSS_SPAWN")
+	@EventHandler(event = "SkyBlockEvents.SLAYER_MINIBOSS_SPAWN_EVENT")
 	private void onMinibossSpawn(@NonNull SlayerType type, @NonNull SlayerTier tier) {
 		if (this.config().slayer.minibossSpawnAlert) {
 			Client.showTitle(Component.literal("Miniboss spawned!").withStyle(ChatFormatting.RED), 1, 15, 1);
 		}
 	}
 
-	@EventHandler(event = "SkyBlockEvents.SLAYER_QUEST_START")
+	@EventHandler(event = "SkyBlockEvents.SLAYER_QUEST_START_EVENT")
 	private void onQuestStart(@NonNull SlayerType type, @NonNull SlayerTier tier, boolean afterUpdate) {
 		// Permet de reset si le type de slayer change ou le tier
 		if (!runs.isEmpty()) {
@@ -116,8 +117,8 @@ public class SlayerStatsFeature extends Feature {
 		}
 	}
 
-	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_END")
-	private void onBossEnd(@NonNull SlayerType type, @NonNull SlayerTier tier, @NonNull Instant startTime) {
+	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_END_EVENT")
+	private void onBossEnd(@NonNull SlayerType type, @NonNull SlayerTier tier, @Nullable Instant startTime) {
 		if (currentRun != null && type != SlayerType.UNKNOWN && tier != SlayerTier.UNKNOWN) {
 			currentRun.setBossSpawn(startTime);
 			// SIROZ-NOTE FUTURE UPDATE

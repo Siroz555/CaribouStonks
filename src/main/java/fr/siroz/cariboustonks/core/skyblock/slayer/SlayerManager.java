@@ -6,8 +6,8 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Mayor;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Perk;
 import fr.siroz.cariboustonks.event.ChatEvents;
+import fr.siroz.cariboustonks.event.ClientEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.event.HudEvents;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.util.Client;
@@ -32,10 +32,10 @@ import org.jspecify.annotations.Nullable;
  *
  * @see SlayerType
  * @see SlayerTier
- * @see SkyBlockEvents#SLAYER_BOSS_SPAWN
- * @see SkyBlockEvents#SLAYER_MINIBOSS_SPAWN
- * @see SkyBlockEvents#SLAYER_QUEST_START
- * @see SkyBlockEvents#SLAYER_QUEST_FAIL
+ * @see SkyBlockEvents#SLAYER_BOSS_SPAWN_EVENT
+ * @see SkyBlockEvents#SLAYER_MINIBOSS_SPAWN_EVENT
+ * @see SkyBlockEvents#SLAYER_QUEST_START_EVENT
+ * @see SkyBlockEvents#SLAYER_QUEST_FAIL_EVENT
  */
 public final class SlayerManager {
 
@@ -54,9 +54,9 @@ public final class SlayerManager {
 	private SlayerQuest quest;
 
 	public SlayerManager() {
-		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
-		SkyBlockEvents.ISLAND_CHANGE.register(this::onIslandChange);
-		HudEvents.SCOREBOARD_UPDATE.register(this::onScoreboardUpdate);
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onMessage);
+		SkyBlockEvents.ISLAND_CHANGE_EVENT.register(this::onIslandChangeHandler);
+		ClientEvents.SCOREBOARD_UPDATE_EVENT.register(this::onScoreboardUpdate);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
 	}
 
@@ -159,7 +159,7 @@ public final class SlayerManager {
 	/**
 	 * The main entry point for managing the various statuses of the Slayer Quest's progress.
 	 */
-	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onMessage(@NonNull Component text) {
 		if (!SkyBlockAPI.isOnSkyBlock()) return;
 
@@ -169,7 +169,7 @@ public final class SlayerManager {
 		switch (message) {
 			case QUEST_CANCELLED, QUEST_FAILED -> {
 				if (quest != null) {
-					SkyBlockEvents.SLAYER_QUEST_FAIL.invoker().onFail(quest.getSlayerType(), quest.getSlayerTier());
+					SkyBlockEvents.SLAYER_QUEST_FAIL_EVENT.invoker().onFail(quest.getSlayerType(), quest.getSlayerTier());
 				}
 				quest = null;
 				bossFight = null;
@@ -178,18 +178,18 @@ public final class SlayerManager {
 				if (quest == null) {
 					quest = new SlayerQuest(this);
 				}
-				SkyBlockEvents.SLAYER_QUEST_START.invoker().onStart(quest.getSlayerType(), quest.getSlayerTier(), false);
+				SkyBlockEvents.SLAYER_QUEST_START_EVENT.invoker().onStart(quest.getSlayerType(), quest.getSlayerTier(), false);
 				bossFight = null;
 			}
 			case BOSS_SLAIN -> {
 				if (quest != null && bossFight != null) {
 					bossFight.setSlain(true);
-					SkyBlockEvents.SLAYER_BOSS_END.invoker().onEnd(quest.getSlayerType(), quest.getSlayerTier(), bossFight.getBossSpawnTime());
+					SkyBlockEvents.SLAYER_BOSS_END_EVENT.invoker().onEnd(quest.getSlayerType(), quest.getSlayerTier(), bossFight.getBossSpawnTime());
 				}
 			}
 			case QUEST_COMPLETE -> {
 				if (quest != null && bossFight != null && !bossFight.isSlain()) {
-					SkyBlockEvents.SLAYER_BOSS_END.invoker().onEnd(quest.getSlayerType(), quest.getSlayerTier(), bossFight.getBossSpawnTime());
+					SkyBlockEvents.SLAYER_BOSS_END_EVENT.invoker().onEnd(quest.getSlayerType(), quest.getSlayerTier(), bossFight.getBossSpawnTime());
 				}
 				bossFight = null;
 			}
@@ -202,8 +202,8 @@ public final class SlayerManager {
 	 * Allows resetting the manager status and attempt to update the information about the active quest
 	 * if it is available upon arrival on the server.
 	 */
-	@EventHandler(event = "SkyBlockEvents.ISLAND_CHANGE")
-	private void onIslandChange(@NonNull IslandType islandType) {
+	@EventHandler(event = "SkyBlockEvents.ISLAND_CHANGE_EVENT")
+	private void onIslandChangeHandler(@NonNull IslandType islandType) {
 		bossFight = null;
 		quest = null;
 		TickScheduler.getInstance().runLater(
@@ -215,7 +215,7 @@ public final class SlayerManager {
 	/**
 	 * Retrieves the different lines of the scoreboard every second
 	 */
-	@EventHandler(event = "HudEvents.SCOREBOARD_UPDATE")
+	@EventHandler(event = "HudEvents.SCOREBOARD_UPDATE_EVENT")
 	private void onScoreboardUpdate(@NonNull List<String> lines) {
 		updateSlayerBossInfo(true, lines);
 	}
@@ -288,7 +288,7 @@ public final class SlayerManager {
 					SlayerTier slayerTier = SlayerTier.valueOf(slayerTierMatcher.group(2));
 					quest.setSlayerType(slayerType);
 					quest.setSlayerTier(slayerTier);
-					SkyBlockEvents.SLAYER_QUEST_START.invoker().onStart(slayerType, slayerTier, true);
+					SkyBlockEvents.SLAYER_QUEST_START_EVENT.invoker().onStart(slayerType, slayerTier, true);
 
 				} else if (line.equals(SCOREBOARD_BOSS_SPAWNED) && !isBossSpawned()) {
 					bossFight = new SlayerBossFight(this, null);

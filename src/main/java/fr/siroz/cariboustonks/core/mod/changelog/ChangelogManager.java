@@ -60,7 +60,7 @@ public final class ChangelogManager {
 		this.notified = false;
 
 		ClientLifecycleEvents.CLIENT_STARTED.register(this::onClientStarted);
-		SkyBlockEvents.JOIN.register(_s -> this.onJoinSkyBlock());
+		SkyBlockEvents.JOIN_EVENT.register(_s -> this.onJoinSkyBlock());
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _ra) ->
 				dispatcher.register(ClientCommandManager.literal("stonksviewchangelog")

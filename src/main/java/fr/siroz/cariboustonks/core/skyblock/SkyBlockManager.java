@@ -92,7 +92,7 @@ public final class SkyBlockManager {
 	@EventHandler(event = "ClientPlayConnectionEvents.DISCONNECT")
 	private void onDisconnect() {
 		if (SkyBlockAPI.isOnSkyBlock()) {
-			SkyBlockEvents.LEAVE.invoker().onLeave();
+			SkyBlockEvents.LEAVE_EVENT.invoker().onLeave();
 		}
 
 		SkyBlockAPI.handleInternalLocationUpdate(null, false, "", IslandType.UNKNOWN);
@@ -115,16 +115,16 @@ public final class SkyBlockManager {
 		IslandType islandType = IslandType.getById(locationPacket.getMode().orElse(""));
 
 		SkyBlockAPI.handleInternalLocationUpdate(null, null, gameType, islandType);
-		SkyBlockEvents.ISLAND_CHANGE.invoker().onIslandChange(islandType);
+		SkyBlockEvents.ISLAND_CHANGE_EVENT.invoker().onIslandChange(islandType);
 
 		if (gameType.equals("SKYBLOCK")) {
 			SkyBlockAPI.handleInternalLocationUpdate(null, true, null, null);
 			if (!previousServerType.equals("SKYBLOCK")) {
-				SkyBlockEvents.JOIN.invoker().onJoin(locationPacket.getServerName());
+				SkyBlockEvents.JOIN_EVENT.invoker().onJoin(locationPacket.getServerName());
 			}
 		} else if (previousServerType.equals("SKYBLOCK")) {
 			SkyBlockAPI.handleInternalLocationUpdate(null, false, null, null);
-			SkyBlockEvents.LEAVE.invoker().onLeave();
+			SkyBlockEvents.LEAVE_EVENT.invoker().onLeave();
 		}
 	}
 

@@ -27,7 +27,7 @@ public class SlayerCocoonedWarningFeature extends Feature {
 
 	public SlayerCocoonedWarningFeature() {
 		this.slayerManager = CaribouStonks.skyBlock().getSlayerManager();
-		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onMessage);
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class SlayerCocoonedWarningFeature extends Feature {
 		return cocoonedBoss;
 	}
 
-	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 

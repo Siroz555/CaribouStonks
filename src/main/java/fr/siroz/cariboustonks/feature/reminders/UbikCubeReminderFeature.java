@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
+import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.system.ReminderSystem;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.HeadTextures;
@@ -38,7 +39,7 @@ public final class UbikCubeReminderFeature extends Feature {
 
     public UbikCubeReminderFeature() {
 		this.ubikCube = ItemUtils.createSkull(HeadTextures.UBIK_CUBE);
-        ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
+        ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
 
 		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
 				.display(getReminderDisplay())
@@ -79,6 +80,7 @@ public final class UbikCubeReminderFeature extends Feature {
 		}
     }
 
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
     private void onChatMessage(@NonNull Component text) {
         if (!isEnabled()) {
 			return;

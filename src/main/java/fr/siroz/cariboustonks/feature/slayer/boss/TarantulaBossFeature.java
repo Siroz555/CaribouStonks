@@ -36,10 +36,10 @@ public class TarantulaBossFeature extends Feature {
 
 	public TarantulaBossFeature() {
 		this.slayerManager = CaribouStonks.skyBlock().getSlayerManager();
-		SkyBlockEvents.SLAYER_BOSS_END.register((_type, _tier, _startTime) -> this.bossEggs.clear());
-		RenderEvents.WORLD_RENDER.register(this::render);
+		SkyBlockEvents.SLAYER_BOSS_END_EVENT.register((_type, _tier, _startTime) -> this.bossEggs.clear());
+		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
-		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
+		WorldEvents.ARMORSTAND_REMOVE_EVENT.register(this::onRemoveArmorStand);
 
 		this.addComponent(EntityGlowComponent.class, EntityGlowComponent.of(entity -> {
 			if (entity instanceof ArmorStand armorStand && isTarantulaBossEgg(armorStand)) {
@@ -62,7 +62,7 @@ public class TarantulaBossFeature extends Feature {
 		bossEggs.clear();
 	}
 
-	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	private void render(WorldRenderer renderer) {
 		if (!isEnabled()) return;
 		if (bossEggs.isEmpty()) return;
@@ -86,7 +86,7 @@ public class TarantulaBossFeature extends Feature {
 		}
 	}
 
-	@EventHandler(event = "WorldEvents.ARMORSTAND_REMOVED")
+	@EventHandler(event = "WorldEvents.ARMORSTAND_REMOVE_EVENT")
 	private void onRemoveArmorStand(@NonNull ArmorStand armorStand) {
 		if (isEnabled() && !bossEggs.isEmpty()) {
 			Iterator<ArmorStand> iterator = bossEggs.iterator();

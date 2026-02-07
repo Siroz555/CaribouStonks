@@ -16,14 +16,14 @@ public final class ChatEvents {
 	/**
      * Called when the client received a message in the chat
      */
-    public static final Event<MessageReceived> MESSAGE_RECEIVED = EventFactory.createArrayBacked(MessageReceived.class, listeners -> text -> {
-        for (MessageReceived listener : listeners) {
-            listener.onMessageReceived(text);
+    public static final Event<MessageReceive> MESSAGE_RECEIVE_EVENT = EventFactory.createArrayBacked(MessageReceive.class, listeners -> text -> {
+        for (MessageReceive listener : listeners) {
+            listener.onMessage(text);
         }
     });
 
     @FunctionalInterface
-    public interface MessageReceived {
-        void onMessageReceived(@NonNull Component text);
+    public interface MessageReceive {
+        void onMessage(@NonNull Component text);
     }
 }

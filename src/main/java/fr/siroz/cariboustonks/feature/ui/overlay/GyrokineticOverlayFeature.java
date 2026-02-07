@@ -17,7 +17,7 @@ public class GyrokineticOverlayFeature extends Feature {
 	private static final int RADIUS = 10;
 
 	public GyrokineticOverlayFeature() {
-		RenderEvents.WORLD_RENDER.register(this::render);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class GyrokineticOverlayFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.overlay.gyrokineticWand;
 	}
 
-	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	private void render(WorldRenderer renderer) {
 		if (CLIENT.player == null || CLIENT.level == null || CLIENT.getCameraEntity() == null) return;
 		if (!isEnabled()) return;

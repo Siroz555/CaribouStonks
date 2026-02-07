@@ -14,7 +14,7 @@ public abstract class ChatListenerMixin {
 	@Inject(method = "handleSystemMessage", at = @At("HEAD"))
 	private void cariboustonks$onChatMessageEvent(Component message, boolean overlay, CallbackInfo ci) {
 		if (!overlay && message != null) {
-			ChatEvents.MESSAGE_RECEIVED.invoker().onMessageReceived(message);
+			ChatEvents.MESSAGE_RECEIVE_EVENT.invoker().onMessage(message);
 		}
 	}
 }

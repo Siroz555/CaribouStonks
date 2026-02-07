@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.core.mod.ModDataSource;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockEnchantment;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.event.ItemRenderEvents;
+import fr.siroz.cariboustonks.event.GuiEvents;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.RomanNumeralUtils;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
@@ -49,7 +49,7 @@ public class ColoredEnchantmentFeature extends Feature {
 
 	public ColoredEnchantmentFeature() {
 		this.modDataSource = CaribouStonks.mod().getModDataSource();
-		ItemRenderEvents.TOOLTIP_APPENDER.register(this::onTooltipLine);
+		GuiEvents.TOOLTIP_APPENDER_EVENT.register(this::onTooltipLine);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class ColoredEnchantmentFeature extends Feature {
 
 	@Nullable
 	@SuppressWarnings("checkstyle:CyclomaticComplexity")
-	@EventHandler(event = "ItemRenderEvents.TOOLTIP_APPENDER")
+	@EventHandler(event = "GuiEvents.TOOLTIP_APPENDER_EVENT")
 	private ItemLore onTooltipLine(ItemStack itemStack, ItemLore loreComponent) {
 		if (itemStack == null || itemStack.isEmpty()) return null;
 		if (loreComponent == null || loreComponent.lines().isEmpty()) return null;

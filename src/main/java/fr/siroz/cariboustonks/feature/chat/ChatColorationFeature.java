@@ -18,7 +18,7 @@ public class ChatColorationFeature extends Feature {
 	private static final Pattern GUILD_JOIN_LEAVE_PATTERN = Pattern.compile("^Guild > [^ ]+ (joined|left)\\.$");
 
 	public ChatColorationFeature() {
-		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onMessage);
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public class ChatColorationFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock(); // en vrai de partout ?
 	}
 
-	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onMessage(Component message) {
 		if (!isEnabled()) return;
 

@@ -36,7 +36,7 @@ public final class EnchantedCloakReminderFeature extends Feature {
 	private static final ItemStack ICON = new ItemStack(Items.CLOCK);
 
 	public EnchantedCloakReminderFeature() {
-		ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
 
 		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
 				.display(getReminderDisplay())
@@ -83,7 +83,7 @@ public final class EnchantedCloakReminderFeature extends Feature {
 		}
 	}
 
-	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onChatMessage(@NonNull Component text) {
 		if (!isEnabled()) {
 			return;

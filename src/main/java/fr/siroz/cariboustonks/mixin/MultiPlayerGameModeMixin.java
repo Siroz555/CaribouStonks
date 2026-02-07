@@ -22,7 +22,7 @@ public abstract class MultiPlayerGameModeMixin {
 			return; //return ActionResult.PASS;
 		}
 
-		if (!InteractionEvents.ALLOW_INTERACT_BLOCK.invoker().onInteract(heldItem)) {
+		if (!InteractionEvents.ALLOW_INTERACT_BLOCK_EVENT.invoker().allowInteract(heldItem)) {
 			info.setReturnValue(InteractionResult.FAIL);
 		}
 	}

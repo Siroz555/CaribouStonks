@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.event.ItemRenderEvents;
+import fr.siroz.cariboustonks.event.GuiEvents;
 import fr.siroz.cariboustonks.feature.vanilla.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.mixin.accessors.AbstractContainerScreenAccessor;
 import java.util.List;
@@ -44,7 +44,7 @@ public abstract class GuiGraphicsMixin {
 	@Group(name = "storeLocals", min = 1, max = 1)
 	@Inject(method = "renderTooltip", at = @At(value = "INVOKE_ASSIGN", target = "Lorg/joml/Vector2ic;x()I", shift = At.Shift.BEFORE, remap = false), locals = LocalCapture.CAPTURE_FAILSOFT)
 	private void cariboustonks$onDrawTooltipEventAndStoreLocals(Font font, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, Identifier resource, CallbackInfo info, int tooltipWidth, int tooltipHeight, int tooltipWidth2, int tooltipHeight2, Vector2ic postPos) {
-		ItemRenderEvents.TOOLTIP_TRACKER.invoker().onTooltipTracker(components);
+		GuiEvents.TOOLTIP_TRACKER_EVENT.invoker().onTooltipTracker(components);
 		storedTooltipWidth = tooltipWidth2;
 		storedTooltipHeight = tooltipHeight2;
 		storedPos = postPos;
@@ -63,7 +63,7 @@ public abstract class GuiGraphicsMixin {
 		}
 
 		if (!stack.isEmpty() && !components.isEmpty()) {
-			ItemRenderEvents.POST_TOOLTIP.invoker().onPostTooltip(
+			GuiEvents.POST_TOOLTIP_EVENT.invoker().onPostTooltip(
 					(GuiGraphics) (Object) this,
 					stack,
 					storedPos.x() + getXOffset(),

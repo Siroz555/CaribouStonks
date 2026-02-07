@@ -24,7 +24,7 @@ public class RareSeaCreatureFeature extends Feature {
 	private boolean doubleHook = false;
 
 	public RareSeaCreatureFeature() {
-		ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class RareSeaCreatureFeature extends Feature {
 		return foundCreature;
 	}
 
-	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onChatMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 		if (!hasFishingRod()) return;

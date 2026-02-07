@@ -55,7 +55,7 @@ public class MobTrackingFeature extends Feature {
 		this.hudBuilder = new HudElementBuilder();
 
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
-		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
+		WorldEvents.ARMORSTAND_REMOVE_EVENT.register(this::onRemoveArmorStand);
 
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
 				.namespaced("mobTracking", ctx -> {
@@ -157,7 +157,7 @@ public class MobTrackingFeature extends Feature {
 		}
 	}
 
-	@EventHandler(event = "WorldEvents.ARMORSTAND_REMOVED")
+	@EventHandler(event = "WorldEvents.ARMORSTAND_REMOVE_EVENT")
 	private void onRemoveArmorStand(ArmorStand armorStand) {
 		if (!tracked.isEmpty()) {
 			boolean removed = tracked.removeIf(entity -> entity.armorStand().getId() == armorStand.getId());

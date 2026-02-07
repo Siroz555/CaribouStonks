@@ -17,7 +17,7 @@ public final class DungeonManager {
 	private DungeonClass dungeonClass = DungeonClass.UNKNOWN;
 
 	public DungeonManager() {
-		ChatEvents.MESSAGE_RECEIVED.register(this::onMessage);
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onMessage);
 		ClientPlayConnectionEvents.JOIN.register((_h, _s, _c) -> this.reset());
 	}
 
@@ -33,7 +33,7 @@ public final class DungeonManager {
 		return dungeonClass;
 	}
 
-	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onMessage(@NonNull Component text) {
 		if (!SkyBlockAPI.isOnSkyBlock()) return;
 		if (SkyBlockAPI.getIsland() != IslandType.DUNGEON) return;
@@ -41,7 +41,7 @@ public final class DungeonManager {
 		String message = StonksUtils.stripColor(text.getString());
 		//if (message.equals("[NPC] Mort: You should find it useful if you get lost.")) {
 		if (message.equals("[NPC] Mort: Here, I found this map when I first entered the dungeon.")) {
-			SkyBlockEvents.DUNGEON_START.invoker().onDungeonStart();
+			SkyBlockEvents.DUNGEON_START_EVENT.invoker().onDungeonStart();
 		}
 
 		updateDungeonClass(message);
@@ -52,7 +52,7 @@ public final class DungeonManager {
 		DungeonBoss newBoss = DungeonBoss.fromTriggerBossMessage(message);
 		if (!isInBoss() && newBoss != DungeonBoss.UNKNOWN) {
 			boss = newBoss;
-			SkyBlockEvents.DUNGEON_BOSS_SPAWN.invoker().onBossSpawn(newBoss);
+			SkyBlockEvents.DUNGEON_BOSS_SPAWN_EVENT.invoker().onBossSpawn(newBoss);
 		}
 	}
 

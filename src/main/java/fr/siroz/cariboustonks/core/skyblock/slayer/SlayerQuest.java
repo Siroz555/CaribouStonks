@@ -41,7 +41,7 @@ class SlayerQuest {
 				minibosses.add(slayerManager.findClosestEntity(type.getEntityType(), armorStand));
 			}
 
-			SkyBlockEvents.SLAYER_MINIBOSS_SPAWN.invoker().onSpawn(type, slayerTier);
+			SkyBlockEvents.SLAYER_MINIBOSS_SPAWN_EVENT.invoker().onSpawn(type, slayerTier);
 		}
 	}
 

@@ -55,9 +55,9 @@ public final class DeveloperManager {
 		DebugRenderer debugRenderer = new DebugRenderer(this);
 		// Events
 		ClientPlayConnectionEvents.JOIN.register(this::onPlayConnection);
-		WorldEvents.ALLOW_SOUND.register(this::onSound);
+		WorldEvents.ALLOW_SOUND_EVENT.register(this::onSound);
 		NetworkEvents.PLAY_SOUND_PACKET.register(this::onSoundPacket);
-		RenderEvents.WORLD_RENDER.register(debugRenderer::render);
+		RenderEvents.WORLD_RENDER_EVENT.register(debugRenderer::render);
 		// Commands
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _ra) -> dispatcher.register(
 				ClientCommandManager.literal(CaribouStonks.NAMESPACE).then(ClientCommandManager.literal("devtools")

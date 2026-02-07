@@ -15,7 +15,7 @@ import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueCalculator;
 import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueResult;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.Gemstones;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.event.ItemRenderEvents;
+import fr.siroz.cariboustonks.event.GuiEvents;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.RomanNumeralUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -63,7 +63,7 @@ public class ItemValueViewerFeature extends Feature {
 	private final List<Component> lines = new ArrayList<>();
 
 	public ItemValueViewerFeature() {
-		ItemRenderEvents.POST_TOOLTIP.register((_ctx, item, _x, _y, _w, _h, tr, _c) -> this.onPostTooltip(item));
+		GuiEvents.POST_TOOLTIP_EVENT.register((_ctx, item, _x, _y, _w, _h, tr, _c) -> this.onPostTooltip(item));
 		ScreenEvents.AFTER_INIT.register((_c, screen, _sw, _sh) -> {
 			ScreenEvents.afterRender(screen).register(this::render);
 			ScreenEvents.remove(screen).register(_s -> this.reset(true));
@@ -76,7 +76,7 @@ public class ItemValueViewerFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.itemValueViewer.enabled;
 	}
 
-	@EventHandler(event = "ItemRenderEvents.POST_TOOLTIP")
+	@EventHandler(event = "GuiEvents.POST_TOOLTIP_EVENT")
 	private void onPostTooltip(ItemStack itemStack) {
 		if (itemStack == null || itemStack.isEmpty() || SkyBlockAPI.getSkyBlockItemUuid(itemStack).isEmpty()) {
 			reset(true);

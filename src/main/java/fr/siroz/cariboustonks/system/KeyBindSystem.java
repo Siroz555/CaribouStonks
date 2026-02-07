@@ -6,8 +6,8 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.mod.crash.CrashType;
 import fr.siroz.cariboustonks.core.module.input.KeyBind;
 import fr.siroz.cariboustonks.core.system.System;
-import fr.siroz.cariboustonks.event.CustomScreenEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
+import fr.siroz.cariboustonks.event.GuiEvents;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +41,7 @@ public final class KeyBindSystem implements System {
 
 	public KeyBindSystem() {
 		ClientTickEvents.END_CLIENT_TICK.register(_client -> this.triggerKeyBinds());
-		CustomScreenEvents.KEY_PRESSED.register(this::handleKeyPressed);
+		GuiEvents.SCREEN_KEY_PRESS_EVENT.register(this::handleKeyPressed);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public final class KeyBindSystem implements System {
 				.ifPresent(keyBindComponent -> register(feature, keyBindComponent));
 	}
 
-	@EventHandler(event = "CustomScreenEvents.KEY_PRESSED")
+	@EventHandler(event = "GuiEvents.SCREEN_KEY_PRESS_EVENT")
 	private void handleKeyPressed(Screen screen, KeyEvent input, @NonNull Slot slot) {
 		triggerKeyBindsInScreen(screen, input, slot);
 	}

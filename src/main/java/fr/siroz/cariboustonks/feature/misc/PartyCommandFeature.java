@@ -28,7 +28,7 @@ public class PartyCommandFeature extends Feature {
 	private long lastActionMs = 0L;
 
 	public PartyCommandFeature() {
-		ChatEvents.MESSAGE_RECEIVED.register(this::onChatMessage);
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class PartyCommandFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock() && this.config().misc.partyCommands.enabled;
 	}
 
-	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onChatMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 

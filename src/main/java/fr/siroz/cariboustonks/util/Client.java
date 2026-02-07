@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.Command;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.event.HudEvents;
+import fr.siroz.cariboustonks.event.ClientEvents;
 import fr.siroz.cariboustonks.mixin.accessors.PlayerTabOverlayAccessor;
 import fr.siroz.cariboustonks.util.render.gui.StonksToast;
 import java.util.ArrayList;
@@ -612,7 +612,7 @@ public final class Client {
 
 			STRING_SCOREBOARD.addAll(stringLines);
 			if (SkyBlockAPI.isOnSkyBlock()) {
-				HudEvents.SCOREBOARD_UPDATE.invoker().onUpdate(STRING_SCOREBOARD);
+				ClientEvents.SCOREBOARD_UPDATE_EVENT.invoker().onUpdate(STRING_SCOREBOARD);
 			}
 		} catch (Exception ignored) {
 		}
@@ -643,7 +643,7 @@ public final class Client {
 
 			STRING_TAB.addAll(stringLines);
 			if (SkyBlockAPI.isOnSkyBlock()) {
-				HudEvents.TAB_LIST_UPDATE.invoker().onUpdate(STRING_TAB);
+				ClientEvents.TAB_LIST_UPDATE_EVENT.invoker().onUpdate(STRING_TAB);
 			}
 		} catch (Exception ignored) {
 		}

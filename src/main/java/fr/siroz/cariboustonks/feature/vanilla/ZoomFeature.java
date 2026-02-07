@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.feature.vanilla;
 import fr.siroz.cariboustonks.core.component.KeybindComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.input.KeyBind;
+import fr.siroz.cariboustonks.event.ClientEvents;
 import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.event.MouseEvents;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -29,7 +29,7 @@ public final class ZoomFeature extends Feature {
         this.zoomKeyBind = new KeyBind("Zoom", GLFW.GLFW_KEY_C, true);
         this.currentZoomMultiplier = ZOOM_MULTIPLIER;
 
-		MouseEvents.ALLOW_MOUSE_SCROLL.register(this::allowMouseScroll);
+		ClientEvents.ALLOW_MOUSE_SCROLL_EVENT.register(this::allowMouseScroll);
 
 		this.addComponent(KeybindComponent.class, KeybindComponent.builder()
 				.add(this.zoomKeyBind)
@@ -57,7 +57,7 @@ public final class ZoomFeature extends Feature {
         currentZoomMultiplier = ZOOM_MULTIPLIER;
     }
 
-	@EventHandler(event = "MouseEvents.ALLOW_MOUSE_SCROLL")
+	@EventHandler(event = "ClientEvents.ALLOW_MOUSE_SCROLL_EVENT")
     private boolean allowMouseScroll(double horizontal, double vertical) {
         if (!isZooming()) return true;
         if (!this.config().vanilla.zoom.mouseScrolling) return true;

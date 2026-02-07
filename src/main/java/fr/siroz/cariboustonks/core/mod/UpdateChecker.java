@@ -43,7 +43,7 @@ final class UpdateChecker {
 
 	UpdateChecker() {
 		ClientLifecycleEvents.CLIENT_STARTED.register(_client -> this.checkUpdateOnModrinth());
-		SkyBlockEvents.JOIN.register(_s -> this.onJoinSkyBlock());
+		SkyBlockEvents.JOIN_EVENT.register(_s -> this.onJoinSkyBlock());
 	}
 
 	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STARTED")

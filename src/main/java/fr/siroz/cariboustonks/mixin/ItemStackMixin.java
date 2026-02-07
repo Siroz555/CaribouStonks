@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.mixin;
 
-import fr.siroz.cariboustonks.event.ItemRenderEvents;
+import fr.siroz.cariboustonks.event.GuiEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.component.TooltipProvider;
@@ -14,7 +14,7 @@ public abstract class ItemStackMixin {
 	@ModifyVariable(method = "addToTooltip", at = @At("STORE"))
 	private TooltipProvider cariboustonks$appendTooltipEvent(TooltipProvider component) {
 		if (component instanceof ItemLore loreComponent) {
-			ItemLore lore = ItemRenderEvents.TOOLTIP_APPENDER.invoker().lines((ItemStack) (Object) this, loreComponent);
+			ItemLore lore = GuiEvents.TOOLTIP_APPENDER_EVENT.invoker().lines((ItemStack) (Object) this, loreComponent);
 			if (lore != null) {
 				return lore;
 			}

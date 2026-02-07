@@ -54,7 +54,7 @@ public final class ReminderSystem implements System {
 			thread.setDaemon(true);
 			return thread;
 		});
-		SkyBlockEvents.JOIN.register(_serverName -> this.onSkyBlockJoin());
+		SkyBlockEvents.JOIN_EVENT.register(_serverName -> this.onSkyBlockJoin());
 		startMonitoring();
 	}
 

@@ -15,18 +15,18 @@ public final class InteractionEvents {
 	/**
 	 * Invoked whenever a player left-clicks the air
 	 */
-	public static final Event<LeftClickAir> LEFT_CLICK_AIR = EventFactory.createArrayBacked(LeftClickAir.class, listeners -> (player, hand) -> {
+	public static final Event<LeftClickAir> LEFT_CLICK_AIR_EVENT = EventFactory.createArrayBacked(LeftClickAir.class, listeners -> (player, hand) -> {
 		for (LeftClickAir listener : listeners) {
-			listener.onClick(player, hand);
+			listener.onLeftClick(player, hand);
 		}
 	});
 
 	/**
 	 * Invoked whenever the player interact on a block.
 	 */
-	public static final Event<AllowInteractBlock> ALLOW_INTERACT_BLOCK = EventFactory.createArrayBacked(AllowInteractBlock.class, listeners -> (heldItem) -> {
+	public static final Event<AllowInteractBlock> ALLOW_INTERACT_BLOCK_EVENT = EventFactory.createArrayBacked(AllowInteractBlock.class, listeners -> (heldItem) -> {
 		for (AllowInteractBlock listener : listeners) {
-			if (!listener.onInteract(heldItem)) {
+			if (!listener.allowInteract(heldItem)) {
 				return false;
 			}
 		}
@@ -35,12 +35,12 @@ public final class InteractionEvents {
 
 	@FunctionalInterface
 	public interface LeftClickAir {
-		void onClick(Player player, InteractionHand hand);
+		void onLeftClick(Player player, InteractionHand hand);
 	}
 
 	@FunctionalInterface
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public interface AllowInteractBlock {
-		boolean onInteract(@NonNull ItemStack heldItem);
+		boolean allowInteract(@NonNull ItemStack heldItem);
 	}
 }

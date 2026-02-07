@@ -30,7 +30,7 @@ public class ThornBossFeature extends Feature {
 	public ThornBossFeature() {
 		this.dungeonManager = CaribouStonks.skyBlock().getDungeonManager();
 
-		WorldEvents.BLOCK_STATE_UPDATE.register(this::onBlockUpdate);
+		WorldEvents.BLOCK_STATE_UPDATE_EVENT.register(this::onBlockUpdate);
 		NetworkEvents.SERVER_TICK.register(this::onServerTick);
 	}
 
@@ -56,7 +56,7 @@ public class ThornBossFeature extends Feature {
 		spawnTicks = 0;
 	}
 
-	@EventHandler(event = "WorldEvents.BLOCK_STATE_UPDATE")
+	@EventHandler(event = "WorldEvents.BLOCK_STATE_UPDATE_EVENT")
 	private void onBlockUpdate(@NonNull BlockPos pos, @Nullable BlockState oldState, @NonNull BlockState newState) {
 		if (isEnabled() && pos.equals(SEA_LANTERN_TARGET) && newState.getBlock().equals(Blocks.SEA_LANTERN)) {
 			spawnTicks = SPIRIT_BEAR_SPAWN_DELAY;
