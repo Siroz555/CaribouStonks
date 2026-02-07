@@ -28,7 +28,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 @Experimental
 public class MobTrackingFeature extends Feature {
@@ -131,7 +131,7 @@ public class MobTrackingFeature extends Feature {
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
-	private void onUpdateArmorStand(@NotNull ArmorStand armorStand, boolean equipment) {
+	private void onUpdateArmorStand(ArmorStand armorStand, boolean equipment) {
 		if (CLIENT.player == null || CLIENT.level == null) return;
 		if (!armorStand.hasCustomName() || armorStand.getCustomName() == null) return;
 		if (equipment || !isEnabled()) return;
@@ -158,7 +158,7 @@ public class MobTrackingFeature extends Feature {
 	}
 
 	@EventHandler(event = "WorldEvents.ARMORSTAND_REMOVED")
-	private void onRemoveArmorStand(@NotNull ArmorStand armorStand) {
+	private void onRemoveArmorStand(ArmorStand armorStand) {
 		if (!tracked.isEmpty()) {
 			boolean removed = tracked.removeIf(entity -> entity.armorStand().getId() == armorStand.getId());
 			if (removed) {
@@ -167,7 +167,7 @@ public class MobTrackingFeature extends Feature {
 		}
 	}
 
-	private void updateSlayerBoss(@NotNull ArmorStand slayerBoss) {
+	private void updateSlayerBoss(@NonNull ArmorStand slayerBoss) {
 		if (slayerBoss.getCustomName() == null) return;
 
 		// Retirer l'ancien slayer boss si présent et le (re)ajouter en first
@@ -180,7 +180,7 @@ public class MobTrackingFeature extends Feature {
 		}
 	}
 
-	private boolean isAlreadyTracked(@NotNull ArmorStand armorStand) {
+	private boolean isAlreadyTracked(@NonNull ArmorStand armorStand) {
 		int id = armorStand.getId();
 		for (TrackedEntity entity : tracked) {
 			if (entity.armorStand().getId() == id) {
@@ -190,7 +190,7 @@ public class MobTrackingFeature extends Feature {
 		return false;
 	}
 
-	private void addTrackedEntity(@NotNull TrackedEntity entity) {
+	private void addTrackedEntity(TrackedEntity entity) {
 		tracked.add(entity);
 
 		Collections.sort(tracked);
@@ -200,8 +200,8 @@ public class MobTrackingFeature extends Feature {
 		}
 	}
 
-	private void onTrackEntity(@NotNull MobTrackingRegistry.MobTrackingEntry mobEntry) {
-		if (mobEntry.config().notifyOnSpawn) {
+	private void onTrackEntity(MobTrackingRegistry.@NonNull MobTrackingEntry mobEntry) {
+		if (mobEntry.model().isNotifyOnSpawn()) {
 			Client.showTitleAndSubtitle(
 					mobEntry.displayName(),
 					Component.literal(this.config().uiAndVisuals.mobTracking.spawnMessage),

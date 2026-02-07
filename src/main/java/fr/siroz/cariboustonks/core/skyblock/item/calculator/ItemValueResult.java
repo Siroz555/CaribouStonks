@@ -6,9 +6,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the result of an {@link ItemValueCalculator} execution.
@@ -21,10 +20,10 @@ import org.jetbrains.annotations.Nullable;
  * @param error              the error that occurred during the execution
  */
 public record ItemValueResult(
-		@NotNull State state,
+		@NonNull State state,
 		double price,
 		double base,
-		@NotNull List<Calculation> calculations,
+		@NonNull List<Calculation> calculations,
 		Map<Calculation.Type, List<Calculation>> calculationsByType,
 		@Nullable Throwable error
 ) {
@@ -48,7 +47,7 @@ public record ItemValueResult(
 	 * @param type the type of the calculation to retrieve
 	 * @return the first {@link Calculation} of the given type or {@code null} if not found
 	 */
-	public @Nullable Calculation get(@NotNull Calculation.Type type) {
+	public @Nullable Calculation get(Calculation.@NonNull Type type) {
 		return calculationsByType.getOrDefault(type, Collections.emptyList()).stream()
 				.findFirst()
 				.orElse(null);
@@ -60,21 +59,19 @@ public record ItemValueResult(
 	 * @param type the type of the calculation to retrieve
 	 * @return the list of {@link Calculation}s of the given type
 	 */
-	public @NotNull List<Calculation> getList(@NotNull Calculation.Type type) {
+	public @NonNull List<Calculation> getList(Calculation.@NonNull Type type) {
 		return calculationsByType.getOrDefault(type, Collections.emptyList());
 	}
 
-	@Contract("_, _, _, -> new")
-	static @NotNull ItemValueResult success(double price, double base, List<Calculation> calculations) {
+	static @NonNull ItemValueResult success(double price, double base, List<Calculation> calculations) {
 		return new ItemValueResult(State.SUCCESS, price, base, Collections.unmodifiableList(calculations), groupCalculationsByType(calculations), null);
 	}
 
-	@Contract("_ -> new")
-	static @NotNull ItemValueResult fail(@Nullable Throwable throwable) {
+	static @NonNull ItemValueResult fail(@Nullable Throwable throwable) {
 		return new ItemValueResult(State.FAIL, 0, 0, Collections.emptyList(), Collections.emptyMap(), throwable);
 	}
 
-	private static Map<Calculation.Type, List<Calculation>> groupCalculationsByType(@NotNull List<Calculation> calculations) {
+	private static Map<Calculation.Type, List<Calculation>> groupCalculationsByType(@NonNull List<Calculation> calculations) {
 		return calculations.stream()
 				.collect(Collectors.groupingBy(
 						Calculation::type,

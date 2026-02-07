@@ -23,8 +23,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.component.ResolvableProfile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Utility class for handling operations related to {@link ItemStack}.
@@ -40,7 +40,7 @@ public final class ItemUtils {
 	 * @return The {@link DataComponents#CUSTOM_DATA custom data} of the ItemStack,
 	 * or an empty {@link CompoundTag} if the ItemStack is missing a custom data component
 	 */
-	public static @NotNull CompoundTag getCustomData(@NotNull DataComponentHolder stack) {
+	public static @NonNull CompoundTag getCustomData(@NonNull DataComponentHolder stack) {
 		return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 	}
 
@@ -50,7 +50,7 @@ public final class ItemUtils {
 	 * @param id the item id
 	 * @return the item or an empty {@link Optional}
 	 */
-	public static Optional<Item> getItemById(@NotNull String id) {
+	public static Optional<Item> getItemById(@NonNull String id) {
 		try {
 			Identifier search = Identifier.parse(id);
 			//itemRegistry.getOptional(RegistryKey.of(RegistryKeys.ITEM, identifier))
@@ -67,7 +67,7 @@ public final class ItemUtils {
 	 * @param stack the ItemStack to get the lore from
 	 * @return the list of lore
 	 */
-	public static @NotNull List<Component> getLore(@NotNull ItemStack stack) {
+	public static @NonNull List<Component> getLore(@NonNull ItemStack stack) {
 		return stack.getOrDefault(DataComponents.LORE, ItemLore.EMPTY).styledLines();
 	}
 
@@ -79,7 +79,7 @@ public final class ItemUtils {
 	 * @return the first matching lore line or {@code null}
 	 */
 	@Nullable
-	public static Matcher getLoreLineIfMatch(@NotNull ItemStack stack, @NotNull Pattern pattern) {
+	public static Matcher getLoreLineIfMatch(@NonNull ItemStack stack, @NonNull Pattern pattern) {
 		Matcher matcher = pattern.matcher("");
 		for (Component line : getLore(stack)) {
 			if (matcher.reset(line.getString()).matches()) {
@@ -98,7 +98,7 @@ public final class ItemUtils {
 	 * @return the first matching lore line or {@code null}
 	 */
 	@Nullable
-	public static String getLoreLineIf(@NotNull ItemStack stack, @NotNull Predicate<String> predicate) {
+	public static String getLoreLineIf(@NonNull ItemStack stack, @NonNull Predicate<String> predicate) {
 		for (Component line : getLore(stack)) {
 			String string = line.getString();
 			if (predicate.test(string)) {
@@ -115,7 +115,7 @@ public final class ItemUtils {
 	 * @param item the item to get the lore from
 	 * @return the concatenated lore
 	 */
-	public static @NotNull String getConcatenatedLore(@NotNull ItemStack item) {
+	public static @NonNull String getConcatenatedLore(@NonNull ItemStack item) {
 		return concatenateLore(getLore(item));
 	}
 
@@ -125,7 +125,7 @@ public final class ItemUtils {
 	 * @param lore the lore to concatenate
 	 * @return the concatenated lore
 	 */
-	public static @NotNull String concatenateLore(@NotNull List<Component> lore) {
+	public static @NonNull String concatenateLore(@NonNull List<Component> lore) {
 		StringBuilder stringBuilder = new StringBuilder();
 		for (int i = 0; i < lore.size(); i++) {
 			stringBuilder.append(lore.get(i).getString());
@@ -143,7 +143,7 @@ public final class ItemUtils {
 	 * @param textureB64 the texture in Base64 format
 	 * @return the created ItemStack
 	 */
-	public static @NotNull ItemStack createSkull(@NotNull String textureB64) {
+	public static @NonNull ItemStack createSkull(@NonNull String textureB64) {
 		ItemStack skull = new ItemStack(Items.PLAYER_HEAD);
 		try {
 			PropertyMap map = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", textureB64)));
@@ -164,7 +164,7 @@ public final class ItemUtils {
 	 * @return the texture or an empty string
 	 * @see #getHeadTextureOptional(ItemStack)
 	 */
-	public static @NotNull String getHeadTexture(@NotNull ItemStack stack) {
+	public static @NonNull String getHeadTexture(@NonNull ItemStack stack) {
 		if (!stack.is(Items.PLAYER_HEAD) || !stack.has(DataComponents.PROFILE)) {
 			return "";
 		}
@@ -189,7 +189,7 @@ public final class ItemUtils {
 	 * @return the texture or an empty {@link Optional}
 	 * @see #getHeadTexture(ItemStack)
 	 */
-	public static @NotNull Optional<String> getHeadTextureOptional(@NotNull ItemStack stack) {
+	public static @NonNull Optional<String> getHeadTextureOptional(@NonNull ItemStack stack) {
 		String texture = getHeadTexture(stack);
 		return texture.isBlank() ? Optional.empty() : Optional.of(texture);
 	}

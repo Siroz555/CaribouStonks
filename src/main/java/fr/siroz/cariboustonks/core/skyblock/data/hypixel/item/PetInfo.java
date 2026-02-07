@@ -4,9 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a SkyBlock Pet's info.
@@ -17,14 +16,13 @@ import org.jetbrains.annotations.Nullable;
  */
 public record PetInfo(
 		@Nullable String name,
-		@NotNull String type,
-		@NotNull Rarity rarity
+		@NonNull String type,
+		@NonNull Rarity rarity
 ) {
 
 	public static final PetInfo EMPTY = new PetInfo(null, "", Rarity.UNKNOWN);
 
-	@ApiStatus.Internal
-	public static @NotNull PetInfo parse(@NotNull CompoundTag data) {
+	public static @NonNull PetInfo parse(@NonNull CompoundTag data) {
 		String petInfo = data.getStringOr("petInfo", "");
 		if (petInfo.isEmpty()) {
 			return EMPTY;

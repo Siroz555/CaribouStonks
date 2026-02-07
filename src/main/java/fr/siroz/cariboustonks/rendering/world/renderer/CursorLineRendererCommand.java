@@ -7,14 +7,14 @@ import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.CursorLineRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.jspecify.annotations.NonNull;
 
 public final class CursorLineRendererCommand implements RendererCommand<CursorLineRenderState> {
 
 	@Override
-	public void emit(@NotNull CursorLineRenderState state, @NotNull CameraRenderState camera) {
+	public void emit(@NonNull CursorLineRenderState state, @NonNull CameraRenderState camera) {
 		RenderPipeline pipeline = CaribouRenderPipelines.LINES_THROUGH_BLOCKS;
 		BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline);
 

@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.screen.reminders;
 
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
-import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import fr.siroz.cariboustonks.util.colors.Colors;
@@ -13,16 +13,16 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull Entry> {
+class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 
 	private final ReminderScreen parent;
 
 	ReminderListWidget(
             Minecraft client,
-            @NotNull ReminderScreen parent,
+            @NonNull ReminderScreen parent,
             int width,
             int height,
             int y,
@@ -34,7 +34,7 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull
 		if (parent.reminders.isEmpty()) {
 			addEntry(new NothingToShow());
 		} else {
-			for (Pair<ReminderComponent, TimedObject> reminder : parent.reminders) {
+			for (Pair<ReminderComponent, TimedObjectModel> reminder : parent.reminders) {
 				addEntry(new ReminderEntry(reminder));
 			}
 		}
@@ -49,7 +49,7 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull
 	public void setSelected(@Nullable Entry entry) {
 		super.setSelected(entry);
 
-		Pair<ReminderComponent, TimedObject> item = null;
+		Pair<ReminderComponent, TimedObjectModel> item = null;
 		if (entry instanceof ReminderEntry reminderEntry) {
 			item = reminderEntry.reminder;
 		}
@@ -57,7 +57,7 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull
 		this.parent.itemSelected(item);
 	}
 
-	protected abstract static class Entry extends ObjectSelectionList.Entry<ReminderListWidget.@NotNull Entry> {
+	protected abstract static class Entry extends ObjectSelectionList.Entry<ReminderListWidget.Entry> {
 		public Entry() {
 		}
 	}
@@ -67,12 +67,12 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull
 		private static final Component TEXT = Component.literal("No reminders for the moment ;'(");
 
 		@Override
-		public @NotNull Component getNarration() {
+		public @NonNull Component getNarration() {
 			return Component.literal("Nothing to show");
 		}
 
 		@Override
-		public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void renderContent(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			if (minecraft.screen == null) {
 				return;
 			}
@@ -85,13 +85,13 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull
 
 	protected class ReminderEntry extends Entry {
 
-		protected Pair<ReminderComponent, TimedObject> reminder;
+		protected Pair<ReminderComponent, TimedObjectModel> reminder;
 		private final Component name;
 		private final Component expireTime;
 		private final Component description;
 		private final ItemStack icon;
 
-		public ReminderEntry(@NotNull Pair<ReminderComponent, TimedObject> reminder) {
+		public ReminderEntry(@NonNull Pair<ReminderComponent, TimedObjectModel> reminder) {
 			this.reminder = reminder;
 			this.name = reminder.left().getDisplay().title();
 
@@ -111,12 +111,12 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.@NotNull
 		}
 
 		@Override
-		public @NotNull Component getNarration() {
+		public @NonNull Component getNarration() {
 			return Component.literal("Reminder " + name.getString());
 		}
 
 		@Override
-		public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void renderContent(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			if (minecraft.screen == null) {
 				return;
 			}

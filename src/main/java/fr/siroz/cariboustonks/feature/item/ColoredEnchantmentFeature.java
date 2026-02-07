@@ -23,8 +23,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Credits to AzureAaron (<a href="https://github.com/AzureAaron">GitHub AzureAaron</a>).
@@ -171,8 +171,8 @@ public class ColoredEnchantmentFeature extends Feature {
 		return null;
 	}
 
-	@NotNull
-	private MutableComponent recursiveCopy(@NotNull Component original) {
+	@NonNull
+	private MutableComponent recursiveCopy(@NonNull Component original) {
 		MutableComponent copy = MutableComponent.create(original.getContents()).setStyle(original.getStyle());
 		((ArrayList<Component>) copy.getSiblings()).ensureCapacity(original.getSiblings().size());
 
@@ -183,8 +183,8 @@ public class ColoredEnchantmentFeature extends Feature {
 		return copy;
 	}
 
-	@NotNull
-	private String trimEnchantName(@NotNull String enchantName) {
+	@NonNull
+	private String trimEnchantName(@NonNull String enchantName) {
 		int commaIndex = enchantName.indexOf(',');
 		return commaIndex > -1 ? enchantName.substring(0, commaIndex).trim() : enchantName.trim();
 	}

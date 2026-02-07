@@ -32,9 +32,7 @@ public final class WaypointRenderer {
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")
 	@SuppressWarnings({"checkstyle:CyclomaticComplexity", "checkstyle:LineLength"}) // merde
 	public void render(WorldRenderer renderer) {
-		if (!waypoint.isEnabled()) {
-			return;
-		}
+		if (!waypoint.isEnabled()) return;
 
 		BlockPos pos = waypoint.getPosition().toBlockPos();
 		Color color = waypoint.getColor() == Colors.RAINBOW
@@ -85,9 +83,7 @@ public final class WaypointRenderer {
 		}
 
 		TextOption textOption = waypoint.getTextOption();
-		if (textOption.getText().isEmpty() && !textOption.isWithDistance()) {
-			return;
-		}
+		if (textOption.getText().isEmpty() && !textOption.isWithDistance()) return;
 
 		if (textOption.getOffsetY() != -1) {
 			centerPos = centerPos.add(0, textOption.getOffsetY(), 0);

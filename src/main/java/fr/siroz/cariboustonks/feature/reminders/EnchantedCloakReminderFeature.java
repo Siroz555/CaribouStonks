@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
@@ -23,8 +23,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public final class EnchantedCloakReminderFeature extends Feature {
 
@@ -51,7 +51,7 @@ public final class EnchantedCloakReminderFeature extends Feature {
 				&& this.config().general.reminders.enchantedCloak;
 	}
 
-	private @NotNull ReminderDisplay getReminderDisplay() {
+	private @NonNull ReminderDisplay getReminderDisplay() {
 		return ReminderDisplay.of(
 				Component.literal("Enchanted Cloak").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
 				null,
@@ -59,7 +59,7 @@ public final class EnchantedCloakReminderFeature extends Feature {
 		);
 	}
 
-	private void onReminderExpire(@NotNull TimedObject timedObject) {
+	private void onReminderExpire(@NonNull TimedObjectModel timedObject) {
 		BoostType boostType = BoostType.getByName(timedObject.id().replace("cloak::", ""));
 		if (boostType == null) {
 			return;
@@ -84,7 +84,7 @@ public final class EnchantedCloakReminderFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onChatMessage(@NotNull Component text) {
+	private void onChatMessage(@NonNull Component text) {
 		if (!isEnabled()) {
 			return;
 		}
@@ -98,7 +98,7 @@ public final class EnchantedCloakReminderFeature extends Feature {
 
 				String message = StonksUtils.textToJson(boostType.name).orElse(boostType.name.getString());
 
-				TimedObject timedObject = new TimedObject(
+				TimedObjectModel timedObject = new TimedObjectModel(
 						"cloak::" + boostType.name(),
 						message,
 						Instant.now().plus(Duration.ofHours(48)),
@@ -128,14 +128,14 @@ public final class EnchantedCloakReminderFeature extends Feature {
 			this.name = name;
 		}
 
-		static @Nullable BoostType getById(@NotNull String id) {
+		static @Nullable BoostType getById(@NonNull String id) {
 			return Arrays.stream(values())
 					.filter(boostType -> boostType.id.equals(id))
 					.findFirst()
 					.orElse(null);
 		}
 
-		static @Nullable BoostType getByName(@NotNull String name) {
+		static @Nullable BoostType getByName(@NonNull String name) {
 			return Arrays.stream(values())
 					.filter(boostType -> boostType.name().equalsIgnoreCase(name))
 					.findFirst()

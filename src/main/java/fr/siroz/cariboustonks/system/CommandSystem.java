@@ -18,18 +18,16 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public final class CommandSystem implements System {
 
-	@ApiStatus.Internal
 	public CommandSystem() {
 		ClientCommandRegistrationCallback.EVENT.register(this::registerModCommand);
 	}
 
 	@Override
-	public void register(@NotNull Feature feature) {
+	public void register(@NonNull Feature feature) {
 		feature.getComponent(CommandComponent.class).ifPresent(this::registerComponent);
 	}
 
@@ -40,7 +38,7 @@ public final class CommandSystem implements System {
 	}
 
 	private void registerModCommand(
-            @NotNull CommandDispatcher<FabricClientCommandSource> dispatcher,
+            @NonNull CommandDispatcher<FabricClientCommandSource> dispatcher,
             CommandBuildContext registryAccess
 	) {
 		LiteralArgumentBuilder<FabricClientCommandSource> builder = ClientCommandManager.literal(CaribouStonks.NAMESPACE)

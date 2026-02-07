@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar;
 
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher.BazaarFetcher;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents a Product in the Bazaar.
@@ -59,7 +59,7 @@ import org.jetbrains.annotations.NotNull;
  * @see BazaarItemAnalytics
  */
 public record BazaarProduct(
-		@NotNull String skyBlockId,
+		@NonNull String skyBlockId,
 		double buyPrice,
 		double sellPrice,
 		double weightedAverageBuyPrice,

@@ -9,13 +9,13 @@ import fr.siroz.cariboustonks.rendering.world.state.OutlineBoxRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.jspecify.annotations.NonNull;
 
 public final class OutlineBoxRendererCommand implements RendererCommand<OutlineBoxRenderState> {
 
 	@Override
-	public void emit(@NotNull OutlineBoxRenderState state, @NotNull CameraRenderState camera) {
+	public void emit(@NonNull OutlineBoxRenderState state, @NonNull CameraRenderState camera) {
 		RenderPipeline pipeline = state.throughBlocks()
 				? CaribouRenderPipelines.LINES_THROUGH_BLOCKS
 				: RenderPipelines.LINES;

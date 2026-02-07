@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.feature.stonks;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -33,9 +34,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Feature that displays a detailed summary of an item's value from {@link ItemValueCalculator}
@@ -44,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
  * The Skyhanni Mod in 1.8 introduced this feature. A wonderful idea!
  * Here, it's roughly the same principle, except that the backend is completely different.
  */
-@ApiStatus.Experimental
+@Experimental
 public class ItemValueViewerFeature extends Feature {
 
 	private static final int PADDING_LEFT = 20;
@@ -112,9 +112,11 @@ public class ItemValueViewerFeature extends Feature {
 		guiGraphics.pose().popMatrix();
 	}
 
-	private void updateForItem(@NotNull ItemStack item) {
+	private void updateForItem(@NonNull ItemStack item) {
 		try {
-			ItemValueResult result = ItemValueCalculator.getInstance().calculateValue(SkyblockItemStack.of(item), configUseNetworth.getAsBoolean());
+			ItemValueResult result = ItemValueCalculator.getInstance()
+					.calculateValue(SkyblockItemStack.of(item), configUseNetworth.getAsBoolean());
+
 			// Pas d'accès a l'API ou bien les NBT de l'item sont invalides
 			if (result.base() < 1 && result.price() < 1 && result.calculations().isEmpty()) {
 				lines.clear();
@@ -139,7 +141,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private @NotNull List<Component> buildDisplayLines(@NotNull ItemStack item, @NotNull ItemValueResult result) {
+	private @NonNull List<Component> buildDisplayLines(@NonNull ItemStack item, @NonNull ItemValueResult result) {
 		List<Component> out = new ArrayList<>();
 
 		if (result.state() == ItemValueResult.State.FAIL) {
@@ -219,7 +221,7 @@ public class ItemValueViewerFeature extends Feature {
 		return out;
 	}
 
-	private void addCosmetic(@NotNull ItemValueResult result, List<Component> out) {
+	private void addCosmetic(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation skin = result.get(Calculation.Type.SKIN);
 		Calculation dye = result.get(Calculation.Type.DYE);
 		if (skin != null || dye != null) {
@@ -247,7 +249,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addEnchantedBook(@NotNull ItemValueResult result, List<Component> out) {
+	private void addEnchantedBook(@NonNull ItemValueResult result, List<Component> out) {
 		List<Calculation> enchants = result.getList(Calculation.Type.ENCHANTED_BOOK);
 		if (!enchants.isEmpty()) {
 			out.add(Component.literal("Enchanted Book:").withStyle(ChatFormatting.GRAY));
@@ -261,7 +263,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addUltimateEnchantedBook(@NotNull ItemValueResult result, List<Component> out) {
+	private void addUltimateEnchantedBook(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation ultimate = result.get(Calculation.Type.ULTIMATE_ENCHANTED_BOOK);
 		if (ultimate != null) {
 			String level = ultimate.count() > 0 ? " " + RomanNumeralUtils.generate(ultimate.count()) : " " + ultimate.count();
@@ -272,7 +274,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addReforge(@NotNull ItemValueResult result, List<Component> out) {
+	private void addReforge(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation reforge = result.get(Calculation.Type.REFORGE);
 		if (reforge != null) {
 			Pair<String, Rarity> infos = getInfos(reforge.skyBlockId());
@@ -292,126 +294,126 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addRecombobulator(@NotNull ItemValueResult result, List<Component> out) {
+	private void addRecombobulator(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation recombobulator = result.get(Calculation.Type.RECOMBOBULATOR);
 		if (recombobulator != null) {
 			out.add(formatHaving("Recombobulator", recombobulator.price()));
 		}
 	}
 
-	private void addEnrichment(@NotNull ItemValueResult result, List<Component> out) {
+	private void addEnrichment(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation enrichment = result.get(Calculation.Type.TALISMAN_ENRICHMENT);
 		if (enrichment != null) {
 			out.add(formatHaving("Enrichment", enrichment.price()));
 		}
 	}
 
-	private void addPocketSackInASack(@NotNull ItemValueResult result, List<Component> out) {
+	private void addPocketSackInASack(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation pocketSackInASack = result.get(Calculation.Type.POCKET_SACK_IN_A_SACK);
 		if (pocketSackInASack != null) {
 			out.add(formatProgress("Pocket Sack-in-a-Sack", pocketSackInASack.count(), 3, pocketSackInASack.price()));
 		}
 	}
 
-	private void addHotPotatoBook(@NotNull ItemValueResult result, List<Component> out) {
+	private void addHotPotatoBook(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation hotPotato = result.get(Calculation.Type.HOT_POTATO_BOOK);
 		if (hotPotato != null) {
 			out.add(formatProgress("Hot Potato", hotPotato.count(), 10, hotPotato.price()));
 		}
 	}
 
-	private void addFumingPotatoBook(@NotNull ItemValueResult result, List<Component> out) {
+	private void addFumingPotatoBook(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation fumingPotato = result.get(Calculation.Type.FUMING_POTATO_BOOK);
 		if (fumingPotato != null) {
 			out.add(formatProgress("Fuming", fumingPotato.count(), 5, fumingPotato.price()));
 		}
 	}
 
-	private void addArtOfWar(@NotNull ItemValueResult result, List<Component> out) {
+	private void addArtOfWar(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation war = result.get(Calculation.Type.ART_OF_WAR);
 		if (war != null) {
 			out.add(formatHaving("Art Of War", war.price()));
 		}
 	}
 
-	private void addArtOfPeace(@NotNull ItemValueResult result, List<Component> out) {
+	private void addArtOfPeace(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation peace = result.get(Calculation.Type.ART_OF_PEACE);
 		if (peace != null) {
 			out.add(formatHaving("Art Of Peace", peace.price()));
 		}
 	}
 
-	private void addWoodSingularity(@NotNull ItemValueResult result, List<Component> out) {
+	private void addWoodSingularity(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation woodSingularity = result.get(Calculation.Type.WOOD_SINGULARITY);
 		if (woodSingularity != null) {
 			out.add(formatHaving("Wood Singularity", woodSingularity.price()));
 		}
 	}
 
-	private void addFarmingForDummies(@NotNull ItemValueResult result, List<Component> out) {
+	private void addFarmingForDummies(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation farming4Dummies = result.get(Calculation.Type.FARMING_FOR_DUMMIES);
 		if (farming4Dummies != null) {
 			out.add(formatProgress("Farming For Dummies", farming4Dummies.count(), 5, farming4Dummies.price()));
 		}
 	}
 
-	private void addBookOfStats(@NotNull ItemValueResult result, List<Component> out) {
+	private void addBookOfStats(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation stats = result.get(Calculation.Type.STATS_BOOK);
 		if (stats != null) {
 			out.add(formatHaving("Book of Stats", stats.price()));
 		}
 	}
 
-	private void addPolarvoidBook(@NotNull ItemValueResult result, List<Component> out) {
+	private void addPolarvoidBook(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation polarvoid = result.get(Calculation.Type.POLARVOID_BOOK);
 		if (polarvoid != null) {
 			out.add(formatProgress("Polarvoid Book", polarvoid.count(), 5, polarvoid.price()));
 		}
 	}
 
-	private void addJalapenoBook(@NotNull ItemValueResult result, List<Component> out) {
+	private void addJalapenoBook(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation jalapeno = result.get(Calculation.Type.JALAPENO_BOOK);
 		if (jalapeno != null) {
 			out.add(formatHaving("Jalapeno Book", jalapeno.price()));
 		}
 	}
 
-	private void addWetBook(@NotNull ItemValueResult result, List<Component> out) {
+	private void addWetBook(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation wet = result.get(Calculation.Type.WET_BOOK);
 		if (wet != null) {
 			out.add(formatProgress("Wet Book", wet.count(), 5, wet.price()));
 		}
 	}
 
-	private void addManaDisintegrator(@NotNull ItemValueResult result, List<Component> out) {
+	private void addManaDisintegrator(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation manaDisintegrator = result.get(Calculation.Type.MANA_DISINTEGRATOR);
 		if (manaDisintegrator != null) {
 			out.add(formatProgress("Mana Disintegrator", manaDisintegrator.count(), 10, manaDisintegrator.price()));
 		}
 	}
 
-	private void addTransmissionTuner(@NotNull ItemValueResult result, List<Component> out) {
+	private void addTransmissionTuner(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation transmissionTuner = result.get(Calculation.Type.TRANSMISSION_TUNER);
 		if (transmissionTuner != null) {
 			out.add(formatProgress("Transmission Tuner", transmissionTuner.count(), 4, transmissionTuner.price()));
 		}
 	}
 
-	private void addEtherwarp(@NotNull ItemValueResult result, List<Component> out) {
+	private void addEtherwarp(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation etherwarp = result.get(Calculation.Type.ETHERWARP_CONDUIT);
 		if (etherwarp != null) {
 			out.add(formatHaving("Etherwarp Conduit", etherwarp.price()));
 		}
 	}
 
-	private void addDivanPowderCoating(@NotNull ItemValueResult result, List<Component> out) {
+	private void addDivanPowderCoating(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation divanPowderCoating = result.get(Calculation.Type.DIVAN_POWDER_COATING);
 		if (divanPowderCoating != null) {
 			out.add(formatHaving("Divan Powder Coating", divanPowderCoating.price()));
 		}
 	}
 
-	private void addPowerScroll(@NotNull ItemValueResult result, List<Component> out) {
+	private void addPowerScroll(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation power = result.get(Calculation.Type.POWER_SCROLL);
 		if (power != null) {
 			Pair<String, Rarity> infos = getInfos(power.skyBlockId());
@@ -421,7 +423,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addMasterStars(@NotNull ItemValueResult result, List<Component> out) {
+	private void addMasterStars(@NonNull ItemValueResult result, List<Component> out) {
 		List<Calculation> masterStars = result.getList(Calculation.Type.MASTER_STAR);
 		if (!masterStars.isEmpty()) {
 			double price = masterStars.stream().mapToDouble(Calculation::price).sum();
@@ -435,7 +437,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addWitherScroll(@NotNull ItemValueResult result, List<Component> out) {
+	private void addWitherScroll(@NonNull ItemValueResult result, List<Component> out) {
 		List<Calculation> wither = result.getList(Calculation.Type.WITHER_SCROLL);
 		if (!wither.isEmpty()) {
 			out.add(Component.empty().append(Component.literal("Wither Scrolls:").withStyle(ChatFormatting.GRAY)));
@@ -449,7 +451,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addGemstones(@NotNull ItemValueResult result, List<Component> out) {
+	private void addGemstones(@NonNull ItemValueResult result, List<Component> out) {
 		List<Calculation> gems = result.getList(Calculation.Type.GEMSTONE);
 		if (!gems.isEmpty()) {
 			out.add(Component.literal("Gemstones:").withStyle(ChatFormatting.GRAY));
@@ -485,7 +487,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addEnchantments(@NotNull ItemValueResult result, List<Component> out) {
+	private void addEnchantments(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation ultimate = result.get(Calculation.Type.ULTIMATE_ENCHANTMENT);
 		List<Calculation> enchants = result.getList(Calculation.Type.ENCHANTMENT);
 		List<Calculation> upgrades = result.getList(Calculation.Type.ENCHANTMENT_UPGRADE);
@@ -533,7 +535,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addPrestiges(@NotNull ItemValueResult result, List<Component> out) {
+	private void addPrestiges(@NonNull ItemValueResult result, List<Component> out) {
 		List<Calculation> prestiges = result.getList(Calculation.Type.PRESTIGE);
 		if (!prestiges.isEmpty()) {
 			double price = prestiges.stream().mapToDouble(Calculation::price).sum();
@@ -547,7 +549,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addDrillParts(@NotNull ItemValueResult result, List<Component> out) {
+	private void addDrillParts(@NonNull ItemValueResult result, List<Component> out) {
 		List<Calculation> drillParts = result.getList(Calculation.Type.DRILL_PART);
 		if (!drillParts.isEmpty()) {
 			out.add(Component.literal("Drill Parts:").withStyle(ChatFormatting.GRAY));
@@ -563,7 +565,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addRodParts(@NotNull ItemValueResult result, List<Component> out) {
+	private void addRodParts(@NonNull ItemValueResult result, List<Component> out) {
 		List<Calculation> rodParts = result.getList(Calculation.Type.ROD_PART);
 		if (!rodParts.isEmpty()) {
 			out.add(Component.literal("Rod Parts:").withStyle(ChatFormatting.GRAY));
@@ -579,7 +581,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addBoosters(@NotNull ItemValueResult result, List<Component> out) {
+	private void addBoosters(@NonNull ItemValueResult result, List<Component> out) {
 		List<Calculation> boosters = result.getList(Calculation.Type.BOOSTERS);
 		if (!boosters.isEmpty()) {
 			double price = boosters.stream().mapToDouble(Calculation::price).sum();
@@ -591,14 +593,14 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private void addOverclockers(@NotNull ItemValueResult result, List<Component> out) {
+	private void addOverclockers(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation overclocker = result.get(Calculation.Type.OVERCLOCKER);
 		if (overclocker != null) {
 			out.add(formatProgress("Overclocker 3000", overclocker.count(), 10, overclocker.price()));
 		}
 	}
 
-	private @NotNull Pair<String, Rarity> getInfos(String skyBlockId) {
+	private @NonNull Pair<String, Rarity> getInfos(String skyBlockId) {
 		SkyBlockItemData itemData = CaribouStonks.skyBlock().getHypixelDataSource().getSkyBlockItem(skyBlockId);
 		if (itemData != null) {
 			return Pair.of(itemData.name(), itemData.tier());
@@ -612,14 +614,14 @@ public class ItemValueViewerFeature extends Feature {
 		}
 	}
 
-	private Component formatHaving(@NotNull String label, double price) {
+	private @NonNull Component formatHaving(@NonNull String label, double price) {
 		return Component.empty()
 				.append(Component.literal(label + ": ").withStyle(ChatFormatting.GRAY))
 				.append(Component.literal("✔").withStyle(ChatFormatting.GREEN))
 				.append(priceShortFormat(price));
 	}
 
-	private Component formatProgress(@NotNull String label, int current, int max, double price) {
+	private @NonNull Component formatProgress(@NonNull String label, int current, int max, double price) {
 		return Component.empty()
 				.append(Component.literal(label + ": ").withStyle(ChatFormatting.GRAY))
 				.append(Component.literal("" + current).withStyle(ChatFormatting.GREEN))
@@ -628,11 +630,11 @@ public class ItemValueViewerFeature extends Feature {
 				.append(priceShortFormat(price));
 	}
 
-	private Component priceFormat(double value) {
+	private @NonNull Component priceFormat(double value) {
 		return Component.literal(StonksUtils.INTEGER_NUMBERS.format(value)).withStyle(ChatFormatting.GOLD);
 	}
 
-	private Component priceShortFormat(double value) {
+	private @NonNull Component priceShortFormat(double value) {
 		return Component.empty()
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
 				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(value)).withStyle(ChatFormatting.GOLD))

@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.util.render;
 import fr.siroz.cariboustonks.mixin.accessors.FrustumAccessor;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.Nullable;
 import org.joml.FrustumIntersection;
+import org.jspecify.annotations.Nullable;
 
 public final class FrustumUtils {
 

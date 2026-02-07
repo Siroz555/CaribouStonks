@@ -1,18 +1,9 @@
-/*
- * This implementation is adapted from the original code in the project
- * SkyHanni (<a href="https://github.com/hannibal002/SkyHanni">GitHub</a>)
- * a Minecraft 1.8 Mod written in Kotlin, which was licensed under LGPL-2.1
- * <p>
- * Original authors: [SkyHanni Contributors]
- * Adaptations by: [Siroz555]
- */
-
 package fr.siroz.cariboustonks.util.math.bezier;
 
 import java.util.List;
 import java.util.stream.IntStream;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents a 3D Bézier curve with associated coefficients for each dimension.
@@ -23,7 +14,7 @@ public class BezierCurve {
 
 	private final List<double[]> coefficients;
 
-	public BezierCurve(@NotNull List<double[]> coefficients) {
+	public BezierCurve(@NonNull List<double[]> coefficients) {
 		if (coefficients.size() != 3) {
 			throw new IllegalArgumentException();
 		}
@@ -95,7 +86,7 @@ public class BezierCurve {
 		return new Vec3(x, y, z);
 	}
 
-	private double[] reverseArray(double @NotNull [] array) {
+	private double[] reverseArray(double @NonNull [] array) {
 		return IntStream.range(0, array.length)
 				.mapToDouble(i -> array[array.length - 1 - i])
 				.toArray();

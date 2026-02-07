@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class PartyCommandFeature extends Feature {
 
@@ -37,7 +37,7 @@ public class PartyCommandFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onChatMessage(@NotNull Component text) {
+	private void onChatMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 
 		String input = StonksUtils.stripColor(text.getString());

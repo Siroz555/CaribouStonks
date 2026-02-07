@@ -8,8 +8,8 @@ import com.google.gson.JsonObject;
 import fr.siroz.cariboustonks.core.service.json.adapters.CodecTypeAdapter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public final class GsonProvider {
 
@@ -31,18 +31,18 @@ public final class GsonProvider {
 	private GsonProvider() {
 	}
 
-	@NotNull
+	@NonNull
 	public static Gson standard() {
 		return STANDARD_GSON;
 	}
 
-	@NotNull
+	@NonNull
 	public static Gson prettyPrinting() {
 		return PRETTY_PRINTING_GSON;
 	}
 
 	@Nullable
-	public static JsonObject safeGetAsObject(@Nullable JsonObject parent, @NotNull String member) {
+	public static JsonObject safeGetAsObject(@Nullable JsonObject parent, @NonNull String member) {
 		if (parent == null || !parent.has(member) || parent.get(member).isJsonNull()) return null;
 
 		JsonElement element = parent.get(member);
@@ -50,7 +50,7 @@ public final class GsonProvider {
 	}
 
 	@Nullable
-	public static JsonArray safeGetAsArray(@Nullable JsonObject parent, @NotNull String member) {
+	public static JsonArray safeGetAsArray(@Nullable JsonObject parent, @NonNull String member) {
 		if (parent == null || !parent.has(member) || parent.get(member).isJsonNull()) return null;
 
 		JsonElement element = parent.get(member);

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Enum representing the different Dungeon bosses. <a href="https://wiki.hypixel.net/Dungeons">Hypixel Wiki Dungeons</a>

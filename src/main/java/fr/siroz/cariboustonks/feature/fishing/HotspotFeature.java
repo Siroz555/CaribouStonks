@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.feature.fishing.hotspot;
+package fr.siroz.cariboustonks.feature.fishing;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -8,10 +8,12 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.RenderEvents;
-import fr.siroz.cariboustonks.feature.fishing.radar.HotspotRadarFeature;
 import fr.siroz.cariboustonks.mixin.accessors.DustParticleOptionsAccessor;
+import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.colors.Color;
+import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -27,23 +29,23 @@ import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class HotspotFeature extends Feature {
 
 	private static final double DISTANCE_TO_HOTSPOT_IN_BLOCKS = 10;
+	private static final Color BOBBER_IN = Colors.GREEN.withAlpha(0.5F);
+	private static final Color BOBBER_OUT = Colors.RED.withAlpha(0.5F);
 
-	private Double hotspotRadius = null;
-	private Hotspot currentHotspot = null;
+	private @Nullable Double hotspotRadius = null;
+	private @Nullable Hotspot currentHotspot = null;
 	private boolean bobberInHotspot = false;
 
 	public HotspotFeature() {
-		HotspotRenderer renderer = new HotspotRenderer(this);
-		RenderEvents.WORLD_RENDER.register(renderer::render);
-
 		TickScheduler.getInstance().runRepeating(this::update, 2, TimeUnit.SECONDS);
 		TickScheduler.getInstance().runRepeating(this::updateBobber, 500, TimeUnit.MILLISECONDS);
+		RenderEvents.WORLD_RENDER.register(this::render);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
 	}
 
@@ -57,20 +59,6 @@ public class HotspotFeature extends Feature {
 	@Override
 	protected void onClientJoinServer() {
 		reset();
-	}
-
-	@Nullable
-	Hotspot getCurrentHotspot() {
-		return currentHotspot;
-	}
-
-	@Nullable
-	Double getHotspotRadius() {
-		return hotspotRadius;
-	}
-
-	boolean isBobberInHotspot() {
-		return bobberInHotspot;
 	}
 
 	private void update() {
@@ -112,6 +100,22 @@ public class HotspotFeature extends Feature {
 		}
 	}
 
+	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	private void render(WorldRenderer renderer) {
+		if (!isEnabled() || currentHotspot == null) return;
+
+		if (hotspotRadius != null && hotspotRadius > 0D && hotspotRadius <= 16D) {
+			renderer.submitThickCircle(
+					currentHotspot.centerPos().subtract(0D, 2.5D, 0D), // 2
+					hotspotRadius,
+					1,
+					32,
+					bobberInHotspot ? BOBBER_IN : BOBBER_OUT,
+					true
+			);
+		}
+	}
+
 	@EventHandler(event = "NetworkEvents.PARTICLE_RECEIVED_PACKET")
 	private void onParticleReceived(ClientboundLevelParticlesPacket particle) {
 		if (!isEnabled() || currentHotspot == null || hotspotRadius != null) {
@@ -136,14 +140,14 @@ public class HotspotFeature extends Feature {
 	/**
 	 * [STDOUT]: particle: smoke count: 5 speed: 0.0
 	 */
-	private boolean matchesSmoke(@NotNull ClientboundLevelParticlesPacket p) {
+	private boolean matchesSmoke(@NonNull ClientboundLevelParticlesPacket p) {
 		return p.getCount() == 5 && p.getMaxSpeed() == 0f;
 	}
 
 	/**
 	 * [STDOUT]: DUST:: color: -38476 scale:1.0 count: 0 speed: 1.0
 	 */
-	private boolean matchesDust(@NotNull ClientboundLevelParticlesPacket p, ParticleOptions params) {
+	private boolean matchesDust(@NonNull ClientboundLevelParticlesPacket p, ParticleOptions params) {
 		if (p.getCount() != 0 || p.getMaxSpeed() != 1f) return false;
 		if (!(params instanceof DustParticleOptions effect)) return false;
 
@@ -152,6 +156,8 @@ public class HotspotFeature extends Feature {
 	}
 
 	private void handleParticle(Vec3 particlePos, ParticleType<?> particleType) {
+		if (currentHotspot == null) return; // "false" ide warn
+
 		hotspotRadius = currentHotspot.centerPos().distanceTo(particlePos);
 		if (particleType == ParticleTypes.DUST) {
 			hotspotRadius -= - 0.2D;
@@ -196,5 +202,8 @@ public class HotspotFeature extends Feature {
 		currentHotspot = null;
 		hotspotRadius = null;
 		bobberInHotspot = false;
+	}
+
+	private record Hotspot(ArmorStand entity, Vec3 centerPos, Optional<String> perk) {
 	}
 }

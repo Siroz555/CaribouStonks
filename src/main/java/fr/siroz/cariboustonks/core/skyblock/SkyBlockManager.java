@@ -16,7 +16,6 @@ import net.hypixel.modapi.error.BuiltinErrorReason;
 import net.hypixel.modapi.error.ErrorReason;
 import net.hypixel.modapi.packet.impl.clientbound.ClientboundHelloPacket;
 import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket;
-import org.jetbrains.annotations.ApiStatus;
 
 /**
  * The {@code SkyBlockManager} class serves as the core manager for all SkyBlock related-content.
@@ -99,7 +98,6 @@ public final class SkyBlockManager {
 		SkyBlockAPI.handleInternalLocationUpdate(null, false, "", IslandType.UNKNOWN);
 	}
 
-	@ApiStatus.Internal
 	private void handleHelloPacket(ClientboundHelloPacket helloPacket) {
 		if (helloPacket == null) return;
 
@@ -109,7 +107,6 @@ public final class SkyBlockManager {
 		SkyBlockAPI.handleInternalLocationUpdate(true, null, null, null);
 	}
 
-	@ApiStatus.Internal
 	private void handleLocationPacket(ClientboundLocationPacket locationPacket) {
 		if (locationPacket == null) return;
 
@@ -131,7 +128,6 @@ public final class SkyBlockManager {
 		}
 	}
 
-	@ApiStatus.Internal
 	private void handleErrorPacket(ErrorReason reason) {
 		if (reason instanceof BuiltinErrorReason error) {
 			CaribouStonks.LOGGER.warn("[HypixelModAPI] [ERROR] [{}] {}", error.getId(), error.name());

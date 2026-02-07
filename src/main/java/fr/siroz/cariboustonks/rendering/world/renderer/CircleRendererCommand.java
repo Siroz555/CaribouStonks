@@ -6,13 +6,13 @@ import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.CircleRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.jspecify.annotations.NonNull;
 
 public final class CircleRendererCommand implements RendererCommand<CircleRenderState> {
 
 	@Override
-	public void emit(@NotNull CircleRenderState state, @NotNull CameraRenderState camera) {
+	public void emit(@NonNull CircleRenderState state, @NonNull CameraRenderState camera) {
 		RenderPipeline pipeline = state.throughBlocks()
 				? CaribouRenderPipelines.CIRCLE_THROUGH_BLOCKS
 				: CaribouRenderPipelines.CIRCLE;

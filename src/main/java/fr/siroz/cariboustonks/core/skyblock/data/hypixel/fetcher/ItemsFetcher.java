@@ -14,6 +14,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.util.http.Http;
 import fr.siroz.cariboustonks.util.http.HttpResponse;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Fetches and caches {@code Hypixel SkyBlock Items resource}.
@@ -37,7 +36,6 @@ import org.jetbrains.annotations.Nullable;
  * Performs an asynchronous fetch of the SkyBlock items resource and stores an immutable snapshot
  * of parsed {@link SkyBlockItemData} objects.
  */
-@ApiStatus.Internal
 public final class ItemsFetcher {
 
 	private static final String ITEMS_URL = "https://api.hypixel.net/v2/resources/skyblock/items";
@@ -55,14 +53,18 @@ public final class ItemsFetcher {
 
 	private final AtomicReference<Map<String, SkyBlockItemData>> skyBlockItems;
 
-	public ItemsFetcher(HypixelDataSource hypixelDataSource, ModDataSource modDataSource, HypixelAPIFixer apiFixer) {
+	public ItemsFetcher(
+			HypixelDataSource hypixelDataSource,
+			ModDataSource modDataSource,
+			HypixelAPIFixer apiFixer
+	) {
 		this.hypixelDataSource = hypixelDataSource;
 		this.modDataSource = modDataSource;
 		this.apiFixer = apiFixer;
 		this.fetchInProgress = new AtomicBoolean(false);
 		this.retryAttempts = new AtomicInteger(0);
 		this.lastFetchSuccessful = new AtomicBoolean(false);
-		this.skyBlockItems = new AtomicReference<>(Map.of());
+		this.skyBlockItems = new AtomicReference<>(Collections.emptyMap());
 	}
 
 	/**
@@ -99,7 +101,7 @@ public final class ItemsFetcher {
 	 * @param key  the item id
 	 * @param item the SkyBlockItem instance
 	 */
-	public void putItem(@NotNull String key, @NotNull SkyBlockItemData item) {
+	public void putItem(@NonNull String key, @NonNull SkyBlockItemData item) {
 		skyBlockItems.updateAndGet(prev -> {
 			Map<String, SkyBlockItemData> mutable = new HashMap<>(prev);
 			mutable.put(key, item);
@@ -211,8 +213,7 @@ public final class ItemsFetcher {
 	/**
 	 * Call-back runnable executed after a fetch attempt completes
 	 */
-	@Contract(pure = true)
-	private @NotNull Runnable afterFetch() {
+	private @NonNull Runnable afterFetch() {
 		return () -> {
 			if (lastFetchSuccessful.get()) {
 				CaribouStonks.LOGGER.info("[ItemsFetcher] Loaded {} SkyBlock Items", skyBlockItems.get().size());

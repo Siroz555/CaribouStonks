@@ -4,7 +4,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents an SkyBlock ItemStack.
@@ -14,9 +14,9 @@ import org.jetbrains.annotations.NotNull;
  * @param metadata     the item's metadata
  */
 public record SkyblockItemStack(
-		@NotNull String skyBlockId,
+		@NonNull String skyBlockId,
 		int amount,
-		@NotNull ItemMetadata metadata
+		@NonNull ItemMetadata metadata
 ) {
 
 	/**
@@ -25,7 +25,7 @@ public record SkyblockItemStack(
 	 * @param itemStack the {@code ItemStack} to parse
 	 * @return the {@code SkyblockItemStack} parsed from the given {@code ItemStack}
 	 */
-	public static @NotNull SkyblockItemStack of(@NotNull ItemStack itemStack) {
+	public static @NonNull SkyblockItemStack of(@NonNull ItemStack itemStack) {
 		CompoundTag customData = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		String skyBlockId = customData.getStringOr("id", "");
 		return new SkyblockItemStack(skyBlockId, itemStack.getCount(), ItemMetadata.ofNbt(customData));

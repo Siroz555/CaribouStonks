@@ -28,7 +28,8 @@ public final class ZoomFeature extends Feature {
     public ZoomFeature() {
         this.zoomKeyBind = new KeyBind("Zoom", GLFW.GLFW_KEY_C, true);
         this.currentZoomMultiplier = ZOOM_MULTIPLIER;
-        MouseEvents.ALLOW_MOUSE_SCROLL.register(this::allowMouseScroll);
+
+		MouseEvents.ALLOW_MOUSE_SCROLL.register(this::allowMouseScroll);
 
 		this.addComponent(KeybindComponent.class, KeybindComponent.builder()
 				.add(this.zoomKeyBind)

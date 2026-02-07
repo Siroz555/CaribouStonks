@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A builder for assembling a sequence of {@link HudElement}s to be rendered in the HUD.
@@ -34,7 +34,7 @@ public final class HudElementBuilder {
 	 * @param text the title text to insert
 	 * @return this builder instance
 	 */
-	public HudElementBuilder appendTitle(@NotNull Component text) {
+	public HudElementBuilder appendTitle(@NonNull Component text) {
 		elements.addFirst(new HudTextLine(text, true));
 		return this;
 	}
@@ -45,7 +45,7 @@ public final class HudElementBuilder {
 	 * @param text the text of the line to append
 	 * @return this builder instance
 	 */
-	public HudElementBuilder appendLine(@NotNull Component text) {
+	public HudElementBuilder appendLine(@NonNull Component text) {
 		elements.add(new HudTextLine(text, false));
 		return this;
 	}
@@ -58,7 +58,7 @@ public final class HudElementBuilder {
 	 * @param c3 the text for the third column
 	 * @return this builder instance
 	 */
-	public HudElementBuilder appendTableRow(@NotNull Component c1, @NotNull Component c2, @NotNull Component c3) {
+	public HudElementBuilder appendTableRow(@NonNull Component c1, @NonNull Component c2, @NonNull Component c3) {
 		elements.add(new HudTableRow(c1, c2, c3, false));
 		return this;
 	}
@@ -70,7 +70,7 @@ public final class HudElementBuilder {
 	 * @param text  the text
 	 * @return this builder instance
 	 */
-	public HudElementBuilder appendIconLine(@NotNull ItemStack stack, @NotNull Component text) {
+	public HudElementBuilder appendIconLine(@NonNull ItemStack stack, @NonNull Component text) {
 		elements.add(new HudIconLine(stack, text, false));
 		return this;
 	}

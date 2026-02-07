@@ -6,9 +6,8 @@ import java.util.Optional;
 import java.util.Random;
 import net.minecraft.client.gui.components.SplashRenderer;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public final class SplashTextSupplier {
 
@@ -47,8 +46,7 @@ public final class SplashTextSupplier {
 		return instance == null ? instance = new SplashTextSupplier() : instance;
 	}
 
-	@Contract(pure = true)
-	public @NotNull Optional<SplashRenderer> get() {
+	public @NonNull Optional<SplashRenderer> get() {
 		return Optional.ofNullable(splashText);
 	}
 }

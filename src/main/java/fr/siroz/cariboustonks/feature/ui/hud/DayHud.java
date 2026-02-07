@@ -7,8 +7,7 @@ import fr.siroz.cariboustonks.core.module.hud.TextHud;
 import fr.siroz.cariboustonks.util.Client;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class DayHud extends Feature {
 
@@ -32,8 +31,7 @@ public class DayHud extends Feature {
 		return true;
 	}
 
-	@Contract(" -> new")
-	private @NotNull Component getText() {
+	private @NonNull Component getText() {
 		long day = Client.getWorldDay();
 		return Component.literal("Day: " + day);
 	}

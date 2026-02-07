@@ -10,7 +10,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import java.lang.reflect.Type;
 
-public record CodecTypeAdapter<T>(Codec<T> codec) implements JsonSerializer<T>, JsonDeserializer<T> {
+public record CodecTypeAdapter<T>(
+		Codec<T> codec
+) implements JsonSerializer<T>, JsonDeserializer<T> {
 
     @Override
     public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {

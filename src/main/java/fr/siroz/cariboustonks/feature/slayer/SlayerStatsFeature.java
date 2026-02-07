@@ -30,8 +30,7 @@ import java.util.OptionalDouble;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 @Experimental
 public class SlayerStatsFeature extends Feature {
@@ -86,21 +85,21 @@ public class SlayerStatsFeature extends Feature {
 	}
 
 	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_SPAWN")
-	private void onBossSpawn(@NotNull SlayerType type, @NotNull SlayerTier tier) {
+	private void onBossSpawn(@NonNull SlayerType type, @NonNull SlayerTier tier) {
 		if (this.config().slayer.bossSpawnAlert) {
 			Client.showTitle(Component.literal("Boss spawned!").withStyle(ChatFormatting.DARK_RED), 1, 15, 1);
 		}
 	}
 
 	@EventHandler(event = "SkyBlockEvents.SLAYER_MINIBOSS_SPAWN")
-	private void onMinibossSpawn(@NotNull SlayerType type, @NotNull SlayerTier tier) {
+	private void onMinibossSpawn(@NonNull SlayerType type, @NonNull SlayerTier tier) {
 		if (this.config().slayer.minibossSpawnAlert) {
 			Client.showTitle(Component.literal("Miniboss spawned!").withStyle(ChatFormatting.RED), 1, 15, 1);
 		}
 	}
 
 	@EventHandler(event = "SkyBlockEvents.SLAYER_QUEST_START")
-	private void onQuestStart(@NotNull SlayerType type, @NotNull SlayerTier tier, boolean afterUpdate) {
+	private void onQuestStart(@NonNull SlayerType type, @NonNull SlayerTier tier, boolean afterUpdate) {
 		// Permet de reset si le type de slayer change ou le tier
 		if (!runs.isEmpty()) {
 			if (runs.getFirst().getSlayerType() != type || runs.getFirst().getSlayerTier() != tier) {
@@ -118,7 +117,7 @@ public class SlayerStatsFeature extends Feature {
 	}
 
 	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_END")
-	private void onBossEnd(@NotNull SlayerType type, @NotNull SlayerTier tier, @Nullable Instant startTime) {
+	private void onBossEnd(@NonNull SlayerType type, @NonNull SlayerTier tier, @NonNull Instant startTime) {
 		if (currentRun != null && type != SlayerType.UNKNOWN && tier != SlayerTier.UNKNOWN) {
 			currentRun.setBossSpawn(startTime);
 			// SIROZ-NOTE FUTURE UPDATE
@@ -187,7 +186,7 @@ public class SlayerStatsFeature extends Feature {
 		xpBuffActive = SkyBlockAPI.isMayorOrMinister(Mayor.AATROX, Perk.SLAYER_XP_BUFF);
 	}
 
-	private void showBreakdown(@NotNull SlayerBossRun currentRun) {
+	private void showBreakdown(@NonNull SlayerBossRun currentRun) {
 		Component message = Component.empty()
 				.append(Component.literal("BREAKDOWN ").withStyle(ChatFormatting.RED, ChatFormatting.BOLD))
 				.append(Component.literal("Spawn: ").withStyle(ChatFormatting.GREEN))

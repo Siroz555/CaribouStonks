@@ -11,16 +11,16 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
-class ChangelogListWidget extends ContainerObjectSelectionList<ChangelogListWidget.@NotNull LineEntry> {
+class ChangelogListWidget extends ContainerObjectSelectionList<ChangelogListWidget.LineEntry> {
 
 	private static final int LINE_HEIGHT = 10;
 	private static final int PADDING = 10;
 	private static final Component SPACE = Component.literal(" ");
 	private static final Component SEPARATOR = Component.literal("────────────────────────────────────").withStyle(ChatFormatting.DARK_GRAY);
 
-	ChangelogListWidget(Minecraft client, @NotNull List<ChangelogEntry> changelogs, int width, int height, int y) {
+	ChangelogListWidget(Minecraft client, @NonNull List<ChangelogEntry> changelogs, int width, int height, int y) {
 		super(client, width, height, y, LINE_HEIGHT);
 
 		// Au lieu de créer une Entry qui fait pour toute la version (features + improvements + fixes + backend),
@@ -54,7 +54,7 @@ class ChangelogListWidget extends ContainerObjectSelectionList<ChangelogListWidg
 		return this.width - 10;
 	}
 
-	protected class LineEntry extends ContainerObjectSelectionList.Entry<@NotNull LineEntry> {
+	protected class LineEntry extends ContainerObjectSelectionList.Entry<LineEntry> {
 		private final Component text;
 
 		LineEntry(Component text) {
@@ -62,12 +62,12 @@ class ChangelogListWidget extends ContainerObjectSelectionList<ChangelogListWidg
 		}
 
 		@Override
-		public @NotNull List<? extends NarratableEntry> narratables() {
+		public @NonNull List<? extends NarratableEntry> narratables() {
 			return List.of();
 		}
 
 		@Override
-		public @NotNull List<? extends GuiEventListener> children() {
+		public @NonNull List<? extends GuiEventListener> children() {
 			return List.of();
 		}
 
@@ -83,7 +83,7 @@ class ChangelogListWidget extends ContainerObjectSelectionList<ChangelogListWidg
 	}
 
 	@SuppressWarnings("checkstyle:CyclomaticComplexity")
-	private @NotNull List<Component> formatChangelogToTexts(@NotNull ChangelogEntry entry, int maxWidth) {
+	private @NonNull List<Component> formatChangelogToTexts(@NonNull ChangelogEntry entry, int maxWidth) {
 		List<Component> out = new ArrayList<>();
 
 		// Titre Version (+ date si présente)
@@ -158,7 +158,7 @@ class ChangelogListWidget extends ContainerObjectSelectionList<ChangelogListWidg
 		return out;
 	}
 
-	private @NotNull List<String> wrapText(@NotNull String text, int maxWidth) {
+	private @NonNull List<String> wrapText(@NonNull String text, int maxWidth) {
 		List<String> lines = new ArrayList<>();
 		String[] words = text.split(" ");
 		StringBuilder current = new StringBuilder();

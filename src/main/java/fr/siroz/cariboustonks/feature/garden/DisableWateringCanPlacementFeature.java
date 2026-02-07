@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.InteractionEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class DisableWateringCanPlacementFeature extends Feature {
 
@@ -26,7 +26,7 @@ public class DisableWateringCanPlacementFeature extends Feature {
 	}
 
 	@EventHandler(event = "InteractionEvents.ALLOW_INTERACT_BLOCK")
-	private boolean allowInteractBlock(@NotNull ItemStack itemStack) {
+	private boolean allowInteractBlock(@NonNull ItemStack itemStack) {
 		if (!isEnabled()) return true;
 		if (itemStack.getItem() != Items.PLAYER_HEAD) return true;
 

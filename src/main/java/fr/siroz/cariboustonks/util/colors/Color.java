@@ -4,8 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.DyeColor;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Représente une couleur {@code R G B A}.
@@ -25,8 +24,7 @@ public class Color {
 	 *
 	 * @param color la couleur
 	 */
-	@Contract(pure = true)
-	public Color(@NotNull Color color) {
+	public Color(@NonNull Color color) {
 		this(color.r, color.g, color.b, color.a);
 	}
 
@@ -36,8 +34,7 @@ public class Color {
 	 * @param color la couleur
 	 * @param alpha l'alpha
 	 */
-	@Contract(pure = true)
-	public Color(@NotNull Color color, int alpha) {
+	public Color(@NonNull Color color, int alpha) {
 		this(color.r, color.g, color.b, alpha);
 	}
 
@@ -99,7 +96,7 @@ public class Color {
 	 * @param formatting le formatting type
 	 * @return la couleur obtenue
 	 */
-	public static Color fromFormatting(@NotNull ChatFormatting formatting) {
+	public static Color fromFormatting(@NonNull ChatFormatting formatting) {
 		if (formatting.getColor() == null) {
 			return DEFAULT;
 		}
@@ -113,8 +110,7 @@ public class Color {
 	 * @param color la dye color type
 	 * @return la couleur obtenue
 	 */
-	@Contract("_ -> new")
-	public static @NotNull Color fromDyeColor(@NotNull DyeColor color) {
+	public static @NonNull Color fromDyeColor(@NonNull DyeColor color) {
 		return fromInt(color.getTextureDiffuseColor() | 0xFF000000);
 	}
 
@@ -126,8 +122,7 @@ public class Color {
 	 * @return la couleur obtenue
 	 * @see #withAlpha(int)
 	 */
-	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull Color fromInt(int num) {
+	public static @NonNull Color fromInt(int num) {
 		if ((num & 0xFF000000) == 0) {
 			num |= 0xFF000000; // (0) / 0 -> 255
 		}
@@ -141,8 +136,7 @@ public class Color {
 	 * @param color la couleur sous {@link java.awt.Color}
 	 * @return la couleur obtenue
 	 */
-	@Contract("_ -> new")
-	public static @NotNull Color fromAwtColor(@NotNull java.awt.Color color) {
+	public static @NonNull Color fromAwtColor(java.awt.Color color) {
 		return new Color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 
@@ -152,7 +146,7 @@ public class Color {
 	 * @param hex la couleur hexadécimale
 	 * @return la couleur obtenue ou {@link #DEFAULT} si le {@code HEX} n'est pas valide
 	 */
-	public static Color fromHexString(@NotNull String hex) {
+	public static Color fromHexString(@NonNull String hex) {
 		Matcher hexMatcher = HEX_PATTERN.matcher(hex.trim());
 		if (!hexMatcher.matches()) {
 			return Color.DEFAULT;
@@ -235,8 +229,7 @@ public class Color {
 	 *
 	 * @return {@link java.awt.Color}
 	 */
-	@Contract(value = " -> new", pure = true)
-	public @NotNull java.awt.Color toAwtColor() {
+	public java.awt.Color toAwtColor() {
 		int ra = Math.max(0, Math.min(255, this.r));
 		int ga = Math.max(0, Math.min(255, this.g));
 		int ba = Math.max(0, Math.min(255, this.b));

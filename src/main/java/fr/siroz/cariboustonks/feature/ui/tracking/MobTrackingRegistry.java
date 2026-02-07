@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.feature.ui.tracking;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.model.MobTrackingModel;
 import fr.siroz.cariboustonks.core.service.json.JsonFileService;
 import fr.siroz.cariboustonks.core.service.json.JsonProcessingException;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
@@ -18,10 +19,8 @@ import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("checkstyle:linelength")
 public final class MobTrackingRegistry {
@@ -33,10 +32,7 @@ public final class MobTrackingRegistry {
 	public MobTrackingRegistry() {
 		ClientLifecycleEvents.CLIENT_STARTED.register(_client -> this.onClientStarted());
 		ClientLifecycleEvents.CLIENT_STOPPING.register(_client -> this.onClientStopping());
-		loadDefaultMobs();
-	}
 
-	private void loadDefaultMobs() {
 		// Slayer Boss "register" en temps réel
 		// Crimson Isle - Minibosses
 		register("Bladesoul", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Bladesoul").withStyle(ChatFormatting.GRAY), false, IslandType.CRIMSON_ISLE);
@@ -77,33 +73,32 @@ public final class MobTrackingRegistry {
 
 	public void saveMobTrackingConfig() {
 		try {
-			List<MobTrackingConfig> configs = new ArrayList<>();
+			List<MobTrackingModel> models = new ArrayList<>();
 			for (Map.Entry<String, MobTrackingEntry> entry : trackedMobs.entrySet()) {
-				String mobName = entry.getValue().config().name;
-				boolean enabled = entry.getValue().config().enabled;
-				boolean notifyOnSpawn = entry.getValue().config().notifyOnSpawn;
-				configs.add(new MobTrackingConfig(mobName, enabled, notifyOnSpawn));
+				String mobName = entry.getValue().model().getName();
+				boolean enabled = entry.getValue().model().isEnabled();
+				boolean notifyOnSpawn = entry.getValue().model().isNotifyOnSpawn();
+				models.add(new MobTrackingModel(mobName, enabled, notifyOnSpawn));
 			}
-			JsonFileService.get().save(MOB_TRACKING_PATH, configs);
+			JsonFileService.get().save(MOB_TRACKING_PATH, models);
 		} catch (JsonProcessingException ex) {
 			CaribouStonks.LOGGER.error("[MobTrackingFeature] Unable to save tracked config", ex);
 		}
 	}
 
-	@Contract(value = " -> new", pure = true)
-	public @NonNull Map<String, MobTrackingEntry> getTrackedMobs() {
+	public @NonNull Map<String, MobTrackingEntry> getTrackedMobsSnapshot() {
 		return new HashMap<>(trackedMobs);
 	}
 
 	@Nullable
-	public MobTrackingEntry findMob(@Nullable String customName, @NotNull IslandType currentIsland) {
+	public MobTrackingEntry findMob(@Nullable String customName, @NonNull IslandType currentIsland) {
 		if (customName == null || customName.isBlank()) return null;
 
 		// Recherche partielle (toujours, car avec les tags des MobType et le health -_-)
 		for (MobTrackingEntry entry : trackedMobs.values()) {
-			if (entry.config().enabled
+			if (entry.model().isEnabled()
 					&& entry.isAllowedOn(currentIsland)
-					&& customName.contains(entry.config().name)
+					&& customName.contains(entry.model().getName())
 			) {
 				return entry;
 			}
@@ -123,24 +118,24 @@ public final class MobTrackingRegistry {
 	}
 
 	private void register(
-			@NotNull String mobName,
+			@NonNull String mobName,
 			int priority, MobCategory category,
 			Component displayName,
 			boolean notifyOnSpawn,
 			IslandType... islandTypes
 	) {
-		MobTrackingConfig config = new MobTrackingConfig(mobName, true, notifyOnSpawn);
-		trackedMobs.put(mobName, new MobTrackingEntry(config, priority, category, displayName, islandTypes));
+		MobTrackingModel model = new MobTrackingModel(mobName, true, notifyOnSpawn);
+		trackedMobs.put(mobName, new MobTrackingEntry(model, priority, category, displayName, islandTypes));
 	}
 
-	private CompletableFuture<List<MobTrackingConfig>> loadMobTrackingConfig() {
+	private CompletableFuture<List<MobTrackingModel>> loadMobTrackingConfig() {
 		if (!Files.exists(MOB_TRACKING_PATH)) {
 			return CompletableFuture.completedFuture(List.of());
 		}
 
 		return CompletableFuture.supplyAsync(() -> {
 			try {
-				return JsonFileService.get().loadList(MOB_TRACKING_PATH, MobTrackingConfig.class);
+				return JsonFileService.get().loadList(MOB_TRACKING_PATH, MobTrackingModel.class);
 			} catch (JsonProcessingException ex) {
 				CaribouStonks.LOGGER.error("[MobTrackingFeature] Unable to load mob tracking configs", ex);
 				return Collections.emptyList();
@@ -148,59 +143,47 @@ public final class MobTrackingRegistry {
 		});
 	}
 
-	private void loadExistingMobTracking(@NotNull List<MobTrackingConfig> mobTrackingList) {
-		for (MobTrackingConfig config : mobTrackingList) {
+	private void loadExistingMobTracking(@NonNull List<MobTrackingModel> models) {
+		for (MobTrackingModel model : models) {
 
 			int priority = 0;
-			MobTrackingEntry priorityEntry = trackedMobs.get(config.name);
+			MobTrackingEntry priorityEntry = trackedMobs.get(model.getName());
 			if (priorityEntry != null) {
 				priority = priorityEntry.priority();
 			}
 
 			MobCategory category = MobCategory.DEFAULT;
-			MobTrackingEntry categoryEntry = trackedMobs.get(config.name);
+			MobTrackingEntry categoryEntry = trackedMobs.get(model.getName());
 			if (categoryEntry != null) {
 				category = categoryEntry.category();
 			}
 
 			IslandType[] allowedIslands = null;
-			MobTrackingEntry islandEntry = trackedMobs.get(config.name);
+			MobTrackingEntry islandEntry = trackedMobs.get(model.getName());
 			if (islandEntry != null) {
 				allowedIslands = islandEntry.allowedIslands();
 			}
 
-			Component displayName = Component.literal(config.name);
-			MobTrackingEntry displayNameEntry = trackedMobs.get(config.name);
+			Component displayName = Component.literal(model.getName());
+			MobTrackingEntry displayNameEntry = trackedMobs.get(model.getName());
 			if (displayNameEntry != null) {
 				displayName = displayNameEntry.displayName();
 			}
 
-			MobTrackingEntry entry = new MobTrackingEntry(config, priority, category, displayName, allowedIslands);
-			trackedMobs.put(entry.config().name, entry);
+			MobTrackingEntry entry = new MobTrackingEntry(model, priority, category, displayName, allowedIslands);
+			trackedMobs.put(entry.model().getName(), entry);
 		}
 
 		if (DeveloperTools.isInDevelopment()) {
-			CaribouStonks.LOGGER.info("[MobTrackingFeature] Loaded {} mob tracking config", mobTrackingList.size());
-		}
-	}
-
-	public static class MobTrackingConfig {
-		public String name;
-		public boolean enabled;
-		public boolean notifyOnSpawn;
-
-		public MobTrackingConfig(String name, boolean enabled, boolean notifyOnSpawn) {
-			this.name = name;
-			this.enabled = enabled;
-			this.notifyOnSpawn = notifyOnSpawn;
+			CaribouStonks.LOGGER.info("[MobTrackingFeature] Loaded {} mob tracking config", models.size());
 		}
 	}
 
 	public record MobTrackingEntry(
-			@NotNull MobTrackingConfig config,
+			@NonNull MobTrackingModel model,
 			int priority,
-			@NotNull MobCategory category,
-			@NotNull Component displayName,
+			@NonNull MobCategory category,
+			@NonNull Component displayName,
 			@Nullable IslandType... allowedIslands
 	) {
 

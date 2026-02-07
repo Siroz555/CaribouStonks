@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * The {@code TickScheduler} class is responsible for managing and scheduling tasks
@@ -75,7 +75,7 @@ public final class TickScheduler {
 	 * @param delay     the delay in ticks before the task is executed; must be non-negative
 	 * @param delayUnit the time unit of the delay parameter
 	 */
-	public void runLater(@NotNull Runnable task, int delay, @NotNull TimeUnit delayUnit) {
+	public void runLater(@NonNull Runnable task, int delay, @NonNull TimeUnit delayUnit) {
 		runLater(task, Ticks.from(Math.max(0, delay), delayUnit));
 	}
 
@@ -86,7 +86,7 @@ public final class TickScheduler {
 	 * @param task  the {@code Runnable} task to be executed; cannot be {@code null}
 	 * @param delay the delay in ticks before the task is executed; must be non-negative
 	 */
-	public void runLater(@NotNull Runnable task, int delay) {
+	public void runLater(@NonNull Runnable task, int delay) {
 		ScheduledTask scheduledTask = new ScheduledTask(task);
 		scheduledTask.setId(taskIdGenerator.incrementAndGet());
 		scheduleTask(scheduledTask, currentTick + Math.max(0, delay));
@@ -102,7 +102,7 @@ public final class TickScheduler {
 	 * @param intervalUnit the time unit of the interval parameter
 	 * @return the unique identifier of the scheduled task
 	 */
-	public int runRepeating(@NotNull Runnable task, int interval, @NotNull TimeUnit intervalUnit) {
+	public int runRepeating(@NonNull Runnable task, int interval, @NonNull TimeUnit intervalUnit) {
 		return runRepeating(task, Ticks.from(Math.max(1, interval), intervalUnit));
 	}
 
@@ -174,7 +174,7 @@ public final class TickScheduler {
 	 * @param task the {@code Runnable} task to be executed
 	 * @return {@code true} if the task was executed successfully, otherwise {@code false}
 	 */
-	private boolean runTask(@NotNull Runnable task) {
+	private boolean runTask(@NonNull Runnable task) {
 		try {
 			task.run();
 		} catch (Throwable throwable) {
@@ -200,7 +200,6 @@ public final class TickScheduler {
 	 * based on the specified scheduling configuration.
 	 */
 	private static class ScheduledTask implements Runnable {
-
 		private final Runnable task;
 		private final int interval;
 		private final TaskType taskType;

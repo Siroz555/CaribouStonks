@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.util.colors.Colors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class InformationWidget extends AbstractStonksWidget {
 

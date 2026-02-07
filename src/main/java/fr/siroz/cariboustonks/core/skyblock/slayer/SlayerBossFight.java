@@ -5,8 +5,7 @@ import java.time.Instant;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 class SlayerBossFight {
 
@@ -29,7 +28,7 @@ class SlayerBossFight {
 
 		SlayerQuest slayerQuest = slayerManager.getQuest();
 		if (armorStand != null && slayerQuest != null) {
-			EntityType<? extends @NotNull Entity> entityType = slayerQuest.getSlayerType().getEntityType();
+			EntityType<? extends Entity> entityType = slayerQuest.getSlayerType().getEntityType();
 			this.boss = slayerManager.findClosestEntity(entityType, armorStand);
 		}
 

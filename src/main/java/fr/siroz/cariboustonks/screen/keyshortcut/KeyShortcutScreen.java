@@ -17,9 +17,8 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyShortcutScreen extends CaribousStonksScreen {
@@ -34,18 +33,16 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	private KeyShortcutListWidget listWidget;
 	private Button buttonDelete;
 	private double scrollBackup;
-	@Nullable
-	private KeyShortcutListWidget.KeyShortcutEntry currentEntry = null;
+	private KeyShortcutListWidget.@Nullable KeyShortcutEntry currentEntry = null;
 
 	private KeyShortcutScreen(@Nullable Screen parent) {
 		super(Component.literal("Key Shortcuts").withStyle(ChatFormatting.BOLD));
 		this.parent = parent;
 		this.keyShortcutFeature = CaribouStonks.features().getFeature(KeyShortcutFeature.class);
-		this.shortcuts = this.keyShortcutFeature.getShortcutsCopy();
+		this.shortcuts = this.keyShortcutFeature.getShortcutsSnapshot();
 	}
 
-	@Contract("_ -> new")
-	public static @NotNull KeyShortcutScreen create(@Nullable Screen parent) {
+	public static @NonNull KeyShortcutScreen create(@Nullable Screen parent) {
 		return new KeyShortcutScreen(parent);
 	}
 
@@ -94,7 +91,7 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public boolean keyPressed(@NotNull KeyEvent input) {
+	public boolean keyPressed(@NonNull KeyEvent input) {
 		if (currentEntry != null) {
 			int code = (input.input() == GLFW.GLFW_KEY_ESCAPE || input.input() == GLFW.GLFW_KEY_DELETE) ? -1 : input.input();
 			currentEntry.setKeyCode(code);
@@ -118,7 +115,7 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void renderBackground(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
+	public void renderBackground(@NonNull GuiGraphics context, int mouseX, int mouseY, float delta) {
 		super.renderBackground(context, mouseX, mouseY, delta);
 		if (currentEntry != null) {
 			context.fill(0, 0, width, height, 0x88000000);
@@ -150,6 +147,6 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 
 	private void saveShortcuts() {
 		keyShortcutFeature.updateShortcuts(shortcuts);
-		keyShortcutFeature.saveShortcuts(minecraft);
+		keyShortcutFeature.saveShortcuts();
 	}
 }

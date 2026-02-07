@@ -14,9 +14,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Map;
 import java.util.function.UnaryOperator;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 /**
@@ -30,7 +29,6 @@ import org.slf4j.Logger;
  * <p>YetAnotherConfigLib version before the patch: 3.6.6+1.21.5
  * <p>YetAnotherConfigLib version after the patch: 3.7.1+1.21.5
  */
-@ApiStatus.Internal
 final class GsonConfigSerializer<T> extends ConfigSerializer<T> {
 
 	private static final Logger LOGGER = LogUtils.getLogger();
@@ -39,9 +37,9 @@ final class GsonConfigSerializer<T> extends ConfigSerializer<T> {
 	private final Gson gson;
 
 	GsonConfigSerializer(
-			@NotNull ConfigClassHandler<T> config,
-			@NotNull Path path,
-			@NotNull UnaryOperator<GsonBuilder> builder
+			@NonNull ConfigClassHandler<T> config,
+			@NonNull Path path,
+			@NonNull UnaryOperator<GsonBuilder> builder
 	) {
 		super(config);
 		this.path = path;

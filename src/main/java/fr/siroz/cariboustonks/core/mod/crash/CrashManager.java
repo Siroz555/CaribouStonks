@@ -5,13 +5,11 @@ import fr.siroz.cariboustonks.util.Client;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Manages and reports crashes within the mod.
  */
-@ApiStatus.Internal
 public final class CrashManager {
 
 	private final Set<String> reportedCrashes;
@@ -30,10 +28,10 @@ public final class CrashManager {
 	 * @param throwable the exception or error thrown during the crash
 	 */
 	public void reportCrash(
-			@NotNull CrashType type,
-			@NotNull String niceName,
-			@NotNull String fullName,
-			@NotNull String reason,
+			@NonNull CrashType type,
+			@NonNull String niceName,
+			@NonNull String fullName,
+			@NonNull String reason,
 			Throwable throwable
 	) {
 		reportCrash(type, niceName, fullName, reason, true, true, throwable);
@@ -51,10 +49,10 @@ public final class CrashManager {
 	 * @param throwable              the exception
 	 */
 	public void reportCrash(
-			@NotNull CrashType type,
-			@NotNull String niceName,
-			@NotNull String fullName,
-			@NotNull String reason,
+			@NonNull CrashType type,
+			@NonNull String niceName,
+			@NonNull String fullName,
+			@NonNull String reason,
 			boolean shouldSendChat,
 			boolean shouldSendNotification,
 			Throwable throwable

@@ -11,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.ClientboundPingPacket;
 import net.minecraft.network.protocol.ping.ServerboundPingRequestPacket;
 import net.minecraft.util.Util;
-import org.jetbrains.annotations.ApiStatus;
 
 public final class NetworkSystem implements System {
 
@@ -28,7 +27,6 @@ public final class NetworkSystem implements System {
 	private long timeLastTimeUpdate = -1;
 	private long timeGameJoined = 0;
 
-	@ApiStatus.Internal
 	public NetworkSystem() {
 		NetworkEvents.PING_RESULT.register(ping -> this.lastPingResult = ping);
 		NetworkEvents.WORLD_TIME_UPDATE_PACKET.register(this::onWorldTimeUpdatePacket);
@@ -63,7 +61,6 @@ public final class NetworkSystem implements System {
 		return sumTickRates / numTicks;
 	}
 
-	@ApiStatus.Internal
 	public void onServerTick(ClientboundPingPacket packet) {
 		if (packet != null && packet.getId() != lastParameterS2CPing) {
 			lastParameterS2CPing = packet.getId();

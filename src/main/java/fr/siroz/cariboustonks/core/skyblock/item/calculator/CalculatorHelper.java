@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.ToDoubleFunction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 final class CalculatorHelper {
 
@@ -58,7 +58,7 @@ final class CalculatorHelper {
 	public static void computeUpgradeCosts(
 			ToDoubleFunction<String> prices,
 			PriceAccumulator acc,
-			@NotNull List<SkyBlockItemData.GearUpgrade> upgradesCosts,
+			@NonNull List<SkyBlockItemData.GearUpgrade> upgradesCosts,
 			String prestigeItem
 	) {
 		double cost = 0;

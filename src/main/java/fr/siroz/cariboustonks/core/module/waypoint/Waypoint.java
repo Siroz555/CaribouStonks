@@ -12,11 +12,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The {@code Waypoint} class represents a visual marker in the world that can be rendered in various forms.
@@ -80,7 +77,6 @@ import org.jetbrains.annotations.Range;
  * @see Type
  */
 public final class Waypoint {
-
 	private Position position;
 	private AABB box;
 	private Type type;
@@ -103,19 +99,19 @@ public final class Waypoint {
 	private final WaypointRenderer renderer;
 
 	private Waypoint(
-			@NotNull Position position,
-			@NotNull Type type,
+			@NonNull Position position,
+			@NonNull Type type,
 			boolean enabled,
-			@NotNull UUID uuid,
+			@NonNull UUID uuid,
 			int timeoutTicks,
 			boolean resetBetweenWorlds,
-			@NotNull Color color,
+			@NonNull Color color,
 			float alpha,
 			float boxLineWidth,
 			boolean boxThroughBlocks,
 			@Nullable Consumer<Waypoint> destroyListener,
-			@NotNull TextOption textOption,
-			@NotNull IconOption iconOption
+			@NonNull TextOption textOption,
+			@NonNull IconOption iconOption
 	) {
 		this.position = position;
 		this.box = new AABB(position.toBlockPos());
@@ -142,8 +138,7 @@ public final class Waypoint {
 	 *                 the builder.
 	 * @return a new {@link Builder} instance configured with the specified position.
 	 */
-	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull Builder builder(@NotNull Position position) {
+	public static @NonNull Builder builder(@NonNull Position position) {
 		return new Builder(position);
 	}
 
@@ -158,7 +153,7 @@ public final class Waypoint {
 	 * @return a newly constructed {@link Waypoint} instance with the configuration
 	 * specified by the provided {@link Builder} consumer.
 	 */
-	public static Waypoint builder(@NotNull Consumer<Builder> builderConsumer) {
+	public static Waypoint builder(@NonNull Consumer<Builder> builderConsumer) {
 		Builder builder = builder(Position.ORIGIN);
 		builderConsumer.accept(builder);
 		return builder.build();
@@ -170,7 +165,7 @@ public final class Waypoint {
 	 * @return the current {@link Position} of the Waypoint. This position is immutable and represents
 	 * the Waypoint's coordinates in the world.
 	 */
-	@NotNull
+	@NonNull
 	public Position getPosition() {
 		return position;
 	}
@@ -181,12 +176,12 @@ public final class Waypoint {
 	 *
 	 * @param position the new {@link Position} to update the Waypoint to
 	 */
-	public void updatePosition(@NotNull Position position) {
+	public void updatePosition(@NonNull Position position) {
 		this.position = position;
 		this.box = new AABB(position.toBlockPos());
 	}
 
-	public void updateType(@NotNull Type type) {
+	public void updateType(@NonNull Type type) {
 		this.type = type;
 	}
 
@@ -205,7 +200,7 @@ public final class Waypoint {
 	 *
 	 * @return the {@link Type} associated with this Waypoint
 	 */
-	@NotNull
+	@NonNull
 	public Type getType() {
 		return type;
 	}
@@ -233,17 +228,15 @@ public final class Waypoint {
 	 *
 	 * @return the {@link UUID} associated with this Waypoint
 	 */
-	@NotNull
+	@NonNull
 	public UUID getUuid() {
 		return uuid;
 	}
 
-	@ApiStatus.Internal
 	public int getTimeoutTicks() {
 		return timeoutTicks;
 	}
 
-	@ApiStatus.Internal
 	public void decreaseTimeout() {
 		if (timeoutTicks > 0) {
 			timeoutTicks--;
@@ -259,7 +252,7 @@ public final class Waypoint {
 	 *
 	 * @return the {@link Color} of the Waypoint
 	 */
-	@NotNull
+	@NonNull
 	public Color getColor() {
 		return color;
 	}
@@ -269,7 +262,7 @@ public final class Waypoint {
 	 *
 	 * @param color the new {@link Color} to set for the Waypoint
 	 */
-	public void updateColor(@NotNull Color color) {
+	public void updateColor(@NonNull Color color) {
 		this.color = color;
 	}
 
@@ -360,7 +353,6 @@ public final class Waypoint {
 	 * into the {@link WaypointSystem}, or simply constructing it for manual use.
 	 */
 	public static class Builder {
-
 		private Position position;
 		private Type waypointType = Type.WAYPOINT;
 		private boolean enabled = true;
@@ -383,7 +375,7 @@ public final class Waypoint {
 		 *
 		 * @param position the {@link Position} associated with this builder
 		 */
-		public Builder(@NotNull Position position) {
+		public Builder(@NonNull Position position) {
 			this.position = position;
 		}
 
@@ -393,7 +385,7 @@ public final class Waypoint {
 		 * @param position the {@link Type} to set
 		 * @return the builder instance for chaining
 		 */
-		public Builder position(@NotNull Position position) {
+		public Builder position(@NonNull Position position) {
 			this.position = position;
 			return this;
 		}
@@ -405,7 +397,7 @@ public final class Waypoint {
 		 * @param waypointType the {@link Type} to assign to the waypoint
 		 * @return the builder instance for method chaining
 		 */
-		public Builder type(@NotNull Type waypointType) {
+		public Builder type(@NonNull Type waypointType) {
 			this.waypointType = waypointType;
 			return this;
 		}
@@ -423,7 +415,7 @@ public final class Waypoint {
 			return this;
 		}
 
-		public Builder uuid(@NotNull UUID uuid) {
+		public Builder uuid(@NonNull UUID uuid) {
 			this.uuid = uuid;
 			return this;
 		}
@@ -436,7 +428,7 @@ public final class Waypoint {
 		 * @param unit    the time unit of the timeout duration
 		 * @return the builder instance for method chaining
 		 */
-		public Builder timeout(@Range(from = 1, to = 999) int timeout, @NotNull TimeUnit unit) {
+		public Builder timeout(int timeout, @NonNull TimeUnit unit) {
 			this.timeoutTicks = Ticks.from(timeout, unit);
 			return this;
 		}
@@ -452,7 +444,7 @@ public final class Waypoint {
 		 * @param color the {@link Color} to assign to the builder
 		 * @return the builder instance for method chaining
 		 */
-		public Builder color(@NotNull Color color) {
+		public Builder color(@NonNull Color color) {
 			this.color = color;
 			return this;
 		}
@@ -499,7 +491,7 @@ public final class Waypoint {
 		 *                        representing the action to be performed when the waypoint is destroyed
 		 * @return the builder instance for method chaining
 		 */
-		public Builder destroyListener(@NotNull Consumer<Waypoint> destroyListener) {
+		public Builder destroyListener(@NonNull Consumer<Waypoint> destroyListener) {
 			this.destroyListener = destroyListener;
 			return this;
 		}
@@ -512,7 +504,7 @@ public final class Waypoint {
 		 * @param textOption the {@link TextOption} instance to use for the waypoint's text configuration
 		 * @return the builder instance for chaining
 		 */
-		public Builder textOption(@NotNull TextOption textOption) {
+		public Builder textOption(@NonNull TextOption textOption) {
 			this.textOption = textOption;
 			return this;
 		}
@@ -525,7 +517,7 @@ public final class Waypoint {
 		 * @param iconOption the {@link IconOption} instance to configure the waypoint's icon
 		 * @return the builder instance for method chaining
 		 */
-		public Builder iconOption(@NotNull IconOption iconOption) {
+		public Builder iconOption(@NonNull IconOption iconOption) {
 			this.iconOption = iconOption;
 			return this;
 		}
@@ -579,17 +571,29 @@ public final class Waypoint {
 	 * and interaction within the application.
 	 */
 	public enum Type {
-
+		/**
+		 * Renders a colored beacon beam
+		 */
 		BEAM,
-
+		/**
+		 * Combines a beacon beam with a box at its base
+		 */
 		WAYPOINT,
-
+		/**
+		 * Similar to WAYPOINT but with an outlined box
+		 */
 		OUTLINED_WAYPOINT,
-
+		/**
+		 * Highlights block(s) with a filled box
+		 */
 		HIGHLIGHT,
-
+		/**
+		 * Highlights block(s) with an outlined box
+		 */
 		OUTLINED_HIGHLIGHT,
-
+		/**
+		 * Creates only an outline around the specified block(s)
+		 */
 		OUTLINE
 	}
 }

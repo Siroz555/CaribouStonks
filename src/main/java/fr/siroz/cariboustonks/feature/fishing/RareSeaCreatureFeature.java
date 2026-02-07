@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class RareSeaCreatureFeature extends Feature {
 
@@ -44,7 +44,7 @@ public class RareSeaCreatureFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onChatMessage(@NotNull Component text) {
+	private void onChatMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 		if (!hasFishingRod()) return;
 
@@ -70,7 +70,7 @@ public class RareSeaCreatureFeature extends Feature {
 		doubleHook = false;
 	}
 
-	private void showNotification(@NotNull RareSeaCreature seaCreature, boolean doubleHook) {
+	private void showNotification(@NonNull RareSeaCreature seaCreature, boolean doubleHook) {
 		Component seaCreatureText = Component.empty()
 				.append(Component.literal("[iL ").withStyle(seaCreature.getColor(), ChatFormatting.OBFUSCATED))
 				.append(seaCreature.getText())

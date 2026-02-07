@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.jspecify.annotations.NonNull;
 
 public final class RenderUtils {
 
@@ -19,17 +19,17 @@ public final class RenderUtils {
 	 *
 	 * @param matrix4f the {@link Matrix4f}
 	 */
-	public static @NotNull PoseStack matrixToStack(Matrix4f matrix4f) {
+	public static @NonNull PoseStack matrixToStack(Matrix4f matrix4f) {
 		PoseStack matrices = new PoseStack();
 		matrices.last().pose().set(matrix4f);
 		return matrices;
 	}
 
-	public static @NotNull DeltaTracker getTickCounter() {
+	public static @NonNull DeltaTracker getTickCounter() {
 		return Minecraft.getInstance().getDeltaTracker();
 	}
 
-	public static @NotNull Camera getCamera() {
+	public static @NonNull Camera getCamera() {
 		return Minecraft.getInstance().gameRenderer.getMainCamera();
 	}
 

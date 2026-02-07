@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.core.module.hud;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
 import fr.siroz.cariboustonks.core.module.hud.element.HudIconLine;
 import fr.siroz.cariboustonks.core.module.hud.element.HudTableRow;
@@ -11,8 +12,7 @@ import java.util.function.Supplier;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A HUD for a list of {@link HudElement}.
@@ -35,10 +35,10 @@ public final class MultiElementHud extends Hud {
 	 * @param defaultY        the default Y
 	 */
 	public MultiElementHud(
-			@NotNull Supplier<Boolean> enabledSupplier,
-			@NotNull List<HudTextLine> defaultText,
-			@NotNull Supplier<List<? extends HudElement>> elementSupplier,
-			@NotNull HudConfig hudConfig,
+			@NonNull Supplier<Boolean> enabledSupplier,
+			@NonNull List<HudTextLine> defaultText,
+			@NonNull Supplier<List<? extends HudElement>> elementSupplier,
+			@NonNull HudConfig hudConfig,
 			int defaultX,
 			int defaultY
 	) {
@@ -81,7 +81,7 @@ public final class MultiElementHud extends Hud {
 		}
 	}
 
-	private void render(@NotNull List<? extends HudElement> elements, @NotNull GuiGraphics guiGraphics, int x, int y, float scale) {
+	private void render(@NonNull List<? extends HudElement> elements, @NonNull GuiGraphics guiGraphics, int x, int y, float scale) {
 		guiGraphics.pose().pushMatrix();
 		guiGraphics.pose().scale(scale, scale);
 
@@ -138,7 +138,7 @@ public final class MultiElementHud extends Hud {
 		guiGraphics.pose().popMatrix();
 	}
 
-	@ApiStatus.Experimental
+	@Experimental
 	private boolean useShadow() {
 		return ConfigManager.getConfig().uiAndVisuals.shadowTextHud;
 	}

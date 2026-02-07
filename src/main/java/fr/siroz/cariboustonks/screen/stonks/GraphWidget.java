@@ -23,9 +23,8 @@ import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * TODO - C'est un bordel monumentale lul. Ça marche, mais c'est beaucoup trop brouillon pour le moment coté code -_-
@@ -47,7 +46,7 @@ class GraphWidget extends AbstractStonksWidget {
 	private double minPrice;
 	private double maxPrice;
 
-	GraphWidget(@NotNull List<ItemPrice> neuData, int width, int height) {
+	GraphWidget(@NonNull List<ItemPrice> neuData, int width, int height) {
 		super(width, height);
 
 		this.granularity = GraphDataFilter.Granularity.DAY;
@@ -313,7 +312,7 @@ class GraphWidget extends AbstractStonksWidget {
 		};
 	}
 
-	private @NotNull String formatTimeLabel(Instant time) {
+	private @NonNull String formatTimeLabel(Instant time) {
 		ZoneId zoneId = ZoneId.systemDefault();
 		return switch (granularity) { // ZoneOffset.UTC
 			case HOUR -> time.atZone(zoneId).format(DateTimeFormatter.ofPattern("HH:mm")); // Minutes et secondes
@@ -341,7 +340,7 @@ class GraphWidget extends AbstractStonksWidget {
 
 	private void renderGradient(
             GuiGraphics guiGraphics,
-            @NotNull List<Point> pointsToRender,
+            @NonNull List<Point> pointsToRender,
             int colorStart,
             int colorEnd,
             int y2,
@@ -388,8 +387,7 @@ class GraphWidget extends AbstractStonksWidget {
 		}
 	}
 
-	@Contract("_ -> param1")
-	private @NotNull List<Point> completePoints(@NotNull List<Point> pointsToComplete) {
+	private @NonNull List<Point> completePoints(@NonNull List<Point> pointsToComplete) {
 		List<Integer> missingX = new ArrayList<>();
 
 		int startX = pointsToComplete.getFirst().x();
@@ -412,7 +410,7 @@ class GraphWidget extends AbstractStonksWidget {
 		return pointsToComplete;
 	}
 
-	private int interpolateY(@NotNull List<Point> points, int x) {
+	private int interpolateY(@NonNull List<Point> points, int x) {
 		Point before = null;
 		Point after = null;
 
@@ -435,7 +433,7 @@ class GraphWidget extends AbstractStonksWidget {
 		return (int) (before.y() + slope * (x - before.x()));
 	}
 
-	private @Nullable Integer getYForX(@NotNull List<Point> points, int x) {
+	private @Nullable Integer getYForX(@NonNull List<Point> points, int x) {
 		for (Point point : points) {
 			if (point.x() == x) {
 				return point.y(); // Retourne Y si le X correspond

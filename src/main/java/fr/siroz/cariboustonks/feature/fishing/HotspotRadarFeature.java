@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.feature.fishing.radar;
+package fr.siroz.cariboustonks.feature.fishing;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.particle.ParticleData;

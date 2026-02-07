@@ -39,14 +39,12 @@ public class EtherWarpOverlayFeature extends Feature {
 	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")
-	public void render(WorldRenderer renderer) {
+	private void render(WorldRenderer renderer) {
 		if (CLIENT.player == null || CLIENT.level == null) return;
 		if (!isEnabled() || !CLIENT.options.keyShift.isDown()) return;
 
 		ItemStack heldItem = CLIENT.player.getMainHandItem();
-		if (heldItem.isEmpty()) {
-			return;
-		}
+		if (heldItem.isEmpty()) return;
 
 		String skyBlockItemId = SkyBlockAPI.getSkyBlockItemId(heldItem);
 		CompoundTag customData = ItemUtils.getCustomData(heldItem);
@@ -88,6 +86,7 @@ public class EtherWarpOverlayFeature extends Feature {
 		BlockState targetAbove2State = CLIENT.level.getBlockState(pos.above(2));
 
 		if (!targetState.isAir() && targetAbove1State.isAir() && targetAbove2State.isAir()) {
+			// SIROZ-NOTE: config color
 			renderer.submitFilled(pos, Colors.PURPLE.withAlpha(0.75f), false);
 		}
 	}

@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.core.module.reminder;
 
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the display details of a reminder in the {@code Reminder Screen}.
@@ -12,13 +12,20 @@ import org.jetbrains.annotations.Nullable;
  * @param title the title of the reminder
  * @param description an optional description providing additional details about the reminder.
  *                    If the description is {@code null}, the reminder description is provided
- *                    by the {@link TimedObject#message()}.
+ *                    by the {@link TimedObjectModel#message()}.
  * @param icon a visual representation associated with the reminder, represented as an {@link ItemStack}
  */
-public record ReminderDisplay(@NotNull Component title, @Nullable Component description, @NotNull ItemStack icon) {
+public record ReminderDisplay(
+		@NonNull Component title,
+		@Nullable Component description,
+		@NonNull ItemStack icon
+) {
 
-    @Contract(value = "_, _, _ -> new", pure = true)
-    public static @NotNull ReminderDisplay of(@NotNull Component title, @Nullable Component description, @NotNull ItemStack icon) {
+    public static @NonNull ReminderDisplay of(
+			@NonNull Component title,
+			@Nullable Component description,
+			@NonNull ItemStack icon
+	) {
         return new ReminderDisplay(title, description, icon);
     }
 }

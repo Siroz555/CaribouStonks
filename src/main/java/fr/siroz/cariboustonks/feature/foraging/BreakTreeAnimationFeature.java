@@ -10,7 +10,7 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class BreakTreeAnimationFeature extends Feature {
 
@@ -33,7 +33,7 @@ public class BreakTreeAnimationFeature extends Feature {
 	}
 
 	@EventHandler(event = "RenderEvents.ALLOW_RENDER_ENTITY")
-	private boolean allowRenderEntity(@NotNull Entity entity) {
+	private boolean allowRenderEntity(@NonNull Entity entity) {
 		if (!isEnabled()) return true;
 		if (!(entity instanceof Display.BlockDisplay blockDisplayEntity)) return true;
 

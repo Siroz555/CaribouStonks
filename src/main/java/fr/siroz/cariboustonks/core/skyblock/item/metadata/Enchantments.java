@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents the {@code Normal Enchantments} and {@code Ultimate Enchantment} applied to an item.
@@ -15,13 +15,13 @@ import org.jetbrains.annotations.NotNull;
  * @param ultimateEnchantment the {@code Ultimate Enchantment} applied
  */
 public record Enchantments(
-		@NotNull Object2IntMap<String> enchantments,
-		@NotNull Optional<Pair<String, Integer>> ultimateEnchantment
+		@NonNull Object2IntMap<String> enchantments,
+		@NonNull Optional<Pair<String, Integer>> ultimateEnchantment
 ) {
 
 	public static final Enchantments EMPTY = new Enchantments(Object2IntMaps.emptyMap(), Optional.empty());
 
-	public static Enchantments ofNbt(@NotNull CompoundTag customData) {
+	public static Enchantments ofNbt(@NonNull CompoundTag customData) {
 		try {
 			Object2IntMap<String> enchantments = new Object2IntOpenHashMap<>();
 			Optional<Pair<String, Integer>> ultimateEnchantment = Optional.empty();

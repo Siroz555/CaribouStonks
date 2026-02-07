@@ -11,8 +11,7 @@ import fr.siroz.cariboustonks.core.skyblock.item.metadata.RodInfo;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.SpecialAuctionInfo;
 import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * The {@code ItemMetadata} class represents the metadata of an SkyBlock item.
@@ -29,15 +28,15 @@ import org.jetbrains.annotations.NotNull;
  */
 public record ItemMetadata(
 		Optional<String> reforge,
-		@NotNull Enchantments enchantments,
-		@NotNull Books books,
-		@NotNull Modifiers modifiers,
-		@NotNull Gemstones gemstones,
-		@NotNull DrillInfo drillInfo,
-		@NotNull RodInfo rodInfo,
-		@NotNull PetInfo petInfo,
-		@NotNull CosmeticInfo cosmeticInfo,
-		@NotNull SpecialAuctionInfo specialAuctionInfo
+		@NonNull Enchantments enchantments,
+		@NonNull Books books,
+		@NonNull Modifiers modifiers,
+		@NonNull Gemstones gemstones,
+		@NonNull DrillInfo drillInfo,
+		@NonNull RodInfo rodInfo,
+		@NonNull PetInfo petInfo,
+		@NonNull CosmeticInfo cosmeticInfo,
+		@NonNull SpecialAuctionInfo specialAuctionInfo
 ) {
 
 	public static final ItemMetadata EMPTY = new ItemMetadata(
@@ -59,8 +58,7 @@ public record ItemMetadata(
 	 * @param customData the {@code NbtCompound} containing the metadata
 	 * @return the {@code ItemMetadata} parsed from the given {@code NbtCompound}
 	 */
-	@ApiStatus.Internal
-	public static @NotNull ItemMetadata ofNbt(@NotNull CompoundTag customData) {
+	public static @NonNull ItemMetadata ofNbt(@NonNull CompoundTag customData) {
 		try {
 			// Base
 			Optional<String> reforge = customData.getString("modifier");

@@ -10,8 +10,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Range;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Provides methods to render various visual elements in the world with
@@ -27,7 +26,7 @@ public interface WorldRenderer {
 	 * @param scale         the scale
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	default void submitText(@NotNull Component text, @NotNull Vec3 position, float scale, boolean throughBlocks) {
+	default void submitText(@NonNull Component text, @NonNull Vec3 position, float scale, boolean throughBlocks) {
 		submitText(text, position, scale, 0, throughBlocks);
 	}
 
@@ -40,7 +39,7 @@ public interface WorldRenderer {
 	 * @param offsetY       the offsetY
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	default void submitText(@NotNull Component text, @NotNull Vec3 position, float scale, float offsetY, boolean throughBlocks) {
+	default void submitText(@NonNull Component text, @NonNull Vec3 position, float scale, float offsetY, boolean throughBlocks) {
 		submitText(text.getVisualOrderText(), position, scale, offsetY, throughBlocks);
 	}
 
@@ -53,7 +52,7 @@ public interface WorldRenderer {
 	 * @param offsetY       the offsetY
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitText(@NotNull FormattedCharSequence text, @NotNull Vec3 position, float scale, float offsetY, boolean throughBlocks);
+	void submitText(@NonNull FormattedCharSequence text, @NonNull Vec3 position, float scale, float offsetY, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code Texture} to be rendered with the given {@link Texture}, facing to the player.
@@ -69,7 +68,7 @@ public interface WorldRenderer {
 	 * @param alpha         the alpha
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	default void submitTexture(@NotNull Vec3 position, float width, float height, float textureWidth, float textureHeight, @NotNull Vec3 renderOffset, @NotNull Texture texture, @NotNull Color color, float alpha, boolean throughBlocks) {
+	default void submitTexture(@NonNull Vec3 position, float width, float height, float textureWidth, float textureHeight, @NonNull Vec3 renderOffset, @NonNull Texture texture, @NonNull Color color, float alpha, boolean throughBlocks) {
 		submitTexture(position, width, height, textureWidth, textureHeight, renderOffset, texture.getIdentifier(), color, alpha, throughBlocks);
 	}
 
@@ -87,7 +86,7 @@ public interface WorldRenderer {
 	 * @param alpha         the alpha
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitTexture(@NotNull Vec3 position, float width, float height, float textureWidth, float textureHeight, @NotNull Vec3 renderOffset, @NotNull Identifier texture, @NotNull Color color, float alpha, boolean throughBlocks);
+	void submitTexture(@NonNull Vec3 position, float width, float height, float textureWidth, float textureHeight, @NonNull Vec3 renderOffset, @NonNull Identifier texture, @NonNull Color color, float alpha, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code circle} to be rendered on the plane defined by the specified axis.
@@ -105,26 +104,26 @@ public interface WorldRenderer {
 	 * and connecting them with a TRIANGLE_STRIP.
 	 *
 	 * @param center           the center
-	 * @param radius           the radius ({@code in blocks ~})
-	 * @param segments         number of segments
+	 * @param radius           the radius ({@code in blocks ~}) between 1-32
+	 * @param segments         number of segments between 8-64
 	 * @param thicknessPercent thickness in {@code %} of radius (0.05 = 5% of radius)
 	 * @param color            the color
 	 * @param axis             the axis
 	 * @param throughBlocks    if rendering can be done through blocks
 	 */
-	void submitCircle(@NotNull Vec3 center, @Range(from = 1, to = 32) double radius, @Range(from = 8, to = 64) int segments, float thicknessPercent, @NotNull Color color, @NotNull Direction.Axis axis, boolean throughBlocks);
+	void submitCircle(@NonNull Vec3 center, double radius, int segments, float thicknessPercent, @NonNull Color color, Direction.@NonNull Axis axis, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code thick circle (disk)} to be rendered extruding a <b>horizontal</b> circle.
 	 *
 	 * @param center        the center
-	 * @param radius        the radius ({@code in blocks ~})
+	 * @param radius        the radius ({@code in blocks ~}) between 1-32
 	 * @param thickness     the thickness (in blocks ~)
-	 * @param segments      number of segments
+	 * @param segments      number of segments between 8-64
 	 * @param color         the color
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitThickCircle(@NotNull Vec3 center, @Range(from = 1, to = 32) double radius, double thickness, @Range(from = 8, to = 64) int segments, @NotNull Color color, boolean throughBlocks);
+	void submitThickCircle(@NonNull Vec3 center, double radius, double thickness, int segments, @NonNull Color color, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code quad} to be rendered.
@@ -133,7 +132,7 @@ public interface WorldRenderer {
 	 * @param color         the color
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitQuad(@NotNull Vec3[] points, @NotNull Color color, boolean throughBlocks);
+	void submitQuad(@NonNull Vec3[] points, @NonNull Color color, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code Filled Box} to be rendered.
@@ -142,7 +141,7 @@ public interface WorldRenderer {
 	 * @param color         the color
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	default void submitFilled(@NotNull BlockPos pos, @NotNull Color color, boolean throughBlocks) {
+	default void submitFilled(@NonNull BlockPos pos, @NonNull Color color, boolean throughBlocks) {
 		submitFilled(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1, color, throughBlocks);
 	}
 
@@ -153,7 +152,7 @@ public interface WorldRenderer {
 	 * @param color         the color
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	default void submitFilled(@NotNull AABB box, @NotNull Color color, boolean throughBlocks) {
+	default void submitFilled(@NonNull AABB box, @NonNull Color color, boolean throughBlocks) {
 		submitFilled(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, color, throughBlocks);
 	}
 
@@ -169,7 +168,7 @@ public interface WorldRenderer {
 	 * @param color         the color
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitFilled(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, @NotNull Color color, boolean throughBlocks);
+	void submitFilled(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, @NonNull Color color, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code Beacon beam} to be rendered.
@@ -177,7 +176,7 @@ public interface WorldRenderer {
 	 * @param position the position
 	 * @param color    the color
 	 */
-	void submitBeaconBeam(@NotNull BlockPos position, @NotNull Color color);
+	void submitBeaconBeam(@NonNull BlockPos position, @NonNull Color color);
 
 	/**
 	 * Submits an {@code Outline Box} to be rendered.
@@ -187,7 +186,7 @@ public interface WorldRenderer {
 	 * @param lineWidth     the line width
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitOutline(@NotNull AABB box, @NotNull Color color, float lineWidth, boolean throughBlocks);
+	void submitOutline(@NonNull AABB box, @NonNull Color color, float lineWidth, boolean throughBlocks);
 
 	/**
 	 * Submits multiple {@code Lines} to be rendered.
@@ -197,7 +196,7 @@ public interface WorldRenderer {
 	 * @param lineWidth     the line width
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitLines(Vec3 @NotNull [] points, @NotNull Color color, float lineWidth, boolean throughBlocks);
+	void submitLines(Vec3 @NonNull [] points, @NonNull Color color, float lineWidth, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code Line} from the cursor to the given point.
@@ -206,7 +205,7 @@ public interface WorldRenderer {
 	 * @param color     the color
 	 * @param lineWidth the line width
 	 */
-	void submitLineFromCursor(@NotNull Vec3 point, @NotNull Color color, float lineWidth);
+	void submitLineFromCursor(@NonNull Vec3 point, @NonNull Color color, float lineWidth);
 
 	/**
 	 * Submits a cuboid outline.
@@ -220,5 +219,5 @@ public interface WorldRenderer {
 	 * @param mainColor   the main color
 	 * @param secondColor the second color
 	 */
-	void submitCuboidOutline(@NotNull Vec3 center, int depth, int size, int minY, int maxY, float lineWidth, @NotNull Color mainColor, @NotNull Color secondColor);
+	void submitCuboidOutline(@NonNull Vec3 center, int depth, int size, int minY, int maxY, float lineWidth, @NonNull Color mainColor, @NonNull Color secondColor);
 }

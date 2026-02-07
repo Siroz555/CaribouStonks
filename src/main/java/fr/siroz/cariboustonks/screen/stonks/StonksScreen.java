@@ -35,8 +35,7 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class StonksScreen extends CaribousStonksScreen {
 
@@ -53,7 +52,7 @@ public class StonksScreen extends CaribousStonksScreen {
 
 	private volatile boolean notFound = false;
 
-	private StonksScreen(@NotNull ItemLookupKey key) {
+	private StonksScreen(@NonNull ItemLookupKey key) {
 		super(Component.literal("Stonks"));
 
 		HypixelDataSource hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
@@ -69,8 +68,7 @@ public class StonksScreen extends CaribousStonksScreen {
 		this.fetchItemData(key).thenRun(this::initStonksWidgets);
 	}
 
-	@Contract("_ -> new")
-	public static @NotNull StonksScreen create(@NotNull ItemLookupKey key) {
+	public static @NonNull StonksScreen create(@NonNull ItemLookupKey key) {
 		return new StonksScreen(key);
 	}
 
@@ -228,7 +226,7 @@ public class StonksScreen extends CaribousStonksScreen {
 		context.drawString(font, string, x2, y2, Colors.WHITE.asInt());
 	}
 
-	private @NotNull CompletableFuture<Void> fetchItemData(@NotNull ItemLookupKey key) {
+	private @NonNull CompletableFuture<Void> fetchItemData(@NonNull ItemLookupKey key) {
 		CompletableFuture<Void> priceHistory = CaribouStonks.skyBlock().getGenericDataSource()
 				.loadGraphData(key)
 				.thenAccept(data -> {
@@ -305,7 +303,7 @@ public class StonksScreen extends CaribousStonksScreen {
 		}
 
 		@Override
-		public void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
+		public void renderWidget(@NonNull GuiGraphics context, int mouseX, int mouseY, float delta) {
 			Component text = this.getMessage();
 			Font textRenderer = this.getFont();
 

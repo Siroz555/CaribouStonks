@@ -12,10 +12,8 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public final class AnimationUtils {
 
@@ -27,7 +25,6 @@ public final class AnimationUtils {
 	private AnimationUtils() {
 	}
 
-	@ApiStatus.Internal
 	public static void initAnimationUtilities() {
 		ClientTickEvents.END_CLIENT_TICK.register(AnimationUtils::onTick);
 	}
@@ -42,7 +39,7 @@ public final class AnimationUtils {
 	 * @param text the input string
 	 * @return un {@link Component} instance with each character colored according to a time-based rainbow gradient
 	 */
-	public static @NotNull Component applyRainbow(@NotNull String text) {
+	public static @NonNull Component applyRainbow(@NonNull String text) {
 		MutableComponent result = Component.empty();
 		long time = Util.getEpochMillis();
 		float speed = 2000F; // 2000 | plus bas = plus rapide
@@ -66,23 +63,44 @@ public final class AnimationUtils {
 		return currentRainbowColor;
 	}
 
+	/**
+	 * Show Special Effet
+	 *
+	 * @param item item
+	 * @param particle particle
+	 * @param particleAge particle age between 1-120
+	 * @param sound sound
+	 * @param soundVolume sound volume
+	 * @param soundPitch sound pitch
+	 */
 	public static void showSpecialEffect(
-			@NotNull ItemStack item,
+			@NonNull ItemStack item,
 			@Nullable ParticleOptions particle,
-			@Range(from = 1, to = 120) int particleAge,
-			@NotNull SoundEvent sound,
+			int particleAge,
+			@NonNull SoundEvent sound,
 			float soundVolume,
 			float soundPitch
 	) {
 		showSpecialEffect(null, item, particle, particleAge, sound, soundVolume, soundPitch);
 	}
 
+	/**
+	 * Show Special Effet
+	 *
+	 * @param title title
+	 * @param item item
+	 * @param particle particle
+	 * @param particleAge particle age between 1-120
+	 * @param sound sound
+	 * @param soundVolume sound volume
+	 * @param soundPitch sound pitch
+	 */
 	public static void showSpecialEffect(
 			@Nullable Component title,
-			@NotNull ItemStack item,
+			@NonNull ItemStack item,
 			@Nullable ParticleOptions particle,
-			@Range(from = 1, to = 120) int particleAge,
-			@NotNull SoundEvent sound,
+			int particleAge,
+			@NonNull SoundEvent sound,
 			float soundVolume,
 			float soundPitch
 	) {

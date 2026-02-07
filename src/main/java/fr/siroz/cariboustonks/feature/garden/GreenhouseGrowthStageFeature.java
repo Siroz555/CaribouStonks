@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.system.ReminderSystem;
@@ -75,7 +75,7 @@ public class GreenhouseGrowthStageFeature extends Feature {
 
 			Instant nextStage = Instant.now().plusSeconds(totalSeconds);
 
-			TimedObject timedObject = new TimedObject(
+			TimedObjectModel timedObject = new TimedObjectModel(
 					"greenhouse::next",
 					"empty",
 					nextStage,
@@ -97,7 +97,7 @@ public class GreenhouseGrowthStageFeature extends Feature {
 		);
 	}
 
-	private void onReminderExpire(@NonNull TimedObject timedObject) {
+	private void onReminderExpire(@NonNull TimedObjectModel timedObject) {
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Greenhouse] ").withStyle(ChatFormatting.DARK_GREEN))
 				.append(Component.literal("Next Growth Stage is reached!").withStyle(ChatFormatting.GREEN));

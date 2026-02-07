@@ -7,6 +7,7 @@ import fr.siroz.cariboustonks.core.module.hud.TextHud;
 import fr.siroz.cariboustonks.system.NetworkSystem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.NonNull;
 
 public class TpsHud extends Feature {
 
@@ -37,7 +38,7 @@ public class TpsHud extends Feature {
 		return true;
 	}
 
-	private Component getText() {
+	private @NonNull Component getText() {
 		float tps = networkSystem.getTickRate();
 
 		// Troncature à une décimale (sans arrondi)

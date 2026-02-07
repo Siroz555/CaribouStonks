@@ -16,8 +16,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public final class AttributeAPI {
 
@@ -50,7 +50,7 @@ public final class AttributeAPI {
 	 * @param lines    the lore of the ItemStack
 	 * @return the skyBlockApiId or the fallback
 	 */
-	public static String getSkyBlockApiIdFromNewShard(@NotNull String fallback, ItemStack item, List<Component> lines) {
+	public static String getSkyBlockApiIdFromNewShard(@NonNull String fallback, ItemStack item, List<Component> lines) {
 		Screen currentScreen = Minecraft.getInstance().screen;
 		if (!fallback.isEmpty() || currentScreen == null) return fallback;
 		// Certaines shards ne sont pas des PLAYER_HEAD
@@ -103,7 +103,7 @@ public final class AttributeAPI {
 		}
 	}
 
-	private static String getAttributeId(@Nullable String id, @NotNull String fallback) {
+	private static String getAttributeId(@Nullable String id, @NonNull String fallback) {
 		SkyBlockAttribute attribute = CaribouStonks.mod().getModDataSource().getAttributeById(id);
 		return attribute != null ? attribute.skyBlockApiId() : fallback;
 	}

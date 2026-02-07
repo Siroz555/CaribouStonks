@@ -22,11 +22,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Class responsible for managing data from the official Hypixel SkyBlock API.
@@ -65,7 +62,6 @@ public final class HypixelDataSource {
 
 	private boolean hasCalledFixMissing = false;
 
-	@ApiStatus.Internal
 	public HypixelDataSource() {
 		this.modDataSource = CaribouStonks.mod().getModDataSource();
 		// Fetchers
@@ -151,7 +147,7 @@ public final class HypixelDataSource {
 	 * @param skyBlockItemId the ID of the SkyBlock item to check for
 	 * @return an {@link ItemStack} corresponding to the ID of the specified SkyBlock item.
 	 */
-	public @NotNull ItemStack getItemStack(@NotNull String skyBlockItemId) {
+	public @NonNull ItemStack getItemStack(@NonNull String skyBlockItemId) {
 		ItemStack fallback = new ItemStack(Items.BARRIER, 1);
 		fallback.set(DataComponents.CUSTOM_NAME, Component.nullToEmpty(skyBlockItemId));
 
@@ -229,8 +225,7 @@ public final class HypixelDataSource {
 	 *                              data retrieval from the API,
 	 *                              or if the SkyBlock item list is empty
 	 */
-	@NotNull
-	@Unmodifiable
+	@NonNull
 	public List<SkyBlockItemData> getSkyBlockItems() throws HypixelDataException {
 		if (modDataSource.isItemsMappingError()) {
 			throw new HypixelDataException(Component.nullToEmpty("Unable to map SkyBlock Items into Minecraft."));
@@ -247,8 +242,7 @@ public final class HypixelDataSource {
 		return new ArrayList<>(itemsFetcher.getSkyBlockItemsSnapshot().values());
 	}
 
-	@Contract(" -> new")
-	public @NotNull Set<String> getSkyBlockItemsIds() {
+	public @NonNull Set<String> getSkyBlockItemsIds() {
 		return new HashSet<>(itemsFetcher.getSkyBlockItemsSnapshot().keySet());
 	}
 
@@ -261,7 +255,6 @@ public final class HypixelDataSource {
 		return itemsFetcher.getSkyBlockItemsSnapshot().size();
 	}
 
-	@ApiStatus.Internal
 	public void fixSkyBlockItems() {
 		if (itemsFetcher.isLastFetchSuccessful() && bazaarFetcher.isFirstBazaarUpdated() && !hasCalledFixMissing) {
 			hasCalledFixMissing = true;

@@ -6,8 +6,7 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.TextHud;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class FpsHud extends Feature {
 
@@ -31,8 +30,7 @@ public class FpsHud extends Feature {
 		return true;
 	}
 
-	@Contract(" -> new")
-	private @NotNull Component getText() {
+	private @NonNull Component getText() {
 		return Component.literal(CLIENT.getFps() + " FPS");
 	}
 }

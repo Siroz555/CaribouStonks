@@ -5,22 +5,20 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.PetInfo;
 import java.util.Locale;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Utility class for handling operations related to NotEnoughUpdates (NEU).
  * <p>
  * <b>This class is deprecated</b>
  */
-@ApiStatus.Experimental
 public final class NotEnoughUpdatesUtils {
 
 	private NotEnoughUpdatesUtils() {
 	}
 
-	public static @NotNull String getNeuId(@Nullable ItemStack stack) {
+	public static @NonNull String getNeuId(@Nullable ItemStack stack) {
 		if (stack == null) {
 			return "";
 		}
@@ -69,7 +67,7 @@ public final class NotEnoughUpdatesUtils {
 		};
 	}
 
-	public static @NotNull String getNeuIdFromSkyBlockId(@NotNull String skyBlockItemId) {
+	public static @NonNull String getNeuIdFromSkyBlockId(@NonNull String skyBlockItemId) {
 		if (skyBlockItemId.isEmpty()) {
 			return "";
 		}

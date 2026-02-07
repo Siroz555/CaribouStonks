@@ -4,8 +4,8 @@ import com.google.common.collect.Streams;
 import java.util.Arrays;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents SkyBlock's Rarity
@@ -63,7 +63,7 @@ public enum Rarity {
 		return UNKNOWN;
 	}
 
-	public static @NotNull Optional<Rarity> containsName(@NotNull String name) {
+	public static @NonNull Optional<Rarity> containsName(@NonNull String name) {
 		return Streams.findLast(Arrays.stream(VALUES).filter(rarity -> name.contains(rarity.name())));
 	}
 

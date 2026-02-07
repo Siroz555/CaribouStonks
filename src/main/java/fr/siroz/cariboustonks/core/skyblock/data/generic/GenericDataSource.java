@@ -22,9 +22,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public final class GenericDataSource {
 
@@ -40,7 +38,6 @@ public final class GenericDataSource {
 	private boolean lowestBinsInUpdate = false;
 	private boolean lowestBinsError = false;
 
-	@ApiStatus.Internal
 	public GenericDataSource() {
 		ClientLifecycleEvents.CLIENT_STARTED.register(_mc -> TickScheduler.getInstance().runRepeating(() -> {
 			if (ConfigManager.getConfig().general.internal.fetchAuctionData) {
@@ -57,17 +54,17 @@ public final class GenericDataSource {
 		return lowestBinsInUpdate;
 	}
 
-	public boolean hasLowestBin(@NotNull ItemLookupKey key) {
+	public boolean hasLowestBin(@NonNull ItemLookupKey key) {
 		if (key.isNull() || key.neuId() == null || lowestBinsNEU.isEmpty()) return false;
 		return lowestBinsNEU.containsKey(key.neuId());
 	}
 
-	public Optional<Double> getLowestBin(@NotNull ItemLookupKey key) {
+	public Optional<Double> getLowestBin(@NonNull ItemLookupKey key) {
 		if (key.isNull() || key.neuId() == null || lowestBinsNEU.isEmpty()) return Optional.empty();
 		return Optional.of(lowestBinsNEU.getDouble(key.neuId()));
 	}
 
-	public CompletableFuture<List<ItemPrice>> loadGraphData(@NotNull ItemLookupKey key) {
+	public CompletableFuture<List<ItemPrice>> loadGraphData(@NonNull ItemLookupKey key) {
 		if (key.isNull()) {
 			return CompletableFuture.completedFuture(null);
 		}
@@ -82,8 +79,7 @@ public final class GenericDataSource {
 		return fetchGraphData(key);
 	}
 
-	@Contract("_ -> new")
-	private @NotNull CompletableFuture<List<ItemPrice>> fetchGraphData(@NotNull ItemLookupKey key) {
+	private @NonNull CompletableFuture<List<ItemPrice>> fetchGraphData(@NonNull ItemLookupKey key) {
 		return CompletableFuture.supplyAsync(() -> {
 			try (HttpResponse response = Http.request(NEU_PRICE_HISTORY_URL + "?item=" + key.neuId())) {
 				if (!response.success()) {
@@ -122,7 +118,7 @@ public final class GenericDataSource {
 		}, AsyncScheduler.getInstance().blockingExecutor());
 	}
 
-	private @NotNull CompletableFuture<Void> updateLowestBins() {
+	private @NonNull CompletableFuture<Void> updateLowestBins() {
 		lowestBinsInUpdate = true;
 
 		return fetchLowestBins().thenAccept(result -> {
@@ -136,8 +132,7 @@ public final class GenericDataSource {
 		});
 	}
 
-	@Contract(" -> new")
-	private @NotNull CompletableFuture<Map<String, Double>> fetchLowestBins() {
+	private @NonNull CompletableFuture<Map<String, Double>> fetchLowestBins() {
 		return CompletableFuture.supplyAsync(() -> {
 			try (HttpResponse response = Http.request(NEU_LOWEST_BIN_AUCTION_URL)) {
 				if (!response.success()) {

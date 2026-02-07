@@ -18,8 +18,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class BazaarPriceTooltipFeature extends Feature {
 
@@ -40,71 +40,72 @@ public class BazaarPriceTooltipFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.bazaarTooltipPrice;
 	}
 
-	private void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
+	private void appendToTooltip(@Nullable Slot focusedSlot, @NonNull ItemStack item, @NonNull List<Component> lines) {
+		String skyBlockApiId = SkyBlockAPI.getSkyBlockApiId(item);
+		// Fix - The Foraging Update 0.23 - HuntingBox, Attribute Menu & Fusion Machine - Shard API ID Hypixel wtf
+		skyBlockApiId = AttributeAPI.getSkyBlockApiIdFromNewShard(skyBlockApiId, item, lines);
+		// Fix - end
+
+		if (!hypixelDataSource.hasBazaarItem(skyBlockApiId)) {
+			return;
+		}
+
 		if (hypixelDataSource.isBazaarInUpdate()) {
 			lines.add(Component.literal("Bazaar is currently updating...").withStyle(ChatFormatting.RED));
 			return;
 		}
 
-		String skyBlockApiId = SkyBlockAPI.getSkyBlockApiId(item);
+		Optional<BazaarProduct> product = hypixelDataSource.getBazaarItem(skyBlockApiId);
+		if (product.isEmpty()) {
+			lines.add(Component.literal("Bazaar item error.").withStyle(ChatFormatting.RED));
+			return;
+		}
 
-		// Fix - The Foraging Update 0.23 - HuntingBox, Attribute Menu & Fusion Machine - Shard API ID Hypixel wtf
-		skyBlockApiId = AttributeAPI.getSkyBlockApiIdFromNewShard(skyBlockApiId, item, lines);
-		// Fix - end
+		int count = item.getCount();
 
-		if (hypixelDataSource.hasBazaarItem(skyBlockApiId)) {
-			Optional<BazaarProduct> product = hypixelDataSource.getBazaarItem(skyBlockApiId);
-			if (product.isEmpty()) {
-				lines.add(Component.literal("Bazaar item error.").withStyle(ChatFormatting.RED));
-				return;
-			}
+		switch (this.config().general.stonks.bazaarTooltipPriceType) {
+			case ALL -> {
+				addBazaarLine(lines, "Bazaar Buy: ", product.get().buyPrice(), count);
+				addBazaarLine(lines, "Bazaar Sell: ", product.get().sellPrice(), count);
+				addBazaarLine(lines, "Bazaar Buy-Avg: ", product.get().weightedAverageBuyPrice(), 1);
+				addBazaarLine(lines, "Bazaar Sell-Avg: ", product.get().weightedAverageSellPrice(), 1);
 
-			int count = item.getCount();
-
-			switch (this.config().general.stonks.bazaarTooltipPriceType) {
-				case ALL -> {
-					addBazaarLine(lines, "Bazaar Buy: ", product.get().buyPrice(), count);
-					addBazaarLine(lines, "Bazaar Sell: ", product.get().sellPrice(), count);
-					addBazaarLine(lines, "Bazaar Buy-Avg: ", product.get().weightedAverageBuyPrice(), 1);
-					addBazaarLine(lines, "Bazaar Sell-Avg: ", product.get().weightedAverageSellPrice(), 1);
-
-					if (!Client.hasShiftDown() && count > 1) {
-						lines.add(Component.literal("[Press SHIFT for x" + count + "]").withStyle(ChatFormatting.DARK_GRAY));
-					}
-				}
-				case NORMAL -> {
-					addBazaarLine(lines, "Bazaar Buy: ", product.get().buyPrice(), count);
-					addBazaarLine(lines, "Bazaar Sell: ", product.get().sellPrice(), count);
-
-					if (!Client.hasShiftDown() && count > 1) {
-						lines.add(Component.literal("[Press SHIFT for x" + count + "]").withStyle(ChatFormatting.DARK_GRAY));
-					}
-				}
-				case AVERAGE -> {
-					addBazaarLine(lines, "Bazaar Buy-Avg: ", product.get().weightedAverageBuyPrice(), 1);
-					addBazaarLine(lines, "Bazaar Sell-Avg: ", product.get().weightedAverageSellPrice(), 1);
-				}
-				case null, default -> {
+				if (!Client.hasShiftDown() && count > 1) {
+					lines.add(Component.literal("[Press SHIFT for x" + count + "]").withStyle(ChatFormatting.DARK_GRAY));
 				}
 			}
+			case NORMAL -> {
+				addBazaarLine(lines, "Bazaar Buy: ", product.get().buyPrice(), count);
+				addBazaarLine(lines, "Bazaar Sell: ", product.get().sellPrice(), count);
 
-			if (this.config().general.stonks.bazaarTooltipMoreData) {
-				double absoluteSpread = product.get().spread();
-				double spreadPercentage = product.get().spreadPercentage();
-				Component spread = Component.empty()
-						.append(Component.literal(" | Spreed: ").withStyle(ChatFormatting.RED))
-						.append(Component.literal(StonksUtils.FLOAT_NUMBERS.format(spreadPercentage) + "%").withColor(Colors.RED.asInt()))
-						.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
-						.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(absoluteSpread)).withColor(Colors.RED.asInt()))
-						.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-						.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(absoluteSpread)).withColor(Colors.RED.asInt()))
-						.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
-				lines.add(spread);
+				if (!Client.hasShiftDown() && count > 1) {
+					lines.add(Component.literal("[Press SHIFT for x" + count + "]").withStyle(ChatFormatting.DARK_GRAY));
+				}
 			}
+			case AVERAGE -> {
+				addBazaarLine(lines, "Bazaar Buy-Avg: ", product.get().weightedAverageBuyPrice(), 1);
+				addBazaarLine(lines, "Bazaar Sell-Avg: ", product.get().weightedAverageSellPrice(), 1);
+			}
+			case null, default -> {
+			}
+		}
+
+		if (this.config().general.stonks.bazaarTooltipMoreData) {
+			double absoluteSpread = product.get().spread();
+			double spreadPercentage = product.get().spreadPercentage();
+			Component spread = Component.empty()
+					.append(Component.literal(" | Spreed: ").withStyle(ChatFormatting.RED))
+					.append(Component.literal(StonksUtils.FLOAT_NUMBERS.format(spreadPercentage) + "%").withColor(Colors.RED.asInt()))
+					.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
+					.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(absoluteSpread)).withColor(Colors.RED.asInt()))
+					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+					.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(absoluteSpread)).withColor(Colors.RED.asInt()))
+					.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
+			lines.add(spread);
 		}
 	}
 
-	private void addBazaarLine(@NotNull List<Component> lines, @NotNull String label, double value, int count) {
+	private void addBazaarLine(@NonNull List<Component> lines, @NonNull String label, double value, int count) {
 		if (value < 0) {
 			lines.add(Component.literal(label).withStyle(ChatFormatting.YELLOW)
 						.append(Component.literal(" No Data").withStyle(ChatFormatting.RED)));

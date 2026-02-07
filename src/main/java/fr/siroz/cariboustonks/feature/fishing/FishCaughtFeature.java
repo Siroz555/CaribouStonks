@@ -9,15 +9,14 @@ import fr.siroz.cariboustonks.util.Client;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class FishCaughtFeature extends Feature {
 
 	private static final String CAUGHT_FISH_NAME = "!!!";
 
-	@Nullable
-	private RareSeaCreatureFeature rareSeaCreatureFeature;
+	private @Nullable RareSeaCreatureFeature rareSeaCreatureFeature;
 
 	public FishCaughtFeature() {
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
@@ -29,12 +28,12 @@ public class FishCaughtFeature extends Feature {
 	}
 
 	@Override
-	protected void postInitialize(@NotNull FeatureManager features) {
+	protected void postInitialize(@NonNull FeatureManager features) {
 		rareSeaCreatureFeature = features.getFeature(RareSeaCreatureFeature.class);
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
-	private void onArmorStandUpdate(@NotNull ArmorStand armorStand, boolean equipment) {
+	private void onArmorStandUpdate(@NonNull ArmorStand armorStand, boolean equipment) {
 		if (CLIENT.player == null || CLIENT.level == null || CLIENT.player.fishing == null) return;
 		if (equipment || !armorStand.isInvisible() || !armorStand.hasCustomName() || !armorStand.isCustomNameVisible()) return;
 		if (!isEnabled()) return;

@@ -7,6 +7,7 @@ import fr.siroz.cariboustonks.core.module.hud.TextHud;
 import fr.siroz.cariboustonks.system.NetworkSystem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.NonNull;
 
 public class PingHud extends Feature {
 
@@ -34,7 +35,7 @@ public class PingHud extends Feature {
 		return true;
 	}
 
-	private Component getText() {
+	private @NonNull Component getText() {
 		long currentPing = networkSystem.getPing();
 		String pingStr = currentPing + " ms";
 

@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.core.skyblock.item.metadata;
 
 import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents "all" (No runes) {@code Cosmetic} applied to an item.
@@ -23,7 +23,7 @@ public record CosmeticInfo(
 			false
 	);
 
-	public static CosmeticInfo ofNbt(@NotNull CompoundTag customData) {
+	public static CosmeticInfo ofNbt(@NonNull CompoundTag customData) {
 		try {
 			Optional<String> skinData = customData.getString("skin");
 			Optional<String> dyeData = customData.getString("dye_item");

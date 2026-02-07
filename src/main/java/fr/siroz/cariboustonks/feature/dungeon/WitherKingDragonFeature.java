@@ -27,8 +27,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * This feature controls various aspects in phase 5 of the Master Mode Catacombs Floor 7.
@@ -70,7 +70,7 @@ public class WitherKingDragonFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onMessage(@NotNull Component text) {
+	private void onMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 
 		String message = StonksUtils.stripColor(text.getString());
@@ -163,7 +163,7 @@ public class WitherKingDragonFeature extends Feature {
 		}
 	}
 
-	private void announceSpawn(@NotNull WitherKingDragon dragon, boolean split) {
+	private void announceSpawn(@NonNull WitherKingDragon dragon, boolean split) {
 		String dragonName = dragon.getName().toUpperCase(Locale.ENGLISH);
 		int color = dragon.getColor().asInt();
 

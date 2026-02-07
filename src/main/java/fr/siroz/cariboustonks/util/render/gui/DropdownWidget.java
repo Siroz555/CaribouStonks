@@ -15,9 +15,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Credits to the Skyblocker Team (<a href="https://github.com/SkyblockerMod/Skyblocker">GitHub Skyblocker</a>)
@@ -44,8 +42,8 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 			int y,
 			int width,
 			int maxHeight,
-			@NotNull List<T> entries,
-			@NotNull Consumer<T> selectCallback,
+			@NonNull List<T> entries,
+			@NonNull Consumer<T> selectCallback,
 			T selected
 	) {
 		super(x, y, width, HEADER_HEIGHT, Component.empty());
@@ -61,12 +59,12 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 	}
 
 	@Override
-	public @NotNull List<? extends GuiEventListener> children() {
+	public @NonNull List<? extends GuiEventListener> children() {
 		return List.of(dropdownList);
 	}
 
 	@Override
-	protected void renderWidget(@NotNull GuiGraphics context, int mouseX, int mouseY, float delta) {
+	protected void renderWidget(@NonNull GuiGraphics context, int mouseX, int mouseY, float delta) {
 		dropdownList.visible = open;
 		dropdownList.render(context, mouseX, mouseY, delta);
 
@@ -80,7 +78,7 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 	}
 
 	@Override
-	protected void updateWidgetNarration(@NotNull NarrationElementOutput builder) {
+	protected void updateWidgetNarration(@NonNull NarrationElementOutput builder) {
 	}
 
 	private void setOpen(boolean open) {
@@ -130,7 +128,7 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 	}
 
 	@Override
-	public boolean mouseClicked(@NotNull MouseButtonEvent click, boolean doubled) {
+	public boolean mouseClicked(@NonNull MouseButtonEvent click, boolean doubled) {
 		if (!visible) return false;
 
 		if (getX() <= click.x() && click.x() < getX() + getWidth() && getY() <= click.y() && click.y() < getY() + HEADER_HEIGHT) {
@@ -165,7 +163,7 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 		return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
 	}
 
-	private class DropdownList extends ContainerObjectSelectionList<@NotNull Entry> {
+	private class DropdownList extends ContainerObjectSelectionList<Entry> {
 
 		protected DropdownList(Minecraft minecraftClient, int x, int y, int width, int height) {
 			super(minecraftClient, width, height, y, ENTRY_HEIGHT);
@@ -188,7 +186,7 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 		}
 
 		@Override
-		protected void renderScrollbar(@NotNull GuiGraphics context, int mouseX, int mouseY) {
+		protected void renderScrollbar(@NonNull GuiGraphics context, int mouseX, int mouseY) {
 			if (this.scrollbarVisible()) {
 				int x1 = this.scrollBarX();
 				int heightY = this.scrollerHeight();
@@ -203,19 +201,19 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 		}
 
 		@Override
-		public boolean mouseClicked(@NotNull MouseButtonEvent click, boolean doubled) {
+		public boolean mouseClicked(@NonNull MouseButtonEvent click, boolean doubled) {
 			if (!visible) return false;
 			return super.mouseClicked(click, doubled);
 		}
 
 		@Override
-		public boolean mouseReleased(@NotNull MouseButtonEvent click) {
+		public boolean mouseReleased(@NonNull MouseButtonEvent click) {
 			if (!visible) return false;
 			return super.mouseReleased(click);
 		}
 
 		@Override
-		public boolean mouseDragged(@NotNull MouseButtonEvent click, double offsetX, double offsetY) {
+		public boolean mouseDragged(@NonNull MouseButtonEvent click, double offsetX, double offsetY) {
 			if (!visible) return false;
 			return super.mouseDragged(click, offsetX, offsetY);
 		}
@@ -227,22 +225,22 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 		}
 
 		@Override
-		protected void renderListSeparators(@NotNull GuiGraphics context) {
+		protected void renderListSeparators(@NonNull GuiGraphics context) {
 		}
 
 		@Override
-		protected void renderListBackground(@NotNull GuiGraphics context) {
+		protected void renderListBackground(@NonNull GuiGraphics context) {
 			context.fill(getX(), getY(), getRight(), getBottom(), BACKGROUND_COLOR);
 			GuiRenderer.drawBorder(context, getX(), getY(), getWidth(), getHeight(), -1);
 		}
 
 		@Override
-		protected void enableScissor(@NotNull GuiGraphics context) {
+		protected void enableScissor(@NonNull GuiGraphics context) {
 			context.enableScissor(this.getX(), this.getY() + 1, this.getRight(), this.getBottom() - 1);
 		}
 	}
 
-	private class Entry extends ContainerObjectSelectionList.Entry<@NotNull Entry> {
+	private class Entry extends ContainerObjectSelectionList.Entry<Entry> {
 
 		private final T entry;
 
@@ -250,20 +248,18 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 			this.entry = element;
 		}
 
-		@Contract(pure = true)
 		@Override
-		public @NotNull @Unmodifiable List<? extends NarratableEntry> narratables() {
-			return List.of();
-		}
-
-		@Contract(pure = true)
-		@Override
-		public @NotNull @Unmodifiable List<? extends GuiEventListener> children() {
+		public @NonNull List<? extends NarratableEntry> narratables() {
 			return List.of();
 		}
 
 		@Override
-		public void renderContent(@NotNull GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public @NonNull List<? extends GuiEventListener> children() {
+			return List.of();
+		}
+
+		@Override
+		public void renderContent(@NonNull GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			context.textRenderer(GuiGraphics.HoveredTextEffects.NONE).acceptScrollingWithDefaultCenter(
 					Component.literal(entry.toString()).withStyle(Style.EMPTY.withUnderlined(hovered)),
 					this.getX() + 10, this.getX() + this.getWidth(), this.getY(), this.getY() + 11
@@ -275,7 +271,7 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 		}
 
 		@Override
-		public boolean mouseClicked(@NotNull MouseButtonEvent click, boolean doubled) {
+		public boolean mouseClicked(@NonNull MouseButtonEvent click, boolean doubled) {
 			select(entry);
 			return true;
 		}

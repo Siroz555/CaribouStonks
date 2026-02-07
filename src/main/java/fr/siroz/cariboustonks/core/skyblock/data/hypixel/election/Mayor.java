@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * All SkyBlock Mayors. <a href="https://wiki.hypixel.net/Mayors">Hypixel Wiki Mayors</a>
@@ -48,7 +48,7 @@ public enum Mayor {
 		this.special = special;
 	}
 
-    public static @NotNull Mayor fromId(@Nullable String id) {
+    public static @NonNull Mayor fromId(@Nullable String id) {
 		if (id == null) return UNKNOWN;
         return BY_ID.getOrDefault(id.toUpperCase(Locale.ROOT), UNKNOWN);
     }

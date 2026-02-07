@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.system.ReminderSystem;
@@ -24,7 +24,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public final class StonksAuctionReminderFeature extends Feature {
 
@@ -54,7 +54,7 @@ public final class StonksAuctionReminderFeature extends Feature {
 				&& this.config().general.reminders.stonksAuction;
 	}
 
-	private @NotNull List<ColorHighlight> contentAnalyzer(@NotNull Int2ObjectMap<ItemStack> slots) {
+	private @NonNull List<ColorHighlight> contentAnalyzer(@NonNull Int2ObjectMap<ItemStack> slots) {
 		String bidItem = ItemUtils.getConcatenatedLore(slots.get(BID_SLOT));
 		Matcher bidItemMatcher = NEXT_AUCTION_PATTERN.matcher(bidItem);
 		if (bidItemMatcher.find()) {
@@ -73,7 +73,7 @@ public final class StonksAuctionReminderFeature extends Feature {
 
 			Instant nextStage = Instant.now().plusSeconds(totalSeconds);
 
-			TimedObject timedObject = new TimedObject(
+			TimedObjectModel timedObject = new TimedObjectModel(
 					"stonksauctions::next",
 					"empty",
 					nextStage,
@@ -87,7 +87,7 @@ public final class StonksAuctionReminderFeature extends Feature {
 		return List.of();
 	}
 
-	private @NotNull ReminderDisplay getReminderDisplay() {
+	private @NonNull ReminderDisplay getReminderDisplay() {
 		return ReminderDisplay.of(
 				Component.literal("Stonks Auction").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
 				Component.literal("Diaz Stonks Auction").withStyle(ChatFormatting.DARK_PURPLE),
@@ -95,7 +95,7 @@ public final class StonksAuctionReminderFeature extends Feature {
 		);
 	}
 
-	private void onReminderExpire(@NotNull TimedObject timedObject) {
+	private void onReminderExpire(@NonNull TimedObjectModel timedObject) {
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Stonks Auction] ").withStyle(ChatFormatting.LIGHT_PURPLE))
 				.append(Component.literal("Diaz Stonks Auction available!").withStyle(ChatFormatting.DARK_PURPLE));

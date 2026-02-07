@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar;
 
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface for analyzing Bazaar Products statistics and market dynamics derived from order data.
@@ -14,7 +14,7 @@ public interface BazaarItemAnalytics {
 	 * @param summaryPrices the summary prices of the product
 	 * @return the instant buy price or -1 if no orders are available
 	 */
-	static double buyPrice(@NotNull List<Double> summaryPrices) {
+	static double buyPrice(@NonNull List<Double> summaryPrices) {
 		return summaryPrices.isEmpty() ? -1 : summaryPrices.stream().min(Double::compareTo).orElse(0.0);
 	}
 
@@ -24,7 +24,7 @@ public interface BazaarItemAnalytics {
 	 * @param summaryPrices the summary prices of the product
 	 * @return the sell price or -1 if no orders are available
 	 */
-	static double sellPrice(@NotNull List<Double> summaryPrices) {
+	static double sellPrice(@NonNull List<Double> summaryPrices) {
 		return summaryPrices.isEmpty() ? -1 : summaryPrices.stream().max(Double::compareTo).orElse(0.0);
 	}
 
@@ -77,7 +77,7 @@ public interface BazaarItemAnalytics {
 	 * @param prices list of prices to analyze
 	 * @return the standard deviation, or 0 if the list is empty
 	 */
-	static double standardDeviation(@NotNull List<Double> prices) {
+	static double standardDeviation(@NonNull List<Double> prices) {
 		if (prices.isEmpty()) return 0;
 
 		double mean = prices.stream()

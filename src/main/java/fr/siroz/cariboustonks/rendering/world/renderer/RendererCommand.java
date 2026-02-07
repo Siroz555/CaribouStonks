@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.rendering.world.renderer;
 
 import net.minecraft.client.renderer.state.CameraRenderState;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents a command that can be emitted to the renderer.
@@ -16,5 +16,5 @@ interface RendererCommand<T> {
 	 * @param state  the state to render
 	 * @param camera the camera state
 	 */
-	void emit(@NotNull T state, @NotNull CameraRenderState camera);
+	void emit(@NonNull T state, @NonNull CameraRenderState camera);
 }

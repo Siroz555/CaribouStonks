@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.screen.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
-import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.system.ReminderSystem;
 import fr.siroz.cariboustonks.util.colors.Colors;
@@ -14,15 +14,14 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class ReminderScreen extends CaribousStonksScreen {
 
     @Nullable
     private final Screen parent;
-    protected List<Pair<ReminderComponent, TimedObject>> reminders;
+    protected List<Pair<ReminderComponent, TimedObjectModel>> reminders;
     private Button optionButton;
 
     private ReminderScreen(@Nullable Screen parent) {
@@ -31,8 +30,7 @@ public class ReminderScreen extends CaribousStonksScreen {
         this.reminders = CaribouStonks.systems().getSystem(ReminderSystem.class).getReminders();
     }
 
-    @Contract("_ -> new")
-    public static @NotNull ReminderScreen create(@Nullable Screen parent) {
+    public static @NonNull ReminderScreen create(@Nullable Screen parent) {
         return new ReminderScreen(parent);
     }
 

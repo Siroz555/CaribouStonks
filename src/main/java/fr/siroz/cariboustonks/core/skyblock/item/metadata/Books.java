@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.core.skyblock.item.metadata;
 
 import java.util.OptionalInt;
 import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents the {@code books} applied to an item.
@@ -38,7 +38,7 @@ public record Books(
 			OptionalInt.empty()
 	);
 
-	public static Books ofNbt(@NotNull CompoundTag customData) {
+	public static Books ofNbt(@NonNull CompoundTag customData) {
 		// Peut être utiliser des boolean ? Les autres keep des int donc why not
 		// .stream().mapToInt(Integer::intValue).filter(n -> n == 1).findFirst();
 		try {

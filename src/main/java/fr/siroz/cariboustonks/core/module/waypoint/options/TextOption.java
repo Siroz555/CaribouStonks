@@ -2,13 +2,10 @@ package fr.siroz.cariboustonks.core.module.waypoint.options;
 
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public final class TextOption {
-
     private Component text;
     private final boolean withDistance;
     private final int offsetY;
@@ -30,8 +27,7 @@ public final class TextOption {
      *
      * @return le {@link Component} ou {@code null}
      */
-    @Contract(pure = true)
-    public @NotNull Optional<Component> getText() {
+    public @NonNull Optional<Component> getText() {
         return Optional.ofNullable(text);
     }
 
@@ -56,13 +52,11 @@ public final class TextOption {
         return throughBlocks;
     }
 
-    @Contract(" -> new")
-    public static @NotNull TextOption.Builder builder() {
+	public static TextOption.@NonNull Builder builder() {
         return new TextOption.Builder();
     }
 
     public static class Builder {
-
         protected Component text = null;
         protected boolean withDistance = false;
         protected int offsetY = -1;
@@ -78,7 +72,7 @@ public final class TextOption {
             return this;
         }
 
-        public TextOption.Builder withOffsetY(@Range(from = 1, to = 100) int offsetY) {
+        public TextOption.Builder withOffsetY(int offsetY) {
             this.offsetY = offsetY;
             return this;
         }

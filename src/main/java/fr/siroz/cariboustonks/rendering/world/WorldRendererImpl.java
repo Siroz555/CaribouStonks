@@ -40,13 +40,11 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Implementation of {@link WorldRenderer}.
  */
-@ApiStatus.Internal
 public final class WorldRendererImpl implements WorldRenderer {
 	// Commands
 	private final TextRendererCommand textRendererCommand = new TextRendererCommand();
@@ -80,7 +78,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	}
 
 	@Override
-	public void submitText(@NotNull FormattedCharSequence text, @NotNull Vec3 position, float scale, float offsetY, boolean throughBlocks) {
+	public void submitText(@NonNull FormattedCharSequence text, @NonNull Vec3 position, float scale, float offsetY, boolean throughBlocks) {
 		if (frozen) return;
 
 		Font textRenderer = Minecraft.getInstance().font;
@@ -92,7 +90,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	}
 
 	@Override
-	public void submitTexture(@NotNull Vec3 position, float width, float height, float textureWidth, float textureHeight, @NotNull Vec3 renderOffset, @NotNull Identifier texture, @NotNull Color color, float alpha, boolean throughBlocks) {
+	public void submitTexture(@NonNull Vec3 position, float width, float height, float textureWidth, float textureHeight, @NonNull Vec3 renderOffset, @NonNull Identifier texture, @NonNull Color color, float alpha, boolean throughBlocks) {
 		if (frozen) return;
 
 		TextureRenderState state = new TextureRenderState(position, width, height, textureWidth, textureHeight, renderOffset, texture, color, alpha, throughBlocks);
@@ -100,7 +98,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	}
 
 	@Override
-	public void submitCircle(@NotNull Vec3 center, double radius, int segments, float thicknessPercent, @NotNull Color color, Direction.@NotNull Axis axis, boolean throughBlocks) {
+	public void submitCircle(@NonNull Vec3 center, double radius, int segments, float thicknessPercent, @NonNull Color color, Direction.@NonNull Axis axis, boolean throughBlocks) {
 		if (frozen) return;
 
 		CircleRenderState state = new CircleRenderState(center, radius, segments, thicknessPercent, color, axis, throughBlocks);
@@ -108,7 +106,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	}
 
 	@Override
-	public void submitThickCircle(@NotNull Vec3 center, double radius, double thickness, int segments, @NotNull Color color, boolean throughBlocks) {
+	public void submitThickCircle(@NonNull Vec3 center, double radius, double thickness, int segments, @NonNull Color color, boolean throughBlocks) {
 		if (frozen) return;
 
 		ThickCircleRenderState state = new ThickCircleRenderState(center, radius, thickness, segments, color, throughBlocks);
@@ -116,7 +114,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	}
 
 	@Override
-	public void submitQuad(@NotNull Vec3[] points, @NotNull Color color, boolean throughBlocks) {
+	public void submitQuad(@NonNull Vec3[] points, @NonNull Color color, boolean throughBlocks) {
 		if (frozen) return;
 
 		QuadRenderState state = new QuadRenderState(points, color, throughBlocks);
@@ -124,7 +122,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	}
 
 	@Override
-	public void submitFilled(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, @NotNull Color color, boolean throughBlocks) {
+	public void submitFilled(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, @NonNull Color color, boolean throughBlocks) {
 		if (frozen) return;
 		if (!FrustumUtils.isVisible(frustum, minX, minY, minZ, maxX, maxY, maxZ)) return;
 
@@ -138,7 +136,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	}
 
 	@Override
-	public void submitBeaconBeam(@NotNull BlockPos position, @NotNull Color color) {
+	public void submitBeaconBeam(@NonNull BlockPos position, @NonNull Color color) {
 		if (frozen) return;
 		if (!FrustumUtils.isVisible(frustum, position.getX(), position.getY(), position.getZ(), position.getX() + 1, RenderUtils.MAX_BUILD_HEIGHT, position.getZ() + 1)) return;
 
@@ -158,7 +156,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	}
 
 	@Override
-	public void submitOutline(@NotNull AABB box, @NotNull Color color, float lineWidth, boolean throughBlocks) {
+	public void submitOutline(@NonNull AABB box, @NonNull Color color, float lineWidth, boolean throughBlocks) {
 		if (frozen) return;
 		if (!FrustumUtils.isVisible(frustum, box)) return;
 
@@ -167,7 +165,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	}
 
 	@Override
-	public void submitLines(Vec3 @NotNull [] points, @NotNull Color color, float lineWidth, boolean throughBlocks) {
+	public void submitLines(Vec3 @NonNull [] points, @NonNull Color color, float lineWidth, boolean throughBlocks) {
 		if (frozen) return;
 		if (points.length < 2) return;
 
@@ -176,7 +174,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	}
 
 	@Override
-	public void submitLineFromCursor(@NotNull Vec3 point, @NotNull Color color, float lineWidth) {
+	public void submitLineFromCursor(@NonNull Vec3 point, @NonNull Color color, float lineWidth) {
 		if (frozen) return;
 
 		CursorLineRenderState state = new CursorLineRenderState(point, color, lineWidth);
@@ -184,7 +182,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	}
 
 	@Override
-	public void submitCuboidOutline(@NotNull Vec3 center, int depth, int size, int minY, int maxY, float lineWidth, @NotNull Color mainColor, @NotNull Color secondColor) {
+	public void submitCuboidOutline(@NonNull Vec3 center, int depth, int size, int minY, int maxY, float lineWidth, @NonNull Color mainColor, @NonNull Color secondColor) {
 		if (frozen) return;
 
 		CuboidOutlineRenderState state = new CuboidOutlineRenderState(center, depth, size, minY, maxY, lineWidth, mainColor, secondColor);

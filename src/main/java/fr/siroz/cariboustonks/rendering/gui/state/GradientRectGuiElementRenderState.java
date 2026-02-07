@@ -5,14 +5,14 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.render.state.GuiElementRenderState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2f;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record GradientRectGuiElementRenderState(
-		@NotNull RenderPipeline pipeline,
-		@NotNull TextureSetup textureSetup,
-		@NotNull Matrix3x2f matrix,
+		@NonNull RenderPipeline pipeline,
+		@NonNull TextureSetup textureSetup,
+		@NonNull Matrix3x2f matrix,
 		int depth,
 		int left,
 		int top,
@@ -25,9 +25,9 @@ public record GradientRectGuiElementRenderState(
 ) implements GuiElementRenderState {
 
 	public GradientRectGuiElementRenderState(
-			@NotNull RenderPipeline pipeline,
-			@NotNull TextureSetup textureSetup,
-			@NotNull Matrix3x2f pose,
+			@NonNull RenderPipeline pipeline,
+			@NonNull TextureSetup textureSetup,
+			@NonNull Matrix3x2f pose,
 			int depth,
 			int left,
 			int top,
@@ -42,7 +42,7 @@ public record GradientRectGuiElementRenderState(
 	}
 
 	@Override
-	public void buildVertices(@NotNull VertexConsumer vertices) {
+	public void buildVertices(@NonNull VertexConsumer vertices) {
 		float startAlpha = (float) (startColor >> 24 & 255) / 255.0F;
 		float startRed = (float) (startColor >> 16 & 255) / 255.0F;
 		float startGreen = (float) (startColor >> 8 & 255) / 255.0F;

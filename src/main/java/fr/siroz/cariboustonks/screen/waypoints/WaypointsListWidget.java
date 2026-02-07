@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.screen.waypoints;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
@@ -23,13 +24,14 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * FUTURE UPDATE -> Waypoint Settings Screen with color codes, etc.
  */
-class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidget.@NotNull WaypointEntry> {
+class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidget.WaypointEntry> {
 
 	private static final int SPACE = 6;
 
@@ -38,7 +40,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 
 	WaypointsListWidget(
             Minecraft client,
-            @NotNull WaypointScreen screen,
+            @NonNull WaypointScreen screen,
             int width,
             int height,
             int y,
@@ -85,10 +87,20 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 	}
 
 	void updateButtons() {
-		for (AbstractSelectionList.Entry<@NotNull WaypointEntry> entry : children()) {
+		for (AbstractSelectionList.Entry<WaypointEntry> entry : children()) {
 			if (entry instanceof WaypointEntry waypointEntry) {
 				if (waypointEntry.enabledWidget.selected() != waypointEntry.waypoint.isEnabled()) {
-					waypointEntry.enabledWidget.onPress(null); // TODO: "requireNonNull" mais il sert a rien
+					waypointEntry.enabledWidget.onPress(new InputWithModifiers() { // SIROZ-NOTE: useless
+						@Override
+						public @InputConstants.Value int input() {
+							return 0;
+						}
+
+						@Override
+						public @Modifiers int modifiers() {
+							return 0;
+						}
+					});
 				}
 			}
 		}
@@ -106,7 +118,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 		}
 	}
 
-	protected class WaypointEntry extends ContainerObjectSelectionList.Entry<@NotNull WaypointEntry> {
+	protected class WaypointEntry extends ContainerObjectSelectionList.Entry<WaypointEntry> {
 
 		private Waypoint waypoint;
 		private final List<AbstractWidget> children;
@@ -115,11 +127,11 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 		private final EditBox xWidget;
 		private final EditBox yWidget;
 		private final EditBox zWidget;
-		private final CycleButton<@NotNull WaypointColors> colorWidget;
-		private final CycleButton<Waypoint.@NotNull Type> typeWidget;
+		private final CycleButton<WaypointColors> colorWidget;
+		private final CycleButton<Waypoint.Type> typeWidget;
 		private final Button deleteWidget;
 
-		public WaypointEntry(@NotNull Waypoint waypoint) {
+		public WaypointEntry(@NonNull Waypoint waypoint) {
 			this.waypoint = waypoint;
 
 			this.enabledWidget = Checkbox.builder(Component.literal(""), minecraft.font)
@@ -175,12 +187,12 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 		}
 
 		@Override
-		public @NotNull List<? extends NarratableEntry> narratables() {
+		public @NonNull List<? extends NarratableEntry> narratables() {
 			return children;
 		}
 
 		@Override
-		public @NotNull List<? extends GuiEventListener> children() {
+		public @NonNull List<? extends GuiEventListener> children() {
 			return children;
 		}
 
@@ -295,7 +307,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 			}
 		}
 
-		private int parseInt(@NotNull String value) throws NumberFormatException {
+		private int parseInt(@NonNull String value) throws NumberFormatException {
 			return value.isEmpty() || value.equals("-") ? 0 : Integer.parseInt(value);
 		}
 	}
@@ -325,7 +337,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 			this.color = color;
 		}
 
-		public static Component getColoredList(@NotNull WaypointColors current) {
+		public static Component getColoredList(@NonNull WaypointColors current) {
 			Component result = Component.empty();
 			for (WaypointColors c : WaypointColors.values()) {
 				String prefix = (c == current) ? "-> " : "";
@@ -344,7 +356,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 			return result;
 		}
 
-		public static WaypointColors getFromWaypoint(@NotNull Color color) {
+		public static WaypointColors getFromWaypoint(@NonNull Color color) {
 			return Arrays.stream(values())
 					.filter(waypointColors -> color.equals(waypointColors.color))
 					.findFirst()
@@ -352,7 +364,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 		}
 	}
 
-	private static Component getWaypointTypeList(@NotNull Waypoint.Type current) {
+	private static Component getWaypointTypeList(Waypoint.@NonNull Type current) {
 		Component result = Component.empty();
 		for (Waypoint.Type type : Waypoint.Type.values()) {
 			String prefix = (type == current) ? "-> " : "";

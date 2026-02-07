@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public enum Perk {
 	// Aatrox
@@ -57,7 +57,7 @@ public enum Perk {
 		this.displayName = displayName;
 	}
 
-    public static @NotNull Perk fromDisplayName(@Nullable String displayName) {
+    public static @NonNull Perk fromDisplayName(@Nullable String displayName) {
 		if (displayName == null) return UNKNOWN;
         return BY_DISPLAY_NAME.getOrDefault(displayName, UNKNOWN);
     }

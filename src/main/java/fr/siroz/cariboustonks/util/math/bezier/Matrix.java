@@ -1,19 +1,10 @@
-/*
- * This implementation is adapted from the original code in the project
- * SkyHanni (<a href="https://github.com/hannibal002/SkyHanni">GitHub</a>)
- * a Minecraft 1.8 Mod written in Kotlin, which was licensed under LGPL-2.1
- * <p>
- * Original authors: [SkyHanni Contributors]
- * Adaptations by: [Siroz555]
- */
-
 package fr.siroz.cariboustonks.util.math.bezier;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.ToDoubleBiFunction;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A Matrix implementation optimized for {@code Bézier curve} calculations.
@@ -37,7 +28,7 @@ public class Matrix {
 	 * @param data The 2D array of doubles to initialize the matrix with
 	 * @throws IllegalArgumentException if the data array is empty or if rows have inconsistent lengths
 	 */
-	public Matrix(double[] @NotNull [] data) {
+	public Matrix(double[] @NonNull [] data) {
 		if (data.length == 0) {
 			throw new IllegalArgumentException("Matrix can't be empty");
 		}
@@ -138,14 +129,14 @@ public class Matrix {
 	}
 
 	// this::L#134+1
-	private void swapRows(double[] @NotNull [] array, int i, int j) {
+	private void swapRows(double[] @NonNull [] array, int i, int j) {
 		double[] temp = array[i];
 		array[i] = array[j];
 		array[j] = temp;
 	}
 
 	// this::L#140
-	private void normalizePivotRow(double[] @NotNull [] a, double[] @NotNull [] b, int c) {
+	private void normalizePivotRow(double[] @NonNull [] a, double[] @NonNull [] b, int c) {
 		double pivot = a[c][c];
 		for (int s = c; s < width; s++) {
 			a[c][s] /= pivot;
@@ -198,7 +189,7 @@ public class Matrix {
 	 * @param other the matrix to multiply by
 	 * @return the resulting matrix from the multiplication
 	 */
-	public Matrix multiply(@NotNull Matrix other) {
+	public Matrix multiply(@NonNull Matrix other) {
 		if (width != other.height) {
 			throw new IllegalArgumentException("Invalid Matrix sizes");
 		}
@@ -237,7 +228,7 @@ public class Matrix {
 	 * @return a new matrix resulting from the addition
 	 * @throws IllegalArgumentException if the matrices have different dimensions
 	 */
-	public Matrix add(@NotNull Matrix other) {
+	public Matrix add(@NonNull Matrix other) {
 		if (width != other.width || height != other.height) {
 			throw new IllegalArgumentException("Invalid Dimensions");
 		}
@@ -258,7 +249,7 @@ public class Matrix {
 	 * @return a new matrix resulting from the subtraction
 	 * @throws IllegalArgumentException if the matrices have different dimensions
 	 */
-	public Matrix subtract(@NotNull Matrix other) {
+	public Matrix subtract(@NonNull Matrix other) {
 		if (width != other.width || height != other.height) {
 			throw new IllegalArgumentException("Invalid Dimensions");
 		}
@@ -292,7 +283,7 @@ public class Matrix {
 		return Arrays.deepHashCode(data);
 	}
 
-	private double[] @NotNull [] deepCopy(double[] @NotNull [] array) {
+	private double[] @NonNull [] deepCopy(double[] @NonNull [] array) {
 		double[][] copy = new double[array.length][];
 		for (int i = 0; i < array.length; i++) {
 			copy[i] = array[i].clone();
@@ -301,7 +292,7 @@ public class Matrix {
 		return copy;
 	}
 
-	private @NotNull Matrix identity(int size) {
+	private @NonNull Matrix identity(int size) {
 		double[][] result = createArray(size, size, (row, col) ->
 				(Objects.equals(row, col) ? 1.0 : 0.0)
 		);
@@ -309,7 +300,7 @@ public class Matrix {
 		return new Matrix(result);
 	}
 
-	private double[] @NotNull [] createArray(int rows, int cols, ToDoubleBiFunction<Integer, Integer> function) {
+	private double[] @NonNull [] createArray(int rows, int cols, ToDoubleBiFunction<Integer, Integer> function) {
 		double[][] array = new double[rows][cols];
 		for (int row = 0; row < rows; row++) {
 			for (int col = 0; col < cols; col++) {

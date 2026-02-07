@@ -12,13 +12,13 @@ import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.jspecify.annotations.NonNull;
 
 public final class TextRendererCommand implements RendererCommand<TextRenderState> {
 
 	@Override
-	public void emit(@NotNull TextRenderState state, @NotNull CameraRenderState camera) {
+	public void emit(@NonNull TextRenderState state, @NonNull CameraRenderState camera) {
 		RenderPipeline pipeline = state.throughBlocks()
 				? RenderPipelines.TEXT_SEE_THROUGH
 				: RenderPipelines.TEXT;
@@ -34,16 +34,16 @@ public final class TextRendererCommand implements RendererCommand<TextRenderStat
 
 		state.preparedText().visit(new Font.GlyphVisitor() {
 			@Override
-			public void acceptGlyph(TextRenderable.@NotNull Styled style) {
+			public void acceptGlyph(TextRenderable.@NonNull Styled style) {
 				this.draw(style);
 			}
 
 			@Override
-			public void acceptEffect(@NotNull TextRenderable renderer) {
+			public void acceptEffect(@NonNull TextRenderable renderer) {
 				this.draw(renderer);
 			}
 
-			private void draw(@NotNull TextRenderable renderer) {
+			private void draw(@NonNull TextRenderable renderer) {
 				TextureSetup textureSetup = TextureSetup.singleTexture(
 						renderer.textureView(),
 						RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)

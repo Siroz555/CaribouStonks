@@ -17,10 +17,8 @@ import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public final class ModDataSource {
 
@@ -40,18 +38,17 @@ public final class ModDataSource {
 	private boolean enchantmentsError = false;
 	private boolean attributesError = false;
 
-	@ApiStatus.Internal
 	public ModDataSource() {
 		ClientLifecycleEvents.CLIENT_STARTED.register(
 				client -> loadModData(client).thenRun(this::checkResults));
 	}
 
-	public @Nullable String getMinecraftId(@NotNull String hypixelMaterial) {
+	public @Nullable String getMinecraftId(@NonNull String hypixelMaterial) {
 		if (minecraftIdsMapping.isEmpty()) return null;
 		return minecraftIdsMapping.get(hypixelMaterial);
 	}
 
-	public boolean containsItem(@NotNull String hypixelMaterial) {
+	public boolean containsItem(@NonNull String hypixelMaterial) {
 		if (minecraftIdsMapping.isEmpty()) return false;
 		return minecraftIdsMapping.containsKey(hypixelMaterial);
 	}
@@ -60,7 +57,7 @@ public final class ModDataSource {
 		return itemsMappingError;
 	}
 
-	public @Nullable SkyBlockEnchantment getSkyBlockEnchantment(@NotNull String id) {
+	public @Nullable SkyBlockEnchantment getSkyBlockEnchantment(@NonNull String id) {
 		if (skyBlockEnchants.isEmpty()) return null;
 		return skyBlockEnchants.get(id);
 	}
@@ -106,7 +103,7 @@ public final class ModDataSource {
 		return null;
 	}
 
-	private @NotNull CompletableFuture<Void> loadModData(Minecraft client) {
+	private @NonNull CompletableFuture<Void> loadModData(Minecraft client) {
 		CompletableFuture<Void> itemsMappingFuture = CompletableFuture.runAsync(() -> {
 			try (BufferedReader reader = client.getResourceManager().openAsReader(ITEMS_MAPPING_JSON)) {
 
@@ -167,8 +164,7 @@ public final class ModDataSource {
 		}
 	}
 
-	@Contract("_ -> new")
-	private @NotNull SkyBlockEnchantment getSkyBlockEnchantment(@NotNull JsonObject jsonEnchantment) {
+	private @NonNull SkyBlockEnchantment getSkyBlockEnchantment(@NonNull JsonObject jsonEnchantment) {
 		return new SkyBlockEnchantment(
 				jsonEnchantment.get("id").getAsString(),
 				jsonEnchantment.get("name").getAsString(),
@@ -178,8 +174,7 @@ public final class ModDataSource {
 		);
 	}
 
-	@Contract("_ -> new")
-	private @NotNull SkyBlockAttribute getSkyBlockAttribute(@NotNull JsonObject jsonAttribute) {
+	private @NonNull SkyBlockAttribute getSkyBlockAttribute(@NonNull JsonObject jsonAttribute) {
 		return new SkyBlockAttribute(
 				jsonAttribute.get("name").getAsString(),
 				jsonAttribute.get("shardName").getAsString(),

@@ -27,22 +27,20 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public final class TooltipAppenderSystem implements System {
 
 	private final Map<Feature, Pair<ContainerMatcherComponent, TooltipAppenderComponent>> registeredAppender = new LinkedHashMap<>();
 	private final List<TooltipAppenderComponent> currentComponents = new ArrayList<>();
 
-	@ApiStatus.Internal
 	public TooltipAppenderSystem() {
 		ItemTooltipCallback.EVENT.register(this::onTooltipCallback);
 		ScreenEvents.AFTER_INIT.register(this::onAfterInit);
 	}
 
 	@Override
-	public void register(@NotNull Feature feature) {
+	public void register(@NonNull Feature feature) {
 		Optional<ContainerMatcherComponent> matcherOpt = feature.getComponent(ContainerMatcherComponent.class);
 		Optional<TooltipAppenderComponent> appenderOpt = feature.getComponent(TooltipAppenderComponent.class);
 

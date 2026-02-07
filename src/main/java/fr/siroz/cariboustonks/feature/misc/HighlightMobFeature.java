@@ -24,8 +24,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 // SIROZ-NOTE : on voit à travers les blocks : avec un Mixin c'est possible d'éviter ça,
 //  mais cela a un cout assez élevé coté performance, je trouve. Sachant que Skyblocker le
@@ -99,13 +98,12 @@ public class HighlightMobFeature extends Feature {
 				.map(Identifier::getPath)
 				.toList();
 
-		@Contract(value = " -> new", pure = true)
-		public static @NotNull EntityIdArgumentType entityType() {
+		public static @NonNull EntityIdArgumentType entityType() {
 			return new EntityIdArgumentType();
 		}
 
 		@Override
-		public @NotNull String parse(@NotNull StringReader reader) throws CommandSyntaxException {
+		public @NonNull String parse(@NonNull StringReader reader) throws CommandSyntaxException {
 			String name = reader.readString();
 			for (String id : ENTITY_ID_LIST) {
 				if (id.equalsIgnoreCase(name)) {
@@ -117,7 +115,7 @@ public class HighlightMobFeature extends Feature {
 		}
 
 		@Override
-		public <S> CompletableFuture<Suggestions> listSuggestions(@NotNull CommandContext<S> context, SuggestionsBuilder builder) {
+		public <S> CompletableFuture<Suggestions> listSuggestions(@NonNull CommandContext<S> context, SuggestionsBuilder builder) {
 			return context.getSource() instanceof SharedSuggestionProvider
 					? SharedSuggestionProvider.suggest(ENTITY_ID_LIST.stream().map(String::toLowerCase), builder)
 					: Suggestions.empty();

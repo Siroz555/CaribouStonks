@@ -6,6 +6,25 @@ import java.util.List;
 import java.util.Objects;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * {@code Component} that provides Keybinds registration for features.
+ *
+ * <h2>Usage Examples</h2>
+ * With {@link KeybindComponent}:
+ * <h3>Simple</h3>
+ * <pre>{@code
+ * this.addComponent(KeybindComponent.class, KeybindComponent.builder()
+ * 		.add(new KeyBind("Hello", GLFW.GLFW_KEY_A, true, () -> {}))
+ * 		.build());
+ * }</pre>
+ *
+ * <h3>With Screen</h3>
+ * <pre>{@code
+ * this.addComponent(KeybindComponent.class, KeybindComponent.builder()
+ * 		.add(new KeyBind("Hello", GLFW.GLFW_KEY_A, (screen, keyCode, scanCode, slot) -> {}))
+ * 		.build());
+ * }</pre>
+ * */
 public final class KeybindComponent implements Component { // SIROZ-NOTE: documentation
 	private final List<KeyBind> keybinds;
 

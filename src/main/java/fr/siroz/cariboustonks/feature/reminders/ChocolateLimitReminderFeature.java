@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.system.ReminderSystem;
 import fr.siroz.cariboustonks.util.Client;
@@ -94,7 +94,7 @@ public final class ChocolateLimitReminderFeature extends Feature {
 			Duration duration = Duration.ofSeconds(secondsToReachTotal);
 			Instant expirationTime = Instant.now().plus(duration);
 			limitTime = expirationTime;
-			TimedObject timedObject = new TimedObject(
+			TimedObjectModel timedObject = new TimedObjectModel(
 					"cf::limit",
 					"empty",
 					expirationTime,
@@ -131,7 +131,7 @@ public final class ChocolateLimitReminderFeature extends Feature {
 				ICON);
 	}
 
-	private void onReminderExpire(TimedObject timedObject) {
+	private void onReminderExpire(TimedObjectModel timedObject) {
 		Component text = Component.literal("The chocolate limit is reached!").withStyle(ChatFormatting.RESET, ChatFormatting.RED);
 
 		Client.sendMessageWithPrefix(Component.literal("[Chocolate Factory] ").withStyle(ChatFormatting.GOLD)
@@ -145,7 +145,7 @@ public final class ChocolateLimitReminderFeature extends Feature {
 		}
 	}
 
-	private void onReminderPreNotify(TimedObject timedObject) {
+	private void onReminderPreNotify(TimedObjectModel timedObject) {
 		MutableComponent text = Component.literal("The chocolate limit will be reached soon!").withStyle(ChatFormatting.RED);
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Chocolate Factory] ").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD))

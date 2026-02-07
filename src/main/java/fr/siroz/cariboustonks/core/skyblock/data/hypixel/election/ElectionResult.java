@@ -3,13 +3,13 @@ package fr.siroz.cariboustonks.core.skyblock.data.hypixel.election;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public record ElectionResult(
-		@NotNull Mayor mayor,
-		@NotNull Mayor minister,
-		@NotNull Set<Perk> mayorPerks,
-		@NotNull Optional<Perk> ministerPerk,
-		@NotNull Instant timestamp
+		@NonNull Mayor mayor,
+		@NonNull Mayor minister,
+		@NonNull Set<Perk> mayorPerks,
+		@NonNull Optional<Perk> ministerPerk,
+		@NonNull Instant timestamp
 ) {
 }

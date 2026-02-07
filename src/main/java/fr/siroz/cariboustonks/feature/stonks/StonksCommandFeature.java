@@ -23,7 +23,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.sounds.SoundEvents;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class StonksCommandFeature extends Feature {
 
@@ -88,7 +88,7 @@ public class StonksCommandFeature extends Feature {
 		return result;
 	}
 
-	private void showBazaarInfo(@NotNull FabricClientCommandSource source, @NotNull String item, @NotNull BazaarProduct bazaarProduct) {
+	private void showBazaarInfo(@NonNull FabricClientCommandSource source, @NonNull String item, @NonNull BazaarProduct bazaarProduct) {
 		Client.playSound(SoundEvents.TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
 
 		source.sendFeedback(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));

@@ -8,14 +8,14 @@ import fr.siroz.cariboustonks.rendering.world.state.LinesRenderState;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.jspecify.annotations.NonNull;
 
 public final class LinesRendererCommand implements RendererCommand<LinesRenderState> {
 
 	@Override
-	public void emit(@NotNull LinesRenderState state, @NotNull CameraRenderState camera) {
+	public void emit(@NonNull LinesRenderState state, @NonNull CameraRenderState camera) {
 		RenderPipeline pipeline = state.throughBlocks()
 				? CaribouRenderPipelines.LINES_THROUGH_BLOCKS
 				: RenderPipelines.LINES;

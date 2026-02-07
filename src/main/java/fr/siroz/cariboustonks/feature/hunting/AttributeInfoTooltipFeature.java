@@ -21,7 +21,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class AttributeInfoTooltipFeature extends Feature {
 
@@ -63,7 +63,7 @@ public class AttributeInfoTooltipFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock() && this.config().hunting.attributeInfos;
 	}
 
-	private void handleHuntingBox(@NotNull List<Component> lines) {
+	private void handleHuntingBox(@NonNull List<Component> lines) {
 		String levelStr = null;
 		String ownedStr = null;
 		String syphonCountStr = null;
@@ -73,9 +73,7 @@ public class AttributeInfoTooltipFeature extends Feature {
 
 		for (Component line : lines) {
 			String lineText = line.getString();
-			if (lineText.isEmpty()) {
-				continue;
-			}
+			if (lineText.isEmpty()) continue;
 
 			matcher.reset(lineText);
 
@@ -104,31 +102,23 @@ public class AttributeInfoTooltipFeature extends Feature {
 		}
 
 		int level = RomanNumeralUtils.parse(levelStr);
-		if (level < 0 || level > AttributeAPI.MAX_LEVEL) {
-			return;
-		}
+		if (level < 0 || level > AttributeAPI.MAX_LEVEL) return;
 
 		int owned = StonksUtils.toInt(ownedStr, -1);
-		if (owned < 0) {
-			return;
-		}
+		if (owned < 0) return;
 
 		Rarity itemRarity = Rarity.valueOf(rarityStr.toUpperCase(Locale.ROOT));
 		int shardsUntilMax = AttributeAPI.getShardsUntilMax(itemRarity, level + 1);
-		if (shardsUntilMax < 0 || syphonCountStr == null) {
-			return;
-		}
+		if (shardsUntilMax < 0 || syphonCountStr == null) return;
 
 		int syphonCount = StonksUtils.toInt(syphonCountStr, -1);
-		if (syphonCount < 0) {
-			return;
-		}
+		if (syphonCount < 0) return;
 
 		int required = shardsUntilMax + syphonCount;
 		appendTooltip(lines, id, required, owned);
 	}
 
-	private void handleAttributeMenu(@NotNull List<Component> lines) {
+	private void handleAttributeMenu(@NonNull List<Component> lines) {
 		String id = null;
 		String rarityStr = null;
 		String levelStr = null;
@@ -137,9 +127,7 @@ public class AttributeInfoTooltipFeature extends Feature {
 
 		for (Component line : lines) {
 			String lineText = line.getString();
-			if (lineText.isEmpty()) {
-				continue;
-			}
+			if (lineText.isEmpty()) continue;
 
 			matcher.reset(lineText);
 
@@ -166,27 +154,22 @@ public class AttributeInfoTooltipFeature extends Feature {
 		}
 
 		int level = StonksUtils.toInt(levelStr, -1);
-		if (level < 0) {
-			return;
-		}
+		if (level < 0) return;
 
 		int syphonCount = StonksUtils.toInt(syphonCountStr, -1);
-		if (syphonCount < 0) {
-			return;
-		}
+		if (syphonCount < 0) return;
 
 		Rarity itemRarity = Rarity.valueOf(rarityStr.toUpperCase(Locale.ROOT));
 		int shardsUntilMax = AttributeAPI.getShardsUntilMax(itemRarity, level + 1);
-		if (shardsUntilMax < 0) {
-			return;
-		}
+		if (shardsUntilMax < 0) return;
+
 
 		int required = shardsUntilMax + syphonCount;
 		// HuntingBox != AttributeMenu
 		appendTooltip(lines, id, required, 0);
 	}
 
-	private void appendTooltip(@NotNull List<Component> lines, String id, int required, int owned) {
+	private void appendTooltip(@NonNull List<Component> lines, String id, int required, int owned) {
 		lines.add(Component.empty()
 				.append(Component.literal("Shards Until Maxed: ").withStyle(ChatFormatting.GREEN))
 				.append(Component.literal(String.valueOf(required)).withStyle(ChatFormatting.AQUA)));

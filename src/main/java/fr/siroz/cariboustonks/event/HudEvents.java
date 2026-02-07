@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.event;
 import java.util.List;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public final class HudEvents {
 
@@ -16,7 +16,7 @@ public final class HudEvents {
 	 * The update is triggered every second
 	 */
 	@OnlySkyBlock
-	public static final Event<@NotNull TabListUpdate> TAB_LIST_UPDATE = EventFactory.createArrayBacked(TabListUpdate.class, listeners -> lines -> {
+	public static final Event<TabListUpdate> TAB_LIST_UPDATE = EventFactory.createArrayBacked(TabListUpdate.class, listeners -> lines -> {
 		for (TabListUpdate listener : listeners) {
 			listener.onUpdate(lines);
 		}
@@ -28,7 +28,7 @@ public final class HudEvents {
 	 * The update is triggered every second
 	 */
 	@OnlySkyBlock
-	public static final Event<@NotNull ScoreboardUpdate> SCOREBOARD_UPDATE = EventFactory.createArrayBacked(ScoreboardUpdate.class, listeners -> lines -> {
+	public static final Event<ScoreboardUpdate> SCOREBOARD_UPDATE = EventFactory.createArrayBacked(ScoreboardUpdate.class, listeners -> lines -> {
 		for (ScoreboardUpdate listener : listeners) {
 			listener.onUpdate(lines);
 		}
@@ -36,11 +36,11 @@ public final class HudEvents {
 
 	@FunctionalInterface
 	public interface TabListUpdate {
-		void onUpdate(@NotNull List<String> lines);
+		void onUpdate(@NonNull List<String> lines);
 	}
 
 	@FunctionalInterface
 	public interface ScoreboardUpdate {
-		void onUpdate(@NotNull List<String> lines);
+		void onUpdate(@NonNull List<String> lines);
 	}
 }

@@ -1,13 +1,13 @@
 package fr.siroz.cariboustonks.core.module.hud;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
+import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.function.Supplier;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A HUD for {@link Component}.
@@ -18,9 +18,9 @@ public final class TextHud extends Hud {
 	private final Supplier<Component> textSupplier;
 
 	public TextHud(
-			@NotNull Component defaultText,
-			@NotNull Supplier<Component> textSupplier,
-			@NotNull HudConfig hudConfig,
+			@NonNull Component defaultText,
+			@NonNull Supplier<Component> textSupplier,
+			@NonNull HudConfig hudConfig,
 			int defaultX,
 			int defaultY
 	) {
@@ -52,14 +52,14 @@ public final class TextHud extends Hud {
 		}
 	}
 
-	private void render(Component text, @NotNull GuiGraphics guiGraphics, int x, int y, float scale) {
+	private void render(Component text, @NonNull GuiGraphics guiGraphics, int x, int y, float scale) {
 		guiGraphics.pose().pushMatrix();
 		guiGraphics.pose().scale(scale, scale);
 		guiGraphics.drawString(CLIENT.font, text, (int) (x / scale), (int) (y / scale), Colors.WHITE.asInt(), useShadow());
 		guiGraphics.pose().popMatrix();
 	}
 
-	@ApiStatus.Experimental
+	@Experimental
 	private boolean useShadow() {
 		return ConfigManager.getConfig().uiAndVisuals.shadowTextHud;
 	}

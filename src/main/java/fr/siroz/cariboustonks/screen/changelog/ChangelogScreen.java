@@ -8,22 +8,20 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class ChangelogScreen extends CaribousStonksScreen {
 
 	private final List<ChangelogEntry> changelogs;
 	private final Runnable onCloseAction;
 
-	private ChangelogScreen(@NotNull List<ChangelogEntry> changelogs, @NotNull Runnable onCloseAction) {
+	private ChangelogScreen(@NonNull List<ChangelogEntry> changelogs, @NonNull Runnable onCloseAction) {
 		super(Component.nullToEmpty("Changelog"));
 		this.changelogs = changelogs;
 		this.onCloseAction = onCloseAction;
 	}
 
-	@Contract("_, _ -> new")
-	public static @NotNull ChangelogScreen create(@NotNull List<ChangelogEntry> changelogs, @NotNull Runnable onCloseAction) {
+	public static @NonNull ChangelogScreen create(@NonNull List<ChangelogEntry> changelogs, @NonNull Runnable onCloseAction) {
 		return new ChangelogScreen(changelogs, onCloseAction);
 	}
 

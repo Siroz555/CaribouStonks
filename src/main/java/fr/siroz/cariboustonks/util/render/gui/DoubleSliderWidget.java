@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.util.math.MathUtils;
 import it.unimi.dsi.fastutil.doubles.DoubleConsumer;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * This class represents a slider widget for double precision floating-point numbers.
@@ -24,7 +24,7 @@ public final class DoubleSliderWidget extends AbstractSliderButton {
 	 *
 	 * @see AbstractSliderButton
 	 */
-	public DoubleSliderWidget(int x, int y, int width, int height, @NotNull Component text, double min, double max, double value, @NotNull DoubleConsumer changeCallback) {
+	public DoubleSliderWidget(int x, int y, int width, int height, @NonNull Component text, double min, double max, double value, @NonNull DoubleConsumer changeCallback) {
 		super(x, y, width, height, text, value);
 		this.min = min;
 		this.max = max;

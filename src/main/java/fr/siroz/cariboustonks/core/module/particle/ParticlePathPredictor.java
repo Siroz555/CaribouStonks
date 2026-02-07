@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.core.module.particle;
 import fr.siroz.cariboustonks.util.math.bezier.BezierCurve;
 import fr.siroz.cariboustonks.util.math.bezier.BezierFitter;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Predicts the path of a particle using Bézier curve fitting techniques.
@@ -54,7 +54,7 @@ public class ParticlePathPredictor extends BezierFitter {
 	 * is calculated using a mathematical formula that involves the pitch angle derived
 	 * from the vector and trigonometric operations.
 	 */
-	double computePitchWeight(@NotNull Vec3 derivative) {
+	double computePitchWeight(@NonNull Vec3 derivative) {
 		return Math.sqrt(24 * Math.sin(getPitchFromDerivative(derivative) - Math.PI) + 25);
 	}
 
@@ -65,7 +65,7 @@ public class ParticlePathPredictor extends BezierFitter {
 	 * The pitch is determined by analyzing the direction of the vector and performing
 	 * an iterative computation using trigonometric functions to refine the result.
 	 */
-	double getPitchFromDerivative(@NotNull Vec3 derivative) {
+	double getPitchFromDerivative(@NonNull Vec3 derivative) {
 		double xzAbscissa = Math.sqrt(Math.pow(derivative.x, 2) + Math.pow(derivative.z, 2));
 		double pitchAngle = -Math.atan2(derivative.y, xzAbscissa);
 		double guessPitch = pitchAngle;

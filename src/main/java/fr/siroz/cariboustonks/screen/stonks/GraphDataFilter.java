@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Méthodes pour filtrer les données pour le graphique selon le type de {@link Granularity}.
@@ -43,7 +43,7 @@ interface GraphDataFilter {
 	 * @param granularity the temporal granularity
 	 * @return a new list of filtered prices
 	 */
-	static List<ItemPrice> filterData(@NotNull List<ItemPrice> prices, @NotNull Granularity granularity) {
+	static List<ItemPrice> filterData(@NonNull List<ItemPrice> prices, @NonNull Granularity granularity) {
 		Instant now = Instant.now();
 		// ChronoUnit.WEEKS -> UnsupportedTemporalTypeException: Unsupported unit: Weeks
 		// parce que c'est des Instant..

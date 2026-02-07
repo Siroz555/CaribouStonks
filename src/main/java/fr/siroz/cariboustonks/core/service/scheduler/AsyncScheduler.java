@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Small shared executor for blocking background tasks.
@@ -60,7 +60,7 @@ public final class AsyncScheduler {
 		return Holder.INSTANCE;
 	}
 
-	public @NotNull ExecutorService blockingExecutor() {
+	public @NonNull ExecutorService blockingExecutor() {
 		return blockingExecutor;
 	}
 
@@ -68,7 +68,7 @@ public final class AsyncScheduler {
 	 * Submit a runnable to the blocking executor and log rejections.
 	 */
 	@SuppressWarnings("unused")
-	public void submit(@NotNull Runnable task) {
+	public void submit(@NonNull Runnable task) {
 		try {
 			blockingExecutor.execute(task);
 		} catch (RejectedExecutionException rex) {

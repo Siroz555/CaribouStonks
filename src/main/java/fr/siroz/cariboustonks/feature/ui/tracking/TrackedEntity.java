@@ -1,13 +1,13 @@
 package fr.siroz.cariboustonks.feature.ui.tracking;
 
 import net.minecraft.world.entity.decoration.ArmorStand;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Wrapper immutable pour une entity trackée avec sa priorité
  */
 public record TrackedEntity(
-		@NotNull ArmorStand armorStand,
+		@NonNull ArmorStand armorStand,
 		int priority,
 		long addedTime,
 		boolean isSlayerBoss
@@ -22,7 +22,7 @@ public record TrackedEntity(
 	}
 
 	@Override
-	public int compareTo(TrackedEntity other) {
+	public int compareTo(@NonNull TrackedEntity other) {
 		// Tri par priorité décroissante (plus haute priorité en premier).
 		int priorityCompare = Integer.compare(other.priority(), this.priority);
 		if (priorityCompare != 0) {

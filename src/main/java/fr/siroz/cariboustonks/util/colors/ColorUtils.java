@@ -3,8 +3,7 @@ package fr.siroz.cariboustonks.util.colors;
 import com.mojang.serialization.Codec;
 import java.awt.Color;
 import net.minecraft.ChatFormatting;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public final class ColorUtils {
 
@@ -22,8 +21,7 @@ public final class ColorUtils {
 	 *                   values outside this range are clamped
 	 * @return a new color representing the interpolated color
 	 */
-	@Contract("_, _, _ -> new")
-	public static @NotNull Color interpolatedColor(@NotNull Color startColor, @NotNull Color endColor, float factor) {
+	public static @NonNull Color interpolatedColor(@NonNull Color startColor, @NonNull Color endColor, float factor) {
 		factor = Math.max(0, Math.min(1f, factor)); // 0.0 et 1.0
 
 		int red = (int) (startColor.getRed() + factor * (endColor.getRed() - startColor.getRed()));
@@ -78,8 +76,7 @@ public final class ColorUtils {
 	 *
 	 * @return array représentant les composants de la couleur en float
 	 */
-	@Contract(value = "_ -> new", pure = true)
-	public static float @NotNull [] getFloatComponents(int color) {
+	public static float @NonNull [] getFloatComponents(int color) {
 		return new float[]{((color >> 16) & 0xFF) / 255f, ((color >> 8) & 0xFF) / 255f, (color & 0xFF) / 255f};
 	}
 
@@ -87,7 +84,7 @@ public final class ColorUtils {
 		return Color.getHSBColor(hueComponent, saturationColor, brightnessColor).getRGB();
 	}
 
-	public static Color getAwtColor(@NotNull ChatFormatting formatting) {
+	public static Color getAwtColor(@NonNull ChatFormatting formatting) {
 		if (formatting.getColor() == null) {
 			return Color.WHITE;
 		}

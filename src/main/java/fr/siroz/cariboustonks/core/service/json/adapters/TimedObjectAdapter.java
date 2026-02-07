@@ -3,11 +3,12 @@ package fr.siroz.cariboustonks.core.service.json.adapters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import java.io.IOException;
 import java.time.Instant;
+import org.jspecify.annotations.NonNull;
 
-public class TimedObjectAdapter extends TypeAdapter<TimedObject> {
+public class TimedObjectAdapter extends TypeAdapter<TimedObjectModel> {
 
 	private final TypeAdapter<Instant> instant;
 
@@ -16,7 +17,7 @@ public class TimedObjectAdapter extends TypeAdapter<TimedObject> {
 	}
 
 	@Override
-	public void write(JsonWriter writer, TimedObject timedObject) throws IOException {
+	public void write(@NonNull JsonWriter writer, @NonNull TimedObjectModel timedObject) throws IOException {
 		writer.beginObject();
 		writer.name("id").value(timedObject.id());
 		writer.name("message").value(timedObject.message());
@@ -27,7 +28,7 @@ public class TimedObjectAdapter extends TypeAdapter<TimedObject> {
 	}
 
 	@Override
-	public TimedObject read(JsonReader reader) throws IOException {
+	public TimedObjectModel read(@NonNull JsonReader reader) throws IOException {
 		reader.beginObject();
 		String id = "";
 		String message = "";
@@ -45,6 +46,6 @@ public class TimedObjectAdapter extends TypeAdapter<TimedObject> {
 		}
 		reader.endObject();
 
-		return new TimedObject(id, message, expirationTime, type);
+		return new TimedObjectModel(id, message, expirationTime, type);
 	}
 }

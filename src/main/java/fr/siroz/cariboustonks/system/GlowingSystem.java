@@ -10,9 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Manages the registration and application of glow colors for entities (and blocks?).
@@ -25,13 +24,12 @@ public final class GlowingSystem implements System {
 	private final Map<Feature, EntityGlowComponent> registeredComponents = new HashMap<>();
 	private final Object2IntMap<Entity> cachedEntities = new Object2IntOpenHashMap<>();
 
-	@ApiStatus.Internal
 	public GlowingSystem() {
 		TickScheduler.getInstance().runRepeating(this.cachedEntities::clear, 1, TimeUnit.SECONDS);
 	}
 
 	@Override
-	public void register(@NotNull Feature feature) {
+	public void register(@NonNull Feature feature) {
 		feature.getComponent(EntityGlowComponent.class)
 				.ifPresent(component ->  registeredComponents.put(feature, component));
 	}
@@ -73,7 +71,7 @@ public final class GlowingSystem implements System {
 	 * Iterates through all registered and enabled providers to compute the glow color for the given entity.
 	 * The first non-default color returned by a provider is used.
 	 */
-	private int computeEntity(@NotNull Entity entity) {
+	private int computeEntity(@NonNull Entity entity) {
 		for (Map.Entry<Feature, EntityGlowComponent> entry : registeredComponents.entrySet()) {
 			if (entry.getKey().isEnabled()) {
 				int glowColor = entry.getValue().getGlowColor(entity);

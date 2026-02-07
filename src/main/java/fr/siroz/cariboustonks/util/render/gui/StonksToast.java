@@ -13,7 +13,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class StonksToast implements Toast {
 
@@ -32,7 +32,7 @@ public class StonksToast implements Toast {
 	}
 
 	@Override
-	public void render(GuiGraphics context, @NotNull Font renderer, long startTime) {
+	public void render(GuiGraphics context, @NonNull Font renderer, long startTime) {
 		context.blitSprite(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, width(), height());
 
 		int y = (height() - getInnerContentsHeight()) / 2;
@@ -64,12 +64,12 @@ public class StonksToast implements Toast {
 	}
 
 	@Override
-	public @NotNull Visibility getWantedVisibility() {
+	public @NonNull Visibility getWantedVisibility() {
 		return this.toastTime > 10_000 ? Visibility.HIDE : Visibility.SHOW;
 	}
 
 	@Override
-	public void update(@NotNull ToastManager manager, long time) {
+	public void update(@NonNull ToastManager manager, long time) {
 		this.toastTime = time;
 	}
 }

@@ -13,8 +13,7 @@ import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 import net.minecraft.SharedConstants;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Utilitaire pour manipuler les requests {@code HTTP} avec l'API {@code java.net.http}.
@@ -44,8 +43,7 @@ public final class Http {
 	 * @return {@link HttpResponse}
 	 * @throws RuntimeException pour toute erreur HTTP (hors réponse) ou IO
 	 */
-	@Contract("_ -> new")
-	public static @NotNull HttpResponse request(@NotNull String url) throws RuntimeException {
+	public static @NonNull HttpResponse request(@NonNull String url) throws RuntimeException {
 		try {
 			HttpRequest request = HttpRequest.newBuilder()
 					.GET()
@@ -80,8 +78,8 @@ public final class Http {
 	 * @throws RuntimeException pour toute erreur HTTP ou IO
 	 */
 	public static InputStream requestGeneric(
-			@NotNull String url,
-			@NotNull Set<String> expectedContentTypes
+			@NonNull String url,
+			@NonNull Set<String> expectedContentTypes
 	) throws RuntimeException {
 		try {
 			HttpRequest request = HttpRequest.newBuilder()
@@ -117,7 +115,7 @@ public final class Http {
 	 * @param response {@link java.net.http.HttpResponse}
 	 * @return {@link InputStream}
 	 */
-	private static InputStream getDecodedInputStream(java.net.http.@NotNull HttpResponse<InputStream> response) {
+	private static InputStream getDecodedInputStream(java.net.http.@NonNull HttpResponse<InputStream> response) {
 		String encoding = response.headers().firstValue("Content-Encoding").orElse("");
 
 		try {

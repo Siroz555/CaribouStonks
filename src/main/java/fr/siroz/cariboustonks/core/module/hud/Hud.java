@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Abstract base class representing a configurable HUD.
@@ -25,7 +25,7 @@ public abstract class Hud {
 	private int y;
 	private float scale;
 
-	protected Hud(@NotNull Supplier<Boolean> enabled, @NotNull HudConfig hudConfig, int defaultX, int defaultY) {
+	protected Hud(@NonNull Supplier<Boolean> enabled, @NonNull HudConfig hudConfig, int defaultX, int defaultY) {
 		this.enabled = enabled;
 		this.hudConfig = hudConfig;
 		this.defaultX = defaultX;

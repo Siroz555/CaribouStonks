@@ -22,12 +22,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class ItemValueTooltipFeature extends Feature {
 
-	private final Cache<@NotNull String, @NotNull ItemValueResult> cache = CacheBuilder.newBuilder()
+	private final Cache<String, ItemValueResult> cache = CacheBuilder.newBuilder()
 			.maximumSize(555)
 			.expireAfterWrite(2, TimeUnit.MINUTES)
 			.build();
@@ -52,11 +52,9 @@ public class ItemValueTooltipFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.itemValueTooltip;
 	}
 
-	private void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Component> lines) {
+	private void appendToTooltip(@Nullable Slot focusedSlot, @NonNull ItemStack item, @NonNull List<Component> lines) {
 		String uuid = SkyBlockAPI.getSkyBlockItemUuid(item);
-		if (uuid.isEmpty()) {
-			return;
-		}
+		if (uuid.isEmpty()) return;
 
 		try {
 			ItemValueResult cached = cache.getIfPresent(uuid);
@@ -87,10 +85,8 @@ public class ItemValueTooltipFeature extends Feature {
 		}
 	}
 
-	private void displayItemValue(@NotNull List<Component> lines, @Nullable ItemValueResult result) {
-		if (result == null || result.calculations().isEmpty()) {
-			return;
-		}
+	private void displayItemValue(@NonNull List<Component> lines, @Nullable ItemValueResult result) {
+		if (result == null || result.calculations().isEmpty()) return;
 
 		double price = result.price();
 		if (price > 0) {

@@ -22,8 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Responsible for calculating the estimated value of an item by composing price components
@@ -95,7 +94,7 @@ public final class ItemValueCalculator {
 	 * @param item the item to evaluate or returns {@link ItemValueResult#EMPTY} if {@code skyBlockId} is empty
 	 * @return an {@link ItemValueResult} containing the resulting price, base price and detailed calculations
 	 */
-	public @NotNull ItemValueResult calculateValue(@NotNull SkyblockItemStack item, boolean networth) {
+	public @NonNull ItemValueResult calculateValue(@NonNull SkyblockItemStack item, boolean networth) {
 		try {
 			return process(item, CalculatorHelper::getPrice, networth);
 		} catch (Throwable throwable) {
@@ -103,7 +102,7 @@ public final class ItemValueCalculator {
 		}
 	}
 
-	private ItemValueResult process(@NotNull SkyblockItemStack item, @NotNull ToDoubleFunction<String> prices, boolean networth) {
+	private ItemValueResult process(@NonNull SkyblockItemStack item, @NonNull ToDoubleFunction<String> prices, boolean networth) {
 		String rawId = item.skyBlockId();
 		if (rawId.isEmpty()) {
 			return ItemValueResult.EMPTY;
@@ -161,8 +160,7 @@ public final class ItemValueCalculator {
 		return ItemValueResult.success(acc.price(), acc.base(), acc.calculations());
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent prestiges() {
+	private @NonNull PriceComponent prestiges() {
 		return (ctx, acc) -> {
 			if (CalculatorConstants.PRESTIGES.containsKey(ctx.skyBlockId())) {
 				for (String prestigeItemId : CalculatorConstants.PRESTIGES.get(ctx.skyBlockId())) {
@@ -176,8 +174,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent specialAuction() {
+	private @NonNull PriceComponent specialAuction() {
 		return (ctx, acc) -> {
 			SpecialAuctionInfo specialAuction = ctx.metadata().specialAuctionInfo();
 			// Shen Auction
@@ -216,8 +213,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent reforge() {
+	private @NonNull PriceComponent reforge() {
 		return (ctx, acc) -> {
 			if (ctx.metadata().reforge().isPresent()) {
 				String reforge = ctx.metadata().reforge().get();
@@ -238,8 +234,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent cosmetics() {
+	private @NonNull PriceComponent cosmetics() {
 		return (ctx, acc) -> {
 			CosmeticInfo cosmetic = ctx.metadata().cosmeticInfo();
 			// Skin
@@ -268,8 +263,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent enchantedBook() {
+	private @NonNull PriceComponent enchantedBook() {
 		return (ctx, acc) -> {
 			if (!ctx.skyBlockId().equals("ENCHANTED_BOOK")) return ComponentDecision.CONTINUE;
 
@@ -310,8 +304,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent ultimateEnchantedBook() {
+	private @NonNull PriceComponent ultimateEnchantedBook() {
 		return (ctx, acc) -> {
 			if (!ctx.skyBlockId().equals("ENCHANTED_BOOK")) return ComponentDecision.CONTINUE;
 
@@ -332,8 +325,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent regularEnchantments() {
+	private @NonNull PriceComponent regularEnchantments() {
 		return (ctx, acc) -> {
 			if (ctx.skyBlockId().equals("ENCHANTED_BOOK")) return ComponentDecision.CONTINUE;
 
@@ -378,8 +370,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent regularUltimateEnchantment() {
+	private @NonNull PriceComponent regularUltimateEnchantment() {
 		return (ctx, acc) -> {
 			if (ctx.skyBlockId().equals("ENCHANTED_BOOK")) return ComponentDecision.CONTINUE;
 
@@ -405,8 +396,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent books() {
+	private @NonNull PriceComponent books() {
 		return (ctx, acc) -> {
 			Books books = ctx.metadata().books();
 			// Hot/Fuming Potato Book
@@ -513,8 +503,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent masterStars() {
+	private @NonNull PriceComponent masterStars() {
 		return (ctx, acc) -> {
 			int dungeonItemLevel = ctx.metadata().modifiers().dungeonItemLevel().orElse(0);
 			int upgradeLevel = ctx.metadata().modifiers().upgradeLevel();
@@ -537,8 +526,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent modifiers() {
+	private @NonNull PriceComponent modifiers() {
 		return (ctx, acc) -> {
 			Modifiers modifiers = ctx.metadata().modifiers();
 			// Recombobulator 3000
@@ -676,8 +664,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent gemstones() {
+	private @NonNull PriceComponent gemstones() {
 		return (ctx, acc) -> {
 			Gemstones gemstones = ctx.metadata().gemstones();
 			// Gemstones
@@ -762,8 +749,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent drillParts() {
+	private @NonNull PriceComponent drillParts() {
 		return (ctx, acc) -> {
 			DrillInfo drill = ctx.metadata().drillInfo();
 			// Fuel Tank
@@ -803,8 +789,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent rodParts() {
+	private @NonNull PriceComponent rodParts() {
 		return (ctx, acc) -> {
 			RodInfo rod = ctx.metadata().rodInfo();
 			// Line
@@ -844,8 +829,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	@Contract(pure = true)
-	private @NotNull PriceComponent boosters() {
+	private @NonNull PriceComponent boosters() {
 		return (ctx, acc) -> {
 			if (ctx.metadata().modifiers().boosters().isPresent()) {
 				for (String booster : ctx.metadata().modifiers().boosters().get()) {
@@ -863,7 +847,7 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	private double worth(@NotNull String skyBlockId, boolean networth) {
+	private double worth(@NonNull String skyBlockId, boolean networth) {
 		return networth ? CalculatorConstants.WORTH.applyAsDouble(skyBlockId) : 1d;
 	}
 }

@@ -3,22 +3,23 @@ package fr.siroz.cariboustonks.core.service.json.adapters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import fr.siroz.cariboustonks.feature.ui.tracking.MobTrackingRegistry;
+import fr.siroz.cariboustonks.core.model.MobTrackingModel;
 import java.io.IOException;
+import org.jspecify.annotations.NonNull;
 
-public class MobTrackingEntryAdapter extends TypeAdapter<MobTrackingRegistry.MobTrackingConfig> {
+public class MobTrackingEntryAdapter extends TypeAdapter<MobTrackingModel> {
 
 	@Override
-	public void write(JsonWriter writer, MobTrackingRegistry.MobTrackingConfig config) throws IOException {
+	public void write(@NonNull JsonWriter writer, @NonNull MobTrackingModel model) throws IOException {
 		writer.beginObject();
-		writer.name("name").value(config.name);
-		writer.name("enabled").value(config.enabled);
-		writer.name("notifyOnSpawn").value(config.notifyOnSpawn);
+		writer.name("name").value(model.getName());
+		writer.name("enabled").value(model.isEnabled());
+		writer.name("notifyOnSpawn").value(model.isNotifyOnSpawn());
 		writer.endObject();
 	}
 
 	@Override
-	public MobTrackingRegistry.MobTrackingConfig read(JsonReader reader) throws IOException {
+	public MobTrackingModel read(@NonNull JsonReader reader) throws IOException {
 		reader.beginObject();
 		String name = "";
 		boolean enabled = true;
@@ -34,6 +35,6 @@ public class MobTrackingEntryAdapter extends TypeAdapter<MobTrackingRegistry.Mob
 		}
 		reader.endObject();
 
-		return new MobTrackingRegistry.MobTrackingConfig(name, enabled, notifyOnSpawn);
+		return new MobTrackingModel(name, enabled, notifyOnSpawn);
 	}
 }

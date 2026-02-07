@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.core.mod.changelog.ChangelogManager;
 import fr.siroz.cariboustonks.core.mod.crash.CrashManager;
 import fr.siroz.cariboustonks.core.mod.dev.DeveloperManager;
 import fr.siroz.cariboustonks.util.DeveloperTools;
+import org.jspecify.annotations.NonNull;
 
 /**
  * The {@code CaribouManager} class serves as the core manager for the mod.
@@ -34,7 +35,7 @@ public final class CaribouManager {
 	 *
 	 * @return the {@link CrashManager} instance.
 	 */
-	public CrashManager getCrashManager() {
+	public @NonNull CrashManager getCrashManager() {
 		return crashManager;
 	}
 
@@ -43,7 +44,7 @@ public final class CaribouManager {
 	 *
 	 * @return the {@link ModDataSource} instance
 	 */
-	public ModDataSource getModDataSource() {
+	public @NonNull ModDataSource getModDataSource() {
 		return modDataSource;
 	}
 }

@@ -8,13 +8,13 @@ import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.FilledBoxRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.jspecify.annotations.NonNull;
 
 public final class FilledBoxRendererCommand implements RendererCommand<FilledBoxRenderState> {
 
 	@Override
-	public void emit(@NotNull FilledBoxRenderState state, @NotNull CameraRenderState camera) {
+	public void emit(@NonNull FilledBoxRenderState state, @NonNull CameraRenderState camera) {
 		RenderPipeline pipeline = state.throughBlocks()
 				? CaribouRenderPipelines.FILLED_THROUGH_BLOCKS
 				// Il y a certains cotés qui ont des triangles vide.

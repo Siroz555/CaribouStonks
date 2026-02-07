@@ -13,9 +13,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public final class HudConfigScreen extends CaribousStonksScreen {
@@ -32,8 +31,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 		this.parent = parent;
 	}
 
-	@Contract("_ -> new")
-	public static @NotNull HudConfigScreen create(@Nullable Screen parent) {
+	public static @NonNull HudConfigScreen create(@Nullable Screen parent) {
 		return new HudConfigScreen(parent);
 	}
 
@@ -44,7 +42,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 		renderElements(guiGraphics);
 	}
 
-	private void renderInformations(@NotNull GuiGraphics guiGraphics) {
+	private void renderInformations(@NonNull GuiGraphics guiGraphics) {
 		int baseY = font.lineHeight * 8;
 		int lineSpacing = font.lineHeight + 4;
 		int y = baseY;
@@ -64,7 +62,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 				"Press TAB to cycle between HUDs", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 	}
 
-	private void renderElements(@NotNull GuiGraphics guiGraphics) {
+	private void renderElements(@NonNull GuiGraphics guiGraphics) {
 		for (Hud hud : hudList) {
 			hud.renderScreen(guiGraphics);
 		}
@@ -115,7 +113,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public boolean mouseDragged(@NotNull MouseButtonEvent click, double offsetX, double offsetY) {
+	public boolean mouseDragged(@NonNull MouseButtonEvent click, double offsetX, double offsetY) {
 		if (selected != null && click.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
 			selected.setX((int) Math.clamp(click.x() - (selected.width() >> 1), 0, this.width - selected.width()));
 			selected.setY((int) Math.clamp(click.y() - (selected.height() >> 1), 0, this.height - selected.height()));

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class WaypointAdapter extends TypeAdapter<Waypoint> {
 
@@ -26,7 +26,7 @@ public class WaypointAdapter extends TypeAdapter<Waypoint> {
 	}
 
 	@Override
-	public void write(@NotNull JsonWriter writer, @NotNull Waypoint waypoint) throws IOException {
+	public void write(@NonNull JsonWriter writer, @NonNull Waypoint waypoint) throws IOException {
 		writer.beginObject();
 		writer.name("uuid").value(waypoint.getUuid().toString());
 		writer.name("position");
@@ -37,12 +37,12 @@ public class WaypointAdapter extends TypeAdapter<Waypoint> {
 		writer.name("color");
 		colorAdapter.write(writer, waypoint.getColor());
 		Optional<Component> text = waypoint.getTextOption().getText();
-		writer.name("text").value(text.isPresent() ? GsonProvider.standard().toJson(text.get()) : "");
+		writer.name("text").value(text.map(component -> GsonProvider.standard().toJson(component)).orElse(""));
 		writer.endObject();
 	}
 
 	@Override
-	public Waypoint read(@NotNull JsonReader reader) throws IOException {
+	public Waypoint read(@NonNull JsonReader reader) throws IOException {
 		reader.beginObject();
 		UUID uuid = UUID.randomUUID();
 		Position position = Position.ORIGIN;

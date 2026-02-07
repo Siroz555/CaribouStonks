@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
-import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.service.json.adapters.ColorAdapter;
 import fr.siroz.cariboustonks.core.service.json.adapters.InstantAdapter;
@@ -18,8 +18,8 @@ import fr.siroz.cariboustonks.util.position.Position;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public final class CustomTypeAdapterFactory implements TypeAdapterFactory {
 
@@ -38,14 +38,14 @@ public final class CustomTypeAdapterFactory implements TypeAdapterFactory {
 		this.adapters.put(Position.class, positionAdapter);
 
 		// "Class Adapters"
-		this.adapters.put(TimedObject.class, new TimedObjectAdapter(instantAdapter));
+		this.adapters.put(TimedObjectModel.class, new TimedObjectAdapter(instantAdapter));
 		this.adapters.put(Waypoint.class, new WaypointAdapter(positionAdapter, colorAdapter));
 		this.adapters.put(MobTrackingRegistry.MobTrackingEntry.class, new MobTrackingEntryAdapter());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> @Nullable TypeAdapter<T> create(Gson gson, @NotNull TypeToken<T> type) {
+	public <T> @Nullable TypeAdapter<T> create(Gson gson, @NonNull TypeToken<T> type) {
 		TypeAdapter<?> adapter = adapters.get(type.getRawType());
 		return adapter != null ? (TypeAdapter<T>) adapter : null;
 	}

@@ -8,13 +8,13 @@ import fr.siroz.cariboustonks.rendering.world.state.QuadRenderState;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.jspecify.annotations.NonNull;
 
 public final class QuadRendererCommand implements RendererCommand<QuadRenderState> {
 
 	@Override
-	public void emit(@NotNull QuadRenderState state, @NotNull CameraRenderState camera) {
+	public void emit(@NonNull QuadRenderState state, @NonNull CameraRenderState camera) {
 		RenderPipeline pipeline = state.throughBlocks()
 				? CaribouRenderPipelines.QUADS_THROUGH_BLOCKS
 				: RenderPipelines.DEBUG_QUADS;

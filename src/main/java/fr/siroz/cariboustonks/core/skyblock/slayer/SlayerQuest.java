@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 class SlayerQuest {
 
@@ -23,13 +23,13 @@ class SlayerQuest {
 		this.slayerTier = SlayerTier.UNKNOWN;
 	}
 
-	public void onMinibossSpawn(@NotNull ArmorStand armorStand, @NotNull SlayerType type) {
+	public void onMinibossSpawn(@NonNull ArmorStand armorStand, @NonNull SlayerType type) {
 		if (!minibossesArmorStand.contains(armorStand)) {
 			minibossesArmorStand.add(armorStand);
 			// Cas particulier :
 			// Depuis l'ajout du Spider T5, les Miniboss ne sont plus la même EntityType que le boss lui-même
 			if (slayerTier == SlayerTier.V && !type.getMinibossEntityTypes().isEmpty()) {
-				for (EntityType<? extends @NotNull Entity> minibossEntityType : type.getMinibossEntityTypes()) {
+				for (EntityType<? extends Entity> minibossEntityType : type.getMinibossEntityTypes()) {
 					Entity closestEntity = slayerManager.findClosestEntity(minibossEntityType, armorStand);
 					// true sera toujours retourné avec le add même si la closestEntity est null
 					if (closestEntity != null) {

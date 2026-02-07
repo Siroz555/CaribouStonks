@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A calculator that evaluates a mathematical expression.
@@ -61,12 +61,12 @@ public final class Calculator {
 	 *                                           <li>Unknown or invalid magnitude suffix</li>
 	 *                                       </ul>
 	 */
-	public static double calculate(@NotNull String expression) throws UnsupportedOperationException {
+	public static double calculate(@NonNull String expression) throws UnsupportedOperationException {
 		expression = expression.toLowerCase(Locale.ENGLISH);
 		return evaluate(shunt(lex(expression)));
 	}
 
-	private static @NotNull List<Token> lex(String input) {
+	private static @NonNull List<Token> lex(String input) {
 		List<Token> tokens = new ArrayList<>();
 		input = input.replace(" ", "").toLowerCase(Locale.ENGLISH).replace("x", "*");
 		int i = 0;
@@ -123,7 +123,7 @@ public final class Calculator {
 		return tokens;
 	}
 
-	private static List<Token> shunt(@NotNull List<Token> tokens) {
+	private static List<Token> shunt(@NonNull List<Token> tokens) {
 		Deque<Token> operatorStack = new ArrayDeque<>();
 		List<Token> outputQueue = new ArrayList<>();
 
@@ -182,7 +182,7 @@ public final class Calculator {
 		return outputQueue.stream().toList();
 	}
 
-	private static int getPrecedence(@NotNull String operator) {
+	private static int getPrecedence(@NonNull String operator) {
 		switch (operator) {
 			case "+", "-" -> {
 				return 0;
@@ -197,7 +197,7 @@ public final class Calculator {
 		}
 	}
 
-	private static double evaluate(@NotNull List<Token> tokens) {
+	private static double evaluate(@NonNull List<Token> tokens) {
 		Deque<Double> values = new ArrayDeque<>();
 		for (Token token : tokens) {
 			switch (token.type) {
@@ -237,7 +237,7 @@ public final class Calculator {
 		return values.pop();
 	}
 
-	private static double calculateValue(@NotNull String value) {
+	private static double calculateValue(@NonNull String value) {
 		Matcher numberMatcher = NUMBER_PATTERN.matcher(value.toLowerCase(Locale.ENGLISH));
 		if (!numberMatcher.matches()) {
 			throw new UnsupportedOperationException("Not a Number");

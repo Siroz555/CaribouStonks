@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.system.ReminderSystem;
 import fr.siroz.cariboustonks.util.Client;
@@ -58,7 +58,7 @@ public final class ForgeReminderFeature extends Feature {
         );
     }
 
-    private void onReminderExpire(@NonNull TimedObject timedObject) {
+    private void onReminderExpire(@NonNull TimedObjectModel timedObject) {
         Component text = StonksUtils.jsonToText(timedObject.message()).orElse(Component.literal(timedObject.message()));
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Forge] ").withStyle(ChatFormatting.GOLD))
@@ -104,7 +104,7 @@ public final class ForgeReminderFeature extends Feature {
                 Duration duration = Duration.ofHours(hours).plusMinutes(minutes).plusSeconds(seconds);
                 Instant expirationTime = Instant.now().plus(duration);
 
-                TimedObject timedObject = new TimedObject(
+                TimedObjectModel timedObject = new TimedObjectModel(
                         "forge::" + entry.getIntKey(),
                         text,
                         expirationTime,

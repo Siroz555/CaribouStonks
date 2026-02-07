@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.screen.mobtracking;
 
+import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.feature.ui.tracking.MobTrackingRegistry;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.ArrayList;
@@ -15,10 +16,9 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
-@ApiStatus.Experimental // SIROZ-NOTE: C'est qu'une preview pour le moment
+@Experimental // SIROZ-NOTE: C'est qu'une preview pour le moment
 class MobTrackingListWidget extends ContainerObjectSelectionList<MobTrackingListWidget.MobTrackingListEntry> {
 
 	MobTrackingListWidget(Minecraft client, MobTrackingScreen screen, int width, int height, int y, int itemHeight) {
@@ -58,17 +58,17 @@ class MobTrackingListWidget extends ContainerObjectSelectionList<MobTrackingList
 		}
 
 		@Override
-		public @NotNull List<? extends NarratableEntry> narratables() {
+		public @NonNull List<? extends NarratableEntry> narratables() {
 			return List.of();
 		}
 
 		@Override
-		public @NotNull List<? extends GuiEventListener> children() {
+		public @NonNull List<? extends GuiEventListener> children() {
 			return List.of();
 		}
 
 		@Override
-		public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void renderContent(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			guiGraphics.drawCenteredString(minecraft.font, category.getName(), this.getContentXMiddle(), this.getY() + 5, Colors.WHITE.asInt());
 		}
 	}
@@ -87,36 +87,36 @@ class MobTrackingListWidget extends ContainerObjectSelectionList<MobTrackingList
 			this.children = List.of();
 		}
 
-		public MobTrackingListEntry(MobTrackingRegistry.@NotNull MobTrackingEntry entry) {
+		public MobTrackingListEntry(MobTrackingRegistry.@NonNull MobTrackingEntry entry) {
 			this.entry = entry;
 
 			this.enabledWidget = Checkbox.builder(Component.literal(""), minecraft.font)
-					.selected(entry.config().enabled)
+					.selected(entry.model().isEnabled())
 					.tooltip(Tooltip.create(Component.literal("Click to toggle this Mob Tracking")))
-					.onValueChange((checkbox, checked) -> entry.config().enabled = checked)
+					.onValueChange((checkbox, checked) -> entry.model().setEnabled(checked))
 					.build();
 
 			this.notifyOnSpawnWidget = Checkbox.builder(Component.literal(""), minecraft.font)
-					.selected(entry.config().notifyOnSpawn)
+					.selected(entry.model().isNotifyOnSpawn())
 					.tooltip(Tooltip.create(Component.literal("Click to enable notification when the mob is detected")))
-					.onValueChange((checkbox, checked) -> entry.config().notifyOnSpawn = checked)
+					.onValueChange((checkbox, checked) -> entry.model().setNotifyOnSpawn(checked))
 					.build();
 
 			this.children = List.of(this.enabledWidget, this.notifyOnSpawnWidget);
 		}
 
 		@Override
-		public @NotNull List<? extends NarratableEntry> narratables() {
+		public @NonNull List<? extends NarratableEntry> narratables() {
 			return children;
 		}
 
 		@Override
-		public @NotNull List<? extends GuiEventListener> children() {
+		public @NonNull List<? extends GuiEventListener> children() {
 			return children;
 		}
 
 		@Override
-		public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void renderContent(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			int x = this.getContentXMiddle() - 100;
 			int y = this.getY();
 

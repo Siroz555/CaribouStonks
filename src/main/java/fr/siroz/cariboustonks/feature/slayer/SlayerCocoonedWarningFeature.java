@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class SlayerCocoonedWarningFeature extends Feature {
 
@@ -23,7 +23,7 @@ public class SlayerCocoonedWarningFeature extends Feature {
 
 	private final SlayerManager slayerManager;
 
-	private static boolean cocoonedBoss = false;
+	private boolean cocoonedBoss = false;
 
 	public SlayerCocoonedWarningFeature() {
 		this.slayerManager = CaribouStonks.skyBlock().getSlayerManager();
@@ -47,7 +47,7 @@ public class SlayerCocoonedWarningFeature extends Feature {
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onMessage(@NotNull Component text) {
+	private void onMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 
 		String message = text.getString();

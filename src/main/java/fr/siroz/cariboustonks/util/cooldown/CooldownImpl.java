@@ -2,20 +2,20 @@ package fr.siroz.cariboustonks.util.cooldown;
 
 import java.util.OptionalLong;
 import java.util.concurrent.TimeUnit;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 final class CooldownImpl implements Cooldown {
 
     private long lastTested;
     private final long timeout;
 
-    CooldownImpl(long amount, @NotNull TimeUnit unit) {
+    CooldownImpl(long amount, @NonNull TimeUnit unit) {
         this.timeout = unit.toMillis(amount);
         this.lastTested = 0;
     }
 
     @Override
-    public @NotNull OptionalLong getLastTested() {
+    public @NonNull OptionalLong getLastTested() {
         return lastTested == 0 ? OptionalLong.empty() : OptionalLong.of(lastTested);
     }
 
@@ -34,7 +34,7 @@ final class CooldownImpl implements Cooldown {
     }
 
     @Override
-    public @NotNull CooldownImpl copy() {
+    public @NonNull CooldownImpl copy() {
         return new CooldownImpl(timeout, TimeUnit.MILLISECONDS);
     }
 }

@@ -13,12 +13,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class REISearchBarCalculatorFeature extends Feature {
 
 	private String lastSearchBarInput = "";
+	@Nullable
 	private String lastCalculatorResult = null;
 
 	public REISearchBarCalculatorFeature() {
@@ -48,7 +49,7 @@ public class REISearchBarCalculatorFeature extends Feature {
 		}
 	}
 
-	private @NotNull Component getCalculatorTextResult(String searchBarFieldText) {
+	private @NonNull Component getCalculatorTextResult(String searchBarFieldText) {
 		String result = calculate(searchBarFieldText);
 		return result == null ? Component.empty() : Component.literal(searchBarFieldText).withStyle(ChatFormatting.GREEN)
 				.append(Component.literal(" = ").withStyle(ChatFormatting.YELLOW))
@@ -70,7 +71,7 @@ public class REISearchBarCalculatorFeature extends Feature {
 		return lastCalculatorResult;
 	}
 
-	private void draw(@NotNull GuiGraphics context, @NotNull AbstractContainerScreen<?> handledScreen, Component displayText) {
+	private void draw(@NonNull GuiGraphics context, @NonNull AbstractContainerScreen<?> handledScreen, Component displayText) {
 		int x = RoughlyEnoughItemsIntegration.isSearchBarAtBottomSide() ? handledScreen.width / 2 + 90 : handledScreen.width / 2 - 80;
 		int y = handledScreen.height - 32;
 

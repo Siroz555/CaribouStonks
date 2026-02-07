@@ -26,19 +26,15 @@ public class GyrokineticOverlayFeature extends Feature {
 	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")
-	public void render(WorldRenderer renderer) {
+	private void render(WorldRenderer renderer) {
 		if (CLIENT.player == null || CLIENT.level == null || CLIENT.getCameraEntity() == null) return;
 		if (!isEnabled()) return;
 
 		String skyBlockId = SkyBlockAPI.getSkyBlockItemId(CLIENT.player.getMainHandItem());
-		if (!GYROKINETIC_ITEM_ID.equals(skyBlockId)) {
-			return;
-		}
+		if (!GYROKINETIC_ITEM_ID.equals(skyBlockId)) return;
 
 		HitResult hitResult = CLIENT.getCameraEntity().pick(REACH, 1.0F, false);
-		if (hitResult.getType() == HitResult.Type.MISS) {
-			return;
-		}
+		if (hitResult.getType() == HitResult.Type.MISS) return;
 
 		Vec3 position = hitResult.getLocation().subtract(0, 0.1D, 0);
 		renderer.submitCircle(position, RADIUS, 16, .015f, Colors.MAGENTA, Direction.Axis.Y, true);

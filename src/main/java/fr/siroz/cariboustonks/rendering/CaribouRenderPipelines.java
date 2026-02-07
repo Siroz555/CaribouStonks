@@ -7,14 +7,12 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.mod.integration.IrisIntegration;
 import net.minecraft.client.renderer.RenderPipelines;
-import org.jetbrains.annotations.ApiStatus;
 
 public final class CaribouRenderPipelines {
 
 	private CaribouRenderPipelines() {
 	}
 
-	@ApiStatus.Internal
 	public static void init() {
 		CaribouRenderer.excludePipelineFromBatching(CIRCLE);
 		CaribouRenderer.excludePipelineFromBatching(CIRCLE_THROUGH_BLOCKS);

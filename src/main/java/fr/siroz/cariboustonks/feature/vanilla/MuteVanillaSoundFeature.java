@@ -43,9 +43,7 @@ public class MuteVanillaSoundFeature extends Feature {
 		Identifier id = soundEvent.location();
 
 		BooleanSupplier exact = EXACT_SOUND_RULES.get(id);
-		if (exact != null && exact.getAsBoolean()) {
-			return false;
-		}
+		if (exact != null && exact.getAsBoolean()) return false;
 
 		String path = id.getPath();
 		for (PrefixRule pr : PREFIX_SOUND_RULES) {

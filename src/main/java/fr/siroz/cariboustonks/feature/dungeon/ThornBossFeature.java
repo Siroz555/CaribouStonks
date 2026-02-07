@@ -16,8 +16,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class ThornBossFeature extends Feature {
 
@@ -57,7 +57,7 @@ public class ThornBossFeature extends Feature {
 	}
 
 	@EventHandler(event = "WorldEvents.BLOCK_STATE_UPDATE")
-	private void onBlockUpdate(@NotNull BlockPos pos, @Nullable BlockState oldState, @NotNull BlockState newState) {
+	private void onBlockUpdate(@NonNull BlockPos pos, @Nullable BlockState oldState, @NonNull BlockState newState) {
 		if (isEnabled() && pos.equals(SEA_LANTERN_TARGET) && newState.getBlock().equals(Blocks.SEA_LANTERN)) {
 			spawnTicks = SPIRIT_BEAR_SPAWN_DELAY;
 		}

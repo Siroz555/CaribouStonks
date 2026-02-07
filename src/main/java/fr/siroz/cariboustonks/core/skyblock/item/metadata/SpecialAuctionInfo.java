@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.core.skyblock.item.metadata;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents the {@code Special Auction} applied to an item.
@@ -27,7 +27,7 @@ public record SpecialAuctionInfo(
 			OptionalInt.empty()
 	);
 
-	public static SpecialAuctionInfo ofNbt(@NotNull CompoundTag customData) {
+	public static SpecialAuctionInfo ofNbt(@NonNull CompoundTag customData) {
 		try {
 			OptionalLong winningBid = customData.getLong("winning_bid")
 					.map(OptionalLong::of)

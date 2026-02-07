@@ -1,12 +1,3 @@
-/*
- * This implementation is adapted from the original code in the project
- * SkyHanni (<a href="https://github.com/hannibal002/SkyHanni">GitHub</a>)
- * a Minecraft 1.8 Mod written in Kotlin, which was licensed under LGPL-2.1
- * <p>
- * Original authors: [SkyHanni Contributors]
- * Adaptations by: [Siroz555]
- */
-
 package fr.siroz.cariboustonks.util.math.bezier;
 
 import java.util.ArrayList;
@@ -14,9 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides functionality for fitting a 3D Bézier curve to a collection of points.
@@ -38,7 +28,7 @@ public class BezierFitter {
 		};
 	}
 
-	public void addPoint(@NotNull Vec3 point) {
+	public void addPoint(@NonNull Vec3 point) {
 		if (!Double.isFinite(point.x) || !Double.isFinite(point.y) || !Double.isFinite(point.z)) {
 			throw new IllegalArgumentException();
 		}
@@ -82,8 +72,7 @@ public class BezierFitter {
 		lastBezierCurve = null;
 	}
 
-	@Contract(value = "_ -> new", pure = true)
-	private double @NotNull [] toDoubleArray(@NotNull Vec3 vec) {
+	private double @NonNull [] toDoubleArray(@NonNull Vec3 vec) {
 		return new double[]{vec.x, vec.y, vec.z};
 	}
 }

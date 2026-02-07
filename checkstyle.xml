@@ -34,6 +34,11 @@
         <module name="IllegalImport"/>
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
+        <module name="IllegalImport">
+            <property name="illegalClasses" value="org.jetbrains.annotations.Nullable"/>
+            <property name="illegalClasses" value="org.jetbrains.annotations.NotNull"/>
+            <property name="illegalClasses" value="org.jetbrains.annotations.ApiStatus"/>
+        </module>
 
         <module name="WhitespaceAround">
             <property name="tokens" value="ASSIGN, BAND, BAND_ASSIGN, BOR, BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR,

@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.screen.mobtracking;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.feature.ui.tracking.MobTrackingFeature;
 import fr.siroz.cariboustonks.feature.ui.tracking.MobTrackingRegistry;
 import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
@@ -15,12 +16,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-@ApiStatus.Experimental
+@Experimental
 public class MobTrackingScreen extends CaribousStonksScreen {
 
 	@Nullable
@@ -35,10 +34,9 @@ public class MobTrackingScreen extends CaribousStonksScreen {
 		);
 		this.parent = parent;
 		this.mobTrackingFeature = CaribouStonks.features().getFeature(MobTrackingFeature.class);
-		this.trackedMobs = this.mobTrackingFeature.getRegistry().getTrackedMobs();
+		this.trackedMobs = this.mobTrackingFeature.getRegistry().getTrackedMobsSnapshot();
 	}
 
-	@Contract("_ -> new")
 	public static @NonNull MobTrackingScreen create(@Nullable Screen parent) {
 		return new MobTrackingScreen(parent);
 	}

@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents the {@code modifiers} applied to an item.
@@ -65,7 +65,7 @@ public record Modifiers(
 		return rarityUpgrades == 1;
 	}
 
-	public static Modifiers ofNbt(@NotNull CompoundTag customData) {
+	public static Modifiers ofNbt(@NonNull CompoundTag customData) {
 		try {
 			int rarityUpgradeData = customData.getIntOr("rarity_upgrades", 0);
 			int upgradeLevelData = customData.getIntOr("upgrade_level", 0);

@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.component;
 
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,13 +14,13 @@ import org.jspecify.annotations.NonNull;
  * or when a pre-notification is required.
  *
  * <h2>Reminder Data and Handling</h2>
- * Each reminder is associated with a {@link TimedObject} that contains contextual information,
+ * Each reminder is associated with a {@link TimedObjectModel} that contains contextual information,
  * including a message field. The {@code message} may be either:
  * <ul>
  *   <li>A simple plain text (e.g., "Ubik's Cube"), which can be directly used in notifications</li>
  *   <li>A JSON-serialized {@link net.minecraft.network.chat.Component}, allowing for dynamic and rich descriptions</li>
  * </ul>
- * The {@link #handleExpiration(TimedObject)} must properly handle both serialization formats
+ * The {@link #handleExpiration(TimedObjectModel)} must properly handle both serialization formats
  * depending on the reminder's requirements.
  * <p>
  * Example usage for registering a simple reminder:
@@ -91,7 +91,7 @@ public final class ReminderComponent implements Component {
 		return display;
 	}
 
-	public void handleExpiration(TimedObject timedObject) {
+	public void handleExpiration(TimedObjectModel timedObject) {
 		onExpireHandler.onExpire(timedObject);
 	}
 
@@ -100,7 +100,7 @@ public final class ReminderComponent implements Component {
 		return Optional.ofNullable(preNotifyDuration);
 	}
 
-	public void handlePreExpiration(TimedObject timedObject) {
+	public void handlePreExpiration(TimedObjectModel timedObject) {
 		if (onPreExpireHandler != null) {
 			onPreExpireHandler.onPreExpire(timedObject);
 		}
@@ -117,7 +117,7 @@ public final class ReminderComponent implements Component {
 	 */
 	@FunctionalInterface
 	public interface ReminderExpirationHandler {
-		void onExpire(TimedObject timedObject);
+		void onExpire(TimedObjectModel timedObject);
 	}
 
 	/**
@@ -125,7 +125,7 @@ public final class ReminderComponent implements Component {
 	 */
 	@FunctionalInterface
 	public interface ReminderPreExpirationHandler {
-		void onPreExpire(TimedObject timedObject);
+		void onPreExpire(TimedObjectModel timedObject);
 	}
 
 	public static class Builder {

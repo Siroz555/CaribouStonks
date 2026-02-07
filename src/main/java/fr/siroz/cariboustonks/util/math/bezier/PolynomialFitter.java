@@ -1,12 +1,3 @@
-/*
- * This implementation is adapted from the original code in the project
- * SkyHanni (<a href="https://github.com/hannibal002/SkyHanni">GitHub</a>)
- * a Minecraft 1.8 Mod written in Kotlin, which was licensed under LGPL-2.1
- * <p>
- * Original authors: [SkyHanni Contributors]
- * Adaptations by: [Siroz555]
- */
-
 package fr.siroz.cariboustonks.util.math.bezier;
 
 import java.util.ArrayList;

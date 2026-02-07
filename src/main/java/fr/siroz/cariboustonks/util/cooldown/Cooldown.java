@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.util.cooldown;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import java.util.OptionalLong;
 import java.util.concurrent.TimeUnit;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents a simple cooldown
@@ -17,8 +17,8 @@ public interface Cooldown {
 	 * @param unit   the unit of time
 	 * @return a new cooldown
 	 */
-	@NotNull
-	static Cooldown of(long amount, @NotNull TimeUnit unit) {
+	@NonNull
+	static Cooldown of(long amount, @NonNull TimeUnit unit) {
 		return new CooldownImpl(amount, unit);
 	}
 
@@ -68,7 +68,7 @@ public interface Cooldown {
 	 *
 	 * @return the last call time
 	 */
-	@NotNull
+	@NonNull
 	OptionalLong getLastTested();
 
 	/**
@@ -93,5 +93,5 @@ public interface Cooldown {
 	 *
 	 * @return a new cooldown instance
 	 */
-	@NotNull Cooldown copy();
+	@NonNull Cooldown copy();
 }

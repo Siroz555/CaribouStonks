@@ -8,8 +8,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.Objects;
 import net.fabricmc.loader.api.FabricLoader;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Provides compatibility with Iris.
@@ -19,7 +18,6 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author MicrocontrollersDev (<a href="https://github.com/MicrocontrollersDev">MicrocontrollersDev GitHub</a>)
  */
-@ApiStatus.Internal
 public final class IrisIntegration {
 
 	private static final boolean IRIS_ENABLED = FabricLoader.getInstance().isModLoaded("iris");

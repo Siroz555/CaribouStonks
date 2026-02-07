@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.util;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a unique key for item lookup, which can be based on either a Neu ID or a Hypixel SkyBlock ID.
@@ -30,7 +30,7 @@ public record ItemLookupKey(
 	 * @param neuId the unique identifier of the item in the NEU ID system.
 	 * @return a new {@link ItemLookupKey} instance that uses the provided NEU ID.
 	 */
-	public static @NotNull ItemLookupKey ofNeuId(@NotNull String neuId) {
+	public static @NonNull ItemLookupKey ofNeuId(@NonNull String neuId) {
 		return new ItemLookupKey(neuId, null);
 	}
 
@@ -40,7 +40,7 @@ public record ItemLookupKey(
 	 * @param hypixelSkyBlockId the unique identifier of the item in Hypixel SkyBlock.
 	 * @return a new {@link ItemLookupKey} instance that uses the provided Hypixel SkyBlock ID.
 	 */
-	public static @NotNull ItemLookupKey ofHypixelSkyBlockId(@NotNull String hypixelSkyBlockId) {
+	public static @NonNull ItemLookupKey ofHypixelSkyBlockId(@NonNull String hypixelSkyBlockId) {
 		return new ItemLookupKey(null, hypixelSkyBlockId);
 	}
 
@@ -52,7 +52,7 @@ public record ItemLookupKey(
 	 * @param hypixelSkyBlockId the unique identifier of the item in the Hypixel SkyBlock system, or null if not applicable
 	 * @return a new {@link ItemLookupKey} instance built with the specified identifiers
 	 */
-	public static @NotNull ItemLookupKey of(@Nullable String neuId, @Nullable String hypixelSkyBlockId) {
+	public static @NonNull ItemLookupKey of(@Nullable String neuId, @Nullable String hypixelSkyBlockId) {
 		return new ItemLookupKey(neuId, hypixelSkyBlockId);
 	}
 

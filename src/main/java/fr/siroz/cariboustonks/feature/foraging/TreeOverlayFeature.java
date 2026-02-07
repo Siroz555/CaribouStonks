@@ -16,8 +16,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class TreeOverlayFeature extends Feature {
 
@@ -78,7 +78,7 @@ public class TreeOverlayFeature extends Feature {
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
-	private void onArmorstandUpdate(@NotNull ArmorStand entity, boolean b) {
+	private void onArmorstandUpdate(@NonNull ArmorStand entity, boolean b) {
 		if (!isEnabled()) return;
 		if (currentTreeInfo == null) return;
 

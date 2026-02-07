@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyShortcutFeature extends Feature {
@@ -35,7 +35,7 @@ public class KeyShortcutFeature extends Feature {
 
 	public KeyShortcutFeature() {
 		ClientLifecycleEvents.CLIENT_STARTED.register(this::onClientStarted);
-		ClientLifecycleEvents.CLIENT_STOPPING.register(this::saveShortcuts);
+		ClientLifecycleEvents.CLIENT_STOPPING.register(this::onClientStopping);
 		ClientTickEvents.END_CLIENT_TICK.register(this::onTick);
 
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
@@ -50,17 +50,16 @@ public class KeyShortcutFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock() && !shortcuts.isEmpty();
 	}
 
-	public Map<String, KeyShortcut> getShortcutsCopy() {
+	public Map<String, KeyShortcut> getShortcutsSnapshot() {
 		return new HashMap<>(shortcuts);
 	}
 
-	public void updateShortcuts(@NotNull Map<String, KeyShortcut> newShortcuts) {
+	public void updateShortcuts(@NonNull Map<String, KeyShortcut> newShortcuts) {
 		shortcuts.clear();
 		shortcuts.putAll(newShortcuts);
 	}
 
-	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STOPPING") // + KeyShortcutScreen#saveShortcuts
-	public void saveShortcuts(Minecraft client) {
+	public void saveShortcuts() {
 		Map<String, Integer> shortcutsToSave = new HashMap<>();
 		// Jcp pk, j'ai mis un record pour gérer en interne les shortcuts,
 		// mais c'est beaucoup plus agréable à gérer dans le Screen -_-
@@ -80,36 +79,9 @@ public class KeyShortcutFeature extends Feature {
 		loadKeyShortcuts().thenAccept(this::loadExistingKeyShortcuts);
 	}
 
-	private CompletableFuture<Map<String, Integer>> loadKeyShortcuts() {
-		if (!Files.exists(SHORTCUTS_PATH)) {
-			return CompletableFuture.completedFuture(Map.of());
-		}
-
-		return CompletableFuture.supplyAsync(() -> {
-			Type mapType = new TypeToken<@NotNull Map<String, Integer>>() {}.getType();
-			try {
-				return JsonFileService.get().loadMap(SHORTCUTS_PATH, mapType);
-			} catch (JsonProcessingException ex) {
-				CaribouStonks.LOGGER.error("{} Unable to load shortcuts", getShortName(), ex);
-				return Collections.emptyMap();
-			}
-		});
-	}
-
-	private void loadExistingKeyShortcuts(@NotNull Map<String, Integer> shortcutsMap) {
-		int loaded = 0;
-		for (Map.Entry<String, Integer> entry : shortcutsMap.entrySet()) {
-			if (entry.getKey() == null || entry.getKey().isBlank()) {
-				continue;
-			}
-
-			shortcuts.put(entry.getKey(), new KeyShortcut(entry.getKey(), entry.getValue()));
-			loaded++;
-		}
-
-		if (DeveloperTools.isInDevelopment()) {
-			CaribouStonks.LOGGER.info("{} Loaded {} KeyShortcut", getShortName(), loaded);
-		}
+	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STOPPING")
+	public void onClientStopping(Minecraft client) {
+		saveShortcuts();
 	}
 
 	@EventHandler(event = "ClientTickEvents.END_CLIENT_TICK")
@@ -136,6 +108,38 @@ public class KeyShortcutFeature extends Feature {
 				lastKeyPressed = System.currentTimeMillis();
 				Client.sendCommandToServer(shortcut.command(), true);
 			}
+		}
+	}
+
+	private CompletableFuture<Map<String, Integer>> loadKeyShortcuts() {
+		if (!Files.exists(SHORTCUTS_PATH)) {
+			return CompletableFuture.completedFuture(Map.of());
+		}
+
+		return CompletableFuture.supplyAsync(() -> {
+			Type mapType = new TypeToken<Map<String, Integer>>() {}.getType();
+			try {
+				return JsonFileService.get().loadMap(SHORTCUTS_PATH, mapType);
+			} catch (JsonProcessingException ex) {
+				CaribouStonks.LOGGER.error("{} Unable to load shortcuts", getShortName(), ex);
+				return Collections.emptyMap();
+			}
+		});
+	}
+
+	private void loadExistingKeyShortcuts(@NonNull Map<String, Integer> shortcutsMap) {
+		int loaded = 0;
+		for (Map.Entry<String, Integer> entry : shortcutsMap.entrySet()) {
+			if (entry.getKey() == null || entry.getKey().isBlank()) {
+				continue;
+			}
+
+			shortcuts.put(entry.getKey(), new KeyShortcut(entry.getKey(), entry.getValue()));
+			loaded++;
+		}
+
+		if (DeveloperTools.isInDevelopment()) {
+			CaribouStonks.LOGGER.info("{} Loaded {} KeyShortcut", getShortName(), loaded);
 		}
 	}
 }

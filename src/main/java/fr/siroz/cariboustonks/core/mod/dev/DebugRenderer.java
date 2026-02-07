@@ -13,9 +13,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
-record DebugRenderer(@NotNull DeveloperManager dev) {
+record DebugRenderer(DeveloperManager dev) {
 
 	public void render(WorldRenderer renderer) {
 		if (!dev.getTexturedArmorStands().isEmpty()) {

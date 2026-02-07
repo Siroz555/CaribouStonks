@@ -25,7 +25,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.NotNull;
 
 public class AbiphoneFavoriteContactFeature extends Feature {
 
@@ -77,7 +76,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 	}
 
 	@EventHandler(event = "CustomScreenEvents.KEY_PRESSED")
-	private void onKeyPressed(Screen screen, KeyEvent input, @NotNull Slot slot) {
+	private void onKeyPressed(Screen screen, KeyEvent input, Slot slot) {
 		if (!isEnabled() || screen == null) return;
 		if (isMatcherBlocking(screen)) return;
 

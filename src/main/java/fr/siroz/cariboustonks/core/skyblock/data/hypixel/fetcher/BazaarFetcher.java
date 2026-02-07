@@ -22,9 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Fetches and caches {@code Hypixel SkyBlock Bazaar products}.
@@ -34,7 +32,6 @@ import org.jetbrains.annotations.NotNull;
  * Periodically triggers an asynchronous fetch of the Bazaar endpoint and stores an immutable snapshot
  * of the {@link BazaarProduct} objects.
  */
-@ApiStatus.Internal
 public final class BazaarFetcher {
 
 	private static final String BAZAAR_URL = "https://api.hypixel.net/v2/skyblock/bazaar";
@@ -51,7 +48,11 @@ public final class BazaarFetcher {
 
 	private volatile boolean firstBazaarUpdated;
 
-	public BazaarFetcher(HypixelDataSource hypixelDataSource, int intervalInMinutes, @NotNull BooleanSupplier shouldFetch) {
+	public BazaarFetcher(
+			HypixelDataSource hypixelDataSource,
+			int intervalInMinutes,
+			@NonNull BooleanSupplier shouldFetch
+	) {
 		this.hypixelDataSource = hypixelDataSource;
 		this.intervalInMinutes = intervalInMinutes;
 		this.shouldFetch = shouldFetch;
@@ -117,7 +118,7 @@ public final class BazaarFetcher {
 	 *
 	 * @return a CompletableFuture that completes when the fetch attempt finishes.
 	 */
-	private @NotNull CompletableFuture<Void> triggerFetch() {
+	private @NonNull CompletableFuture<Void> triggerFetch() {
 		fetchInProgress.set(true);
 		lastFetchSuccessful.set(false);
 
@@ -171,7 +172,7 @@ public final class BazaarFetcher {
 		}
 	}
 
-	private @NotNull Map<String, BazaarProduct> computeAndConsumeProducts(@NotNull Map<String, HypixelProduct> products) {
+	private @NonNull Map<String, BazaarProduct> computeAndConsumeProducts(@NonNull Map<String, HypixelProduct> products) {
 		Map<String, BazaarProduct> result = new HashMap<>(Math.max(16, products.size()));
 
 		Iterator<Map.Entry<String, HypixelProduct>> it = products.entrySet().iterator();
@@ -184,8 +185,7 @@ public final class BazaarFetcher {
 		return result;
 	}
 
-	@Contract("_ -> new")
-	private @NotNull BazaarProduct computeProduct(@NotNull HypixelProduct product) {
+	private @NonNull BazaarProduct computeProduct(@NonNull HypixelProduct product) {
 		Status qs = product.quickStatus();
 		List<Double> buyPrices = product.buySummary().stream().map(Summary::pricePerUnit).toList();
 		List<Double> sellPrices = product.sellSummary().stream().map(Summary::pricePerUnit).toList();

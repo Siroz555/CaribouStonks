@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Base Mod Screen.
@@ -51,7 +51,7 @@ public abstract class CaribousStonksScreen extends Screen {
 	}
 
 	@Override
-	public final void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTicks) {
+	public final void render(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTicks) {
 		try {
 			onRender(guiGraphics, mouseX, mouseY, deltaTicks);
 		} catch (Throwable throwable) {
@@ -64,7 +64,7 @@ public abstract class CaribousStonksScreen extends Screen {
 	}
 
 	@Override
-	public boolean mouseClicked(@NotNull MouseButtonEvent click, boolean doubled) {
+	public boolean mouseClicked(@NonNull MouseButtonEvent click, boolean doubled) {
 		try {
 			return onMouseClicked(click, doubled);
 		} catch (Throwable throwable) {
@@ -92,7 +92,7 @@ public abstract class CaribousStonksScreen extends Screen {
 	}
 
 	@Override
-	public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void renderBackground(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		renderBlurredBackground(guiGraphics);
 	}
 }

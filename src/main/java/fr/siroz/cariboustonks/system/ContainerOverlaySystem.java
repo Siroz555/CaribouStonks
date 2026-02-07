@@ -27,8 +27,7 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public final class ContainerOverlaySystem implements System {
 
@@ -38,13 +37,12 @@ public final class ContainerOverlaySystem implements System {
 	private ContainerOverlayComponent currentContainerOverlay = null;
 	private List<ColorHighlight> highlights;
 
-	@ApiStatus.Internal
 	public ContainerOverlaySystem() {
 		ScreenEvents.BEFORE_INIT.register(this::onScreenBeforeInit);
 	}
 
 	@Override
-	public void register(@NotNull Feature feature) {
+	public void register(@NonNull Feature feature) {
 		Optional<ContainerMatcherComponent> matcherOpt = feature.getComponent(ContainerMatcherComponent.class);
 		Optional<ContainerOverlayComponent> overlayOpt = feature.getComponent(ContainerOverlayComponent.class);
 
@@ -81,7 +79,7 @@ public final class ContainerOverlaySystem implements System {
 		highlights = null;
 	}
 
-	public void draw(GuiGraphics context, AbstractContainerScreen<@NotNull ChestMenu> containerScreen, List<Slot> slots) {
+	public void draw(GuiGraphics context, AbstractContainerScreen<ChestMenu> containerScreen, List<Slot> slots) {
 		if (currentContainerOverlay == null) {
 			return;
 		}
@@ -124,7 +122,7 @@ public final class ContainerOverlaySystem implements System {
 		context.pose().popMatrix();
 	}
 
-	private void onScreen(@NotNull ContainerScreen screen) {
+	private void onScreen(@NonNull ContainerScreen screen) {
 		for (Map.Entry<Feature, Pair<ContainerMatcherComponent, ContainerOverlayComponent>> overlay : registeredOverlays.entrySet()) {
 			if (overlay.getKey().isEnabled()) {
 				if (overlay.getValue().left().matches(screen, screen.getMenu().slots.size())) {
@@ -145,8 +143,8 @@ public final class ContainerOverlaySystem implements System {
 		}
 	}
 
-	@NotNull
-	private Int2ObjectMap<ItemStack> slotMap(@NotNull List<Slot> slots) {
+	@NonNull
+	private Int2ObjectMap<ItemStack> slotMap(@NonNull List<Slot> slots) {
 		Int2ObjectMap<ItemStack> slotMap = new Int2ObjectRBTreeMap<>();
 		for (int i = 0; i < slots.size(); i++) {
 			slotMap.put(i, slots.get(i).getItem());

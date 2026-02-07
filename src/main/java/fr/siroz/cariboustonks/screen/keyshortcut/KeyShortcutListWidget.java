@@ -17,16 +17,16 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutListWidget.@NotNull KeyShortcutEntry> {
+class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutListWidget.KeyShortcutEntry> {
 
 	private final KeyShortcutScreen parent;
 
 	KeyShortcutListWidget(
             Minecraft client,
-            @NotNull KeyShortcutScreen parent,
+            @NonNull KeyShortcutScreen parent,
             int width,
             int height,
             int y,
@@ -67,7 +67,7 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 		}
 	}
 
-	protected class KeyShortcutEntry extends ContainerObjectSelectionList.Entry<@NotNull KeyShortcutEntry> {
+	protected class KeyShortcutEntry extends ContainerObjectSelectionList.Entry<KeyShortcutEntry> {
 
 		protected KeyShortcut keyShortcut;
 
@@ -77,7 +77,7 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 
 		private boolean waitingForKey = false;
 
-		public KeyShortcutEntry(@NotNull KeyShortcut keyShortcut) {
+		public KeyShortcutEntry(@NonNull KeyShortcut keyShortcut) {
 			this.keyShortcut = keyShortcut;
 
 			this.commandWidget = new EditBox(minecraft.font, width / 2 - 160, 5, 150, 20, Component.literal("Command"));
@@ -100,17 +100,17 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 		}
 
 		@Override
-		public @NotNull List<? extends NarratableEntry> narratables() {
+		public @NonNull List<? extends NarratableEntry> narratables() {
 			return children;
 		}
 
 		@Override
-		public @NotNull List<? extends GuiEventListener> children() {
+		public @NonNull List<? extends GuiEventListener> children() {
 			return children;
 		}
 
 		@Override
-		public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void renderContent(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			// Vu que le Widget n'est pas un AlwaysSelectedEntryListWidget, le rendu ne se fait pas.
 			// Et si c'était le cas, la facon de gérer les ElementListWidget-Entry change.
 			// La facon de gérer les screen me rend fou -_-
@@ -156,7 +156,7 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 		}
 
 		@Override
-		public boolean mouseClicked(@NotNull MouseButtonEvent button, boolean doubled) {
+		public boolean mouseClicked(@NonNull MouseButtonEvent button, boolean doubled) {
 			if (keyBindWidget.mouseClicked(button, doubled)) {
 				return true;
 			}

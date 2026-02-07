@@ -5,9 +5,13 @@ import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
-public record ImmutablePosition(int x, int y, int z) implements Position {
+public record ImmutablePosition(
+		int x,
+		int y,
+		int z
+) implements Position {
 
 	// le Y est comparé en dernier
 	private static final Comparator<Position> POSITION_COMPARATOR = Comparator.comparing(
@@ -16,7 +20,7 @@ public record ImmutablePosition(int x, int y, int z) implements Position {
 			.thenComparing(Position::y, Integer::compareTo);
 
 	@Override
-	public double distanceTo(@NotNull Position other) {
+	public double distanceTo(@NonNull Position other) {
 		double dx = other.x() - x;
 		double dy = other.y() - y;
 		double dz = other.z() - z;
@@ -24,7 +28,7 @@ public record ImmutablePosition(int x, int y, int z) implements Position {
 	}
 
 	@Override
-	public double squaredDistanceTo(@NotNull Position other) {
+	public double squaredDistanceTo(@NonNull Position other) {
 		double dx = other.x() - x;
 		double dy = other.y() - y;
 		double dz = other.z() - z;
@@ -32,27 +36,27 @@ public record ImmutablePosition(int x, int y, int z) implements Position {
 	}
 
 	@Override
-	public boolean isInRange(@NotNull Position other, double radius) {
+	public boolean isInRange(@NonNull Position other, double radius) {
 		return squaredDistanceTo(other) < radius * radius;
 	}
 
 	@Override
-	public @NotNull Position offset(int dx, int dy, int dz) {
+	public @NonNull Position offset(int dx, int dy, int dz) {
 		return new ImmutablePosition(x + dx, y + dy, z + dz);
 	}
 
 	@Override
-	public @NotNull BlockPos toBlockPos() {
+	public @NonNull BlockPos toBlockPos() {
 		return new BlockPos(x, y, z);
 	}
 
 	@Override
-	public @NotNull Vec3 toVec3d() {
+	public @NonNull Vec3 toVec3d() {
 		return new Vec3(x, y, z);
 	}
 
 	@Override
-	public @NotNull AABB toBox() {
+	public @NonNull AABB toBox() {
 		return new AABB(new BlockPos(x, y, z));
 	}
 
@@ -72,7 +76,7 @@ public record ImmutablePosition(int x, int y, int z) implements Position {
 	}
 
 	@Override
-	public int compareTo(@NotNull Position that) {
+	public int compareTo(@NonNull Position that) {
 		return POSITION_COMPARATOR.compare(this, that);
 	}
 }

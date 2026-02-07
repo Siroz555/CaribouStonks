@@ -8,11 +8,9 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-@ApiStatus.Internal
 public final class HypixelAPIFixer {
 
 	public static final Pattern MINION_PATTERN = Pattern.compile("^[A-Z_]+_GENERATOR_\\d+$");
@@ -23,7 +21,7 @@ public final class HypixelAPIFixer {
 	HypixelAPIFixer() {
 	}
 
-	public boolean isBlacklisted(@NotNull String inputId) {
+	public boolean isBlacklisted(@NonNull String inputId) {
 		boolean blacklisted = false;
 
 		Matcher minionMatcher = MINION_PATTERN.matcher(inputId);
@@ -36,35 +34,35 @@ public final class HypixelAPIFixer {
 		return blacklisted;
 	}
 
-	public boolean isEnchantment(@NotNull String inputId) {
+	public boolean isEnchantment(@NonNull String inputId) {
 		Matcher matcher = ENCHANTMENT_PATTERN.matcher(inputId);
 		return matcher.matches();
 	}
 
-	public boolean isEssence(@NotNull String inputId) {
+	public boolean isEssence(@NonNull String inputId) {
 		Matcher matcher = ESSENCE_PATTERN.matcher(inputId);
 		return matcher.matches();
 	}
 
-	public boolean isShard(@NotNull String inputId) {
+	public boolean isShard(@NonNull String inputId) {
 		Matcher matcher = SHARD_PATTERN.matcher(inputId);
 		return matcher.matches();
 	}
 
-	public @NotNull SkyBlockItemData createEnchant(@NotNull String skyBlockIdEnchantment) {
+	public @NonNull SkyBlockItemData createEnchant(@NonNull String skyBlockIdEnchantment) {
 		String material = "ENCHANTED_BOOK";
 		String name = getEnchantName(skyBlockIdEnchantment);
 		Rarity tier = skyBlockIdEnchantment.contains("ULTIMATE") ? Rarity.MYTHIC : Rarity.UNCOMMON;
 		return new SkyBlockItemData(skyBlockIdEnchantment, material, name, tier, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 	}
 
-	public @NotNull SkyBlockItemData createEssence(@NotNull String skyBlockIdEssence) {
+	public @NonNull SkyBlockItemData createEssence(@NonNull String skyBlockIdEssence) {
 		String material = "SKULL_ITEM";
 		String name = getEssenceName(skyBlockIdEssence);
 		return new SkyBlockItemData(skyBlockIdEssence, material, name, Rarity.MYTHIC, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 	}
 
-	public @Nullable SkyBlockItemData createShard(@NotNull String skyBlockIdShard) {
+	public @Nullable SkyBlockItemData createShard(@NonNull String skyBlockIdShard) {
 		SkyBlockAttribute attribute = CaribouStonks.mod().getModDataSource().getAttributeBySkyBlockId(skyBlockIdShard);
 		if (attribute != null) {
 			String material = "PRISMARINE_SHARD";
@@ -100,10 +98,8 @@ public final class HypixelAPIFixer {
 	 * @param inputId enchantment ID
 	 * @return le nom issu de l'ID
 	 */
-	public @NotNull String getEnchantName(@NotNull String inputId) {
-		if (inputId.isEmpty()) {
-			return "";
-		}
+	public @NonNull String getEnchantName(@NonNull String inputId) {
+		if (inputId.isEmpty()) return "";
 
 		String withoutPrefix = inputId.replaceFirst("^ENCHANTMENT_", "");
 		String[] words = withoutPrefix.split("_");
@@ -123,10 +119,8 @@ public final class HypixelAPIFixer {
 		return prettyName.toString();
 	}
 
-	public @NotNull String getEssenceName(@NotNull String input) {
-		if (!input.contains("_")) {
-			return input;
-		}
+	public @NonNull String getEssenceName(@NonNull String input) {
+		if (!input.contains("_")) return input;
 
 		String essenceName = input.split("_")[1];
 		String prettyName = essenceName.substring(0, 1).toUpperCase(Locale.ENGLISH) + essenceName.substring(1).toLowerCase(Locale.ENGLISH);

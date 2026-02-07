@@ -2,14 +2,16 @@ package fr.siroz.cariboustonks.core.module.hud.element;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
-public record HudIconLine(@NotNull ItemStack stack, @NotNull Component text, boolean spaceAfter) implements HudElement {
+public record HudIconLine(
+		@NonNull ItemStack stack,
+		@NonNull Component text,
+		boolean spaceAfter
+) implements HudElement {
 
-	@Contract(value = " -> new", pure = true)
 	@Override
-	public Component @NotNull [] getCells() {
+	public Component @NonNull [] getCells() {
 		return new Component[]{text};
 	}
 

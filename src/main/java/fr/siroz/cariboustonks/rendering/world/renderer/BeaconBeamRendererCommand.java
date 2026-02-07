@@ -7,13 +7,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.jspecify.annotations.NonNull;
 
 public final class BeaconBeamRendererCommand implements RendererCommand<BeaconBeamRenderState> {
 
 	@Override
-	public void emit(@NotNull BeaconBeamRenderState state, @NotNull CameraRenderState camera) {
+	public void emit(@NonNull BeaconBeamRenderState state, @NonNull CameraRenderState camera) {
 		double dx = state.pos().getX() - camera.pos.x();
 		double dy = state.pos().getY() - camera.pos.y();
 		double dz = state.pos().getZ() - camera.pos.z();

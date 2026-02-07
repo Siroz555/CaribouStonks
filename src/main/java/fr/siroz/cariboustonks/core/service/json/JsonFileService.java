@@ -13,8 +13,8 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The {@code JsonFileService} class provides utility methods to save and load objects to/from JSON files.
@@ -51,7 +51,7 @@ public final class JsonFileService {
 	 * @return the loaded object of the specified type, or {@code null} if the file does not exist
 	 * @throws JsonProcessingException if an error occurs while loading the object
 	 */
-	public <T> @Nullable T load(@NotNull Path path, @NotNull Class<T> clazz) throws JsonProcessingException {
+	public <T> @Nullable T load(@NonNull Path path, @NonNull Class<T> clazz) throws JsonProcessingException {
 		if (Files.notExists(path)) {
 			return null;
 		}
@@ -74,7 +74,7 @@ public final class JsonFileService {
 	 * @param object the object to save to the file
 	 * @throws JsonProcessingException if an error occurs while saving the object
 	 */
-	public void save(@NotNull Path path, @NotNull Object object) throws JsonProcessingException {
+	public void save(@NonNull Path path, @NonNull Object object) throws JsonProcessingException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path)) {
 			gson.toJson(object, writer);
 		} catch (IOException ex) {
@@ -95,7 +95,7 @@ public final class JsonFileService {
 	 * @return a loaded objects list of the specified type, or an empty list if the file does not exist
 	 * @throws JsonProcessingException if an error occurs while loading the list
 	 */
-	public <T> @NotNull List<T> loadList(@NotNull Path path, @NotNull Class<T> clazz) throws JsonProcessingException {
+	public <T> @NonNull List<T> loadList(@NonNull Path path, @NonNull Class<T> clazz) throws JsonProcessingException {
 		if (Files.notExists(path)) {
 			return Collections.emptyList();
 		}
@@ -120,7 +120,7 @@ public final class JsonFileService {
 	 * @return a loaded objects map of the specified key and value types, or an empty map if the file does not exist
 	 * @throws JsonProcessingException if an error occurs while loading the map
 	 */
-	public <K, V> @NotNull Map<K, V> loadMap(@NotNull Path path, @NotNull Type typeOfMap) throws JsonProcessingException {
+	public <K, V> @NonNull Map<K, V> loadMap(@NonNull Path path, @NonNull Type typeOfMap) throws JsonProcessingException {
 		if (Files.notExists(path)) {
 			return Collections.emptyMap();
 		}
@@ -146,7 +146,7 @@ public final class JsonFileService {
 	 * @return a loaded objects map of the specified key and value types, or an empty map if the file does not exist
 	 * @throws JsonProcessingException if an error occurs while loading the map
 	 */
-	public <K, V> @NotNull Map<K, V> loadMap(@NotNull Path path, @NotNull Class<K> keyClass, @NotNull Class<V> valueClass) throws JsonProcessingException {
+	public <K, V> @NonNull Map<K, V> loadMap(@NonNull Path path, @NonNull Class<K> keyClass, @NonNull Class<V> valueClass) throws JsonProcessingException {
 		if (Files.notExists(path)) {
 			return Collections.emptyMap();
 		}

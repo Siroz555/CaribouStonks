@@ -23,9 +23,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the configuration screen for customizing the appearance of held item models in the player's hands.
@@ -60,8 +59,7 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 		this.changed = false;
 	}
 
-	@Contract("_, _ -> new")
-	public static @NotNull HeldItemViewConfigScreen create(@Nullable Screen parent, @NotNull InteractionHand hand) {
+	public static @NonNull HeldItemViewConfigScreen create(@Nullable Screen parent, @NonNull InteractionHand hand) {
 		return new HeldItemViewConfigScreen(parent, hand);
 	}
 
@@ -160,7 +158,7 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void renderBackground(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTicks) {
+	public void renderBackground(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTicks) {
 		ScreenRectangle dimensions = getEffectiveDimensions(this.width, this.height);
 
 		guiGraphics.enableScissor(dimensions.left(), dimensions.top(), dimensions.right(), dimensions.bottom());
@@ -205,8 +203,7 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 		}
 	}
 
-	@Contract("_, _ -> new")
-	private @NotNull ScreenRectangle getEffectiveDimensions(int scaledWindowWidth, int scaledWindowHeight) {
+	private @NonNull ScreenRectangle getEffectiveDimensions(int scaledWindowWidth, int scaledWindowHeight) {
 		int x = isMainHand() ? 0 : scaledWindowWidth / 2;
 		int width = scaledWindowWidth / 2;
 

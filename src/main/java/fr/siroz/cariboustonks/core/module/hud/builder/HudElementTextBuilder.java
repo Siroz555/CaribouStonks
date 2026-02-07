@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.core.module.hud.element.HudTextLine;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A builder for assembling a sequence of {@link HudTextLine} to be rendered in the default HUD view.
@@ -20,7 +20,7 @@ public class HudElementTextBuilder {
 	 * @return this builder instance
 	 * @see #append(HudTextLine)
 	 */
-	public HudElementTextBuilder append(@NotNull Component text) {
+	public HudElementTextBuilder append(@NonNull Component text) {
 		return append(new HudTextLine(text, false));
 	}
 
@@ -31,7 +31,7 @@ public class HudElementTextBuilder {
 	 * @return this builder instance
 	 * @see #append(Component)
 	 */
-	public HudElementTextBuilder append(@NotNull HudTextLine element) {
+	public HudElementTextBuilder append(@NonNull HudTextLine element) {
 		elements.add(element);
 		return this;
 	}

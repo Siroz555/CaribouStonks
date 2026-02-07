@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Base class for all feature implementations.
@@ -57,7 +57,7 @@ public abstract class Feature {
 	 * @param component the component instance to attach
 	 * @throws IllegalStateException if a component of the same {@code type} is already attached
 	 */
-	protected <C extends Component> void addComponent(@NotNull Class<C> type, @NotNull C component) {
+	protected <C extends Component> void addComponent(@NonNull Class<C> type, @NonNull C component) {
 		Component current = components.putIfAbsent(type, component);
 		if (current != null) {
 			throw new IllegalStateException("Component of type %s already registered for feature %s"
@@ -78,7 +78,7 @@ public abstract class Feature {
 	 * @param type the component interface class token
 	 * @return an {@link Optional} containing the component, or empty if not present
 	 */
-	public <C extends Component> Optional<C> getComponent(@NotNull Class<C> type) {
+	public <C extends Component> Optional<C> getComponent(@NonNull Class<C> type) {
 		return Optional.ofNullable(type.cast(components.get(type)));
 	}
 
@@ -96,7 +96,7 @@ public abstract class Feature {
 	 *
 	 * @param features the feature manager instance
 	 */
-	protected void postInitialize(@NotNull FeatureManager features) {
+	protected void postInitialize(@NonNull FeatureManager features) {
 	}
 
 	/**

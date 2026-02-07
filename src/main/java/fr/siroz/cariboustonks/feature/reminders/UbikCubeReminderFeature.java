@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.ChatEvents;
@@ -21,7 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public final class UbikCubeReminderFeature extends Feature {
 
@@ -53,7 +53,7 @@ public final class UbikCubeReminderFeature extends Feature {
                 && this.config().general.reminders.ubikCube;
     }
 
-    private @NotNull ReminderDisplay getReminderDisplay() {
+    private @NonNull ReminderDisplay getReminderDisplay() {
         return ReminderDisplay.of(
                 Component.literal("Ubik's Cube").withStyle(ChatFormatting.RED, ChatFormatting.BOLD, ChatFormatting.UNDERLINE),
                 SPLIT_OR_STEAL_TEXT,
@@ -61,7 +61,7 @@ public final class UbikCubeReminderFeature extends Feature {
         );
     }
 
-    private void onReminderExpire(@NotNull TimedObject timedObject) {
+    private void onReminderExpire(@NonNull TimedObjectModel timedObject) {
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Ubik's Cube] ").withStyle(ChatFormatting.GOLD))
 				.append(Component.literal("Ready to play ").withStyle(ChatFormatting.GREEN))
@@ -79,7 +79,7 @@ public final class UbikCubeReminderFeature extends Feature {
 		}
     }
 
-    private void onChatMessage(@NotNull Component text) {
+    private void onChatMessage(@NonNull Component text) {
         if (!isEnabled()) {
 			return;
 		}
@@ -90,7 +90,7 @@ public final class UbikCubeReminderFeature extends Feature {
             Duration duration = Duration.ofHours(2);
             Instant expirationTime = Instant.now().plus(duration);
 
-            TimedObject timedObject = new TimedObject(
+            TimedObjectModel timedObject = new TimedObjectModel(
                     "rift::ubikCube",
                     "empty",
                     expirationTime,

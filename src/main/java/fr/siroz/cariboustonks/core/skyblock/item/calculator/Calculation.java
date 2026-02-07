@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.core.skyblock.item.calculator;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents a single calculation.
@@ -12,19 +11,17 @@ import org.jetbrains.annotations.NotNull;
  * @param count      the count
  */
 public record Calculation(
-		@NotNull Type type,
-		@NotNull String skyBlockId,
+		@NonNull Type type,
+		@NonNull String skyBlockId,
 		double price,
 		int count
 ) {
 
-	@Contract("_, _, _ -> new")
-	static @NotNull Calculation of(Type type, String skyBlockId, double price) {
+	static @NonNull Calculation of(Type type, String skyBlockId, double price) {
 		return new Calculation(type, skyBlockId, price, 1);
 	}
 
-	@Contract("_, _, _, _ -> new")
-	static @NotNull Calculation of(Type type, String skyBlockId, double price, int count) {
+	static @NonNull Calculation of(Type type, String skyBlockId, double price, int count) {
 		return new Calculation(type, skyBlockId, price, count);
 	}
 
@@ -80,7 +77,6 @@ public record Calculation(
 		DRILL_PART,
 		ROD_PART,
 		// Boosters
-		BOOSTERS,
-		;
+		BOOSTERS
 	}
 }

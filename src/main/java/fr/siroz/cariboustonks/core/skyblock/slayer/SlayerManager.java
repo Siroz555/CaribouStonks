@@ -22,8 +22,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Master Manager regarding Slayers.
@@ -85,7 +85,7 @@ public final class SlayerManager {
 	 * @param tier the slayer tier
 	 * @return {@code true} if a Slayer Quest is active and the slayer tier matches
 	 */
-	public boolean isSlayerTier(@NotNull SlayerTier tier) {
+	public boolean isSlayerTier(@NonNull SlayerTier tier) {
 		return quest != null && quest.getSlayerTier() == tier;
 	}
 
@@ -105,7 +105,7 @@ public final class SlayerManager {
 	 * @param slayerType the slayer type
 	 * @return {@code true} if the boss has not spawned, a Slayer Quest is active, and the slayer type matches
 	 */
-	public boolean isInQuestTypeWithoutBoss(@NotNull SlayerType slayerType) {
+	public boolean isInQuestTypeWithoutBoss(@NonNull SlayerType slayerType) {
 		return !isBossSpawned() && quest != null && quest.getSlayerType().equals(slayerType);
 	}
 
@@ -114,7 +114,7 @@ public final class SlayerManager {
 	 *
 	 * @return the entity Minibosses list or an empty list
 	 */
-	@NotNull
+	@NonNull
 	public List<Entity> getMinibosses() {
 		return quest != null ? quest.getMinibosses() : List.of();
 	}
@@ -147,7 +147,7 @@ public final class SlayerManager {
 	 * @param tier the tier
 	 * @return the final xp reward
 	 */
-	public double getXpReward(@NotNull SlayerType type, @NotNull SlayerTier tier) {
+	public double getXpReward(@NonNull SlayerType type, @NonNull SlayerTier tier) {
 		double xp = type.getExpPerTier()[tier.ordinal() - 1]; // -1 car UNKNOWN est en premier
 		if (SkyBlockAPI.isMayorOrMinister(Mayor.AATROX, Perk.SLAYER_XP_BUFF)) {
 			xp *= 1.25f;
@@ -160,7 +160,7 @@ public final class SlayerManager {
 	 * The main entry point for managing the various statuses of the Slayer Quest's progress.
 	 */
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVED")
-	private void onMessage(@NotNull Component text) {
+	private void onMessage(@NonNull Component text) {
 		if (!SkyBlockAPI.isOnSkyBlock()) return;
 
 		String message = text.getString();
@@ -203,7 +203,7 @@ public final class SlayerManager {
 	 * if it is available upon arrival on the server.
 	 */
 	@EventHandler(event = "SkyBlockEvents.ISLAND_CHANGE")
-	private void onIslandChange(@NotNull IslandType islandType) {
+	private void onIslandChange(@NonNull IslandType islandType) {
 		bossFight = null;
 		quest = null;
 		TickScheduler.getInstance().runLater(
@@ -216,7 +216,7 @@ public final class SlayerManager {
 	 * Retrieves the different lines of the scoreboard every second
 	 */
 	@EventHandler(event = "HudEvents.SCOREBOARD_UPDATE")
-	private void onScoreboardUpdate(@NotNull List<String> lines) {
+	private void onScoreboardUpdate(@NonNull List<String> lines) {
 		updateSlayerBossInfo(true, lines);
 	}
 
@@ -228,7 +228,7 @@ public final class SlayerManager {
 	 * @param equipment  no equip packet
 	 */
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
-	private void onArmorStandUpdate(@NotNull ArmorStand armorStand, boolean equipment) {
+	private void onArmorStandUpdate(@NonNull ArmorStand armorStand, boolean equipment) {
 		if (!SkyBlockAPI.isOnSkyBlock() || equipment) return;
 		if (quest == null || !armorStand.hasCustomName() || (isBossSpawned() && bossFight.getBossEntity() != null)) return;
 
@@ -304,7 +304,7 @@ public final class SlayerManager {
 	}
 
 	@Nullable
-	<T extends Entity> T findClosestEntity(@Nullable EntityType<@NotNull T> entityType, @Nullable ArmorStand armorStand) {
+	<T extends Entity> T findClosestEntity(@Nullable EntityType<T> entityType, @Nullable ArmorStand armorStand) {
 		if (entityType == null) return null;
 		if (armorStand == null) return null;
 
@@ -325,7 +325,7 @@ public final class SlayerManager {
 		};
 	}
 
-	private List<Entity> getArmorStands(@NotNull Entity entity) {
+	private List<Entity> getArmorStands(@NonNull Entity entity) {
 		return entity.level().getEntities(
 				entity,
 				entity.getBoundingBox().inflate(0.1D, 1.5D, 0.1D),

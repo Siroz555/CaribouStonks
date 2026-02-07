@@ -20,9 +20,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class WaypointScreen extends CaribousStonksScreen {
 
@@ -40,11 +39,10 @@ public class WaypointScreen extends CaribousStonksScreen {
 		this.parent = parent;
 		this.currentIslandType = SkyBlockAPI.getIsland();
 		this.waypointFeature = CaribouStonks.features().getFeature(WaypointFeature.class);
-		this.waypoints = this.waypointFeature.getWaypoints();
+		this.waypoints = this.waypointFeature.getWaypointsSnapshot();
 	}
 
-	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull WaypointScreen create(@Nullable Screen parent) {
+	public static @NonNull WaypointScreen create(@Nullable Screen parent) {
 		return new WaypointScreen(parent);
 	}
 
@@ -106,7 +104,7 @@ public class WaypointScreen extends CaribousStonksScreen {
 
 	private void saveWaypoints() {
 		waypointFeature.updateWaypoints(waypoints);
-		waypointFeature.saveWaypoints(minecraft);
+		waypointFeature.saveWaypoints();
 	}
 
 	private void onIslandChanged(IslandType islandType) {

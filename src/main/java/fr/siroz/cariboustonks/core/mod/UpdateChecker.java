@@ -29,11 +29,9 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.sounds.SoundEvents;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-@ApiStatus.Internal
 final class UpdateChecker {
 
 	private static final String MODRINTH_VERSION_URL = "https://modrinth.com/mod/cariboustonks/version/";
@@ -122,7 +120,7 @@ final class UpdateChecker {
 		}, 3, TimeUnit.SECONDS);
 	}
 
-	private @NotNull SemanticVersion getVersionFromString(@NotNull String versionNumber) throws VersionParsingException {
+	private @NonNull SemanticVersion getVersionFromString(@NonNull String versionNumber) throws VersionParsingException {
 		if (versionNumber.charAt(0) == 'v') {
 			versionNumber = versionNumber.substring(1);
 		}

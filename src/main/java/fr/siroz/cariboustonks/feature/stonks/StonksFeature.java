@@ -16,7 +16,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.lwjgl.glfw.GLFW;
 
 public class StonksFeature extends Feature {
@@ -32,13 +32,7 @@ public class StonksFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock();
 	}
 
-	private void onKeyPressed(Screen screen, Slot slot) {
-		if (isEnabled() && !slot.getItem().isEmpty()) {
-			stonksItem(slot.getItem());
-		}
-	}
-
-	public void stonksItem(@NotNull ItemStack stack) {
+	public void stonksItem(@NonNull ItemStack stack) {
 		Client.sendMessageWithPrefix(stack.getHoverName().copy().append(Component.literal(" ..")));
 
 		String neuId = NotEnoughUpdatesUtils.getNeuId(stack);
@@ -60,6 +54,12 @@ public class StonksFeature extends Feature {
 					stack.getHoverName().getString(), neuIdError, hypixelSkyBlockIdError);
 		} else {
 			Minecraft.getInstance().setScreen(StonksScreen.create(ItemLookupKey.of(neuId, hypixelSkyBlockId)));
+		}
+	}
+
+	private void onKeyPressed(Screen screen, Slot slot) {
+		if (isEnabled() && !slot.getItem().isEmpty()) {
+			stonksItem(slot.getItem());
 		}
 	}
 }

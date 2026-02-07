@@ -10,19 +10,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class BobberTimerFeature extends Feature {
 
 	private static final Pattern TIMER_PATTERN = Pattern.compile("\\d.\\d");
 	private static final double MIN_BOBBER_TIMER_DISTANCE = 0.1D;
 
-	@Nullable
-	private RareSeaCreatureFeature rareSeaCreatureFeature;
+	private @Nullable RareSeaCreatureFeature rareSeaCreatureFeature;
 
-	@Nullable
-	private ArmorStand bobberTimerArmorStand;
+	private @Nullable ArmorStand bobberTimerArmorStand;
 
 	public BobberTimerFeature() {
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
@@ -34,7 +32,7 @@ public class BobberTimerFeature extends Feature {
 	}
 
 	@Override
-	protected void postInitialize(@NotNull FeatureManager features) {
+	protected void postInitialize(@NonNull FeatureManager features) {
 		rareSeaCreatureFeature = features.getFeature(RareSeaCreatureFeature.class);
 	}
 
@@ -44,7 +42,7 @@ public class BobberTimerFeature extends Feature {
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
-	private void onArmorStandUpdate(@NotNull ArmorStand armorStand, boolean equipment) {
+	private void onArmorStandUpdate(@NonNull ArmorStand armorStand, boolean equipment) {
 		if (equipment || !armorStand.hasCustomName()) return;
 		if (CLIENT.player == null || CLIENT.player.fishing == null) return;
 		if (bobberTimerArmorStand != null) return;

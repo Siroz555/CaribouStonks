@@ -7,17 +7,17 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.Instant;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class InstantAdapter extends TypeAdapter<Instant> {
 
     @Override
-    public void write(@NotNull JsonWriter writer, @NotNull Instant instant) throws IOException {
+    public void write(@NonNull JsonWriter writer, @NonNull Instant instant) throws IOException {
         writer.value(instant.toString());
     }
 
     @Override
-    public Instant read(@NotNull JsonReader reader) throws IOException {
+    public Instant read(@NonNull JsonReader reader) throws IOException {
         try {
 			return Instant.parse(reader.nextString());
 		} catch (DateTimeException ex) {

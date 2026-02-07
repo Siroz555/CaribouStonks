@@ -43,13 +43,8 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.ScoreHolder;
 import net.minecraft.world.scores.Scoreboard;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
-import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 /**
@@ -145,7 +140,7 @@ public final class Client {
 	 *
 	 * @param toClipboard the string
 	 */
-	public static void setToClipboard(@NotNull String toClipboard) {
+	public static void setToClipboard(@NonNull String toClipboard) {
 		CLIENT.keyboardHandler.setClipboard(toClipboard);
 	}
 
@@ -154,8 +149,7 @@ public final class Client {
 	 *
 	 * @return the current scoreboard lines
 	 */
-	@Contract(value = " -> new", pure = true)
-	public static @NotNull List<String> getScoreboard() {
+	public static @NonNull List<String> getScoreboard() {
 		return new ArrayList<>(STRING_SCOREBOARD);
 	}
 
@@ -165,8 +159,7 @@ public final class Client {
 	 * @return the current tab list lines
 	 */
 	@SuppressWarnings("unused")
-	@Contract(value = " -> new", pure = true)
-	public static @NotNull List<String> getTabList() {
+	public static @NonNull List<String> getTabList() {
 		return new ArrayList<>(STRING_TAB);
 	}
 
@@ -240,9 +233,9 @@ public final class Client {
 	 */
 	@SuppressWarnings("unused") // SIROZ-NOTE: Impl
 	public static <T extends Entity> List<T> findClosestEntities(
-			@NotNull Class<T> entity,
+			@NonNull Class<T> entity,
 			double distanceInBlocks,
-			@NotNull Predicate<? super T> entityPredicate
+			@NonNull Predicate<? super T> entityPredicate
 	) {
 		if (CLIENT.player == null || CLIENT.level == null) {
 			return Collections.emptyList();
@@ -265,10 +258,10 @@ public final class Client {
 	 */
 	@SuppressWarnings("unused") // SIROZ-NOTE: Impl
 	public static <T extends Entity> @Nullable T findClosestEntity(
-			@NotNull Class<T> entity,
+			@NonNull Class<T> entity,
 			double distanceInBlocks,
-			@NotNull Predicate<? super T> entityPredicate,
-			@NotNull Predicate<? super T> filterPredicate
+			@NonNull Predicate<? super T> entityPredicate,
+			@NonNull Predicate<? super T> filterPredicate
 	) {
 		if (CLIENT.player == null || CLIENT.level == null) {
 			return null;
@@ -287,8 +280,7 @@ public final class Client {
 	 * @param screenSupplier the screen supplier
 	 * @return {@link Command Command with FabricClientCommandSource}
 	 */
-	@Contract(pure = true)
-	public static @NotNull Command<FabricClientCommandSource> openScreen(@NotNull Supplier<Screen> screenSupplier) {
+	public static @NonNull Command<FabricClientCommandSource> openScreen(@NonNull Supplier<Screen> screenSupplier) {
 		return context -> {
 			CLIENT.schedule(() -> CLIENT.setScreen(screenSupplier.get()));
 			return Command.SINGLE_SUCCESS;
@@ -303,7 +295,7 @@ public final class Client {
 	 * @param message the message
 	 * @see #sendMessageWithPrefix(Component)
 	 */
-	public static void sendMessage(@NotNull Component message) {
+	public static void sendMessage(@NonNull Component message) {
 		sendMessageInternal(message);
 	}
 
@@ -315,7 +307,7 @@ public final class Client {
 	 * @param message the message
 	 * @see #sendMessage(Component)
 	 */
-	public static void sendMessageWithPrefix(@NotNull Component message) {
+	public static void sendMessageWithPrefix(@NonNull Component message) {
 		sendMessageInternal(CaribouStonks.prefix().get().append(message));
 	}
 
@@ -328,7 +320,7 @@ public final class Client {
 	 * @param errorMessage the error message
 	 * @param notification if the message should be displayed in a Toast Notification
 	 */
-	public static void sendErrorMessage(@NotNull String errorMessage, boolean notification) {
+	public static void sendErrorMessage(@NonNull String errorMessage, boolean notification) {
 		CaribouStonks.LOGGER.warn("Chat error message sent: {}", errorMessage);
 		sendMessageInternal(CaribouStonks.prefix().get()
 				.append(Component.literal(errorMessage).withStyle(ChatFormatting.RED)));
@@ -338,8 +330,7 @@ public final class Client {
 		}
 	}
 
-	@ApiStatus.Internal
-	private static void sendMessageInternal(@NotNull Component message) {
+	private static void sendMessageInternal(@NonNull Component message) {
 		if (CLIENT.player != null) CLIENT.player.displayClientMessage(message, false);
 	}
 
@@ -356,10 +347,10 @@ public final class Client {
 	 * @see #showTitleAndSubtitle(Component, Component, int, int, int) showTitleAndSubtitle
 	 */
 	public static void showTitle(
-			@NotNull Component title,
-			@Range(from = 0, to = 250) int fadeInTicks,
-			@Range(from = 0, to = 1000) int stayTicks,
-			@Range(from = 0, to = 250) int fadeOutTicks
+			@NonNull Component title,
+			int fadeInTicks,
+			int stayTicks,
+			int fadeOutTicks
 	) {
 		showTitleAndSubtitle(title, Component.empty(), fadeInTicks, stayTicks, fadeOutTicks);
 	}
@@ -377,10 +368,10 @@ public final class Client {
 	 * @see #showTitleAndSubtitle(Component, Component, int, int, int) showTitleAndSubtitle
 	 */
 	public static void showSubtitle(
-			@NotNull Component subtitle,
-			@Range(from = 0, to = 250) int fadeInTicks,
-			@Range(from = 0, to = 1000) int stayTicks,
-			@Range(from = 0, to = 250) int fadeOutTicks
+			@NonNull Component subtitle,
+			int fadeInTicks,
+			int stayTicks,
+			int fadeOutTicks
 	) {
 		showTitleAndSubtitle(Component.empty(), subtitle, fadeInTicks, stayTicks, fadeOutTicks);
 	}
@@ -399,11 +390,11 @@ public final class Client {
 	 * @see #showSubtitle(Component, int, int, int) showSubtitle
 	 */
 	public static void showTitleAndSubtitle(
-			@NotNull Component title,
-			@NotNull Component subtitle,
-			@Range(from = 0, to = 250) int fadeInTicks,
-			@Range(from = 0, to = 1000) int stayTicks,
-			@Range(from = 0, to = 250) int fadeOutTicks
+			@NonNull Component title,
+			@NonNull Component subtitle,
+			int fadeInTicks,
+			int stayTicks,
+			int fadeOutTicks
 	) {
 		if (CLIENT.player != null) {
 			CLIENT.gui.setTimes(fadeInTicks, stayTicks, fadeOutTicks);
@@ -420,7 +411,7 @@ public final class Client {
 	 * @param message the message
 	 * @see #sendCommandToServer(String, boolean)
 	 */
-	public static void sendChatToServer(@NotNull String message, boolean hideToClient) {
+	public static void sendChatToServer(@NonNull String message, boolean hideToClient) {
 		sendToServerInternal(message, hideToClient, false);
 	}
 
@@ -434,12 +425,11 @@ public final class Client {
 	 * @param command the command
 	 * @see #sendChatToServer(String, boolean)
 	 */
-	public static void sendCommandToServer(@NotNull String command, boolean hideToClient) {
+	public static void sendCommandToServer(@NonNull String command, boolean hideToClient) {
 		sendToServerInternal(command, hideToClient, true);
 	}
 
-	@ApiStatus.Internal
-	private static void sendToServerInternal(@NotNull String content, boolean hideToClient, boolean command) {
+	private static void sendToServerInternal(@NonNull String content, boolean hideToClient, boolean command) {
 		if (CLIENT.player != null) {
 			content = StringUtil.trimChatMessage(StringUtils.normalizeSpace(content.trim()));
 
@@ -462,7 +452,7 @@ public final class Client {
 	 * @param text the text
 	 * @param icon the icon
 	 */
-	public static void showNotification(@NotNull MutableComponent text, @NotNull ItemStack icon) {
+	public static void showNotification(@NonNull MutableComponent text, @NonNull ItemStack icon) {
 		CLIENT.getToastManager().addToast(new StonksToast(text, icon));
 	}
 
@@ -471,7 +461,7 @@ public final class Client {
 	 *
 	 * @param description the text description
 	 */
-	public static void showNotificationSystem(@NotNull String description) {
+	public static void showNotificationSystem(@NonNull String description) {
 		showNotificationSystem("CaribouStonks", description);
 	}
 
@@ -481,7 +471,7 @@ public final class Client {
 	 * @param title       the text title
 	 * @param description the text description
 	 */
-	public static void showNotificationSystem(@NotNull String title, @NotNull String description) {
+	public static void showNotificationSystem(@NonNull String title, @NonNull String description) {
 		SystemToast systemToast = SystemToast.multiline(CLIENT, STONKS_SYSTEM, Component.literal(title), Component.literal(description));
 		CLIENT.getToastManager().addToast(systemToast);
 	}
@@ -494,7 +484,7 @@ public final class Client {
 	 * @param title   the title
 	 * @param message the message
 	 */
-	public static void showFatalErrorScreen(@NotNull Component title, @NotNull Component message) {
+	public static void showFatalErrorScreen(@NonNull Component title, @NonNull Component message) {
 		if (CLIENT.player != null) CLIENT.setScreen(new ErrorScreen(title, message));
 	}
 
@@ -505,7 +495,7 @@ public final class Client {
 	 *
 	 * @param bossBar the bossBar to show
 	 */
-	public static void showBossBar(@NotNull BossEvent bossBar) {
+	public static void showBossBar(@NonNull BossEvent bossBar) {
 		if (CLIENT.player != null) {
 			try {
 				CLIENT.gui.getBossOverlay().update(ClientboundBossEventPacket.createAddPacket(bossBar));
@@ -524,7 +514,7 @@ public final class Client {
 	 *
 	 * @param bossBar the bossBar to remove
 	 */
-	public static void removeBossBar(@NotNull BossEvent bossBar) {
+	public static void removeBossBar(@NonNull BossEvent bossBar) {
 		if (CLIENT.player != null) {
 			try {
 				CLIENT.gui.getBossOverlay().update(ClientboundBossEventPacket.createRemovePacket(bossBar.getId()));
@@ -558,7 +548,7 @@ public final class Client {
 	 * @param volume the volume
 	 * @param pitch  the pitch
 	 */
-	public static void playSound(@NotNull SoundEvent sound, float volume, float pitch) {
+	public static void playSound(@NonNull SoundEvent sound, float volume, float pitch) {
 		if (CLIENT.player != null) CLIENT.player.playSound(sound, volume, pitch);
 	}
 
@@ -575,16 +565,14 @@ public final class Client {
 	 * @param entity the living entity
 	 * @return list of {@link ItemStack} representing the armor items equipped by the entity
 	 */
-	@NotNull
-	@Unmodifiable
-	public static List<ItemStack> getArmorFromEntity(@NotNull LivingEntity entity) {
+	@NonNull
+	public static List<ItemStack> getArmorFromEntity(@NonNull LivingEntity entity) {
 		return EquipmentSlotGroup.ARMOR.slots().stream()
 				.filter(slot -> slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
 				.map(entity::getItemBySlot)
 				.toList();
 	}
 
-	@ApiStatus.Internal
 	public static void handleUpdates() {
 		updateScoreboard();
 		updateTabList();

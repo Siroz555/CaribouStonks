@@ -2,16 +2,16 @@ package fr.siroz.cariboustonks.rendering.world.renderer;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.CuboidOutlineRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.jspecify.annotations.NonNull;
 
-@ApiStatus.Experimental
+@Experimental
 public final class CuboidOutlineRendererCommand implements RendererCommand<CuboidOutlineRenderState> {
 
 	// Pour le moment, c'est juste pour les Garden Plot.
@@ -19,7 +19,7 @@ public final class CuboidOutlineRendererCommand implements RendererCommand<Cuboi
 	// Il faudra le rendre plus libre, notamment au sujet du "depth".
 
 	@Override
-	public void emit(@NotNull CuboidOutlineRenderState state, @NotNull CameraRenderState camera) {
+	public void emit(@NonNull CuboidOutlineRenderState state, @NonNull CameraRenderState camera) {
 		BufferBuilder buffer = CaribouRenderer.getBuffer(CaribouRenderPipelines.LINE_STRIP);
 
 		Matrix4f matrix4f = new Matrix4f()

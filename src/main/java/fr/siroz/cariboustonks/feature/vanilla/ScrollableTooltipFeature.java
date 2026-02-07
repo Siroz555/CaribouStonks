@@ -18,9 +18,8 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.FormattedCharSink;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class ScrollableTooltipFeature extends Feature {
@@ -212,7 +211,7 @@ public class ScrollableTooltipFeature extends Feature {
 			}
 
 			@Override
-			public boolean accept(int index, @NotNull Style style, int codePoint) {
+			public boolean accept(int index, @NonNull Style style, int codePoint) {
 				if (index > finalIndex) finalIndex = index;
 				else return false;
 
@@ -220,13 +219,12 @@ public class ScrollableTooltipFeature extends Feature {
 				return true;
 			}
 
-			@Contract(pure = true)
-			public @NotNull String getString() {
+			public @NonNull String getString() {
 				return builder.toString();
 			}
 		}
 
-		public static @NotNull String read(@NotNull FormattedCharSequence text) {
+		public static @NonNull String read(@NonNull FormattedCharSequence text) {
 			Visitor visitor = new Visitor();
 			text.accept(visitor);
 			return visitor.getString();

@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class TarantulaBossFeature extends Feature {
 
@@ -63,7 +63,7 @@ public class TarantulaBossFeature extends Feature {
 	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER")
-	public void render(WorldRenderer renderer) {
+	private void render(WorldRenderer renderer) {
 		if (!isEnabled()) return;
 		if (bossEggs.isEmpty()) return;
 		if (!this.config().slayer.tarantulaBoss.showCursorLineToBossEggs) return;
@@ -74,7 +74,7 @@ public class TarantulaBossFeature extends Feature {
 	}
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
-	private void onArmorStandUpdate(@NotNull ArmorStand armorStand, boolean equipment) {
+	private void onArmorStandUpdate(@NonNull ArmorStand armorStand, boolean equipment) {
 		if (isEnabled() && !equipment) {
 			Matcher cocoonEggMatcher = COCOON_EGG_PATTERN.matcher(armorStand.getName().getString());
 			if (cocoonEggMatcher.matches()) {
@@ -87,7 +87,7 @@ public class TarantulaBossFeature extends Feature {
 	}
 
 	@EventHandler(event = "WorldEvents.ARMORSTAND_REMOVED")
-	private void onRemoveArmorStand(@NotNull ArmorStand armorStand) {
+	private void onRemoveArmorStand(@NonNull ArmorStand armorStand) {
 		if (isEnabled() && !bossEggs.isEmpty()) {
 			Iterator<ArmorStand> iterator = bossEggs.iterator();
 			while (iterator.hasNext()) {
@@ -100,15 +100,11 @@ public class TarantulaBossFeature extends Feature {
 		}
 	}
 
-	private boolean isTarantulaBossEgg(@NotNull ArmorStand as) {
-		if (as.isCustomNameVisible() || !as.hasItemInSlot(EquipmentSlot.HEAD)) {
-			return false;
-		}
+	private boolean isTarantulaBossEgg(@NonNull ArmorStand as) {
+		if (as.isCustomNameVisible() || !as.hasItemInSlot(EquipmentSlot.HEAD)) return false;
 
 		String headTexture = ItemUtils.getHeadTexture(as.getItemBySlot(EquipmentSlot.HEAD));
-		if (headTexture.isBlank()) {
-			return false;
-		}
+		if (headTexture.isBlank()) return false;
 
 		return headTexture.equals(HeadTextures.TARANTULA_COCOON);
 	}

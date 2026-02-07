@@ -15,9 +15,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.RenderPipelines;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
+import org.jspecify.annotations.NonNull;
 
 public final class GuiRenderer {
 
@@ -37,7 +37,7 @@ public final class GuiRenderer {
 	 * @param height      the height
 	 * @param color       the color
 	 */
-	public static void drawBorder(@NotNull GuiGraphics guiGraphics, int x, int y, int width, int height, int color) {
+	public static void drawBorder(@NonNull GuiGraphics guiGraphics, int x, int y, int width, int height, int color) {
 		guiGraphics.fill(x, y, x + width, y + 1, color);
 		guiGraphics.fill(x, y + height - 1, x + width, y + height, color);
 		guiGraphics.fill(x, y + 1, x + 1, y + height - 1, color);
@@ -58,7 +58,7 @@ public final class GuiRenderer {
 	 * @param startColor  the start color of the gradient
 	 * @param endColor    the end color of the gradient
 	 */
-	public static void submitGradientRect(@NotNull GuiGraphics guiGraphics, int depth, int left, int top, int right, int bottom, int startColor, int endColor) {
+	public static void submitGradientRect(@NonNull GuiGraphics guiGraphics, int depth, int left, int top, int right, int bottom, int startColor, int endColor) {
 		GradientRectGuiElementRenderState renderState = new GradientRectGuiElementRenderState(
 				CaribouRenderPipelines.GUI_QUADS, //RenderPipelines.GUI,
 				TextureSetup.noTexture(),
@@ -86,9 +86,9 @@ public final class GuiRenderer {
 	 * @param thickness   the thickness of the line in pixels
 	 */
 	public static void submitLinesFromPoints(
-			@NotNull GuiGraphics guiGraphics,
-			@NotNull Point @NotNull [] points,
-			@NotNull Color color,
+			@NonNull GuiGraphics guiGraphics,
+			@NonNull Point @NonNull [] points,
+			@NonNull Color color,
 			int thickness
 	) {
 		if (points.length < 2) return;

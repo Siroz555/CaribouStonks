@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.system;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.core.module.reminder.TimedObject;
+import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.service.json.JsonFileService;
 import fr.siroz.cariboustonks.core.service.json.JsonProcessingException;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
@@ -28,11 +28,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
- * Manages timed reminders by storing, processing, and serializing {@link TimedObject} instances.
+ * Manages timed reminders by storing, processing, and serializing {@link TimedObjectModel} instances.
  * This manager ensures that expired objects are handled correctly and provides functionality
  * to add, remove, retrieve, and persist reminders across player sessions.
  */
@@ -41,15 +40,14 @@ public final class ReminderSystem implements System {
 	private static final Path REMINDER_PATH = CaribouStonks.CONFIG_DIR.resolve("reminder.json");
 	private static final int MONITOR_INTERVAL_SECONDS = 10;
 
-	private final PriorityQueue<TimedObject> queue = new PriorityQueue<>(Comparator.comparing(TimedObject::expirationTime));
-	private final Map<String, TimedObject> activeReminders = new ConcurrentHashMap<>();
+	private final PriorityQueue<TimedObjectModel> queue = new PriorityQueue<>(Comparator.comparing(TimedObjectModel::expirationTime));
+	private final Map<String, TimedObjectModel> activeReminders = new ConcurrentHashMap<>();
 	private final Set<String> preNotifiedIds = ConcurrentHashMap.newKeySet();
 	private final Map<String, ReminderComponent> registeredComponents = new ConcurrentHashMap<>();
 
 	private final ScheduledExecutorService scheduler;
 	private volatile boolean loaded = false;
 
-	@ApiStatus.Internal
 	public ReminderSystem() {
 		this.scheduler = Executors.newScheduledThreadPool(1, r -> {
 			Thread thread = new Thread(r, "ReminderSystem-Monitor");
@@ -66,7 +64,7 @@ public final class ReminderSystem implements System {
 	 * @param feature the feature class
 	 */
 	@Override
-	public void register(@NotNull Feature feature) {
+	public void register(@NonNull Feature feature) {
 		feature.getComponent(ReminderComponent.class)
 				.ifPresent(component -> registerComponent(feature, component));
 	}
@@ -95,25 +93,25 @@ public final class ReminderSystem implements System {
 	}
 
 	/**
-	 * Adds a {@link TimedObject} to the queue.
+	 * Adds a {@link TimedObjectModel} to the queue.
 	 *
-	 * @param obj the {@link TimedObject} to add
-	 * @see #addTimedObject(TimedObject, boolean)
+	 * @param obj the {@link TimedObjectModel} to add
+	 * @see #addTimedObject(TimedObjectModel, boolean)
 	 */
-	public void addTimedObject(@NotNull TimedObject obj) {
+	public void addTimedObject(@NonNull TimedObjectModel obj) {
 		addTimedObject(obj, false);
 	}
 
 	/**
-	 * Adds a {@link TimedObject} to the queue.
+	 * Adds a {@link TimedObjectModel} to the queue.
 	 * If the object already exists, it will be added only if {@code replaceIfExists} is {@code true}.
 	 *
-	 * @param obj             the {@link TimedObject} to add
+	 * @param obj             the {@link TimedObjectModel} to add
 	 * @param replaceIfExists if {@code true}, replaces an existing object with the same ID
 	 *                        if {@code false}, the object is added only if it does not already exist
-	 * @see #addTimedObject(TimedObject)
+	 * @see #addTimedObject(TimedObjectModel)
 	 */
-	public void addTimedObject(@NotNull TimedObject obj, boolean replaceIfExists) {
+	public void addTimedObject(@NonNull TimedObjectModel obj, boolean replaceIfExists) {
 		if (!registeredComponents.containsKey(obj.type())) {
 			throw new IllegalArgumentException("No reminder registered for type: " + obj.type());
 		}
@@ -151,18 +149,18 @@ public final class ReminderSystem implements System {
 	}
 
 	/**
-	 * Retrieves a list of reminders paired with their associated {@link TimedObject} instances.
-	 * Each entry in the list represents a {@link ReminderComponent} object and a corresponding {@link TimedObject}
+	 * Retrieves a list of reminders paired with their associated {@link TimedObjectModel} instances.
+	 * Each entry in the list represents a {@link ReminderComponent} object and a corresponding {@link TimedObjectModel}
 	 * whose type matches the reminder.
 	 *
 	 * @return a {@link List} of {@link Pair} objects, where each {@link Pair} contains a {@link ReminderComponent}
-	 * and a {@link TimedObject} whose types are associated.
+	 * and a {@link TimedObjectModel} whose types are associated.
 	 */
-	public @NotNull List<Pair<ReminderComponent, TimedObject>> getReminders() {
-		List<Pair<ReminderComponent, TimedObject>> result = new ArrayList<>();
+	public @NonNull List<Pair<ReminderComponent, TimedObjectModel>> getReminders() {
+		List<Pair<ReminderComponent, TimedObjectModel>> result = new ArrayList<>();
 
 		synchronized (queue) {
-			for (TimedObject obj : queue) {
+			for (TimedObjectModel obj : queue) {
 				ReminderComponent component = registeredComponents.get(obj.type());
 				if (component != null) {
 					result.add(Pair.of(component, obj));
@@ -197,7 +195,7 @@ public final class ReminderSystem implements System {
 
 		loaded = false;
 
-		List<TimedObject> objectsToSave;
+		List<TimedObjectModel> objectsToSave;
 		synchronized (queue) {
 			objectsToSave = new ArrayList<>(queue);
 		}
@@ -215,14 +213,14 @@ public final class ReminderSystem implements System {
 		}
 	}
 
-	private @NotNull CompletableFuture<List<TimedObject>> loadTimedObjects() {
+	private @NonNull CompletableFuture<List<TimedObjectModel>> loadTimedObjects() {
 		if (!Files.exists(REMINDER_PATH)) {
 			return CompletableFuture.completedFuture(List.of());
 		}
 
 		return CompletableFuture.supplyAsync(() -> {
 			try {
-				List<TimedObject> loaded = JsonFileService.get().loadList(REMINDER_PATH, TimedObject.class);
+				List<TimedObjectModel> loaded = JsonFileService.get().loadList(REMINDER_PATH, TimedObjectModel.class);
 
 				if (DeveloperTools.isInDevelopment()) {
 					CaribouStonks.LOGGER.info("[ReminderSystem] Loaded {} reminders from disk", loaded.size());
@@ -236,7 +234,7 @@ public final class ReminderSystem implements System {
 		});
 	}
 
-	private void loadExistingObjects(@NotNull List<TimedObject> loadedObjects) {
+	private void loadExistingObjects(@NonNull List<TimedObjectModel> loadedObjects) {
 		if (loadedObjects.isEmpty()) {
 			return;
 		}
@@ -246,7 +244,7 @@ public final class ReminderSystem implements System {
 		int loaded = 0;
 		int orphaned = 0;
 
-		for (TimedObject obj : loadedObjects) {
+		for (TimedObjectModel obj : loadedObjects) {
 			if (!registeredComponents.containsKey(obj.type())) {
 				orphaned++;
 				if (DeveloperTools.isInDevelopment()) {
@@ -288,7 +286,7 @@ public final class ReminderSystem implements System {
 
 	private void processReminders() {
 		Instant now = Instant.now();
-		List<TimedObject> expiredObjects = new ArrayList<>();
+		List<TimedObjectModel> expiredObjects = new ArrayList<>();
 
 		synchronized (queue) {
 			// Handle pre-notifications
@@ -310,7 +308,7 @@ public final class ReminderSystem implements System {
 		});
 	}
 
-	private boolean shouldProcessPreNotification(@NotNull TimedObject obj, @NotNull Instant now) {
+	private boolean shouldProcessPreNotification(@NonNull TimedObjectModel obj, @NonNull Instant now) {
 		if (!preNotifiedIds.add(obj.id())) {
 			return false;
 		}
@@ -337,7 +335,7 @@ public final class ReminderSystem implements System {
 		return true;
 	}
 
-	private void processPreNotification(@NotNull TimedObject obj) {
+	private void processPreNotification(@NonNull TimedObjectModel obj) {
 		ReminderComponent component = registeredComponents.get(obj.type());
 		if (component != null) {
 			try {
@@ -352,7 +350,7 @@ public final class ReminderSystem implements System {
 		}
 	}
 
-	private void onExpire(@NotNull TimedObject obj) {
+	private void onExpire(@NonNull TimedObjectModel obj) {
 		ReminderComponent component = registeredComponents.get(obj.type());
 		if (component != null) {
 			try {

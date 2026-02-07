@@ -8,13 +8,13 @@ import fr.siroz.cariboustonks.rendering.world.state.TextureRenderState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
+import org.jspecify.annotations.NonNull;
 
 public final class TextureRendererCommand implements RendererCommand<TextureRenderState> {
 
 	@Override
-	public void emit(@NotNull TextureRenderState state, @NotNull CameraRenderState camera) {
+	public void emit(@NonNull TextureRenderState state, @NonNull CameraRenderState camera) {
 		RenderPipeline pipeline = state.throughBlocks()
 				? CaribouRenderPipelines.TEXTURE_THROUGH_BLOCKS
 				: CaribouRenderPipelines.TEXTURE;

@@ -2,7 +2,6 @@ package fr.siroz.cariboustonks.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Events related to mouse interactions.
@@ -15,7 +14,7 @@ public final class MouseEvents {
 	/**
 	 * Called when the mouse wheel is scrolling
 	 */
-	public static final Event<@NotNull AllowMouseScroll> ALLOW_MOUSE_SCROLL = EventFactory.createArrayBacked(AllowMouseScroll.class, listeners -> (horizontal, vertical) -> {
+	public static final Event<AllowMouseScroll> ALLOW_MOUSE_SCROLL = EventFactory.createArrayBacked(AllowMouseScroll.class, listeners -> (horizontal, vertical) -> {
 		for (AllowMouseScroll listener : listeners) {
 			if (!listener.allowMouseScroll(horizontal, vertical)) {
 				return false;

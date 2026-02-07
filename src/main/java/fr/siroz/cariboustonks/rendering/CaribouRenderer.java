@@ -34,14 +34,12 @@ import net.minecraft.client.renderer.MappableRingBuffer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.LevelRenderState;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.system.MemoryUtil;
 
 public final class CaribouRenderer {
@@ -59,14 +57,14 @@ public final class CaribouRenderer {
 	private static final Map<VertexFormat, MappableRingBuffer> VERTEX_BUFFERS = new Object2ObjectOpenHashMap<>();
 	private static final List<PreparedDraw> PREPARED_DRAWS = new ArrayList<>();
 	private static final List<Draw> DRAWS = new ArrayList<>();
-	private static @Nullable BatchedDraw lastUnbatchedDraw = null;
+	@Nullable
+	private static BatchedDraw lastUnbatchedDraw = null;
 
 	private static WorldRendererImpl worldRenderer;
 
 	private CaribouRenderer() {
 	}
 
-	@ApiStatus.Internal
 	public static void init() {
 		if (StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass() != CaribouStonks.class) {
 			throw new RuntimeException("Noo noo and noo");
@@ -119,11 +117,11 @@ public final class CaribouRenderer {
 		DRAWS.clear();
 	}
 
-	public static BufferBuilder getBuffer(@NotNull RenderPipeline pipeline) {
+	public static BufferBuilder getBuffer(@NonNull RenderPipeline pipeline) {
 		return getBufferInternal(pipeline, TextureSetup.noTexture());
 	}
 
-	public static BufferBuilder getBuffer(@NotNull RenderPipeline pipeline, @NotNull TextureSetup textureSetup) {
+	public static BufferBuilder getBuffer(@NonNull RenderPipeline pipeline, @NonNull TextureSetup textureSetup) {
 		return getBufferInternal(pipeline, textureSetup);
 	}
 
@@ -164,7 +162,7 @@ public final class CaribouRenderer {
 		}
 	}
 
-	private static @NotNull BufferBuilder setupUnbatched(RenderPipeline pipeline, TextureSetup textureSetup) {
+	private static @NonNull BufferBuilder setupUnbatched(RenderPipeline pipeline, TextureSetup textureSetup) {
 		if (lastUnbatchedDraw != null) {
 			prepareBatchedDraw(lastUnbatchedDraw);
 		}
@@ -179,7 +177,7 @@ public final class CaribouRenderer {
 	 * Calculates the hash of the given inputs which serves as the keys to our maps where we store stuff for the batched draws.
 	 * This is much faster than using an object-based key as we do not need to create any objects to find the instances we want.
 	 */
-	private static int hash(@NotNull RenderPipeline pipeline, TextureSetup textureSetup) {
+	private static int hash(@NonNull RenderPipeline pipeline, TextureSetup textureSetup) {
 		// This manually calculates the hash, avoiding Objects#hash to not incur the array allocation each time
 		int hash = 1;
 		hash = 31 * hash + pipeline.hashCode();
@@ -199,7 +197,7 @@ public final class CaribouRenderer {
 		}
 	}
 
-	private static void prepareBatchedDraw(@NotNull BatchedDraw draw) {
+	private static void prepareBatchedDraw(@NonNull BatchedDraw draw) {
 		PREPARED_DRAWS.add(new PreparedDraw(
 				draw.bufferBuilder().buildOrThrow(),
 				draw.pipeline(),
@@ -240,7 +238,7 @@ public final class CaribouRenderer {
 	/**
 	 * Maps the {@code target} buffer and copies the {@code source} data into it.
 	 */
-	private static void copyDataInto(@NotNull MappableRingBuffer target, ByteBuffer source, int position, int remainingBytes) {
+	private static void copyDataInto(@NonNull MappableRingBuffer target, ByteBuffer source, int position, int remainingBytes) {
 		CommandEncoder commandEncoder = RenderSystem.getDevice().createCommandEncoder();
 
 		try (GpuBuffer.MappedView mappedView = commandEncoder.mapBuffer(target.currentBuffer().slice(position, remainingBytes), false, true)) {
@@ -262,8 +260,7 @@ public final class CaribouRenderer {
 		}
 	}
 
-	@Contract("null, _, _ -> new")
-	private static @NotNull MappableRingBuffer initOrResizeBuffer(MappableRingBuffer buffer, String name, int neededSize) {
+	private static @NonNull MappableRingBuffer initOrResizeBuffer(MappableRingBuffer buffer, String name, int neededSize) {
 		if (buffer == null || buffer.size() < neededSize) {
 			if (buffer != null) {
 				buffer.close();
@@ -278,7 +275,7 @@ public final class CaribouRenderer {
 	/**
 	 * Collect the required buffer size for each vertex format in use.
 	 */
-	private static @NotNull Object2IntMap<VertexFormat> collectVertexBufferSizes() {
+	private static @NonNull Object2IntMap<VertexFormat> collectVertexBufferSizes() {
 		// If we ever need to create our own shared index buffers,
 		// then we can turn this into an Object2LongMap and pack
 		// both the vertex & index buffer sizes into a single long (since they're two ints)
@@ -294,7 +291,7 @@ public final class CaribouRenderer {
 		return vertexSizes;
 	}
 
-	private static void draw(@NotNull Draw draw) {
+	private static void draw(@NonNull Draw draw) {
 		GpuBuffer indices;
 		VertexFormat.IndexType indexType;
 
@@ -313,7 +310,7 @@ public final class CaribouRenderer {
 		draw(draw, indices, indexType);
 	}
 
-	private static void draw(@NotNull Draw draw, GpuBuffer indices, VertexFormat.IndexType indexType) {
+	private static void draw(@NonNull Draw draw, GpuBuffer indices, VertexFormat.IndexType indexType) {
 		applyViewOffsetZLayering();
 		GpuBufferSlice dynamicTransforms = setupDynamicTransforms();
 

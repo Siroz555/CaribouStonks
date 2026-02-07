@@ -29,8 +29,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.Minecraft;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public final class WaypointFeature extends Feature {
 
@@ -46,7 +45,7 @@ public final class WaypointFeature extends Feature {
 
     public WaypointFeature() {
         ClientLifecycleEvents.CLIENT_STARTED.register(this::onClientStarted);
-        ClientLifecycleEvents.CLIENT_STOPPING.register(this::saveWaypoints);
+        ClientLifecycleEvents.CLIENT_STOPPING.register(this::onClientStopping);
         RenderEvents.WORLD_RENDER.register(this::render);
 
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
@@ -61,30 +60,12 @@ public final class WaypointFeature extends Feature {
         return SkyBlockAPI.isOnSkyBlock() && !waypoints.isEmpty();
     }
 
-	@EventHandler(event = "RenderEvents.WORLD_RENDER")
-    public void render(WorldRenderer renderer) {
-        if (!isEnabled()) return;
-
-        List<Waypoint> currentWaypoints = new ArrayList<>(waypoints.get(SkyBlockAPI.getIsland()));
-        currentWaypoints.addAll(new ArrayList<>(waypoints.get(IslandType.ANY)));
-        if (currentWaypoints.isEmpty()) {
-			return;
-		}
-
-        for (Waypoint waypoint : currentWaypoints) {
-            waypoint.getRenderer().render(renderer);
-        }
-    }
-
-    @Contract(" -> new")
-    public @NotNull Map<IslandType, List<Waypoint>> getWaypoints() {
+    public @NonNull Map<IslandType, List<Waypoint>> getWaypointsSnapshot() {
         return new EnumMap<>(waypoints);
     }
 
     public void updateWaypoints(Map<IslandType, List<Waypoint>> newWaypoints) {
-        if (newWaypoints == null || newWaypoints.isEmpty()) {
-			return;
-		}
+        if (newWaypoints == null || newWaypoints.isEmpty()) return;
 
         Map<IslandType, List<Waypoint>> copy = new EnumMap<>(IslandType.class);
         for (IslandType islandType : IslandType.values()) {
@@ -95,9 +76,39 @@ public final class WaypointFeature extends Feature {
         waypoints = copy;
     }
 
+	public void saveWaypoints() {
+		try {
+			JsonFileService.get().save(WAYPOINT_PATH, waypoints);
+		} catch (JsonProcessingException ex) {
+			CaribouStonks.LOGGER.error("[WaypointFeature] Unable to save waypoints", ex);
+		}
+	}
+
+	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STARTED")
     private void onClientStarted(Minecraft client) {
         loadWaypoints().thenAccept(this::loadExistingWaypoints);
     }
+
+	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STOPPING")
+	private void onClientStopping(Minecraft client) {
+		saveWaypoints();
+	}
+
+	@EventHandler(event = "RenderEvents.WORLD_RENDER")
+	private void render(WorldRenderer renderer) {
+		if (!isEnabled()) return;
+
+		// SIROZ-NOTE: au lieu de créer des ArrayList a chaque frame, juste clear et addAll
+		List<Waypoint> currentWaypoints = new ArrayList<>(waypoints.get(SkyBlockAPI.getIsland()));
+		currentWaypoints.addAll(new ArrayList<>(waypoints.get(IslandType.ANY)));
+		if (currentWaypoints.isEmpty()) {
+			return;
+		}
+
+		for (Waypoint waypoint : currentWaypoints) {
+			waypoint.getRenderer().render(renderer);
+		}
+	}
 
     private CompletableFuture<Map<IslandType, List<Waypoint>>> loadWaypoints() {
         if (!Files.exists(WAYPOINT_PATH)) {
@@ -105,7 +116,7 @@ public final class WaypointFeature extends Feature {
 		}
 
         return CompletableFuture.supplyAsync(() -> {
-            Type mapType = new TypeToken<@NotNull Map<IslandType, List<Waypoint>>>() {}.getType();
+            Type mapType = new TypeToken<Map<IslandType, List<Waypoint>>>() {}.getType();
 			try {
 				return JsonFileService.get().loadMap(WAYPOINT_PATH, mapType);
 			} catch (JsonProcessingException ex) {
@@ -115,7 +126,7 @@ public final class WaypointFeature extends Feature {
 		});
     }
 
-    private void loadExistingWaypoints(@NotNull Map<IslandType, List<Waypoint>> waypointMap) {
+    private void loadExistingWaypoints(@NonNull Map<IslandType, List<Waypoint>> waypointMap) {
         int loaded = 0;
         for (Map.Entry<IslandType, List<Waypoint>> entry : waypointMap.entrySet()) {
             // S'assurer qu'il n'y a pas de vide dans le Json, même si useless. Mettre + de sécu cotée Json
@@ -132,12 +143,4 @@ public final class WaypointFeature extends Feature {
 
         waypoints.putAll(waypointMap);
     }
-
-    public void saveWaypoints(Minecraft client) {
-		try {
-			JsonFileService.get().save(WAYPOINT_PATH, waypoints);
-		} catch (JsonProcessingException ex) {
-			CaribouStonks.LOGGER.error("[WaypointFeature] Unable to save waypoints", ex);
-		}
-	}
 }

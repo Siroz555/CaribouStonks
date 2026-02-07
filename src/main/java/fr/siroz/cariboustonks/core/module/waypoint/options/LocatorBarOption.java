@@ -2,11 +2,11 @@ package fr.siroz.cariboustonks.core.module.waypoint.options;
 
 import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
+@SuppressWarnings("ALL")
 @Deprecated
-public final class LocatorBarOption {
+public final class LocatorBarOption { // SIROZ-NOTE: Il faudra l'implémenté un jour nan siroz ?
 
     private final boolean enabled;
     private final Color color;
@@ -19,7 +19,7 @@ public final class LocatorBarOption {
 
     public LocatorBarOption(
             boolean enabled,
-            @NotNull Color color,
+            @NonNull Color color,
             boolean showInBossBar,
             int maxDistanceToNextIcon
     ) {
@@ -29,8 +29,8 @@ public final class LocatorBarOption {
         this.maxDistanceToNextIcon = maxDistanceToNextIcon;
     }
 
-    @Contract(value = " -> new", pure = true)
-    public static @NotNull Builder builder() {
+	@NonNull
+    public static Builder builder() {
         return new Builder();
     }
 

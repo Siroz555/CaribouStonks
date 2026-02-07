@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 // SIROZ-NOTE : Remplacer l'autre PetInfo par celui ci et le cleanup pour le SkyBlockAPI#getPetInfo
 // + faire le calculator pour les Pets, mais j'ai pas tout compris ce que fait Altpapier SkyHelper-Networth.
@@ -27,7 +27,7 @@ public record PetInfo(
 			Optional.empty()
 	);
 
-	public static PetInfo ofNbt(@NotNull CompoundTag customData) {
+	public static PetInfo ofNbt(@NonNull CompoundTag customData) {
 		try {
 			String petInfoJson = customData.getStringOr("petInfo", "");
 			if (petInfoJson.isEmpty()) {

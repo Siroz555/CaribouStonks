@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public final class TimeUtils {
 
@@ -88,7 +88,7 @@ public final class TimeUtils {
 	 * @param amount the amount
 	 * @return the duration
 	 */
-	public static Duration duration(@NotNull TimeUnit unit, long amount) {
+	public static Duration duration(@NonNull TimeUnit unit, long amount) {
 		return switch (unit) {
 			case NANOSECONDS -> Duration.ofNanos(amount);
 			case MICROSECONDS -> Duration.ofNanos(TimeUnit.MICROSECONDS.toNanos(amount));
@@ -100,7 +100,7 @@ public final class TimeUtils {
 		};
 	}
 
-	public static Optional<Instant> parseToInstant(@NotNull String input) {
+	public static Optional<Instant> parseToInstant(@NonNull String input) {
 		Duration duration = Duration.ZERO;
 		Matcher matcher = TIME_PATTERN.matcher(input);
 
@@ -129,7 +129,7 @@ public final class TimeUtils {
 	 * @throws DateTimeException if an error occurs during printing
 	 * @see #formatInstant(Instant, DateTimeFormatter, Locale)
 	 */
-	public static @NotNull String formatInstant(@NotNull Instant instant, @NotNull DateTimeFormatter formatter) {
+	public static @NonNull String formatInstant(@NonNull Instant instant, @NonNull DateTimeFormatter formatter) {
 		return formatInstant(instant, formatter, LOCALE, ZONE_ID);
 	}
 
@@ -145,10 +145,10 @@ public final class TimeUtils {
 	 * @throws DateTimeException if an error occurs during printing
 	 * @see #formatInstant(Instant, DateTimeFormatter)
 	 */
-	public static @NotNull String formatInstant(
-			@NotNull Instant instant,
-			@NotNull DateTimeFormatter formatter,
-			@NotNull Locale locale
+	public static @NonNull String formatInstant(
+			@NonNull Instant instant,
+			@NonNull DateTimeFormatter formatter,
+			@NonNull Locale locale
 	) {
 		return formatInstant(instant, formatter, locale, ZONE_ID);
 	}
@@ -162,11 +162,11 @@ public final class TimeUtils {
 	 * @param zoneId    the zoneId
 	 * @return the formatted {@link ZonedDateTime}
 	 */
-	public static @NotNull String formatInstant(
-			@NotNull Instant instant,
-			@NotNull DateTimeFormatter formatter,
-			@NotNull Locale locale,
-			@NotNull ZoneId zoneId
+	public static @NonNull String formatInstant(
+			@NonNull Instant instant,
+			@NonNull DateTimeFormatter formatter,
+			@NonNull Locale locale,
+			@NonNull ZoneId zoneId
 	) {
 		ZonedDateTime dateTime = instant.atZone(zoneId);
 		return dateTime.format(formatter.localizedBy(locale));
@@ -190,7 +190,7 @@ public final class TimeUtils {
 	 * @return the formatted string
 	 * @see #getDurationFormatted(Instant, boolean)
 	 */
-	public static @NotNull String getDurationFormatted(@NotNull Instant after) {
+	public static @NonNull String getDurationFormatted(@NonNull Instant after) {
 		return getDurationFormatted(Instant.now(), after, false);
 	}
 
@@ -218,7 +218,7 @@ public final class TimeUtils {
 	 * @return the formatted string
 	 * @see #getDurationFormatted (Instant)
 	 */
-	public static @NotNull String getDurationFormatted(@NotNull Instant after, boolean all) {
+	public static @NonNull String getDurationFormatted(@NonNull Instant after, boolean all) {
 		return getDurationFormatted(Instant.now(), after, all);
 	}
 
@@ -241,7 +241,7 @@ public final class TimeUtils {
 	 * @return the formatted string
 	 * @see #getDurationFormatted(Instant, Instant, boolean)
 	 */
-	public static @NotNull String getDurationFormatted(@NotNull Instant now, @NotNull Instant after) {
+	public static @NonNull String getDurationFormatted(@NonNull Instant now, @NonNull Instant after) {
 		return getDurationFormatted(now, after, false);
 	}
 
@@ -272,7 +272,7 @@ public final class TimeUtils {
 	 * @return the formatted string
 	 * @see #getDurationFormatted (Instant, Instant)
 	 */
-	public static @NotNull String getDurationFormatted(@NotNull Instant now, @NotNull Instant after, boolean all) {
+	public static @NonNull String getDurationFormatted(@NonNull Instant now, @NonNull Instant after, boolean all) {
 		Duration duration = Duration.between(now, after);
 
 		String durationFormatted = String.format("%sd %sh %sm %ss",
@@ -298,7 +298,7 @@ public final class TimeUtils {
 		}
 	}
 
-	public static @NotNull String getSimpleTime(int seconds) {
+	public static @NonNull String getSimpleTime(int seconds) {
 		if (seconds >= 3600) return "> 1h";
 
 		int sec = seconds % 60;

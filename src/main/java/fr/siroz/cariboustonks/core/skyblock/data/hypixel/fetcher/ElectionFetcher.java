@@ -23,10 +23,8 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Fetches and caches {@code Hypixel SkyBlock Election resource}.
@@ -35,7 +33,6 @@ import org.jetbrains.annotations.Nullable;
  * <p>
  * Periodically triggers an asynchronous fetch of the election endpoint and stores the parsed {@link ElectionResult}.
  */
-@ApiStatus.Internal
 public final class ElectionFetcher {
 
 	private static final String ELECTION_URL = "https://api.hypixel.net/v2/resources/skyblock/election";
@@ -147,7 +144,7 @@ public final class ElectionFetcher {
 		}
 	}
 
-	private @NotNull Mayor parseMayor(@Nullable JsonObject mayorObject) {
+	private @NonNull Mayor parseMayor(@Nullable JsonObject mayorObject) {
 		if (mayorObject == null) return Mayor.UNKNOWN;
 		try {
 			String key = mayorObject.has("key") ? mayorObject.get("key").getAsString() : "";
@@ -157,7 +154,7 @@ public final class ElectionFetcher {
 		}
 	}
 
-	private @NotNull Set<Perk> parseMayorPerks(@Nullable JsonObject mayorObj) {
+	private @NonNull Set<Perk> parseMayorPerks(@Nullable JsonObject mayorObj) {
 		if (mayorObj == null) return Set.of();
 		try {
 			Set<Perk> perks = new HashSet<>();
@@ -177,7 +174,7 @@ public final class ElectionFetcher {
 		}
 	}
 
-	private @NotNull Optional<Perk> parseMinisterPerk(@Nullable JsonObject ministerObj) {
+	private @NonNull Optional<Perk> parseMinisterPerk(@Nullable JsonObject ministerObj) {
 		if (ministerObj == null) return Optional.empty();
 		try {
 			if (ministerObj.has("perk") && !ministerObj.get("perk").isJsonNull()) {
@@ -196,8 +193,7 @@ public final class ElectionFetcher {
 	/**
 	 * Call-back runnable executed after a fetch attempt completes
 	 */
-	@Contract(pure = true)
-	private @NotNull Runnable afterFetch() {
+	private @NonNull Runnable afterFetch() {
 		return () -> {
 			if (cachedElection == null) {
 				CaribouStonks.LOGGER.warn("[ElectionFetcher] No election result yet");

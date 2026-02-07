@@ -13,8 +13,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents the {@code Gemstones} of an SkyBlock item.
@@ -23,8 +23,8 @@ import org.jetbrains.annotations.Nullable;
  * @param gemstoneApplied the list of {@link GemstoneApplied}
  */
 public record Gemstones(
-		@NotNull List<String> unlockedSlots,
-		@NotNull List<GemstoneApplied> gemstoneApplied
+		@NonNull List<String> unlockedSlots,
+		@NonNull List<GemstoneApplied> gemstoneApplied
 ) {
 
 	// DEV-NOTE : La facon de récupérer les Gemstones est sujet a changement.
@@ -34,7 +34,7 @@ public record Gemstones(
 
 	public static final Gemstones EMPTY = new Gemstones(List.of(), List.of());
 
-	public static Gemstones ofNbt(@NotNull CompoundTag customData) {
+	public static Gemstones ofNbt(@NonNull CompoundTag customData) {
 		try {
 			CompoundTag gemData = customData.getCompoundOrEmpty("gems");
 			if (gemData.isEmpty()) {
@@ -65,7 +65,7 @@ public record Gemstones(
 		}
 	}
 
-	private static @NotNull Optional<GemstoneApplied> parseGemstone(String key, @NotNull JsonObject gemsObject) {
+	private static @NonNull Optional<GemstoneApplied> parseGemstone(String key, @NonNull JsonObject gemsObject) {
 		try {
 			JsonElement valueElement = gemsObject.get(key);
 
@@ -109,7 +109,7 @@ public record Gemstones(
 		}
 	}
 
-	private static int slotIndex(@NotNull String key) {
+	private static int slotIndex(@NonNull String key) {
 		// JADE_0 -> 0
 		int idx = key.lastIndexOf('_');
 		if (idx == -1 || idx == key.length() - 1) return Integer.MAX_VALUE;
@@ -127,14 +127,14 @@ public record Gemstones(
 	 * @param type    the {@link GemstoneType} of the gemstone
 	 * @param quality the {@link GemstoneQuality} of the gemstone
 	 */
-	public record GemstoneApplied(@NotNull GemstoneType type, @NotNull GemstoneQuality quality) {
+	public record GemstoneApplied(@NonNull GemstoneType type, @NonNull GemstoneQuality quality) {
 
 		/**
 		 * Returns the full {@code SkyBlockId} of this Gemstone Slot.
 		 *
 		 * @return the skyBlockId (API)
 		 */
-		public @NotNull String getSkyBlockGemstoneId() {
+		public @NonNull String getSkyBlockGemstoneId() {
 			return (quality.name() + "_" + type.name() + "_GEM").toUpperCase(Locale.ENGLISH);
 		}
 
@@ -206,7 +206,7 @@ public record Gemstones(
 			this.color = color;
 		}
 
-		public static @Nullable GemstoneType fromName(@NotNull String name) {
+		public static @Nullable GemstoneType fromName(@NonNull String name) {
 			return BY_NAME.get(name.toUpperCase(Locale.ENGLISH));
 		}
 

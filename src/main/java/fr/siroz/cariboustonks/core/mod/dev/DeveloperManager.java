@@ -37,15 +37,13 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Internal Developer Manager.
  * <p>
  * Class initialized only in a development environment
  */
-@ApiStatus.Internal
 public final class DeveloperManager {
 
 	private final Object2IntMap<ArmorStand> texturedArmorStands = new Object2IntOpenHashMap<>();
@@ -82,7 +80,7 @@ public final class DeveloperManager {
 	}
 
 	@EventHandler(event = "WorldEvents.ALLOW_SOUND")
-	private boolean onSound(@NotNull SoundEvent soundEvent) {
+	private boolean onSound(@NonNull SoundEvent soundEvent) {
 		if (dumpSound) {
 			String soundId = soundEvent.location().getPath();
 			String time = TimeUtils.formatInstant(Instant.now(), TimeUtils.TIME_HH_MM_SS);

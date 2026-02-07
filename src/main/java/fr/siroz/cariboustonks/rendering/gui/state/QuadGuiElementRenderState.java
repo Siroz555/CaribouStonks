@@ -8,23 +8,22 @@ import java.util.List;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.render.state.GuiElementRenderState;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public record QuadGuiElementRenderState(
-		@NotNull RenderPipeline pipeline,
-		@NotNull TextureSetup textureSetup,
-		@NotNull List<Quad> quads,
+		@NonNull RenderPipeline pipeline,
+		@NonNull TextureSetup textureSetup,
+		@NonNull List<Quad> quads,
 		int color,
 		@Nullable ScreenRectangle scissorArea,
 		@Nullable ScreenRectangle bounds
 ) implements GuiElementRenderState {
 
 	public QuadGuiElementRenderState(
-			@NotNull RenderPipeline pipeline,
-			@NotNull TextureSetup textureSetup,
-			@NotNull List<Quad> quads,
+			@NonNull RenderPipeline pipeline,
+			@NonNull TextureSetup textureSetup,
+			@NonNull List<Quad> quads,
 			int color,
 			@Nullable ScreenRectangle scissorArea
 	) {
@@ -32,7 +31,7 @@ public record QuadGuiElementRenderState(
 	}
 
 	@Override
-	public void buildVertices(@NotNull VertexConsumer vertices) {
+	public void buildVertices(@NonNull VertexConsumer vertices) {
 		for (Quad quad : quads) {
 			vertices.addVertex(quad.x1(), quad.y1(), 0).setColor(color);
 			vertices.addVertex(quad.x2(), quad.y2(), 0).setColor(color);
@@ -41,8 +40,7 @@ public record QuadGuiElementRenderState(
 		}
 	}
 
-	@Contract("_ -> new")
-	private static @NotNull ScreenRectangle createBounds(@NotNull List<Quad> quads) {
+	private static @NonNull ScreenRectangle createBounds(@NonNull List<Quad> quads) {
 		float minX = Float.POSITIVE_INFINITY;
 		float minY = Float.POSITIVE_INFINITY;
 		float maxX = Float.NEGATIVE_INFINITY;

@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.core.system.System;
 import java.util.ArrayList;
 import java.util.List;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Manages and handles the registration and rendering of HUD elements within the game
@@ -22,11 +22,11 @@ public final class HudSystem implements System {
 	private final List<Hud> providers = new ArrayList<>();
 
 	@Override
-	public void register(@NotNull Feature feature) {
+	public void register(@NonNull Feature feature) {
 		feature.getComponent(HudComponent.class).ifPresent(this::registerComponent);
 	}
 
-	private void registerComponent(HudComponent component) {
+	private void registerComponent(@NonNull HudComponent component) {
 		Hud hud = component.getHud();
 		providers.add(hud);
 		HudElementRegistry.attachElementAfter(component.getLayerType(), component.getHudId(), hud::renderHud);

@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import java.util.Locale;
 import java.util.regex.Pattern;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Roman Numeral Utils.
@@ -32,7 +32,7 @@ public final class RomanNumeralUtils {
 	private RomanNumeralUtils() {
 	}
 
-	public static boolean isRomanNumeral(@NotNull String number) {
+	public static boolean isRomanNumeral(@NonNull String number) {
 		if (number.isEmpty()) {
 			return false;
 		}
@@ -40,7 +40,7 @@ public final class RomanNumeralUtils {
 		return ROMAN_PATTERN.matcher(number.toUpperCase(Locale.ENGLISH)).matches();
 	}
 
-	public static int parse(@NotNull String roman) {
+	public static int parse(@NonNull String roman) {
 		if (roman.isEmpty() || !isRomanNumeral(roman)) {
 			return -1;
 		}
@@ -66,7 +66,7 @@ public final class RomanNumeralUtils {
 		return result;
 	}
 
-	public static @NotNull String generate(int number) {
+	public static @NonNull String generate(int number) {
 		if (number < 1 || number > 3999) {
 			throw new IllegalArgumentException("Number out of range for Roman numeral conversion.");
 		}

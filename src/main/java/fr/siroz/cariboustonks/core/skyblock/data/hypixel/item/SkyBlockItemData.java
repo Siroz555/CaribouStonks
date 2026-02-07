@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a SkyBlock item as returned by the SkyBlock API.
@@ -31,10 +29,10 @@ import org.jetbrains.annotations.Nullable;
  * @param prestige      the {@link PrestigeItem} if the item has a prestige field
  */
 public record SkyBlockItemData(
-		@NotNull String skyBlockId,
-		@NotNull String material,
-		@NotNull String name,
-		@NotNull Rarity tier,
+		@NonNull String skyBlockId,
+		@NonNull String material,
+		@NonNull String name,
+		@NonNull Rarity tier,
 		Optional<String> category,
 		Optional<String> skullTexture,
 		Optional<List<GemstoneSlot>> gemstoneSlots,
@@ -59,9 +57,7 @@ public record SkyBlockItemData(
 	 *
 	 * @param jsonItem the JsonObject describing the item
 	 */
-	@ApiStatus.Internal
-	@Contract("_ -> new")
-	public static @NotNull SkyBlockItemData parse(@NotNull JsonObject jsonItem) throws RuntimeException {
+	public static @NonNull SkyBlockItemData parse(@NonNull JsonObject jsonItem) throws RuntimeException {
 		try {
 			String id = jsonItem.get("id").getAsString();
 			String material = jsonItem.get("material").getAsString();
@@ -110,7 +106,7 @@ public record SkyBlockItemData(
 
 		public static final GearUpgrade EMPTY = new GearUpgrade(Optional.empty(), Optional.empty(), OptionalInt.empty());
 
-		static GearUpgrade parse(@NotNull JsonObject json) {
+		static GearUpgrade parse(@NonNull JsonObject json) {
 			try {
 				Optional<String> itemId = Optional.ofNullable(json.has("item_id") ? json.get("item_id").getAsString() : null);
 				Optional<String> essenceType = Optional.ofNullable(json.has("essence_type") ? json.get("essence_type").getAsString() : null);
@@ -135,7 +131,7 @@ public record SkyBlockItemData(
 
 		public static final GemstoneSlot EMPTY = new GemstoneSlot("", Optional.empty());
 
-		static GemstoneSlot parse(@NotNull JsonObject json) {
+		static GemstoneSlot parse(@NonNull JsonObject json) {
 			try {
 				String slotType = json.has("slot_type") ? json.get("slot_type").getAsString() : "";
 				JsonArray costs = json.has("costs") ? json.get("costs").getAsJsonArray() : null;
@@ -182,7 +178,7 @@ public record SkyBlockItemData(
 
 			public static final GemstoneSlotCost EMPTY = new GemstoneSlotCost("", Optional.empty(), OptionalInt.empty(), OptionalInt.empty());
 
-			static GemstoneSlotCost parse(@NotNull JsonObject json) {
+			static GemstoneSlotCost parse(@NonNull JsonObject json) {
 				try {
 					String type = json.has("type") ? json.get("type").getAsString() : "";
 					Optional<String> itemId = Optional.ofNullable(json.has("item_id") ? json.get("item_id").getAsString() : null);
@@ -209,7 +205,7 @@ public record SkyBlockItemData(
 
 		public static final PrestigeItem EMPTY = new PrestigeItem("", List.of());
 
-		static PrestigeItem parse(@NotNull JsonObject json) {
+		static PrestigeItem parse(@NonNull JsonObject json) {
 			try {
 				String itemId = json.has("item_id") ? json.get("item_id").getAsString() : "";
 				JsonArray upgradesCost = json.has("costs") ? json.get("costs").getAsJsonArray() : null;
@@ -232,21 +228,21 @@ public record SkyBlockItemData(
 		}
 	}
 
-	private static Rarity computeTier(@NotNull JsonObject jsonItem) {
+	private static Rarity computeTier(@NonNull JsonObject jsonItem) {
 		if (jsonItem.has("tier")) {
 			return Rarity.fromName(jsonItem.get("tier").getAsString());
 		}
 		return Rarity.UNKNOWN;
 	}
 
-	private static @Nullable String computeCategory(@NotNull JsonObject jsonItem) {
+	private static @Nullable String computeCategory(@NonNull JsonObject jsonItem) {
 		if (jsonItem.has("category")) {
 			return jsonItem.get("category").getAsString();
 		}
 		return null;
 	}
 
-	private static @Nullable String computeSkullTexture(@NotNull JsonObject jsonItem, String material) {
+	private static @Nullable String computeSkullTexture(@NonNull JsonObject jsonItem, String material) {
 		if (jsonItem.has("skin") && "SKULL_ITEM".equals(material)) {
 			JsonObject skin = jsonItem.get("skin").getAsJsonObject();
 			return skin.has("value") ? skin.get("value").getAsString() : null;
@@ -254,7 +250,7 @@ public record SkyBlockItemData(
 		return null;
 	}
 
-	private static @Nullable List<GemstoneSlot> computeGemstoneSlots(@NotNull JsonObject jsonItem) {
+	private static @Nullable List<GemstoneSlot> computeGemstoneSlots(@NonNull JsonObject jsonItem) {
 		if (jsonItem.has("gemstone_slots") && jsonItem.get("gemstone_slots").isJsonArray()) {
 			List<GemstoneSlot> gemstoneSlots = new ArrayList<>();
 			JsonArray gemstoneSlotsJson = jsonItem.get("gemstone_slots").getAsJsonArray();
@@ -271,7 +267,7 @@ public record SkyBlockItemData(
 		return null;
 	}
 
-	private static @Nullable PrestigeItem computePrestige(@NotNull JsonObject jsonItem) {
+	private static @Nullable PrestigeItem computePrestige(@NonNull JsonObject jsonItem) {
 		if (jsonItem.has("prestige") && jsonItem.get("prestige").isJsonObject()) {
 			JsonObject prestige = jsonItem.get("prestige").getAsJsonObject();
 			// if (!parsedX.equals(X.EMPTY))

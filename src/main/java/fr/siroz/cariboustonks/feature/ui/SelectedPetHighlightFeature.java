@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -21,15 +20,10 @@ public class SelectedPetHighlightFeature extends Feature {
 	public SelectedPetHighlightFeature() {
 		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.of(TITLE_PATTERN));
 		this.addComponent(ContainerOverlayComponent.class, ContainerOverlayComponent.builder()
-				.content(slots -> {
-					List<ColorHighlight> highlights = new ArrayList<>();
-					slots.forEach((slotIndex, itemStack) -> {
-						if (isSelected(itemStack)) {
-							highlights.add(ColorHighlight.green(slotIndex, 0.25f));
-						}
-					});
-					return highlights;
-				})
+				.content(slots -> slots.int2ObjectEntrySet().stream()
+						.filter(itemStackEntry ->  isSelected(itemStackEntry.getValue()))
+						.map(e -> ColorHighlight.green(e.getIntKey(), 0.25f))
+						.toList())
 				.build());
 	}
 
@@ -39,14 +33,10 @@ public class SelectedPetHighlightFeature extends Feature {
 	}
 
 	private boolean isSelected(ItemStack itemStack) {
-		if (itemStack == null || !itemStack.is(Items.PLAYER_HEAD)) {
-			return false;
-		}
+		if (itemStack == null || !itemStack.is(Items.PLAYER_HEAD)) return false;
 
 		List<Component> lore = ItemUtils.getLore(itemStack);
-		if (lore.isEmpty()) {
-			return false;
-		}
+		if (lore.isEmpty()) return false;
 
 		String concatenateLore = ItemUtils.concatenateLore(lore);
 		return SELECTED_PATTERN.matcher(concatenateLore).find();

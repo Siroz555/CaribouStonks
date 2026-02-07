@@ -6,8 +6,7 @@ import java.util.stream.Stream;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Représente une Position immutable dans le monde.
@@ -16,23 +15,19 @@ public interface Position extends Comparable<Position> {
 
     Position ORIGIN = new ImmutablePosition(0, 0, 0);
 
-    @Contract(value = "_, _, _ -> new", pure = true)
-    static @NotNull Position of(int x, int y, int z) {
+    static @NonNull Position of(int x, int y, int z) {
         return new ImmutablePosition(x, y, z);
     }
 
-    @Contract("_ -> new")
-    static @NotNull Position of(@NotNull Position position) {
+    static @NonNull Position of(@NonNull Position position) {
         return of(position.x(), position.y(), position.z());
     }
 
-    @Contract("_ -> new")
-    static @NotNull Position of(@NotNull BlockPos pos) {
+    static @NonNull Position of(@NonNull BlockPos pos) {
         return of(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    @Contract("_ -> new")
-    static @NotNull Position of(@NotNull Vec3 vec3d) {
+    static @NonNull Position of(@NonNull Vec3 vec3d) {
         return of((int) vec3d.x(), (int) vec3d.y(), (int) vec3d.z());
     }
 
@@ -42,27 +37,27 @@ public interface Position extends Comparable<Position> {
 
     int z();
 
-    double distanceTo(@NotNull Position other);
+    double distanceTo(@NonNull Position other);
 
-    double squaredDistanceTo(@NotNull Position other);
+    double squaredDistanceTo(@NonNull Position other);
 
     boolean isInRange(Position other, double radius);
 
-    @NotNull Position offset(int dx, int dy, int dz);
+    @NonNull Position offset(int dx, int dy, int dz);
 
-    @NotNull BlockPos toBlockPos();
+    @NonNull BlockPos toBlockPos();
 
-    @NotNull Vec3 toVec3d();
+    @NonNull Vec3 toVec3d();
 
-    @NotNull AABB toBox();
+    @NonNull AABB toBox();
 
-    default @NotNull String asChatCoordinates() {
+    default @NonNull String asChatCoordinates() {
         return "x: " + x() + ", y: " + y() + ", z: " + z();
     }
 
     boolean equals(Object o);
 
-    int compareTo(@NotNull Position o);
+    int compareTo(@NonNull Position o);
 
     default String asString() {
         return "x:" + x() + "," + "y:" + y() + "," + "z:" + z();
@@ -75,7 +70,7 @@ public interface Position extends Comparable<Position> {
      * @return the Position object
      * @throws IllegalArgumentException if the String is not in the expected format
      */
-    static @NotNull Position fromString(@NotNull String positionString) {
+    static @NonNull Position fromString(@NonNull String positionString) throws IllegalArgumentException {
         String[] parts = positionString.split(",");
         if (parts.length != 3) {
 			throw new IllegalArgumentException(

@@ -1,6 +1,9 @@
 package fr.siroz.cariboustonks.util.http;
 
-public record HttpResponse(int statusCode, String content) implements AutoCloseable {
+public record HttpResponse(
+		int statusCode,
+		String content
+) implements AutoCloseable {
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean success() {

@@ -1,9 +1,8 @@
 package fr.siroz.cariboustonks.core.skyblock;
 
 import java.util.Arrays;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * All SkyBlock Islands
@@ -15,11 +14,9 @@ import org.jetbrains.annotations.Nullable;
  * {@link #VALUES} return <b>non-deprecated</b> Island constants.
  */
 public enum IslandType {
-
 	/**
 	 * Any
 	 */
-	@ApiStatus.Internal
 	ANY("#any#", "Any"),
 
 	/**
@@ -192,7 +189,7 @@ public enum IslandType {
 	 * @param id the Island id
 	 * @return the Island or {@link IslandType#UNKNOWN} if not found
 	 */
-	public static @NotNull IslandType getById(@Nullable String id) {
+	public static @NonNull IslandType getById(@Nullable String id) {
 		if (id == null || id.isEmpty()) {
 			return UNKNOWN;
 		}

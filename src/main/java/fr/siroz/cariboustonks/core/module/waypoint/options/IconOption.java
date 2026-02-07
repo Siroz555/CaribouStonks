@@ -4,12 +4,10 @@ import fr.siroz.cariboustonks.util.colors.Color;
 import java.util.Optional;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public final class IconOption {
-
 	private final Identifier icon;
 	private final float width;
 	private final float height;
@@ -31,8 +29,8 @@ public final class IconOption {
 			float height,
 			float textureWidth,
 			float textureHeight,
-			@NotNull Vec3 renderOffset,
-			@NotNull Color color,
+			@NonNull Vec3 renderOffset,
+			@NonNull Color color,
 			float alpha,
 			boolean scaleWithDistance,
 			boolean throughBlocks
@@ -49,8 +47,7 @@ public final class IconOption {
 		this.throughBlocks = throughBlocks;
 	}
 
-	@Contract(pure = true)
-	public @NotNull Optional<Identifier> getIcon() {
+	public @NonNull Optional<Identifier> getIcon() {
 		return Optional.ofNullable(icon);
 	}
 
@@ -90,13 +87,12 @@ public final class IconOption {
 		return throughBlocks;
 	}
 
-	@Contract(value = " -> new", pure = true)
-	public static @NotNull Builder builder() {
+	@NonNull
+	public static Builder builder() {
 		return new Builder();
 	}
 
 	public static class Builder {
-
 		protected Identifier icon = null;
 		protected float width = 1f;
 		protected float height = 1f;
@@ -133,12 +129,12 @@ public final class IconOption {
 			return this;
 		}
 
-		public Builder withRenderOffset(@NotNull Vec3 renderOffset) {
+		public Builder withRenderOffset(@NonNull Vec3 renderOffset) {
 			this.renderOffset = renderOffset;
 			return this;
 		}
 
-		public Builder withColor(@NotNull Color color) {
+		public Builder withColor(@NonNull Color color) {
 			this.color = color;
 			return this;
 		}

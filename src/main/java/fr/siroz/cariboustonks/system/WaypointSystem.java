@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.system;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.system.System;
+import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
@@ -10,8 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.client.Minecraft;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * The {@code WaypointSystem} class is a central management system for all waypoints in the game.
@@ -42,7 +42,6 @@ public final class WaypointSystem implements System {
 
     private final Map<UUID, Waypoint> waypoints = new ConcurrentHashMap<>();
 
-    @ApiStatus.Internal
     public WaypointSystem() {
 		WorldEvents.JOIN.register(world -> this.resetWaypoints());
         RenderEvents.WORLD_RENDER.register(this::render);
@@ -54,7 +53,7 @@ public final class WaypointSystem implements System {
 	 *
 	 * @param waypoint the waypoint to add
 	 */
-	public void addWaypoint(@NotNull Waypoint waypoint) {
+	public void addWaypoint(@NonNull Waypoint waypoint) {
         waypoints.putIfAbsent(waypoint.getUuid(), waypoint);
     }
 
@@ -63,10 +62,11 @@ public final class WaypointSystem implements System {
 	 *
 	 * @param waypoint the waypoint to be removed
 	 */
-	public void removeWaypoint(@NotNull Waypoint waypoint) {
+	public void removeWaypoint(@NonNull Waypoint waypoint) {
         waypoints.remove(waypoint.getUuid());
     }
 
+	@EventHandler(event = "RenderEvents.WORLD_RENDER")
     private void render(WorldRenderer renderer) {
         if (CLIENT.player == null || CLIENT.level == null || waypoints.isEmpty()) {
 			return;

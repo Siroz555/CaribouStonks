@@ -35,14 +35,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Retrieves and manage the changelogs from releases (if available) from GitHub.
  */
-@ApiStatus.Internal
 public final class ChangelogManager {
 
 	private static final String GITHUB_REPO_URL = "https://api.github.com/repos/Siroz555/CaribouStonks/releases";
@@ -149,7 +147,7 @@ public final class ChangelogManager {
 		}
 	}
 
-	private void fetchChangelogSinceLastSeen(@NotNull String lastSeenVersionToParse) {
+	private void fetchChangelogSinceLastSeen(@NonNull String lastSeenVersionToParse) {
 		CompletableFuture.runAsync(() -> {
 			try (HttpResponse response = Http.request(GITHUB_REPO_URL)) {
 				if (!response.success()) {
@@ -173,7 +171,7 @@ public final class ChangelogManager {
 		});
 	}
 
-	private void parseChangelogs(@NotNull JsonArray releases, String lastSeenVersionToParse) {
+	private void parseChangelogs(@NonNull JsonArray releases, String lastSeenVersionToParse) {
 		Map<String, ChangelogEntry> changelogCache = new TreeMap<>();
 		try {
 			for (JsonElement element : releases) {
@@ -219,7 +217,7 @@ public final class ChangelogManager {
 		relevantChangelogs.clear();
 	}
 
-	private @NotNull ChangelogEntry parseChangelogBody(@NotNull String version, String body, @NotNull String date) {
+	private @NonNull ChangelogEntry parseChangelogBody(@NonNull String version, String body, @NonNull String date) {
 		ChangelogEntry entry = new ChangelogEntry();
 		entry.version = version.replace("v", "");
 		entry.date = date.substring(0, 10); // Format: YYYY-MM-DD

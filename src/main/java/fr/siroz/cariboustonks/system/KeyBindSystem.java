@@ -20,8 +20,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.world.inventory.Slot;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * The {@code KeyBindSystem} manages the registration and handling of {@link KeyBind} for features,
@@ -40,20 +39,19 @@ public final class KeyBindSystem implements System {
 	private final Set<KeyBind> enabledKeyBinds = ConcurrentHashMap.newKeySet();
 	private final Map<Feature, List<KeyBind>> keyBinds = new ConcurrentHashMap<>();
 
-	@ApiStatus.Internal
 	public KeyBindSystem() {
 		ClientTickEvents.END_CLIENT_TICK.register(_client -> this.triggerKeyBinds());
 		CustomScreenEvents.KEY_PRESSED.register(this::handleKeyPressed);
 	}
 
 	@Override
-	public void register(@NotNull Feature feature) {
+	public void register(@NonNull Feature feature) {
 		feature.getComponent(KeybindComponent.class)
 				.ifPresent(keyBindComponent -> register(feature, keyBindComponent));
 	}
 
 	@EventHandler(event = "CustomScreenEvents.KEY_PRESSED")
-	private void handleKeyPressed(Screen screen, KeyEvent input, @NotNull Slot slot) {
+	private void handleKeyPressed(Screen screen, KeyEvent input, @NonNull Slot slot) {
 		triggerKeyBindsInScreen(screen, input, slot);
 	}
 
@@ -72,7 +70,7 @@ public final class KeyBindSystem implements System {
 	/**
 	 * Enables and registers all key binds associated with the given feature.
 	 */
-	private void enableFeatureKeyBinds(@NotNull Feature feature) {
+	private void enableFeatureKeyBinds(@NonNull Feature feature) {
 		if (!keyBinds.containsKey(feature)) {
 			return;
 		}

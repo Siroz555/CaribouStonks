@@ -17,10 +17,8 @@ import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Stonks utilities
@@ -74,14 +72,12 @@ public final class StonksUtils {
 	/**
 	 * Init utilities
 	 */
-	@ApiStatus.Internal
 	public static void initUtilities() {
 		AnimationUtils.initAnimationUtilities();
 		TickScheduler.getInstance().runRepeating(Client::handleUpdates, 1, TimeUnit.SECONDS);
 	}
 
-	@Contract(pure = true)
-	public static @NotNull String stripColor(@Nullable String input) {
+	public static @NonNull String stripColor(@Nullable String input) {
 		if (input == null || input.isEmpty()) return "";
 
 		return COLOR_CODE_PATTERN.matcher(input).replaceAll("");
@@ -107,7 +103,7 @@ public final class StonksUtils {
 		return serverAddress.contains("hypixel.net") || serverBrand.contains("Hypixel BungeeCord");
 	}
 
-	public static Optional<String> textToJson(@NotNull Component text) {
+	public static Optional<String> textToJson(@NonNull Component text) {
 		try {
 			String json = GsonProvider.standard().toJson(text);
 			return Optional.of(json);
@@ -116,7 +112,7 @@ public final class StonksUtils {
 		}
 	}
 
-	public static Optional<Component> jsonToText(@NotNull String json) {
+	public static Optional<Component> jsonToText(@NonNull String json) {
 		try {
 			Component text = GsonProvider.standard().fromJson(json, Component.class);
 			return Optional.ofNullable(text);
@@ -125,8 +121,7 @@ public final class StonksUtils {
 		}
 	}
 
-	@Contract("_, _ -> param1")
-	public static <T> T make(@NotNull T object, @NotNull Consumer<? super T> initializer) {
+	public static <T> T make(@NonNull T object, @NonNull Consumer<? super T> initializer) {
 		initializer.accept(object);
 		return object;
 	}
@@ -154,7 +149,7 @@ public final class StonksUtils {
 	 * @param values the values
 	 * @return the Median
 	 */
-	public static double calculateMedian(@NotNull List<Double> values) {
+	public static double calculateMedian(@NonNull List<Double> values) {
 		if (values.isEmpty()) return -1;
 
 		List<Double> sorted = values.stream().sorted().toList();
@@ -174,7 +169,7 @@ public final class StonksUtils {
 	 * @param to   the destination position
 	 * @return the squared distance between the two positions
 	 */
-	public static double squaredDistanceToIgnoringY(@NotNull Position from, @NotNull Position to) {
+	public static double squaredDistanceToIgnoringY(@NonNull Position from, @NonNull Position to) {
 		double dx = from.x() - to.x();
 		double dz = from.z() - to.z();
 		return dx * dx + dz * dz;
@@ -209,31 +204,6 @@ public final class StonksUtils {
 	}
 
 	/**
-	 * Supprime chaque deuxième élément de la liste donnée tout en conservant le premier et le dernier élément.
-	 * Si la liste contient moins de trois éléments, elle est retournée inchangée.
-	 *
-	 * @param list la liste dont chaque deuxième élément doit être supprimé
-	 * @return la nouvelle liste après traitement
-	 */
-	@Deprecated
-	public static <T> @NotNull List<T> removeEverySecondElement(@NotNull List<T> list) {
-		if (list.size() < 3) return list;
-
-		List<T> result = new ArrayList<>();
-		result.add(list.getFirst());
-
-		for (int i = 1; i < list.size() - 1; i++) {
-			if (i % 2 == 0) {
-				result.add(list.get(i));
-			}
-		}
-
-		result.add(list.getLast());
-
-		return result;
-	}
-
-	/**
 	 * Réduit la taille de la liste fournie pour qu'elle atteigne approximativement la taille cible spécifiée.
 	 * Si la liste contient un nombre d'éléments inférieur ou égal à la taille cible, la liste est retournée inchangée.
 	 * Si la taille de la liste est supérieure à la taille cible, les éléments sont sélectionnés à des intervalles
@@ -244,7 +214,7 @@ public final class StonksUtils {
 	 * @param targetSize la taille approximative souhaitée de la liste réduite
 	 * @return la nouvelle liste après traitement
 	 */
-	public static <T> @NotNull List<T> reduceListToApproxSize(@NotNull List<T> list, int targetSize) {
+	public static <T> @NonNull List<T> reduceListToApproxSize(@NonNull List<T> list, int targetSize) {
 		if (list.size() <= targetSize) return list;
 
 		List<T> result = new ArrayList<>();
@@ -272,7 +242,7 @@ public final class StonksUtils {
 	 * @param s the input String
 	 * @return the capitalized input String
 	 */
-	public static String capitalize(@NotNull String s) {
+	public static String capitalize(@NonNull String s) {
 		if (s.isEmpty()) return s;
 
 		String normalized = s.replace('_', ' ');

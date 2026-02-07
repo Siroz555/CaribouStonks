@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public enum SlayerType {
 
@@ -62,20 +62,20 @@ public enum SlayerType {
 	),
 	UNKNOWN(null, "Unknown", List.of(), List.of(), new int[]{}, new ItemStack(Items.BARRIER));
 
-	private final EntityType<? extends @NotNull Entity> entityType;
+	private final EntityType<? extends Entity> entityType;
 	private final String bossName;
 	private final List<String> minibossNames;
-	private final List<EntityType<? extends @NotNull Entity>> minibossEntityTypes;
+	private final List<EntityType<? extends Entity>> minibossEntityTypes;
 	private final int[] expPerTier;
 	private final ItemStack icon;
 
 	private static final Map<String, SlayerType> BOSS_NAME_TO_TYPE = new HashMap<>();
 
 	SlayerType(
-            EntityType<? extends @NotNull Entity> entityType,
+            EntityType<? extends Entity> entityType,
             String bossName,
             List<String> minibossNames,
-            List<EntityType<? extends @NotNull Entity>> minibossEntityTypes,
+            List<EntityType<? extends Entity>> minibossEntityTypes,
             int[] expPerTier,
 			ItemStack icon
 	) {
@@ -87,11 +87,11 @@ public enum SlayerType {
 		this.icon = icon;
 	}
 
-	public static SlayerType fromBossName(@NotNull String bossName) {
+	public static SlayerType fromBossName(@NonNull String bossName) {
 		return BOSS_NAME_TO_TYPE.getOrDefault(bossName.toLowerCase(Locale.ENGLISH), UNKNOWN);
 	}
 
-	public EntityType<? extends @NotNull Entity> getEntityType() {
+	public EntityType<? extends Entity> getEntityType() {
 		return entityType;
 	}
 
@@ -103,7 +103,7 @@ public enum SlayerType {
 		return minibossNames;
 	}
 
-	public List<EntityType<? extends @NotNull Entity>> getMinibossEntityTypes() {
+	public List<EntityType<? extends Entity>> getMinibossEntityTypes() {
 		return minibossEntityTypes;
 	}
 

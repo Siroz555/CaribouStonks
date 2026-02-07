@@ -23,9 +23,8 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The {@code SkyBlockAPI} class provides a utility layer to interact with SkyBlock-related states and contents.
@@ -71,7 +70,7 @@ public final class SkyBlockAPI {
 	 * @param islandTypes an array of {@link IslandType} values to check against the current island type
 	 * @return {@code true} if the current island type matches any of the specified types
 	 */
-	public static boolean isOnIslands(IslandType @NotNull ... islandTypes) {
+	public static boolean isOnIslands(IslandType @NonNull ... islandTypes) {
 		if (islandTypes.length == 0) {
 			return false;
 		}
@@ -94,7 +93,7 @@ public final class SkyBlockAPI {
 	 * @return {@code true} if the given {@code mayor} matches the current mayor or minister
 	 * @see #isMayorOrMinister(Mayor, Perk)
 	 */
-	public static boolean isMayorOrMinister(@NotNull Mayor mayor) {
+	public static boolean isMayorOrMinister(@NonNull Mayor mayor) {
 		return isMayorOrMinister(mayor, null);
 	}
 
@@ -123,11 +122,9 @@ public final class SkyBlockAPI {
 	 * when {@code perk} is provided, the requested perk is present for that role
 	 * @see #isMayorOrMinister(Mayor)
 	 */
-	public static boolean isMayorOrMinister(@NotNull Mayor mayor, @Nullable Perk perk) {
+	public static boolean isMayorOrMinister(@NonNull Mayor mayor, @Nullable Perk perk) {
 		ElectionResult result = CaribouStonks.skyBlock().getHypixelDataSource().getElection();
-		if (result == null) {
-			return false;
-		}
+		if (result == null) return false;
 
 		if (perk == null) {
 			return mayor == result.mayor() || mayor == result.minister();
@@ -151,7 +148,7 @@ public final class SkyBlockAPI {
 	 *
 	 * @return an {@link Optional} containing the area name
 	 */
-	public static @NotNull Optional<String> getArea() {
+	public static @NonNull Optional<String> getArea() {
 		for (String line : Client.getScoreboard()) {
 			if (line.contains("⏣") || line.contains("ф")) {
 				return Optional.of(line.strip());
@@ -166,7 +163,7 @@ public final class SkyBlockAPI {
 	 * @param stack the ItemStack
 	 * @return the SkyBlock Item ID or an empty string
 	 */
-	public static @NotNull String getSkyBlockItemId(@NotNull DataComponentHolder stack) {
+	public static @NonNull String getSkyBlockItemId(@NonNull DataComponentHolder stack) {
 		return ItemUtils.getCustomData(stack).getStringOr(ITEM_ID, "");
 	}
 
@@ -176,7 +173,7 @@ public final class SkyBlockAPI {
 	 * @param stack the ItemStack
 	 * @return the UUID or an empty string
 	 */
-	public static @NotNull String getSkyBlockItemUuid(@NotNull DataComponentHolder stack) {
+	public static @NonNull String getSkyBlockItemUuid(@NonNull DataComponentHolder stack) {
 		return ItemUtils.getCustomData(stack).getStringOr(ITEM_UUID, "");
 	}
 
@@ -186,7 +183,7 @@ public final class SkyBlockAPI {
 	 * @param skyBlockItemId the SkyBlock item ID to compare against the held item's ID
 	 * @return {@code true} if the currently held is not null, and the skyBlockItemId matches
 	 */
-	public static boolean isHoldingItem(@NotNull String skyBlockItemId) {
+	public static boolean isHoldingItem(@NonNull String skyBlockItemId) {
 		ItemStack held = Client.getHeldItem();
 		return held != null && getSkyBlockItemId(held).equals(skyBlockItemId);
 	}
@@ -197,10 +194,8 @@ public final class SkyBlockAPI {
 	 * @param stack the ItemStack
 	 * @return the Rarity of the ItemStack or {@link Rarity#UNKNOWN} if the item does not have a rarity
 	 */
-	public static @NotNull Rarity getRarity(@Nullable ItemStack stack) {
-		if (!onSkyBlockState || stack == null || stack.isEmpty()) {
-			return Rarity.UNKNOWN;
-		}
+	public static @NonNull Rarity getRarity(@Nullable ItemStack stack) {
+		if (!onSkyBlockState || stack == null || stack.isEmpty()) return Rarity.UNKNOWN;
 
 		if (getSkyBlockItemId(stack).equals("PET")) {
 			return getPetInfo(stack).rarity();
@@ -220,7 +215,7 @@ public final class SkyBlockAPI {
 	 * @param stack the ItemStack
 	 * @return the PetInfo or {@link PetInfo#EMPTY} if the item is not a pet
 	 */
-	public static @NotNull PetInfo getPetInfo(@Nullable ItemStack stack) {
+	public static @NonNull PetInfo getPetInfo(@Nullable ItemStack stack) {
 		if (!onSkyBlockState || stack == null || stack.isEmpty()) {
 			return PetInfo.EMPTY;
 		}
@@ -234,7 +229,7 @@ public final class SkyBlockAPI {
 	 * @param stack the ItemStack
 	 * @return the ability name or {@code null} if the item does not have an ability
 	 */
-	public static @Nullable String getAbility(@NotNull ItemStack stack) {
+	public static @Nullable String getAbility(@NonNull ItemStack stack) {
 		Matcher abilityMatcher = ItemUtils.getLoreLineIfMatch(stack, ABILITY);
 		return abilityMatcher != null ? abilityMatcher.group("name") : null;
 	}
@@ -245,7 +240,7 @@ public final class SkyBlockAPI {
 	 * @return the SkyBlock API ID or an empty String
 	 */
 	@SuppressWarnings("checkstyle:CyclomaticComplexity")
-	public static @NotNull String getSkyBlockApiId(@NotNull DataComponentHolder itemStack) {
+	public static @NonNull String getSkyBlockApiId(@NonNull DataComponentHolder itemStack) {
 		CompoundTag customData = ItemUtils.getCustomData(itemStack);
 		String id = customData.getStringOr(ITEM_ID, "");
 
@@ -308,12 +303,10 @@ public final class SkyBlockAPI {
 		return id;
 	}
 
-	@ApiStatus.Internal
 	static String getGameType() {
 		return gameType;
 	}
 
-	@ApiStatus.Internal
 	static void handleInternalUpdate() {
 		FabricLoader fabricLoader = FabricLoader.getInstance();
 
@@ -332,7 +325,6 @@ public final class SkyBlockAPI {
 		}
 	}
 
-	@ApiStatus.Internal
 	static void handleInternalLocationUpdate(
 			@Nullable Boolean onHypixel,
 			@Nullable Boolean onSkyBlock,

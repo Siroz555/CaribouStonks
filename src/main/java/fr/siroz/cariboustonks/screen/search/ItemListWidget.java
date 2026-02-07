@@ -30,10 +30,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-class ItemListWidget extends ObjectSelectionList<ItemListWidget.@NotNull Entry> {
+class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 
 	private final StonksSearchScreen parent;
 
@@ -111,7 +111,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.@NotNull Entry> 
 	}
 
 	@Override
-	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void renderWidget(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		List<ItemSummary> itemsList = tryGet();
 		if (itemsList != items) {
 			show(itemsList);
@@ -194,7 +194,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.@NotNull Entry> 
 		}
 	}
 
-	abstract static class Entry extends ObjectSelectionList.Entry<@NotNull Entry> implements AutoCloseable {
+	abstract static class Entry extends ObjectSelectionList.Entry<Entry> implements AutoCloseable {
 		Entry() {
 		}
 
@@ -214,7 +214,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.@NotNull Entry> 
 		}
 
 		@Override
-		public @NotNull Component getNarration() {
+		public @NonNull Component getNarration() {
 			return Component.literal("Select " + item.name());
 		}
 
@@ -282,7 +282,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.@NotNull Entry> 
 		}
 
 		@Override
-		public void renderContent(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void renderContent(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			if (this.client == null || this.client.screen == null) {
 				return;
 			}
@@ -298,7 +298,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.@NotNull Entry> 
 		}
 
 		@Override
-		public @NotNull Component getNarration() {
+		public @NonNull Component getNarration() {
 			return LOADING_LIST_TEXT;
 		}
 	}
@@ -311,7 +311,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.@NotNull Entry> 
 	) implements Comparable<ItemSummary> {
 
 		@Override
-		public int compareTo(@NotNull ItemSummary itemSummary) {
+		public int compareTo(@NonNull ItemSummary itemSummary) {
 			return this.name.compareToIgnoreCase(itemSummary.name);
 		}
 	}
