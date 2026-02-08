@@ -1,5 +1,7 @@
 package fr.siroz.cariboustonks.rendering.world;
 
+import fr.siroz.cariboustonks.core.module.color.Color;
+import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.rendering.world.renderer.BeaconBeamRendererCommand;
 import fr.siroz.cariboustonks.rendering.world.renderer.CircleRendererCommand;
 import fr.siroz.cariboustonks.rendering.world.renderer.CuboidOutlineRendererCommand;
@@ -23,11 +25,9 @@ import fr.siroz.cariboustonks.rendering.world.state.TextRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.TextureRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.ThickCircleRenderState;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.util.colors.Color;
-import fr.siroz.cariboustonks.util.colors.Colors;
+import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import fr.siroz.cariboustonks.util.render.FrustumUtils;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
-import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;

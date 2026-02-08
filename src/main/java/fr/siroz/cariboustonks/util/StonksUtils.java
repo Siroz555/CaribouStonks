@@ -1,22 +1,19 @@
 package fr.siroz.cariboustonks.util;
 
-import fr.siroz.cariboustonks.core.service.json.GsonProvider;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
+import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Position;
-import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -101,24 +98,6 @@ public final class StonksUtils {
 		}
 
 		return serverAddress.contains("hypixel.net") || serverBrand.contains("Hypixel BungeeCord");
-	}
-
-	public static Optional<String> textToJson(@NonNull Component text) {
-		try {
-			String json = GsonProvider.standard().toJson(text);
-			return Optional.of(json);
-		} catch (Exception ex) {
-			return Optional.empty();
-		}
-	}
-
-	public static Optional<Component> jsonToText(@NonNull String json) {
-		try {
-			Component text = GsonProvider.standard().fromJson(json, Component.class);
-			return Optional.ofNullable(text);
-		} catch (Exception ex) {
-			return Optional.empty();
-		}
 	}
 
 	public static <T> T make(@NonNull T object, @NonNull Consumer<? super T> initializer) {

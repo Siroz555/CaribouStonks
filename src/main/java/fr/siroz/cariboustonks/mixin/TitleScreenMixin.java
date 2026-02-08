@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.mixin;
 
-import fr.siroz.cariboustonks.util.render.gui.SplashTextSupplier;
+import fr.siroz.cariboustonks.CaribouStonks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.components.SplashRenderer;
@@ -28,6 +28,6 @@ public abstract class TitleScreenMixin extends Screen {
 
 	@Inject(at = @At("RETURN"), method = "init")
 	protected void cariboustonks$coucou(CallbackInfo ci) {
-		SplashTextSupplier.getInstance().get().ifPresent(text -> this.splash = text);
+		CaribouStonks.mod().getModFlavor().getSplashText().ifPresent(text -> this.splash = text);
 	}
 }

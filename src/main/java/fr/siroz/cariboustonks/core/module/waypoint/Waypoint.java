@@ -1,13 +1,13 @@
 package fr.siroz.cariboustonks.core.module.waypoint;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.module.color.Color;
+import fr.siroz.cariboustonks.core.module.color.Colors;
+import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.module.waypoint.options.IconOption;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.system.WaypointSystem;
 import fr.siroz.cariboustonks.util.Ticks;
-import fr.siroz.cariboustonks.util.colors.Color;
-import fr.siroz.cariboustonks.util.colors.Colors;
-import fr.siroz.cariboustonks.util.position.Position;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;

@@ -2,9 +2,9 @@ package fr.siroz.cariboustonks.core.skyblock.dungeon;
 
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.event.ChatEvents;
-import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.event.SkyBlockEvents;
+import fr.siroz.cariboustonks.events.ChatEvents;
+import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;

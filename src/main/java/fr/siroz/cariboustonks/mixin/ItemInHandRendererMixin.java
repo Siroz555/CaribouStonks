@@ -8,7 +8,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.VanillaConfig;
-import fr.siroz.cariboustonks.screen.HeldItemViewConfigScreen;
+import fr.siroz.cariboustonks.screens.HeldItemViewConfigScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.LightTexture;

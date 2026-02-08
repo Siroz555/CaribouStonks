@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.event.GuiEvents;
+import fr.siroz.cariboustonks.events.GuiEvents;
 import fr.siroz.cariboustonks.system.ContainerOverlaySystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;

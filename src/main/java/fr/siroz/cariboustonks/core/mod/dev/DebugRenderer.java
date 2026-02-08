@@ -1,15 +1,15 @@
 package fr.siroz.cariboustonks.core.mod.dev;
 
+import fr.siroz.cariboustonks.core.module.color.Color;
+import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.colors.Color;
-import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
-import fr.siroz.cariboustonks.util.render.Texture;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -119,7 +119,7 @@ record DebugRenderer(DeveloperManager dev) {
 				1f,
 				1f,
 				new Vec3(0, 0, 0),
-				Texture.NETHERITE_SWORD,
+				Identifier.withDefaultNamespace("textures/item/netherite_sword.png"),
 				new Color(255, 255, 255),
 				1f,
 				true

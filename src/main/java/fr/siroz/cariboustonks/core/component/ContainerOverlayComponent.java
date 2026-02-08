@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.core.component;
 
-import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
+import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.List;
 import java.util.Objects;

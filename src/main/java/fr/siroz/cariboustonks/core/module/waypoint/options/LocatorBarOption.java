@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.module.waypoint.options;
 
-import fr.siroz.cariboustonks.util.colors.Color;
-import fr.siroz.cariboustonks.util.colors.Colors;
+import fr.siroz.cariboustonks.core.module.color.Color;
+import fr.siroz.cariboustonks.core.module.color.Colors;
 import org.jspecify.annotations.NonNull;
 
 @SuppressWarnings("ALL")

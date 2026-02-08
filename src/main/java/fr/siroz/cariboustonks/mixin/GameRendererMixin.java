@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.feature.vanilla.ZoomFeature;
+import fr.siroz.cariboustonks.features.vanilla.ZoomFeature;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import net.minecraft.client.Minecraft;

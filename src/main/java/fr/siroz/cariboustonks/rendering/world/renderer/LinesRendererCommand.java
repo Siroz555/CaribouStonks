@@ -37,7 +37,7 @@ public final class LinesRendererCommand implements RendererCommand<LinesRenderSt
 			}
 
 			buffer.addVertex(matrix4f, (float) points[i].x(), (float) points[i].y(), (float) points[i].z())
-					.setColor(state.color().r, state.color().g, state.color().b, state.color().a)
+					.setColor(state.color().r(), state.color().g(), state.color().b(), state.color().a())
 					.setNormal(normalVec.x(), normalVec.y(), normalVec.z())
 					.setLineWidth(state.lineWidth());
 		}

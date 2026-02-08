@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.core.skyblock.slayer;
 
-import fr.siroz.cariboustonks.event.SkyBlockEvents;
+import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.world.entity.Entity;

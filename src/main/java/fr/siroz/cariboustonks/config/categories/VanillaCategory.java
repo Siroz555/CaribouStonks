@@ -7,7 +7,7 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
-import fr.siroz.cariboustonks.screen.HeldItemViewConfigScreen;
+import fr.siroz.cariboustonks.screens.HeldItemViewConfigScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;

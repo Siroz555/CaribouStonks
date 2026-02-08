@@ -1,8 +1,7 @@
 package fr.siroz.cariboustonks.rendering.world;
 
-import fr.siroz.cariboustonks.event.RenderEvents;
-import fr.siroz.cariboustonks.util.colors.Color;
-import fr.siroz.cariboustonks.util.render.Texture;
+import fr.siroz.cariboustonks.core.module.color.Color;
+import fr.siroz.cariboustonks.events.RenderEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -53,24 +52,6 @@ public interface WorldRenderer {
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
 	void submitText(@NonNull FormattedCharSequence text, @NonNull Vec3 position, float scale, float offsetY, boolean throughBlocks);
-
-	/**
-	 * Submits a {@code Texture} to be rendered with the given {@link Texture}, facing to the player.
-	 *
-	 * @param position      the position
-	 * @param width         the width
-	 * @param height        the height
-	 * @param textureWidth  the amount of texture width
-	 * @param textureHeight the amount of texture height
-	 * @param renderOffset  the offset
-	 * @param texture       the texture
-	 * @param color         the color
-	 * @param alpha         the alpha
-	 * @param throughBlocks if rendering can be done through blocks
-	 */
-	default void submitTexture(@NonNull Vec3 position, float width, float height, float textureWidth, float textureHeight, @NonNull Vec3 renderOffset, @NonNull Texture texture, @NonNull Color color, float alpha, boolean throughBlocks) {
-		submitTexture(position, width, height, textureWidth, textureHeight, renderOffset, texture.getIdentifier(), color, alpha, throughBlocks);
-	}
 
 	/**
 	 * Submits a {@code Texture} to be rendered with the given {@link Identifier}, facing to the player.

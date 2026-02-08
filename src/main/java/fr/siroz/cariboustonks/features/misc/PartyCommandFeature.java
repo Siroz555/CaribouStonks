@@ -1,0 +1,158 @@
+package fr.siroz.cariboustonks.features.misc;
+
+import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.config.configs.MiscConfig;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.position.Position;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.events.ChatEvents;
+import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.system.NetworkSystem;
+import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.util.StonksUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.NonNull;
+
+public class PartyCommandFeature extends Feature {
+
+	private static final List<String> MAGIC_8BALL_ANSWERS = new ArrayList<>();
+	private static final long COOLDOWN_MS = 750L;
+
+	private long lastActionMs = 0L;
+
+	public PartyCommandFeature() {
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return SkyBlockAPI.isOnSkyBlock() && this.config().misc.partyCommands.enabled;
+	}
+
+	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
+	private void onChatMessage(@NonNull Component text) {
+		if (!isEnabled()) return;
+
+		String input = StonksUtils.stripColor(text.getString());
+		if (!input.startsWith("Party >")) return;
+		if (CLIENT.player == null || CLIENT.level == null) return;
+
+		for (PartyCommand command : PartyCommand.values()) {
+			if (command.getConfig().test(this.config().misc.partyCommands)) {
+				Matcher matcher = command.getPattern().matcher(input);
+				if (matcher.find()) {
+					long now = System.currentTimeMillis();
+					if (now - lastActionMs < COOLDOWN_MS) {
+						break;
+					}
+
+					sendCommand(command, matcher);
+					lastActionMs = now;
+					break;
+				}
+			}
+		}
+	}
+
+	private void sendCommand(PartyCommand command, Matcher matcher) {
+		try {
+			command.getAction().accept(matcher);
+		} catch (Exception ex) {
+			CaribouStonks.LOGGER.warn("{} Unable to handle {}", getShortName(), command.name(), ex);
+		}
+	}
+
+	private enum PartyCommand {
+		COORDS(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !coords"), cmd -> cmd.coords, matcher -> {
+			Position position = Position.of(Client.getCurrentPosition());
+			Client.sendCommandToServer("/pc " + position.asChatCoordinates(), true);
+		}),
+		WARP(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !warp"), cmd -> cmd.warp, matcher -> {
+			Client.sendCommandToServer("/p warp", true); // -_-
+		}),
+		DICE(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !dice"), cmd -> cmd.diceGame, matcher -> {
+			int roll = (int) (1 + Math.floor(Math.random() * 6));
+			String extra = roll == 1 ? " Sheeh!" : roll == 6 ? " Waw!" : "";
+			String message = matcher.group(2) + " rolled a " + roll + "." + extra;
+			Client.sendCommandToServer("/pc " + message, true);
+		}),
+		EIGHT_BALL(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !8ball"), cmd -> cmd.magic8Ball, matcher -> {
+			int r = new Random().nextInt(MAGIC_8BALL_ANSWERS.size());
+			String selected = MAGIC_8BALL_ANSWERS.get(r);
+			Client.sendCommandToServer("/pc " + selected, true);
+		}),
+		CF(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !cf"), cmd -> cmd.coinFlip, matcher -> {
+			if (new Random().nextBoolean()) {
+				Client.sendCommandToServer("/pc HEADS!", true);
+			} else {
+				Client.sendCommandToServer("/pc TAILS!", true);
+			}
+		}),
+		TPS(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !tps"), cmd -> cmd.tps, matcher -> {
+			float tps = CaribouStonks.systems().getSystem(NetworkSystem.class).getTickRate();
+			String message = String.format("TPS: %.1f", tps);
+			Client.sendCommandToServer("/pc " + message, true);
+		}),
+		;
+
+		private final Pattern pattern;
+		private final Predicate<MiscConfig.PartyCommands> config;
+		private final Consumer<Matcher> action;
+
+		PartyCommand(Pattern pattern, Predicate<MiscConfig.PartyCommands> config, Consumer<Matcher> action) {
+			this.pattern = pattern;
+			this.config = config;
+			this.action = action;
+		}
+
+		public Pattern getPattern() {
+			return pattern;
+		}
+
+		public Predicate<MiscConfig.PartyCommands> getConfig() {
+			return config;
+		}
+
+		public Consumer<Matcher> getAction() {
+			return action;
+		}
+	}
+
+	static {
+		MAGIC_8BALL_ANSWERS.add("It is certain.");
+		MAGIC_8BALL_ANSWERS.add("It is decidedly so.");
+		MAGIC_8BALL_ANSWERS.add("Without a doubt.");
+		MAGIC_8BALL_ANSWERS.add("Yes – definitely.");
+		MAGIC_8BALL_ANSWERS.add("You may rely on it.");
+		MAGIC_8BALL_ANSWERS.add("As I see it, yes.");
+		MAGIC_8BALL_ANSWERS.add("Most likely.");
+		MAGIC_8BALL_ANSWERS.add("Outlook good.");
+		MAGIC_8BALL_ANSWERS.add("Yes.");
+		MAGIC_8BALL_ANSWERS.add("No.");
+		MAGIC_8BALL_ANSWERS.add("Reply hazy, try again.");
+		MAGIC_8BALL_ANSWERS.add("Ask again later.");
+		MAGIC_8BALL_ANSWERS.add("Better not tell you now.");
+		MAGIC_8BALL_ANSWERS.add("Concentrate and ask again.");
+		MAGIC_8BALL_ANSWERS.add("Don't count on it.");
+		MAGIC_8BALL_ANSWERS.add("My reply is no.");
+		MAGIC_8BALL_ANSWERS.add("My sources say no.");
+		MAGIC_8BALL_ANSWERS.add("Outlook not so good.");
+		MAGIC_8BALL_ANSWERS.add("Very doubtful.");
+		MAGIC_8BALL_ANSWERS.add("Absolutely not.");
+		MAGIC_8BALL_ANSWERS.add("Absolutely yes.");
+		MAGIC_8BALL_ANSWERS.add("If you believe hard enough.");
+		MAGIC_8BALL_ANSWERS.add("The stars say no.");
+		MAGIC_8BALL_ANSWERS.add("The stars say yes.");
+		MAGIC_8BALL_ANSWERS.add("Try again after coffee.");
+		MAGIC_8BALL_ANSWERS.add("404: answer not found.");
+		MAGIC_8BALL_ANSWERS.add("Sheesh... maybe.");
+		MAGIC_8BALL_ANSWERS.add("Waw! Definitely.");
+	}
+}

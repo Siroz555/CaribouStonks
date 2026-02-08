@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.mixin;
 
-import fr.siroz.cariboustonks.event.ChatEvents;
+import fr.siroz.cariboustonks.events.ChatEvents;
 import net.minecraft.client.multiplayer.chat.ChatListener;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;

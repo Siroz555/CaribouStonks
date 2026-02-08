@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.core.service.json.adapters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import fr.siroz.cariboustonks.util.colors.Color;
+import fr.siroz.cariboustonks.core.module.color.Color;
 import java.io.IOException;
 import org.jspecify.annotations.NonNull;
 

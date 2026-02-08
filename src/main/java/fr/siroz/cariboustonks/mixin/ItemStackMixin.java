@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.mixin;
 
-import fr.siroz.cariboustonks.event.GuiEvents;
+import fr.siroz.cariboustonks.events.GuiEvents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.component.TooltipProvider;

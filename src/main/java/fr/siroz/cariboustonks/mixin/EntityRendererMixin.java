@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.event.RenderEvents;
+import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.system.GlowingSystem;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;

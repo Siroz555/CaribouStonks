@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.mixin;
 
-import fr.siroz.cariboustonks.event.NetworkEvents;
+import fr.siroz.cariboustonks.events.NetworkEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PingDebugMonitor;
 import org.spongepowered.asm.mixin.Mixin;

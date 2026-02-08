@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import fr.siroz.cariboustonks.event.NetworkEvents;
+import fr.siroz.cariboustonks.events.NetworkEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;

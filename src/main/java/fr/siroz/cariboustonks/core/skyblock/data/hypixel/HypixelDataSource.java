@@ -9,7 +9,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher.BazaarFetcher;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher.ElectionFetcher;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher.ItemsFetcher;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
-import fr.siroz.cariboustonks.event.EventHandler;
+import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -64,10 +64,10 @@ public final class CircleRendererCommand implements RendererCommand<CircleRender
 			}
 
 			buffer.addVertex(matrix4f, outerX, outerY, outerZ)
-					.setColor(state.color().r, state.color().g, state.color().b, state.color().a);
+					.setColor(state.color().r(), state.color().g(), state.color().b(), state.color().a());
 
 			buffer.addVertex(matrix4f, innerX, innerY, innerZ)
-					.setColor(state.color().r, state.color().g, state.color().b, state.color().a);
+					.setColor(state.color().r(), state.color().g(), state.color().b(), state.color().a());
 		}
 	}
 }

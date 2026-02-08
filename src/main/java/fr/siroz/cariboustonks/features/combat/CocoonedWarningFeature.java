@@ -1,0 +1,201 @@
+package fr.siroz.cariboustonks.features.combat;
+
+import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.config.ConfigValue;
+import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.feature.FeatureManager;
+import fr.siroz.cariboustonks.core.module.color.Colors;
+import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
+import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerType;
+import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.events.NetworkEvents;
+import fr.siroz.cariboustonks.events.RenderEvents;
+import fr.siroz.cariboustonks.events.SkyBlockEvents;
+import fr.siroz.cariboustonks.events.WorldEvents;
+import fr.siroz.cariboustonks.features.slayer.SlayerCocoonedWarningFeature;
+import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.util.ItemUtils;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
+public class CocoonedWarningFeature extends Feature {
+
+	private static final long WORLD_CHANGE_THRESHOLD_MS = 10_000;
+	private static final double MAX_ARMORSTAND_PAIR_DISTANCE_SQ = 2f * 2f;
+	private static final double MAX_PLAYER_COCOON_DISTANCE_SQ = 15f * 15f;
+	//private static final int MAX_Y_CHECK = 6;
+
+	private final ConfigValue<String> configMessage = ConfigValue.of(
+			() -> this.config().combat.cocoonedMob.message
+	);
+
+	@Nullable
+	private SlayerCocoonedWarningFeature slayerCocoonedWarningFeature;
+
+	// chaîne temporaire des apparitions successives (ordre d'apparition)
+	private final Deque<ArmorStand> chain = new ArrayDeque<>();
+	private final List<BlockPos> cocoonPositions = new ArrayList<>();
+	private long lastWorldChange = 0;
+	private boolean canBeTriggered = false;
+
+	public CocoonedWarningFeature() {
+		SkyBlockEvents.ISLAND_CHANGE_EVENT.register(this::onChangeIsland);
+		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
+		WorldEvents.ARMORSTAND_REMOVE_EVENT.register(this::onRemoveArmorStand);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return SkyBlockAPI.isOnSkyBlock()
+				&& canBeTriggered
+				// --start-- Pour détecter les cocoons depuis les Slayers Minibosses
+				//&& !slayerManager.isInQuest()
+				&& !CaribouStonks.skyBlock().getSlayerManager().isInQuestWithBoss(SlayerType.SPIDER)
+				&& (slayerCocoonedWarningFeature != null && !slayerCocoonedWarningFeature.isCocoonedBoss())
+				// --end--
+				&& this.config().combat.cocoonedMob.cocoonedWarning;
+	}
+
+	@Override
+	protected void postInitialize(@NonNull FeatureManager features) {
+		slayerCocoonedWarningFeature = features.getFeature(SlayerCocoonedWarningFeature.class);
+	}
+
+	@Override
+	protected void onClientJoinServer() {
+		lastWorldChange = System.currentTimeMillis();
+		chain.clear();
+		cocoonPositions.clear();
+	}
+
+	@EventHandler(event = "SkyBlockEvents.ISLAND_CHANGE_EVENT")
+	private void onChangeIsland(@NonNull IslandType islandType) {
+		canBeTriggered = islandType != IslandType.DUNGEON
+				&& islandType != IslandType.KUUDRA_HOLLOW
+				&& islandType != IslandType.THE_RIFT; // Parce que dans le rift il y a les mêmes cocoons
+	}
+
+	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
+	private void onUpdateArmorStand(@NonNull ArmorStand armorStandEntity, boolean equipment) {
+		if (equipment || (System.currentTimeMillis() - lastWorldChange < WORLD_CHANGE_THRESHOLD_MS)) return;
+		if (!isEnabled()) return;
+		if (!matchesCocoonCriteria(armorStandEntity)) return;
+
+		for (ArmorStand as : chain) {
+			if (as.getId() == armorStandEntity.getId()) {
+				return;
+			}
+		}
+
+		chain.removeIf(a -> a.isRemoved() || a.isDeadOrDying());
+
+		// Si la chain est vide, ce spawn devient le premier élément
+		if (chain.isEmpty()) {
+			chain.addLast(armorStandEntity);
+			return;
+		}
+
+		// Si le nouveau spawn est assez proche d'au moins un élément de la chain, il est ajouté
+		boolean closeToAny = false;
+		for (ArmorStand as : chain) {
+			if (as.distanceToSqr(armorStandEntity) <= MAX_ARMORSTAND_PAIR_DISTANCE_SQ) {
+				closeToAny = true;
+				break;
+			}
+		}
+
+		if (closeToAny) {
+			chain.addLast(armorStandEntity);
+
+			// Garder au max 3 éléments pertinents dans la chain
+			while (chain.size() > 3) {
+				chain.removeFirst();
+			}
+
+			if (chain.size() == 3) {
+				onMobCocooned(chain.element().blockPosition());
+				chain.clear(); // Réinitialise la chain pour éviter de trigger à nouveau
+			}
+		} else {
+			// Spawn trop loin, réinitialise la chain et repart à partir de ce spawn
+			chain.clear();
+			chain.addLast(armorStandEntity);
+		}
+	}
+
+	@EventHandler(event = "WorldEvents.ARMORSTAND_REMOVE_EVENT")
+	private void onRemoveArmorStand(@NonNull ArmorStand armorStand) {
+		chain.removeIf(a -> a.getId() == armorStand.getId());
+	}
+
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
+	private void render(WorldRenderer renderer) {
+		for (BlockPos pos : cocoonPositions) {
+			final BlockPos finalPos = pos.immutable().offset(0, -4, 0);
+			renderer.submitBeaconBeam(finalPos, Colors.RED);
+		}
+	}
+
+	private void onMobCocooned(BlockPos pos) {
+		Client.sendMessageWithPrefix(Component.literal(configMessage.get()));
+
+		if (this.config().combat.cocoonedMob.cocoonedWarningSound) {
+			Client.playSound(SoundEvents.ELDER_GUARDIAN_CURSE, 1f, 1f);
+		}
+
+		if (this.config().combat.cocoonedMob.cocoonedWarningTitle) {
+			Client.showTitle(Component.literal(configMessage.get()), 0, 27, 0);
+		}
+
+		if (pos != null && this.config().combat.cocoonedMob.cocoonedWarningBeam) {
+			cocoonPositions.add(pos);
+			final BlockPos finalPos = pos;
+			TickScheduler.getInstance().runLater(() -> cocoonPositions.remove(finalPos), 4, TimeUnit.SECONDS);
+		}
+	}
+
+	private boolean matchesCocoonCriteria(@NonNull ArmorStand as) {
+		if (CLIENT.player == null) {
+			return false;
+		}
+
+		// Si l'Armorstand est +/- au-dessus du joueur.
+		// C'est pour empêcher la détection des cocoons des Spiders Slayer des autres joueurs,
+		// Mais ça ne va pas bloquer complètement la détection.
+		// SIROZ-NOTE: a voir, mais peut être check aussi if Spider Den / Crimson Isle
+//		double deltaY = as.position().y() - CLIENT.player.position().y();
+//		if (deltaY >= MAX_Y_CHECK) {
+//			return false;
+//		}
+
+		if (as.isCustomNameVisible() || !as.hasItemInSlot(EquipmentSlot.HEAD)) {
+			return false;
+		}
+
+		String headTexture = ItemUtils.getHeadTexture(as.getItemBySlot(EquipmentSlot.HEAD));
+		if (headTexture.isBlank()) {
+			return false;
+		}
+
+		if (CLIENT.player.position().distanceToSqr(as.position()) > MAX_PLAYER_COCOON_DISTANCE_SQ) {
+			return false;
+		}
+
+		return headTexture.equals(HeadTextures.TARANTULA_COCOON);
+	}
+}

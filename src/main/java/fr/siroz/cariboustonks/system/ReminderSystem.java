@@ -8,7 +8,7 @@ import fr.siroz.cariboustonks.core.service.json.JsonFileService;
 import fr.siroz.cariboustonks.core.service.json.JsonProcessingException;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.system.System;
-import fr.siroz.cariboustonks.event.SkyBlockEvents;
+import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import it.unimi.dsi.fastutil.Pair;
 import java.nio.file.Files;

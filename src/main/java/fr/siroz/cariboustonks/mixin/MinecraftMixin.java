@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.mixin;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.event.InteractionEvents;
+import fr.siroz.cariboustonks.events.InteractionEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;

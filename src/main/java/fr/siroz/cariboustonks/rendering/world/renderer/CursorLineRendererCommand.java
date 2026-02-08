@@ -27,12 +27,12 @@ public final class CursorLineRendererCommand implements RendererCommand<CursorLi
 				.normalize();
 
 		buffer.addVertex(matrix4f, (float) cameraPoint.x(), (float) cameraPoint.y(), (float) cameraPoint.z())
-				.setColor(state.color().r, state.color().g, state.color().b, state.color().a)
+				.setColor(state.color().r(), state.color().g(), state.color().b(), state.color().a())
 				.setNormal(normal.x(), normal.y(), normal.z())
 				.setLineWidth(state.lineWidth());
 
 		buffer.addVertex(matrix4f, (float) state.point().x(), (float) state.point().y(), (float) state.point().z())
-				.setColor(state.color().r, state.color().g, state.color().b, state.color().a)
+				.setColor(state.color().r(), state.color().g(), state.color().b(), state.color().a())
 				.setNormal(normal.x(), normal.y(), normal.z())
 				.setLineWidth(state.lineWidth());
 	}

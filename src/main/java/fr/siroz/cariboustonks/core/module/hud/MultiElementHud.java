@@ -2,11 +2,11 @@ package fr.siroz.cariboustonks.core.module.hud;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.annotation.Experimental;
+import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
 import fr.siroz.cariboustonks.core.module.hud.element.HudIconLine;
 import fr.siroz.cariboustonks.core.module.hud.element.HudTableRow;
 import fr.siroz.cariboustonks.core.module.hud.element.HudTextLine;
-import fr.siroz.cariboustonks.util.colors.Colors;
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.client.DeltaTracker;

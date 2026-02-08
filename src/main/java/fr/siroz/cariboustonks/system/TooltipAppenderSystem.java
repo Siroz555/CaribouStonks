@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.mod.crash.CrashType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.system.System;
-import fr.siroz.cariboustonks.event.EventHandler;
+import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.mixin.accessors.AbstractContainerScreenAccessor;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import it.unimi.dsi.fastutil.Pair;

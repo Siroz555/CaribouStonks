@@ -1,11 +1,11 @@
 package fr.siroz.cariboustonks.core.module.waypoint;
 
+import fr.siroz.cariboustonks.core.module.color.Color;
+import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.waypoint.options.IconOption;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
-import fr.siroz.cariboustonks.event.EventHandler;
+import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.colors.Color;
-import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

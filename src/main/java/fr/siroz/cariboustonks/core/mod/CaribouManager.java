@@ -13,13 +13,13 @@ public final class CaribouManager {
 
 	private final CrashManager crashManager;
 	private final ModDataSource modDataSource;
+	private final ModFlavor modFlavor;
 
 	public CaribouManager() {
-		// "Main" core components
 		this.crashManager = new CrashManager();
 		this.modDataSource = new ModDataSource();
+		this.modFlavor = new ModFlavor();
 
-		// "Secondary" core components
 		new UpdateChecker();
 		new ChangelogManager();
 		new WelcomeMessage();
@@ -46,5 +46,14 @@ public final class CaribouManager {
 	 */
 	public @NonNull ModDataSource getModDataSource() {
 		return modDataSource;
+	}
+
+	/**
+	 * Retrieves the {@link ModFlavor} instance.
+	 *
+	 * @return the {@link ModFlavor} instance
+	 */
+	public ModFlavor getModFlavor() {
+		return modFlavor;
 	}
 }

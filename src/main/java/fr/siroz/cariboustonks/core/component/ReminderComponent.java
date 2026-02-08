@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.component;
 
-import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.core.model.TimedObjectModel;
+import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.Optional;

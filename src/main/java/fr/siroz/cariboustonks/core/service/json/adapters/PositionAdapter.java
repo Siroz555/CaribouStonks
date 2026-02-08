@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.core.service.json.adapters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import fr.siroz.cariboustonks.util.position.Position;
+import fr.siroz.cariboustonks.core.module.position.Position;
 import java.io.IOException;
 import org.jspecify.annotations.NonNull;
 

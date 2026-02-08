@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.mixin;
 
-import fr.siroz.cariboustonks.event.GuiEvents;
+import fr.siroz.cariboustonks.events.GuiEvents;
 import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

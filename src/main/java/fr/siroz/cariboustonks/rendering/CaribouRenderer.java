@@ -12,7 +12,7 @@ import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.event.RenderEvents;
+import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.rendering.world.WorldRendererImpl;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;

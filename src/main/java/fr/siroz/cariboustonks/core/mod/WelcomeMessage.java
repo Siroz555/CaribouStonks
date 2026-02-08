@@ -2,8 +2,8 @@ package fr.siroz.cariboustonks.core.mod;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.event.EventHandler;
-import fr.siroz.cariboustonks.event.SkyBlockEvents;
+import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;

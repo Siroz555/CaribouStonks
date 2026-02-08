@@ -3,17 +3,25 @@ package fr.siroz.cariboustonks.core.component;
 import fr.siroz.cariboustonks.core.feature.Feature;
 
 /**
- * Marker interface for all feature components in the component-based architecture.
+ * Marker interface for all feature components.
  * <p>
  * Components are modular, reusable pieces of functionality that can be attached to
  * {@link Feature} instances to extend their capabilities. Each component encapsulates
  * a specific aspect of feature behavior, such as keybindings, commands or HUD elements.
  * <p>
- * This interface follows the Entity-Component-System (ECS) architectural pattern:
+ * This interface can be interpreted as ECS architecture, without actually being so.
+ * Half of the Component adhere to the basic, while others incorporate handlers
+ * to transmit business logic, while remaining simple.
+ * <p>
  * <ul>
- *   <li>Entity: {@link Feature} instances that contain components</li>
- *   <li>Component: Data and behavior modules (implementations of this interface)</li>
- *   <li>System Managers that process components ({@code ReminderSystem}, {@code HudSystem})</li>
+ *     <li>{@link CommandComponent} provides client-side command registration</li>
+ *     <li>{@link KeybindComponent} provides Keybinds registration</li>
+ *     <li>{@link HudComponent} provides Hud registration</li>
+ *     <li>{@link ContainerMatcherComponent} provide a container (Screen) matching Pattern</li>
+ *     <li>{@link ContainerOverlayComponent} provide overlays creation in containers (Screen)</li>
+ *     <li>{@link TooltipAppenderComponent} provide tooltips appender in containers (Screen)</li>
+ *     <li>{@link EntityGlowComponent} provide glowing strategies for entities</li>
+ *     <li>{@link ReminderComponent} provide handlers logic for reminders</li>
  * </ul>
  *
  * <h2>Usage Example</h2>
