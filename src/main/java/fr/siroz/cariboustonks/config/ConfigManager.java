@@ -13,7 +13,7 @@ import fr.siroz.cariboustonks.config.categories.UIAndVisualsCategory;
 import fr.siroz.cariboustonks.config.categories.VanillaCategory;
 import fr.siroz.cariboustonks.core.service.json.adapters.CodecTypeAdapter;
 import fr.siroz.cariboustonks.util.Client;
-import fr.siroz.cariboustonks.util.CodecUtil;
+import fr.siroz.cariboustonks.util.CodecUtils;
 import java.awt.Color;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -43,7 +43,7 @@ public final class ConfigManager {
 					.registerTypeHierarchyAdapter(Identifier.class, new CodecTypeAdapter<>(Identifier.CODEC))
 					.registerTypeHierarchyAdapter(Component.class, new CodecTypeAdapter<>(ComponentSerialization.CODEC))
 					.registerTypeHierarchyAdapter(Style.class, new CodecTypeAdapter<>(Style.Serializer.CODEC))
-					.registerTypeHierarchyAdapter(Color.class, new CodecTypeAdapter<>(CodecUtil.COLOR_CODEC))))
+					.registerTypeHierarchyAdapter(Color.class, new CodecTypeAdapter<>(CodecUtils.COLOR_CODEC))))
 			.build();
 
 	private ConfigManager() {

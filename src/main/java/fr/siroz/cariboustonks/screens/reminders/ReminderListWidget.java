@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.screens.reminders;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.util.CodecUtil;
+import fr.siroz.cariboustonks.util.CodecUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import it.unimi.dsi.fastutil.Pair;
 import java.time.Instant;
@@ -105,7 +105,7 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 
 			this.description = reminder.left().getDisplay().description() != null
 					? reminder.left().getDisplay().description()
-					: CodecUtil.jsonToText(reminder.right().message()).orElse(Component.literal(reminder.right().message()));
+					: CodecUtils.jsonToText(reminder.right().message()).orElse(Component.literal(reminder.right().message()));
 
 			this.icon = reminder.left().getDisplay().icon();
 		}

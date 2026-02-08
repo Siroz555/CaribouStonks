@@ -20,7 +20,7 @@ mods/
 *.launch
 
 # Siroz
-developer/
+.dev/*
 docs/
 
 # idea
