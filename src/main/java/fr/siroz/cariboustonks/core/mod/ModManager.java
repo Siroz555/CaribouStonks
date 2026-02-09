@@ -7,15 +7,15 @@ import fr.siroz.cariboustonks.util.DeveloperTools;
 import org.jspecify.annotations.NonNull;
 
 /**
- * The {@code CaribouManager} class serves as the core manager for the mod.
+ * The {@code ModManager} class serves as the core manager for the mod.
  */
-public final class CaribouManager {
+public final class ModManager {
 
 	private final CrashManager crashManager;
 	private final ModDataSource modDataSource;
 	private final ModFlavor modFlavor;
 
-	public CaribouManager() {
+	public ModManager() {
 		this.crashManager = new CrashManager();
 		this.modDataSource = new ModDataSource();
 		this.modFlavor = new ModFlavor();

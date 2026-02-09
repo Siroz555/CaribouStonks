@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.FeatureManager;
-import fr.siroz.cariboustonks.core.mod.CaribouManager;
+import fr.siroz.cariboustonks.core.mod.ModManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockManager;
 import fr.siroz.cariboustonks.core.system.SystemManager;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
@@ -35,7 +35,7 @@ public final class CaribouStonks implements ClientModInitializer {
 
 	private static CaribouStonks instance;
 
-	private CaribouManager modManager;
+	private ModManager modManager;
 	private SkyBlockManager skyBlockManager;
 	private SystemManager systemManager;
 	private FeatureManager featureManager;
@@ -46,25 +46,23 @@ public final class CaribouStonks implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		// Mod Configuration
-		ConfigManager.loadConfig();
-		// Utilities
-		StonksUtils.initUtilities();
-		// Rendering
-		CaribouRenderer.init();
-		this.modManager = new CaribouManager();
+		ConfigManager.loadConfig(); // Mod Configuration
+		StonksUtils.initUtilities(); // Utilities
+		CaribouRenderer.init(); // Rendering
+
+		this.modManager = new ModManager();
 		this.skyBlockManager = new SkyBlockManager();
 		this.systemManager = new SystemManager();
 		this.featureManager = new FeatureManager();
 	}
 
 	/**
-	 * Returns the {@link CaribouManager} instance of the mod.
+	 * Returns the {@link ModManager} instance of the mod.
 	 * This instance is used to retrieve and manage all internal mod functionalities.
 	 *
-	 * @return the {@link CaribouManager} instance
+	 * @return the {@link ModManager} instance
 	 */
-	public static @NonNull CaribouManager mod() {
+	public static @NonNull ModManager mod() {
 		return instance.modManager;
 	}
 
