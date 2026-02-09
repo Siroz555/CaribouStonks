@@ -13,6 +13,8 @@ import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.util.Client;
 import java.awt.Color;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.network.chat.Component;
 
 @SuppressWarnings("checkstyle:linelength")
@@ -377,6 +379,21 @@ public class SkillsCategory extends AbstractCategory {
 										() -> current.hunting.attributeInfos,
 										newValue -> current.hunting.attributeInfos = newValue)
 								.controller(this::createBooleanController)
+								.build())
+						.option(LabelOption.create(Component.literal("| Fusion Machine").withStyle(ChatFormatting.BOLD)))
+						.option(ButtonOption.createBuilder()
+								.name(Component.literal("Quick Fusion - Repeat KeyBind"))
+								.action((screen, opt) -> this.openScreen(new KeyBindsScreen(screen, Minecraft.getInstance().options)))
+								.text(Component.literal("Open Keybinds Options"))
+								.description(OptionDescription.of(
+										Component.literal("Note: 100 ms between each actions is set.").withStyle(ChatFormatting.GOLD)))
+								.build())
+						.option(ButtonOption.createBuilder()
+								.name(Component.literal("Quick Fusion - Confirm KeyBind"))
+								.action((screen, opt) -> this.openScreen(new KeyBindsScreen(screen, Minecraft.getInstance().options)))
+								.text(Component.literal("Open Keybinds Options"))
+								.description(OptionDescription.of(
+										Component.literal("Note: 100 ms between each actions is set.").withStyle(ChatFormatting.GOLD)))
 								.build())
 						.build())
                 .group(OptionGroup.createBuilder()

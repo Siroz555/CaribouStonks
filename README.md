@@ -126,6 +126,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - Hunting
     - Display Shard prices in Hunting Box, Attribute Menu and Fusion Machine.
     - Display the number of missing Shards and the price to max it out.
+    - Quick Fusion for the Fusion Machine. Repeat and Confirm Keybinds.
 
 - Fishing
     - Bobber Timer Display: Show the bobber timer in the center of the screen.
