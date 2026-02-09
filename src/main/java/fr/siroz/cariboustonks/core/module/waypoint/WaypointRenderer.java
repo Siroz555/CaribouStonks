@@ -96,7 +96,8 @@ public final class WaypointRenderer {
 
 			renderer.submitText(
 					Component.literal(Math.round(distance) + "m").withStyle(ChatFormatting.AQUA),
-					centerPos.add(0, 1, 0), Math.max((float) distance / 10, 1),
+					centerPos.add(0, 1, 0),
+					Math.max((float) distance / textOption.getScaleAdjustment(), 1),
 					Minecraft.getInstance().font.lineHeight + 1F,
 					textOption.isThroughBlocks()
 			);
@@ -109,7 +110,8 @@ public final class WaypointRenderer {
 
 			renderer.submitText(
 					textOption.getText().get(),
-					centerPos.add(0, 1, 0), Math.max((float) distance / 10, 1),
+					centerPos.add(0, 1, 0),
+					Math.max((float) distance / textOption.getScaleAdjustment(), 1),
 					Minecraft.getInstance().font.lineHeight - 12F,
 					textOption.isThroughBlocks()
 			);

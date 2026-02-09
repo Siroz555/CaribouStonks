@@ -7,16 +7,18 @@ import org.jspecify.annotations.Nullable;
 
 public final class TextOption {
     private Component text;
+	private final float scaleAdjustment;
     private final boolean withDistance;
     private final int offsetY;
     private final boolean throughBlocks;
 
     public TextOption() {
-        this(null, false, -1, true);
+        this(null, 10, false, -1, true);
     }
 
-    private TextOption(Component text, boolean withDistance, int offsetY, boolean throughBlocks) {
+    private TextOption(Component text, float scaleAdjustment, boolean withDistance, int offsetY, boolean throughBlocks) {
         this.text = text;
+		this.scaleAdjustment = scaleAdjustment;
         this.withDistance = withDistance;
         this.offsetY = offsetY;
         this.throughBlocks = throughBlocks;
@@ -40,7 +42,11 @@ public final class TextOption {
         this.text = text;
     }
 
-    public boolean isWithDistance() {
+	public float getScaleAdjustment() {
+		return scaleAdjustment;
+	}
+
+	public boolean isWithDistance() {
         return withDistance;
     }
 
@@ -58,6 +64,7 @@ public final class TextOption {
 
     public static class Builder {
         protected Component text = null;
+		protected float scaleAdjustment = 10;
         protected boolean withDistance = false;
         protected int offsetY = -1;
         protected boolean throughBlocks = true;
@@ -66,6 +73,11 @@ public final class TextOption {
             this.text = text;
             return this;
         }
+
+		public TextOption.Builder scaleAdjustment(float scaleAdjustment) {
+			this.scaleAdjustment = scaleAdjustment;
+			return this;
+		}
 
         public TextOption.Builder withDistance(boolean withDistance) {
             this.withDistance = withDistance;
@@ -83,7 +95,7 @@ public final class TextOption {
         }
 
         public TextOption build() {
-            return new TextOption(text, withDistance, offsetY, throughBlocks);
+            return new TextOption(text, scaleAdjustment, withDistance, offsetY, throughBlocks);
         }
     }
 }
