@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.system;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.mod.crash.CrashType;
@@ -10,7 +9,6 @@ import fr.siroz.cariboustonks.core.system.System;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.mixin.accessors.AbstractContainerScreenAccessor;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import it.unimi.dsi.fastutil.Pair;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -31,7 +29,7 @@ import org.jspecify.annotations.NonNull;
 
 public final class TooltipAppenderSystem implements System {
 
-	private final Map<Feature, Pair<ContainerMatcherComponent, TooltipAppenderComponent>> registeredAppender = new LinkedHashMap<>();
+	private final Map<Feature, TooltipAppenderComponent> registeredAppender = new LinkedHashMap<>();
 	private final List<TooltipAppenderComponent> currentComponents = new ArrayList<>();
 
 	public TooltipAppenderSystem() {
@@ -41,22 +39,10 @@ public final class TooltipAppenderSystem implements System {
 
 	@Override
 	public void register(@NonNull Feature feature) {
-		Optional<ContainerMatcherComponent> matcherOpt = feature.getComponent(ContainerMatcherComponent.class);
 		Optional<TooltipAppenderComponent> appenderOpt = feature.getComponent(TooltipAppenderComponent.class);
+		if (appenderOpt.isEmpty()) return;
 
-		if (matcherOpt.isEmpty() && appenderOpt.isPresent()) {
-			CaribouStonks.LOGGER.warn("[TooltipAppenderSystem] no matcher found with appender for {}", feature.getShortName());
-			return;
-		}
-
-		if (matcherOpt.isEmpty() || appenderOpt.isEmpty()) {
-			return;
-		}
-
-		ContainerMatcherComponent matcher = matcherOpt.get();
-		TooltipAppenderComponent appender = appenderOpt.get();
-
-		registeredAppender.put(feature, Pair.of(matcher, appender));
+		registeredAppender.put(feature, appenderOpt.get());
 
 		if (DeveloperTools.isInDevelopment()) {
 			CaribouStonks.LOGGER.info("[TooltipAppenderSystem] Registered tooltip appender from feature: {}", feature.getShortName());
@@ -80,10 +66,10 @@ public final class TooltipAppenderSystem implements System {
 	@EventHandler(event = "ScreenEvents.AFTER_INIT")
 	private void onAfterInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight) {
 		currentComponents.clear();
-		for (Map.Entry<Feature, Pair<ContainerMatcherComponent, TooltipAppenderComponent>> appender : registeredAppender.entrySet()) {
+		for (Map.Entry<Feature, TooltipAppenderComponent> appender : registeredAppender.entrySet()) {
 			if (appender.getKey().isEnabled()) {
-				if (appender.getValue().left().matches(screen, 0)) {
-					currentComponents.add(appender.getValue().right());
+				if (appender.getValue().getTrait().matches(screen, 0)) {
+					currentComponents.add(appender.getValue());
 				}
 			}
 		}

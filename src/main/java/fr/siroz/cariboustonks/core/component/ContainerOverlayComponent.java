@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.core.component;
 
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
+import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.List;
 import java.util.Objects;
@@ -24,25 +25,38 @@ import org.jspecify.annotations.Nullable;
  * allows for more flexible overlay implementations.
  * <p>
  * To use this Component correctly, the feature class must also
- * have the {@link ContainerMatcherComponent} to define where and how
+ * have the {@link MatcherTrait} to define where and how
  * the overlay will be applied. This trait allows specifying a pattern to detect
  * the containers with which the overlay will be associated.
  *
- * @see ContainerMatcherComponent
+ * @see MatcherTrait
  */
 public final class ContainerOverlayComponent implements Component {
+	private final MatcherTrait trait;
 	private final ContentAnalyzer contentAnalyzer;
 	private final OverlayRenderer renderer;
 	private final ResetHandler resetHandler;
 
 	private ContainerOverlayComponent(
+			MatcherTrait trait,
 			ContentAnalyzer contentAnalyzer,
 			OverlayRenderer renderer,
 			ResetHandler resetHandler
 	) {
+		this.trait = trait;
 		this.contentAnalyzer = contentAnalyzer;
 		this.renderer = renderer;
 		this.resetHandler = resetHandler;
+	}
+
+	/**
+	 * Returns the {@code Trait} matching for this Component.
+	 *
+	 * @return the {@link MatcherTrait}
+	 */
+	@NonNull
+	public MatcherTrait getTrait() {
+		return trait;
 	}
 
 	/**
@@ -101,9 +115,21 @@ public final class ContainerOverlayComponent implements Component {
 	}
 
 	public static class Builder {
+		private MatcherTrait trait;
 		private ContentAnalyzer contentAnalyzer;
 		private OverlayRenderer renderer;
 		private ResetHandler resetHandler;
+
+		/**
+		 * Sets the {@link MatcherTrait} to provide a container (Screen) matching
+		 *
+		 * @param trait the trait
+		 * @return Builder
+		 */
+		public Builder trait(@NonNull MatcherTrait trait) {
+			this.trait = trait;
+			return this;
+		}
 
 		/**
 		 * Defines the content highlights to be displayed for specific slots in a container.
@@ -152,9 +178,10 @@ public final class ContainerOverlayComponent implements Component {
 		}
 
 		public ContainerOverlayComponent build() {
+			Objects.requireNonNull(trait, "Trait must be set");
 			Objects.requireNonNull(contentAnalyzer, "Content analyzer must be set");
 
-			return new ContainerOverlayComponent(contentAnalyzer, renderer, resetHandler);
+			return new ContainerOverlayComponent(trait, contentAnalyzer, renderer, resetHandler);
 		}
 	}
 }

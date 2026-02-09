@@ -1,8 +1,8 @@
 package fr.siroz.cariboustonks.features.misc;
 
-import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -12,9 +12,9 @@ import net.minecraft.world.item.component.DyedItemColor;
 public class HexTooltipFeature extends Feature {
 
 	public HexTooltipFeature(int priority) {
-		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.empty());
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
+				.trait(MatcherTrait.empty())
 				.appender((focusedSlot, item, lines) -> {
 					DyedItemColor dyedColor = item.get(DataComponents.DYED_COLOR);
 					if (dyedColor == null) return;

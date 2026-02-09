@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.features.ui;
 
-import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
+import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import java.util.List;
@@ -18,8 +18,8 @@ public class SelectedPetHighlightFeature extends Feature {
 	private static final Pattern SELECTED_PATTERN = Pattern.compile("Click to despawn!");
 
 	public SelectedPetHighlightFeature() {
-		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.of(TITLE_PATTERN));
 		this.addComponent(ContainerOverlayComponent.class, ContainerOverlayComponent.builder()
+				.trait(MatcherTrait.pattern(TITLE_PATTERN))
 				.content(slots -> slots.int2ObjectEntrySet().stream()
 						.filter(itemStackEntry ->  isSelected(itemStackEntry.getValue()))
 						.map(e -> ColorHighlight.green(e.getIntKey(), 0.25f))

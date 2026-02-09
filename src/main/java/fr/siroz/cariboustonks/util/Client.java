@@ -34,6 +34,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -571,6 +572,19 @@ public final class Client {
 				.filter(slot -> slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
 				.map(entity::getItemBySlot)
 				.toList();
+	}
+
+	/**
+	 * Handle a Mouse Click within a Container.
+	 *
+	 * @param containerId the container id
+	 * @param slotId the slot id
+	 * @param type the click type
+	 */
+	public static void handleMouseClick(int containerId, int slotId, ClickType type) {
+		if (CLIENT.player != null && CLIENT.gameMode != null) {
+			CLIENT.gameMode.handleInventoryMouseClick(containerId, slotId, 0, type, CLIENT.player);
+		}
 	}
 
 	public static void handleUpdates() {

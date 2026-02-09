@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.features.stonks.tooltips.bazaar;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
+import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
@@ -28,9 +28,9 @@ public class BazaarPriceTooltipFeature extends Feature {
 	public BazaarPriceTooltipFeature(int priority) {
 		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
 
-		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.empty());
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
+				.trait(MatcherTrait.empty())
 				.appender(this::appendToTooltip)
 				.build());
 	}

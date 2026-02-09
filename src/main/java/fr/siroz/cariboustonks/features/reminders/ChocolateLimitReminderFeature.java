@@ -1,13 +1,13 @@
 package fr.siroz.cariboustonks.features.reminders;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
+import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.system.ReminderSystem;
@@ -55,8 +55,8 @@ public final class ChocolateLimitReminderFeature extends Feature {
 				.preNotify(Duration.ofHours(24), this::onReminderPreNotify)
 				.build());
 
-		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.of(TITLE_PATTERN));
 		this.addComponent(ContainerOverlayComponent.class, ContainerOverlayComponent.builder()
+				.trait(MatcherTrait.pattern(TITLE_PATTERN))
 				.content(this::contentAnalyzer)
 				.render(this::render)
 				.onReset(() -> {

@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.features.stonks.tooltips.auction;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.generic.GenericDataSource;
 import fr.siroz.cariboustonks.features.stonks.tooltips.TooltipPriceDisplayType;
@@ -27,9 +27,9 @@ public class AuctionLowestBinTooltipFeature extends Feature {
 	public AuctionLowestBinTooltipFeature(int priority) {
 		this.genericDataSource = CaribouStonks.skyBlock().getGenericDataSource();
 
-		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.empty());
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
+				.trait(MatcherTrait.empty())
 				.appender(this::appendToTooltip)
 				.build());
 	}

@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.system;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.mod.crash.CrashType;
@@ -11,7 +10,6 @@ import fr.siroz.cariboustonks.core.system.System;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.mixin.accessors.AbstractContainerScreenAccessor;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectRBTreeMap;
 import java.util.HashMap;
@@ -33,7 +31,7 @@ public final class ContainerOverlaySystem implements System {
 
 	private static final Minecraft CLIENT = Minecraft.getInstance();
 
-	private final Map<Feature, Pair<ContainerMatcherComponent, ContainerOverlayComponent>> registeredOverlays = new HashMap<>();
+	private final Map<Feature, ContainerOverlayComponent> registeredOverlays = new HashMap<>();
 	private ContainerOverlayComponent currentContainerOverlay = null;
 	private List<ColorHighlight> highlights;
 
@@ -43,22 +41,10 @@ public final class ContainerOverlaySystem implements System {
 
 	@Override
 	public void register(@NonNull Feature feature) {
-		Optional<ContainerMatcherComponent> matcherOpt = feature.getComponent(ContainerMatcherComponent.class);
 		Optional<ContainerOverlayComponent> overlayOpt = feature.getComponent(ContainerOverlayComponent.class);
+		if (overlayOpt.isEmpty()) return;
 
-		if (matcherOpt.isEmpty() && overlayOpt.isPresent()) {
-			CaribouStonks.LOGGER.error("[ContainerOverlaySystem] no matcher found with overlay for {}", feature.getShortName());
-			return;
-		}
-
-		if (matcherOpt.isEmpty() || overlayOpt.isEmpty()) {
-			return;
-		}
-
-		ContainerMatcherComponent matcher = matcherOpt.get();
-		ContainerOverlayComponent overlay = overlayOpt.get();
-
-		registeredOverlays.put(feature, Pair.of(matcher, overlay));
+		registeredOverlays.put(feature, overlayOpt.get());
 
 		if (DeveloperTools.isInDevelopment()) {
 			CaribouStonks.LOGGER.info("[ContainerOverlaySystem] Registered overlay from feature: {}", feature.getShortName());
@@ -123,10 +109,10 @@ public final class ContainerOverlaySystem implements System {
 	}
 
 	private void onScreen(@NonNull ContainerScreen screen) {
-		for (Map.Entry<Feature, Pair<ContainerMatcherComponent, ContainerOverlayComponent>> overlay : registeredOverlays.entrySet()) {
+		for (Map.Entry<Feature, ContainerOverlayComponent> overlay : registeredOverlays.entrySet()) {
 			if (overlay.getKey().isEnabled()) {
-				if (overlay.getValue().left().matches(screen, screen.getMenu().slots.size())) {
-					currentContainerOverlay = overlay.getValue().right();
+				if (overlay.getValue().getTrait().matches(screen, screen.getMenu().slots.size())) {
+					currentContainerOverlay = overlay.getValue();
 					markHighlightsDirty();
 					return;
 				}

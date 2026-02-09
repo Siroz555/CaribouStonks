@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.features.dungeon;
 
-import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
+import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -31,10 +31,8 @@ public class CroesusMenuFeature extends Feature {
 			() ->  this.config().instance.croesus.mainMenuKismetAvailable;
 
 	public CroesusMenuFeature() {
-		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.builder()
-				.titlePattern(CROESUS_PATTERN)
-				.build());
 		this.addComponent(ContainerOverlayComponent.class, ContainerOverlayComponent.builder()
+				.trait(MatcherTrait.pattern(CROESUS_PATTERN))
 				.content(this::contentAnalyzer)
 				.build());
 	}

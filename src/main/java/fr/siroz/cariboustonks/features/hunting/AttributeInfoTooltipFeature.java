@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.features.hunting;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
@@ -37,9 +37,9 @@ public class AttributeInfoTooltipFeature extends Feature {
 	public AttributeInfoTooltipFeature(int priority) {
 		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
 
-		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.of(AttributeAPI.SHARD_GUI_PATTERN));
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
+				.trait(MatcherTrait.empty())
 				.appender((focusedSlot, item, lines) -> {
 					if (hypixelDataSource.isBazaarInUpdate()) return;
 

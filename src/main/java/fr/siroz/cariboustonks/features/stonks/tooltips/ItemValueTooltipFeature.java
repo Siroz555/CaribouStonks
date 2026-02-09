@@ -3,9 +3,9 @@ package fr.siroz.cariboustonks.features.stonks.tooltips;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyblockItemStack;
@@ -40,9 +40,9 @@ public class ItemValueTooltipFeature extends Feature {
 	public ItemValueTooltipFeature(int priority) {
 		TickScheduler.getInstance().runRepeating(failedCalculations::clear, 5, TimeUnit.MINUTES);
 
-		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.empty());
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
+				.trait(MatcherTrait.empty())
 				.appender(this::appendToTooltip)
 				.build());
 	}

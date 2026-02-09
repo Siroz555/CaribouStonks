@@ -17,7 +17,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
  *     <li>{@link CommandComponent} provides client-side command registration</li>
  *     <li>{@link KeybindComponent} provides Keybinds registration</li>
  *     <li>{@link HudComponent} provides Hud registration</li>
- *     <li>{@link ContainerMatcherComponent} provide a container (Screen) matching Pattern</li>
  *     <li>{@link ContainerOverlayComponent} provide overlays creation in containers (Screen)</li>
  *     <li>{@link TooltipAppenderComponent} provide tooltips appender in containers (Screen)</li>
  *     <li>{@link EntityGlowComponent} provide glowing strategies for entities</li>
@@ -50,7 +49,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
  */
 public sealed interface Component permits
 		CommandComponent,
-		ContainerMatcherComponent,
 		ContainerOverlayComponent,
 		EntityGlowComponent,
 		HudComponent,

@@ -1,12 +1,12 @@
 package fr.siroz.cariboustonks.features.ui;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.component.ContainerMatcherComponent;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
+import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
@@ -31,15 +31,18 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 	private static final Pattern TITLE_PATTERN = Pattern.compile("^Abiphone.*");
 	private static final Cooldown COOLDOWN = Cooldown.of(1, TimeUnit.SECONDS);
 
+	private final MatcherTrait trait;
 	private boolean updated = false;
 
 	public AbiphoneFavoriteContactFeature(int priority) {
+		this.trait = MatcherTrait.pattern(TITLE_PATTERN);
+
 		GuiEvents.SCREEN_KEY_PRESS_EVENT.register(this::onKeyPressed);
 		GuiEvents.SCREEN_CLOSE_EVENT.register(this::onClose);
 
-		this.addComponent(ContainerMatcherComponent.class, ContainerMatcherComponent.of(TITLE_PATTERN));
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
+				.trait(this.trait)
 				.appender((focusedSlot, item, lines) -> {
 					if (isContact(item)) {
 						String name = StonksUtils.stripColor(item.getHoverName().getString());
@@ -55,6 +58,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 				})
 				.build());
 		this.addComponent(ContainerOverlayComponent.class, ContainerOverlayComponent.builder()
+				.trait(this.trait)
 				.content(slots -> {
 					List<ColorHighlight> highlights = new ArrayList<>();
 					slots.forEach((slotIndex, itemStack) -> {
@@ -98,9 +102,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 	}
 
 	private boolean isMatcherBlocking(Screen screen) {
-		return !this.getComponent(ContainerMatcherComponent.class)
-				.map(matcherComponent -> matcherComponent.matches(screen, 0))
-				.orElse(false);
+		return !trait.matches(screen, 0);
 	}
 
 	private boolean isContact(ItemStack itemStack) {
