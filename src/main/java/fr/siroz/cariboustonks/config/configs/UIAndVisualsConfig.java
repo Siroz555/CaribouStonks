@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.config.configs;
 
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import fr.siroz.cariboustonks.core.module.hud.HudConfig;
+import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import java.awt.Color;
 
@@ -153,7 +154,10 @@ public class UIAndVisualsConfig {
 		public int showTime = 15;
 
 		@SerialEntry
-		public boolean rainbow = true;
+		public Waypoint.Type type = Waypoint.Type.OUTLINED_WAYPOINT;
+
+		@SerialEntry
+		public boolean rainbow = false;
 
 		@SerialEntry
 		public Color color = Color.RED;

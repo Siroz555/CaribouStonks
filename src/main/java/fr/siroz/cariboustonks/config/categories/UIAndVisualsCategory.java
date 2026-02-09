@@ -8,6 +8,7 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
+import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.screens.HudConfigScreen;
 import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.render.AnimationUtils;
@@ -246,6 +247,26 @@ public class UIAndVisualsCategory extends AbstractCategory {
 										() -> current.uiAndVisuals.sharedPositionWaypoint.rainbow,
 										newValue -> current.uiAndVisuals.sharedPositionWaypoint.rainbow = newValue)
 								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Waypoint.Type>createBuilder()
+								.name(Component.literal("Waypoint Type"))
+								.description(OptionDescription.of(
+										Component.literal("Change the display type of the Waypoint."),
+										Component.literal(SPACE + "Types:"),
+										Component.literal(SPACE + " BEAM:").withStyle(ChatFormatting.UNDERLINE),
+										Component.literal(SPACE + " Colored beacon beam"),
+										Component.literal(SPACE + " WAYPOINT:").withStyle(ChatFormatting.UNDERLINE),
+										Component.literal(SPACE + " Combines a beacon beam with a box at its base"),
+										Component.literal(SPACE + " OUTLINED_WAYPOINT:").withStyle(ChatFormatting.UNDERLINE),
+										Component.literal(SPACE + " Similar to WAYPOINT but with an outlined box"),
+										Component.literal(SPACE + " HIGHLIGHT:").withStyle(ChatFormatting.UNDERLINE),
+										Component.literal(SPACE + " Highlight with an outlined box"),
+										Component.literal(SPACE + " OUTLINE:").withStyle(ChatFormatting.UNDERLINE),
+										Component.literal(SPACE + " Creates only an outline around the target")))
+								.binding(defaults.uiAndVisuals.sharedPositionWaypoint.type,
+										() -> current.uiAndVisuals.sharedPositionWaypoint.type,
+										newValue -> current.uiAndVisuals.sharedPositionWaypoint.type = newValue)
+								.controller(this::createEnumCyclingController)
 								.build())
 						.option(Option.<Color>createBuilder()
 								.name(Component.literal("Waypoint color"))

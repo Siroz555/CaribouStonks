@@ -95,7 +95,7 @@ public final class WaypointRenderer {
 			}
 
 			renderer.submitText(
-					Component.literal(Math.round(distance) + "m").withStyle(ChatFormatting.AQUA),
+					Component.literal(Math.round(distance) + "m").withStyle(ChatFormatting.YELLOW),
 					centerPos.add(0, 1, 0),
 					Math.max((float) distance / textOption.getScaleAdjustment(), 1),
 					Minecraft.getInstance().font.lineHeight + 1F,
