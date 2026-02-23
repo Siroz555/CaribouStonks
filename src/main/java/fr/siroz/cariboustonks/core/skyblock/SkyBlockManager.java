@@ -8,14 +8,17 @@ import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonManager;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
-import fr.siroz.cariboustonks.util.DeveloperTools;
+import fr.siroz.cariboustonks.util.StonksUtils;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.concurrent.TimeUnit;
+import net.azureaaron.hmapi.events.HypixelPacketEvents;
+import net.azureaaron.hmapi.network.HypixelNetworking;
+import net.azureaaron.hmapi.network.packet.s2c.ErrorS2CPacket;
+import net.azureaaron.hmapi.network.packet.s2c.HelloS2CPacket;
+import net.azureaaron.hmapi.network.packet.s2c.HypixelS2CPacket;
+import net.azureaaron.hmapi.network.packet.v1.s2c.LocationUpdateS2CPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.hypixel.modapi.HypixelModAPI;
-import net.hypixel.modapi.error.BuiltinErrorReason;
-import net.hypixel.modapi.error.ErrorReason;
-import net.hypixel.modapi.packet.impl.clientbound.ClientboundHelloPacket;
-import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The {@code SkyBlockManager} class serves as the core manager for all SkyBlock related-content.
@@ -43,11 +46,12 @@ public final class SkyBlockManager {
 		// Event listeners
 		ClientPlayConnectionEvents.DISCONNECT.register((_handler, _client) -> this.onDisconnect());
 
-		// Official Hypixel Mod API
+		// Hypixel Mod API
 		try {
-			HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket.class);
-			HypixelModAPI.getInstance().createHandler(ClientboundHelloPacket.class, this::handleHelloPacket).onError(this::handleErrorPacket);
-			HypixelModAPI.getInstance().createHandler(ClientboundLocationPacket.class, this::handleLocationPacket).onError(this::handleErrorPacket);
+			HypixelNetworking.registerToEvents(StonksUtils.make(new Object2IntOpenHashMap<>(),
+					map -> map.put(LocationUpdateS2CPacket.ID, 1)));
+			HypixelPacketEvents.HELLO.register(this::handlePacket);
+			HypixelPacketEvents.LOCATION_UPDATE.register(this::handlePacket);
 		} catch (Exception ex) {
 			CaribouStonks.LOGGER.error("[HypixelModAPI] Unable to register Hypixel Mod API", ex);
 		}
@@ -98,41 +102,37 @@ public final class SkyBlockManager {
 		SkyBlockAPI.handleInternalLocationUpdate(null, false, "", IslandType.UNKNOWN);
 	}
 
-	private void handleHelloPacket(ClientboundHelloPacket helloPacket) {
-		if (helloPacket == null) return;
+	private void handlePacket(@NotNull HypixelS2CPacket packet) {
+		switch (packet) {
 
-		if (DeveloperTools.isInDevelopment()) {
-			CaribouStonks.LOGGER.info("[HypixelModAPI] Hello o/ ({})", helloPacket.getEnvironment());
-		}
-		SkyBlockAPI.handleInternalLocationUpdate(true, null, null, null);
-	}
+			case HelloS2CPacket(var ignored) -> SkyBlockAPI.handleInternalLocationUpdate(true, null, null, null);
 
-	private void handleLocationPacket(ClientboundLocationPacket locationPacket) {
-		if (locationPacket == null) return;
+			case LocationUpdateS2CPacket(var serverName, var serverType, var ignored, var mode, var ignored1) -> {
+				String previousServerType = SkyBlockAPI.getGameType();
+				String gameType = serverType.orElse("");
+				IslandType islandType = IslandType.getById(mode.orElse(""));
 
-		String previousServerType = SkyBlockAPI.getGameType();
-		String gameType = locationPacket.getServerType().isPresent() ? locationPacket.getServerType().get().name() : "";
-		IslandType islandType = IslandType.getById(locationPacket.getMode().orElse(""));
+				SkyBlockAPI.handleInternalLocationUpdate(null, null, gameType, islandType);
+				SkyBlockEvents.ISLAND_CHANGE_EVENT.invoker().onIslandChange(islandType);
 
-		SkyBlockAPI.handleInternalLocationUpdate(null, null, gameType, islandType);
-		SkyBlockEvents.ISLAND_CHANGE_EVENT.invoker().onIslandChange(islandType);
-
-		if (gameType.equals("SKYBLOCK")) {
-			SkyBlockAPI.handleInternalLocationUpdate(null, true, null, null);
-			if (!previousServerType.equals("SKYBLOCK")) {
-				SkyBlockEvents.JOIN_EVENT.invoker().onJoin(locationPacket.getServerName());
+				if (gameType.equals("SKYBLOCK")) {
+					SkyBlockAPI.handleInternalLocationUpdate(null, true, null, null);
+					if (!previousServerType.equals("SKYBLOCK")) {
+						SkyBlockEvents.JOIN_EVENT.invoker().onJoin(serverName);
+					}
+				} else if (previousServerType.equals("SKYBLOCK")) {
+					SkyBlockAPI.handleInternalLocationUpdate(null, false, null, null);
+					SkyBlockEvents.LEAVE_EVENT.invoker().onLeave();
+				}
 			}
-		} else if (previousServerType.equals("SKYBLOCK")) {
-			SkyBlockAPI.handleInternalLocationUpdate(null, false, null, null);
-			SkyBlockEvents.LEAVE_EVENT.invoker().onLeave();
-		}
-	}
 
-	private void handleErrorPacket(ErrorReason reason) {
-		if (reason instanceof BuiltinErrorReason error) {
-			CaribouStonks.LOGGER.warn("[HypixelModAPI] [ERROR] [{}] {}", error.getId(), error.name());
-		} else {
-			CaribouStonks.LOGGER.warn("[HypixelModAPI] [ERROR] [{}]", reason.getId());
+			case ErrorS2CPacket(var id, var error) when id.equals(LocationUpdateS2CPacket.ID) -> {
+				SkyBlockAPI.handleInternalLocationUpdate(null, null, "", IslandType.UNKNOWN);
+				CaribouStonks.LOGGER.error("[HypixelModAPI] Failed to update Hypixel location! Error: {}", error);
+			}
+
+			default -> {
+			}
 		}
 	}
 }
