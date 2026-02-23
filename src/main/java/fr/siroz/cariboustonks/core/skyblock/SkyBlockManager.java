@@ -18,7 +18,7 @@ import net.azureaaron.hmapi.network.packet.s2c.HelloS2CPacket;
 import net.azureaaron.hmapi.network.packet.s2c.HypixelS2CPacket;
 import net.azureaaron.hmapi.network.packet.v1.s2c.LocationUpdateS2CPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * The {@code SkyBlockManager} class serves as the core manager for all SkyBlock related-content.
@@ -102,7 +102,7 @@ public final class SkyBlockManager {
 		SkyBlockAPI.handleInternalLocationUpdate(null, false, "", IslandType.UNKNOWN);
 	}
 
-	private void handlePacket(@NotNull HypixelS2CPacket packet) {
+	private void handlePacket(@NonNull HypixelS2CPacket packet) {
 		switch (packet) {
 
 			case HelloS2CPacket(var ignored) -> SkyBlockAPI.handleInternalLocationUpdate(true, null, null, null);
