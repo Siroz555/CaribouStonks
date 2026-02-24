@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.system.NetworkSystem;
+import fr.siroz.cariboustonks.systems.NetworkSystem;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.ArrayList;

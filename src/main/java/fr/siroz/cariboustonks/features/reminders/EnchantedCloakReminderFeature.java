@@ -9,7 +9,7 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.system.ReminderSystem;
+import fr.siroz.cariboustonks.systems.ReminderSystem;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.CodecUtils;
 import java.time.Duration;

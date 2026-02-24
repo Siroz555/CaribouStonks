@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.mixin;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.system.ContainerOverlaySystem;
+import fr.siroz.cariboustonks.systems.ContainerOverlaySystem;
 import java.util.List;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;

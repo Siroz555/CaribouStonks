@@ -1,15 +1,15 @@
 package fr.siroz.cariboustonks.core.system;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.system.CommandSystem;
-import fr.siroz.cariboustonks.system.ContainerOverlaySystem;
-import fr.siroz.cariboustonks.system.GlowingSystem;
-import fr.siroz.cariboustonks.system.HudSystem;
-import fr.siroz.cariboustonks.system.KeyBindSystem;
-import fr.siroz.cariboustonks.system.NetworkSystem;
-import fr.siroz.cariboustonks.system.ReminderSystem;
-import fr.siroz.cariboustonks.system.TooltipAppenderSystem;
-import fr.siroz.cariboustonks.system.WaypointSystem;
+import fr.siroz.cariboustonks.systems.CommandSystem;
+import fr.siroz.cariboustonks.systems.ContainerOverlaySystem;
+import fr.siroz.cariboustonks.systems.GlowingSystem;
+import fr.siroz.cariboustonks.systems.HudSystem;
+import fr.siroz.cariboustonks.systems.KeyBindSystem;
+import fr.siroz.cariboustonks.systems.NetworkSystem;
+import fr.siroz.cariboustonks.systems.ReminderSystem;
+import fr.siroz.cariboustonks.systems.TooltipAppenderSystem;
+import fr.siroz.cariboustonks.systems.WaypointSystem;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;

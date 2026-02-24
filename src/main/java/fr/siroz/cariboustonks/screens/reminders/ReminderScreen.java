@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.screens.CaribousStonksScreen;
-import fr.siroz.cariboustonks.system.ReminderSystem;
+import fr.siroz.cariboustonks.systems.ReminderSystem;
 import it.unimi.dsi.fastutil.Pair;
 import java.util.List;
 import net.minecraft.ChatFormatting;

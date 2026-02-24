@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.module.waypoint.options.IconOption;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
-import fr.siroz.cariboustonks.system.WaypointSystem;
+import fr.siroz.cariboustonks.systems.WaypointSystem;
 import fr.siroz.cariboustonks.util.Ticks;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;

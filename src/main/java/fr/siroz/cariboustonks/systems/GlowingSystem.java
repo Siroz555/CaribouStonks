@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.system;
+package fr.siroz.cariboustonks.systems;
 
 import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;

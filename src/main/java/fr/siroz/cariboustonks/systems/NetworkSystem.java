@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.system;
+package fr.siroz.cariboustonks.systems;
 
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.system.System;

@@ -4,7 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import fr.siroz.cariboustonks.system.CommandSystem;
+import fr.siroz.cariboustonks.systems.CommandSystem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

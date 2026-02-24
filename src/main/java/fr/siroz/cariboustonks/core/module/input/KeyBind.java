@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.module.input;
 
 import fr.siroz.cariboustonks.core.component.KeybindComponent;
-import fr.siroz.cariboustonks.system.KeyBindSystem;
+import fr.siroz.cariboustonks.systems.KeyBindSystem;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.Slot;

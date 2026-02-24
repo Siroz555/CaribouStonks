@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.hud.Hud;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
-import fr.siroz.cariboustonks.system.HudSystem;
+import fr.siroz.cariboustonks.systems.HudSystem;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
