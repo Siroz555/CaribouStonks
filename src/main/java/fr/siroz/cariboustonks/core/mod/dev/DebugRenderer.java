@@ -2,6 +2,8 @@ package fr.siroz.cariboustonks.core.mod.dev;
 
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
+import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -14,15 +16,21 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-record DebugRenderer(DeveloperManager dev) {
+class DebugRenderer {
 
-	public void render(WorldRenderer renderer) {
+	private final DeveloperManager dev;
+
+	DebugRenderer(DeveloperManager dev) {
+		this.dev = dev;
+		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
+	}
+
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
+	private void render(WorldRenderer renderer) {
 		if (!dev.getTexturedArmorStands().isEmpty()) {
 			for (Object2IntMap.Entry<ArmorStand> armorStand : dev.getTexturedArmorStands().object2IntEntrySet()) {
 				ArmorStand entity = armorStand.getKey();
-				if (entity == null) {
-					continue;
-				}
+				if (entity == null) continue;
 
 				Vec3 centerPos = entity.position();
 				renderer.submitText(Component.literal("#" + armorStand.getIntValue()),

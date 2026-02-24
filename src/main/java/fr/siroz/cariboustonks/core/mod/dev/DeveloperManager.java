@@ -9,7 +9,6 @@ import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
-import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
@@ -52,12 +51,11 @@ public final class DeveloperManager {
 	public DeveloperManager() {
 		CaribouStonks.LOGGER.warn("Debug mode enabled ({}) {}", SharedConstants.getCurrentVersion().name(), DeveloperTools.isSnapshot() ? "(Snapshot)" : "");
 		// Debug Renderer
-		DebugRenderer debugRenderer = new DebugRenderer(this);
+		new DebugRenderer(this);
 		// Events
 		ClientPlayConnectionEvents.JOIN.register(this::onPlayConnection);
 		WorldEvents.ALLOW_SOUND_EVENT.register(this::onSound);
 		NetworkEvents.PLAY_SOUND_PACKET.register(this::onSoundPacket);
-		RenderEvents.WORLD_RENDER_EVENT.register(debugRenderer::render);
 		// Commands
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _ra) -> dispatcher.register(
 				ClientCommandManager.literal(CaribouStonks.NAMESPACE).then(ClientCommandManager.literal("devtools")
