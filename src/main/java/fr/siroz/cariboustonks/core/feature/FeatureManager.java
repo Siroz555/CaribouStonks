@@ -202,8 +202,8 @@ public final class FeatureManager {
 		});
 	}
 
-	private void warnIfExperimental(Feature feature) {
-		Experimental annotation = getClass().getAnnotation(Experimental.class);
+	private void warnIfExperimental(@NonNull Feature feature) {
+		Experimental annotation = feature.getClass().getAnnotation(Experimental.class);
 
 		Optional<String> experimental = annotation != null ? Optional.of(annotation.value()) : Optional.empty();
 		experimental.ifPresent(s -> CaribouStonks.LOGGER.warn("[FeatureManager] {} is marked as Experimental {}",
