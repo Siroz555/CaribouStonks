@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.core.service.json.JsonFileService;
 import fr.siroz.cariboustonks.core.service.json.JsonProcessingException;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.system.System;
+import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import it.unimi.dsi.fastutil.Pair;
@@ -39,6 +40,7 @@ public final class ReminderSystem implements System {
 
 	private static final Path REMINDER_PATH = CaribouStonks.CONFIG_DIR.resolve("reminder.json");
 	private static final int MONITOR_INTERVAL_SECONDS = 10;
+	private static final int AUTO_SAVE_INTERVAL_SECONDS = 60;
 
 	private final PriorityQueue<TimedObjectModel> queue = new PriorityQueue<>(Comparator.comparing(TimedObjectModel::expirationTime));
 	private final Map<String, TimedObjectModel> activeReminders = new ConcurrentHashMap<>();
@@ -47,6 +49,8 @@ public final class ReminderSystem implements System {
 
 	private final ScheduledExecutorService scheduler;
 	private volatile boolean loaded = false;
+	private volatile boolean isDirty = false;
+	private volatile int lastSavedHash = 0;
 
 	public ReminderSystem() {
 		this.scheduler = Executors.newScheduledThreadPool(1, r -> {
@@ -55,7 +59,8 @@ public final class ReminderSystem implements System {
 			return thread;
 		});
 		SkyBlockEvents.JOIN_EVENT.register(_serverName -> this.onSkyBlockJoin());
-		startMonitoring();
+		this.startMonitoring();
+		this.startAutoSave();
 	}
 
 	/**
@@ -142,6 +147,7 @@ public final class ReminderSystem implements System {
 			queue.add(obj);
 		}
 		activeReminders.put(objectId, obj);
+		isDirty = true;
 
 		if (DeveloperTools.isInDevelopment()) {
 			CaribouStonks.LOGGER.info("[ReminderSystem] Added object: {} (type: {}, expires: {})", objectId, obj.type(), obj.expirationTime());
@@ -172,10 +178,9 @@ public final class ReminderSystem implements System {
 		return result;
 	}
 
+	@EventHandler(event = "SkyBlockEvents.JOIN_EVENT")
 	private void onSkyBlockJoin() {
-		if (loaded) {
-			return;
-		}
+		if (loaded) return;
 
 		loaded = true;
 		loadTimedObjects()
@@ -189,9 +194,7 @@ public final class ReminderSystem implements System {
 
 	@Override
 	public void onShutdown() {
-		if (!loaded) {
-			return;
-		}
+		if (!loaded) return;
 
 		loaded = false;
 
@@ -213,10 +216,32 @@ public final class ReminderSystem implements System {
 		}
 	}
 
-	private @NonNull CompletableFuture<List<TimedObjectModel>> loadTimedObjects() {
-		if (!Files.exists(REMINDER_PATH)) {
-			return CompletableFuture.completedFuture(List.of());
+	private void startMonitoring() {
+		scheduler.scheduleAtFixedRate(() -> {
+			try {
+				processReminders();
+			} catch (Exception ex) {
+				CaribouStonks.LOGGER.error("[ReminderSystem] Error in monitoring task", ex);
+			}
+		}, MONITOR_INTERVAL_SECONDS, MONITOR_INTERVAL_SECONDS, TimeUnit.SECONDS);
+
+		if (DeveloperTools.isInDevelopment()) {
+			CaribouStonks.LOGGER.info("[ReminderSystem] Started monitoring with {}s interval", MONITOR_INTERVAL_SECONDS);
 		}
+	}
+
+	private void startAutoSave() {
+		scheduler.scheduleAtFixedRate(() -> {
+			try {
+				autoSave();
+			} catch (Exception ex) {
+				CaribouStonks.LOGGER.error("[ReminderSystem] Error in auto-save task", ex);
+			}
+		}, AUTO_SAVE_INTERVAL_SECONDS, AUTO_SAVE_INTERVAL_SECONDS, TimeUnit.SECONDS);
+	}
+
+	private @NonNull CompletableFuture<List<TimedObjectModel>> loadTimedObjects() {
+		if (!Files.exists(REMINDER_PATH)) return CompletableFuture.completedFuture(List.of());
 
 		return CompletableFuture.supplyAsync(() -> {
 			try {
@@ -235,9 +260,7 @@ public final class ReminderSystem implements System {
 	}
 
 	private void loadExistingObjects(@NonNull List<TimedObjectModel> loadedObjects) {
-		if (loadedObjects.isEmpty()) {
-			return;
-		}
+		if (loadedObjects.isEmpty()) return;
 
 		Instant now = Instant.now();
 		int expired = 0;
@@ -270,20 +293,6 @@ public final class ReminderSystem implements System {
 		}
 	}
 
-	private void startMonitoring() {
-		scheduler.scheduleAtFixedRate(() -> {
-			try {
-				processReminders();
-			} catch (Exception ex) {
-				CaribouStonks.LOGGER.error("[ReminderSystem] Error in monitoring task", ex);
-			}
-		}, MONITOR_INTERVAL_SECONDS, MONITOR_INTERVAL_SECONDS, TimeUnit.SECONDS);
-
-		if (DeveloperTools.isInDevelopment()) {
-			CaribouStonks.LOGGER.info("[ReminderSystem] Started monitoring with {}s interval", MONITOR_INTERVAL_SECONDS);
-		}
-	}
-
 	private void processReminders() {
 		Instant now = Instant.now();
 		List<TimedObjectModel> expiredObjects = new ArrayList<>();
@@ -309,9 +318,7 @@ public final class ReminderSystem implements System {
 	}
 
 	private boolean shouldProcessPreNotification(@NonNull TimedObjectModel obj, @NonNull Instant now) {
-		if (!preNotifiedIds.add(obj.id())) {
-			return false;
-		}
+		if (!preNotifiedIds.add(obj.id())) return false;
 
 		ReminderComponent component = registeredComponents.get(obj.type());
 		if (component == null) {
@@ -365,5 +372,77 @@ public final class ReminderSystem implements System {
 		} else {
 			CaribouStonks.LOGGER.warn("[ReminderSystem] No component found for expired reminder: {} (type: {})", obj.id(), obj.type());
 		}
+	}
+
+	private void autoSave() {
+		if (!loaded) return;
+
+		if (!isDirty) {
+			if (DeveloperTools.isInDevelopment()) {
+				CaribouStonks.LOGGER.info("[ReminderSystem] Auto-save skipped: no changes (not dirty)");
+			}
+			return;
+		}
+
+		if (saveIfChanged()) {
+			isDirty = false;
+		}
+	}
+
+	private boolean saveIfChanged() {
+		List<TimedObjectModel> objectsToSave;
+		synchronized (queue) {
+			objectsToSave = new ArrayList<>(queue);
+		}
+
+		// If empty and was empty before, skip
+		if (objectsToSave.isEmpty() && lastSavedHash == 0) {
+			if (DeveloperTools.isInDevelopment()) {
+				CaribouStonks.LOGGER.info("[ReminderSystem] Save skipped: queue is empty");
+			}
+			return false;
+		}
+
+		int currentHash = calculateHash(objectsToSave);
+		if (currentHash == lastSavedHash) {
+			if (DeveloperTools.isInDevelopment()) {
+				CaribouStonks.LOGGER.info("[ReminderSystem] Save skipped: content unchanged (hash: {})", currentHash);
+			}
+			return false;
+		}
+
+		try {
+			JsonFileService.get().save(REMINDER_PATH, objectsToSave);
+			lastSavedHash = currentHash;
+
+			if (DeveloperTools.isInDevelopment()) {
+				CaribouStonks.LOGGER.info(
+						"[ReminderSystem] Saved {} reminders (hash: {})",
+						objectsToSave.size(),
+						currentHash
+				);
+			}
+
+			return true;
+		} catch (JsonProcessingException ex) {
+			CaribouStonks.LOGGER.error("[ReminderSystem] Failed to save reminders", ex);
+			return false;
+		}
+	}
+
+	private int calculateHash(List<TimedObjectModel> objects) {
+		if (objects.isEmpty()) return 0;
+
+		// Il faut que ça soit consistent
+		List<TimedObjectModel> sorted = new ArrayList<>(objects);
+		sorted.sort(Comparator.comparing(TimedObjectModel::id));
+
+		int hash = 1;
+		for (TimedObjectModel obj : sorted) {
+			hash = 31 * hash + obj.id().hashCode();
+			hash = 31 * hash + obj.expirationTime().hashCode();
+		}
+
+		return hash;
 	}
 }
