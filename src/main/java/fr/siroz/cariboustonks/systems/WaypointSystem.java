@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.systems;
 
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
-import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.system.System;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.RenderEvents;
@@ -9,6 +8,7 @@ import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.minecraft.client.Minecraft;
 import org.jspecify.annotations.NonNull;
@@ -34,7 +34,6 @@ import org.jspecify.annotations.NonNull;
  *
  * @see Waypoint
  * @see System
- * @see TickScheduler
  */
 public final class WaypointSystem implements System {
 
@@ -45,7 +44,7 @@ public final class WaypointSystem implements System {
     public WaypointSystem() {
 		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((event, world) -> this.resetWaypoints());
         RenderEvents.WORLD_RENDER_EVENT.register(this::render);
-        TickScheduler.getInstance().runRepeating(this::onTick, 1);
+		ClientTickEvents.END_CLIENT_TICK.register(_client -> this.onTick());
     }
 
 	/**
@@ -77,6 +76,7 @@ public final class WaypointSystem implements System {
         }
     }
 
+	@EventHandler(event = "ClientTickEvents.END_CLIENT_TICK")
     private void onTick() {
         if (waypoints.isEmpty()) {
 			return;
