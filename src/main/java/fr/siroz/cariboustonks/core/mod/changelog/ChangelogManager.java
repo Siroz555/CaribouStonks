@@ -63,7 +63,7 @@ public final class ChangelogManager {
 		SkyBlockEvents.JOIN_EVENT.register(_s -> this.onJoinSkyBlock());
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _ra) ->
-				dispatcher.register(ClientCommandManager.literal("stonksviewchangelog")
+				dispatcher.register(ClientCommandManager.literal("csviewchangelog")
 						.executes(Client.openScreen(
 								() -> ChangelogScreen.create(changelogEntries, this::markChangelogAsSeen)))));
 	}
@@ -102,7 +102,7 @@ public final class ChangelogManager {
 					.append(Component.literal("to see the changelogs in-game!").withStyle(ChatFormatting.YELLOW))
 					.withStyle(style -> style
 							.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to see the changelogs!").withStyle(ChatFormatting.YELLOW)))
-							.withClickEvent(new ClickEvent.RunCommand("/stonksviewchangelog"))));
+							.withClickEvent(new ClickEvent.RunCommand("/csviewchangelog"))));
 			Client.sendMessage(Component.empty());
 		}, 3, TimeUnit.SECONDS);
 	}
