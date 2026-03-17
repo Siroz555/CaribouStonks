@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.component.DataComponentHolder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -19,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemLore;
@@ -144,16 +146,23 @@ public final class ItemUtils {
 	 * @return the created ItemStack
 	 */
 	public static @NonNull ItemStack createSkull(@NonNull String textureB64) {
-		ItemStack skull = new ItemStack(Items.PLAYER_HEAD);
+		ItemStackTemplate virtualSkull = createVirtualSkull(textureB64);
+		if (virtualSkull != null) return virtualSkull.create();
+		else return new ItemStack(Items.PLAYER_HEAD);
+	}
+
+	public static @Nullable ItemStackTemplate createVirtualSkull(@NonNull String textureB64) {
 		try {
 			PropertyMap map = new PropertyMap(ImmutableMultimap.of("textures", new Property("textures", textureB64)));
 			GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "skull", map);
 			ResolvableProfile profile = ResolvableProfile.createResolved(gameProfile);
-			skull.set(DataComponents.PROFILE, profile);
+			return new ItemStackTemplate(Items.PLAYER_HEAD, DataComponentPatch.builder()
+					.set(DataComponents.PROFILE, profile)
+					.build());
 		} catch (Exception ex) {
 			fr.siroz.cariboustonks.CaribouStonks.LOGGER.error("[ItemUtils] Failed to create skull", ex);
+			return null;
 		}
-		return skull;
 	}
 
 	/**

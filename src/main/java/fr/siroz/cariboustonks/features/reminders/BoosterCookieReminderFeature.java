@@ -10,12 +10,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 
 public final class BoosterCookieReminderFeature extends Feature /*implements Reminder*/ {
 
-	private static final ItemStack ICON = new ItemStack(Items.COOKIE);
+	private static final ItemStackTemplate ICON = new ItemStackTemplate(Items.COOKIE);
 
 	private boolean notified = false;
 
@@ -70,9 +70,9 @@ public final class BoosterCookieReminderFeature extends Feature /*implements Rem
 
 			Client.sendMessageWithPrefix(message);
 
-			Client.showNotification(message.copy(), ICON);
+			Client.showNotification(message.copy(), ICON.create());
 
-			AnimationUtils.showSpecialEffect(ICON, ParticleTypes.OMINOUS_SPAWNING, 10,
+			AnimationUtils.showSpecialEffect(ICON.create(), ParticleTypes.OMINOUS_SPAWNING, 10,
 					SoundEvents.BLAZE_DEATH, 1f, 0.75f);
 		}
 	}

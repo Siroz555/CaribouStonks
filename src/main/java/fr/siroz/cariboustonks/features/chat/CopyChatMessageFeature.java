@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Map;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
-import net.minecraft.client.GuiMessage;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
@@ -75,7 +75,7 @@ public class CopyChatMessageFeature extends Feature {
 	private int getMessageAt(double chatLineX, double chatLineY) {
 		ChatComponent chatHud = CLIENT.gui.getChat();
 		ChatComponentAccessor chatAccessor = (ChatComponentAccessor) chatHud;
-		if (!chatHud.isChatFocused() || chatAccessor.invokeIsChatHidden()) {
+		if (!chatHud.isChatFocused() /*|| chatAccessor.invokeIsChatHidden()*/) { // TODO :: 26.1 :: useless maintenant?
 			return -1;
 		}
 

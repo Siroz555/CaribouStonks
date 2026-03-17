@@ -11,6 +11,11 @@ public final class RenderUtils {
 
 	public static final int MAX_BUILD_HEIGHT = 300;
 
+	/**
+	 * LightTexture :: 0xF00000 :: RGBA(240, 0, 0, 0.00)
+	 */
+	public static final int FULL_BRIGHT = 15728880; // LightCoordsUtil
+
 	private RenderUtils() {
 	}
 

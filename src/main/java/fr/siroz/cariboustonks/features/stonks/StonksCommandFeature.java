@@ -15,7 +15,7 @@ import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.Optional;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -49,7 +49,7 @@ public class StonksCommandFeature extends Feature {
 						}
 						return 1;
 					});
-					builder.then(ClientCommandManager.argument("item", StringArgumentType.greedyString())
+					builder.then(ClientCommands.argument("item", StringArgumentType.greedyString())
 							.suggests((context, suggestionsBuilder) -> SharedSuggestionProvider.suggest(hypixelDataSource.getSkyBlockItemsIds(), suggestionsBuilder))
 							.executes(context -> handle(context.getSource(), StringArgumentType.getString(context, "item"))));
 				})

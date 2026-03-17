@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 public class HideStatusEffectsFeature extends Feature {
 
 	public HideStatusEffectsFeature() {
-		HudElementRegistry.replaceElement(VanillaHudElements.STATUS_EFFECTS,
+		HudElementRegistry.replaceElement(VanillaHudElements.MOB_EFFECTS,
 				hud -> isEnabled() ? (guiGraphics, deltaTracker) -> {} : hud
 		);
 	}

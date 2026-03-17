@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.Tooltip;
@@ -139,7 +139,7 @@ public class StonksScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
 		synchronized (this) {
 			super.onRender(guiGraphics, mouseX, mouseY, delta);
 		}
@@ -149,7 +149,7 @@ public class StonksScreen extends CaribousStonksScreen {
 				Component error = Component.literal("Error ;(");
 				int x1 = (getBackgroundWidth() - font.width(error)) / 2;
 				int y1 = getBackgroundHeight() / 2;
-				guiGraphics.drawString(font, error, x1, y1, Color.RED.getRGB());
+				guiGraphics.text(font, error, x1, y1, Color.RED.getRGB());
 			} else {
 				showLoadingScreen(guiGraphics);
 			}
@@ -209,7 +209,7 @@ public class StonksScreen extends CaribousStonksScreen {
 		minecraft.setScreen(null);
 	}
 
-	private void showLoadingScreen(GuiGraphics context) {
+	private void showLoadingScreen(GuiGraphicsExtractor context) {
 		if (minecraft.screen == null) {
 			return;
 		}
@@ -218,12 +218,12 @@ public class StonksScreen extends CaribousStonksScreen {
 
 		int x1 = (minecraft.screen.width - font.width(loadingText)) / 2;
 		int y1 = getBackgroundHeight() / 2;
-		context.drawString(font, loadingText, x1, y1, Colors.WHITE.asInt());
+		context.text(font, loadingText, x1, y1, Colors.WHITE.asInt());
 
 		String string = LoadingDotsText.get(Util.getMillis());
 		int x2 = (minecraft.screen.width - font.width(string)) / 2;
 		int y2 = y1 + 9;
-		context.drawString(font, string, x2, y2, Colors.WHITE.asInt());
+		context.text(font, string, x2, y2, Colors.WHITE.asInt());
 	}
 
 	private @NonNull CompletableFuture<Void> fetchItemData(@NonNull ItemLookupKey key) {
@@ -303,7 +303,7 @@ public class StonksScreen extends CaribousStonksScreen {
 		}
 
 		@Override
-		public void renderWidget(@NonNull GuiGraphics context, int mouseX, int mouseY, float delta) {
+		public void extractWidgetRenderState(@NonNull GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
 			Component text = this.getMessage();
 			Font textRenderer = this.getFont();
 
@@ -314,8 +314,8 @@ public class StonksScreen extends CaribousStonksScreen {
 			int y = this.getY() + (this.getHeight() - textRenderer.lineHeight) / 2;
 			FormattedCharSequence orderedText = textWidth > width ? this.trim(text, width) : text.getVisualOrderText();
 
-			context.drawString(textRenderer, orderedText, x, y, Colors.WHITE.asInt());
-			context.renderItem(icon, x - 34, y - 4);
+			context.text(textRenderer, orderedText, x, y, Colors.WHITE.asInt());
+			context.item(icon, x - 34, y - 4);
 		}
 
 		private FormattedCharSequence trim(Component text, int width) {

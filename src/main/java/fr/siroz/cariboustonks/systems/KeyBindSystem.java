@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -27,7 +27,7 @@ import org.jspecify.annotations.NonNull;
  * providing functionality to trigger actions based on key presses, manage KeyBind states,
  * and integrate KeyBind with custom screens.
  * <p>
- * The registration of KeyBinds is done via the {@link KeyBindingHelper} from Fabric API.
+ * The registration of KeyBinds is done via the {@link KeyMappingHelper} from Fabric API.
  * <p>
  * This allows for better management of KeyBind states compared to the Fabric API and provides
  * improved tracking of the different uses of each KeyBind within the Mod.
@@ -81,7 +81,7 @@ public final class KeyBindSystem implements System {
 	}
 
 	/**
-	 * Registers a {@link KeyBind} into the {@link KeyBindingHelper} Fabric API, and adds it for handling key presses.
+	 * Registers a {@link KeyBind} into the {@link KeyMappingHelper} Fabric API, and adds it for handling key presses.
 	 * Ensures that key binds with duplicate names are not added.
 	 */
 	private void registerKeyBind(KeyBind keyBind) {
@@ -90,7 +90,7 @@ public final class KeyBindSystem implements System {
 		}
 
 		enabledKeyBinds.add(keyBind);
-		KeyBindingHelper.registerKeyBinding(keyBind.getKeyBinding());
+		KeyMappingHelper.registerKeyMapping(keyBind.getKeyBinding());
 	}
 
 	/**

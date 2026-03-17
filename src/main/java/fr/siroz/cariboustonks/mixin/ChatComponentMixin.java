@@ -9,15 +9,8 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ChatComponent.class) // ChatHud
 public abstract class ChatComponentMixin {
 
-	@ModifyExpressionValue(method = {"addMessageToDisplayQueue", "addMessageToQueue(Lnet/minecraft/client/GuiMessage;)V", "addRecentChat"}, at = @At(value = "CONSTANT", args = "intValue=100"), require = 3)
+	@ModifyExpressionValue(method = {"addMessageToDisplayQueue", "addMessageToQueue", "addRecentChat"}, at = @At(value = "CONSTANT", args = "intValue=100"), require = 3)
 	private int cariboustonks$increaseChatHistoryLength(int maxMessages) {
 		return Math.max(Math.max(maxMessages, ConfigManager.getConfig().chat.chatHistoryLength), 100);
 	}
-// TODO
-//	@Inject(method = "mouseClicked", at = @At("HEAD"))
-//	private void cariboustonks$onMouseClickEvent(double mouseX, double mouseY, CallbackInfoReturnable<Boolean> cir) {
-//		if (MinecraftClient.getInstance().currentScreen instanceof ChatScreen) {
-//			ChatEvents.MESSAGE_CLICKED.invoker().onMessageClicked(mouseX, mouseY);
-//		}
-//	}
 }

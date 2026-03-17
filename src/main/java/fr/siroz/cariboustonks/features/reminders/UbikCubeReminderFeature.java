@@ -21,7 +21,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import org.jspecify.annotations.NonNull;
 
 public final class UbikCubeReminderFeature extends Feature {
@@ -35,10 +35,10 @@ public final class UbikCubeReminderFeature extends Feature {
 
 	private static final String REMINDER_TYPE = "RIFT_UBIK_CUBE";
 
-	private final ItemStack ubikCube;
+	private final ItemStackTemplate ubikCube;
 
     public UbikCubeReminderFeature() {
-		this.ubikCube = ItemUtils.createSkull(HeadTextures.UBIK_CUBE);
+		this.ubikCube = ItemUtils.createVirtualSkull(HeadTextures.UBIK_CUBE);
         ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
 
 		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
@@ -74,7 +74,7 @@ public final class UbikCubeReminderFeature extends Feature {
 				.append(SPLIT_OR_STEAL_TEXT);
 
         Client.sendMessageWithPrefix(message);
-        Client.showNotification(notification, ubikCube);
+        Client.showNotification(notification, ubikCube.create());
 		if (this.config().general.reminders.playSound) {
 			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}

@@ -1,11 +1,11 @@
 package fr.siroz.cariboustonks.rendering;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.mod.integration.IrisIntegration;
+import java.util.Optional;
 import net.minecraft.client.renderer.RenderPipelines;
 
 public final class CaribouRenderPipelines {
@@ -30,7 +30,7 @@ public final class CaribouRenderPipelines {
 			RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/filled_box_through_blocks"))
 					.withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLE_STRIP)
-					.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+					.withDepthStencilState(Optional.empty())
 					.build()
 	);
 
@@ -47,7 +47,7 @@ public final class CaribouRenderPipelines {
 	public static final RenderPipeline LINES_THROUGH_BLOCKS = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/lines_through_blocks"))
-					.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+					.withDepthStencilState(Optional.empty())
 					.build()
 	);
 
@@ -63,7 +63,7 @@ public final class CaribouRenderPipelines {
 			RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/circles_through_blocks"))
 					.withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLE_STRIP)
-					.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+					.withDepthStencilState(Optional.empty())
 					.withCull(false)
 					.build()
 	);
@@ -71,7 +71,7 @@ public final class CaribouRenderPipelines {
 	public static final RenderPipeline QUADS_THROUGH_BLOCKS = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/quads_through_blocks"))
-					.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+					.withDepthStencilState(Optional.empty())
 					.withCull(false)
 					.build()
 	);
@@ -86,7 +86,7 @@ public final class CaribouRenderPipelines {
 	public static final RenderPipeline TEXTURE_THROUGH_BLOCKS = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/textures_through_blocks"))
-					.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+					.withDepthStencilState(Optional.empty())
 					.withCull(false)
 					.build()
 	);
@@ -96,7 +96,7 @@ public final class CaribouRenderPipelines {
 			RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/gui_lines"))
 					.withVertexFormat(DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.DEBUG_LINE_STRIP)
-					.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+					.withDepthStencilState(Optional.empty())
 					.withCull(false)
 					.build()
 	);
@@ -105,7 +105,7 @@ public final class CaribouRenderPipelines {
 			RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/gui_quads"))
 					.withVertexFormat(DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.QUADS)
-					.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+					.withDepthStencilState(Optional.empty())
 					.build()
 	);
 }

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -128,7 +128,7 @@ class GraphWidget extends AbstractStonksWidget {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y) {
+	public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, int x, int y) {
 		final int x1 = x + 20;
 		final int y1 = y + 25; // 20
 		final int x2 = x1 + this.width / 2;
@@ -206,7 +206,7 @@ class GraphWidget extends AbstractStonksWidget {
 		drawHoveredItem(guiGraphics, mouseX, mouseY);
 	}
 
-	private void drawLabels(GuiGraphics context, int x1, int y1, int x2, int y2) {
+	private void drawLabels(GuiGraphicsExtractor context, int x1, int y1, int x2, int y2) {
 		int timeSteps = getGranularityStep();
 		for (int i = 0; i <= timeSteps; i++) {
 			// Calcul de l'instant correspondant au label
@@ -218,7 +218,7 @@ class GraphWidget extends AbstractStonksWidget {
 			String timeLabel = formatTimeLabel(currentTime);
 
 			// -12 vers la gauche | y2 + 10
-			context.drawString(textRenderer, Component.literal(timeLabel), labelX - 12, y2 + 20, Color.WHITE.getRGB());
+			context.text(textRenderer, Component.literal(timeLabel), labelX - 12, y2 + 20, Color.WHITE.getRGB());
 		}
 
 		int priceSteps = 5;
@@ -231,13 +231,13 @@ class GraphWidget extends AbstractStonksWidget {
 
 			String priceLabel = StonksUtils.SHORT_FLOAT_NUMBERS.format(currentPrice);
 
-			context.drawString(textRenderer, Component.literal(priceLabel).withStyle(ChatFormatting.GOLD),
+			context.text(textRenderer, Component.literal(priceLabel).withStyle(ChatFormatting.GOLD),
 					x2 + 10, labelY, Color.WHITE.getRGB());
 		}
 	}
 
 	@SuppressWarnings("ConstantConditions") // if (closestPoint != null) -> Aucune confiance
-	private void drawHoveredItem(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+	private void drawHoveredItem(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
 		if (graphData == null || graphData.isEmpty() || graphData.size() < 3) {
 			return;
 		}
@@ -285,16 +285,16 @@ class GraphWidget extends AbstractStonksWidget {
 				// Border
 				GuiRenderer.drawBorder(guiGraphics, mouseX + 7, mouseY - 13, textWidth, height, Color.WHITE.getRGB());
 				// Date
-				guiGraphics.drawString(textRenderer, dateText, mouseX + 10, mouseY - 10, Color.WHITE.getRGB());
+				guiGraphics.text(textRenderer, dateText, mouseX + 10, mouseY - 10, Color.WHITE.getRGB());
 				// Price - Auction / 1ère ligne du Bazaar
-				guiGraphics.drawString(textRenderer, priceText, mouseX + 10, mouseY, Color.WHITE.getRGB());
+				guiGraphics.text(textRenderer, priceText, mouseX + 10, mouseY, Color.WHITE.getRGB());
 				// Price - Deuxième ligne du Bazaar
 				if (type == Type.BAZAAR && secondPriceText != null) {
-					guiGraphics.drawString(textRenderer, secondPriceText, mouseX + 10, mouseY + 10, Color.WHITE.getRGB());
+					guiGraphics.text(textRenderer, secondPriceText, mouseX + 10, mouseY + 10, Color.WHITE.getRGB());
 				}
 
 				// - 32 || +- 5 border haut/bas
-				guiGraphics.vLine(mouseX, y1 - 5, y2 - 22 + 5, new Color(204, 2, 2).getRGB());
+				guiGraphics.verticalLine(mouseX, y1 - 5, y2 - 22 + 5, new Color(204, 2, 2).getRGB());
 			}
 		}
 	}
@@ -323,7 +323,7 @@ class GraphWidget extends AbstractStonksWidget {
 	}
 
 	private void drawGradient(
-            GuiGraphics guiGraphics,
+			GuiGraphicsExtractor guiGraphics,
             List<Point> pointsToRender,
             int startColor,
             int endColor,
@@ -339,7 +339,7 @@ class GraphWidget extends AbstractStonksWidget {
 	}
 
 	private void renderGradient(
-            GuiGraphics guiGraphics,
+			GuiGraphicsExtractor guiGraphics,
             @NonNull List<Point> pointsToRender,
             int colorStart,
             int colorEnd,

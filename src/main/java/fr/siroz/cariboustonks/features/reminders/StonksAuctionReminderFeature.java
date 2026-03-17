@@ -23,6 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import org.jspecify.annotations.NonNull;
 
@@ -33,7 +34,7 @@ public final class StonksAuctionReminderFeature extends Feature {
 	private static final Pattern NEXT_AUCTION_PATTERN = Pattern.compile("Auction ends in\\s*(?:(\\d+)\\s*h)?\\s*(?:(\\d+)\\s*m)?\\s*(?:(\\d+)\\s*s)?");
 	private static final int BID_SLOT = 11;
 	private static final String REMINDER_TYPE = "NEXT_STONKS_AUCTION";
-	private static final ItemStack ICON = new ItemStack(Items.PAPER);
+	private static final ItemStackTemplate ICON = new ItemStackTemplate(Items.PAPER);
 
 	public StonksAuctionReminderFeature() {
 		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
@@ -105,7 +106,7 @@ public final class StonksAuctionReminderFeature extends Feature {
 				.append(Component.literal("Diaz Stonks Auction available!").withStyle(ChatFormatting.DARK_PURPLE));
 
 		Client.sendMessageWithPrefix(message);
-		Client.showNotification(notification, ICON);
+		Client.showNotification(notification, ICON.create());
 		if (this.config().general.reminders.playSound) {
 			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}

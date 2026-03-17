@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.features.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.screens.CaribousStonksScreen;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
@@ -85,9 +85,9 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onRender(GuiGraphics context, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
 		super.onRender(context, mouseX, mouseY, delta);
-		context.drawCenteredString(this.font, this.title, this.width / 2, 16, Colors.WHITE.asInt());
+		context.centeredText(this.font, this.title, this.width / 2, 16, Colors.WHITE.asInt());
 	}
 
 	@Override
@@ -115,8 +115,8 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void renderBackground(@NonNull GuiGraphics context, int mouseX, int mouseY, float delta) {
-		super.renderBackground(context, mouseX, mouseY, delta);
+	public void extractBackground(@NonNull GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
+		super.extractBackground(context, mouseX, mouseY, delta);
 		if (currentEntry != null) {
 			context.fill(0, 0, width, height, 0x88000000);
 		}

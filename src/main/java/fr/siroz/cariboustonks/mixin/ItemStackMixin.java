@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(value = ItemStack.class, priority = 1111)
 public abstract class ItemStackMixin {
 
-	@ModifyVariable(method = "addToTooltip", at = @At("STORE"))
+	@ModifyVariable(method = "addToTooltip", at = @At("STORE"), name = "component")
 	private TooltipProvider cariboustonks$appendTooltipEvent(TooltipProvider component) {
 		if (component instanceof ItemLore loreComponent) {
 			ItemLore lore = GuiEvents.TOOLTIP_APPENDER_EVENT.invoker().lines((ItemStack) (Object) this, loreComponent);

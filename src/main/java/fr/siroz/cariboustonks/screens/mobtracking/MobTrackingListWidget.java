@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
@@ -68,8 +68,8 @@ class MobTrackingListWidget extends ContainerObjectSelectionList<MobTrackingList
 		}
 
 		@Override
-		public void renderContent(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			guiGraphics.drawCenteredString(minecraft.font, category.getName(), this.getContentXMiddle(), this.getY() + 5, Colors.WHITE.asInt());
+		public void extractContent(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+			guiGraphics.centeredText(minecraft.font, category.getName(), this.getContentXMiddle(), this.getY() + 5, Colors.WHITE.asInt());
 		}
 	}
 
@@ -116,17 +116,17 @@ class MobTrackingListWidget extends ContainerObjectSelectionList<MobTrackingList
 		}
 
 		@Override
-		public void renderContent(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void extractContent(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			int x = this.getContentXMiddle() - 100;
 			int y = this.getY();
 
-			guiGraphics.drawString(minecraft.font, entry.displayName(), x - 10, y + 5, Colors.WHITE.asInt());
+			guiGraphics.text(minecraft.font, entry.displayName(), x - 10, y + 5, Colors.WHITE.asInt());
 
 			enabledWidget.setPosition(x + 150, y);
 			notifyOnSpawnWidget.setPosition(x + 175, y);
 
 			for (AbstractWidget child : children) {
-				child.render(guiGraphics, mouseX, mouseY, deltaTicks);
+				child.extractRenderState(guiGraphics, mouseX, mouseY, deltaTicks);
 			}
 		}
 	}

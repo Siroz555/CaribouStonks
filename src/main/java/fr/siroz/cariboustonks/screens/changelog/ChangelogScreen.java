@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.screens.CaribousStonksScreen;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
@@ -34,17 +34,17 @@ public class ChangelogScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
 		super.onRender(guiGraphics, mouseX, mouseY, delta);
-		guiGraphics.drawCenteredString(font,
+		guiGraphics.centeredText(font,
 				Component.literal("✨ What's new since your last visit ✨").withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD),
 				this.width / 2, 10, Colors.WHITE.asInt());
 
 		if (changelogs.isEmpty()) {
-			guiGraphics.drawCenteredString(font,
+			guiGraphics.centeredText(font,
 					Component.literal("You are on the latest version!").withStyle(ChatFormatting.GREEN),
 					this.width / 2, 50, Colors.WHITE.asInt());
-			guiGraphics.drawCenteredString(font, Component.empty()
+			guiGraphics.centeredText(font, Component.empty()
 							.append(Component.literal("To see the latest changes, visit ").withStyle(ChatFormatting.GRAY))
 							.append(Component.literal("https://modrinth.com/mod/cariboustonks").withStyle(ChatFormatting.AQUA, ChatFormatting.UNDERLINE)),
 					this.width / 2, 69, Colors.WHITE.asInt());

@@ -22,11 +22,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import org.jspecify.annotations.NonNull;
 
@@ -42,7 +43,7 @@ public final class ChocolateLimitReminderFeature extends Feature {
 	private static final int COCOA_BEAM_SLOT = 45;
 	private static final long MAX_CHOCOLATE = 60_000_000_000L;
 
-	private static final ItemStack ICON = new ItemStack(Items.COCOA_BEANS);
+	private static final ItemStackTemplate ICON = new ItemStackTemplate(Items.COCOA_BEANS);
 
 	private long totalChocolate = -1L;
 	private double chocolatePerSeconds = -1.0D;
@@ -108,14 +109,14 @@ public final class ChocolateLimitReminderFeature extends Feature {
 		return List.of();
 	}
 
-	private void render(@NonNull GuiGraphics context, int screenWidth, int screenHeight, int x, int y) {
+	private void render(@NonNull GuiGraphicsExtractor context, int screenWidth, int screenHeight, int x, int y) {
 		if (limitTime != null) {
 			Component text = Component.empty()
 					.append(Component.literal("Chocolate will be reached: ")
 							.withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(TimeUtils.formatInstant(limitTime, TimeUtils.DATE_TIME_FULL))
 							.withStyle(ChatFormatting.YELLOW));
-			context.drawCenteredString(
+			context.centeredText(
 					Minecraft.getInstance().font,
 					text,
 					screenWidth >> 1,
@@ -138,7 +139,7 @@ public final class ChocolateLimitReminderFeature extends Feature {
 				.append(text));
 
 		Client.showNotification(Component.literal("Chocolate Factory\n").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
-				.append(text), ICON);
+				.append(text), ICON.create());
 
 		if (this.config().general.reminders.playSound) {
 			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
@@ -156,6 +157,6 @@ public final class ChocolateLimitReminderFeature extends Feature {
 				.append(text);
 
 		Client.sendMessageWithPrefix(message);
-		Client.showNotification(notification, ICON);
+		Client.showNotification(notification, ICON.create());
 	}
 }

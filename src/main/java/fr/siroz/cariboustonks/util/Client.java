@@ -34,7 +34,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -207,7 +207,7 @@ public final class Client {
 	 * @return the day of the current world
 	 */
 	public static long getWorldDay() {
-		return CLIENT.level != null ? CLIENT.level.getDayTime() / 24000 : 0L;
+		return CLIENT.level != null ? CLIENT.level.getOverworldClockTime() / 24000 : 0L;
 	}
 
 	/**
@@ -332,7 +332,7 @@ public final class Client {
 	}
 
 	private static void sendMessageInternal(@NonNull Component message) {
-		if (CLIENT.player != null) CLIENT.player.displayClientMessage(message, false);
+		if (CLIENT.player != null) CLIENT.player.sendSystemMessage(message);
 	}
 
 	/**
@@ -581,9 +581,9 @@ public final class Client {
 	 * @param slotId the slot id
 	 * @param type the click type
 	 */
-	public static void handleMouseClick(int containerId, int slotId, ClickType type) {
+	public static void handleMouseClick(int containerId, int slotId, ContainerInput type) {
 		if (CLIENT.player != null && CLIENT.gameMode != null) {
-			CLIENT.gameMode.handleInventoryMouseClick(containerId, slotId, 0, type, CLIENT.player);
+			CLIENT.gameMode.handleContainerInput(containerId, slotId, 0, type, CLIENT.player);
 		}
 	}
 

@@ -8,8 +8,8 @@ import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.minecraft.client.Minecraft;
 import org.jspecify.annotations.NonNull;
 
@@ -42,7 +42,7 @@ public final class WaypointSystem implements System {
     private final Map<UUID, Waypoint> waypoints = new ConcurrentHashMap<>();
 
     public WaypointSystem() {
-		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((event, world) -> this.resetWaypoints());
+		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((event, world) -> this.resetWaypoints());
         RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 		ClientTickEvents.END_CLIENT_TICK.register(_client -> this.onTick());
     }

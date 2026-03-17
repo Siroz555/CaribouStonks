@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractContainerWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -46,7 +46,7 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 			@NonNull Consumer<T> selectCallback,
 			T selected
 	) {
-		super(x, y, width, HEADER_HEIGHT, Component.empty());
+		super(x, y, width, HEADER_HEIGHT, Component.empty(), AbstractContainerWidget.defaultSettings(4));
 		this.maxHeight = maxHeight;
 		this.entries = entries;
 		this.selectCallback = selectCallback;
@@ -64,14 +64,14 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 	}
 
 	@Override
-	protected void renderWidget(@NonNull GuiGraphics context, int mouseX, int mouseY, float delta) {
+	protected void extractWidgetRenderState(@NonNull GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
 		dropdownList.visible = open;
-		dropdownList.render(context, mouseX, mouseY, delta);
+		dropdownList.extractRenderState(context, mouseX, mouseY, delta);
 
 		context.fill(getX(), getY(), getRight(), getY() + HEADER_HEIGHT + 1, BACKGROUND_COLOR);
 		GuiRenderer.drawBorder(context, getX(), getY(), getWidth(), HEADER_HEIGHT + 1, -1);
-		context.drawString(CLIENT.font, ">", getX() + 4, getY() + 6, Colors.WHITE.asInt(), true);
-		context.drawString(CLIENT.font, selected.toString(), getX() + 12, getY() + 6, Colors.WHITE.asInt(), true);
+		context.text(CLIENT.font, ">", getX() + 4, getY() + 6, Colors.WHITE.asInt(), true);
+		context.text(CLIENT.font, selected.toString(), getX() + 12, getY() + 6, Colors.WHITE.asInt(), true);
 		if (isMouseOver(mouseX, mouseY)) {
 			context.requestCursor(CursorTypes.POINTING_HAND);
 		}
@@ -186,8 +186,8 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 		}
 
 		@Override
-		protected void renderScrollbar(@NonNull GuiGraphics context, int mouseX, int mouseY) {
-			if (this.scrollbarVisible()) {
+		protected void extractScrollbar(@NonNull GuiGraphicsExtractor context, int mouseX, int mouseY) {
+			if (this.scrollable()) {
 				int x1 = this.scrollBarX();
 				int heightY = this.scrollerHeight();
 				int y1 = this.scrollBarY();
@@ -225,17 +225,17 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 		}
 
 		@Override
-		protected void renderListSeparators(@NonNull GuiGraphics context) {
+		protected void extractListSeparators(@NonNull GuiGraphicsExtractor context) {
 		}
 
 		@Override
-		protected void renderListBackground(@NonNull GuiGraphics context) {
+		protected void extractListBackground(@NonNull GuiGraphicsExtractor context) {
 			context.fill(getX(), getY(), getRight(), getBottom(), BACKGROUND_COLOR);
 			GuiRenderer.drawBorder(context, getX(), getY(), getWidth(), getHeight(), -1);
 		}
 
 		@Override
-		protected void enableScissor(@NonNull GuiGraphics context) {
+		protected void enableScissor(@NonNull GuiGraphicsExtractor context) {
 			context.enableScissor(this.getX(), this.getY() + 1, this.getRight(), this.getBottom() - 1);
 		}
 	}
@@ -259,14 +259,14 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 		}
 
 		@Override
-		public void renderContent(@NonNull GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			context.textRenderer(GuiGraphics.HoveredTextEffects.NONE).acceptScrollingWithDefaultCenter(
+		public void extractContent(@NonNull GuiGraphicsExtractor context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+			context.textRenderer(GuiGraphicsExtractor.HoveredTextEffects.NONE).acceptScrollingWithDefaultCenter(
 					Component.literal(entry.toString()).withStyle(Style.EMPTY.withUnderlined(hovered)),
 					this.getX() + 10, this.getX() + this.getWidth(), this.getY(), this.getY() + 11
 			);
 
 			if (selected == this.entry) {
-				context.drawString(CLIENT.font, "->", getX() + 1, getY() + 2, 0xFFFFFFFF);
+				context.text(CLIENT.font, "->", getX() + 1, getY() + 2, 0xFFFFFFFF);
 			}
 		}
 

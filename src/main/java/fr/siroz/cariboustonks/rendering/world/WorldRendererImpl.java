@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.rendering.world;
 
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.rendering.world.renderer.BeaconBeamRendererCommand;
+import fr.siroz.cariboustonks.mixin.accessors.BlockEntityRenderStateAccessor;
 import fr.siroz.cariboustonks.rendering.world.renderer.CircleRendererCommand;
 import fr.siroz.cariboustonks.rendering.world.renderer.CuboidOutlineRendererCommand;
 import fr.siroz.cariboustonks.rendering.world.renderer.CursorLineRendererCommand;
@@ -13,7 +13,6 @@ import fr.siroz.cariboustonks.rendering.world.renderer.QuadRendererCommand;
 import fr.siroz.cariboustonks.rendering.world.renderer.TextRendererCommand;
 import fr.siroz.cariboustonks.rendering.world.renderer.TextureRendererCommand;
 import fr.siroz.cariboustonks.rendering.world.renderer.ThickCircleRendererCommand;
-import fr.siroz.cariboustonks.rendering.world.state.BeaconBeamRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.CircleRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.CuboidOutlineRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.CursorLineRenderState;
@@ -32,15 +31,20 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.blockentity.state.BeaconRenderState;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implementation of {@link WorldRenderer}.
@@ -53,7 +57,6 @@ public final class WorldRendererImpl implements WorldRenderer {
 	private final ThickCircleRendererCommand thickCircleRendererCommand = new ThickCircleRendererCommand();
 	private final QuadRendererCommand quadRendererCommand = new QuadRendererCommand();
 	private final FilledBoxRendererCommand filledBoxRendererCommand = new FilledBoxRendererCommand();
-	private final BeaconBeamRendererCommand beaconBeamRendererCommand = new BeaconBeamRendererCommand();
 	private final OutlineBoxRendererCommand outlineBoxRendererCommand = new OutlineBoxRendererCommand();
 	private final LinesRendererCommand linesRendererCommand = new LinesRendererCommand();
 	private final CursorLineRendererCommand cursorLineRendererCommand = new CursorLineRendererCommand();
@@ -65,14 +68,16 @@ public final class WorldRendererImpl implements WorldRenderer {
 	private final List<ThickCircleRenderState> thickCircleRenderStates = new ArrayList<>();
 	private final List<QuadRenderState> quadRenderStates = new ArrayList<>();
 	private final List<FilledBoxRenderState> filledBoxRenderStates = new ArrayList<>();
-	private final List<BeaconBeamRenderState> beaconBeamRenderStates = new ArrayList<>();
 	private final List<OutlineBoxRenderState> outlineBoxRenderStates = new ArrayList<>();
 	private final List<LinesRenderState> linesRenderStates = new ArrayList<>();
 	private final List<CursorLineRenderState> cursorLineRenderStates = new ArrayList<>();
 	private final List<CuboidOutlineRenderState> cuboidOutlineRenderStates = new ArrayList<>();
 
-	private boolean frozen = false;
+	@Nullable
+	private LevelRenderState levelRenderState = null;
+	@Nullable
 	private Frustum frustum = null;
+	private boolean frozen = false;
 
 	public WorldRendererImpl() {
 	}
@@ -138,6 +143,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	@Override
 	public void submitBeaconBeam(@NonNull BlockPos position, @NonNull Color color) {
 		if (frozen) return;
+		if (levelRenderState == null) return;
 		if (!FrustumUtils.isVisible(frustum, position.getX(), position.getY(), position.getZ(), position.getX() + 1, RenderUtils.MAX_BUILD_HEIGHT, position.getZ() + 1)) return;
 
 		int colorInt;
@@ -148,11 +154,19 @@ public final class WorldRendererImpl implements WorldRenderer {
 		}
 
 		float length = (float) RenderUtils.getCamera().position().subtract(position.getCenter()).horizontalDistance();
-		float scale = Math.max(1.0f, length / 96.0f);
-		float beamRotationDegrees = Math.floorMod(Client.getWorldTime(), 40) + RenderUtils.getTickCounter().getGameTimeDeltaPartialTick(true);
+		float animationTime = Math.floorMod(Client.getWorldTime(), 40) + RenderUtils.getTickCounter().getGameTimeDeltaPartialTick(true);
 
-		BeaconBeamRenderState state = new BeaconBeamRenderState(position, colorInt, scale, beamRotationDegrees);
-		beaconBeamRenderStates.add(state);
+		BeaconRenderState state = new BeaconRenderState();
+		state.blockPos = position;
+		((BlockEntityRenderStateAccessor) state).setBlockState(Blocks.BEACON.defaultBlockState());
+		state.blockEntityType = BlockEntityType.BEACON;
+		state.lightCoords = RenderUtils.FULL_BRIGHT;
+		state.breakProgress = null;
+		state.animationTime = animationTime;
+		state.sections.add(new BeaconRenderState.Section(colorInt, RenderUtils.MAX_BUILD_HEIGHT));
+		state.beamRadiusScale = Math.max(1.0F, length / 96.0F);
+		// Vanilla Block Entity States
+		levelRenderState.blockEntityRenderStates.add(state);
 	}
 
 	@Override
@@ -192,16 +206,16 @@ public final class WorldRendererImpl implements WorldRenderer {
 	/**
 	 * Resets the renderer.
 	 */
-	public void begin(Frustum frustumExtracted) {
+	public void begin(LevelRenderState levelRenderStateContext, Frustum frustumContext) {
 		frozen = false;
-		frustum = frustumExtracted;
+		levelRenderState = levelRenderStateContext;
+		frustum = frustumContext;
 		textRenderStates.clear();
 		textureRenderStates.clear();
 		circleRenderStates.clear();
 		thickCircleRenderStates.clear();
 		quadRenderStates.clear();
 		filledBoxRenderStates.clear();
-		beaconBeamRenderStates.clear();
 		outlineBoxRenderStates.clear();
 		linesRenderStates.clear();
 		cursorLineRenderStates.clear();
@@ -237,10 +251,6 @@ public final class WorldRendererImpl implements WorldRenderer {
 		// Filled
 		for (FilledBoxRenderState state : filledBoxRenderStates) {
 			filledBoxRendererCommand.emit(state, cameraState);
-		}
-		// Beacon beams
-		for (BeaconBeamRenderState state : beaconBeamRenderStates) {
-			beaconBeamRendererCommand.emit(state, cameraState);
 		}
 		// Outline boxes
 		for (OutlineBoxRenderState state : outlineBoxRenderStates) {

@@ -1,5 +1,7 @@
 package fr.siroz.cariboustonks.mixin;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import fr.siroz.cariboustonks.CaribouStonks;
@@ -9,7 +11,7 @@ import fr.siroz.cariboustonks.mixin.accessors.AbstractContainerScreenAccessor;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -26,8 +28,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(value = GuiGraphics.class, priority = 1111) // DrawContext
-public abstract class GuiGraphicsMixin {
+@Mixin(value = GuiGraphicsExtractor.class, priority = 1111) // DrawContext
+public abstract class GuiGraphicsExtractorMixin {
 
 	@Unique
 	private int storedTooltipWidth;
@@ -40,9 +42,10 @@ public abstract class GuiGraphicsMixin {
 	private final ScrollableTooltipFeature scrollableTooltipFeature = CaribouStonks.features()
 			.getFeature(ScrollableTooltipFeature.class);
 
-	// TODO(Ravel): remapper for org.spongepowered.asm.mixin.injection.Group is not implemented
+	@Definition(id = "x", method = "Lorg/joml/Vector2ic;x()I")
+	@Expression("? = ?.x()")
 	@Group(name = "storeLocals", min = 1, max = 1)
-	@Inject(method = "renderTooltip", at = @At(value = "INVOKE_ASSIGN", target = "Lorg/joml/Vector2ic;x()I", shift = At.Shift.BEFORE, remap = false), locals = LocalCapture.CAPTURE_FAILSOFT)
+	@Inject(method = "tooltip", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
 	private void cariboustonks$onDrawTooltipEventAndStoreLocals(Font font, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, Identifier resource, CallbackInfo info, int tooltipWidth, int tooltipHeight, int tooltipWidth2, int tooltipHeight2, Vector2ic postPos) {
 		GuiEvents.TOOLTIP_TRACKER_EVENT.invoker().onTooltipTracker(components);
 		storedTooltipWidth = tooltipWidth2;
@@ -50,7 +53,7 @@ public abstract class GuiGraphicsMixin {
 		storedPos = postPos;
 	}
 
-	@Inject(method = "renderTooltip", at = @At(value = "TAIL"))
+	@Inject(method = "tooltip", at = @At(value = "TAIL"))
 	private void cariboustonks$onDrawTooltipInternalEvent(Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, Identifier texture, CallbackInfo ci) {
 		ItemStack stack = ItemStack.EMPTY;
 
@@ -64,7 +67,7 @@ public abstract class GuiGraphicsMixin {
 
 		if (!stack.isEmpty() && !components.isEmpty()) {
 			GuiEvents.POST_TOOLTIP_EVENT.invoker().onPostTooltip(
-					(GuiGraphics) (Object) this,
+					(GuiGraphicsExtractor) (Object) this,
 					stack,
 					storedPos.x() + getXOffset(),
 					storedPos.y() + getYOffset(),
@@ -76,8 +79,8 @@ public abstract class GuiGraphicsMixin {
 		}
 	}
 
-	@Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix3x2fStack;pushMatrix()Lorg/joml/Matrix3x2fStack;"))
-	private void cariboustonks$scrollableTooltipXYAxis(Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, Identifier texture, CallbackInfo info, @Local(ordinal = 6) LocalIntRef refX, @Local(ordinal = 7) LocalIntRef refY) {
+	@Inject(method = "tooltip", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix3x2fStack;pushMatrix()Lorg/joml/Matrix3x2fStack;"))
+	private void cariboustonks$scrollableTooltipXYAxis(Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, Identifier texture, CallbackInfo info, @Local(name = "x") LocalIntRef refX, @Local(name = "y") LocalIntRef refY) {
 		refX.set(refX.get() + getXOffset());
 		refY.set(refY.get() + getYOffset());
 

@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.events.GuiEvents;
 import fr.siroz.cariboustonks.systems.ContainerOverlaySystem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.KeyEvent;
@@ -41,8 +41,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 	}
 
 	@SuppressWarnings("unchecked")
-	@Inject(method = "renderTooltip", at = @At("HEAD"))
-	private void cariboustonks$drawContainerOverlay(CallbackInfo ci, @Local(argsOnly = true) GuiGraphics context) {
+	@Inject(method = "extractTooltip", at = @At("HEAD"))
+	private void cariboustonks$drawContainerOverlay(CallbackInfo ci, @Local(argsOnly = true) GuiGraphicsExtractor context) {
 		overlayManager.draw(context, (AbstractContainerScreen<ChestMenu>) (Object) this, this.menu.slots);
 	}
 

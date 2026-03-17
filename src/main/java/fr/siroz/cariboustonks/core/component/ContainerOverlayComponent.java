@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.List;
 import java.util.Objects;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -16,7 +16,7 @@ import org.jspecify.annotations.Nullable;
  * This follows a two-phase rendering architecture:
  * <ol>
  *   <li>The {@link #analyzeContent(Int2ObjectMap)} method analyzes container items and collects data</li>
- *   <li>The {@link #render(GuiGraphics, int, int, int, int)} method uses this data to render visual elements</li>
+ *   <li>The {@link #render(GuiGraphicsExtractor, int, int, int, int)} method uses this data to render visual elements</li>
  * </ol>
  * <p>
  * Even when no highlights are needed, the {@code content} method provides access to container
@@ -70,7 +70,7 @@ public final class ContainerOverlayComponent implements Component {
 	/**
 	 * Renders the overlay visuals.
 	 */
-	public void render(GuiGraphics guiGraphics, int screenWidth, int screenHeight, int x, int y) {
+	public void render(GuiGraphicsExtractor guiGraphics, int screenWidth, int screenHeight, int x, int y) {
 		if (renderer != null) {
 			renderer.render(guiGraphics, screenWidth, screenHeight, x, y);
 		}
@@ -103,7 +103,7 @@ public final class ContainerOverlayComponent implements Component {
 	 */
 	@FunctionalInterface
 	public interface OverlayRenderer {
-		void render(@NonNull GuiGraphics guiGraphics, int screenWidth, int screenHeight, int x, int y);
+		void render(@NonNull GuiGraphicsExtractor guiGraphics, int screenWidth, int screenHeight, int x, int y);
 	}
 
 	/**

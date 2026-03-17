@@ -6,12 +6,12 @@ import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.rendering.world.state.TextRenderState;
+import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.TextRenderable;
 import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import org.joml.Matrix4f;
 import org.jspecify.annotations.NonNull;
 
@@ -50,7 +50,7 @@ public final class TextRendererCommand implements RendererCommand<TextRenderStat
 				);
 
 				BufferBuilder buffer = CaribouRenderer.getBuffer(pipeline, textureSetup);
-				renderer.render(matrix4f, buffer, LightTexture.FULL_BRIGHT, false);
+				renderer.render(matrix4f, buffer, RenderUtils.FULL_BRIGHT, false);
 			}
 		});
 	}

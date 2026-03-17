@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.screens.search;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.screens.CaribousStonksScreen;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -51,11 +51,11 @@ public class StonksSearchScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTicks) {
+	public void onRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float deltaTicks) {
 		super.onRender(guiGraphics, mouseX, mouseY, deltaTicks);
-		searchBox.render(guiGraphics, mouseX, mouseY, deltaTicks);
+		searchBox.extractRenderState(guiGraphics, mouseX, mouseY, deltaTicks); // TODO :: 26.1 :: mapping?
 		Component title = Component.literal("Search for a SkyBlock item (" + this.totalSkyBlockItemsCount + " items)");
-		guiGraphics.drawCenteredString(this.font, title, this.width / 2, 8, Colors.WHITE.asInt());
+		guiGraphics.centeredText(this.font, title, this.width / 2, 8, Colors.WHITE.asInt());
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import it.unimi.dsi.fastutil.Pair;
 import java.time.Instant;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -72,14 +72,14 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 		}
 
 		@Override
-		public void renderContent(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void extractContent(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			if (minecraft.screen == null) {
 				return;
 			}
 
 			int x1 = (minecraft.screen.width - minecraft.font.width(TEXT)) / 2;
 			int y1 = this.getY() + (this.getHeight() - 9) / 2; // getContentHeight()
-			guiGraphics.drawString(minecraft.font, TEXT, x1, y1, Colors.WHITE.asInt());
+			guiGraphics.text(minecraft.font, TEXT, x1, y1, Colors.WHITE.asInt());
 		}
 	}
 
@@ -107,7 +107,7 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 					? reminder.left().getDisplay().description()
 					: CodecUtils.jsonToText(reminder.right().message()).orElse(Component.literal(reminder.right().message()));
 
-			this.icon = reminder.left().getDisplay().icon();
+			this.icon = reminder.left().getDisplay().icon().create();
 		}
 
 		@Override
@@ -116,17 +116,17 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 		}
 
 		@Override
-		public void renderContent(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void extractContent(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			if (minecraft.screen == null) {
 				return;
 			}
 
-			guiGraphics.drawString(minecraft.font, name, this.getX() + 32 + 3, this.getY() + 1, Colors.WHITE.asInt());
+			guiGraphics.text(minecraft.font, name, this.getX() + 32 + 3, this.getY() + 1, Colors.WHITE.asInt());
 			int x1 = this.getX() + 32 + 3;
-			guiGraphics.drawString(minecraft.font, expireTime, x1, this.getY() + 12, Colors.WHITE.asInt());
-			guiGraphics.drawString(minecraft.font, description, x1, this.getY() + 23, Colors.WHITE.asInt());
+			guiGraphics.text(minecraft.font, expireTime, x1, this.getY() + 12, Colors.WHITE.asInt());
+			guiGraphics.text(minecraft.font, description, x1, this.getY() + 23, Colors.WHITE.asInt());
 
-			guiGraphics.renderItem(icon, this.getX() + 7, this.getY() + 7);
+			guiGraphics.item(icon, this.getX() + 7, this.getY() + 7);
 		}
 	}
 }

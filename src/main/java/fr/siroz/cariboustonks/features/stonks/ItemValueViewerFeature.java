@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -65,7 +65,7 @@ public class ItemValueViewerFeature extends Feature {
 	public ItemValueViewerFeature() {
 		GuiEvents.POST_TOOLTIP_EVENT.register((_ctx, item, _x, _y, _w, _h, tr, _c) -> this.onPostTooltip(item));
 		ScreenEvents.AFTER_INIT.register((_c, screen, _sw, _sh) -> {
-			ScreenEvents.afterRender(screen).register(this::render);
+			ScreenEvents.afterExtract(screen).register(this::render);
 			ScreenEvents.remove(screen).register(_s -> this.reset(true));
 		});
 		TickScheduler.getInstance().runRepeating(() -> this.reset(false), 1, TimeUnit.SECONDS);
@@ -93,7 +93,7 @@ public class ItemValueViewerFeature extends Feature {
 	}
 
 	@EventHandler(event = "ScreenEvents.afterRender")
-	private void render(Screen screen, GuiGraphics guiGraphics, int mouseX, int mouseY, float tickDelta) {
+	private void render(Screen screen, GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float tickDelta) {
 		if (currentItem == null || lines.isEmpty()) return;
 
 		guiGraphics.pose().pushMatrix();
@@ -102,7 +102,7 @@ public class ItemValueViewerFeature extends Feature {
 
 		int y = START_Y;
 		for (Component text : lines) {
-			guiGraphics.drawString(CLIENT.font, text, PADDING_LEFT, y, Colors.WHITE.asInt());
+			guiGraphics.text(CLIENT.font, text, PADDING_LEFT, y, Colors.WHITE.asInt());
 			if (text.getString().isBlank()) {
 				y += (LINE_HEIGHT / 2);
 			} else {

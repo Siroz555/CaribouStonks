@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.rendering.gui.impl.DoubleSliderWidget;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.Tooltip;
@@ -158,22 +158,22 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void renderBackground(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTicks) {
+	public void extractBackground(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float deltaTicks) {
 		ScreenRectangle dimensions = getEffectiveDimensions(this.width, this.height);
 
 		guiGraphics.enableScissor(dimensions.left(), dimensions.top(), dimensions.right(), dimensions.bottom());
 		GuiRenderer.enableBlurScissor(dimensions.left(), dimensions.top(), dimensions.width(), dimensions.height());
-		this.renderBlurredBackground(guiGraphics);
-		this.renderMenuBackground(guiGraphics);
+		this.extractBlurredBackground(guiGraphics);
+		this.extractMenuBackground(guiGraphics);
 		guiGraphics.disableScissor();
 
-		guiGraphics.vLine(
+		guiGraphics.verticalLine(
 				isMainHand() ? dimensions.right() : dimensions.left(),
 				dimensions.top() - 1,
 				dimensions.bottom(),
 				new Color(0, 0, 0).withAlpha(190).asInt());
 
-		guiGraphics.vLine(
+		guiGraphics.verticalLine(
 				isMainHand() ? dimensions.right() - 1 : dimensions.left() + 1,
 				dimensions.top() - 1,
 				dimensions.bottom(),

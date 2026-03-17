@@ -46,7 +46,7 @@ public final class HudComponent implements Component { // SIROZ-NOTE: documentat
 		}
 
 		public Builder attachAfterStatusEffects(@NonNull Identifier hudId) {
-			this.layerType = VanillaHudElements.STATUS_EFFECTS;
+			this.layerType = VanillaHudElements.MOB_EFFECTS;
 			this.hudId = hudId;
 			return this;
 		}

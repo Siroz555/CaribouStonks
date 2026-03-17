@@ -12,7 +12,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.joml.Matrix3x2f;
@@ -37,7 +37,7 @@ public final class GuiRenderer {
 	 * @param height      the height
 	 * @param color       the color
 	 */
-	public static void drawBorder(@NonNull GuiGraphics guiGraphics, int x, int y, int width, int height, int color) {
+	public static void drawBorder(@NonNull GuiGraphicsExtractor guiGraphics, int x, int y, int width, int height, int color) {
 		guiGraphics.fill(x, y, x + width, y + 1, color);
 		guiGraphics.fill(x, y + height - 1, x + width, y + height, color);
 		guiGraphics.fill(x, y + 1, x + 1, y + height - 1, color);
@@ -45,7 +45,7 @@ public final class GuiRenderer {
 	}
 
 	/**
-	 * Enqueues a gradient rectangle GUI element for rendering using the given {@link GuiGraphics}.
+	 * Enqueues a gradient rectangle GUI element for rendering using the given {@link GuiGraphicsExtractor}.
 	 * <p>
 	 * This method creates a {@link GradientRectGuiElementRenderState}.
 	 *
@@ -58,7 +58,7 @@ public final class GuiRenderer {
 	 * @param startColor  the start color of the gradient
 	 * @param endColor    the end color of the gradient
 	 */
-	public static void submitGradientRect(@NonNull GuiGraphics guiGraphics, int depth, int left, int top, int right, int bottom, int startColor, int endColor) {
+	public static void submitGradientRect(@NonNull GuiGraphicsExtractor guiGraphics, int depth, int left, int top, int right, int bottom, int startColor, int endColor) {
 		GradientRectGuiElementRenderState renderState = new GradientRectGuiElementRenderState(
 				CaribouRenderPipelines.GUI_QUADS, //RenderPipelines.GUI,
 				TextureSetup.noTexture(),
@@ -72,11 +72,11 @@ public final class GuiRenderer {
 				endColor,
 				guiGraphics.scissorStack.peek()
 		);
-		guiGraphics.guiRenderState.submitGuiElement(renderState);
+		guiGraphics.guiRenderState.addGuiElement(renderState);
 	}
 
 	/**
-	 * Enqueues a polyline as a series of a quad GUI element for rendering using the given {@link GuiGraphics}.
+	 * Enqueues a polyline as a series of a quad GUI element for rendering using the given {@link GuiGraphicsExtractor}.
 	 * <p>
 	 * This method creates a {@link QuadGuiElementRenderState}.
 	 *
@@ -86,7 +86,7 @@ public final class GuiRenderer {
 	 * @param thickness   the thickness of the line in pixels
 	 */
 	public static void submitLinesFromPoints(
-			@NonNull GuiGraphics guiGraphics,
+			@NonNull GuiGraphicsExtractor guiGraphics,
 			@NonNull Point @NonNull [] points,
 			@NonNull Color color,
 			int thickness
@@ -141,7 +141,7 @@ public final class GuiRenderer {
 				color.getRGB(),
 				guiGraphics.scissorStack.peek()
 		);
-		guiGraphics.guiRenderState.submitGuiElement(renderState);
+		guiGraphics.guiRenderState.addGuiElement(renderState);
 	}
 
 	public static void enableBlurScissor(int x, int y, int width, int height) {

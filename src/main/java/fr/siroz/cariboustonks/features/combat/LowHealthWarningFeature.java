@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Util;
@@ -70,7 +70,7 @@ public class LowHealthWarningFeature extends Feature {
 		}
 	}
 
-	private void renderOverlay(GuiGraphics guiGraphics) {
+	private void renderOverlay(GuiGraphicsExtractor guiGraphics) {
 		if (!triggered) return;
 
 		int width = guiGraphics.guiWidth();

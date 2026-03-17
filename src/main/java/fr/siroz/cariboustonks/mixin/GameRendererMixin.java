@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.features.vanilla.ZoomFeature;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
@@ -33,24 +32,24 @@ public abstract class GameRendererMixin {
 		CaribouRenderer.close();
 	}
 
-	@ModifyReturnValue(method = "getFov", at = @At("RETURN"))
-	private float cariboustonks$changeFov(float fov) {
-		if (zoomFeature.isZooming()) {
-			if (!smoothCamera) {
-				smoothCamera = true;
-				minecraft.options.smoothCamera = true;
-			}
-
-			return (float) (fov * zoomFeature.getCurrentZoomMultiplier());
-
-		} else if (smoothCamera) {
-			smoothCamera = false;
-			minecraft.options.smoothCamera = false;
-			zoomFeature.resetZoomMultiplier();
-		}
-
-		return fov;
-	}
+//	@ModifyReturnValue(method = "getFov", at = @At("RETURN")) // TODO :: 26.1
+//	private float cariboustonks$changeFov(float fov) {
+//		if (zoomFeature.isZooming()) {
+//			if (!smoothCamera) {
+//				smoothCamera = true;
+//				minecraft.options.smoothCamera = true;
+//			}
+//
+//			return (float) (fov * zoomFeature.getCurrentZoomMultiplier());
+//
+//		} else if (smoothCamera) {
+//			smoothCamera = false;
+//			minecraft.options.smoothCamera = false;
+//			zoomFeature.resetZoomMultiplier();
+//		}
+//
+//		return fov;
+//	}
 
 	@Inject(method = "processBlurEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/PostChain;process(Lcom/mojang/blaze3d/pipeline/RenderTarget;Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;)V", shift = At.Shift.AFTER))
 	private void cariboustonks$onBlurRendered(CallbackInfo ci) {

@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,14 +43,14 @@ public class HighlightMobFeature extends Feature {
 
 		// SIROZ-NOTE: remettre la fluent API
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
-				.custom(d -> d.register(ClientCommandManager.literal("highlighter")
+				.custom(d -> d.register(ClientCommands.literal("highlighter")
 						.executes(context -> {
 							currentEntityTypeGlow = null;
 							context.getSource().sendFeedback(CaribouStonks.prefix().get()
 									.append(Component.literal("Glowing entities removed.").withStyle(ChatFormatting.RED)));
 							return 1;
 						})
-						.then(ClientCommandManager.argument("mob", EntityIdArgumentType.entityType())
+						.then(ClientCommands.argument("mob", EntityIdArgumentType.entityType())
 								.executes(context -> {
 									String entityArg = context.getArgument("mob", String.class);
 									Optional<EntityType<?>> entityType = BuiltInRegistries.ENTITY_TYPE

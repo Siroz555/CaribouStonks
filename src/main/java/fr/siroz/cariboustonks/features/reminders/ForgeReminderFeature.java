@@ -24,6 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import org.jspecify.annotations.NonNull;
 
@@ -31,7 +32,7 @@ public final class ForgeReminderFeature extends Feature {
 
 	private static final Pattern TITLE_PATTERN = Pattern.compile("^The Forge");
 	private static final String REMINDER_TYPE = "FORGE_ITEM";
-    private static final ItemStack ICON = new ItemStack(Items.FURNACE);
+    private static final ItemStackTemplate ICON = new ItemStackTemplate(Items.FURNACE);
 
 	public ForgeReminderFeature() {
 		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
@@ -72,7 +73,7 @@ public final class ForgeReminderFeature extends Feature {
 				.append(Component.literal(" was ended!").withStyle(ChatFormatting.GREEN));
 
         Client.sendMessageWithPrefix(message );
-        Client.showNotification(notification, ICON);
+        Client.showNotification(notification, ICON.create());
 		if (this.config().general.reminders.playSound) {
 			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}

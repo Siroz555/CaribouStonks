@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.layouts.FrameLayout;
 import net.minecraft.client.gui.layouts.GridLayout;
@@ -76,9 +76,9 @@ public class WaypointScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
 		super.onRender(guiGraphics, mouseX, mouseY, delta);
-		guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 16, Colors.WHITE.asInt());
+		guiGraphics.centeredText(this.font, this.title, this.width / 2, 16, Colors.WHITE.asInt());
 	}
 
 	@Override

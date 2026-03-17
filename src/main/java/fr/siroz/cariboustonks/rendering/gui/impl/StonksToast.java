@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -32,19 +32,19 @@ public class StonksToast implements Toast {
 	}
 
 	@Override
-	public void render(GuiGraphics context, @NonNull Font renderer, long startTime) {
+	public void extractRenderState(GuiGraphicsExtractor context, @NonNull Font renderer, long startTime) {
 		context.blitSprite(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, width(), height());
 
 		int y = (height() - getInnerContentsHeight()) / 2;
 		drawMessage(context, y);
 
-		context.renderFakeItem(icon, 8, height() / 2 - 8);
+		context.fakeItem(icon, 8, height() / 2 - 8);
 	}
 
-	private void drawMessage(GuiGraphics context, int y) {
+	private void drawMessage(GuiGraphicsExtractor context, int y) {
 		Font textRenderer = Minecraft.getInstance().font;
 		for (FormattedCharSequence orderedText : message) {
-			context.drawString(textRenderer, orderedText, 30, y, CommonColors.WHITE, false);
+			context.text(textRenderer, orderedText, 30, y, CommonColors.WHITE, false);
 			y += textRenderer.lineHeight;
 		}
 	}

@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.Optional;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -150,7 +150,7 @@ public final class ReminderComponent implements Component {
 		/**
 		 * Convenient method to set display with inline parameters.
 		 */
-		public Builder display(net.minecraft.network.chat.Component title, net.minecraft.network.chat.Component description, @NonNull ItemStack icon) {
+		public Builder display(net.minecraft.network.chat.Component title, net.minecraft.network.chat.Component description, @NonNull ItemStackTemplate icon) {
 			this.display = new ReminderDisplay(title, description, icon);
 			return this;
 		}

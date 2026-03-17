@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.mixin.accessors.PlayerTabOverlayAccessor;
 import java.util.function.Supplier;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -85,7 +85,7 @@ public abstract class Hud {
 				&& !((PlayerTabOverlayAccessor) CLIENT.gui.getTabList()).isVisible();
 	}
 
-	public abstract void renderScreen(GuiGraphics guiGraphics);
+	public abstract void renderScreen(GuiGraphicsExtractor guiGraphics);
 
-	public abstract void renderHud(GuiGraphics guiGraphics, DeltaTracker tickCounter);
+	public abstract void renderHud(GuiGraphicsExtractor guiGraphics, DeltaTracker tickCounter);
 }

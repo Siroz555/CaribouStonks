@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
@@ -63,7 +63,7 @@ public final class ChangelogManager {
 		SkyBlockEvents.JOIN_EVENT.register(_s -> this.onJoinSkyBlock());
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _ra) ->
-				dispatcher.register(ClientCommandManager.literal("csviewchangelog")
+				dispatcher.register(ClientCommands.literal("csviewchangelog")
 						.executes(Client.openScreen(
 								() -> ChangelogScreen.create(changelogEntries, this::markChangelogAsSeen)))));
 	}

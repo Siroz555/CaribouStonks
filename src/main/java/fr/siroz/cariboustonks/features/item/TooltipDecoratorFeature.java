@@ -11,7 +11,7 @@ import java.awt.Color;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
@@ -41,7 +41,7 @@ public class TooltipDecoratorFeature extends Feature {
 
 	@EventHandler(event = "GuiEvents.POST_TOOLTIP_EVENT")
 	private void onRenderTooltip(
-            GuiGraphics guiGraphics,
+			GuiGraphicsExtractor guiGraphics,
             ItemStack itemStack,
             int x, int y,
             int width, int height,
@@ -65,7 +65,7 @@ public class TooltipDecoratorFeature extends Feature {
 		}
 	}
 
-	private void drawBorder(GuiGraphics guiGraphics, int x, int y, int width, int height, Pair<Integer, Integer> colors) {
+	private void drawBorder(GuiGraphicsExtractor guiGraphics, int x, int y, int width, int height, Pair<Integer, Integer> colors) {
 		guiGraphics.pose().pushMatrix();
 
 		GuiRenderer.submitGradientRect(guiGraphics,

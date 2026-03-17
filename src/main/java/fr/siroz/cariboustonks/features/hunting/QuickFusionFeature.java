@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import org.lwjgl.glfw.GLFW;
 
@@ -45,7 +45,7 @@ public class QuickFusionFeature extends Feature {
 		if (!Objects.equals(container.getTitle().getString(), expectedTitle)) return;
 
 		if (COOLDOWN.test()) {
-			Client.handleMouseClick(container.getMenu().containerId, slotIndex, ClickType.PICKUP);
+			Client.handleMouseClick(container.getMenu().containerId, slotIndex, ContainerInput.PICKUP);
 		}
 	}
 }

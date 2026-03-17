@@ -20,8 +20,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.List;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -58,7 +58,7 @@ public final class DeveloperManager {
 		NetworkEvents.PLAY_SOUND_PACKET.register(this::onSoundPacket);
 		// Commands
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _ra) -> dispatcher.register(
-				ClientCommandManager.literal(CaribouStonks.NAMESPACE).then(ClientCommandManager.literal("devtools")
+				ClientCommands.literal(CaribouStonks.NAMESPACE).then(ClientCommands.literal("devtools")
 						.then(dumpSoundCommand())
 						.then(dumpMayorCommand())
 						.then(dumpHeldItemSimpleCommand())
@@ -105,7 +105,7 @@ public final class DeveloperManager {
 	}
 
 	private LiteralArgumentBuilder<FabricClientCommandSource> dumpHeldItemSimpleCommand() {
-		return ClientCommandManager.literal("dumpHeldItemSimple").executes(ctx -> {
+		return ClientCommands.literal("dumpHeldItemSimple").executes(ctx -> {
 			ItemStack item = ctx.getSource().getPlayer().getMainHandItem();
 			if (item.isEmpty()) {
 				ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("Item is null or empty").withStyle(ChatFormatting.RED)));
@@ -124,7 +124,7 @@ public final class DeveloperManager {
 	}
 
 	private LiteralArgumentBuilder<FabricClientCommandSource> dumpHeldItemCommand() {
-		return ClientCommandManager.literal("dumpHeldItem").executes(ctx -> {
+		return ClientCommands.literal("dumpHeldItem").executes(ctx -> {
 			String json = GsonProvider.standard().toJson(ItemStack.CODEC.encodeStart(
 					DeveloperTools.getRegistryLookup().createSerializationContext(JsonOps.INSTANCE),
 					ctx.getSource().getPlayer().getMainHandItem()).getOrThrow());
@@ -135,11 +135,11 @@ public final class DeveloperManager {
 	}
 
 	private LiteralArgumentBuilder<FabricClientCommandSource> dumpArmorStandHeadTextures() {
-		return ClientCommandManager.literal("dumpArmorStandHeadTextures").executes(ctx -> {
+		return ClientCommands.literal("dumpArmorStandHeadTextures").executes(ctx -> {
 			texturedArmorStands.clear();
 			TickScheduler.getInstance().runLater(texturedArmorStands::clear, 20 * 10);
 
-			List<ArmorStand> armorStands = ctx.getSource().getWorld().getEntitiesOfClass(
+			List<ArmorStand> armorStands = ctx.getSource().getLevel().getEntitiesOfClass(
 					ArmorStand.class,
 					ctx.getSource().getPlayer().getBoundingBox().inflate(8d),
 					EntitySelector.ENTITY_NOT_BEING_RIDDEN
@@ -162,7 +162,7 @@ public final class DeveloperManager {
 	}
 
 	private LiteralArgumentBuilder<FabricClientCommandSource> dumpSoundCommand() {
-		return ClientCommandManager.literal("dumpSound").executes(ctx -> {
+		return ClientCommands.literal("dumpSound").executes(ctx -> {
 			dumpSound = !dumpSound;
 			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("Dump sound: " + dumpSound)));
 			return Command.SINGLE_SUCCESS;
@@ -170,7 +170,7 @@ public final class DeveloperManager {
 	}
 
 	private LiteralArgumentBuilder<FabricClientCommandSource> dumpMayorCommand() {
-		return ClientCommandManager.literal("dumpMayor").executes(ctx -> {
+		return ClientCommands.literal("dumpMayor").executes(ctx -> {
 			String str = CaribouStonks.skyBlock().getHypixelDataSource().getElection() != null
 					? CaribouStonks.skyBlock().getHypixelDataSource().getElection().toString()
 					: "NULL";

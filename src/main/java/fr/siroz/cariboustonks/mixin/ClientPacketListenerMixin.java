@@ -55,14 +55,14 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 	}
 
 	@Inject(method = "handleSetEntityData", at = @At("TAIL"))
-	private void cariboustonks$packetEntityTrackerUpdateEvent(ClientboundSetEntityDataPacket packet, CallbackInfo ci, @Local Entity entity) {
+	private void cariboustonks$packetEntityTrackerUpdateEvent(ClientboundSetEntityDataPacket packet, CallbackInfo ci, @Local(name = "entity") Entity entity) {
 		if (entity instanceof ArmorStand armorStandEntity) {
 			NetworkEvents.ARMORSTAND_UPDATE_PACKET.invoker().onArmorStandUpdate(armorStandEntity, false);
 		}
 	}
 
 	@Inject(method = "handleSetEquipment", at = @At("TAIL"))
-	private void cariboustonks$packetEntityEquipmentUpdateEvent(ClientboundSetEquipmentPacket packet, CallbackInfo ci, @Local Entity entity) {
+	private void cariboustonks$packetEntityEquipmentUpdateEvent(ClientboundSetEquipmentPacket packet, CallbackInfo ci, @Local(name = "entity") Entity entity) {
 		if (entity instanceof ArmorStand armorStandEntity) {
 			NetworkEvents.ARMORSTAND_UPDATE_PACKET.invoker().onArmorStandUpdate(armorStandEntity, true);
 		}

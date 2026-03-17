@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.rendering.world.renderer;
 
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import org.jspecify.annotations.NonNull;
 
 /**

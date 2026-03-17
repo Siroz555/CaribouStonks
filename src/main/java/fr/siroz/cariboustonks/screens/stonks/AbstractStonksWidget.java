@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.screens.stonks;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 abstract class AbstractStonksWidget {
 
@@ -21,5 +21,5 @@ abstract class AbstractStonksWidget {
 		this.height = height;
 	}
 
-	public abstract void render(GuiGraphics context, int mouseX, int mouseY, int x, int y);
+	public abstract void render(GuiGraphicsExtractor context, int mouseX, int mouseY, int x, int y);
 }

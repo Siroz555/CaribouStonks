@@ -8,7 +8,7 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.util.Client;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -18,7 +18,7 @@ public final class MouseLockFeature extends Feature {
 	private boolean locked = false;
 
 	public MouseLockFeature() {
-		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((_mc, _level) -> this.onJoinWorld());
+		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((_mc, _level) -> this.onJoinWorld());
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
 				.namespaced("lockMouse", ctx -> {
 					updateLockState();

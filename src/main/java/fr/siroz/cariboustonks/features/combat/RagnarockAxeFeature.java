@@ -41,7 +41,7 @@ public class RagnarockAxeFeature extends Feature {
 		NetworkEvents.PLAY_SOUND_PACKET.register(this::onPlaySound);
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
-				.attachAfter(VanillaHudElements.STATUS_EFFECTS, HUD_ID)
+				.attachAfter(VanillaHudElements.MOB_EFFECTS, HUD_ID)
 				.hud(new TextHud(
 						Component.literal("§cRag Casted! §e8.4s §f(§c+765.1§f)"),
 						this::getText,

@@ -9,9 +9,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.VanillaConfig;
 import fr.siroz.cariboustonks.screens.HeldItemViewConfigScreen;
+import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemInHandRenderer;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -60,7 +60,7 @@ public abstract class ItemInHandRendererMixin {
 			swingProgress.set(0f);
 			stack.set(heldItemViewConfigScreen.getPreviewItem());
 			equipProgress.set(0f);
-			light.set(LightTexture.FULL_BRIGHT);
+			light.set(RenderUtils.FULL_BRIGHT);
 		}
 	}
 }

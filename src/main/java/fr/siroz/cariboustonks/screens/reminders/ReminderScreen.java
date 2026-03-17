@@ -9,7 +9,7 @@ import fr.siroz.cariboustonks.systems.ReminderSystem;
 import it.unimi.dsi.fastutil.Pair;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -49,9 +49,9 @@ public class ReminderScreen extends CaribousStonksScreen {
     }
 
     @Override
-    public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+    public void onRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
         super.onRender(guiGraphics, mouseX, mouseY, delta);
-		guiGraphics.drawCenteredString(this.font, title, this.width / 2, 8, Colors.WHITE.asInt());
+		guiGraphics.centeredText(this.font, title, this.width / 2, 8, Colors.WHITE.asInt());
     }
 
     @Override

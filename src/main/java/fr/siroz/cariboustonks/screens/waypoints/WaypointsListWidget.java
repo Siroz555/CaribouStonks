@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSelectionList;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -147,17 +147,17 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 
 			this.xWidget = new EditBox(minecraft.font, 32, 20, Component.literal("X"));
 			this.xWidget.setValue(Integer.toString(waypoint.getPosition().x()));
-			this.xWidget.setFilter(this::testInt);
+			//this.xWidget.setFilter(this::testInt); // TODO :: 26.1 :: mapping?
 			this.xWidget.setResponder(this::updateX);
 
 			this.yWidget = new EditBox(minecraft.font, 32, 20, Component.literal("Y"));
 			this.yWidget.setValue(Integer.toString(waypoint.getPosition().y()));
-			this.yWidget.setFilter(this::testInt);
+			//this.yWidget.setFilter(this::testInt);
 			this.yWidget.setResponder(this::updateY);
 
 			this.zWidget = new EditBox(minecraft.font, 32, 20, Component.literal("Z"));
 			this.zWidget.setValue(Integer.toString(waypoint.getPosition().z()));
-			this.zWidget.setFilter(this::testInt);
+			//this.zWidget.setFilter(this::testInt);
 			this.zWidget.setResponder(this::updateZ);
 
 			this.colorWidget = CycleButton.<WaypointColors>builder(
@@ -197,7 +197,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 		}
 
 		@Override
-		public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			int x = this.getX(); //getContentX();
 			int y = this.getY(); //getContentY();
 
@@ -209,15 +209,15 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 
 			int afterName = nameX + nameWidget.getWidth();
 			int xX = afterName + SPACE * 2;
-			guiGraphics.drawString(minecraft.font, "X:", xX, y + 6, Colors.WHITE.asInt());
+			guiGraphics.text(minecraft.font, "X:", xX, y + 6, Colors.WHITE.asInt());
 			xWidget.setPosition(xX + 9, y);
 
 			int yX = xX + xWidget.getWidth() + (SPACE * 2);
-			guiGraphics.drawString(minecraft.font, "Y:", yX, y + 6, Colors.WHITE.asInt());
+			guiGraphics.text(minecraft.font, "Y:", yX, y + 6, Colors.WHITE.asInt());
 			yWidget.setPosition(yX + 9, y);
 
 			int zX = yX + yWidget.getWidth() + (SPACE * 2);
-			guiGraphics.drawString(minecraft.font, "Z:", zX, y + 6, Colors.WHITE.asInt());
+			guiGraphics.text(minecraft.font, "Z:", zX, y + 6, Colors.WHITE.asInt());
 			zWidget.setPosition(zX + 9, y);
 
 			int colorX = zX + zWidget.getWidth() + SPACE * 4;
@@ -230,7 +230,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 			deleteWidget.setPosition(deleteX, y);
 
 			for (AbstractWidget child : children) {
-				child.render(guiGraphics, mouseX, mouseY, deltaTicks);
+				child.extractRenderState(guiGraphics, mouseX, mouseY, deltaTicks);
 			}
 		}
 

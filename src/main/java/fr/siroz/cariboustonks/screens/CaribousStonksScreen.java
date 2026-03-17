@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.mod.crash.CrashType;
 import fr.siroz.cariboustonks.util.Client;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -14,7 +14,7 @@ import org.jspecify.annotations.NonNull;
  * Base Mod Screen.
  *
  * <li>{@link #onInit()}</li>
- * <li>{@link #onRender(GuiGraphics, int, int, float)}</li>
+ * <li>{@link #onRender(GuiGraphicsExtractor, int, int, float)}</li>
  * <li>{@link #onMouseClicked(MouseButtonEvent, boolean)}</li>
  * <li>{@link #close()}</li>
  */
@@ -51,7 +51,7 @@ public abstract class CaribousStonksScreen extends Screen {
 	}
 
 	@Override
-	public final void render(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, float deltaTicks) {
+	public final void extractRenderState(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float deltaTicks) {
 		try {
 			onRender(guiGraphics, mouseX, mouseY, deltaTicks);
 		} catch (Throwable throwable) {
@@ -59,8 +59,8 @@ public abstract class CaribousStonksScreen extends Screen {
 		}
 	}
 
-	public void onRender(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
-		super.render(context, mouseX, mouseY, deltaTicks);
+	public void onRender(GuiGraphicsExtractor context, int mouseX, int mouseY, float deltaTicks) {
+		super.extractRenderState(context, mouseX, mouseY, deltaTicks);
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public abstract class CaribousStonksScreen extends Screen {
 	}
 
 	@Override
-	public void renderBackground(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-		renderBlurredBackground(guiGraphics);
+	public void extractBackground(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
+		extractBlurredBackground(guiGraphics);
 	}
 }

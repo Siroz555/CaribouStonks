@@ -4,7 +4,7 @@ import java.util.List;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.input.KeyEvent;
@@ -42,7 +42,7 @@ public final class GuiEvents {
 
 	/**
 	 * Allows getting the last rendering phase of a Tooltip for an ItemStack in
-	 * {@link net.minecraft.client.gui.screens.inventory.AbstractContainerScreen} with {@link GuiGraphics}.
+	 * {@link net.minecraft.client.gui.screens.inventory.AbstractContainerScreen} with {@link GuiGraphicsExtractor}.
 	 * <p>
 	 * Not to be confused with {@link net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback} which only manages
 	 * the Tooltip lines without handling the general appearance of the Tooltip, such as background or dimensions.
@@ -66,7 +66,7 @@ public final class GuiEvents {
 	});
 
 	/**
-	 * Called when a {@link GuiGraphics} draw the ItemStack {@code Tooltips}
+	 * Called when a {@link GuiGraphicsExtractor} draw the ItemStack {@code Tooltips}
 	 */
 	public static final Event<TooltipTracker> TOOLTIP_TRACKER_EVENT = EventFactory.createArrayBacked(TooltipTracker.class, listeners -> (components) -> {
 		for (TooltipTracker listener : listeners) {
@@ -86,7 +86,7 @@ public final class GuiEvents {
 
 	@FunctionalInterface
 	public interface PostTooltip {
-		void onPostTooltip(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y, int width, int height, Font font, List<ClientTooltipComponent> components);
+		void onPostTooltip(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int x, int y, int width, int height, Font font, List<ClientTooltipComponent> components);
 	}
 
 	@FunctionalInterface

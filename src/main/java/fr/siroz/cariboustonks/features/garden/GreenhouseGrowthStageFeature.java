@@ -23,6 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import org.jspecify.annotations.NonNull;
 
@@ -33,7 +34,7 @@ public class GreenhouseGrowthStageFeature extends Feature {
 
 	private static final Pattern GROWTH_STAGE_PATTERN = Pattern.compile("Next Stage:\\s*(?:(\\d+)\\s*h)?\\s*(?:(\\d+)\\s*m)?\\s*(?:(\\d+)\\s*s)?");
 	private static final int GROWTH_STAGE_SLOT = 20;
-	private static final ItemStack ICON = new ItemStack(Items.JUNGLE_SAPLING);
+	private static final ItemStackTemplate ICON = new ItemStackTemplate(Items.JUNGLE_SAPLING);
 
 	public GreenhouseGrowthStageFeature() {
 		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
@@ -107,7 +108,7 @@ public class GreenhouseGrowthStageFeature extends Feature {
 				.append(Component.literal("Next Growth Stage is reached!").withStyle(ChatFormatting.GREEN));
 
 		Client.sendMessageWithPrefix(message);
-		Client.showNotification(notification, ICON);
+		Client.showNotification(notification, ICON.create());
 
 		if (this.config().general.reminders.playSound) {
 			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);

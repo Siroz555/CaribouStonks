@@ -1,12 +1,12 @@
 package fr.siroz.cariboustonks.core.mod.integration;
 
-import me.shedaniel.rei.api.client.REIRuntime;
-import me.shedaniel.rei.api.client.gui.config.SearchFieldLocation;
-import me.shedaniel.rei.api.client.gui.widgets.TextField;
+//import me.shedaniel.rei.api.client.REIRuntime;
+//import me.shedaniel.rei.api.client.gui.config.SearchFieldLocation;
+//import me.shedaniel.rei.api.client.gui.widgets.TextField;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jspecify.annotations.Nullable;
 
-public final class RoughlyEnoughItemsIntegration {
+public final class RoughlyEnoughItemsIntegration { // TODO :: 26.1
 
 	private RoughlyEnoughItemsIntegration() {
 	}
@@ -17,15 +17,17 @@ public final class RoughlyEnoughItemsIntegration {
 
 	@Nullable
 	public static String getSearchBarText() {
-		TextField searchBarField = REIRuntime.getInstance().getSearchTextField();
-		if (searchBarField == null) {
-			return null;
-		}
-
-		return searchBarField.getText();
+//		TextField searchBarField = REIRuntime.getInstance().getSearchTextField();
+//		if (searchBarField == null) {
+//			return null;
+//		}
+//
+//		return searchBarField.getText();
+		return null;
 	}
 
 	public static boolean isSearchBarAtBottomSide() {
-		return REIRuntime.getInstance().getContextualSearchFieldLocation() == SearchFieldLocation.BOTTOM_SIDE;
+		//return REIRuntime.getInstance().getContextualSearchFieldLocation() == SearchFieldLocation.BOTTOM_SIDE;
+		return true;
 	}
 }

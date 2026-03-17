@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class LevelLoadingScreenMixin {
 
 	// Pas le Panorama, perso ça me dérange pas, car un black screen...
-	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "extractRenderState", at = @At("HEAD"), cancellable = true)
 	private void cariboustonks$hideLoadingScreen(CallbackInfo ci) {
 		if (ConfigManager.getConfig().vanilla.hideWorldLoadingScreen) {
 			ci.cancel();

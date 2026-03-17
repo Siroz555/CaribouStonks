@@ -1,8 +1,8 @@
 package fr.siroz.cariboustonks.mixin.accessors;
 
 import java.util.List;
-import net.minecraft.client.GuiMessage;
 import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
@@ -21,9 +21,6 @@ public interface ChatComponentAccessor {
 
 	@Invoker
 	int invokeGetLineHeight();
-
-	@Invoker
-	boolean invokeIsChatHidden();
 
 	@Invoker
 	int invokeGetWidth();

@@ -10,7 +10,7 @@ import fr.siroz.cariboustonks.core.module.hud.element.HudTextLine;
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 
@@ -69,19 +69,19 @@ public final class MultiElementHud extends Hud {
 	}
 
 	@Override
-	public void renderScreen(GuiGraphics context) {
+	public void renderScreen(GuiGraphicsExtractor context) {
 		render(defaultText, context, x(), y(), scale());
 	}
 
 	@Override
-	public void renderHud(GuiGraphics guiGraphics, DeltaTracker tickCounter) {
+	public void renderHud(GuiGraphicsExtractor guiGraphics, DeltaTracker tickCounter) {
 		// SIROZ-NOTE: un try-catch pour le rendu hud hors screen avec le système de crash en préparation
 		if (shouldRender()) {
 			render(elementSupplier.get(), guiGraphics, hudConfig.x(), hudConfig.y(), hudConfig.scale());
 		}
 	}
 
-	private void render(@NonNull List<? extends HudElement> elements, @NonNull GuiGraphics guiGraphics, int x, int y, float scale) {
+	private void render(@NonNull List<? extends HudElement> elements, @NonNull GuiGraphicsExtractor guiGraphics, int x, int y, float scale) {
 		guiGraphics.pose().pushMatrix();
 		guiGraphics.pose().scale(scale, scale);
 
@@ -118,14 +118,14 @@ public final class MultiElementHud extends Hud {
 				int cellX = (int) (x / scale);
 				Component[] cells = row.getCells();
 				for (int i = 0; i < cells.length; i++) {
-					guiGraphics.drawString(CLIENT.font, cells[i], cellX, baseY + offset, Colors.WHITE.asInt(), useShadow());
+					guiGraphics.text(CLIENT.font, cells[i], cellX, baseY + offset, Colors.WHITE.asInt(), useShadow());
 					cellX += colWidth[i] + cellPadding;
 				}
 			} else if (element instanceof HudTextLine line) {
-				guiGraphics.drawString(CLIENT.font, line.text(), (int) (x / scale), baseY + offset, Colors.WHITE.asInt(), useShadow());
+				guiGraphics.text(CLIENT.font, line.text(), (int) (x / scale), baseY + offset, Colors.WHITE.asInt(), useShadow());
 			} else if (element instanceof HudIconLine icon) {
-				guiGraphics.renderItem(icon.stack(), (int) (x / scale), baseY + offset);
-				guiGraphics.drawString(CLIENT.font, icon.text(), (int) (x / scale) + 18, baseY + offset + 4, Colors.WHITE.asInt(), useShadow());
+				guiGraphics.item(icon.stack(), (int) (x / scale), baseY + offset);
+				guiGraphics.text(CLIENT.font, icon.text(), (int) (x / scale) + 18, baseY + offset + 4, Colors.WHITE.asInt(), useShadow());
 			}
 
 			// Avance verticalement : hauteur de ligne + éventuel interligne / Icon

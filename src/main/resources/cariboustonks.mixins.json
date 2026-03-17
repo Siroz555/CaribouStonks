@@ -2,6 +2,9 @@
   "required": true,
   "package": "fr.siroz.cariboustonks.mixin",
   "compatibilityLevel": "JAVA_21",
+  "mixinextras": {
+    "minVersion": "0.5.0"
+  },
   "client": [
     "AbstractContainerMenuMixin",
     "AbstractContainerScreenMixin",
@@ -13,7 +16,7 @@
     "EntityRenderDispatcherMixin",
     "EntityRendererMixin",
     "GameRendererMixin",
-    "GuiGraphicsMixin",
+    "GuiGraphicsExtractorMixin",
     "GuiMixin",
     "ItemInHandRendererMixin",
     "ItemStackMixin",
@@ -35,6 +38,7 @@
     "TutorialMixin",
     "YggdrasilServicesKeyInfoMixin",
     "accessors.AbstractContainerScreenAccessor",
+    "accessors.BlockEntityRenderStateAccessor",
     "accessors.ChatComponentAccessor",
     "accessors.ChatListenerAccessor",
     "accessors.ClientTextTooltipAccessor",

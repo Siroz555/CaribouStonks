@@ -9,7 +9,7 @@ import fr.siroz.cariboustonks.util.StonksUtils;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -35,7 +35,7 @@ public class REISearchBarCalculatorFeature extends Feature {
 	@EventHandler(event = "ScreenEvents.BEFORE_INIT")
 	private void onScreenBeforeInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight) {
 		if (isEnabled() && screen instanceof AbstractContainerScreen<?> handledScreen) {
-			ScreenEvents.afterRender(screen).register((_screen, context, mouseX, mouseY, tickDelta) -> {
+			ScreenEvents.afterExtract(screen).register((_screen, context, mouseX, mouseY, tickDelta) -> {
 				String searchBarText = RoughlyEnoughItemsIntegration.getSearchBarText();
 				if (searchBarText == null || searchBarText.isBlank() || !searchBarText.matches(".*\\d.*")) {
 					return;
@@ -71,10 +71,10 @@ public class REISearchBarCalculatorFeature extends Feature {
 		return lastCalculatorResult;
 	}
 
-	private void draw(@NonNull GuiGraphics context, @NonNull AbstractContainerScreen<?> handledScreen, Component displayText) {
+	private void draw(@NonNull GuiGraphicsExtractor context, @NonNull AbstractContainerScreen<?> handledScreen, Component displayText) {
 		int x = RoughlyEnoughItemsIntegration.isSearchBarAtBottomSide() ? handledScreen.width / 2 + 90 : handledScreen.width / 2 - 80;
 		int y = handledScreen.height - 32;
 
-		context.drawString(Minecraft.getInstance().font, displayText, x, y, Colors.WHITE.asInt(), false);
+		context.text(Minecraft.getInstance().font, displayText, x, y, Colors.WHITE.asInt(), false);
 	}
 }

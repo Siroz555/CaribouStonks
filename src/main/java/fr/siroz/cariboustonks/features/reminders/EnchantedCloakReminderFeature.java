@@ -21,7 +21,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -33,7 +33,7 @@ public final class EnchantedCloakReminderFeature extends Feature {
 
 	private static final String REMINDER_TYPE = "ENCHANTED_CLOAK";
 
-	private static final ItemStack ICON = new ItemStack(Items.CLOCK);
+	private static final ItemStackTemplate ICON = new ItemStackTemplate(Items.CLOCK);
 
 	public EnchantedCloakReminderFeature() {
 		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
@@ -77,7 +77,7 @@ public final class EnchantedCloakReminderFeature extends Feature {
 				.append(text);
 
 		Client.sendMessageWithPrefix(message);
-		Client.showNotification(notification, ICON);
+		Client.showNotification(notification, ICON.create());
 		if (this.config().general.reminders.playSound) {
 			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}

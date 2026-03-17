@@ -8,7 +8,7 @@ import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.systems.HudSystem;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -36,33 +36,33 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
 		super.onRender(guiGraphics, mouseX, mouseY, delta);
 		renderInformations(guiGraphics);
 		renderElements(guiGraphics);
 	}
 
-	private void renderInformations(@NonNull GuiGraphics guiGraphics) {
+	private void renderInformations(@NonNull GuiGraphicsExtractor guiGraphics) {
 		int baseY = font.lineHeight * 8;
 		int lineSpacing = font.lineHeight + 4;
 		int y = baseY;
-		guiGraphics.drawCenteredString(font,
+		guiGraphics.centeredText(font,
 				"LEFT-CLICK to select an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
-		guiGraphics.drawCenteredString(font,
+		guiGraphics.centeredText(font,
 				"RIGHT-CLICK to unselect an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
-		guiGraphics.drawCenteredString(font,
+		guiGraphics.centeredText(font,
 				"Press +/- to scale an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
-		guiGraphics.drawCenteredString(font,
+		guiGraphics.centeredText(font,
 				"Press R to reset an HUD's position & scale", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
-		guiGraphics.drawCenteredString(font,
+		guiGraphics.centeredText(font,
 				"Press TAB to cycle between HUDs", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 	}
 
-	private void renderElements(@NonNull GuiGraphics guiGraphics) {
+	private void renderElements(@NonNull GuiGraphicsExtractor guiGraphics) {
 		for (Hud hud : hudList) {
 			hud.renderScreen(guiGraphics);
 		}

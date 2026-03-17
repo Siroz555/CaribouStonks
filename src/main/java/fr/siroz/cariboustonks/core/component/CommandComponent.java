@@ -8,7 +8,7 @@ import fr.siroz.cariboustonks.systems.CommandSystem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import org.jspecify.annotations.NonNull;
 
@@ -197,10 +197,10 @@ public final class CommandComponent implements Component {
 
 			registrations.add(dispatcher -> {
 				LiteralArgumentBuilder<FabricClientCommandSource> namespaceNode =
-						ClientCommandManager.literal(namespace);
+						ClientCommands.literal(namespace);
 
 				LiteralArgumentBuilder<FabricClientCommandSource> commandNode =
-						ClientCommandManager.literal(name).executes(executor::execute);
+						ClientCommands.literal(name).executes(executor::execute);
 
 				dispatcher.register(namespaceNode.then(commandNode));
 			});
@@ -221,10 +221,10 @@ public final class CommandComponent implements Component {
 
 			registrations.add(dispatcher -> {
 				LiteralArgumentBuilder<FabricClientCommandSource> namespaceNode =
-						ClientCommandManager.literal(namespace);
+						ClientCommands.literal(namespace);
 
 				LiteralArgumentBuilder<FabricClientCommandSource> commandNode =
-						ClientCommandManager.literal(name);
+						ClientCommands.literal(name);
 
 				configurator.configure(commandNode);
 
@@ -249,7 +249,7 @@ public final class CommandComponent implements Component {
 			Objects.requireNonNull(executor, "executor must not be null");
 
 			registrations.add(dispatcher -> dispatcher.register(
-					ClientCommandManager.literal(name).executes(executor::execute)
+					ClientCommands.literal(name).executes(executor::execute)
 			));
 
 			return this;
@@ -268,7 +268,7 @@ public final class CommandComponent implements Component {
 
 			registrations.add(dispatcher -> {
 				LiteralArgumentBuilder<FabricClientCommandSource> commandNode =
-						ClientCommandManager.literal(name);
+						ClientCommands.literal(name);
 
 				configurator.configure(commandNode);
 

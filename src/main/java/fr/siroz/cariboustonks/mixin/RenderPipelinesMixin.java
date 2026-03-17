@@ -1,8 +1,10 @@
 package fr.siroz.cariboustonks.mixin;
 
 import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.ColorTargetState;
+import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.platform.CompareOp;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.spongepowered.asm.mixin.Final;
@@ -27,9 +29,8 @@ public abstract class RenderPipelinesMixin {
             BEACON_BEAM_TRANSLUCENT = RenderPipelines.register(
                     RenderPipeline.builder(RenderPipelines.BEACON_BEAM_SNIPPET)
                             .withLocation("pipeline/beacon_beam_translucent")
-                            .withDepthWrite(false)
-                            .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
-                            .withBlend(BlendFunction.TRANSLUCENT) // <-
+							.withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
+							.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
                             .build());
         }
     }

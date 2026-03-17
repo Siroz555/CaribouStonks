@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -65,7 +65,7 @@ public final class ContainerOverlaySystem implements System {
 		highlights = null;
 	}
 
-	public void draw(GuiGraphics context, AbstractContainerScreen<ChestMenu> containerScreen, List<Slot> slots) {
+	public void draw(GuiGraphicsExtractor context, AbstractContainerScreen<ChestMenu> containerScreen, List<Slot> slots) {
 		if (currentContainerOverlay == null) {
 			return;
 		}

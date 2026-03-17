@@ -10,7 +10,7 @@ import fr.siroz.cariboustonks.screens.search.StonksSearchScreen;
 import fr.siroz.cariboustonks.screens.waypoints.WaypointScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.components.Tooltip;
@@ -143,7 +143,7 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 	}
 
 	@Override
-	public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+	public void onRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
 		//this.renderBackground(context, mouseX, mouseY, delta);
         /*RenderSystem.enableBlend();
         context.drawTexture(BACKGROUND_TEXTURE,
@@ -161,7 +161,7 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 		}
 
 		@Override
-		public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
 			Component text = this.getMessage();
 			Font textRenderer = this.getFont();
 
@@ -175,7 +175,7 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 			int iconX = x - 34;
 			int iconY = y - 13;
 
-			guiGraphics.drawString(textRenderer, orderedText, x, y, Colors.WHITE.asInt());
+			guiGraphics.text(textRenderer, orderedText, x, y, Colors.WHITE.asInt());
 			guiGraphics.blit(RenderPipelines.GUI_TEXTURED, icon, iconX, iconY, 0, 0, 32, 32, 32, 32);
 		}
 

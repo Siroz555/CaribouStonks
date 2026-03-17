@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.features.keyshortcut.KeyShortcut;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
@@ -110,7 +110,7 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 		}
 
 		@Override
-		public void renderContent(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+		public void extractContent(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			// Vu que le Widget n'est pas un AlwaysSelectedEntryListWidget, le rendu ne se fait pas.
 			// Et si c'était le cas, la facon de gérer les ElementListWidget-Entry change.
 			// La facon de gérer les screen me rend fou -_-
@@ -151,7 +151,7 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 			keyBindWidget.setMessage(message);
 
 			for (AbstractWidget child : children) {
-				child.render(guiGraphics, mouseX, mouseY, deltaTicks);
+				child.extractRenderState(guiGraphics, mouseX, mouseY, deltaTicks);
 			}
 		}
 

@@ -30,7 +30,7 @@ public abstract class ClientLevelMixin implements BlockGetter {
 	}
 
 	@Inject(method = "removeEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onClientRemoval()V"))
-	private void cariboustonks$onRemoveEntityEvent(int entityId, Entity.RemovalReason removalReason, CallbackInfo ci, @Local Entity entity) {
+	private void cariboustonks$onRemoveEntityEvent(int entityId, Entity.RemovalReason removalReason, CallbackInfo ci, @Local(name = "entity") Entity entity) {
 		if (SkyBlockAPI.isOnSkyBlock() && entity instanceof ArmorStand armorStand) {
 			WorldEvents.ARMORSTAND_REMOVE_EVENT.invoker().onRemove(armorStand);
 		}

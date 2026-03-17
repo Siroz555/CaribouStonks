@@ -33,7 +33,8 @@ import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.MappableRingBuffer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.state.LevelRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
@@ -73,18 +74,18 @@ public final class CaribouRenderer {
 		worldRenderer = new WorldRendererImpl();
 	}
 
-	public static void startExtraction(Frustum frustum) {
+	public static void startExtraction(LevelRenderState levelRenderState, Frustum frustum) {
 		if (worldRenderer == null) return;
 
-		worldRenderer.begin(frustum);
+		worldRenderer.begin(levelRenderState, frustum);
 		RenderEvents.WORLD_RENDER_EVENT.invoker().onWorldRender(worldRenderer);
 		worldRenderer.end();
 	}
 
-	public static void executeDraws(LevelRenderState levelRenderState) {
+	public static void executeDraws(CameraRenderState cameraRenderState) {
 		if (worldRenderer == null) return;
 
-		worldRenderer.flush(levelRenderState.cameraRenderState);
+		worldRenderer.flush(cameraRenderState);
 
 		executeDraws();
 	}
