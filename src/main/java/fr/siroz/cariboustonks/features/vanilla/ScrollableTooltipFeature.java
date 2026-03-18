@@ -40,7 +40,7 @@ public class ScrollableTooltipFeature extends Feature {
 	private List<ClientTooltipComponent> currentTooltips;
 
 	public ScrollableTooltipFeature() {
-		GuiEvents.SCREEN_CLOSE_EVENT.register(screen -> this.reset());
+		GuiEvents.SCREEN_CLOSE_EVENT.register(_ -> this.reset());
 		ClientEvents.ALLOW_MOUSE_SCROLL_EVENT.register(this::allowMouseScroll);
 		GuiEvents.TOOLTIP_TRACKER_EVENT.register(this::onTooltipTracker);
 	}

@@ -43,7 +43,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
 				.trait(this.trait)
-				.appender((focusedSlot, item, lines) -> {
+				.appender((_, item, lines) -> {
 					if (isContact(item)) {
 						String name = StonksUtils.stripColor(item.getHoverName().getString());
 						if (this.config().uiAndVisuals.favoriteAbiphoneContacts.contains(name)) {

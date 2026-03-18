@@ -35,7 +35,7 @@ public class REISearchBarCalculatorFeature extends Feature {
 	@EventHandler(event = "ScreenEvents.BEFORE_INIT")
 	private void onScreenBeforeInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight) {
 		if (isEnabled() && screen instanceof AbstractContainerScreen<?> handledScreen) {
-			ScreenEvents.afterExtract(screen).register((_screen, context, mouseX, mouseY, tickDelta) -> {
+			ScreenEvents.afterExtract(screen).register((_, context, _, _, _) -> {
 				String searchBarText = RoughlyEnoughItemsIntegration.getSearchBarText();
 				if (searchBarText == null || searchBarText.isBlank() || !searchBarText.matches(".*\\d.*")) {
 					return;

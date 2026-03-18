@@ -54,7 +54,7 @@ public class SlayerStatsFeature extends Feature {
 		SkyBlockEvents.SLAYER_BOSS_SPAWN_EVENT.register(this::onBossSpawn);
 		SkyBlockEvents.SLAYER_MINIBOSS_SPAWN_EVENT.register(this::onMinibossSpawn);
 		SkyBlockEvents.SLAYER_QUEST_START_EVENT.register(this::onQuestStart);
-		SkyBlockEvents.SLAYER_QUEST_FAIL_EVENT.register((_type, _tier) -> this.currentRun = null);
+		SkyBlockEvents.SLAYER_QUEST_FAIL_EVENT.register((_, _) -> this.currentRun = null);
 		SkyBlockEvents.SLAYER_BOSS_END_EVENT.register(this::onBossEnd);
 
 		this.addComponent(HudComponent.class, HudComponent.builder()

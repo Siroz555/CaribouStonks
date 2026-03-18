@@ -44,7 +44,7 @@ public final class SkyBlockManager {
 		TickScheduler.getInstance().runRepeating(SkyBlockAPI::handleInternalUpdate, 3, TimeUnit.SECONDS);
 
 		// Event listeners
-		ClientPlayConnectionEvents.DISCONNECT.register((_handler, _client) -> this.onDisconnect());
+		ClientPlayConnectionEvents.DISCONNECT.register((_, _) -> this.onDisconnect());
 
 		// Hypixel Mod API
 		try {

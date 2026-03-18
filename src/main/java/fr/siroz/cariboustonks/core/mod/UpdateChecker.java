@@ -42,8 +42,8 @@ final class UpdateChecker {
 	private boolean notified = false;
 
 	UpdateChecker() {
-		ClientLifecycleEvents.CLIENT_STARTED.register(_client -> this.checkUpdateOnModrinth());
-		SkyBlockEvents.JOIN_EVENT.register(_s -> this.onJoinSkyBlock());
+		ClientLifecycleEvents.CLIENT_STARTED.register(_ -> this.checkUpdateOnModrinth());
+		SkyBlockEvents.JOIN_EVENT.register(_ -> this.onJoinSkyBlock());
 	}
 
 	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STARTED")

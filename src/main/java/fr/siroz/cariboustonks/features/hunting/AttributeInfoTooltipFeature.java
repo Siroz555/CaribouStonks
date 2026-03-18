@@ -40,7 +40,7 @@ public class AttributeInfoTooltipFeature extends Feature {
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
 				.trait(MatcherTrait.empty())
-				.appender((focusedSlot, item, lines) -> {
+				.appender((focusedSlot, _, lines) -> {
 					if (hypixelDataSource.isBazaarInUpdate()) return;
 
 					Screen currentScreen = Minecraft.getInstance().screen;

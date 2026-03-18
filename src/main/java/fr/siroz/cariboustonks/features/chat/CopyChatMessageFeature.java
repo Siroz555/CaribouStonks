@@ -24,7 +24,7 @@ import org.lwjgl.glfw.GLFW;
 public class CopyChatMessageFeature extends Feature {
 
 	public CopyChatMessageFeature() {
-		ScreenEvents.AFTER_INIT.register((_mc, screen, _sw, _sh) -> {
+		ScreenEvents.AFTER_INIT.register((_, screen, _, _) -> {
 			if (screen instanceof ChatScreen chat) {
 				ScreenMouseEvents.afterMouseClick(chat).register(this::onMouseClick);
 			}
@@ -128,7 +128,7 @@ public class CopyChatMessageFeature extends Feature {
 	private String buildNormalizedContent(List<GuiMessage.Line> visible, int start, int end) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = start; i >= end; i--) {
-			visible.get(i).content().accept((index, style, codePoint) -> {
+			visible.get(i).content().accept((_, _, codePoint) -> {
 				if (!Character.isWhitespace(codePoint)) {
 					sb.appendCodePoint(codePoint);
 				}

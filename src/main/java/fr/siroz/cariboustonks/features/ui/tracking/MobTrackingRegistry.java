@@ -30,8 +30,8 @@ public final class MobTrackingRegistry {
 	private Map<String, MobTrackingEntry> trackedMobs = new HashMap<>();
 
 	public MobTrackingRegistry() {
-		ClientLifecycleEvents.CLIENT_STARTED.register(_client -> this.onClientStarted());
-		ClientLifecycleEvents.CLIENT_STOPPING.register(_client -> this.onClientStopping());
+		ClientLifecycleEvents.CLIENT_STARTED.register(_ -> this.onClientStarted());
+		ClientLifecycleEvents.CLIENT_STOPPING.register(_ -> this.onClientStopping());
 
 		// Slayer Boss "register" en temps réel
 		// Crimson Isle - Minibosses

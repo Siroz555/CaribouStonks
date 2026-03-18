@@ -34,7 +34,7 @@ public final class SystemManager {
         register(new HudSystem());
 		register(new GlowingSystem());
 
-		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
+		ClientLifecycleEvents.CLIENT_STOPPING.register(_ -> {
 			for (System system : SYSTEM_INSTANCES.values()) {
 				system.onShutdown();
 			}

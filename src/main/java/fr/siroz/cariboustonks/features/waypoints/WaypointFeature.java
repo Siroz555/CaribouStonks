@@ -38,8 +38,8 @@ public final class WaypointFeature extends Feature {
     private Map<IslandType, List<Waypoint>> waypoints = Arrays.stream(IslandType.VALUES)
             .collect(Collectors.toMap(
                     Function.identity(),
-                    l -> new ArrayList<>(),
-                    (a, b) -> a,
+                    _ -> new ArrayList<>(),
+                    (a, _) -> a,
                     () -> new EnumMap<>(IslandType.class)
             ));
 

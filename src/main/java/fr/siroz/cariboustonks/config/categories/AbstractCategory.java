@@ -37,7 +37,7 @@ abstract class AbstractCategory {
 	public ButtonOption shortcutToKeybindsOptions() {
 		return ButtonOption.createBuilder()
 				.name(Component.literal("Edit keybind"))
-				.action((screen, opt) -> Minecraft.getInstance()
+				.action((screen, _) -> Minecraft.getInstance()
 						.setScreen(new KeyBindsScreen(screen, Minecraft.getInstance().options)))
 				.text(Component.literal("Open the Keybinds Options"))
 				.build();

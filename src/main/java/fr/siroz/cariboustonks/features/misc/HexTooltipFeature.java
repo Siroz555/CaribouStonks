@@ -15,7 +15,7 @@ public class HexTooltipFeature extends Feature {
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
 				.trait(MatcherTrait.empty())
-				.appender((focusedSlot, item, lines) -> {
+				.appender((_, item, lines) -> {
 					DyedItemColor dyedColor = item.get(DataComponents.DYED_COLOR);
 					if (dyedColor == null) return;
 

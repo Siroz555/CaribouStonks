@@ -39,7 +39,7 @@ public final class GenericDataSource {
 	private boolean lowestBinsError = false;
 
 	public GenericDataSource() {
-		ClientLifecycleEvents.CLIENT_STARTED.register(_mc -> TickScheduler.getInstance().runRepeating(() -> {
+		ClientLifecycleEvents.CLIENT_STARTED.register(_ -> TickScheduler.getInstance().runRepeating(() -> {
 			if (ConfigManager.getConfig().general.internal.fetchAuctionData) {
 				updateLowestBins().thenRun(() -> {
 					lowestBinsInUpdate = false;

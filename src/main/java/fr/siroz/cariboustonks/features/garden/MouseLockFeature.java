@@ -18,9 +18,9 @@ public final class MouseLockFeature extends Feature {
 	private boolean locked = false;
 
 	public MouseLockFeature() {
-		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((_mc, _level) -> this.onJoinWorld());
+		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((_, _) -> this.onJoinWorld());
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
-				.namespaced("lockMouse", ctx -> {
+				.namespaced("lockMouse", _ -> {
 					updateLockState();
 					return 1;
 				})

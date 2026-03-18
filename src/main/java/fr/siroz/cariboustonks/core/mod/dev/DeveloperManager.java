@@ -57,7 +57,7 @@ public final class DeveloperManager {
 		WorldEvents.ALLOW_SOUND_EVENT.register(this::onSound);
 		NetworkEvents.PLAY_SOUND_PACKET.register(this::onSoundPacket);
 		// Commands
-		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _ra) -> dispatcher.register(
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _) -> dispatcher.register(
 				ClientCommands.literal(CaribouStonks.NAMESPACE).then(ClientCommands.literal("devtools")
 						.then(dumpSoundCommand())
 						.then(dumpMayorCommand())

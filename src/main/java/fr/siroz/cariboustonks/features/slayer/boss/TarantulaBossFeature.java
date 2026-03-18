@@ -28,7 +28,7 @@ import org.jspecify.annotations.NonNull;
 
 public class TarantulaBossFeature extends Feature {
 
-	// TODO - Je crois que le nombre des egg a changé
+	// SIROZ-NOTE - Je crois que le nombre des egg a changé
 	private static final Pattern COCOON_EGG_PATTERN = Pattern.compile("(\\d+)s (\\d)/3");
 
 	private final SlayerManager slayerManager;
@@ -36,7 +36,7 @@ public class TarantulaBossFeature extends Feature {
 
 	public TarantulaBossFeature() {
 		this.slayerManager = CaribouStonks.skyBlock().getSlayerManager();
-		SkyBlockEvents.SLAYER_BOSS_END_EVENT.register((_type, _tier, _startTime) -> this.bossEggs.clear());
+		SkyBlockEvents.SLAYER_BOSS_END_EVENT.register((_, _, _) -> this.bossEggs.clear());
 		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
 		WorldEvents.ARMORSTAND_REMOVE_EVENT.register(this::onRemoveArmorStand);

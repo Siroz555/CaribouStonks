@@ -50,7 +50,7 @@ public class StonksCommandFeature extends Feature {
 						return 1;
 					});
 					builder.then(ClientCommands.argument("item", StringArgumentType.greedyString())
-							.suggests((context, suggestionsBuilder) -> SharedSuggestionProvider.suggest(hypixelDataSource.getSkyBlockItemsIds(), suggestionsBuilder))
+							.suggests((_, suggestionsBuilder) -> SharedSuggestionProvider.suggest(hypixelDataSource.getSkyBlockItemsIds(), suggestionsBuilder))
 							.executes(context -> handle(context.getSource(), StringArgumentType.getString(context, "item"))));
 				})
 				.build());

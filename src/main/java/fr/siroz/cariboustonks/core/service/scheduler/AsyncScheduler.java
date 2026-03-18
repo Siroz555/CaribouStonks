@@ -49,7 +49,7 @@ public final class AsyncScheduler {
 				new ThreadPoolExecutor.CallerRunsPolicy() // se dégrade "doucement" lorsque c'est full
 		);
 		// Techniquement useless car les Threads sont des Daemon.
-		ClientLifecycleEvents.CLIENT_STOPPING.register(_client -> shutdownBlockingExecutor());
+		ClientLifecycleEvents.CLIENT_STOPPING.register(_ -> shutdownBlockingExecutor());
 	}
 
 	private static final class Holder {

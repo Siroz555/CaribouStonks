@@ -63,10 +63,10 @@ public class ItemValueViewerFeature extends Feature {
 	private final List<Component> lines = new ArrayList<>();
 
 	public ItemValueViewerFeature() {
-		GuiEvents.POST_TOOLTIP_EVENT.register((_ctx, item, _x, _y, _w, _h, tr, _c) -> this.onPostTooltip(item));
-		ScreenEvents.AFTER_INIT.register((_c, screen, _sw, _sh) -> {
+		GuiEvents.POST_TOOLTIP_EVENT.register((_, item, _, _, _, _, _, _) -> this.onPostTooltip(item));
+		ScreenEvents.AFTER_INIT.register((_, screen, _, _) -> {
 			ScreenEvents.afterExtract(screen).register(this::render);
-			ScreenEvents.remove(screen).register(_s -> this.reset(true));
+			ScreenEvents.remove(screen).register(_ -> this.reset(true));
 		});
 		TickScheduler.getInstance().runRepeating(() -> this.reset(false), 1, TimeUnit.SECONDS);
 	}

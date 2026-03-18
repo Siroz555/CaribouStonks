@@ -27,7 +27,7 @@ public class MiscCategory extends AbstractCategory {
 				.option(ButtonOption.createBuilder()
 						.name(Component.literal("Highlighter Mob"))
 						.text(Component.literal("/highlighter <mob>"))
-						.action((screen, buttonOption) -> {
+						.action((screen, _) -> {
 							Client.sendMessageWithPrefix(Component.literal("Use /highlighter <mob>").withStyle(ChatFormatting.GREEN));
 							screen.onClose();
 						})

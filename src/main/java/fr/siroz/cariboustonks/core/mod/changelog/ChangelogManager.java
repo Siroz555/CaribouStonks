@@ -60,9 +60,9 @@ public final class ChangelogManager {
 		this.notified = false;
 
 		ClientLifecycleEvents.CLIENT_STARTED.register(this::onClientStarted);
-		SkyBlockEvents.JOIN_EVENT.register(_s -> this.onJoinSkyBlock());
+		SkyBlockEvents.JOIN_EVENT.register(_ -> this.onJoinSkyBlock());
 
-		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _ra) ->
+		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _) ->
 				dispatcher.register(ClientCommands.literal("csviewchangelog")
 						.executes(Client.openScreen(
 								() -> ChangelogScreen.create(changelogEntries, this::markChangelogAsSeen)))));

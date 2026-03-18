@@ -18,7 +18,7 @@ final class WelcomeMessage {
 
 	WelcomeMessage() {
 		if (ConfigManager.getConfig().general.firstTimeWithTheMod) {
-			SkyBlockEvents.JOIN_EVENT.register(_s -> onJoin());
+			SkyBlockEvents.JOIN_EVENT.register(_ -> this.onJoin());
 		}
 	}
 

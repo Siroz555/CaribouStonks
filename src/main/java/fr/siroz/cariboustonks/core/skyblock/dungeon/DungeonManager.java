@@ -18,7 +18,7 @@ public final class DungeonManager {
 
 	public DungeonManager() {
 		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onMessage);
-		ClientPlayConnectionEvents.JOIN.register((_h, _s, _c) -> this.reset());
+		ClientPlayConnectionEvents.JOIN.register((_, _, _) -> this.reset());
 	}
 
 	public DungeonBoss getBoss() {

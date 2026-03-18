@@ -67,7 +67,7 @@ public final class EntityGlowComponent implements Component {  // SIROZ-NOTE: do
 		private int defaultColor = DEFAULT;
 
 		void addRule(Predicate<Entity> condition, int color) {
-			rules.add(new GlowRule(condition, e -> color));
+			rules.add(new GlowRule(condition, _ -> color));
 		}
 
 		<T extends Entity> void addTypeRule(@NonNull Class<T> type, Function<T, Integer> colorFunction) {

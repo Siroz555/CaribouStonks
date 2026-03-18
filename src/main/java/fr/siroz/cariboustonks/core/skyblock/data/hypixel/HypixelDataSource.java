@@ -69,7 +69,7 @@ public final class HypixelDataSource {
 		this.bazaarFetcher = new BazaarFetcher(this, 5, () -> ConfigManager.getConfig().general.internal.fetchBazaarData);
 		this.electionFetcher = new ElectionFetcher();
 		// Event listener
-		ClientLifecycleEvents.CLIENT_STARTED.register(client -> onClientStarted());
+		ClientLifecycleEvents.CLIENT_STARTED.register(_ -> onClientStarted());
 	}
 
 	@EventHandler(event = "ClientLifecycleEvents.CLIENT_STARTED")

@@ -134,7 +134,7 @@ public final class BazaarFetcher {
 			return CompletableFuture.completedFuture(null);
 		});
 
-		promise = promise.whenComplete((v, t) -> fetchInProgress.set(false));
+		promise = promise.whenComplete((_, _) -> fetchInProgress.set(false));
 		return promise;
 	}
 

@@ -70,11 +70,11 @@ public class PartyCommandFeature extends Feature {
 	}
 
 	private enum PartyCommand {
-		COORDS(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !coords"), cmd -> cmd.coords, matcher -> {
+		COORDS(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !coords"), cmd -> cmd.coords, _ -> {
 			Position position = Position.of(Client.getCurrentPosition());
 			Client.sendCommandToServer("/pc " + position.asChatCoordinates(), true);
 		}),
-		WARP(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !warp"), cmd -> cmd.warp, matcher -> {
+		WARP(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !warp"), cmd -> cmd.warp, _ -> {
 			Client.sendCommandToServer("/p warp", true); // -_-
 		}),
 		DICE(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !dice"), cmd -> cmd.diceGame, matcher -> {
@@ -83,19 +83,19 @@ public class PartyCommandFeature extends Feature {
 			String message = matcher.group(2) + " rolled a " + roll + "." + extra;
 			Client.sendCommandToServer("/pc " + message, true);
 		}),
-		EIGHT_BALL(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !8ball"), cmd -> cmd.magic8Ball, matcher -> {
+		EIGHT_BALL(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !8ball"), cmd -> cmd.magic8Ball, _ -> {
 			int r = new Random().nextInt(MAGIC_8BALL_ANSWERS.size());
 			String selected = MAGIC_8BALL_ANSWERS.get(r);
 			Client.sendCommandToServer("/pc " + selected, true);
 		}),
-		CF(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !cf"), cmd -> cmd.coinFlip, matcher -> {
+		CF(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !cf"), cmd -> cmd.coinFlip, _ -> {
 			if (new Random().nextBoolean()) {
 				Client.sendCommandToServer("/pc HEADS!", true);
 			} else {
 				Client.sendCommandToServer("/pc TAILS!", true);
 			}
 		}),
-		TPS(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !tps"), cmd -> cmd.tps, matcher -> {
+		TPS(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !tps"), cmd -> cmd.tps, _ -> {
 			float tps = CaribouStonks.systems().getSystem(NetworkSystem.class).getTickRate();
 			String message = String.format("TPS: %.1f", tps);
 			Client.sendCommandToServer("/pc " + message, true);

@@ -316,9 +316,7 @@ public class SkillsCategory extends AbstractCategory {
                                 .description(OptionDescription.of(
                                         Component.literal("Allows you to block the movements of the mouse during farming."),
                                         Component.literal(SPACE + "Use /lockMouse or go to KeyBinds Options.")))
-                                .action((yaclScreen, buttonOption) -> {
-                                    Client.sendMessageWithPrefix(Component.literal("Use /lockMouse or go to KeyBinds Options."));
-                                })
+                                .action((_, _) -> Client.sendMessageWithPrefix(Component.literal("Use /lockMouse or go to KeyBinds Options.")))
                                 .build())
                         .option(this::shortcutToKeybindsOptions)
                         .option(Option.<Boolean>createBuilder()
@@ -383,14 +381,14 @@ public class SkillsCategory extends AbstractCategory {
 						.option(LabelOption.create(Component.literal("| Fusion Machine").withStyle(ChatFormatting.BOLD)))
 						.option(ButtonOption.createBuilder()
 								.name(Component.literal("Quick Fusion - Repeat KeyBind"))
-								.action((screen, opt) -> this.openScreen(new KeyBindsScreen(screen, Minecraft.getInstance().options)))
+								.action((screen, _) -> this.openScreen(new KeyBindsScreen(screen, Minecraft.getInstance().options)))
 								.text(Component.literal("Open Keybinds Options"))
 								.description(OptionDescription.of(
 										Component.literal("Note: 100 ms between each actions is set.").withStyle(ChatFormatting.GOLD)))
 								.build())
 						.option(ButtonOption.createBuilder()
 								.name(Component.literal("Quick Fusion - Confirm KeyBind"))
-								.action((screen, opt) -> this.openScreen(new KeyBindsScreen(screen, Minecraft.getInstance().options)))
+								.action((screen, _) -> this.openScreen(new KeyBindsScreen(screen, Minecraft.getInstance().options)))
 								.text(Component.literal("Open Keybinds Options"))
 								.description(OptionDescription.of(
 										Component.literal("Note: 100 ms between each actions is set.").withStyle(ChatFormatting.GOLD)))

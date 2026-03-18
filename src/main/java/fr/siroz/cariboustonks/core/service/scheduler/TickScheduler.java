@@ -156,7 +156,7 @@ public final class TickScheduler {
 			for (int i = 0; i < currentTickTasks.size(); i++) {
 				Runnable task = currentTickTasks.get(i);
 				if (!runTask(task)) {
-					tasks.computeIfAbsent(currentTick + 1, key -> new ArrayList<>()).add(task);
+					tasks.computeIfAbsent(currentTick + 1, _ -> new ArrayList<>()).add(task);
 				}
 			}
 

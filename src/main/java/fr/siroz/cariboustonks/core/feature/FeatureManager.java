@@ -190,12 +190,12 @@ public final class FeatureManager {
 	}
 
 	private void registerListeners() {
-		ClientTickEvents.END_CLIENT_TICK.register(_mc -> {
+		ClientTickEvents.END_CLIENT_TICK.register(_ -> {
 			for (Feature feature : FEATURE_INSTANCES.values()) {
 				feature.onClientTick();
 			}
 		});
-		ClientPlayConnectionEvents.JOIN.register((_h, _ps, _mc) -> {
+		ClientPlayConnectionEvents.JOIN.register((_, _, _) -> {
 			for (Feature feature : FEATURE_INSTANCES.values()) {
 				feature.onClientJoinServer();
 			}

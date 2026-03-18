@@ -40,7 +40,7 @@ public class LowHealthWarningFeature extends Feature {
 		HudElementRegistry.attachElementAfter(
 				VanillaHudElements.MISC_OVERLAYS,
 				CaribouStonks.identifier("low_health_overlay"),
-				(guiGraphics, _deltaTracker) -> this.renderOverlay(guiGraphics)
+				(guiGraphics, _) -> this.renderOverlay(guiGraphics)
 		);
 	}
 

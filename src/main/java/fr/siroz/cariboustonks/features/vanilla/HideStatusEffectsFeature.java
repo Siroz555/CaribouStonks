@@ -8,7 +8,7 @@ public class HideStatusEffectsFeature extends Feature {
 
 	public HideStatusEffectsFeature() {
 		HudElementRegistry.replaceElement(VanillaHudElements.MOB_EFFECTS,
-				hud -> isEnabled() ? (guiGraphics, deltaTracker) -> {} : hud
+				hud -> isEnabled() ? (_, _) -> {} : hud
 		);
 	}
 
