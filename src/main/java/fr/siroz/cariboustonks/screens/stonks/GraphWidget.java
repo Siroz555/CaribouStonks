@@ -27,7 +27,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
- * TODO - C'est un bordel monumentale lul. Ça marche, mais c'est beaucoup trop brouillon pour le moment coté code -_-
+ * SIROZ-NOTE - C'est un bordel monumentale lul. Ça marche, mais c'est beaucoup trop brouillon pour le moment coté code -_-
  *  Beaucoup de chose useless et surtout a modifier pour avoir un vrai truc "trading" mais sur MC..
  *  Il y a plein de chose a changer, que sa soit coté ordre et logique d'implémentation de chaque partie.
  */

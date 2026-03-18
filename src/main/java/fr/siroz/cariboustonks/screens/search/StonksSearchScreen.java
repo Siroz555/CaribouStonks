@@ -53,7 +53,7 @@ public class StonksSearchScreen extends CaribousStonksScreen {
 	@Override
 	public void onRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float deltaTicks) {
 		super.onRender(guiGraphics, mouseX, mouseY, deltaTicks);
-		searchBox.extractRenderState(guiGraphics, mouseX, mouseY, deltaTicks); // TODO :: 26.1 :: mapping?
+		searchBox.extractRenderState(guiGraphics, mouseX, mouseY, deltaTicks);
 		Component title = Component.literal("Search for a SkyBlock item (" + this.totalSkyBlockItemsCount + " items)");
 		guiGraphics.centeredText(this.font, title, this.width / 2, 8, Colors.WHITE.asInt());
 	}
