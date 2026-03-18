@@ -19,42 +19,40 @@ repositories {
 	maven {
 		name = "Xander Maven"
 		url = "https://maven.isxander.dev/releases"
-
 		content {
 			includeGroup "dev.isxander"
 			includeGroup "org.quiltmc.parsers"
 		}
 	}
 
+	def azureAaronMaven = maven {
+		name = "AzureAaron Maven"
+		url = "https://maven.azureaaron.net/releases"
+	}
 	exclusiveContent {
-		forRepository {
-			maven {
-				url = "https://maven.azureaaron.net/releases"
-			}
-		}
-
+		forRepositories(azureAaronMaven)
 		filter {
 			includeGroup "net.azureaaron"
 		}
 	}
 
+	def terraformersmcMaven = maven {
+		name = "TerraformersMC Maven"
+		url = "https://maven.terraformersmc.com"
+	}
 	exclusiveContent {
-		forRepository {
-			maven {
-				url = "https://maven.terraformersmc.com"
-			}
-		}
-
+		forRepositories(terraformersmcMaven)
 		filter {
 			includeGroup "com.terraformersmc"
 		}
 	}
 
+	def shedanielMaven = maven {
+		name = "shedaniel Maven"
+		url = "https://maven.shedaniel.me/"
+	}
 	exclusiveContent {
-		forRepository {
-			maven { url = "https://maven.shedaniel.me/" }
-		}
-
+		forRepositories(shedanielMaven)
 		filter {
 			includeGroup "me.shedaniel"
 			includeGroup "me.shedaniel.cloth"
@@ -62,13 +60,12 @@ repositories {
 		}
 	}
 
+	def djtheredstonerMaven = maven {
+		name = "djtheredstoner Maven"
+		url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
+	}
 	exclusiveContent {
-		forRepository {
-			maven {
-				url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
-			}
-		}
-
+		forRepositories(djtheredstonerMaven)
 		filter {
 			includeGroup("me.djtheredstoner")
 		}
@@ -87,18 +84,32 @@ dependencies {
 	include implementation("net.azureaaron:hm-api:${project.hypixel_mod_api_version}")
 
 	// ModMenu (https://github.com/TerraformersMC/ModMenu)
-//	compileOnly "com.terraformersmc:modmenu:${modmenu_version}" // TODO :: 26.1 :: Gradle Dep
+	compileOnly "com.terraformersmc:modmenu:${modmenu_version}" // TODO :: 26.1 :: Gradle Dep
 
 	// RoughlyEnoughItems (https://github.com/shedaniel/RoughlyEnoughItems)
-//	compileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") { // TODO :: 26.1 :: Gradle Dep
+//	compileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") {
 //		exclude group: "net.fabricmc.fabric-api"
 //	}
 
 	// DevAuth - DEV (https://github.com/DJtheRedstoner/DevAuth)
-//	runtimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}" // TODO :: 26.1 :: Gradle Dep
+	runtimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
 
 	// JSpecify - DEV (https://github.com/jspecify/jspecify)
-	compileOnly 'org.jspecify:jspecify:1.0.0'
+	compileOnly "org.jspecify:jspecify:1.0.0"
+}
+
+base {
+	archivesName = project.archives_base_name
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
 }
 
 loom {
@@ -109,10 +120,6 @@ loom {
 			}
 		}
 	}
-}
-
-base {
-	archivesName = project.archives_base_name
 }
 
 processResources {
@@ -128,16 +135,6 @@ checkstyle {
 	configFile = rootProject.file("checkstyle.xml")
 	sourceSets = [sourceSets.main]
 	ignoreFailures = false
-}
-
-tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
-	it.options.encoding = "UTF-8"
-}
-
-java {
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
