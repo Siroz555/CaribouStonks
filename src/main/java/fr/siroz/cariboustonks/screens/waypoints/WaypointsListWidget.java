@@ -1,12 +1,12 @@
 package fr.siroz.cariboustonks.screens.waypoints;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.rendering.gui.impl.EmptyInput;
 import fr.siroz.cariboustonks.rendering.gui.impl.FilteredEditBox;
 import fr.siroz.cariboustonks.util.Client;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
@@ -25,7 +25,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 
@@ -91,17 +90,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 		for (AbstractSelectionList.Entry<WaypointEntry> entry : children()) {
 			if (entry instanceof WaypointEntry waypointEntry) {
 				if (waypointEntry.enabledWidget.selected() != waypointEntry.waypoint.isEnabled()) {
-					waypointEntry.enabledWidget.onPress(new InputWithModifiers() { // SIROZ-NOTE: useless
-						@Override
-						public @InputConstants.Value int input() {
-							return 0;
-						}
-
-						@Override
-						public @Modifiers int modifiers() {
-							return 0;
-						}
-					});
+					waypointEntry.enabledWidget.onPress(EmptyInput.INSTANCE);
 				}
 			}
 		}
