@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.config.configs.VanillaConfig;
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
-import fr.siroz.cariboustonks.rendering.gui.impl.DoubleSliderWidget;
+import fr.siroz.cariboustonks.rendering.gui.element.DoubleSliderWidget;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;

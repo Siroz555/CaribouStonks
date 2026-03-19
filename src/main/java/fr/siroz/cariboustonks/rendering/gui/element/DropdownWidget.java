@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.rendering.gui.impl;
+package fr.siroz.cariboustonks.rendering.gui.element;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import fr.siroz.cariboustonks.core.module.color.Colors;

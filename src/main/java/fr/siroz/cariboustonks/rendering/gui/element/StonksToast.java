@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.rendering.gui.impl;
+package fr.siroz.cariboustonks.rendering.gui.element;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import java.util.List;

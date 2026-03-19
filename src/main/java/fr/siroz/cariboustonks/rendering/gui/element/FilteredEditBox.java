@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.rendering.gui.impl;
+package fr.siroz.cariboustonks.rendering.gui.element;
 
 import fr.siroz.cariboustonks.mixin.accessors.EditBoxAccessor;
 import java.util.Objects;

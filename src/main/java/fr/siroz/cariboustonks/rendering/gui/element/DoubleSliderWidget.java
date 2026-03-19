@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.rendering.gui.impl;
+package fr.siroz.cariboustonks.rendering.gui.element;
 
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import it.unimi.dsi.fastutil.doubles.DoubleConsumer;

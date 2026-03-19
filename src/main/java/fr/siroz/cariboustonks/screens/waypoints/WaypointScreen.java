@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.features.waypoints.WaypointFeature;
-import fr.siroz.cariboustonks.rendering.gui.impl.DropdownWidget;
+import fr.siroz.cariboustonks.rendering.gui.element.DropdownWidget;
 import fr.siroz.cariboustonks.screens.CaribousStonksScreen;
 import java.util.Arrays;
 import java.util.List;
