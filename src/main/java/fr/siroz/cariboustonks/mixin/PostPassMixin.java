@@ -10,16 +10,15 @@ import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(PostPass.class) // PostEffectPass
-public abstract class PostPassMixin { // TODO :: 26.1
+@Mixin(PostPass.class)
+public abstract class PostPassMixin {
 
-//	@ModifyReceiver(method = "method_67884", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V"))
-//	private RenderPass cariboustonks$applyBlurScissor(RenderPass renderPass, @NonNull RenderPipeline pipeline) {
-//		Identifier id = pipeline.getLocation();
-//		if (id.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) && id.getPath().startsWith("blur")) {
-//			GuiRenderer.applyBlurScissorToRenderPass(renderPass);
-//		}
-//
-//		return renderPass;
-//	}
+	@ModifyReceiver(method = "lambda$addToFrame$1", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderPass;setPipeline(Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V"))
+	private RenderPass cariboustonks$applyBlurScissor(@NonNull RenderPass renderPass, @NonNull RenderPipeline pipeline) {
+		Identifier id = pipeline.getLocation();
+		if (id.getNamespace().equals(Identifier.DEFAULT_NAMESPACE) && id.getPath().startsWith("blur")) {
+			GuiRenderer.applyBlurScissorToRenderPass(renderPass);
+		}
+		return renderPass;
+	}
 }
