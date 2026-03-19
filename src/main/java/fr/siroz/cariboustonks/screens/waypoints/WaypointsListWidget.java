@@ -7,6 +7,7 @@ import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.rendering.gui.impl.FilteredEditBox;
 import fr.siroz.cariboustonks.util.Client;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.Arrays;
@@ -124,9 +125,9 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 		private final List<AbstractWidget> children;
 		private final Checkbox enabledWidget;
 		private final EditBox nameWidget;
-		private final EditBox xWidget;
-		private final EditBox yWidget;
-		private final EditBox zWidget;
+		private final FilteredEditBox xWidget;
+		private final FilteredEditBox yWidget;
+		private final FilteredEditBox zWidget;
 		private final CycleButton<WaypointColors> colorWidget;
 		private final CycleButton<Waypoint.Type> typeWidget;
 		private final Button deleteWidget;
@@ -145,19 +146,19 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 			this.nameWidget.setTooltip(Tooltip.create(Component.literal("Click to edit the waypoint's name.")));
 			this.nameWidget.setResponder(this::updateName);
 
-			this.xWidget = new EditBox(minecraft.font, 32, 20, Component.literal("X"));
+			this.xWidget = new FilteredEditBox(minecraft.font, 32, 20, Component.literal("X"));
 			this.xWidget.setValue(Integer.toString(waypoint.getPosition().x()));
-			//this.xWidget.setFilter(this::testInt); // TODO :: 26.1 :: mapping?
+			this.xWidget.setFilter(this::testInt);
 			this.xWidget.setResponder(this::updateX);
 
-			this.yWidget = new EditBox(minecraft.font, 32, 20, Component.literal("Y"));
+			this.yWidget = new FilteredEditBox(minecraft.font, 32, 20, Component.literal("Y"));
 			this.yWidget.setValue(Integer.toString(waypoint.getPosition().y()));
-			//this.yWidget.setFilter(this::testInt);
+			this.yWidget.setFilter(this::testInt);
 			this.yWidget.setResponder(this::updateY);
 
-			this.zWidget = new EditBox(minecraft.font, 32, 20, Component.literal("Z"));
+			this.zWidget = new FilteredEditBox(minecraft.font, 32, 20, Component.literal("Z"));
 			this.zWidget.setValue(Integer.toString(waypoint.getPosition().z()));
-			//this.zWidget.setFilter(this::testInt);
+			this.zWidget.setFilter(this::testInt);
 			this.zWidget.setResponder(this::updateZ);
 
 			this.colorWidget = CycleButton.<WaypointColors>builder(
