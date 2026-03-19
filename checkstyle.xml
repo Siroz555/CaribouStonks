@@ -58,6 +58,13 @@
 
         <module name="GenericWhitespace"/>
 
+        <module name="UnnecessaryParentheses">
+            <property name="tokens" value="LAMBDA"/>
+        </module>
+
+        <module name="UnusedCatchParameterShouldBeUnnamed"/>
+        <module name="UnusedLambdaParameterShouldBeUnnamed"/>
+
         <module name="NeedBraces">
             <property name="tokens" value="LITERAL_IF, LITERAL_ELSE, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO"/>
             <!-- Blocs d'une ligne (pour les lambdas -_-) -->
