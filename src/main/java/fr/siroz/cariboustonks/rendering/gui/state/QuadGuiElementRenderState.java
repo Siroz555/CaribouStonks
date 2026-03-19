@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.rendering.gui.state;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import fr.siroz.cariboustonks.core.module.gui.Quad;
+import fr.siroz.cariboustonks.rendering.gui.element.Quad;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import java.util.List;
 import net.minecraft.client.gui.navigation.ScreenRectangle;

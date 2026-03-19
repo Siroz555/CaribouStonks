@@ -3,9 +3,9 @@ package fr.siroz.cariboustonks.rendering.gui;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.ScissorState;
-import fr.siroz.cariboustonks.core.module.gui.Point;
-import fr.siroz.cariboustonks.core.module.gui.Quad;
 import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
+import fr.siroz.cariboustonks.rendering.gui.element.Point;
+import fr.siroz.cariboustonks.rendering.gui.element.Quad;
 import fr.siroz.cariboustonks.rendering.gui.state.GradientRectGuiElementRenderState;
 import fr.siroz.cariboustonks.rendering.gui.state.QuadGuiElementRenderState;
 import java.awt.Color;
@@ -19,6 +19,9 @@ import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Provides methods to render various visual elements in the client GUI.
+ */
 public final class GuiRenderer {
 
 	private static final List<Quad> BATCH_QUADS = new ArrayList<>();
@@ -28,20 +31,20 @@ public final class GuiRenderer {
 	}
 
 	/**
-	 * Draws a rectangular border within the specified coordinates and dimensions.
+	 * Enqueues a rectangular border within the specified coordinates and dimensions.
 	 *
-	 * @param guiGraphics the {@code GuiGraphics} used for rendering the border
-	 * @param x           the x-coordinate (top-left corner)
-	 * @param y           the y-coordinate (top-left corner)
-	 * @param width       the width
-	 * @param height      the height
-	 * @param color       the color
+	 * @param graphics the {@code GuiGraphics} used for rendering the border
+	 * @param x        the x-coordinate (top-left corner)
+	 * @param y        the y-coordinate (top-left corner)
+	 * @param width    the width
+	 * @param height   the height
+	 * @param color    the color
 	 */
-	public static void drawBorder(@NonNull GuiGraphicsExtractor guiGraphics, int x, int y, int width, int height, int color) {
-		guiGraphics.fill(x, y, x + width, y + 1, color);
-		guiGraphics.fill(x, y + height - 1, x + width, y + height, color);
-		guiGraphics.fill(x, y + 1, x + 1, y + height - 1, color);
-		guiGraphics.fill(x + width - 1, y + 1, x + width, y + height - 1, color);
+	public static void submitBorder(@NonNull GuiGraphicsExtractor graphics, int x, int y, int width, int height, int color) {
+		graphics.fill(x, y, x + width, y + 1, color);
+		graphics.fill(x, y + height - 1, x + width, y + height, color);
+		graphics.fill(x, y + 1, x + 1, y + height - 1, color);
+		graphics.fill(x + width - 1, y + 1, x + width, y + height - 1, color);
 	}
 
 	/**
@@ -49,20 +52,20 @@ public final class GuiRenderer {
 	 * <p>
 	 * This method creates a {@link GradientRectGuiElementRenderState}.
 	 *
-	 * @param guiGraphics the {@code GuiGraphics}
-	 * @param depth       the depth of the element
-	 * @param left        the left position of the rectangle
-	 * @param top         the top position of the rectangle
-	 * @param right       the right position of the rectangle
-	 * @param bottom      the bottom position of the rectangle
-	 * @param startColor  the start color of the gradient
-	 * @param endColor    the end color of the gradient
+	 * @param graphics   the {@code GuiGraphics}
+	 * @param depth      the depth of the element
+	 * @param left       the left position of the rectangle
+	 * @param top        the top position of the rectangle
+	 * @param right      the right position of the rectangle
+	 * @param bottom     the bottom position of the rectangle
+	 * @param startColor the start color of the gradient
+	 * @param endColor   the end color of the gradient
 	 */
-	public static void submitGradientRect(@NonNull GuiGraphicsExtractor guiGraphics, int depth, int left, int top, int right, int bottom, int startColor, int endColor) {
+	public static void submitGradientRect(@NonNull GuiGraphicsExtractor graphics, int depth, int left, int top, int right, int bottom, int startColor, int endColor) {
 		GradientRectGuiElementRenderState renderState = new GradientRectGuiElementRenderState(
 				CaribouRenderPipelines.GUI_QUADS, //RenderPipelines.GUI,
 				TextureSetup.noTexture(),
-				new Matrix3x2f(guiGraphics.pose()),
+				new Matrix3x2f(graphics.pose()),
 				depth,
 				left,
 				top,
@@ -70,9 +73,9 @@ public final class GuiRenderer {
 				bottom,
 				startColor,
 				endColor,
-				guiGraphics.scissorStack.peek()
+				graphics.scissorStack.peek()
 		);
-		guiGraphics.guiRenderState.addGuiElement(renderState);
+		graphics.guiRenderState.addGuiElement(renderState);
 	}
 
 	/**
@@ -80,20 +83,20 @@ public final class GuiRenderer {
 	 * <p>
 	 * This method creates a {@link QuadGuiElementRenderState}.
 	 *
-	 * @param guiGraphics the {@code GuiGraphics}
-	 * @param points      an array of Points describing the polyline
-	 * @param color       the color
-	 * @param thickness   the thickness of the line in pixels
+	 * @param graphics  the {@code GuiGraphics}
+	 * @param points    an array of Points describing the polyline
+	 * @param color     the color
+	 * @param thickness the thickness of the line in pixels
 	 */
 	public static void submitLinesFromPoints(
-			@NonNull GuiGraphicsExtractor guiGraphics,
+			@NonNull GuiGraphicsExtractor graphics,
 			@NonNull Point @NonNull [] points,
 			@NonNull Color color,
 			int thickness
 	) {
 		if (points.length < 2) return;
 
-		Matrix3x2f matrix = guiGraphics.pose();
+		Matrix3x2f matrix = graphics.pose();
 
 		for (int i = 0; i < points.length; i++) {
 			Point currentPoint = points[i];
@@ -139,9 +142,9 @@ public final class GuiRenderer {
 				TextureSetup.noTexture(),
 				batchCopy,
 				color.getRGB(),
-				guiGraphics.scissorStack.peek()
+				graphics.scissorStack.peek()
 		);
-		guiGraphics.guiRenderState.addGuiElement(renderState);
+		graphics.guiRenderState.addGuiElement(renderState);
 	}
 
 	public static void enableBlurScissor(int x, int y, int width, int height) {

@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.core.module.gui;
+package fr.siroz.cariboustonks.rendering.gui.element;
 
 public record Quad(
 		float x1,
@@ -11,3 +11,4 @@ public record Quad(
 		float y4
 ) {
 }
+

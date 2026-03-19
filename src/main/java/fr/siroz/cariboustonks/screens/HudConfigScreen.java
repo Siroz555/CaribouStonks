@@ -80,7 +80,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			int bWidth = Math.min(x + width + 2, this.width) - bX;
 			int bHeight = Math.min(y + height + 2, this.height) - bY;
 
-			GuiRenderer.drawBorder(guiGraphics, bX, bY, bWidth, bHeight, Colors.RED.asInt());
+			GuiRenderer.submitBorder(guiGraphics, bX, bY, bWidth, bHeight, Colors.RED.asInt());
 		}
 	}
 

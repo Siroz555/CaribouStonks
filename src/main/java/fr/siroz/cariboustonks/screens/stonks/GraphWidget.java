@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.screens.stonks;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.module.gui.Point;
 import fr.siroz.cariboustonks.core.skyblock.data.generic.ItemPrice;
 import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
+import fr.siroz.cariboustonks.rendering.gui.element.Point;
 import fr.siroz.cariboustonks.util.ColorUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
@@ -283,7 +283,7 @@ class GraphWidget extends AbstractStonksWidget {
 				int textWidth = this.textRenderer.width(dateText) + 10;
 				int height = type == Type.BAZAAR && secondPriceText != null ? 34 : 24; // 24
 				// Border
-				GuiRenderer.drawBorder(guiGraphics, mouseX + 7, mouseY - 13, textWidth, height, Color.WHITE.getRGB());
+				GuiRenderer.submitBorder(guiGraphics, mouseX + 7, mouseY - 13, textWidth, height, Color.WHITE.getRGB());
 				// Date
 				guiGraphics.text(textRenderer, dateText, mouseX + 10, mouseY - 10, Color.WHITE.getRGB());
 				// Price - Auction / 1ère ligne du Bazaar

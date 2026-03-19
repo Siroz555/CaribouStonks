@@ -69,7 +69,7 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 		dropdownList.extractRenderState(context, mouseX, mouseY, delta);
 
 		context.fill(getX(), getY(), getRight(), getY() + HEADER_HEIGHT + 1, BACKGROUND_COLOR);
-		GuiRenderer.drawBorder(context, getX(), getY(), getWidth(), HEADER_HEIGHT + 1, -1);
+		GuiRenderer.submitBorder(context, getX(), getY(), getWidth(), HEADER_HEIGHT + 1, -1);
 		context.text(CLIENT.font, ">", getX() + 4, getY() + 6, Colors.WHITE.asInt(), true);
 		context.text(CLIENT.font, selected.toString(), getX() + 12, getY() + 6, Colors.WHITE.asInt(), true);
 		if (isMouseOver(mouseX, mouseY)) {
@@ -231,7 +231,7 @@ public class DropdownWidget<T> extends AbstractContainerWidget {
 		@Override
 		protected void extractListBackground(@NonNull GuiGraphicsExtractor context) {
 			context.fill(getX(), getY(), getRight(), getBottom(), BACKGROUND_COLOR);
-			GuiRenderer.drawBorder(context, getX(), getY(), getWidth(), getHeight(), -1);
+			GuiRenderer.submitBorder(context, getX(), getY(), getWidth(), getHeight(), -1);
 		}
 
 		@Override
