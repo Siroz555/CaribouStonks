@@ -35,7 +35,7 @@ public record Enchantments(
 				}
 			}
 			return new Enchantments(enchantments, ultimateEnchantment);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return EMPTY;
 		}
 	}

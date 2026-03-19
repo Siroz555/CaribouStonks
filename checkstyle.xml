@@ -89,7 +89,7 @@
         <module name="MissingOverride"/>
 
         <module name="EmptyCatchBlock">
-            <property name="exceptionVariableName" value="ignored|expected"/>
+            <property name="exceptionVariableName" value="ignored|expected|_"/>
         </module>
 
         <module name="CyclomaticComplexity">

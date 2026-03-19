@@ -42,9 +42,9 @@ public final class WaypointSystem implements System {
     private final Map<UUID, Waypoint> waypoints = new ConcurrentHashMap<>();
 
     public WaypointSystem() {
-		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((event, world) -> this.resetWaypoints());
+		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((_, _) -> this.resetWaypoints());
         RenderEvents.WORLD_RENDER_EVENT.register(this::render);
-		ClientTickEvents.END_CLIENT_TICK.register(_client -> this.onTick());
+		ClientTickEvents.END_CLIENT_TICK.register(_ -> this.onTick());
     }
 
 	/**

@@ -117,7 +117,7 @@ public final class StonksUtils {
 
 		try {
 			return Integer.parseInt(s);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return defaultValue;
 		}
 	}

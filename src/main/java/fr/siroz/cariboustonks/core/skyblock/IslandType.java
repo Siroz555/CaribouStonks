@@ -190,9 +190,7 @@ public enum IslandType {
 	 * @return the Island or {@link IslandType#UNKNOWN} if not found
 	 */
 	public static @NonNull IslandType getById(@Nullable String id) {
-		if (id == null || id.isEmpty()) {
-			return UNKNOWN;
-		}
+		if (id == null || id.isEmpty()) return UNKNOWN;
 
 		return Arrays.stream(IslandType.values())
 				.filter(is -> id.equals(is.getId()))
@@ -205,7 +203,7 @@ public enum IslandType {
 				.filter(is -> {
 					try {
 						return IslandType.class.getField(is.name()).getAnnotation(Deprecated.class) == null;
-					} catch (NoSuchFieldException ignored) {
+					} catch (NoSuchFieldException _) {
 						return true;
 					}
 				})

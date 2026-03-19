@@ -63,7 +63,7 @@ public class REISearchBarCalculatorFeature extends Feature {
 			try {
 				double result = Calculator.calculate(searchBarInput);
 				lastCalculatorResult = StonksUtils.DOUBLE_NUMBERS.format(result);
-			} catch (Throwable ignored) {
+			} catch (Throwable _) {
 				lastCalculatorResult = null;
 			}
 		}

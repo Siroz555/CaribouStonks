@@ -30,7 +30,7 @@ public class StonksSearchScreen extends CaribousStonksScreen {
 				this.width / 2 - 100, 22,
 				200, 20,
 				searchBox, Component.literal("Search..."));
-		searchBox.setResponder((search) -> itemListWidget.setSearch(search));
+		searchBox.setResponder(search -> itemListWidget.setSearch(search));
 		addWidget(searchBox);
 
 		itemListWidget = addRenderableWidget(new ItemListWidget(this, this.minecraft,
@@ -39,11 +39,11 @@ public class StonksSearchScreen extends CaribousStonksScreen {
 				searchBox.getValue()));
 
 		selectButton = addRenderableWidget(Button.builder(Component.literal("Load"),
-						(b) -> itemListWidget.getSelectedOptional()
+						_ -> itemListWidget.getSelectedOptional()
 								.ifPresent(ItemListWidget.ItemEntry::load))
 				.bounds(this.width / 2 - 154, this.height - 38, 150, 20).build()); // 52
 
-		addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, (b) -> this.minecraft.setScreen(parent))
+		addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, _ -> this.minecraft.setScreen(parent))
 				.bounds(this.width / 2 + 4, this.height - 38, 150, 20)
 				.build()); // 52
 

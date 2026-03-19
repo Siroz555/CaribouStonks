@@ -84,7 +84,7 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 				layout.addToContents(new StringWidget(Component.literal("You must enable Held Item customization to use this.").withColor(Colors.ORANGE.asInt()), this.font));
 			}
 
-			layout.addToFooter(Button.builder(CommonComponents.GUI_DONE, b -> close()).width(210).build());
+			layout.addToFooter(Button.builder(CommonComponents.GUI_DONE, _ -> close()).width(210).build());
 			layout.arrangeElements();
 			layout.visitWidgets(this::addRenderableWidget);
 			return;
@@ -138,15 +138,15 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 		), 3);
 
 		adder.addChild(new SpacerElement(0, 20), 3);
-		adder.addChild(Button.builder(Component.literal("Revert"), b -> revert())
+		adder.addChild(Button.builder(Component.literal("Revert"), _ -> revert())
 				.tooltip(Tooltip.create(Component.literal("Reverts to the last saved values.")))
 				.width(100)
 				.build());
-		adder.addChild(Button.builder(Component.literal("Reset"), b -> reset())
+		adder.addChild(Button.builder(Component.literal("Reset"), _ -> reset())
 				.tooltip(Tooltip.create(Component.literal("Resets to the default values.")))
 				.width(100)
 				.build());
-		adder.addChild(Button.builder(Component.literal("Save"), b -> saveAndClose())
+		adder.addChild(Button.builder(Component.literal("Save"), _ -> saveAndClose())
 				.tooltip(Tooltip.create(Component.literal("Saves and close.")))
 				.width(208)
 				.build(), 3);

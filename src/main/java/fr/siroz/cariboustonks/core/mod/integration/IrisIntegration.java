@@ -60,7 +60,7 @@ public final class IrisIntegration {
 			Objects.requireNonNull(REGISTER_PIPELINE, "Iris register pipeline handle must be present to assign a pipeline.");
 			Objects.requireNonNull(GET_IRIS_PROGRAM, "Iris Program handle must be present to assign a pipeline.");
 			REGISTER_PIPELINE.invoke(GET_IRIS_API.invoke(), pipeline, GET_IRIS_PROGRAM.invoke(irisProgramName));
-		} catch (IllegalStateException ignored) {
+		} catch (IllegalStateException _) {
 			// The pipeline was probably already registered
 		} catch (Throwable ex) {
 			CaribouStonks.LOGGER.error("[IrisCompatibility] Failed to assign pipeline {} to {}.", pipeline.getLocation(), irisProgramName, ex);
@@ -73,7 +73,7 @@ public final class IrisIntegration {
 			MethodHandles.Lookup lookup = MethodHandles.publicLookup();
 			MethodType type = MethodType.methodType(irisApiClass);
 			return lookup.findStatic(irisApiClass, "getInstance", type);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return null;
 		}
 	}
@@ -85,7 +85,7 @@ public final class IrisIntegration {
 			MethodHandles.Lookup lookup = MethodHandles.publicLookup();
 			MethodType type = MethodType.methodType(void.class, RenderPipeline.class, irisProgramClass);
 			return lookup.findVirtual(irisApiClass, "assignPipeline", type);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return null;
 		}
 	}
@@ -97,7 +97,7 @@ public final class IrisIntegration {
 			MethodType type = MethodType.methodType(Enum.class, Class.class, String.class);
 			MethodHandle enumValueOf = lookup.findStatic(Enum.class, "valueOf", type);
 			return MethodHandles.insertArguments(enumValueOf, 0, irisProgramClass);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return null;
 		}
 	}

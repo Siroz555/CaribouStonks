@@ -90,7 +90,7 @@ public final class AsyncScheduler {
 			if (!blockingExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
 				blockingExecutor.shutdownNow(); // les tasks courantes
 			}
-		} catch (InterruptedException ignored) {
+		} catch (InterruptedException _) {
 			// C'est très mal de faire comme ça, à ne pas reproduire chez vous.
 			// Normalement, il faut interrupt le current thread après ce genre de chose
 		}

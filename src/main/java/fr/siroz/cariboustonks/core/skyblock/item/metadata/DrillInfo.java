@@ -29,7 +29,7 @@ public record DrillInfo(
 			Optional<String> enginePart = customData.getString("drill_part_engine");
 			Optional<String> upgradeModulePart = customData.getString("drill_part_upgrade_module");
 			return new DrillInfo(fuelTankPart, enginePart, upgradeModulePart);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return EMPTY;
 		}
 	}

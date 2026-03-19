@@ -37,7 +37,7 @@ public record PetInfo(
 			Rarity rarity = Rarity.fromName(json.has("tier") ? json.get("tier").getAsString() : null);
 
 			return new PetInfo(name, type, rarity);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 		}
 
 		return EMPTY;

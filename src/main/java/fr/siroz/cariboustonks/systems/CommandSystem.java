@@ -33,7 +33,7 @@ public final class CommandSystem implements System {
 
 	private void registerComponent(CommandComponent component) {
 		for (CommandComponent.CommandRegistration registration :  component.getRegistrations()) {
-			ClientCommandRegistrationCallback.EVENT.register((d, _buildContext) ->  registration.register(d));
+			ClientCommandRegistrationCallback.EVENT.register((d, _) ->  registration.register(d));
 		}
 	}
 

@@ -149,7 +149,7 @@ public final class ElectionFetcher {
 		try {
 			String key = mayorObject.has("key") ? mayorObject.get("key").getAsString() : "";
 			return Mayor.fromId(key);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return Mayor.UNKNOWN;
 		}
 	}
@@ -169,7 +169,7 @@ public final class ElectionFetcher {
 				}
 			}
 			return perks;
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return Set.of();
 		}
 	}
@@ -185,7 +185,7 @@ public final class ElectionFetcher {
 					return Optional.of(Perk.fromDisplayName(name));
 				}
 			}
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 		}
 		return Optional.empty();
 	}

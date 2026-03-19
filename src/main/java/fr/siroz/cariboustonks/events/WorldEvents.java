@@ -37,7 +37,7 @@ public final class WorldEvents {
 		return allowSound;
 	});
 
-	public static final Event<ArmorStandRemoved> ARMORSTAND_REMOVE_EVENT = EventFactory.createArrayBacked(ArmorStandRemoved.class, listeners -> (armorStand) -> {
+	public static final Event<ArmorStandRemoved> ARMORSTAND_REMOVE_EVENT = EventFactory.createArrayBacked(ArmorStandRemoved.class, listeners -> armorStand -> {
 		for (ArmorStandRemoved listener : listeners) {
 			listener.onRemove(armorStand);
 		}

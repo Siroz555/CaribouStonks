@@ -43,7 +43,7 @@ public record SpecialAuctionInfo(
 					.orElse(OptionalInt.empty());
 
 			return new SpecialAuctionInfo(winningBid, price, bid, auction);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return EMPTY;
 		}
 	}

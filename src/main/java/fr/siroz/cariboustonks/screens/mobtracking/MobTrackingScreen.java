@@ -49,7 +49,7 @@ public class MobTrackingScreen extends CaribousStonksScreen {
 		grid.defaultCellSetting().paddingHorizontal(5).paddingVertical(2);
 
 		GridLayout.RowHelper adder = grid.createRowHelper(2);
-		adder.addChild(Button.builder(CommonComponents.GUI_DONE, button -> {
+		adder.addChild(Button.builder(CommonComponents.GUI_DONE, _ -> {
 			saveMobTrackingConfig();
 			close();
 		}).width(310).build(), 2);

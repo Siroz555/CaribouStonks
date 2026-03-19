@@ -109,7 +109,7 @@ public class StonksScreen extends CaribousStonksScreen {
 				? Component.literal(itemGraphWidget.getGranularity()).withStyle(ChatFormatting.GREEN)
 				: Component.literal("?").withStyle(ChatFormatting.BOLD);
 
-		Button graphType = Button.builder(Component.literal("Graph type : ").append(granularity), b -> {
+		Button graphType = Button.builder(Component.literal("Graph type : ").append(granularity), _ -> {
 			if (itemGraphWidget != null && itemGraphWidget.updateGranularity()) {
 				repositionElements();
 			}
@@ -122,12 +122,12 @@ public class StonksScreen extends CaribousStonksScreen {
 		)).build();
 		adder.addChild(graphType);
 
-		Button search = Button.builder(Component.literal("Search an item.."), _b ->
+		Button search = Button.builder(Component.literal("Search an item.."), _ ->
 				Objects.requireNonNull(minecraft).setScreen(new StonksSearchScreen(null))
 		).build();
 		adder.addChild(search);
 
-		Button buttonDone = Button.builder(CommonComponents.GUI_DONE, _b -> close()).build();
+		Button buttonDone = Button.builder(CommonComponents.GUI_DONE, _ -> close()).build();
 		adder.addChild(buttonDone);
 
 		gridWidget.arrangeElements();

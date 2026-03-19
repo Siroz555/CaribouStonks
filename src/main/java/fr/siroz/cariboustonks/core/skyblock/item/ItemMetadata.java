@@ -85,7 +85,7 @@ public record ItemMetadata(
 					cosmeticInfo,
 					specialAuctionInfo
 			);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			// Ne se fera jamais, chaque metadata a un try-catch
 			return EMPTY;
 		}

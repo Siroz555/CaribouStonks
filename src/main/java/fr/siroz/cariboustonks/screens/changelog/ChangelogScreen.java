@@ -28,7 +28,7 @@ public class ChangelogScreen extends CaribousStonksScreen {
 	@Override
 	protected void onInit() {
 		this.addRenderableWidget(new ChangelogListWidget(this.minecraft, changelogs, this.width, this.height - 100, 40));
-		this.addRenderableWidget(Button.builder(Component.literal("Close"), b -> this.close())
+		this.addRenderableWidget(Button.builder(Component.literal("Close"), _ -> this.close())
 				.bounds(this.width / 2 - 50, this.height - 30, 100, 20)
 				.build());
 	}

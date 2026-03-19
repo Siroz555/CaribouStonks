@@ -30,7 +30,7 @@ public record CosmeticInfo(
 			boolean isShinyData = customData.getBooleanOr("is_shiny", false);
 
 			return new CosmeticInfo(skinData, dyeData, isShinyData);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return EMPTY;
 		}
 	}

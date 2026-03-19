@@ -47,7 +47,7 @@ final class CalculatorHelper {
 			String type = parts[0].toUpperCase(Locale.ENGLISH);
 			int idx = Integer.parseInt(parts[1]);
 			return Optional.of(new UnlockedSlot(type, idx));
-		} catch (NumberFormatException ex) {
+		} catch (NumberFormatException _) {
 			return Optional.empty();
 		}
 	}

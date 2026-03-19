@@ -48,7 +48,7 @@ public record PetInfo(
 					: Optional.empty();
 
 			return new PetInfo(type, exp, tier, candies, heldItem, skin);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return EMPTY;
 		}
 	}

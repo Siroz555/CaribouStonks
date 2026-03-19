@@ -154,7 +154,7 @@ public final class CaribouRenderer {
 		BatchedDraw draw = BATCHED_DRAWS.get(hash);
 
 		if (draw == null) {
-			ByteBufferBuilder allocator = ALLOCATORS.computeIfAbsent(hash, _hash -> new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE));
+			ByteBufferBuilder allocator = ALLOCATORS.computeIfAbsent(hash, _ -> new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE));
 			BufferBuilder bufferBuilder = new BufferBuilder(allocator, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
 			BATCHED_DRAWS.put(hash, new BatchedDraw(bufferBuilder, pipeline, textureSetup));
 			return bufferBuilder;
@@ -257,7 +257,7 @@ public final class CaribouRenderer {
 			VertexFormat format = entry.getKey();
 			int vertexBufferSize = entry.getIntValue();
 
-			VERTEX_BUFFERS.compute(format, (k, vertexBuffer) -> initOrResizeBuffer(vertexBuffer, "CaribouStonks vertex buffer for: " + format, vertexBufferSize));
+			VERTEX_BUFFERS.compute(format, (_, vertexBuffer) -> initOrResizeBuffer(vertexBuffer, "CaribouStonks vertex buffer for: " + format, vertexBufferSize));
 		}
 	}
 

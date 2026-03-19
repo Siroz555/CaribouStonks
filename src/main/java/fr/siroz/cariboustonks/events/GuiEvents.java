@@ -25,7 +25,7 @@ public final class GuiEvents {
 	/**
 	 * Called when a screen is closed
 	 */
-	public static final Event<ScreenClose> SCREEN_CLOSE_EVENT = EventFactory.createArrayBacked(ScreenClose.class, listeners -> (screen) -> {
+	public static final Event<ScreenClose> SCREEN_CLOSE_EVENT = EventFactory.createArrayBacked(ScreenClose.class, listeners -> screen -> {
 		for (ScreenClose listener : listeners) {
 			listener.onScreenClose(screen);
 		}
@@ -68,7 +68,7 @@ public final class GuiEvents {
 	/**
 	 * Called when a {@link GuiGraphicsExtractor} draw the ItemStack {@code Tooltips}
 	 */
-	public static final Event<TooltipTracker> TOOLTIP_TRACKER_EVENT = EventFactory.createArrayBacked(TooltipTracker.class, listeners -> (components) -> {
+	public static final Event<TooltipTracker> TOOLTIP_TRACKER_EVENT = EventFactory.createArrayBacked(TooltipTracker.class, listeners -> components -> {
 		for (TooltipTracker listener : listeners) {
 			listener.onTooltipTracker(components);
 		}

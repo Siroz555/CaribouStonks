@@ -54,7 +54,7 @@ public final class ContainerOverlaySystem implements System {
 	@EventHandler(event = "ScreenEvents.BEFORE_INIT")
 	private void onScreenBeforeInit(Minecraft _client, Screen screen, int _scaledWidth, int _scaledHeight) {
 		if (SkyBlockAPI.isOnSkyBlock() && screen instanceof ContainerScreen containerScreen) {
-			ScreenEvents.remove(screen).register(_screen -> clearScreen());
+			ScreenEvents.remove(screen).register(_ -> clearScreen());
 			onScreen(containerScreen);
 		} else {
 			clearScreen();
@@ -102,7 +102,7 @@ public final class ContainerOverlaySystem implements System {
 				Slot slot = slots.get(highlight.slot());
 				context.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, highlight.color().asInt());
 			}
-		} catch (Throwable ignored) {
+		} catch (Throwable _) {
 		}
 
 		context.pose().popMatrix();

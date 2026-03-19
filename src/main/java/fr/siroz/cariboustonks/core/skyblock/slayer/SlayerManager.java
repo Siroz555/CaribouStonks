@@ -294,7 +294,7 @@ public final class SlayerManager {
 					bossFight = new SlayerBossFight(this, null);
 				}
 			}
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 		}
 	}
 

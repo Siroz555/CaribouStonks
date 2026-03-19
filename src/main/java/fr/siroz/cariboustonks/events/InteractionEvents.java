@@ -24,7 +24,7 @@ public final class InteractionEvents {
 	/**
 	 * Invoked whenever the player interact on a block.
 	 */
-	public static final Event<AllowInteractBlock> ALLOW_INTERACT_BLOCK_EVENT = EventFactory.createArrayBacked(AllowInteractBlock.class, listeners -> (heldItem) -> {
+	public static final Event<AllowInteractBlock> ALLOW_INTERACT_BLOCK_EVENT = EventFactory.createArrayBacked(AllowInteractBlock.class, listeners -> heldItem -> {
 		for (AllowInteractBlock listener : listeners) {
 			if (!listener.allowInteract(heldItem)) {
 				return false;

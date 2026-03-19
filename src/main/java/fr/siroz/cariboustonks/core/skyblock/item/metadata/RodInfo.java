@@ -38,7 +38,7 @@ public record RodInfo(
 					.asCompound()
 					.flatMap(MAPPER);
 			return new RodInfo(line, hook, sinker);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return EMPTY;
 		}
 	}

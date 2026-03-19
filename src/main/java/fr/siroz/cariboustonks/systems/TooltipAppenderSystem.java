@@ -76,7 +76,7 @@ public final class TooltipAppenderSystem implements System {
 
 		currentComponents.sort(Comparator.comparingInt(TooltipAppenderComponent::getPriority));
 
-		ScreenEvents.remove(screen).register(_screen -> currentComponents.clear());
+		ScreenEvents.remove(screen).register(_ -> currentComponents.clear());
 	}
 
 	private void appendToTooltip(Slot focusedSlot, ItemStack stack, List<Component> lines) {

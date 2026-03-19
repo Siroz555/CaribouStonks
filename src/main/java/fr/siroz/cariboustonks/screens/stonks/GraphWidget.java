@@ -65,7 +65,7 @@ class GraphWidget extends AbstractStonksWidget {
 		this.type = this.prices.stream()
 				.filter(itemPrice -> itemPrice.sellPrice() != null)
 				.findFirst()
-				.map(itemPrice -> Type.BAZAAR)
+				.map(_ -> Type.BAZAAR)
 				.orElse(this.type);
 
 		updateMinMaxValues();

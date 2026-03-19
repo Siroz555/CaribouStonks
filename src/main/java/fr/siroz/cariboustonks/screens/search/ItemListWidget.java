@@ -105,7 +105,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 	private List<ItemSummary> tryGet() {
 		try {
 			return itemsFuture.getNow(null);
-		} catch (CancellationException | CompletionException exception) {
+		} catch (CancellationException | CompletionException _) {
 			return null;
 		}
 	}

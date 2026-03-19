@@ -128,7 +128,7 @@ public record Modifiers(
 					boostersData,
 					overclockData
 			);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return EMPTY;
 		}
 	}

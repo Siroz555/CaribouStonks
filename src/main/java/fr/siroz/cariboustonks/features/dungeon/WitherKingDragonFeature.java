@@ -159,7 +159,7 @@ public class WitherKingDragonFeature extends Feature {
 			} else {
 				announceSpawn(dragon, false);
 			}
-		} catch (Exception ignored) { // Tellement useless mais si c'est le crash :/
+		} catch (Exception _) { // Tellement useless mais si c'est le crash :/
 		}
 	}
 

@@ -57,9 +57,9 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 		GridLayout.RowHelper adder = grid.createRowHelper(2);
 
 		adder.addChild(Button.builder(Component.literal("New Shortcut"),
-				b -> listWidget.createKeyShortcut()).build());
+				_ -> listWidget.createKeyShortcut()).build());
 
-		buttonDelete = Button.builder(Component.translatable("selectServer.deleteButton"), b -> {
+		buttonDelete = Button.builder(Component.translatable("selectServer.deleteButton"), _ -> {
 			if (listWidget.getSelected() instanceof KeyShortcutListWidget.KeyShortcutEntry entry) {
 				scrollBackup = listWidget.scrollAmount();
 				minecraft.setScreen(new ConfirmScreen(
@@ -73,7 +73,7 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 		}).build();
 		adder.addChild(buttonDelete);
 
-		adder.addChild(Button.builder(CommonComponents.GUI_DONE, b -> {
+		adder.addChild(Button.builder(CommonComponents.GUI_DONE, _ -> {
 			saveShortcuts();
 			close();
 		}).width(310).build(), 2);

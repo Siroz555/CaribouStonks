@@ -136,7 +136,7 @@ public final class ForgeReminderFeature extends Feature {
                     seconds = Integer.parseInt(part.replace("s", ""));
                 }
             }
-        } catch (NumberFormatException ignored) {
+        } catch (NumberFormatException _) {
         }
 
         return new int[]{hours, minutes, seconds};

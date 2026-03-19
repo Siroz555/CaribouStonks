@@ -59,12 +59,12 @@ public class WaypointScreen extends CaribousStonksScreen {
 
 		GridLayout.RowHelper adder = grid.createRowHelper(2);
 		adder.addChild(Button.builder(Component.literal("Add (At Crosshair)"),
-				button -> waypointsListWidget.createWaypoint(true)).build());
+				_ -> waypointsListWidget.createWaypoint(true)).build());
 
 		adder.addChild(Button.builder(Component.literal("Add (Your position)"),
-				button -> waypointsListWidget.createWaypoint(false)).build());
+				_ -> waypointsListWidget.createWaypoint(false)).build());
 
-		adder.addChild(Button.builder(CommonComponents.GUI_DONE, button -> {
+		adder.addChild(Button.builder(CommonComponents.GUI_DONE, _ -> {
 			saveWaypoints();
 			close();
 		}).width(310).build(), 2);

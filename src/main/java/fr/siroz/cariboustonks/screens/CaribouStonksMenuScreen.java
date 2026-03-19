@@ -53,32 +53,32 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 		// LINE #1
 
 		adder.addChild(Button.builder(Component.literal("Configuration"),
-						button -> openScreen(ConfigManager.createConfigGUI(this)))
+						_ -> openScreen(ConfigManager.createConfigGUI(this)))
 				.width(BUTTON_WIDTH)
 				.build(), 2);
 
 		// LINE #2
 
 		adder.addChild(Button.builder(Component.literal("Reminders"),
-						button -> openScreen(ReminderScreen.create(this)))
+						_ -> openScreen(ReminderScreen.create(this)))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
 		adder.addChild(Button.builder(Component.literal("Waypoints"),
-						button -> openScreen(WaypointScreen.create(this)))
+						_ -> openScreen(WaypointScreen.create(this)))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
 		// LINE #3
 
 		adder.addChild(Button.builder(Component.literal("Stonks"),
-						button -> openScreen(new StonksSearchScreen(this)))
+						_ -> openScreen(new StonksSearchScreen(this)))
 				.tooltip(Tooltip.create(Component.literal("Search a SkyBlock item to show more informations about.")))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
 		Button keybinds = Button.builder(Component.literal("Key Shortcuts"),
-						button -> openScreen(KeyShortcutScreen.create(this)))
+						_ -> openScreen(KeyShortcutScreen.create(this)))
 				.tooltip(Tooltip.create(Component.literal("Link Keybinds to commands to be executed.")))
 				.width(HALF_BUTTON_WIDTH)
 				.build();
@@ -87,12 +87,12 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 		// LINE #4
 
 		adder.addChild(Button.builder(Component.literal("Mob Tracking"),
-						button -> openScreen(MobTrackingScreen.create(this)))
+						_ -> openScreen(MobTrackingScreen.create(this)))
 				.tooltip(Tooltip.create(Component.literal("Configure all Mob Tracking")))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
-		Button surprise = Button.builder(Component.literal("?"), button -> {})
+		Button surprise = Button.builder(Component.literal("?"), _ -> {})
 				.tooltip(Tooltip.create(Component.literal("Mmmmm ?")))
 				.width(HALF_BUTTON_WIDTH)
 				.build();
@@ -102,7 +102,7 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 		// LINE #5
 
 		adder.addChild(Button.builder(CommonComponents.GUI_DONE,
-						button -> this.close())
+						_ -> this.close())
 				.width(BUTTON_WIDTH)
 				.build(), 2);
 

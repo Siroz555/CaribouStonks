@@ -58,7 +58,7 @@ public final class ReminderSystem implements System {
 			thread.setDaemon(true);
 			return thread;
 		});
-		SkyBlockEvents.JOIN_EVENT.register(_serverName -> this.onSkyBlockJoin());
+		SkyBlockEvents.JOIN_EVENT.register(_ -> this.onSkyBlockJoin());
 		this.startMonitoring();
 		this.startAutoSave();
 	}
@@ -212,7 +212,7 @@ public final class ReminderSystem implements System {
 
 		try {
 			scheduler.shutdown();
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 		}
 	}
 

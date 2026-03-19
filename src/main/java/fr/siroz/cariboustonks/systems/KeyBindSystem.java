@@ -40,7 +40,7 @@ public final class KeyBindSystem implements System {
 	private final Map<Feature, List<KeyBind>> keyBinds = new ConcurrentHashMap<>();
 
 	public KeyBindSystem() {
-		ClientTickEvents.END_CLIENT_TICK.register(_client -> this.triggerKeyBinds());
+		ClientTickEvents.END_CLIENT_TICK.register(_ -> this.triggerKeyBinds());
 		GuiEvents.SCREEN_KEY_PRESS_EVENT.register(this::handleKeyPressed);
 	}
 

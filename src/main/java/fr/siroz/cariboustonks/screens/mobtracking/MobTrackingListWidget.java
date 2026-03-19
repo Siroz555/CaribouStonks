@@ -28,7 +28,7 @@ class MobTrackingListWidget extends ContainerObjectSelectionList<MobTrackingList
 		Map<MobTrackingRegistry.MobCategory, List<MobTrackingRegistry.MobTrackingEntry>> groupedByCategory = new LinkedHashMap<>();
 
 		for (MobTrackingRegistry.MobTrackingEntry entry : mobTrackingEntries.values()) {
-			groupedByCategory.computeIfAbsent(entry.category(), k -> new ArrayList<>()).add(entry);
+			groupedByCategory.computeIfAbsent(entry.category(), _ -> new ArrayList<>()).add(entry);
 		}
 
 		for (Map.Entry<MobTrackingRegistry.MobCategory, List<MobTrackingRegistry.MobTrackingEntry>> categoryGroup : groupedByCategory.entrySet()) {
@@ -93,13 +93,13 @@ class MobTrackingListWidget extends ContainerObjectSelectionList<MobTrackingList
 			this.enabledWidget = Checkbox.builder(Component.literal(""), minecraft.font)
 					.selected(entry.model().isEnabled())
 					.tooltip(Tooltip.create(Component.literal("Click to toggle this Mob Tracking")))
-					.onValueChange((checkbox, checked) -> entry.model().setEnabled(checked))
+					.onValueChange((_, checked) -> entry.model().setEnabled(checked))
 					.build();
 
 			this.notifyOnSpawnWidget = Checkbox.builder(Component.literal(""), minecraft.font)
 					.selected(entry.model().isNotifyOnSpawn())
 					.tooltip(Tooltip.create(Component.literal("Click to enable notification when the mob is detected")))
-					.onValueChange((checkbox, checked) -> entry.model().setNotifyOnSpawn(checked))
+					.onValueChange((_, checked) -> entry.model().setNotifyOnSpawn(checked))
 					.build();
 
 			this.children = List.of(this.enabledWidget, this.notifyOnSpawnWidget);

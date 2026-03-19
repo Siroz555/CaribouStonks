@@ -38,11 +38,11 @@ public class ReminderScreen extends CaribousStonksScreen {
     protected void onInit() {
         addRenderableWidget(new ReminderListWidget(this.minecraft, this, this.width, this.height - 112, 40, 36));
 
-        this.optionButton = addRenderableWidget(Button.builder(Component.literal("Options"), (b) -> {
+        this.optionButton = addRenderableWidget(Button.builder(Component.literal("Options"), _ -> {
 
         }).bounds(this.width / 2 - 154, this.height - 38, 150, 20).build());
 
-        addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, (b) -> setScreen(parent))
+        addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, _ -> setScreen(parent))
                 .bounds(this.width / 2 + 4, this.height - 38, 150, 20).build());
 
         this.itemSelected(null);

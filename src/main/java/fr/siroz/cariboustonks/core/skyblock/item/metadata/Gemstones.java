@@ -60,7 +60,7 @@ public record Gemstones(
 					.toList();
 
 			return new Gemstones(unlockedSlots, gemstoneList);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return EMPTY;
 		}
 	}
@@ -102,7 +102,7 @@ public record Gemstones(
 			}
 
 			return Optional.of(new GemstoneApplied(type, quality));
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			// Un gros catch pour éviter tout changement d'Hypixel, comme le cas avec la Fermento Armor
 			// avec des JsonObject qui est vérifié en amont pour déterminer le "qualityStr".
 			return Optional.empty();
@@ -116,7 +116,7 @@ public record Gemstones(
 		String suffix = key.substring(idx + 1);
 		try {
 			return Integer.parseInt(suffix);
-		} catch (NumberFormatException ignored) {
+		} catch (NumberFormatException _) {
 			return Integer.MAX_VALUE;
 		}
 	}
@@ -169,7 +169,7 @@ public record Gemstones(
 				GemstoneQuality quality = GemstoneQuality.valueOf(qualityToken);
 				GemstoneType type = GemstoneType.valueOf(typeToken);
 				return Optional.of(new GemstoneApplied(type, quality));
-			} catch (IllegalArgumentException ignored) {
+			} catch (IllegalArgumentException _) {
 				return Optional.empty();
 			}
 		}

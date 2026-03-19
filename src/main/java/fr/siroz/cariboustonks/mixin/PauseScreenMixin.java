@@ -19,8 +19,11 @@ public abstract class PauseScreenMixin extends Screen {
 
 	@Inject(method = "createPauseMenu", at = @At("RETURN"))
 	private void cariboustonks$addButtonForCaribouStonksMenu(CallbackInfo ci) {
-		this.addRenderableWidget(Button.builder(Component.literal("CaribouStonks"), (button) -> {
-			this.minecraft.setScreen(new CaribouStonksMenuScreen());
-		}).bounds(this.width - 105, this.height - 25, 100, 20).build());
+		this.addRenderableWidget(Button.builder(
+				Component.literal("CaribouStonks"),
+				_ -> this.minecraft.setScreen(new CaribouStonksMenuScreen()))
+				.bounds(this.width - 105, this.height - 25, 100, 20)
+				.build()
+		);
 	}
 }

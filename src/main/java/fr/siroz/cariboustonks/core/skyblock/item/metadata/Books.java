@@ -77,7 +77,7 @@ public record Books(
 					jalapenoData,
 					wetData
 			);
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 			return EMPTY;
 		}
 	}

@@ -21,7 +21,7 @@ public final class SkyBlockEvents {
 	/**
 	 * Called when the client joins the SkyBlock
 	 */
-	public static final Event<Join> JOIN_EVENT = EventFactory.createArrayBacked(Join.class, listeners -> (serverName) -> {
+	public static final Event<Join> JOIN_EVENT = EventFactory.createArrayBacked(Join.class, listeners -> serverName -> {
 		for (Join listener : listeners) {
 			listener.onJoin(serverName);
 		}
@@ -39,7 +39,7 @@ public final class SkyBlockEvents {
 	/**
 	 * Called when the client changes of SkyBlock Island
 	 */
-	public static final Event<IslandChange> ISLAND_CHANGE_EVENT = EventFactory.createArrayBacked(IslandChange.class, listeners -> (location) -> {
+	public static final Event<IslandChange> ISLAND_CHANGE_EVENT = EventFactory.createArrayBacked(IslandChange.class, listeners -> location -> {
 		for (IslandChange listener : listeners) {
 			listener.onIslandChange(location);
 		}
@@ -81,7 +81,7 @@ public final class SkyBlockEvents {
 		}
 	});
 
-	public static final Event<DungeonBossSpawn> DUNGEON_BOSS_SPAWN_EVENT = EventFactory.createArrayBacked(DungeonBossSpawn.class, listeners -> (boss) -> {
+	public static final Event<DungeonBossSpawn> DUNGEON_BOSS_SPAWN_EVENT = EventFactory.createArrayBacked(DungeonBossSpawn.class, listeners -> boss -> {
 		for (DungeonBossSpawn listener : listeners) {
 			listener.onBossSpawn(boss);
 		}

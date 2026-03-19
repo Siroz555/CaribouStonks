@@ -85,7 +85,7 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 			this.commandWidget.setValue(keyShortcut.command());
 			this.commandWidget.setMaxLength(48);
 
-			this.keyBindWidget = Button.builder(Component.literal("" + keyShortcut.keyCode()), b -> {
+			this.keyBindWidget = Button.builder(Component.literal("" + keyShortcut.keyCode()), _ -> {
 				parent.setCurrentEntry(this);
 				waitingForKey = true;
 			}).bounds(0, 0, 56, 20).build();

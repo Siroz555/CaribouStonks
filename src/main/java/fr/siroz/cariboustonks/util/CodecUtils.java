@@ -18,7 +18,7 @@ public final class CodecUtils {
 		try {
 			String json = GsonProvider.standard().toJson(text);
 			return Optional.of(json);
-		} catch (Exception ex) {
+		} catch (Exception _) {
 			return Optional.empty();
 		}
 	}
@@ -27,7 +27,7 @@ public final class CodecUtils {
 		try {
 			Component text = GsonProvider.standard().fromJson(json, Component.class);
 			return Optional.ofNullable(text);
-		} catch (Exception ex) {
+		} catch (Exception _) {
 			return Optional.empty();
 		}
 	}

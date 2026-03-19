@@ -124,7 +124,7 @@ public class LowHealthWarningFeature extends Feature {
 			int threshold = (int) (currentHealth.max() * (configThreshold / 100.0D));
 
 			triggered = currentHealth.value() <= threshold;
-		} catch (Exception ignored) { // valeurs négatives ou max incorrect, techniquement useless ?
+		} catch (Exception _) { // valeurs négatives ou max incorrect, techniquement useless ?
 		}
 	}
 

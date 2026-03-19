@@ -137,7 +137,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 			this.enabledWidget = Checkbox.builder(Component.literal(""), minecraft.font)
 					.selected(waypoint.isEnabled())
 					.tooltip(Tooltip.create(Component.literal("Click to toggle the waypoint's visibility")))
-					.onValueChange((checkbox, checked) -> waypoint.setEnabled(checked))
+					.onValueChange((_, checked) -> waypoint.setEnabled(checked))
 					.build();
 
 			this.nameWidget = new EditBox(minecraft.font, 65, 20, Component.literal("Name"));
@@ -167,7 +167,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 					.displayOnlyValue() // " : " avant la value, ques-ce que c ?
 					.withTooltip(value -> Tooltip.create(WaypointColors.getColoredList(value)))
 					.create(0, 0, 56, 20, Component.empty(),
-							(button, value) -> updateColor(value.color));
+							(_, value) -> updateColor(value.color));
 
 			this.typeWidget = CycleButton.<Waypoint.Type>builder(
 							value -> Component.literal(value.name()),
@@ -176,9 +176,9 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 					.displayOnlyValue() // " : " avant la value, ques-ce que c ?
 					.withTooltip(value -> Tooltip.create(getWaypointTypeList(value)))
 					.create(0, 0, 56, 20, Component.empty(),
-							(button, value) -> updateType(value));
+							(_, value) -> updateType(value));
 
-			this.deleteWidget = Button.builder(Component.translatable("selectServer.deleteButton"), button -> {
+			this.deleteWidget = Button.builder(Component.translatable("selectServer.deleteButton"), _ -> {
 				waypoints.remove(waypoint);
 				removeEntry(this);
 			}).width(56).build();
@@ -280,7 +280,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 			try {
 				parseInt(string);
 				return true;
-			} catch (NumberFormatException ignored) {
+			} catch (NumberFormatException _) {
 				return false;
 			}
 		}

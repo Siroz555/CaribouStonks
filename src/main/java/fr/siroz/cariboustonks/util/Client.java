@@ -282,7 +282,7 @@ public final class Client {
 	 * @return {@link Command Command with FabricClientCommandSource}
 	 */
 	public static @NonNull Command<FabricClientCommandSource> openScreen(@NonNull Supplier<Screen> screenSupplier) {
-		return context -> {
+		return _ -> {
 			CLIENT.schedule(() -> CLIENT.setScreen(screenSupplier.get()));
 			return Command.SINGLE_SUCCESS;
 		};
@@ -628,7 +628,7 @@ public final class Client {
 			if (SkyBlockAPI.isOnSkyBlock()) {
 				ClientEvents.SCOREBOARD_UPDATE_EVENT.invoker().onUpdate(STRING_SCOREBOARD);
 			}
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 		}
 	}
 
@@ -659,7 +659,7 @@ public final class Client {
 			if (SkyBlockAPI.isOnSkyBlock()) {
 				ClientEvents.TAB_LIST_UPDATE_EVENT.invoker().onUpdate(STRING_TAB);
 			}
-		} catch (Exception ignored) {
+		} catch (Exception _) {
 		}
 	}
 }

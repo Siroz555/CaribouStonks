@@ -112,7 +112,7 @@ public record SkyBlockItemData(
 				Optional<String> essenceType = Optional.ofNullable(json.has("essence_type") ? json.get("essence_type").getAsString() : null);
 				OptionalInt amount = json.has("amount") ? OptionalInt.of(json.get("amount").getAsInt()) : OptionalInt.empty();
 				return new GearUpgrade(itemId, essenceType, amount);
-			} catch (Exception ignored) {
+			} catch (Exception _) {
 				return EMPTY;
 			}
 		}
@@ -148,7 +148,7 @@ public record SkyBlockItemData(
 					}
 				}
 				return new GemstoneSlot(slotType, parsedCosts.isEmpty() ? Optional.empty() : Optional.of(parsedCosts));
-			} catch (Exception ignored) {
+			} catch (Exception _) {
 				return EMPTY;
 			}
 		}
@@ -185,7 +185,7 @@ public record SkyBlockItemData(
 					OptionalInt amount = json.has("amount") ? OptionalInt.of(json.get("amount").getAsInt()) : OptionalInt.empty();
 					OptionalInt coins = json.has("coins") ? OptionalInt.of(json.get("coins").getAsInt()) : OptionalInt.empty();
 					return new GemstoneSlotCost(type, itemId, amount, coins);
-				} catch (Exception ignored) {
+				} catch (Exception _) {
 					return EMPTY;
 				}
 			}
@@ -222,7 +222,7 @@ public record SkyBlockItemData(
 					}
 				}
 				return new PrestigeItem(itemId, upgrades);
-			} catch (Exception ignored) {
+			} catch (Exception _) {
 				return EMPTY;
 			}
 		}
