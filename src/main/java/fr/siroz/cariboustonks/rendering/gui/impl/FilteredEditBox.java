@@ -23,13 +23,13 @@ public class FilteredEditBox extends EditBox {
 
 	@Override
 	public void setValue(@NonNull String value) {
-		if (filter.test(value)) {
+		if (this.filter.test(value)) {
 			super.setValue(value);
 		}
 	}
 
 	@Override
-	public void insertText(final @NonNull String input) {
+	public void insertText(@NonNull String input) {
 		EditBoxAccessor accessor = (EditBoxAccessor) this;
 		int start = Math.min(this.getCursorPosition(), accessor.getHighlightPos());
 		int end = Math.max(this.getCursorPosition(), accessor.getHighlightPos());
@@ -47,8 +47,7 @@ public class FilteredEditBox extends EditBox {
 			}
 
 			String newValue = new StringBuilder(this.getValue()).replace(start, end, text).toString();
-
-			if (filter.test(input)) {
+			if (this.filter.test(newValue)) {
 				this.setValue(newValue);
 				this.setCursorPosition(start + insertionLength);
 				this.setHighlightPos(this.getCursorPosition());
@@ -58,7 +57,7 @@ public class FilteredEditBox extends EditBox {
 	}
 
 	@Override
-	public void deleteCharsToPos(final int pos) {
+	public void deleteCharsToPos(int pos) {
 		EditBoxAccessor accessor = (EditBoxAccessor) this;
 
 		if (!this.getValue().isEmpty()) {
@@ -69,10 +68,8 @@ public class FilteredEditBox extends EditBox {
 				int end = Math.max(pos, this.getCursorPosition());
 				if (start != end) {
 					String newValue = new StringBuilder(this.getValue()).delete(start, end).toString();
-
-					if (filter.test(newValue)) {
-						this.setCursorPosition(start);
-						accessor.invokeOnValueChange(this.getValue());
+					if (this.filter.test(newValue)) {
+						this.setValue(newValue);
 						this.moveCursorTo(start, false);
 					}
 				}
