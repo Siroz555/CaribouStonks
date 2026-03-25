@@ -13,7 +13,6 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 1. Requirements:
     - [Fabric API](https://modrinth.com/mod/fabric-api)
-    - [Hypixel Mod API](https://modrinth.com/mod/hypixel-mod-api) (Minecraft 1.21.11+)
 2. Install directly in the `mods` folder
 
 > [!IMPORTANT]
