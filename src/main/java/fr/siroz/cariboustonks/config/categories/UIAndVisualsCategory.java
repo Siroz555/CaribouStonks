@@ -58,6 +58,73 @@ public class UIAndVisualsCategory extends AbstractCategory {
 						.controller(this::createBooleanController)
 						.build())
 				.group(OptionGroup.createBuilder()
+						.name(Component.literal("Deployable").withStyle(ChatFormatting.BOLD))
+						.description(OptionDescription.of(
+								Component.literal(""),
+								Component.literal(SPACE + ".").withStyle(ChatFormatting.RED)))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Enable Deployable"))
+								.description(OptionDescription.of(
+										Component.literal("Once activated, deployable such as Power Orbs, Flares and Personal will be displayed in a HUD with their respective timer.")))
+								.binding(defaults.uiAndVisuals.deployables.enabled,
+										() -> current.uiAndVisuals.deployables.enabled,
+										newValue -> current.uiAndVisuals.deployables.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Show in a HUD"))
+								.description(OptionDescription.of(
+										Component.literal("If Deployable is enabled, this allows you to view all active deployable close to you along with their respective timer."),
+										Component.literal(SPACE + "Only one type of deployable can be displayed at a time. However, multiple types may still appear, such as a Black Hole with a Plasmaflux Power Orb.").withStyle(ChatFormatting.YELLOW)))
+								.binding(defaults.uiAndVisuals.deployables.hud.showHud,
+										() -> current.uiAndVisuals.deployables.hud.showHud,
+										newValue -> current.uiAndVisuals.deployables.hud.showHud = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Detect > Power Orbs Deployable"))
+								.description(OptionDescription.of(
+										Component.literal("If Deployable is enabled, this allows you to detect Power Orbs:"),
+										Component.literal(SPACE),
+										Component.literal("- Mana Flux").withStyle(ChatFormatting.BLUE),
+										Component.literal("- Overflux").withStyle(ChatFormatting.DARK_PURPLE),
+										Component.literal("- Plasmaflux").withStyle(ChatFormatting.LIGHT_PURPLE),
+										Component.literal("- Umberella").withStyle(ChatFormatting.BLUE),
+										Component.literal("- Titanium Lantern").withStyle(ChatFormatting.BLUE),
+										Component.literal("- Glacite Lantern").withStyle(ChatFormatting.DARK_PURPLE),
+										Component.literal("- Will-o'-wisp").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.uiAndVisuals.deployables.detectPowerOrbs,
+										() -> current.uiAndVisuals.deployables.detectPowerOrbs,
+										newValue -> current.uiAndVisuals.deployables.detectPowerOrbs = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Detect > Flares Deployable").append(BETA))
+								.description(OptionDescription.of(
+										Component.literal("If Deployable is enabled, this allows you to detect Flares:"),
+										Component.literal(SPACE),
+										Component.literal("- Alert Flare").withStyle(ChatFormatting.BLUE),
+										Component.literal("- SOS Flare").withStyle(ChatFormatting.DARK_PURPLE),
+										Component.literal(SPACE + "[!] Flares detection is experimental.").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.uiAndVisuals.deployables.detectFlares,
+										() -> current.uiAndVisuals.deployables.detectFlares,
+										newValue -> current.uiAndVisuals.deployables.detectFlares = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Detect > Personal Deployable"))
+								.description(OptionDescription.of(
+										Component.literal("If Deployable is enabled, this allows you to detect Personal Deployable:"),
+										Component.literal(SPACE),
+										Component.literal("- Black Hole").withStyle(ChatFormatting.DARK_PURPLE)))
+								.binding(defaults.uiAndVisuals.deployables.detectPersonals,
+										() -> current.uiAndVisuals.deployables.detectPersonals,
+										newValue -> current.uiAndVisuals.deployables.detectPersonals = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Mob Tracking").withStyle(ChatFormatting.BOLD).append(BETA))
 						.description(OptionDescription.of(
 								Component.literal("Mob Tracking combines features that allow you to view information about a specific Mob in real time."),
