@@ -25,6 +25,7 @@ import fr.siroz.cariboustonks.feature.garden.GreenhouseGrowthStageFeature;
 import fr.siroz.cariboustonks.feature.garden.MouseLockFeature;
 import fr.siroz.cariboustonks.feature.garden.pest.PestFinderFeature;
 import fr.siroz.cariboustonks.feature.hunting.AttributeInfoTooltipFeature;
+import fr.siroz.cariboustonks.feature.hunting.QuickFusionFeature;
 import fr.siroz.cariboustonks.feature.item.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
@@ -51,6 +52,7 @@ import fr.siroz.cariboustonks.feature.stonks.tooltips.auction.AuctionLowestBinTo
 import fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
 import fr.siroz.cariboustonks.feature.ui.AbiphoneFavoriteContactFeature;
 import fr.siroz.cariboustonks.feature.ui.SelectedPetHighlightFeature;
+import fr.siroz.cariboustonks.feature.ui.deployable.DeployableFeature;
 import fr.siroz.cariboustonks.feature.ui.hud.DayHud;
 import fr.siroz.cariboustonks.feature.ui.hud.FpsHud;
 import fr.siroz.cariboustonks.feature.ui.hud.PingHud;
@@ -105,6 +107,7 @@ public final class Features {
 		registerFeature(new GreenhouseGrowthStageFeature());
 		registerFeature(new MouseLockFeature());
 		// Hunting
+		registerFeature(new QuickFusionFeature());
 		registerFeature(new AttributeInfoTooltipFeature(3));
 		// Item
 		registerFeature(new ColoredEnchantmentFeature());
@@ -134,6 +137,7 @@ public final class Features {
 		registerFeature(new AuctionLowestBinTooltipFeature(2));
 		registerFeature(new ItemValueTooltipFeature(4));
 		// UI
+		registerFeature(new DeployableFeature());
 		registerFeature(new MobTrackingFeature());
 		registerFeature(new AbiphoneFavoriteContactFeature(0));
 		// UI - HUDs

@@ -21,6 +21,7 @@ mods/
 
 # Siroz
 developer/
+.dev/*
 docs/
 
 # idea

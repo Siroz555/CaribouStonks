@@ -15,8 +15,11 @@ import fr.siroz.cariboustonks.util.colors.Color;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import fr.siroz.cariboustonks.util.cooldown.Cooldown;
 import fr.siroz.cariboustonks.util.position.Position;
+import java.util.Objects;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
@@ -124,25 +127,51 @@ public class ChatPositionFeature extends Feature {
 			int positionZ = Integer.parseInt(z);
 			Position position = Position.of(positionX, positionY, positionZ);
 
-			UIAndVisualsConfig.SharedPositionWaypoint config = ConfigManager.getConfig().uiAndVisuals.sharedPositionWaypoint;
-			int showTime = config.showTime;
-			Color color = config.rainbow ? Colors.RAINBOW : Color.fromInt(config.color.getRGB());
+			Text waypointName = Text.literal("- ? -").formatted(Formatting.YELLOW, Formatting.BOLD);
+			if (!playerName.isEmpty()) {
+				waypointName = Objects.requireNonNullElseGet(
+						getTabListName(playerName),
+						() -> Text.literal(playerName).formatted(Formatting.AQUA)
+				);
+			}
 
-			Text waypointName = playerName.isEmpty()
-					? Text.literal("- ? -").formatted(Formatting.YELLOW, Formatting.BOLD)
-					: Text.literal(playerName).formatted(Formatting.AQUA);
+			UIAndVisualsConfig.SharedPositionWaypoint config = ConfigManager.getConfig().uiAndVisuals.sharedPositionWaypoint;
 
 			Waypoint.builder(position)
-					.color(color)
-					.timeout(showTime, TimeUnit.SECONDS)
+					.type(config.type)
+					.color(config.rainbow ? Colors.RAINBOW : Color.fromInt(config.color.getRGB()))
+					.timeout(config.showTime, TimeUnit.SECONDS)
 					.resetBetweenWorlds(true)
 					.textOption(TextOption.builder()
 							.withText(waypointName)
+							.scaleAdjustment(5)
 							.withDistance(true)
 							.build())
 					.buildAndRegister();
 		} catch (Exception ex) { // NumberFormatException
 			CaribouStonks.LOGGER.error("[ChatPositionFeature] Unable to create waypoint", ex);
 		}
+	}
+
+	private Text getTabListName(String playerName) {
+		if (CLIENT.getNetworkHandler() == null) return null;
+
+		for (PlayerListEntry playerInfo : CLIENT.getNetworkHandler().getPlayerList()) {
+			String profileName = playerInfo.getProfile().name();
+			if (profileName != null && profileName.equals(playerName)) {
+				return getNameForDisplay(playerInfo, profileName);
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Import depuis PlayerTabOverlay
+	 */
+	private Text getNameForDisplay(PlayerListEntry playerInfo, String profileName) {
+		return playerInfo.getDisplayName() != null
+				? playerInfo.getDisplayName().copy()
+				: Team.decorateName(playerInfo.getScoreboardTeam(), Text.literal(profileName));
 	}
 }

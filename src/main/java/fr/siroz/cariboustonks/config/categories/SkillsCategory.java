@@ -12,6 +12,8 @@ import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.util.Client;
 import java.awt.Color;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.option.KeybindsScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -377,6 +379,21 @@ public class SkillsCategory extends AbstractCategory {
 										() -> current.hunting.attributeInfos,
 										newValue -> current.hunting.attributeInfos = newValue)
 								.controller(this::createBooleanController)
+								.build())
+						.option(LabelOption.create(Text.literal("| Fusion Machine").formatted(Formatting.BOLD)))
+						.option(ButtonOption.createBuilder()
+								.name(Text.literal("Quick Fusion - Repeat KeyBind"))
+								.action((screen, opt) -> this.openScreen(new KeybindsScreen(screen, MinecraftClient.getInstance().options)))
+								.text(Text.literal("Open Keybinds Options"))
+								.description(OptionDescription.of(
+										Text.literal("Note: 100 ms between each actions is set.").formatted(Formatting.GOLD)))
+								.build())
+						.option(ButtonOption.createBuilder()
+								.name(Text.literal("Quick Fusion - Confirm KeyBind"))
+								.action((screen, opt) -> this.openScreen(new KeybindsScreen(screen, MinecraftClient.getInstance().options)))
+								.text(Text.literal("Open Keybinds Options"))
+								.description(OptionDescription.of(
+										Text.literal("Note: 100 ms between each actions is set.").formatted(Formatting.GOLD)))
 								.build())
 						.build())
                 .group(OptionGroup.createBuilder()

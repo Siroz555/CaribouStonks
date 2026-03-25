@@ -99,8 +99,9 @@ public final class WaypointRenderer {
 			}
 
 			renderer.submitText(
-					Text.literal(Math.round(distance) + "m").formatted(Formatting.AQUA),
-					centerPos.add(0, 1, 0), Math.max((float) distance / 10, 1),
+					Text.literal(Math.round(distance) + "m").formatted(Formatting.YELLOW),
+					centerPos.add(0, 1, 0),
+					Math.max((float) distance / textOption.getScaleAdjustment(), 1),
 					MinecraftClient.getInstance().textRenderer.fontHeight + 1F,
 					textOption.isThroughBlocks()
 			);
@@ -113,7 +114,8 @@ public final class WaypointRenderer {
 
 			renderer.submitText(
 					textOption.getText().get(),
-					centerPos.add(0, 1, 0), Math.max((float) distance / 10, 1),
+					centerPos.add(0, 1, 0),
+					Math.max((float) distance / textOption.getScaleAdjustment(), 1),
 					MinecraftClient.getInstance().textRenderer.fontHeight - 12F,
 					textOption.isThroughBlocks()
 			);

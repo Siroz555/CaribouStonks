@@ -21,6 +21,7 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardDisplaySlot;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.Team;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.MutableText;
@@ -358,6 +359,12 @@ public final class Client {
 	 */
 	public static void playSoundButtonClickUI() {
 		CLIENT.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+	}
+
+	public static void handleMouseClick(int containerId, int slotId, SlotActionType type) {
+		if (CLIENT.player != null && CLIENT.interactionManager != null) {
+			CLIENT.interactionManager.clickSlot(containerId, slotId, 0, type, CLIENT.player);
+		}
 	}
 
 	@ApiStatus.Internal

@@ -8,6 +8,7 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
+import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.screen.HudConfigScreen;
 import fr.siroz.cariboustonks.screen.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
@@ -56,6 +57,73 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								() -> current.uiAndVisuals.highlightSelectedPet,
 								newValue -> current.uiAndVisuals.highlightSelectedPet = newValue)
 						.controller(this::createBooleanController)
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Text.literal("Deployable").formatted(Formatting.BOLD))
+						.description(OptionDescription.of(
+								Text.literal(""),
+								Text.literal(SPACE + ".").formatted(Formatting.RED)))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Enable Deployable"))
+								.description(OptionDescription.of(
+										Text.literal("Once activated, deployable such as Power Orbs, Flares and Personal will be displayed in a HUD with their respective timer.")))
+								.binding(defaults.uiAndVisuals.deployables.enabled,
+										() -> current.uiAndVisuals.deployables.enabled,
+										newValue -> current.uiAndVisuals.deployables.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Show in a HUD"))
+								.description(OptionDescription.of(
+										Text.literal("If Deployable is enabled, this allows you to view all active deployable close to you along with their respective timer."),
+										Text.literal(SPACE + "Only one type of deployable can be displayed at a time. However, multiple types may still appear, such as a Black Hole with a Plasmaflux Power Orb.").formatted(Formatting.YELLOW)))
+								.binding(defaults.uiAndVisuals.deployables.hud.showHud,
+										() -> current.uiAndVisuals.deployables.hud.showHud,
+										newValue -> current.uiAndVisuals.deployables.hud.showHud = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Detect > Power Orbs Deployable"))
+								.description(OptionDescription.of(
+										Text.literal("If Deployable is enabled, this allows you to detect Power Orbs:"),
+										Text.literal(SPACE),
+										Text.literal("- Mana Flux").formatted(Formatting.BLUE),
+										Text.literal("- Overflux").formatted(Formatting.DARK_PURPLE),
+										Text.literal("- Plasmaflux").formatted(Formatting.LIGHT_PURPLE),
+										Text.literal("- Umberella").formatted(Formatting.BLUE),
+										Text.literal("- Titanium Lantern").formatted(Formatting.BLUE),
+										Text.literal("- Glacite Lantern").formatted(Formatting.DARK_PURPLE),
+										Text.literal("- Will-o'-wisp").formatted(Formatting.GOLD)))
+								.binding(defaults.uiAndVisuals.deployables.detectPowerOrbs,
+										() -> current.uiAndVisuals.deployables.detectPowerOrbs,
+										newValue -> current.uiAndVisuals.deployables.detectPowerOrbs = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Detect > Flares Deployable").append(BETA))
+								.description(OptionDescription.of(
+										Text.literal("If Deployable is enabled, this allows you to detect Flares:"),
+										Text.literal(SPACE),
+										Text.literal("- Alert Flare").formatted(Formatting.BLUE),
+										Text.literal("- SOS Flare").formatted(Formatting.DARK_PURPLE),
+										Text.literal(SPACE + "[!] Flares detection is experimental.").formatted(Formatting.GOLD)))
+								.binding(defaults.uiAndVisuals.deployables.detectFlares,
+										() -> current.uiAndVisuals.deployables.detectFlares,
+										newValue -> current.uiAndVisuals.deployables.detectFlares = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Detect > Personal Deployable"))
+								.description(OptionDescription.of(
+										Text.literal("If Deployable is enabled, this allows you to detect Personal Deployable:"),
+										Text.literal(SPACE),
+										Text.literal("- Black Hole").formatted(Formatting.DARK_PURPLE)))
+								.binding(defaults.uiAndVisuals.deployables.detectPersonals,
+										() -> current.uiAndVisuals.deployables.detectPersonals,
+										newValue -> current.uiAndVisuals.deployables.detectPersonals = newValue)
+								.controller(this::createYesNoController)
+								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Mob Tracking").formatted(Formatting.BOLD).append(BETA))
@@ -238,6 +306,26 @@ public class UIAndVisualsCategory extends AbstractCategory {
 										() -> current.uiAndVisuals.sharedPositionWaypoint.showTime,
 										newValue -> current.uiAndVisuals.sharedPositionWaypoint.showTime = newValue)
 								.controller(opt -> createIntegerSecondesController(opt, 256))
+								.build())
+						.option(Option.<Waypoint.Type>createBuilder()
+								.name(Text.literal("Waypoint Type"))
+								.description(OptionDescription.of(
+										Text.literal("Change the display type of the Waypoint."),
+										Text.literal(SPACE + "Types:"),
+										Text.literal(SPACE + " BEAM:").formatted(Formatting.UNDERLINE),
+										Text.literal(SPACE + " Colored beacon beam"),
+										Text.literal(SPACE + " WAYPOINT:").formatted(Formatting.UNDERLINE),
+										Text.literal(SPACE + " Combines a beacon beam with a box at its base"),
+										Text.literal(SPACE + " OUTLINED_WAYPOINT:").formatted(Formatting.UNDERLINE),
+										Text.literal(SPACE + " Similar to WAYPOINT but with an outlined box"),
+										Text.literal(SPACE + " HIGHLIGHT:").formatted(Formatting.UNDERLINE),
+										Text.literal(SPACE + " Highlight with an outlined box"),
+										Text.literal(SPACE + " OUTLINE:").formatted(Formatting.UNDERLINE),
+										Text.literal(SPACE + " Creates only an outline around the target")))
+								.binding(defaults.uiAndVisuals.sharedPositionWaypoint.type,
+										() -> current.uiAndVisuals.sharedPositionWaypoint.type,
+										newValue -> current.uiAndVisuals.sharedPositionWaypoint.type = newValue)
+								.controller(this::createEnumCyclingController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Waypoint in Rainbow mode"))

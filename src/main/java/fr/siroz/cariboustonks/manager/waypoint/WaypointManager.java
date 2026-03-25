@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.manager.waypoint;
 
-import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.event.RenderEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.manager.Manager;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +34,6 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @see Waypoint
  * @see Manager
- * @see TickScheduler
  */
 public final class WaypointManager implements Manager {
 
@@ -46,7 +45,7 @@ public final class WaypointManager implements Manager {
     public WaypointManager() {
 		WorldEvents.JOIN.register(world -> this.resetWaypoints());
         RenderEvents.WORLD_RENDER.register(this::render);
-        TickScheduler.getInstance().runRepeating(this::onTick, 1);
+		ClientTickEvents.END_CLIENT_TICK.register(_client -> this.onTick());
     }
 
 	/**

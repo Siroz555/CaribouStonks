@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.config.configs;
 
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import fr.siroz.cariboustonks.manager.hud.HudConfig;
+import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 import java.awt.Color;
@@ -16,6 +17,9 @@ public class UIAndVisualsConfig {
 
 	@SerialEntry
 	public boolean highlightSelectedPet = false;
+
+	@SerialEntry
+	public Deployables deployables = new Deployables();
 
 	@SerialEntry
 	public MobTracking mobTracking = new MobTracking();
@@ -46,6 +50,74 @@ public class UIAndVisualsConfig {
 
 	@SerialEntry
 	public DayHud dayHud = new DayHud();
+
+	public static class Deployables {
+
+		@SerialEntry
+		public boolean enabled = false;
+
+		@SerialEntry
+		public boolean detectPowerOrbs = true;
+
+		@SerialEntry
+		public boolean detectFlares = false;
+
+		@SerialEntry
+		public boolean detectPersonals = false;
+
+		@SerialEntry
+		public DeployableHud hud = new DeployableHud();
+
+		public static class DeployableHud implements HudConfig {
+
+			@SerialEntry
+			public boolean showHud = true;
+
+			@SerialEntry
+			public int x = 150;
+
+			@SerialEntry
+			public int y = 15;
+
+			@SerialEntry
+			public float scale = 1f;
+
+			@Override
+			public int x() {
+				return this.x;
+			}
+
+			@Override
+			public void setX(int x) {
+				this.x = x;
+			}
+
+			@Override
+			public int y() {
+				return this.y;
+			}
+
+			@Override
+			public void setY(int y) {
+				this.y = y;
+			}
+
+			@Override
+			public float scale() {
+				return this.scale;
+			}
+
+			@Override
+			public void setScale(float scale) {
+				this.scale = scale;
+			}
+
+			@Override
+			public boolean shouldRender() {
+				return this.showHud;
+			}
+		}
+	}
 
 	public static class MobTracking {
 
@@ -152,6 +224,9 @@ public class UIAndVisualsConfig {
 
 		@SerialEntry
 		public int showTime = 15;
+
+		@SerialEntry
+		public Waypoint.Type type = Waypoint.Type.OUTLINED_WAYPOINT;
 
 		@SerialEntry
 		public boolean rainbow = true;
