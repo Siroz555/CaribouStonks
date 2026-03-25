@@ -70,6 +70,12 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 **UI & Visuals**
 
+- Deployable:
+    - Display all active Deployable in a HUD with their respective timer.
+    - Individual detection config.
+    - Power Orbs (Plasmaflux, Umberella, Will-o'-wisp, ..)
+    - Flares (BETA) (Alert Flare, SOS Flare)
+    - Personal (Black Hole)
 - Mob Tracking (BETA Preview):
     - That allow you to view information about a specific Mob in real time.
     - Display of mob health and other information in a Boss Bar or via a HUD.
