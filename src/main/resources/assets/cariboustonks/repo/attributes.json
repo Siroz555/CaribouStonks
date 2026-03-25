@@ -870,6 +870,12 @@
     "skyBlockApiId": "SHARD_KING_MINOS"
   },
   {
+    "name": "Freezing Spread",
+    "shardName": "Littlefoot",
+    "id": "E45",
+    "skyBlockApiId": "SHARD_LITTLEFOOT"
+  },
+  {
     "name": "Shadow Elemental",
     "shardName": "Tenebris",
     "id": "L1",
@@ -892,6 +898,12 @@
     "shardName": "Chameleon",
     "id": "L4",
     "skyBlockApiId": "SHARD_CHAMELEON"
+  },
+  {
+    "name": "Loch Hook",
+    "shardName": "Nessie",
+    "id": "L5",
+    "skyBlockApiId": "SHARD_NESSIE"
   },
   {
     "name": "Echo of Echoes",
