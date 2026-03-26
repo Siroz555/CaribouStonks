@@ -18,12 +18,6 @@ public abstract class MinecraftMixin {
 	@Nullable
 	public LocalPlayer player;
 
-	// TODO :: 26.1
-//	@WrapWithCondition(method = "runTick", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;limitDisplayFPS(I)V"))
-//	private boolean cariboustonks$stopFpsLimiter(int fps) {
-//		return !ConfigManager.getConfig().vanilla.stopFpsLimiter;
-//	}
-
 	// https://github.com/architectury/architectury-api/blob/1.19.2/fabric/src/main/java/dev/architectury/mixin/fabric/client/MixinMinecraft.java#L76
 	@Inject(method = "startAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;resetAttackStrengthTicker()V", ordinal = 0))
 	private void cariboustonks$leftClickAirEvent(CallbackInfoReturnable<Boolean> cir) {

@@ -8,6 +8,7 @@
   "client": [
     "AbstractContainerMenuMixin",
     "AbstractContainerScreenMixin",
+    "CameraMixin",
     "ChatComponentMixin",
     "ChatListenerMixin",
     "ClientCommonPacketListenerImplMixin",

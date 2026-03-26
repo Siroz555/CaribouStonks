@@ -8,12 +8,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = ChatListener.class, priority = 55) // MessageHandler
+@Mixin(value = ChatListener.class, priority = 55)
 public abstract class ChatListenerMixin {
 
 	@Inject(method = "handleSystemMessage", at = @At("HEAD"))
-	private void cariboustonks$onChatMessageEvent(Component message, boolean overlay, CallbackInfo ci) {
-		if (!overlay && message != null) {
+	private void cariboustonks$onSystemMessageEvent(Component message, boolean remote, CallbackInfo ci) {
+		// overlay (ActionBar) est séparé maintenant, on a remote a la place, jcp c'est quoi
+		if (message != null) {
 			ChatEvents.MESSAGE_RECEIVE_EVENT.invoker().onMessage(message);
 		}
 	}
