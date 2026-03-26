@@ -24,7 +24,7 @@ public abstract class RenderPipelinesMixin {
     public static RenderPipeline BEACON_BEAM_TRANSLUCENT;
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
-    private static void onInit(CallbackInfo ci) {
+    private static void onInit(CallbackInfo ci) { // SIROZ-NOTE: Optional DepthStencilState (LevelRenderer)
         if (ConfigManager.getConfig().uiAndVisuals.beaconBeamWithNoDepthTest) {
             BEACON_BEAM_TRANSLUCENT = RenderPipelines.register(
                     RenderPipeline.builder(RenderPipelines.BEACON_BEAM_SNIPPET)
