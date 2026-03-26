@@ -1,11 +1,16 @@
 package fr.siroz.cariboustonks.util.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import fr.siroz.cariboustonks.mixin.accessors.FrustumAccessor;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.world.phys.AABB;
+import org.joml.FrustumIntersection;
 import org.joml.Matrix4f;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public final class RenderUtils {
 
@@ -17,6 +22,18 @@ public final class RenderUtils {
 	public static final int FULL_BRIGHT = 15728880; // LightCoordsUtil
 
 	private RenderUtils() {
+	}
+
+	public static boolean isVisible(@Nullable Frustum frustum, AABB box) {
+		if (frustum == null) return false;
+		return frustum.isVisible(box);
+	}
+
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	public static boolean isVisible(@Nullable Frustum frustum, double minX, double minY, double minZ, double maxX, double maxY, double maxZ) {
+		if (frustum == null) return false;
+		int visible = ((FrustumAccessor) frustum).invokeIntersectAab(minX, minY, minZ, maxX, maxY, maxZ);
+		return visible == FrustumIntersection.INSIDE || visible == FrustumIntersection.INTERSECT;
 	}
 
 	/**

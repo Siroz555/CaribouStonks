@@ -25,7 +25,6 @@ import fr.siroz.cariboustonks.rendering.world.state.TextureRenderState;
 import fr.siroz.cariboustonks.rendering.world.state.ThickCircleRenderState;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.render.AnimationUtils;
-import fr.siroz.cariboustonks.util.render.FrustumUtils;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,7 +128,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	@Override
 	public void submitFilled(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, @NonNull Color color, boolean throughBlocks) {
 		if (frozen) return;
-		if (!FrustumUtils.isVisible(frustum, minX, minY, minZ, maxX, maxY, maxZ)) return;
+		if (!RenderUtils.isVisible(frustum, minX, minY, minZ, maxX, maxY, maxZ)) return;
 
 		if (color == Colors.RAINBOW) {
 			int colorInt = AnimationUtils.getCurrentRainbowColor().withAlpha(1f).asInt();
@@ -144,7 +143,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	public void submitBeaconBeam(@NonNull BlockPos position, @NonNull Color color) {
 		if (frozen) return;
 		if (levelRenderState == null) return;
-		if (!FrustumUtils.isVisible(frustum, position.getX(), position.getY(), position.getZ(), position.getX() + 1, RenderUtils.MAX_BUILD_HEIGHT, position.getZ() + 1)) return;
+		if (!RenderUtils.isVisible(frustum, position.getX(), position.getY(), position.getZ(), position.getX() + 1, RenderUtils.MAX_BUILD_HEIGHT, position.getZ() + 1)) return;
 
 		int colorInt;
 		if (color == Colors.RAINBOW) {
@@ -172,7 +171,7 @@ public final class WorldRendererImpl implements WorldRenderer {
 	@Override
 	public void submitOutline(@NonNull AABB box, @NonNull Color color, float lineWidth, boolean throughBlocks) {
 		if (frozen) return;
-		if (!FrustumUtils.isVisible(frustum, box)) return;
+		if (!RenderUtils.isVisible(frustum, box)) return;
 
 		OutlineBoxRenderState state = new OutlineBoxRenderState(box, color, lineWidth, throughBlocks);
 		outlineBoxRenderStates.add(state);
