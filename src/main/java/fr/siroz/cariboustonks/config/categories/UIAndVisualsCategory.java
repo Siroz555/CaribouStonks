@@ -139,9 +139,9 @@ public class UIAndVisualsCategory extends AbstractCategory {
 										Text.literal(SPACE + "The display shows the life and other information of the mob being tracked in real time."),
 										Text.literal(SPACE + "Each mob can be activated or deactivated, display an alert, in the dedicated menu."),
 										Text.literal(SPACE + "These features are in BETA. Adjustments will be made.").formatted(Formatting.RED)))
-								.binding(defaults.uiAndVisuals.mobTracking.enabled,
-										() -> current.uiAndVisuals.mobTracking.enabled,
-										newValue -> current.uiAndVisuals.mobTracking.enabled = newValue)
+								.binding(defaults.uiAndVisuals.mobTracking.tracking,
+										() -> current.uiAndVisuals.mobTracking.tracking,
+										newValue -> current.uiAndVisuals.mobTracking.tracking = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()

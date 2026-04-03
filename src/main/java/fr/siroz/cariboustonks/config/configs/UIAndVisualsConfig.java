@@ -122,7 +122,7 @@ public class UIAndVisualsConfig {
 	public static class MobTracking {
 
 		@SerialEntry
-		public boolean enabled = false;
+		public boolean tracking = true;
 
 		@SerialEntry
 		public boolean showInBossBar = true;
@@ -134,7 +134,7 @@ public class UIAndVisualsConfig {
 		public String spawnMessage = "§bNearby!";
 
 		@SerialEntry
-		public boolean playSoundWhenSpawn = false;
+		public boolean playSoundWhenSpawn = true;
 
 		@SerialEntry
 		public TrackingHud hud = new TrackingHud();

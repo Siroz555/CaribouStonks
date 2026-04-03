@@ -31,7 +31,7 @@ public enum IslandType {
 	/**
 	 * Hub
 	 */
-	HUB("hub", "Hub"),
+	HUB("hub", "Hub", true),
 
 	/**
 	 * The Farming Islands
@@ -71,7 +71,7 @@ public enum IslandType {
 	/**
 	 * Spider's Den
 	 */
-	SPIDER_DEN("combat_1", "Spider's Den"),
+	SPIDER_DEN("combat_1", "Spider's Den", true),
 
 	/**
 	 * Nether
@@ -87,7 +87,7 @@ public enum IslandType {
 	/**
 	 * Crimson Isle
 	 */
-	CRIMSON_ISLE("crimson_isle", "Crimson Isle"),
+	CRIMSON_ISLE("crimson_isle", "Crimson Isle", true),
 
 	/**
 	 * Kuudra's Hollow
@@ -117,12 +117,12 @@ public enum IslandType {
 	/**
 	 * Backwater Bayou
 	 */
-	BACKWATER_BAYOU("fishing_1", "Backwater Bayou"),
+	BACKWATER_BAYOU("fishing_1", "Backwater Bayou", true),
 
 	/**
 	 * Jerry's Workshop
 	 */
-	JERRY_WORKSHOP("winter", "Jerry's Workshop"),
+	JERRY_WORKSHOP("winter", "Jerry's Workshop", true),
 
 	/**
 	 * Dark Auction
@@ -151,10 +151,16 @@ public enum IslandType {
 
 	private final String id;
 	private final String name;
+	private final boolean hasHotspotFishing;
 
 	IslandType(String id, String name) {
+		this(id, name, false);
+	}
+
+	IslandType(String id, String name, boolean hasHotspotFishing) {
 		this.id = id;
 		this.name = name;
+		this.hasHotspotFishing = hasHotspotFishing;
 	}
 
 	/**
@@ -185,6 +191,10 @@ public enum IslandType {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public boolean hasHotspotFishing() {
+		return hasHotspotFishing;
 	}
 
 	/**

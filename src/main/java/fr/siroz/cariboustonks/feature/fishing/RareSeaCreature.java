@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.feature.fishing;
 
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -15,10 +16,12 @@ public enum RareSeaCreature {
 	// Water
 	CARROT_KING("Carrot King", "Is this even a fish? It's the Carrot King!", Formatting.AQUA),
 	WATER_HYDRA("Water Hydra", "The Water Hydra has come to test your strength.", Formatting.BLUE),
-	THE_LOCH_EMPEROR("The Loch Emperor", "The Loch Emperor arises from the depths.", Formatting.RED),
+	// Water - Galatea
+	THE_LOCH_EMPEROR("The Loch Emperor", "The Loch Emperor arises from the depths.", Formatting.RED, IslandType.GALATEA),
+	NESSIE("Nessie", "You've caused a disturbance in the loch. Could it be... Nessie?", Formatting.LIGHT_PURPLE, IslandType.GALATEA),
 	// Water - Jerry Workshop
-	YETI("Yeti", "What is this creature!?", Formatting.WHITE),
-	REINDRAKE("Reindrake", "A Reindrake forms from the depths.", Formatting.RED),
+	YETI("Yeti", "What is this creature!?", Formatting.WHITE, IslandType.JERRY_WORKSHOP),
+	REINDRAKE("Reindrake", "A Reindrake forms from the depths.", Formatting.RED, IslandType.JERRY_WORKSHOP),
 	// Water - Crystal Hollows
 	ABYSSAL_MINER("Abyssal Miner", "An Abyssal Miner breaks out of the water!", Formatting.AQUA),
 	// Water - Fishing Festival
@@ -33,11 +36,11 @@ public enum RareSeaCreature {
 	TITANOBOA("Titanoboa", "A massive Titanoboa surfaces. Its body stretches as far as the eye can see.", Formatting.DARK_GREEN),
 	WIKI_TIKI("Wiki Tiki", "The water bubbles and froths. A massive form emerges- you have disturbed the Wiki Tiki! You shall pay the price.", Formatting.LIGHT_PURPLE),
 	// Lava - Crimson Isle
-	FIERY_SCUTTLER("Fiery Scuttler", "A Fiery Scuttler inconspicuously waddles up to you, friends in tow.", Formatting.GOLD),
-	THUNDER("Thunder", "You hear a massive rumble as Thunder emerges.", Formatting.AQUA),
-	LORD_JAWBUS("Lord Jawbus", "You have angered a legendary creature... Lord Jawbus has arrived.", Formatting.RED),
-	RAGNAROK("Ragnarok", "The sky darkens and the air thickens. The end times are upon us: Ragnarok is here.", Formatting.DARK_RED),
-	PLHLEGBLAST("Plhlegblast", "WOAH! A Plhlegblast appeared.", Formatting.DARK_RED),
+	FIERY_SCUTTLER("Fiery Scuttler", "A Fiery Scuttler inconspicuously waddles up to you, friends in tow.", Formatting.GOLD, IslandType.CRIMSON_ISLE),
+	THUNDER("Thunder", "You hear a massive rumble as Thunder emerges.", Formatting.AQUA, IslandType.CRIMSON_ISLE),
+	LORD_JAWBUS("Lord Jawbus", "You have angered a legendary creature... Lord Jawbus has arrived.", Formatting.RED, IslandType.CRIMSON_ISLE),
+	RAGNAROK("Ragnarok", "The sky darkens and the air thickens. The end times are upon us: Ragnarok is here.", Formatting.DARK_RED, IslandType.CRIMSON_ISLE),
+	PLHLEGBLAST("Plhlegblast", "WOAH! A Plhlegblast appeared.", Formatting.DARK_RED, IslandType.CRIMSON_ISLE),
 	;
 
 	private static final Map<String, RareSeaCreature> SEA_CREATURE_CHAT = Arrays.stream(values())
@@ -46,11 +49,17 @@ public enum RareSeaCreature {
 	private final String name;
 	private final String chatMessage;
 	private final Formatting color;
+	private final IslandType islandType;
 
 	RareSeaCreature(String name, String chatMessage, Formatting color) {
+		this(name, chatMessage, color, IslandType.ANY);
+	}
+
+	RareSeaCreature(String name, String chatMessage, Formatting color, IslandType islandType) {
 		this.name = name;
 		this.chatMessage = chatMessage;
 		this.color = color;
+		this.islandType = islandType;
 	}
 
 	public static @Nullable RareSeaCreature fromChatMessage(String chatMessage) {
@@ -67,6 +76,10 @@ public enum RareSeaCreature {
 
 	public Formatting getColor() {
 		return color;
+	}
+
+	public IslandType getIslandType() {
+		return islandType;
 	}
 
 	public Text getText() {

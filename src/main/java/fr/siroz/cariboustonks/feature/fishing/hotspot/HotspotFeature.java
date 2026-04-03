@@ -44,7 +44,7 @@ public class HotspotFeature extends Feature {
 		HotspotRenderer renderer = new HotspotRenderer(this);
 		RenderEvents.WORLD_RENDER.register(renderer::render);
 
-		TickScheduler.getInstance().runRepeating(this::update, 2, TimeUnit.SECONDS);
+		TickScheduler.getInstance().runRepeating(this::update, 1, TimeUnit.SECONDS);
 		TickScheduler.getInstance().runRepeating(this::updateBobber, 500, TimeUnit.MILLISECONDS);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
 	}
@@ -53,7 +53,7 @@ public class HotspotFeature extends Feature {
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& ConfigManager.getConfig().fishing.hotspotHighlight
-				&& SkyBlockAPI.isOnIslands(IslandType.CRIMSON_ISLE, IslandType.BACKWATER_BAYOU);
+				&& SkyBlockAPI.getIsland().hasHotspotFishing();
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class HotspotFeature extends Feature {
 	private void handleParticle(Vec3d particlePos, ParticleType<?> particleType) {
 		hotspotRadius = currentHotspot.centerPos().distanceTo(particlePos);
 		if (particleType == ParticleTypes.DUST) {
-			hotspotRadius -= - 0.2D;
+			hotspotRadius -= 0.2D;
 		}
 	}
 

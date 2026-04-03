@@ -127,7 +127,7 @@ public class DeployableFeature extends Feature implements HudProvider {
 		String customName = armorStand.getCustomName().getString();
 		if (customName.isBlank()) return;
 
-		tryDeployableWithTimer(armorStand, type -> type == Deployable.Type.COMBAT || type == Deployable.Type.PERSONAL || type == Deployable.Type.FISHING);
+		tryDeployableWithTimer(armorStand, type -> type != Deployable.Type.FLARE && type != Deployable.Type.PERSONAL);
 	}
 
 	private void detectFlares(ArmorStandEntity armorStand) {

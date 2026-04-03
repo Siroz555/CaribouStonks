@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiFunction;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -24,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("checkstyle:linelength")
 public final class MobTrackingRegistry {
 
+	public static final BiFunction<String, String, Boolean> CONTAINS = String::contains;
+	public static final BiFunction<String, String, Boolean> EQUALS = String::equals;
 	private static final Path MOB_TRACKING_PATH = CaribouStonks.CONFIG_DIR.resolve("mobTracking.json");
 
 	private Map<String, MobTrackingEntry> trackedMobs = new HashMap<>();
@@ -50,8 +53,9 @@ public final class MobTrackingRegistry {
 		register("King Minos", 55, MobCategory.MYTHOLOGICAL, Text.literal("King Minos").formatted(Formatting.RED), false, IslandType.HUB);
 		// Rare Fishing Mobs
 		for (RareSeaCreature seaCreature : RareSeaCreature.values()) {
-			register(seaCreature.getName(), 50, MobCategory.FISHING, Text.literal(seaCreature.getName()).formatted(seaCreature.getColor()), true);
+			register(seaCreature.getName(), 50, MobCategory.FISHING, Text.literal(seaCreature.getName()).formatted(seaCreature.getColor()), true, seaCreature.getIslandType());
 		}
+		register("Littlefoot", 50, MobCategory.MINING, Text.literal("Littlefoot").formatted(Formatting.BLUE), true, IslandType.GLACITE_MINESHAFT);
 	}
 
 	public void updateMobTrackingConfig(Map<String, MobTrackingEntry> newTrackedMobs) {
@@ -94,14 +98,20 @@ public final class MobTrackingRegistry {
 	}
 
 	@Nullable
-	public MobTrackingEntry findMob(@Nullable String customName, @NotNull IslandType currentIsland) {
+	public MobTrackingEntry findMob(
+			@Nullable String customName,
+			@NotNull BiFunction<String, String, Boolean> searchFunction,
+			@NotNull IslandType currentIsland
+	) {
 		if (customName == null || customName.isBlank()) return null;
 
-		// Recherche partielle (toujours, car avec les tags des MobType et le health -_-)
+		// Recherche partielle [CONTAINS] (toujours, car avec les tags des MobType et le health -_-)
+		// OU
+		// Strictement égal [EQUALS] (dans le cas ou l'entity a un nom comme le Mage Outlaw ou un Aligator)
 		for (MobTrackingEntry entry : trackedMobs.values()) {
 			if (entry.config().enabled
 					&& entry.isAllowedOn(currentIsland)
-					&& customName.contains(entry.config().name)
+					&& searchFunction.apply(customName, entry.config().name)
 			) {
 				return entry;
 			}
@@ -229,6 +239,7 @@ public final class MobTrackingRegistry {
 		DEFAULT(Text.literal("Default").formatted(Formatting.WHITE, Formatting.BOLD)),
 		CRIMSON_ISLE_MINIBOSS(Text.literal("Crimson Isle Miniboss").formatted(Formatting.DARK_RED, Formatting.BOLD)),
 		FISHING(Text.literal("Fishing").formatted(Formatting.AQUA, Formatting.BOLD)),
+		MINING(Text.literal("Mining").formatted(Formatting.BLUE, Formatting.BOLD)),
 		MYTHOLOGICAL(Text.literal("Mythological").formatted(Formatting.DARK_GREEN, Formatting.BOLD)),
 		SPECIAL(Text.literal("Special").formatted(Formatting.RED, Formatting.BOLD)),
 		;

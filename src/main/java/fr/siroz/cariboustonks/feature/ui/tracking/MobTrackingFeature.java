@@ -1,5 +1,7 @@
 package fr.siroz.cariboustonks.feature.ui.tracking;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
@@ -25,9 +27,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.minecraft.client.gui.hud.ClientBossBar;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.sound.SoundEvents;
@@ -46,6 +51,7 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 	private final MobTrackingRegistry registry;
 	private final BossBar bossEvent;
 	private final HudElementBuilder hudBuilder;
+	private final Cache<Integer, Integer> notified;
 
 	private final List<TrackedEntity> tracked = new ArrayList<>(MAX_TRACKED_ENTITIES);
 	private boolean showingBossBar = false;
@@ -59,9 +65,13 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 				false, false, false
 		);
 		this.hudBuilder = new HudElementBuilder();
+		this.notified = CacheBuilder.newBuilder()
+				.expireAfterWrite(10, TimeUnit.SECONDS)
+				.build();
 
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
 		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
+		ClientEntityEvents.ENTITY_LOAD.register((entity, world) -> this.onEntityLoad(entity));
 
 		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
 				.then(ClientCommandManager.literal("mobTracking")
@@ -79,12 +89,13 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
 				&& SkyBlockAPI.getIsland() != IslandType.KUUDRA_HOLLOW
-				&& ConfigManager.getConfig().uiAndVisuals.mobTracking.enabled;
+				&& ConfigManager.getConfig().uiAndVisuals.mobTracking.tracking;
 	}
 
 	@Override
 	protected void onClientJoinServer() {
 		tracked.clear();
+		notified.invalidateAll();
 		if (showingBossBar) {
 			Client.removeBossBar(bossEvent);
 			showingBossBar = false;
@@ -155,11 +166,12 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 			// Le nom est présent.
 			MobTrackingRegistry.MobTrackingEntry mobEntry = registry.findMob(
 					armorStand.getCustomName().getString(),
+					MobTrackingRegistry.CONTAINS,
 					SkyBlockAPI.getIsland()
 			);
 			if (mobEntry != null) {
 				addTrackedEntity(new TrackedEntity(armorStand, mobEntry.priority()));
-				onTrackEntity(mobEntry);
+				onTrackEntity(armorStand.getId(), mobEntry);
 			}
 		} catch (Exception ex) {
 			if (DeveloperTools.isInDevelopment()) {
@@ -175,6 +187,21 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 			if (removed) {
 				Client.removeBossBar(bossEvent);
 			}
+		}
+	}
+
+	@EventHandler(event = "ClientEntityEvents.ENTITY_LOAD")
+	private void onEntityLoad(Entity entity) {
+		if (!isEnabled()) return;
+		if (entity instanceof ArmorStandEntity) return;
+
+		MobTrackingRegistry.MobTrackingEntry mobEntry = registry.findMob(
+				entity.getName().getString(),
+				MobTrackingRegistry.EQUALS,
+				SkyBlockAPI.getIsland()
+		);
+		if (mobEntry != null) {
+			onTrackEntity(entity.getId(), mobEntry);
 		}
 	}
 
@@ -211,12 +238,13 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 		}
 	}
 
-	private void onTrackEntity(@NotNull MobTrackingRegistry.MobTrackingEntry mobEntry) {
-		if (mobEntry.config().notifyOnSpawn) {
+	private void onTrackEntity(Integer entityId, @NotNull MobTrackingRegistry.MobTrackingEntry mobEntry) {
+		if (notified.getIfPresent(entityId) == null && mobEntry.config().notifyOnSpawn) {
+			notified.put(entityId, entityId);
 			Client.showTitleAndSubtitle(
 					mobEntry.displayName(),
 					Text.literal(ConfigManager.getConfig().uiAndVisuals.mobTracking.spawnMessage),
-					1, 20, 1
+					1, 25, 1
 			);
 			if (ConfigManager.getConfig().uiAndVisuals.mobTracking.playSoundWhenSpawn) {
 				Client.playSound(SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 1f, 1f);
