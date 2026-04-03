@@ -232,7 +232,6 @@ public final class Client {
 	 * @param <T>              the entity class type
 	 * @return a List of {@link Entity}s close to the player if the conditions are met, otherwise an empty list
 	 */
-	@SuppressWarnings("unused") // SIROZ-NOTE: Impl
 	public static <T extends Entity> List<T> findClosestEntities(
 			@NonNull Class<T> entity,
 			double distanceInBlocks,
@@ -257,7 +256,6 @@ public final class Client {
 	 * @param <T>              the entity class type
 	 * @return the closest entity to the player if the conditions are met, otherwise null
 	 */
-	@SuppressWarnings("unused") // SIROZ-NOTE: Impl
 	public static <T extends Entity> @Nullable T findClosestEntity(
 			@NonNull Class<T> entity,
 			double distanceInBlocks,
@@ -268,7 +266,28 @@ public final class Client {
 			return null;
 		}
 
-		return findClosestEntities(entity, distanceInBlocks, entityPredicate).stream()
+		List<T> entities = findClosestEntities(entity, distanceInBlocks, entityPredicate);
+		return findClosestEntity(entities, filterPredicate);
+	}
+
+	/**
+	 * Returns the {@link Entity} closest to the player, according to the given conditions.
+	 * <p>
+	 * {@code Safe Client null} & {@code Safe World null}
+	 *
+	 * @param entities        the entities list
+	 * @param filterPredicate the filter predicate (e.g. {@code e -> "King Minos".equals(e.getName().getString())})
+	 * @param <T>             the entity class type
+	 * @return the closest entity to the player if the conditions are met, otherwise null
+	 */
+	public static <T extends Entity> @Nullable T findClosestEntity(
+			@NonNull List<T> entities,
+			@NonNull Predicate<? super T> filterPredicate
+	) {
+		if (CLIENT.player == null || CLIENT.level == null) return null;
+		if (entities.isEmpty()) return null;
+
+		return entities.stream()
 				.filter(filterPredicate)
 				.min(Comparator.comparingDouble(as -> as.distanceToSqr(CLIENT.player)))
 				.orElse(null);

@@ -7,8 +7,6 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.util.Client;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +15,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 public class TreeOverlayFeature extends Feature {
 
@@ -64,9 +61,9 @@ public class TreeOverlayFeature extends Feature {
 		if (!AXES.contains(itemId)) return;
 
 		if (currentTreeInfo == null) {
-			currentTreeInfo = findClosestTreeInfoInRange(CLIENT.player).orElse(null);
+			currentTreeInfo = findClosestTreeInfoInRange().orElse(null);
 		} else {
-			Optional<ArmorStand> newTreeInfo = findClosestTreeInfoInRange(CLIENT.player);
+			Optional<ArmorStand> newTreeInfo = findClosestTreeInfoInRange();
 			if (newTreeInfo.isEmpty()) {
 				reset();
 			}
@@ -95,22 +92,15 @@ public class TreeOverlayFeature extends Feature {
 		currentTreeInfo = null;
 	}
 
-	private Optional<ArmorStand> findClosestTreeInfoInRange(@Nullable Entity entity) {
-		if (CLIENT.level == null || CLIENT.player == null || entity == null) {
-			return Optional.empty();
-		}
+	private Optional<ArmorStand> findClosestTreeInfoInRange() {
+		if (CLIENT.level == null || CLIENT.player == null) return Optional.empty();
 
-		List<ArmorStand> armorStands = CLIENT.level.getEntitiesOfClass(
+		ArmorStand closestTreeInfoArmorStand = Client.findClosestEntity(
 				ArmorStand.class,
-				entity.getBoundingBox().inflate(DISTANCE_TO_TREE_INFO_IN_BLOCKS),
-				Entity::hasCustomName
+				DISTANCE_TO_TREE_INFO_IN_BLOCKS,
+				Entity::hasCustomName,
+				as -> as.getName().getString().contains(CLIENT.getUser().getName())
 		);
-
-		ArmorStand closestTreeInfoArmorStand = armorStands.stream()
-				.filter(as -> as.getName().getString().contains(CLIENT.getUser().getName()))
-				.min(Comparator.comparingDouble(as -> as.distanceToSqr(entity)))
-				.orElse(null);
-
 		if (closestTreeInfoArmorStand == null) {
 			return Optional.empty();
 		}
