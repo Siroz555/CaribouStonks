@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.feature.fishing.hotspot;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.NetworkEvents;
