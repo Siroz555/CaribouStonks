@@ -1,6 +1,8 @@
 package fr.siroz.cariboustonks.rendering;
 
+import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import fr.siroz.cariboustonks.CaribouStonks;
@@ -37,6 +39,7 @@ public final class CaribouRenderPipelines {
 	public static final RenderPipeline LINE_STRIP = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/line_strip"))
+					.withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
 					.withVertexShader("core/position_color")
 					.withFragmentShader("core/position_color")
 					.withCull(false)
