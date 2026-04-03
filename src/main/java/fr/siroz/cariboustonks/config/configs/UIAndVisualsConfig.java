@@ -121,7 +121,7 @@ public class UIAndVisualsConfig {
 	public static class MobTracking {
 
 		@SerialEntry
-		public boolean enabled = false;
+		public boolean enabled = true;
 
 		@SerialEntry
 		public boolean showInBossBar = true;
