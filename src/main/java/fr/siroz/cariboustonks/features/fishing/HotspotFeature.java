@@ -43,7 +43,7 @@ public class HotspotFeature extends Feature {
 	private boolean bobberInHotspot = false;
 
 	public HotspotFeature() {
-		TickScheduler.getInstance().runRepeating(this::update, 2, TimeUnit.SECONDS);
+		TickScheduler.getInstance().runRepeating(this::update, 1, TimeUnit.SECONDS);
 		TickScheduler.getInstance().runRepeating(this::updateBobber, 500, TimeUnit.MILLISECONDS);
 		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
@@ -160,7 +160,7 @@ public class HotspotFeature extends Feature {
 
 		hotspotRadius = currentHotspot.centerPos().distanceTo(particlePos);
 		if (particleType == ParticleTypes.DUST) {
-			hotspotRadius -= - 0.2D;
+			hotspotRadius -= 0.2D;
 		}
 	}
 
