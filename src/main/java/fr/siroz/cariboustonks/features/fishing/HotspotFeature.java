@@ -1,11 +1,10 @@
 package fr.siroz.cariboustonks.features.fishing;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
@@ -14,7 +13,6 @@ import fr.siroz.cariboustonks.mixin.accessors.DustParticleOptionsAccessor;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -38,14 +36,16 @@ public class HotspotFeature extends Feature {
 	private static final Color BOBBER_IN = Colors.GREEN.withAlpha(0.5F);
 	private static final Color BOBBER_OUT = Colors.RED.withAlpha(0.5F);
 
+	private @Nullable HotspotRadarFeature hotspotRadarFeature;
+
 	private @Nullable Double hotspotRadius = null;
 	private @Nullable Hotspot currentHotspot = null;
 	private boolean bobberInHotspot = false;
 
 	public HotspotFeature() {
-		TickScheduler.getInstance().runRepeating(this::update, 2, TimeUnit.SECONDS);
+		TickScheduler.getInstance().runRepeating(this::update, 1, TimeUnit.SECONDS);
 		TickScheduler.getInstance().runRepeating(this::updateBobber, 500, TimeUnit.MILLISECONDS);
-		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::onWorldRender);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
 	}
 
@@ -53,7 +53,12 @@ public class HotspotFeature extends Feature {
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& this.config().fishing.hotspotHighlight
-				&& SkyBlockAPI.isOnIslands(IslandType.CRIMSON_ISLE, IslandType.BACKWATER_BAYOU);
+				&& SkyBlockAPI.getIsland().hasHotspotFishing();
+	}
+
+	@Override
+	protected void postInitialize(@NonNull FeatureManager features) {
+		hotspotRadarFeature = features.getFeature(HotspotRadarFeature.class);
 	}
 
 	@Override
@@ -62,9 +67,7 @@ public class HotspotFeature extends Feature {
 	}
 
 	private void update() {
-		if (!isEnabled() || CLIENT.player == null || CLIENT.level == null) {
-			return;
-		}
+		if (!isEnabled() || CLIENT.player == null || CLIENT.level == null) return;
 
 		ItemStack item = Client.getHeldItem();
 		if (item == null || item.isEmpty() || !item.is(Items.FISHING_ROD)) {
@@ -73,13 +76,12 @@ public class HotspotFeature extends Feature {
 		}
 
 		if (currentHotspot == null) {
-			currentHotspot = findClosestHotspotInRange(CLIENT.player).orElse(null);
-			if (currentHotspot != null) {
-				// dep -_-
-				CaribouStonks.features().getFeature(HotspotRadarFeature.class).reset();
+			currentHotspot = findClosestHotspotInRange().orElse(null);
+			if (currentHotspot != null && hotspotRadarFeature != null) {
+				hotspotRadarFeature.reset();
 			}
 		} else {
-			Optional<Hotspot> newHotspot = findClosestHotspotInRange(CLIENT.player);
+			Optional<Hotspot> newHotspot = findClosestHotspotInRange();
 			if (newHotspot.isEmpty()) {
 				reset();
 			}
@@ -101,7 +103,7 @@ public class HotspotFeature extends Feature {
 	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
-	private void render(WorldRenderer renderer) {
+	private void onWorldRender(WorldRenderer renderer) {
 		if (!isEnabled() || currentHotspot == null) return;
 
 		if (hotspotRadius != null && hotspotRadius > 0D && hotspotRadius <= 16D) {
@@ -160,26 +162,23 @@ public class HotspotFeature extends Feature {
 
 		hotspotRadius = currentHotspot.centerPos().distanceTo(particlePos);
 		if (particleType == ParticleTypes.DUST) {
-			hotspotRadius -= - 0.2D;
+			hotspotRadius -= 0.2D;
 		}
 	}
 
-	private Optional<Hotspot> findClosestHotspotInRange(@Nullable Entity entity) {
-		if (CLIENT.level == null || entity == null) {
-			return Optional.empty();
-		}
+	private Optional<Hotspot> findClosestHotspotInRange() {
+		if (CLIENT.level == null) return Optional.empty();
 
-		List<ArmorStand> armorStands = CLIENT.level.getEntitiesOfClass(
+		List<ArmorStand> armorStands = Client.findClosestEntities(
 				ArmorStand.class,
-				entity.getBoundingBox().inflate(DISTANCE_TO_HOTSPOT_IN_BLOCKS),
+				DISTANCE_TO_HOTSPOT_IN_BLOCKS,
 				Entity::hasCustomName
 		);
 
-		ArmorStand closestHotspotArmorStand = armorStands.stream()
-				.filter(as -> "HOTSPOT".equals(as.getName().getString()))
-				.min(Comparator.comparingDouble(as -> as.distanceToSqr(entity)))
-				.orElse(null);
-
+		ArmorStand closestHotspotArmorStand = Client.findClosestEntity(
+				armorStands,
+				as -> "HOTSPOT".equals(as.getName().getString())
+		);
 		if (closestHotspotArmorStand == null) {
 			return Optional.empty();
 		}
