@@ -98,7 +98,7 @@ public class MobTrackingFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
 				&& SkyBlockAPI.getIsland() != IslandType.KUUDRA_HOLLOW
-				&& this.config().uiAndVisuals.mobTracking.enabled;
+				&& this.config().uiAndVisuals.mobTracking.tracking;
 	}
 
 	@Override
