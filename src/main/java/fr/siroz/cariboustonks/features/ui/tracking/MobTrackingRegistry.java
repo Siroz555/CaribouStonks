@@ -48,8 +48,9 @@ public final class MobTrackingRegistry {
 		register("King Minos", 55, MobCategory.MYTHOLOGICAL, Component.literal("King Minos").withStyle(ChatFormatting.RED), false, IslandType.HUB);
 		// Rare Fishing Mobs
 		for (RareSeaCreature seaCreature : RareSeaCreature.values()) {
-			register(seaCreature.getName(), 50, MobCategory.FISHING, Component.literal(seaCreature.getName()).withStyle(seaCreature.getColor()), true);
+			register(seaCreature.getName(), 50, MobCategory.FISHING, Component.literal(seaCreature.getName()).withStyle(seaCreature.getColor()), true, seaCreature.getIslandType());
 		}
+		register("Littlefoot", 50, MobCategory.MINING, Component.literal("Littlefoot").withStyle(ChatFormatting.BLUE), true, IslandType.GLACITE_MINESHAFT);
 	}
 
 	public void updateMobTrackingConfig(Map<String, MobTrackingEntry> newTrackedMobs) {
@@ -214,6 +215,7 @@ public final class MobTrackingRegistry {
 		DEFAULT(Component.literal("Default").withStyle(ChatFormatting.WHITE, ChatFormatting.BOLD)),
 		CRIMSON_ISLE_MINIBOSS(Component.literal("Crimson Isle Miniboss").withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD)),
 		FISHING(Component.literal("Fishing").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD)),
+		MINING(Component.literal("Mining").withStyle(ChatFormatting.BLUE, ChatFormatting.BOLD)),
 		MYTHOLOGICAL(Component.literal("Mythological").withStyle(ChatFormatting.DARK_GREEN, ChatFormatting.BOLD)),
 		SPECIAL(Component.literal("Special").withStyle(ChatFormatting.RED, ChatFormatting.BOLD)),
 		;
