@@ -83,7 +83,7 @@ public enum IslandType {
 	/**
 	 * Crimson Isle
 	 */
-	CRIMSON_ISLE("crimson_isle", "Crimson Isle"),
+	CRIMSON_ISLE("crimson_isle", "Crimson Isle", true),
 
 	/**
 	 * Kuudra's Hollow
