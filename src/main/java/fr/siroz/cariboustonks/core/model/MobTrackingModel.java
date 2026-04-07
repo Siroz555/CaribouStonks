@@ -3,12 +3,14 @@ package fr.siroz.cariboustonks.core.model;
 public class MobTrackingModel {
 	private String name;
 	private boolean enabled;
-	private  boolean notifyOnSpawn;
+	private boolean notifyOnSpawn;
+	private boolean highlightable;
 
-	public MobTrackingModel(String name, boolean enabled, boolean notifyOnSpawn) {
+	public MobTrackingModel(String name, boolean enabled, boolean notifyOnSpawn, boolean highlightable) {
 		this.name = name;
 		this.enabled = enabled;
 		this.notifyOnSpawn = notifyOnSpawn;
+		this.highlightable = highlightable;
 	}
 
 	public String getName() {
@@ -33,5 +35,13 @@ public class MobTrackingModel {
 
 	public void setNotifyOnSpawn(boolean notifyOnSpawn) {
 		this.notifyOnSpawn = notifyOnSpawn;
+	}
+
+	public boolean isHighlightable() {
+		return highlightable;
+	}
+
+	public void setHighlightable(boolean highlightable) {
+		this.highlightable = highlightable;
 	}
 }

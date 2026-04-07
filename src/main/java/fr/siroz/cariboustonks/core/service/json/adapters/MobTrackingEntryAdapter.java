@@ -15,6 +15,7 @@ public class MobTrackingEntryAdapter extends TypeAdapter<MobTrackingModel> {
 		writer.name("name").value(model.getName());
 		writer.name("enabled").value(model.isEnabled());
 		writer.name("notifyOnSpawn").value(model.isNotifyOnSpawn());
+		writer.name("highlightable").value(model.isHighlightable());
 		writer.endObject();
 	}
 
@@ -24,17 +25,19 @@ public class MobTrackingEntryAdapter extends TypeAdapter<MobTrackingModel> {
 		String name = "";
 		boolean enabled = true;
 		boolean notifyOnSpawn = false;
+		boolean highlightable = false;
 		while (reader.hasNext()) {
 			switch (reader.nextName()) {
 				case "name" -> name = reader.nextString();
 				case "enabled" -> enabled = reader.nextBoolean();
 				case "notifyOnSpawn" -> notifyOnSpawn = reader.nextBoolean();
+				case "highlightable" -> highlightable = reader.nextBoolean();
 				case null, default -> {
 				}
 			}
 		}
 		reader.endObject();
 
-		return new MobTrackingModel(name, enabled, notifyOnSpawn);
+		return new MobTrackingModel(name, enabled, notifyOnSpawn, highlightable);
 	}
 }

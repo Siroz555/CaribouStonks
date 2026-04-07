@@ -76,11 +76,13 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Power Orbs (Plasmaflux, Umberella, Will-o'-wisp, ..)
     - Flares (BETA) (Alert Flare, SOS Flare)
     - Personal (Black Hole)
-- Mob Tracking (BETA Preview):
+- Mob Tracking:
     - That allow you to view information about a specific Mob in real time.
     - Display of mob health and other information in a Boss Bar or via a HUD.
+    - You can turn off the display while keeping the notification or highlight.
     - Works for Slayer Bosses.
     - Alert when a mob is detected near you.
+    - Applies the Glowing effect with a customizable color.
     - Dedicated menu for configuring each Mob.
 - Highlight selected Pet in the Pet Menu.
 - Create & highlight favorite contacts in the Abiphone Menu
