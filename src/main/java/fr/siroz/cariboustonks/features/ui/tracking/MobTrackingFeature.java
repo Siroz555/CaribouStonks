@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.features.ui.tracking;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.core.component.CommandComponent;
+import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
@@ -22,7 +22,9 @@ import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
@@ -35,7 +37,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import org.jspecify.annotations.NonNull;
 
-@Experimental
 public class MobTrackingFeature extends Feature {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_mob_tracking");
@@ -48,6 +49,7 @@ public class MobTrackingFeature extends Feature {
 	private final Cache<Integer, Integer> notified;
 
 	private final List<TrackedEntity> tracked = new ArrayList<>(MAX_TRACKED_ENTITIES);
+	private final Map<Integer, Boolean> trackedHighlight = new HashMap<>();
 	private boolean showingBossBar = false;
 
 	public MobTrackingFeature() {
@@ -65,7 +67,8 @@ public class MobTrackingFeature extends Feature {
 
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
 		WorldEvents.ARMORSTAND_REMOVE_EVENT.register(this::onRemoveArmorStand);
-		ClientEntityEvents.ENTITY_LOAD.register((entity, world) -> this.onEntityLoad(entity));
+		ClientEntityEvents.ENTITY_LOAD.register((entity, _w) -> this.onEntityLoad(entity));
+		ClientEntityEvents.ENTITY_UNLOAD.register((entity, _w) -> this.onEntityUnload(entity));
 
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
 				.namespaced("mobTracking", ctx -> {
@@ -87,6 +90,13 @@ public class MobTrackingFeature extends Feature {
 						25
 				))
 				.build());
+
+		this.addComponent(EntityGlowComponent.class, EntityGlowComponent.of(entity -> {
+			if (!(entity instanceof ArmorStand) && trackedHighlight.getOrDefault(entity.getId(), false)) {
+				return this.config().uiAndVisuals.mobTracking.highlightColor.getRGB();
+			}
+			return EntityGlowComponent.EntityGlowStrategy.DEFAULT;
+		}));
 	}
 
 	public MobTrackingRegistry getRegistry() {
@@ -104,6 +114,7 @@ public class MobTrackingFeature extends Feature {
 	@Override
 	protected void onClientJoinServer() {
 		tracked.clear();
+		trackedHighlight.clear();
 		notified.invalidateAll();
 		if (showingBossBar) {
 			Client.removeBossBar(bossEvent);
@@ -160,7 +171,7 @@ public class MobTrackingFeature extends Feature {
 			);
 			if (mobEntry != null) {
 				addTrackedEntity(new TrackedEntity(armorStand, mobEntry.priority()));
-				onTrackEntity(armorStand.getId(), mobEntry);
+				notifyEntity(armorStand.getId(), mobEntry);
 			}
 		} catch (Exception ex) {
 			if (DeveloperTools.isInDevelopment()) {
@@ -190,8 +201,15 @@ public class MobTrackingFeature extends Feature {
 				SkyBlockAPI.getIsland()
 		);
 		if (mobEntry != null) {
-			onTrackEntity(entity.getId(), mobEntry);
+			int entityId = entity.getId();
+			trackedHighlight.put(entityId, mobEntry.model().isHighlightable());
+			notifyEntity(entityId, mobEntry);
 		}
+	}
+
+	@EventHandler(event = "ClientEntityEvents.ENTITY_UNLOAD")
+	private void onEntityUnload(Entity entity) {
+		trackedHighlight.remove(entity.getId());
 	}
 
 	private void updateSlayerBoss(@NonNull ArmorStand slayerBoss) {
@@ -227,7 +245,7 @@ public class MobTrackingFeature extends Feature {
 		}
 	}
 
-	private void onTrackEntity(Integer entityId, MobTrackingRegistry.@NonNull MobTrackingEntry mobEntry) {
+	private void notifyEntity(Integer entityId, MobTrackingRegistry.@NonNull MobTrackingEntry mobEntry) {
 		if (notified.getIfPresent(entityId) == null && mobEntry.model().isNotifyOnSpawn()) {
 			notified.put(entityId, entityId);
 

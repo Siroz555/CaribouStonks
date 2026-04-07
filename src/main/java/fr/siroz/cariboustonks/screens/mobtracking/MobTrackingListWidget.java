@@ -79,11 +79,13 @@ class MobTrackingListWidget extends ContainerObjectSelectionList<MobTrackingList
 		private final List<AbstractWidget> children;
 		private final Checkbox enabledWidget;
 		private final Checkbox notifyOnSpawnWidget;
+		private final Checkbox highlightableWidget;
 
 		protected MobTrackingListEntry() { // Pour le CategorySeparatorEntry
 			this.entry = null;
 			this.enabledWidget = null;
 			this.notifyOnSpawnWidget = null;
+			this.highlightableWidget = null;
 			this.children = List.of();
 		}
 
@@ -102,7 +104,13 @@ class MobTrackingListWidget extends ContainerObjectSelectionList<MobTrackingList
 					.onValueChange((checkbox, checked) -> entry.model().setNotifyOnSpawn(checked))
 					.build();
 
-			this.children = List.of(this.enabledWidget, this.notifyOnSpawnWidget);
+			this.highlightableWidget = Checkbox.builder(Component.literal(""), minecraft.font)
+					.selected(entry.model().isHighlightable())
+					.tooltip(Tooltip.create(Component.literal("Click to enable the Glowing effect on this entity")))
+					.onValueChange((checkbox, checked) -> entry.model().setHighlightable(checked))
+					.build();
+
+			this.children = List.of(this.enabledWidget, this.notifyOnSpawnWidget, this.highlightableWidget);
 		}
 
 		@Override
@@ -117,13 +125,14 @@ class MobTrackingListWidget extends ContainerObjectSelectionList<MobTrackingList
 
 		@Override
 		public void renderContent(@NonNull GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			int x = this.getContentXMiddle() - 100;
+			int x = this.getContentXMiddle() - 80;
 			int y = this.getY();
 
+			enabledWidget.setPosition(x - 35, y);
 			guiGraphics.drawString(minecraft.font, entry.displayName(), x - 10, y + 5, Colors.WHITE.asInt());
 
-			enabledWidget.setPosition(x + 150, y);
-			notifyOnSpawnWidget.setPosition(x + 175, y);
+			notifyOnSpawnWidget.setPosition(x + 150, y);
+			highlightableWidget.setPosition(x + 175, y);
 
 			for (AbstractWidget child : children) {
 				child.render(guiGraphics, mouseX, mouseY, deltaTicks);

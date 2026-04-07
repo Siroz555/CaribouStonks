@@ -136,6 +136,9 @@ public class UIAndVisualsConfig {
 		public boolean playSoundWhenSpawn = true;
 
 		@SerialEntry
+		public Color highlightColor = Color.WHITE;
+
+		@SerialEntry
 		public TrackingHud hud = new TrackingHud();
 
 		public static class TrackingHud implements HudConfig {

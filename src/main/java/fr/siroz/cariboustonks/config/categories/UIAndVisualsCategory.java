@@ -125,19 +125,18 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
-						.name(Component.literal("Mob Tracking").withStyle(ChatFormatting.BOLD).append(BETA))
+						.name(Component.literal("Mob Tracking").withStyle(ChatFormatting.BOLD))
 						.description(OptionDescription.of(
 								Component.literal("Mob Tracking combines features that allow you to view information about a specific Mob in real time."),
-								Component.literal(SPACE + "Allow the display of mob health and other information in a custom Boss Bar or via a HUD. Also allows you to be alerted when a mob spawns."),
-								Component.literal(SPACE + "These features are in BETA. Adjustments will be made.").withStyle(ChatFormatting.RED)))
+								Component.literal(SPACE + "Allow the display of mob health and other information in a custom Boss Bar or via a HUD. Also allows you to be alerted when a mob spawns.")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Enable Mob Tracking"))
 								.description(OptionDescription.of(
 										Component.literal("Once activated, mobs such as Slayers, rare fishing mobs, and others will be displayed in the form of a Boss Bar or HUD."),
-										Component.literal(SPACE + "The display shows the life and other information of the mob being tracked in real time."),
-										Component.literal(SPACE + "Each mob can be activated or deactivated, display an alert, in the dedicated menu."),
-										Component.literal(SPACE + "These features are in BETA. Adjustments will be made.").withStyle(ChatFormatting.RED)))
+										Component.literal("The display shows the life and other information of the mob being tracked in real time."),
+										Component.literal(SPACE + "You can disable “Show in Boss Bar” or “Show in HUD” and enable only spawn notifications or highlighting."),
+										Component.literal(SPACE + "Each mob can be activated or deactivated, display an alert, highlighted, in the dedicated menu.").withStyle(ChatFormatting.GREEN)))
 								.binding(defaults.uiAndVisuals.mobTracking.tracking,
 										() -> current.uiAndVisuals.mobTracking.tracking,
 										newValue -> current.uiAndVisuals.mobTracking.tracking = newValue)
@@ -179,6 +178,16 @@ public class UIAndVisualsCategory extends AbstractCategory {
 										() -> current.uiAndVisuals.mobTracking.spawnMessage,
 										newValue -> current.uiAndVisuals.mobTracking.spawnMessage = newValue)
 								.controller(StringControllerBuilder::create)
+								.build())
+						.option(Option.<Color>createBuilder()
+								.name(Component.literal("Track Glowing Color"))
+								.description(OptionDescription.of(
+										Component.literal("Change the Glowing color"),
+										Component.literal(SPACE + "Note: Must be enabled in the Mob Tracking menu for each desired entity").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.uiAndVisuals.mobTracking.highlightColor,
+										() -> current.uiAndVisuals.mobTracking.highlightColor,
+										newValue -> current.uiAndVisuals.mobTracking.highlightColor = newValue)
+								.controller(ColorControllerBuilder::create)
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Track Spawn Sound"))

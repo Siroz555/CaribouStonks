@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.screens.mobtracking;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.features.ui.tracking.MobTrackingFeature;
 import fr.siroz.cariboustonks.features.ui.tracking.MobTrackingRegistry;
@@ -19,7 +18,6 @@ import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-@Experimental
 public class MobTrackingScreen extends CaribousStonksScreen {
 
 	@Nullable
@@ -28,10 +26,7 @@ public class MobTrackingScreen extends CaribousStonksScreen {
 	protected final Map<String, MobTrackingRegistry.MobTrackingEntry> trackedMobs;
 
 	private MobTrackingScreen(@Nullable Screen parent) {
-		super(Component.empty()
-				.append(Component.literal("Mob Tracking ").withStyle(ChatFormatting.RED, ChatFormatting.BOLD))
-				.append(Component.literal(" (Beta)").withStyle(ChatFormatting.GRAY))
-		);
+		super(Component.literal("Mob Tracking").withStyle(ChatFormatting.RED, ChatFormatting.BOLD));
 		this.parent = parent;
 		this.mobTrackingFeature = CaribouStonks.features().getFeature(MobTrackingFeature.class);
 		this.trackedMobs = this.mobTrackingFeature.getRegistry().getTrackedMobsSnapshot();

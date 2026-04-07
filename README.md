@@ -7,13 +7,12 @@ Siroz555's Mod – Fabric mod for Hypixel SkyBlock on the latest versions of Min
 The main features are Bazaar/Auctions price displays on items, a graphical representation of prices over time,
 in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
-**✅ Supported Minecraft Versions**: **1.21.11** & **1.21.10**
+**✅ Supported Minecraft Versions**: **26.1**, **1.21.11** and **1.21.10**
 
 ### Installation
 
 1. Requirements:
     - [Fabric API](https://modrinth.com/mod/fabric-api)
-    - [Hypixel Mod API](https://modrinth.com/mod/hypixel-mod-api) (Minecraft 1.21.11+)
 2. Install directly in the `mods` folder
 
 > [!IMPORTANT]
@@ -71,11 +70,19 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 **UI & Visuals**
 
-- Mob Tracking (BETA Preview):
+- Deployable:
+    - Display all active Deployable in a HUD with their respective timer.
+    - Individual detection config.
+    - Power Orbs (Plasmaflux, Umberella, Will-o'-wisp, ..)
+    - Flares (BETA) (Alert Flare, SOS Flare)
+    - Personal (Black Hole)
+- Mob Tracking:
     - That allow you to view information about a specific Mob in real time.
     - Display of mob health and other information in a Boss Bar or via a HUD.
+    - You can turn off the display while keeping the notification or highlight.
     - Works for Slayer Bosses.
     - Alert when a mob is detected near you.
+    - Applies the Glowing effect with a customizable color.
     - Dedicated menu for configuring each Mob.
 - Highlight selected Pet in the Pet Menu.
 - Create & highlight favorite contacts in the Abiphone Menu
@@ -205,12 +212,13 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 ### Minecraft Versions History
 
-| Version             |                   Status | Notes                      |
-|---------------------|-------------------------:|----------------------------|
-| **1.21.11**         |            ✅ **Current** | Latest                     |
-| **1.21.10**         |            ✅ **Current** | Maintained                 |
-| **1.21.7 / 1.21.8** | ⚠️ **No Longer Updated** | Latest Mod Version: 0.10.1 |
-| **1.21.5**          | ⚠️ **No Longer Updated** | Latest Mod Version: 0.8.0  |
+| Version             |                   Status | Notes                               |
+|---------------------|-------------------------:|-------------------------------------|
+| **26.1**            |            ✅ **Current** | Latest                              |
+| **1.21.11**         |            ✅ **Current** | Maintained                          |
+| **1.21.10**         |           ⚠️ **Current** | Maintained (Hypixel Version Policy) |
+| **1.21.7 / 1.21.8** | ⚠️ **No Longer Updated** | Latest Mod Version: 0.10.1          |
+| **1.21.5**          | ⚠️ **No Longer Updated** | Latest Mod Version: 0.8.0           |
 
 ---
 
