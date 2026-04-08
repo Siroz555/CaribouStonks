@@ -184,6 +184,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 **Misc**
 
 - Highlight entities (/highlighter)
+- Bestiary Highlight: Highlights entities by middle-clicking on an entity.
 - Guess Hoppity Eggs: Predict the location of Hoppity Eggs.
 - Show Hex Color on Dyed Items.
 - Party Commands (!warp, !coords, !dice, ..)
@@ -194,6 +195,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - /cariboustonks (Main mod Screen)
 - /sendCoords > Share your current position.
 - /highlighter > Highlight a specific entity in the world.
+- /bestiaryHighlight > Control custom Bestiary highlight in the world.
 - /stonks > Display prices and other information simply anywhere.
 - /cariboustonks heldItemCustomization <mainHand/offHand>: Customize the appearance of Held Item.
 - /cariboustonks keyShortcuts: Link Keybinds to commands to be executed.
