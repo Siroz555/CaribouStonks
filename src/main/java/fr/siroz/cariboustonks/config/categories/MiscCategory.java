@@ -32,6 +32,23 @@ public class MiscCategory extends AbstractCategory {
 							screen.onClose();
 						})
 						.build())
+				.option(ButtonOption.createBuilder()
+						.name(Component.literal("Bestiary Highlight"))
+						.text(Component.literal("/bestiaryHighlight add <name>"))
+						.action((screen, _) -> {
+							Client.sendMessageWithPrefix(Component.literal("Use /bestiaryHighlight <add|clear> <name>").withStyle(ChatFormatting.GREEN));
+							screen.onClose();
+						})
+						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Bestiary Highlight Middle Click"))
+						.description(OptionDescription.of(
+								Component.literal("Highlights entities with the same name by middle-clicking on an entity.")))
+						.binding(defaults.misc.bestiaryHighlight,
+								() -> current.misc.bestiaryHighlight,
+								newValue -> current.misc.bestiaryHighlight = newValue)
+						.controller(this::createBooleanController)
+						.build())
 				.option(Option.<Color>createBuilder()
 						.name(Component.literal("Highlighter Mob color"))
 						.description(OptionDescription.of(

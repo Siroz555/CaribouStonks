@@ -14,6 +14,9 @@ public class MiscConfig {
 	public Color highlighterColor = ColorUtils.getAwtColor(ChatFormatting.AQUA);
 
 	@SerialEntry
+	public boolean bestiaryHighlight = true;
+
+	@SerialEntry
 	public boolean showHexOnDyedItemEverywhere = false;
 
 	@SerialEntry
