@@ -19,16 +19,22 @@ import fr.siroz.cariboustonks.features.slayer.SlayerCocoonedWarningFeature;
 import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.Ticks;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -37,18 +43,20 @@ public class CocoonedWarningFeature extends Feature {
 	private static final long WORLD_CHANGE_THRESHOLD_MS = 10_000;
 	private static final double MAX_ARMORSTAND_PAIR_DISTANCE_SQ = 2f * 2f;
 	private static final double MAX_PLAYER_COCOON_DISTANCE_SQ = 15f * 15f;
+	private static final long COCOON_LIFE_TIME_TICKS = Ticks.from(6500, TimeUnit.MILLISECONDS); // 6.5s
 	//private static final int MAX_Y_CHECK = 6;
 
 	private final ConfigValue<String> configMessage = ConfigValue.of(
 			() -> this.config().combat.cocoonedMob.message
 	);
 
-	@Nullable
-	private SlayerCocoonedWarningFeature slayerCocoonedWarningFeature;
-
 	// chaîne temporaire des apparitions successives (ordre d'apparition)
 	private final Deque<ArmorStand> chain = new ArrayDeque<>();
 	private final List<BlockPos> cocoonPositions = new ArrayList<>();
+	// Pas de Map<Cocoon> pour éviter la concurrence entre tick/render et de possible null
+	private final Map<BlockPos, Long> cocoonLifeTicks = new ConcurrentHashMap<>();
+
+	private @Nullable SlayerCocoonedWarningFeature slayerCocoonedWarningFeature;
 	private long lastWorldChange = 0;
 	private boolean canBeTriggered = false;
 
@@ -57,18 +65,15 @@ public class CocoonedWarningFeature extends Feature {
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
 		WorldEvents.ARMORSTAND_REMOVE_EVENT.register(this::onRemoveArmorStand);
 		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
+		NetworkEvents.SERVER_TICK.register(this::onServerTick);
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& canBeTriggered
-				// --start-- Pour détecter les cocoons depuis les Slayers Minibosses
-				//&& !slayerManager.isInQuest()
 				&& !CaribouStonks.skyBlock().getSlayerManager().isInQuestWithBoss(SlayerType.SPIDER)
-				&& (slayerCocoonedWarningFeature != null && !slayerCocoonedWarningFeature.isCocoonedBoss())
-				// --end--
-				&& this.config().combat.cocoonedMob.cocoonedWarning;
+				&& this.config().combat.cocoonedMob.warning;
 	}
 
 	@Override
@@ -81,6 +86,7 @@ public class CocoonedWarningFeature extends Feature {
 		lastWorldChange = System.currentTimeMillis();
 		chain.clear();
 		cocoonPositions.clear();
+		cocoonLifeTicks.clear();
 	}
 
 	@EventHandler(event = "SkyBlockEvents.ISLAND_CHANGE_EVENT")
@@ -145,57 +151,101 @@ public class CocoonedWarningFeature extends Feature {
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	private void render(WorldRenderer renderer) {
-		for (BlockPos pos : cocoonPositions) {
-			final BlockPos finalPos = pos.immutable().offset(0, -4, 0);
-			renderer.submitBeaconBeam(finalPos, Colors.RED);
+		if (!isEnabled()) return;
+
+		if (!cocoonPositions.isEmpty()) {
+			for (BlockPos pos : cocoonPositions) {
+				final BlockPos finalPos = pos.immutable().offset(0, -4, 0);
+				renderer.submitBeaconBeam(finalPos, Colors.RED);
+			}
+		}
+
+		if (!cocoonLifeTicks.isEmpty()) {
+			for (Map.Entry<BlockPos, Long> entry : cocoonLifeTicks.entrySet()) {
+				final long finalTimeTick = entry.getValue();
+				// Suppression après 8s coté client, évite un text inutile entre 6.5s (server) et 8s (client)
+				if (finalTimeTick <= 0) continue;
+
+				Component message = Component.literal(
+						StonksUtils.DECIMAL_FORMAT.format(finalTimeTick / 20f) + "s"
+				).withStyle(getColorFromTicks(finalTimeTick));
+
+				Vec3 position = entry.getKey().getCenter().add(0, 2.1D, 0);
+				renderer.submitText(message, position, 2f, false);
+			}
+		}
+	}
+
+	@EventHandler(event = "NetworkEvents.SERVER_TICK")
+	private void onServerTick() {
+		if (cocoonLifeTicks.isEmpty()) return;
+
+		for (Map.Entry<BlockPos, Long> entry : cocoonLifeTicks.entrySet()) {
+			long lifeTick = entry.getValue();
+			if (lifeTick > 0) {
+				entry.setValue(--lifeTick); // -1
+			}
 		}
 	}
 
 	private void onMobCocooned(BlockPos pos) {
-		Client.sendMessageWithPrefix(Component.literal(configMessage.get()));
+		if (!isSlayerBossCocooned()) { // Avoir le system de Cocoon sans les alerts si le Slayer Boss est cocooned.
+			Client.sendMessageWithPrefix(Component.literal(configMessage.get()));
 
-		if (this.config().combat.cocoonedMob.cocoonedWarningSound) {
-			Client.playSound(SoundEvents.ELDER_GUARDIAN_CURSE, 1f, 1f);
+			if (this.config().combat.cocoonedMob.cocoonedWarningSound) {
+				Client.playSound(SoundEvents.ELDER_GUARDIAN_CURSE, 1f, 1f);
+			}
+
+			if (this.config().combat.cocoonedMob.cocoonedWarningTitle) {
+				Client.showTitle(Component.literal(configMessage.get()), 0, 27, 0);
+			}
 		}
 
-		if (this.config().combat.cocoonedMob.cocoonedWarningTitle) {
-			Client.showTitle(Component.literal(configMessage.get()), 0, 27, 0);
-		}
+		if (pos == null) return;
+		final BlockPos finalPos = pos;
 
-		if (pos != null && this.config().combat.cocoonedMob.cocoonedWarningBeam) {
+		if (this.config().combat.cocoonedMob.cocoonedWarningBeam) {
+			// Contrairement au "cocoonedWarningTime", le beam est moins gênant
+			// en cas de suppression prématuré, alors que les Time peuvent avoir un plus grand écart.
 			cocoonPositions.add(pos);
-			final BlockPos finalPos = pos;
-			TickScheduler.getInstance().runLater(() -> cocoonPositions.remove(finalPos), 4, TimeUnit.SECONDS);
+			TickScheduler.getInstance().runLater(() -> cocoonPositions.remove(finalPos), 3, TimeUnit.SECONDS);
+		}
+
+		if (this.config().combat.cocoonedMob.cocoonedWarningTime) {
+			// Si X mobs est cocooned au même endroit avant que le premier scheduler expire.
+			// T=0s  → put(pos, TICKS), schedule remove(pos) à T+8s
+			// T=3s  → put(pos, TICKS) (reset OK), schedule remove(pos) à T+10s
+			// T=8s  → 1er scheduler fire → remove(pos) ← supprime le 2ème timer prématurément
+			// T=10s → 2ème scheduler fire → no-op (déjà supprimé)
+			if (!cocoonLifeTicks.containsKey(pos)) {
+				// 8s pour rajouté en peu plus de 1s au life time des cocoons en cas de "gros" lag serveur.
+				TickScheduler.getInstance().runLater(() -> cocoonLifeTicks.remove(finalPos), 8, TimeUnit.SECONDS);
+			}
+			cocoonLifeTicks.put(pos, COCOON_LIFE_TIME_TICKS);
 		}
 	}
 
 	private boolean matchesCocoonCriteria(@NonNull ArmorStand as) {
-		if (CLIENT.player == null) {
-			return false;
-		}
-
-		// Si l'Armorstand est +/- au-dessus du joueur.
-		// C'est pour empêcher la détection des cocoons des Spiders Slayer des autres joueurs,
-		// Mais ça ne va pas bloquer complètement la détection.
-		// SIROZ-NOTE: a voir, mais peut être check aussi if Spider Den / Crimson Isle
-//		double deltaY = as.position().y() - CLIENT.player.position().y();
-//		if (deltaY >= MAX_Y_CHECK) {
-//			return false;
-//		}
-
-		if (as.isCustomNameVisible() || !as.hasItemInSlot(EquipmentSlot.HEAD)) {
-			return false;
-		}
-
+		if (CLIENT.player == null) return false;
+		if (as.isCustomNameVisible() || !as.hasItemInSlot(EquipmentSlot.HEAD)) return false;
+		// Récupère la texture si présente
 		String headTexture = ItemUtils.getHeadTexture(as.getItemBySlot(EquipmentSlot.HEAD));
-		if (headTexture.isBlank()) {
-			return false;
-		}
+		if (headTexture.isBlank()) return false;
+		// Check de la distance minimale
+		if (CLIENT.player.position().distanceToSqr(as.position()) > MAX_PLAYER_COCOON_DISTANCE_SQ) return false;
+		// Check de la texture
+		return headTexture.equals(HeadTextures.COCOON);
+	}
 
-		if (CLIENT.player.position().distanceToSqr(as.position()) > MAX_PLAYER_COCOON_DISTANCE_SQ) {
-			return false;
-		}
+	private boolean isSlayerBossCocooned() {
+		if (slayerCocoonedWarningFeature == null) return false;
+		return slayerCocoonedWarningFeature.isCocoonedBoss();
+	}
 
-		return headTexture.equals(HeadTextures.TARANTULA_COCOON);
+	private ChatFormatting getColorFromTicks(long ticks) {
+		if (ticks <= 20) return ChatFormatting.RED;
+		if (ticks <= 40) return ChatFormatting.GOLD;
+		if (ticks <= 60) return ChatFormatting.YELLOW;
+		return ChatFormatting.GREEN;
 	}
 }
