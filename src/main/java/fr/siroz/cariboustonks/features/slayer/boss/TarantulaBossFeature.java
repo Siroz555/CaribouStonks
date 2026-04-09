@@ -106,6 +106,6 @@ public class TarantulaBossFeature extends Feature {
 		String headTexture = ItemUtils.getHeadTexture(as.getItemBySlot(EquipmentSlot.HEAD));
 		if (headTexture.isBlank()) return false;
 
-		return headTexture.equals(HeadTextures.TARANTULA_COCOON);
+		return headTexture.equals(HeadTextures.COCOON);
 	}
 }

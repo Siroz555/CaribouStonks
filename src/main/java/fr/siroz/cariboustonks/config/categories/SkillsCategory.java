@@ -73,9 +73,9 @@ public class SkillsCategory extends AbstractCategory {
 										Component.literal(SPACE + " - Bloodshot on the Primordial Belt").withStyle(ChatFormatting.GOLD),
 										Component.literal(" - Slayer Minibosses").withStyle(ChatFormatting.RED),
 										Component.literal(SPACE + "Note: In rare cases, other players' cocoons that are too close to you may be detected.").withStyle(ChatFormatting.YELLOW)))
-								.binding(defaults.combat.cocoonedMob.cocoonedWarning,
-										() -> current.combat.cocoonedMob.cocoonedWarning,
-										newValue -> current.combat.cocoonedMob.cocoonedWarning = newValue)
+								.binding(defaults.combat.cocoonedMob.warning,
+										() -> current.combat.cocoonedMob.warning,
+										newValue -> current.combat.cocoonedMob.warning = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
@@ -94,6 +94,15 @@ public class SkillsCategory extends AbstractCategory {
 								.binding(defaults.combat.cocoonedMob.cocoonedWarningSound,
 										() -> current.combat.cocoonedMob.cocoonedWarningSound,
 										newValue -> current.combat.cocoonedMob.cocoonedWarningSound = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Cocooned Warning - Timer"))
+								.description(OptionDescription.of(
+										Component.literal("When a mob is Cocooned, show a Text as timer before the entity revive.")))
+								.binding(defaults.combat.cocoonedMob.cocoonedWarningTime,
+										() -> current.combat.cocoonedMob.cocoonedWarningTime,
+										newValue -> current.combat.cocoonedMob.cocoonedWarningTime = newValue)
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()

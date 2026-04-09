@@ -109,6 +109,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - Combat
     - Cocooned Warning: Allows you to be alerted when a mob has been cocooned.
       - _(works with The Primordial Belt & Bloodshot Reforge Stone)_
+      - Alerts, Sound, Timer and Beacon Beam.
     - Low health warning: Display a red screen when your health is low.
     - Ragnarock Axe:
         - Cast Title / Personalized message
