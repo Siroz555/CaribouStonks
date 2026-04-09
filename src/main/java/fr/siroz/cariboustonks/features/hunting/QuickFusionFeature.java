@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.core.component.KeybindComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
 import fr.siroz.cariboustonks.core.module.input.KeyBind;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.Objects;
@@ -28,7 +27,7 @@ public class QuickFusionFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && SkyBlockAPI.getIsland() == IslandType.GALATEA;
+		return SkyBlockAPI.isOnSkyBlock();
 	}
 
 	private void onFusionKey(Screen screen, Slot slot) {
