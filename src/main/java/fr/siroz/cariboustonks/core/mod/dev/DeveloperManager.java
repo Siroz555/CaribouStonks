@@ -9,7 +9,9 @@ import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
+import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
+import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtils;
@@ -36,6 +38,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -51,11 +54,13 @@ public final class DeveloperManager {
 	public DeveloperManager() {
 		CaribouStonks.LOGGER.warn("Debug mode enabled ({}) {}", SharedConstants.getCurrentVersion().name(), DeveloperTools.isSnapshot() ? "(Snapshot)" : "");
 		// Debug Renderer
-		new DebugRenderer(this);
+		DebugWorldRenderer renderer = new DebugWorldRenderer();
+		RenderEvents.WORLD_RENDER_EVENT.register(renderer::render);
 		// Events
 		ClientPlayConnectionEvents.JOIN.register(this::onPlayConnection);
 		WorldEvents.ALLOW_SOUND_EVENT.register(this::onSound);
 		NetworkEvents.PLAY_SOUND_PACKET.register(this::onSoundPacket);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::onWorldRender);
 		// Commands
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _) -> dispatcher.register(
 				ClientCommands.literal(CaribouStonks.NAMESPACE).then(ClientCommands.literal("devtools")
@@ -65,10 +70,6 @@ public final class DeveloperManager {
 						.then(dumpHeldItemCommand())
 						.then(dumpArmorStandHeadTextures()))
 		));
-	}
-
-	Object2IntMap<ArmorStand> getTexturedArmorStands() {
-		return texturedArmorStands;
 	}
 
 	@EventHandler(event = "ClientPlayConnectionEvents.JOIN")
@@ -101,6 +102,20 @@ public final class DeveloperManager {
 					.stripTrailingZeros()
 					.toPlainString();
 			Client.sendMessage(Component.literal("(Server) " + time + " :: " + soundId + " Pitch: " + pitch + " Volume: " + volume));
+		}
+	}
+
+	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
+	private void onWorldRender(WorldRenderer renderer) {
+		if (!texturedArmorStands.isEmpty()) {
+			for (Object2IntMap.Entry<ArmorStand> armorStand : texturedArmorStands.object2IntEntrySet()) {
+				ArmorStand entity = armorStand.getKey();
+				if (entity == null) continue;
+
+				Vec3 centerPos = entity.position();
+				renderer.submitText(Component.literal("#" + armorStand.getIntValue()),
+						centerPos.add(0, 1, 0), 1, true);
+			}
 		}
 	}
 
