@@ -6,6 +6,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.generic.GenericDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonManager;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
+import fr.siroz.cariboustonks.core.skyblock.tablist.TabListManager;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -30,6 +31,7 @@ public final class SkyBlockManager {
 
 	private final DungeonManager dungeonManager;
 	private final SlayerManager slayerManager;
+	private final TabListManager tabListManager;
 
 	public SkyBlockManager() {
 		// Data Sources
@@ -39,6 +41,7 @@ public final class SkyBlockManager {
 		// SkyBlock Managers
 		this.dungeonManager = new DungeonManager();
 		this.slayerManager = new SlayerManager();
+		this.tabListManager = new TabListManager();
 
 		// General Tick Scheduler for the SkyBlock API
 		TickScheduler.getInstance().runRepeating(SkyBlockAPI::handleInternalUpdate, 3, TimeUnit.SECONDS);
@@ -91,6 +94,15 @@ public final class SkyBlockManager {
 	 */
 	public SlayerManager getSlayerManager() {
 		return slayerManager;
+	}
+
+	/**
+	 * Retrieves the {@link TabListManager} instance.
+	 *
+	 * @return {@link TabListManager} instance
+	 */
+	public TabListManager getTabListManager() {
+		return tabListManager;
 	}
 
 	@EventHandler(event = "ClientPlayConnectionEvents.DISCONNECT")

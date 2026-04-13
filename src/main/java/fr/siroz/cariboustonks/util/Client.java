@@ -19,7 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.ErrorScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -59,7 +58,6 @@ public final class Client {
 
 	private static final SystemToast.SystemToastId STONKS_SYSTEM = new SystemToast.SystemToastId(10000L); // 10000L
 	private static final List<String> STRING_SCOREBOARD = new ArrayList<>();
-	private static final List<String> STRING_TAB = new ArrayList<>();
 
 	private Client() {
 	}
@@ -152,16 +150,6 @@ public final class Client {
 	 */
 	public static @NonNull List<String> getScoreboard() {
 		return new ArrayList<>(STRING_SCOREBOARD);
-	}
-
-	/**
-	 * Retrieves the current tab list lines.
-	 *
-	 * @return the current tab list lines
-	 */
-	@SuppressWarnings("unused")
-	public static @NonNull List<String> getTabList() {
-		return new ArrayList<>(STRING_TAB);
 	}
 
 	/**
@@ -608,7 +596,6 @@ public final class Client {
 
 	public static void handleUpdates() {
 		updateScoreboard();
-		updateTabList();
 	}
 
 	private static void updateScoreboard() {
@@ -646,37 +633,6 @@ public final class Client {
 			STRING_SCOREBOARD.addAll(stringLines);
 			if (SkyBlockAPI.isOnSkyBlock()) {
 				ClientEvents.SCOREBOARD_UPDATE_EVENT.invoker().onUpdate(STRING_SCOREBOARD);
-			}
-		} catch (Exception _) {
-		}
-	}
-
-	private static void updateTabList() {
-		try {
-			STRING_TAB.clear();
-
-			if (CLIENT.getConnection() == null) {
-				return;
-			}
-
-			List<String> stringLines = new ArrayList<>();
-			for (PlayerInfo playerListEntry : CLIENT.getConnection().getOnlinePlayers()) {
-				if (playerListEntry.getTabListDisplayName() == null) {
-					continue;
-				}
-
-				String name = playerListEntry.getTabListDisplayName().getString();
-				if (name.isEmpty() || name.startsWith("[")) {
-					continue;
-				}
-
-				//String formatted = StonksUtils.strip(name); // ?
-				stringLines.add(name);
-			}
-
-			STRING_TAB.addAll(stringLines);
-			if (SkyBlockAPI.isOnSkyBlock()) {
-				ClientEvents.TAB_LIST_UPDATE_EVENT.invoker().onUpdate(STRING_TAB);
 			}
 		} catch (Exception _) {
 		}

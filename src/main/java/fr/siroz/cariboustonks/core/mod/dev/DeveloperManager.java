@@ -7,6 +7,8 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.service.json.GsonProvider;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.tablist.TabLine;
+import fr.siroz.cariboustonks.core.skyblock.tablist.TabWidget;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
@@ -66,6 +68,7 @@ public final class DeveloperManager {
 				ClientCommands.literal(CaribouStonks.NAMESPACE).then(ClientCommands.literal("devtools")
 						.then(dumpSoundCommand())
 						.then(dumpMayorCommand())
+						.then(dumpTabListCommand())
 						.then(dumpHeldItemSimpleCommand())
 						.then(dumpHeldItemCommand())
 						.then(dumpArmorStandHeadTextures()))
@@ -191,6 +194,20 @@ public final class DeveloperManager {
 					: "NULL";
 			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("--")));
 			ctx.getSource().sendFeedback(Component.literal(str));
+			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("--")));
+			return Command.SINGLE_SUCCESS;
+		});
+	}
+
+	private LiteralArgumentBuilder<FabricClientCommandSource> dumpTabListCommand() {
+		return ClientCommands.literal("dumpTabList").executes(ctx -> {
+			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("-- DUMP TAB --")));
+			for (TabWidget widget : CaribouStonks.skyBlock().getTabListManager().getWidgetView()) {
+				ctx.getSource().sendFeedback(widget.getHeader().component());
+				for (TabLine line : widget.getLines()) {
+					ctx.getSource().sendFeedback(line.component());
+				}
+			}
 			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("--")));
 			return Command.SINGLE_SUCCESS;
 		});
