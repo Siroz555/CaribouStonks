@@ -112,6 +112,12 @@ public abstract class Feature {
 	}
 
 	/**
+	 * Called every second from client side.
+	 */
+	protected void onSecondPassed() {
+	}
+
+	/**
 	 * Provides the feature's canonical short name.
 	 * <p>
 	 * Automatically strips the "Feature" suffix from the class name

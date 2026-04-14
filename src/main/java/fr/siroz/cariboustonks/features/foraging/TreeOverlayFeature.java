@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.features.foraging;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -9,7 +8,6 @@ import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.util.Client;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -34,7 +32,6 @@ public class TreeOverlayFeature extends Feature {
 	private Component currentInfo = null;
 
 	public TreeOverlayFeature() {
-		TickScheduler.getInstance().runRepeating(this::update, 1, TimeUnit.SECONDS);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorstandUpdate);
 	}
 
@@ -50,7 +47,8 @@ public class TreeOverlayFeature extends Feature {
 		reset();
 	}
 
-	private void update() {
+	@Override
+	protected void onSecondPassed() {
 		if (CLIENT.player == null || CLIENT.level == null) return;
 		if (!isEnabled()) return;
 

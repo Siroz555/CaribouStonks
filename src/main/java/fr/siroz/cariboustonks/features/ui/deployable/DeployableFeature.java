@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
 import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
-import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -18,7 +17,6 @@ import fr.siroz.cariboustonks.util.ItemUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,7 +38,6 @@ public class DeployableFeature extends Feature {
 	public DeployableFeature() {
 		this.hudBuilder = new HudElementBuilder();
 
-		TickScheduler.getInstance().runRepeating(this::updateDeployables, 1, TimeUnit.SECONDS);
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
 		WorldEvents.ARMORSTAND_REMOVE_EVENT.register(this::onRemoveArmorStand);
 
@@ -69,7 +66,8 @@ public class DeployableFeature extends Feature {
 		trackedDeployables.clear();
 	}
 
-	private void updateDeployables() {
+	@Override
+	protected void onSecondPassed() {
 		if (CLIENT.player == null || CLIENT.level == null) return;
 		if (trackedDeployables.isEmpty()) return;
 		if (!isEnabled()) return;
