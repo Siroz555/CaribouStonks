@@ -58,7 +58,6 @@ public class TabListWidgetExtractorFeature extends Feature {
 								.append(Component.literal("§e§lBestiary:"))
 								.append(Component.literal(" §fGhost 15: §b§lMAX"))
 								.append(Component.literal(" §fLittlefoot 14: §b84/100"))
-								.append(Component.literal("------"))
 								.build(),
 						this::getHudLines,
 						this.config().uiAndVisuals.tabListWidget.hud,
@@ -107,7 +106,8 @@ public class TabListWidgetExtractorFeature extends Feature {
 				CaribouStonks.skyBlock()
 						.getTabListManager()
 						.get(name)
-						.ifPresent(w -> currentWidgets.put(name, w)); // else? a voir pour le delete ?
+						.ifPresent(widget -> currentWidgets.put(name, widget));
+				// SIROZ-NOTE: ifPresentOrElse, a voir pour le delete ?
 			}
 		}
 	}
