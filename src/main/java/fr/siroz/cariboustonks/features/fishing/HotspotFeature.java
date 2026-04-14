@@ -43,7 +43,6 @@ public class HotspotFeature extends Feature {
 	private boolean bobberInHotspot = false;
 
 	public HotspotFeature() {
-		TickScheduler.getInstance().runRepeating(this::update, 1, TimeUnit.SECONDS);
 		TickScheduler.getInstance().runRepeating(this::updateBobber, 500, TimeUnit.MILLISECONDS);
 		RenderEvents.WORLD_RENDER_EVENT.register(this::onWorldRender);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticleReceived);
@@ -66,7 +65,8 @@ public class HotspotFeature extends Feature {
 		reset();
 	}
 
-	private void update() {
+	@Override
+	protected void onSecondPassed() {
 		if (!isEnabled() || CLIENT.player == null || CLIENT.level == null) return;
 
 		ItemStack item = Client.getHeldItem();

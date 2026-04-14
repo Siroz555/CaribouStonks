@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.core.feature;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.annotation.Experimental;
+import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.features.chat.ChatColorationFeature;
 import fr.siroz.cariboustonks.features.chat.ChatPositionFeature;
 import fr.siroz.cariboustonks.features.chat.CopyChatMessageFeature;
@@ -71,6 +72,7 @@ import fr.siroz.cariboustonks.features.waypoints.WaypointFeature;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import org.jspecify.annotations.NonNull;
@@ -204,6 +206,11 @@ public final class FeatureManager {
 				feature.onClientJoinServer();
 			}
 		});
+		TickScheduler.getInstance().runRepeating(() -> {
+			for (Feature feature : FEATURE_INSTANCES.values()) {
+				feature.onSecondPassed();
+			}
+		}, 1, TimeUnit.SECONDS);
 	}
 
 	private void warnIfExperimental(@NonNull Feature feature) {

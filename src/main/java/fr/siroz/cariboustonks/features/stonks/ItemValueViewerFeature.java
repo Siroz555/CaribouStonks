@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.ChatFormatting;
@@ -68,12 +66,16 @@ public class ItemValueViewerFeature extends Feature {
 			ScreenEvents.afterRender(screen).register(this::render);
 			ScreenEvents.remove(screen).register(_s -> this.reset(true));
 		});
-		TickScheduler.getInstance().runRepeating(() -> this.reset(false), 1, TimeUnit.SECONDS);
 	}
 
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.itemValueViewer.enabled;
+	}
+
+	@Override
+	protected void onSecondPassed() {
+		reset(false);
 	}
 
 	@EventHandler(event = "GuiEvents.POST_TOOLTIP_EVENT")
