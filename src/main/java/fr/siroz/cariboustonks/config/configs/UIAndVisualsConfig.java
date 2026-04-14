@@ -27,6 +27,9 @@ public class UIAndVisualsConfig {
 	public MobTracking mobTracking = new MobTracking();
 
 	@SerialEntry
+	public TabListWidget tabListWidget = new TabListWidget();
+
+	@SerialEntry
 	public ObjectOpenHashSet<String> favoriteAbiphoneContacts = new ObjectOpenHashSet<>();
 
 	@SerialEntry
@@ -191,6 +194,83 @@ public class UIAndVisualsConfig {
 			@Override
 			public boolean shouldRender() {
 				return this.showInHud;
+			}
+		}
+	}
+
+	public static class TabListWidget {
+
+		@SerialEntry
+		public HudPositioner hud = new HudPositioner();
+
+		@SerialEntry
+		public String customWidgets = "";
+
+		@SerialEntry
+		public boolean pickaxeAbility = true;
+
+		@SerialEntry
+		public boolean bestiary = false;
+
+		@SerialEntry
+		public boolean slayer = false;
+
+		@SerialEntry
+		public boolean pet = false;
+
+		@SerialEntry
+		public boolean pity = false;
+
+		@SerialEntry
+		public boolean commissions = false;
+
+		public static class HudPositioner implements HudConfig {
+
+			@SerialEntry
+			public boolean enabled = false;
+
+			@SerialEntry
+			public int x = 10;
+
+			@SerialEntry
+			public int y = 50;
+
+			@SerialEntry
+			public float scale = 1f;
+
+			@Override
+			public int x() {
+				return this.x;
+			}
+
+			@Override
+			public void setX(int x) {
+				this.x = x;
+			}
+
+			@Override
+			public int y() {
+				return this.y;
+			}
+
+			@Override
+			public void setY(int y) {
+				this.y = y;
+			}
+
+			@Override
+			public float scale() {
+				return this.scale;
+			}
+
+			@Override
+			public void setScale(float scale) {
+				this.scale = scale;
+			}
+
+			@Override
+			public boolean shouldRender() {
+				return this.enabled;
 			}
 		}
 	}

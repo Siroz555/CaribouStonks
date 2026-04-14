@@ -73,7 +73,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - Deployable:
     - Display all active Deployable in a HUD with their respective timer.
     - Individual detection config.
-    - Power Orbs (Plasmaflux, Umberella, Will-o'-wisp, ..)
+    - Power Orbs (Plasmaflux, Umberella, Will-o'-wisp, ...)
     - Flares (BETA) (Alert Flare, SOS Flare)
     - Personal (Black Hole)
 - Mob Tracking:
@@ -84,6 +84,10 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Alert when a mob is detected near you.
     - Applies the Glowing effect with a customizable color.
     - Dedicated menu for configuring each Mob.
+- TabList Widgets Extractor (BETA):
+    - Allows you to extract Widgets from the TabList and display them as a HUD.
+    - Add custom Widgets.
+    - Add predefined Widgets (Bestiary, Slayer, Pickaxe Ability, Commissions...)
 - Highlight selected Pet in the Pet Menu.
 - Create & highlight favorite contacts in the Abiphone Menu
 - Create and customize Waypoints.
