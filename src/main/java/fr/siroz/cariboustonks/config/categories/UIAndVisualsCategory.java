@@ -11,6 +11,7 @@ import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.screens.HudConfigScreen;
 import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
+import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import java.awt.Color;
 import net.minecraft.ChatFormatting;
@@ -212,6 +213,95 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.name(Component.literal("Configure each tracked mob"))
 								.text(Component.literal("Open"))
 								.action((screen, opt) -> Minecraft.getInstance().setScreen(MobTrackingScreen.create(screen)))
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Component.literal("TabList Widgets Extractor").withStyle(ChatFormatting.BOLD))
+						.description(OptionDescription.of(
+								Component.literal("Widgets Extractor")))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Enable Widgets Extractor"))
+								.description(OptionDescription.of(
+										Component.literal("Allows you to extract widgets from the TabList and display them as a HUD."),
+										Component.literal("Check each widget below, and make sure to enable the widgets on the islands whenever you want using /widgets"),
+										Component.literal(SPACE + "Currently, the HUD display is a single view; if multiple widgets are enabled, they will all be displayed one after another.").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.uiAndVisuals.tabListWidget.hud.enabled,
+										() -> current.uiAndVisuals.tabListWidget.hud.enabled,
+										newValue -> {
+											current.uiAndVisuals.tabListWidget.hud.enabled = newValue;
+											if (newValue) {
+												Client.sendMessageWithPrefix(Component.literal("[Widgets Extractor] Currently, the HUD display is a single view; if multiple widgets are enabled, they will all be displayed one after another.").withStyle(ChatFormatting.RED));
+												Client.sendMessageWithPrefix(Component.literal("[Widgets Extractor] You must enable or disable widgets on each desired Island via /widgets").withStyle(ChatFormatting.GOLD));
+											}
+										})
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<String>createBuilder()
+								.name(Component.literal("Add custom Widgets"))
+								.description(OptionDescription.of(
+										Component.literal("Allows you to add custom widgets."),
+										Component.literal("Enter the widget name, followed by a §f§lcomma (,) §r§fto add additional names if you want multiple widgets. Leave this field blank if you don't want custom widgets."),
+										Component.literal(SPACE + "§f§lFor example: §dJacob's Contest, Event Tracker"),
+										Component.literal(SPACE + "§eNames are displayed in bold before the “:”, such as “§d§nJacob's Contest§r§e: 1m 16s”")))
+								.binding(defaults.uiAndVisuals.tabListWidget.customWidgets,
+										() -> current.uiAndVisuals.tabListWidget.customWidgets,
+										newValue -> current.uiAndVisuals.tabListWidget.customWidgets = newValue)
+								.controller(StringControllerBuilder::create)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Widget > Bestiary"))
+								.description(OptionDescription.of(
+										Component.literal("")))
+								.binding(defaults.uiAndVisuals.tabListWidget.bestiary,
+										() -> current.uiAndVisuals.tabListWidget.bestiary,
+										newValue -> current.uiAndVisuals.tabListWidget.bestiary = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Widget > Slayer"))
+								.description(OptionDescription.of(
+										Component.literal("")))
+								.binding(defaults.uiAndVisuals.tabListWidget.slayer,
+										() -> current.uiAndVisuals.tabListWidget.slayer,
+										newValue -> current.uiAndVisuals.tabListWidget.slayer = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Widget > Pet"))
+								.description(OptionDescription.of(
+										Component.literal("")))
+								.binding(defaults.uiAndVisuals.tabListWidget.pet,
+										() -> current.uiAndVisuals.tabListWidget.pet,
+										newValue -> current.uiAndVisuals.tabListWidget.pet = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Widget > Pickaxe Ability"))
+								.description(OptionDescription.of(
+										Component.literal("")))
+								.binding(defaults.uiAndVisuals.tabListWidget.pickaxeAbility,
+										() -> current.uiAndVisuals.tabListWidget.pickaxeAbility,
+										newValue -> current.uiAndVisuals.tabListWidget.pickaxeAbility = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Widget > Pity"))
+								.description(OptionDescription.of(
+										Component.literal("")))
+								.binding(defaults.uiAndVisuals.tabListWidget.pity,
+										() -> current.uiAndVisuals.tabListWidget.pity,
+										newValue -> current.uiAndVisuals.tabListWidget.pity = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Widget > Commissions"))
+								.description(OptionDescription.of(
+										Component.literal("")))
+								.binding(defaults.uiAndVisuals.tabListWidget.commissions,
+										() -> current.uiAndVisuals.tabListWidget.commissions,
+										newValue -> current.uiAndVisuals.tabListWidget.commissions = newValue)
+								.controller(this::createYesNoController)
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
