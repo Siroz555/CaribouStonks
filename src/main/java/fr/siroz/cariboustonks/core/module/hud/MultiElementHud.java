@@ -70,7 +70,12 @@ public final class MultiElementHud extends Hud {
 
 	@Override
 	public void renderScreen(GuiGraphics context) {
-		render(defaultText, context, x(), y(), scale());
+		// SIROZ-NOTE: Le check se fait uniquement via l'option de la config,
+		//  pas dans le supplier de chaque hud pour éviter les checks interne aux features.
+		//  A prendre ou a laisser, possible de rajouté une option dans UI & Visuals pour ceux qui veulent.
+		if (hudConfig.shouldRender()) {
+			render(defaultText, context, x(), y(), scale());
+		}
 	}
 
 	@Override
