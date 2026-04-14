@@ -18,6 +18,9 @@ public class UIAndVisualsConfig {
 	public boolean highlightSelectedPet = false;
 
 	@SerialEntry
+	public boolean abiphoneFavoriteContacts = true;
+
+	@SerialEntry
 	public Deployables deployables = new Deployables();
 
 	@SerialEntry

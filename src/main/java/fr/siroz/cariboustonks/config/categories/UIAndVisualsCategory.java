@@ -57,6 +57,15 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								newValue -> current.uiAndVisuals.highlightSelectedPet = newValue)
 						.controller(this::createBooleanController)
 						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Abiphone Favorite Contacts"))
+						.description(OptionDescription.of(
+								Component.literal("Create and highlight contacts in your Abiphone Menu.")))
+						.binding(defaults.uiAndVisuals.abiphoneFavoriteContacts,
+								() -> current.uiAndVisuals.abiphoneFavoriteContacts,
+								newValue -> current.uiAndVisuals.abiphoneFavoriteContacts = newValue)
+						.controller(this::createBooleanController)
+						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Deployable").withStyle(ChatFormatting.BOLD))
 						.description(OptionDescription.of(

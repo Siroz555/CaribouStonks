@@ -65,7 +65,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 						if (isContact(itemStack)) {
 							String name = StonksUtils.stripColor(itemStack.getHoverName().getString());
 							if (this.config().uiAndVisuals.favoriteAbiphoneContacts.contains(name)) {
-								highlights.add(ColorHighlight.yellow(slotIndex, 0.25f));
+								highlights.add(ColorHighlight.yellow(slotIndex, 0.35f));
 							}
 						}
 					});
@@ -76,7 +76,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock();
+		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.abiphoneFavoriteContacts;
 	}
 
 	@EventHandler(event = "GuiEvents.SCREEN_KEY_PRESS_EVENT")
