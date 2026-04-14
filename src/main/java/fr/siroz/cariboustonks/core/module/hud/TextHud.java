@@ -41,7 +41,9 @@ public final class TextHud extends Hud {
 
 	@Override
 	public void renderScreen(GuiGraphicsExtractor guiGraphics) {
-		render(defaultText, guiGraphics, x(), y(), scale());
+		if (hudConfig.shouldRender()) {
+			render(defaultText, guiGraphics, x(), y(), scale());
+		}
 	}
 
 	@Override
