@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.features.stonks;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -42,7 +40,6 @@ import org.jspecify.annotations.Nullable;
  * The Skyhanni Mod in 1.8 introduced this feature. A wonderful idea!
  * Here, it's roughly the same principle, except that the backend is completely different.
  */
-@Experimental
 public class ItemValueViewerFeature extends Feature {
 
 	private static final int PADDING_LEFT = 20;
@@ -52,9 +49,6 @@ public class ItemValueViewerFeature extends Feature {
 	private static final int MAX_ENCHANT_DISPLAY = 5;
 	private static final String ARROW = "⤷";
 	private static final String[] MASTER_STARS_CIRCLED = {"➊", "➋", "➌", "➍", "➎"};
-
-	private final BooleanSupplier configUseNetworth =
-			() -> this.config().general.stonks.useNetworthItemValue;
 
 	@Nullable
 	private ItemStack currentItem = null;
@@ -116,8 +110,10 @@ public class ItemValueViewerFeature extends Feature {
 
 	private void updateForItem(@NonNull ItemStack item) {
 		try {
-			ItemValueResult result = ItemValueCalculator.getInstance()
-					.calculateValue(SkyblockItemStack.of(item), configUseNetworth.getAsBoolean());
+			ItemValueResult result = ItemValueCalculator.getInstance().calculateValue(
+					SkyblockItemStack.of(item),
+					this.config().general.stonks.useNetworthItemValue
+			);
 
 			// Pas d'accès a l'API ou bien les NBT de l'item sont invalides
 			if (result.base() < 1 && result.price() < 1 && result.calculations().isEmpty()) {
@@ -125,7 +121,7 @@ public class ItemValueViewerFeature extends Feature {
 				return;
 			}
 			// Si c'est globalement un Enchanted Book ou un item avec un prix unique du Bazaar ou de l'Auction
-			if (result.calculations().size() < 2) {
+			if (result.calculations().isEmpty()) {
 				lines.clear();
 				return;
 			}

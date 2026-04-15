@@ -505,6 +505,9 @@ public final class ItemValueCalculator {
 
 	private @NonNull PriceComponent masterStars() {
 		return (ctx, acc) -> {
+			// Les upgrades costs via Hypixel API au lieu de check les Kuudra Armors maybe
+			if (CalculatorConstants.PRESTIGES.containsKey(ctx.skyBlockId())) return ComponentDecision.CONTINUE;
+
 			int dungeonItemLevel = ctx.metadata().modifiers().dungeonItemLevel().orElse(0);
 			int upgradeLevel = ctx.metadata().modifiers().upgradeLevel();
 			if (dungeonItemLevel > 5 || upgradeLevel > 5) {
