@@ -124,7 +124,7 @@ public class TabListWidgetExtractorFeature extends Feature {
 			for (TabLine line : widget.getLines()) {
 				hudBuilder.appendLine(line.component());
 			}
-			hudBuilder.appendSpace();
+			hudBuilder.appendLine(Component.empty());
 		}
 
 		return hudBuilder.build();
