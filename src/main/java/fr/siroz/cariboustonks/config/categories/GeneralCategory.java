@@ -195,11 +195,10 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Estimated Item Value Viewer").append(BETA))
+								.name(Component.literal("Estimated Item Value Viewer"))
 								.description(OptionDescription.of(
 										Component.literal("Displays the detailed summary of an item's value when you hover over it."),
-										Component.literal(SPACE + "Displays all details of the item's value on the side of the inventory."),
-										Component.literal(SPACE + "This viewer is in BETA phase.").withStyle(ChatFormatting.YELLOW)))
+										Component.literal(SPACE + "Displays all details of the item's value on the side of the inventory.")))
 								.binding(defaults.general.stonks.itemValueViewer.enabled,
 										() -> current.general.stonks.itemValueViewer.enabled,
 										newValue -> current.general.stonks.itemValueViewer.enabled = newValue)
