@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.core.module.cooldown;
 
-import fr.siroz.cariboustonks.util.TimeUtils;
 import java.util.OptionalLong;
 import java.util.concurrent.TimeUnit;
 import org.jspecify.annotations.NonNull;
@@ -53,14 +52,14 @@ public interface Cooldown {
 	 * @return the elapsed time
 	 */
 	default long elapsed() {
-		return TimeUtils.nowMillis() - getLastTested().orElse(0);
+		return System.currentTimeMillis() - getLastTested().orElse(0);
 	}
 
 	/**
 	 * Resets the cooldown
 	 */
 	default void reset() {
-		setLastTested(TimeUtils.nowMillis());
+		setLastTested(System.currentTimeMillis());
 	}
 
 	/**

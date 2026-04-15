@@ -8,8 +8,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jspecify.annotations.NonNull;
@@ -19,8 +17,11 @@ public final class TimeUtils {
 	private static final Locale LOCALE = Locale.getDefault();
 	private static final ZoneId ZONE_ID = ZoneId.systemDefault();
 
-	private static final Pattern TIME_PATTERN = Pattern.compile(
-			"(\\d+)d?|([01]?\\d|2[0-3])h?|([0-5]?\\d)m?|([0-5]?\\d)s?"
+	/**
+	 * | => 10s | => 50m 10s | => 16h 50m 10s | => 4d 16h 50m 10s
+	 */
+	public static final Pattern TIME_PATTERN = Pattern.compile(
+			"(?:(\\d+)d)?\\s*(?:(\\d+)h)?\\s*(?:(\\d+)m)?\\s*(?:(\\d+)s)?"
 	);
 
 	/**
@@ -63,59 +64,25 @@ public final class TimeUtils {
 	}
 
 	/**
-	 * Gets the current unix time in milliseconds.
+	 * Extracts the {@link Duration} from the given input ({@link TimeUtils#TIME_PATTERN})
+	 * <p>
+	 * Input: 4d 16h 50m 10s => Duration: 4d 16h 50m 10s
 	 *
-	 * @return the current unix time
+	 * @param input the input String
+	 * @return the Duration result {@code or} {@link Duration#ZERO}
 	 */
-	public static long nowMillis() {
-		return System.currentTimeMillis();
-	}
-
-	/**
-	 * Gets the difference between {@link Instant#now()} and another instant.
-	 *
-	 * @param other the other instant
-	 * @return the difference
-	 */
-	public static Duration diffToNow(Instant other) {
-		return Duration.between(Instant.now(), other).abs();
-	}
-
-	/**
-	 * Gets a {@link Duration} for a {@link TimeUnit} and amount.
-	 *
-	 * @param unit   the unit
-	 * @param amount the amount
-	 * @return the duration
-	 */
-	public static Duration duration(@NonNull TimeUnit unit, long amount) {
-		return switch (unit) {
-			case NANOSECONDS -> Duration.ofNanos(amount);
-			case MICROSECONDS -> Duration.ofNanos(TimeUnit.MICROSECONDS.toNanos(amount));
-			case MILLISECONDS -> Duration.ofMillis(amount);
-			case SECONDS -> Duration.ofSeconds(amount);
-			case MINUTES -> Duration.ofMinutes(amount);
-			case HOURS -> Duration.ofHours(amount);
-			case DAYS -> Duration.ofDays(amount);
-		};
-	}
-
-	public static Optional<Instant> parseToInstant(@NonNull String input) {
-		Duration duration = Duration.ZERO;
+	public static Duration extractDuration(@NonNull String input) {
 		Matcher matcher = TIME_PATTERN.matcher(input);
-
-		while (matcher.find()) {
-			if (matcher.group(1) != null) duration = duration.plusDays(Long.parseLong(matcher.group(1)));
-			if (matcher.group(2) != null) duration = duration.plusHours(Long.parseLong(matcher.group(2)));
-			if (matcher.group(3) != null) duration = duration.plusMinutes(Long.parseLong(matcher.group(3)));
-			if (matcher.group(4) != null) duration = duration.plusSeconds(Long.parseLong(matcher.group(4)));
+		if (!matcher.find()) return Duration.ZERO;
+		try {
+			long days = matcher.group(1) != null ? Long.parseLong(matcher.group(1)) : 0;
+			long hours = matcher.group(2) != null ? Long.parseLong(matcher.group(2)) : 0;
+			long minutes = matcher.group(3) != null ? Long.parseLong(matcher.group(3)) : 0;
+			long seconds = matcher.group(4) != null ? Long.parseLong(matcher.group(4)) : 0;
+			return Duration.ofDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
+		} catch (Exception _) {
+			return Duration.ZERO;
 		}
-
-		if (duration.isZero() || duration.isNegative()) {
-			return Optional.empty();
-		}
-
-		return Optional.of(Instant.now().plus(duration));
 	}
 
 	/**
@@ -228,29 +195,6 @@ public final class TimeUtils {
 	 * <p>
 	 * Note: if the time difference is negative, "?" is returned
 	 * <p>
-	 * Duration formatted output:
-	 * <pre>
-	 *     "14s"
-	 *     "1m 6s"
-	 *     "6h 42m 12s"
-	 *     "1d 18h 42m 16s"
-	 * </pre>
-	 *
-	 * @param now   the now time
-	 * @param after the after time
-	 * @return the formatted string
-	 * @see #getDurationFormatted(Instant, Instant, boolean)
-	 */
-	public static @NonNull String getDurationFormatted(@NonNull Instant now, @NonNull Instant after) {
-		return getDurationFormatted(now, after, false);
-	}
-
-	/**
-	 * Returns a string formatted with the time difference between
-	 * now {@link Instant} and the after {@link Instant}.
-	 * <p>
-	 * Note: if the time difference is negative, "?" is returned
-	 * <p>
 	 * If the boolean parameter {@code all} is set to true, all time parts are returned.
 	 * <p>
 	 * Duration formatted output:
@@ -296,17 +240,5 @@ public final class TimeUtils {
 		} else {
 			return "?";
 		}
-	}
-
-	public static @NonNull String getSimpleTime(int seconds) {
-		if (seconds >= 3600) return "> 1h";
-
-		int sec = seconds % 60;
-		int min = (seconds / 60) % 60;
-
-		String strSec = (sec < 10) ? "0" + sec : Integer.toString(sec);
-		String strMin = (min < 10) ? "0" + min : Integer.toString(min);
-
-		return strMin + ":" + strSec;
 	}
 }
