@@ -11,6 +11,9 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -22,6 +25,7 @@ public class ReminderScreen extends CaribousStonksScreen {
     @Nullable
     private final Screen parent;
     protected List<Pair<ReminderComponent, TimedObjectModel>> reminders;
+    private Button createButton;
     private Button optionButton;
 
     private ReminderScreen(@Nullable Screen parent) {
@@ -38,14 +42,25 @@ public class ReminderScreen extends CaribousStonksScreen {
     protected void onInit() {
         addRenderableWidget(new ReminderListWidget(this.minecraft, this, this.width, this.height - 112, 40, 36));
 
-        this.optionButton = addRenderableWidget(Button.builder(Component.literal("Options"), (b) -> {
+		GridLayout grid = new GridLayout();
+		grid.defaultCellSetting().paddingHorizontal(5).paddingVertical(2);
 
-        }).bounds(this.width / 2 - 154, this.height - 38, 150, 20).build());
+		GridLayout.RowHelper adder = grid.createRowHelper(2);
+		createButton = adder.addChild(Button.builder(Component.literal("Create custom Reminder"), _b -> {
 
-        addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, (b) -> setScreen(parent))
-                .bounds(this.width / 2 + 4, this.height - 38, 150, 20).build());
+		}).tooltip(Tooltip.create(Component.literal("3-5 Business days"))).build());
 
-        this.itemSelected(null);
+		optionButton = adder.addChild(Button.builder(Component.literal("Options"), _b -> {
+
+		}).tooltip(Tooltip.create(Component.literal("3-5 Business days"))).build());
+
+		adder.addChild(Button.builder(CommonComponents.GUI_DONE, _b -> close()).width(310).build(), 2);
+
+		grid.arrangeElements();
+		FrameLayout.centerInRectangle(grid, 0, this.height - 64, this.width, 64);
+		grid.visitWidgets(this::addRenderableWidget);
+
+		this.itemSelected(null);
     }
 
     @Override
@@ -56,20 +71,18 @@ public class ReminderScreen extends CaribousStonksScreen {
 
     @Override
     public void close() {
-        setScreen(parent);
-    }
-
-    private void setScreen(Screen screen) {
-		minecraft.setScreen(screen);
+		minecraft.setScreen(parent);
     }
 
     public void itemSelected(Object o) {
-        if (o == null) {
-            this.optionButton.setMessage(Component.literal("Options"));
-            this.optionButton.active = false;
-        } else {
-            this.optionButton.setMessage(Component.literal("Options"));
-            this.optionButton.active = true;
-        }
+		createButton.active = false;
+		optionButton.active = false;
+//        if (o == null) {
+//            this.optionButton.setMessage(Component.literal("Options"));
+//            this.optionButton.active = false;
+//        } else {
+//            this.optionButton.setMessage(Component.literal("Options"));
+//            this.optionButton.active = true;
+//        }
     }
 }
