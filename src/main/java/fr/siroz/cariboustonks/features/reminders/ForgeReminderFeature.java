@@ -13,12 +13,12 @@ import fr.siroz.cariboustonks.systems.ReminderSystem;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.CodecUtils;
 import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.TimeUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -33,9 +33,6 @@ public final class ForgeReminderFeature extends Feature {
 	private static final Pattern TITLE_PATTERN = Pattern.compile("^The Forge");
 	private static final String REMINDER_TYPE = "FORGE_ITEM";
     private static final ItemStack ICON = new ItemStack(Items.FURNACE);
-	private static final Pattern TIME_PATTERN = Pattern.compile(
-			"(?:(\\d+)d)?\\s*(?:(\\d+)h)?\\s*(?:(\\d+)m)?\\s*(?:(\\d+)s)?"
-	);
 
 	public ForgeReminderFeature() {
 		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)
@@ -74,7 +71,7 @@ public final class ForgeReminderFeature extends Feature {
 				.append(text)
 				.append(Component.literal(" was ended!").withStyle(ChatFormatting.GREEN));
 
-        Client.sendMessageWithPrefix(message );
+        Client.sendMessageWithPrefix(message);
         Client.showNotification(notification, ICON);
 		if (this.config().general.reminders.playSound) {
 			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
@@ -92,7 +89,7 @@ public final class ForgeReminderFeature extends Feature {
 				String lore = ItemUtils.getLoreLineIf(itemStack, s -> s.contains("Time"));
 				if (lore == null) continue;
 
-				Duration duration = extractDuration(lore.replace("Time Remaining: ", ""));
+				Duration duration = TimeUtils.extractDuration(lore.replace("Time Remaining: ", ""));
 				if (duration.isZero()) continue;
 
 				String text = CodecUtils.textToJson(itemStack.getHoverName())
@@ -112,19 +109,5 @@ public final class ForgeReminderFeature extends Feature {
 		}
 
 		return highlights;
-	}
-
-	private Duration extractDuration(String input) {
-		Matcher matcher = TIME_PATTERN.matcher(input);
-		if (!matcher.find()) return Duration.ZERO;
-		try {
-			long days = matcher.group(1) != null ? Long.parseLong(matcher.group(1)) : 0;
-			long hours = matcher.group(2) != null ? Long.parseLong(matcher.group(2)) : 0;
-			long minutes = matcher.group(3) != null ? Long.parseLong(matcher.group(3)) : 0;
-			long seconds = matcher.group(4) != null ? Long.parseLong(matcher.group(4)) : 0;
-			return Duration.ofDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
-		} catch (Exception ignored) {
-			return Duration.ZERO;
-		}
 	}
 }
