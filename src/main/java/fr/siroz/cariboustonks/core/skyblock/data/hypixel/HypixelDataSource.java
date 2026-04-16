@@ -10,12 +10,14 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher.ElectionFetcher
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher.ItemsFetcher;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -182,7 +184,9 @@ public final class HypixelDataSource {
 
 			return itemStack;
 		} catch (Throwable ex) {
-			CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create ItemStack for {}", skyBlockItemId, ex);
+			if (DeveloperTools.isInDevelopment()) {
+				CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create ItemStack for {}", skyBlockItemId, ex);
+			}
 		}
 
 		return fallback;
@@ -255,6 +259,7 @@ public final class HypixelDataSource {
 		return itemsFetcher.getSkyBlockItemsSnapshot().size();
 	}
 
+	@SuppressWarnings("checkstyle:CyclomaticComplexity")
 	public void fixSkyBlockItems() {
 		if (itemsFetcher.isLastFetchSuccessful() && bazaarFetcher.isFirstBazaarUpdated() && !hasCalledFixMissing) {
 			hasCalledFixMissing = true;
@@ -282,20 +287,41 @@ public final class HypixelDataSource {
 							itemsFetcher.putItem(bazaarProductId, shard);
 							fixedShards++;
 						} else {
-							CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create {} Shard! Not registered in ModDataSource.",
-									bazaarProductId);
+							if (DeveloperTools.isInDevelopment()) {
+								CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create {} Shard! Not registered in ModDataSource.",
+										bazaarProductId);
+							}
 						}
 					} else {
-						CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to fix {}. Not identified!",
-								bazaarProductId);
+						if (DeveloperTools.isInDevelopment()) {
+							CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to fix {}. Not identified!",
+									bazaarProductId);
+						}
 					}
 				} catch (Throwable ex) {
-					CaribouStonks.LOGGER.error("[HypixelDataSource] Fix for {} failed", bazaarProductId, ex);
+					if (DeveloperTools.isInDevelopment()) {
+						CaribouStonks.LOGGER.error("[HypixelDataSource] Fix for {} failed", bazaarProductId, ex);
+					}
 				}
 			}
 
-			CaribouStonks.LOGGER.info("[HypixelDataSource] Fixed {} enchants, {} essences and {} Shards from Bazaar to SkyBlock Items",
-					fixedEnchants, fixedEssences, fixedShards);
+			if (DeveloperTools.isInDevelopment()) {
+				List<String> hypixelMaterials = itemsFetcher.getSkyBlockItemsSnapshot().values().stream()
+						.map(SkyBlockItemData::material)
+						.collect(Collectors.toSet())
+						.stream()
+						.toList();
+
+				for (String material : hypixelMaterials) {
+					if (!modDataSource.containsItem(material)) {
+						CaribouStonks.LOGGER.warn(
+								"[HypixelDataSource] (Minecraft Ids Mapping) -> {} is not registered!", material);
+					}
+				}
+
+				CaribouStonks.LOGGER.info("[HypixelDataSource] Fixed {} enchants, {} essences and {} Shards from Bazaar to SkyBlock Items",
+						fixedEnchants, fixedEssences, fixedShards);
+			}
 		}
 	}
 }
