@@ -3,13 +3,8 @@ package fr.siroz.cariboustonks.core.skyblock;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
-import fr.siroz.cariboustonks.util.StonksUtils;
-import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.Minecraft;
@@ -32,10 +27,6 @@ public final class AttributeAPI {
 	public static final Pattern SHARD_WITH_QUANTITY_PATTERN = Pattern.compile("[A-Za-z ]+ Shard(?: x(?<amount>\\d+))?");
 	public static final Pattern SOURCE_PATTERN = Pattern.compile("Source: (?<shardName>[A-Za-z ]+?) Shard \\((?<id>[CUREL]\\d+)\\)");
 	public static final Pattern RARITY_AND_ID_PATTERN = Pattern.compile("(COMMON|UNCOMMON|RARE|EPIC|LEGENDARY).*?SHARD \\(ID ([CUREL]\\d+)\\)");
-
-	private static final Map<Rarity, Int2IntMap> RARITY_2_LEVELS = new EnumMap<>(Rarity.class);
-	private static final Set<String> DUNGEON_CHESTS;
-	private static final Set<String> KUUDRA_CHESTS;
 
 	private AttributeAPI() {
 	}
@@ -103,7 +94,7 @@ public final class AttributeAPI {
 			}
 			default -> {
 				// Les rewards chest de Dungeon & Kuudra
-				if (DUNGEON_CHESTS.contains(title) || KUUDRA_CHESTS.contains(title)) {
+				if (SkyBlockConstants.DUNGEON_CHESTS.contains(title) || SkyBlockConstants.KUUDRA_CHESTS.contains(title)) {
 					String name = item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
 					Matcher matcher = SHARD_WITH_QUANTITY_PATTERN.matcher(name);
 					if (name.contains("Shard") && matcher.matches()) {
@@ -124,7 +115,7 @@ public final class AttributeAPI {
 	public static int getShardsUntilMax(Rarity rarity, int level) {
 		if (level == MAX_LEVEL) return 0;
 
-		Int2IntMap level2Count = RARITY_2_LEVELS.get(rarity);
+		Int2IntMap level2Count = SkyBlockConstants.ATTRIBUTE_LEVELS.get(rarity);
 		if (level2Count == null) {
 			return -1;
 		}
@@ -140,80 +131,5 @@ public final class AttributeAPI {
 		}
 
 		return maxShardCount - currentShardCount;
-	}
-
-	static {
-		RARITY_2_LEVELS.put(Rarity.COMMON, StonksUtils.make(new Int2IntArrayMap(), map -> {
-			map.put(1, 1);
-			map.put(2, 4);
-			map.put(3, 9);
-			map.put(4, 15);
-			map.put(5, 22);
-			map.put(6, 30);
-			map.put(7, 40);
-			map.put(8, 54);
-			map.put(9, 72);
-			map.put(10, 96);
-		}));
-		RARITY_2_LEVELS.put(Rarity.UNCOMMON, StonksUtils.make(new Int2IntArrayMap(), map -> {
-			map.put(1, 1);
-			map.put(2, 3);
-			map.put(3, 6);
-			map.put(4, 10);
-			map.put(5, 15);
-			map.put(6, 21);
-			map.put(7, 28);
-			map.put(8, 36);
-			map.put(9, 48);
-			map.put(10, 64);
-		}));
-		RARITY_2_LEVELS.put(Rarity.RARE, StonksUtils.make(new Int2IntArrayMap(), map -> {
-			map.put(1, 1);
-			map.put(2, 3);
-			map.put(3, 6);
-			map.put(4, 9);
-			map.put(5, 13);
-			map.put(6, 17);
-			map.put(7, 22);
-			map.put(8, 28);
-			map.put(9, 39);
-			map.put(10, 48);
-		}));
-		RARITY_2_LEVELS.put(Rarity.EPIC, StonksUtils.make(new Int2IntArrayMap(), map -> {
-			map.put(1, 1);
-			map.put(2, 2);
-			map.put(3, 4);
-			map.put(4, 6);
-			map.put(5, 9);
-			map.put(6, 12);
-			map.put(7, 16);
-			map.put(8, 20);
-			map.put(9, 25);
-			map.put(10, 32);
-		}));
-		RARITY_2_LEVELS.put(Rarity.LEGENDARY, StonksUtils.make(new Int2IntArrayMap(), map -> {
-			map.put(1, 1);
-			map.put(2, 2);
-			map.put(3, 3);
-			map.put(4, 5);
-			map.put(5, 7);
-			map.put(6, 9);
-			map.put(7, 12);
-			map.put(8, 15);
-			map.put(9, 19);
-			map.put(10, 24);
-		}));
-		DUNGEON_CHESTS = Set.of(
-				"Wood Chest", "Wood",
-				"Gold Chest", "Gold",
-				"Diamond Chest", "Diamond",
-				"Emerald Chest", "Emerald",
-				"Obsidian Chest", "Obsidian",
-				"Bedrock Chest", "Bedrock"
-		);
-		KUUDRA_CHESTS = Set.of(
-				"Free Chest", "Free Chest Chest",
-				"Paid Chest", "Paid Chest Chest"
-		);
 	}
 }

@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.core.skyblock.item.calculator;
 
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.ItemMetadata;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyblockItemStack;
@@ -162,8 +163,8 @@ public final class ItemValueCalculator {
 
 	private @NonNull PriceComponent prestiges() {
 		return (ctx, acc) -> {
-			if (CalculatorConstants.PRESTIGES.containsKey(ctx.skyBlockId())) {
-				for (String prestigeItemId : CalculatorConstants.PRESTIGES.get(ctx.skyBlockId())) {
+			if (SkyBlockConstants.PRESTIGES.containsKey(ctx.skyBlockId())) {
+				for (String prestigeItemId : SkyBlockConstants.PRESTIGES.get(ctx.skyBlockId())) {
 					SkyBlockItemData itemData = CalculatorHelper.getItemData(prestigeItemId);
 					if (itemData != null && itemData.prestige().isPresent()) {
 						CalculatorHelper.computeUpgradeCosts(ctx.prices(), acc, itemData.prestige().get().costs(), prestigeItemId);
@@ -191,8 +192,8 @@ public final class ItemValueCalculator {
 				}
 			}
 			// Dark Auction - Midas Sword / Midas Staff
-			if (CalculatorConstants.MIDAS_WEAPONS.containsKey(ctx.skyBlockId())) {
-				Pair<Long, String> midasWeapon = CalculatorConstants.MIDAS_WEAPONS.get(ctx.skyBlockId());
+			if (SkyBlockConstants.MIDAS_WEAPONS.containsKey(ctx.skyBlockId())) {
+				Pair<Long, String> midasWeapon = SkyBlockConstants.MIDAS_WEAPONS.get(ctx.skyBlockId());
 				long maxBid = midasWeapon.left();
 				String apiId = midasWeapon.right();
 				if (specialAuction.winningBid().isPresent()) {
@@ -202,7 +203,7 @@ public final class ItemValueCalculator {
 					if (winningBid >= maxBid) {
 						calc = Calculation.of(Calculation.Type.WINNING_BID, apiId, winningBid * worth("winningBid", ctx.networth()));
 					} else {
-						// Sinon ça récupère le prix de l'Auction
+						// sinon ça récupère le prix de l'Auction
 						calc = Calculation.of(Calculation.Type.WINNING_BID, apiId, ctx.prices().applyAsDouble(apiId));
 					}
 					acc.set(calc.price());
@@ -217,7 +218,7 @@ public final class ItemValueCalculator {
 		return (ctx, acc) -> {
 			if (ctx.metadata().reforge().isPresent()) {
 				String reforge = ctx.metadata().reforge().get();
-				String apiId = CalculatorConstants.REFORGES.getOrDefault(reforge, "");
+				String apiId = SkyBlockConstants.REFORGES.getOrDefault(reforge, "");
 				// Ça évite de recup le prix d'une reforge de base (non présente au Bazaar).
 				double price = apiId.isEmpty()
 						? 0 :
@@ -335,8 +336,8 @@ public final class ItemValueCalculator {
 			for (Object2IntMap.Entry<String> entry : Object2IntMaps.fastIterable(enchantments.enchantments())) {
 				String enchantmentId = entry.getKey().toUpperCase(Locale.ENGLISH);
 				int lvl = entry.getIntValue();
-				// Enchantment Upgrades (SCAVENGER -> GOLDEN_BOUNTY, ENDER_SLAYER -> ENDSTONE_IDOL, ..)
-				Map<Integer, String> upgrades = CalculatorConstants.ENCHANTMENT_UPGRADES.getOrDefault(enchantmentId, null);
+				// Enchantment Upgrades (SCAVENGER -> GOLDEN_BOUNTY, ENDER_SLAYER -> ENDSTONE_IDOL...)
+				Map<Integer, String> upgrades = SkyBlockConstants.ENCHANTMENT_UPGRADES.getOrDefault(enchantmentId, null);
 				if (upgrades != null) {
 					String upgradeKey = upgrades.getOrDefault(lvl, null);
 					if (upgradeKey != null) {
@@ -353,7 +354,7 @@ public final class ItemValueCalculator {
 				}
 
 				// Il n'y a que les level 1 dispo au Bazaar pour Expertise, Champion, ...
-				if (CalculatorConstants.STACKING_ENCHANTMENTS.contains(enchantmentId)) {
+				if (SkyBlockConstants.STACKING_ENCHANTMENTS.contains(enchantmentId)) {
 					lvl = 1;
 				}
 
@@ -381,7 +382,7 @@ public final class ItemValueCalculator {
 			String ultimateEnchantId = ultimate.left().toUpperCase(Locale.ENGLISH);
 			int targetLvl = ultimate.right();
 			// Pourquoi networth-calculator de Aaron ne fait pas ça ?
-			int minLevel = CalculatorConstants.ULTIMATE_BASE_LEVELS.getOrDefault(ultimateEnchantId, 1);
+			int minLevel = SkyBlockConstants.ULTIMATE_BASE_LEVELS.getOrDefault(ultimateEnchantId, 1);
 			int unitsNeeded = (targetLvl >= minLevel) ? (int) Math.pow(2, targetLvl - minLevel) : 1; // fallback si problème
 
 			Calculation calc = Calculation.of(
@@ -506,7 +507,7 @@ public final class ItemValueCalculator {
 	private @NonNull PriceComponent masterStars() {
 		return (ctx, acc) -> {
 			// Les upgrades costs via Hypixel API au lieu de check les Kuudra Armors maybe
-			if (CalculatorConstants.PRESTIGES.containsKey(ctx.skyBlockId())) return ComponentDecision.CONTINUE;
+			if (SkyBlockConstants.PRESTIGES.containsKey(ctx.skyBlockId())) return ComponentDecision.CONTINUE;
 
 			int dungeonItemLevel = ctx.metadata().modifiers().dungeonItemLevel().orElse(0);
 			int upgradeLevel = ctx.metadata().modifiers().upgradeLevel();
@@ -515,7 +516,7 @@ public final class ItemValueCalculator {
 				int starsUsedUpgrade = upgradeLevel - 5;
 				int starsUsed = Math.max(starsUsedDungeons, starsUsedUpgrade);
 				for (int i = 0; i < starsUsed; i++) {
-					String apiId = CalculatorConstants.MASTER_STARS.get(i);
+					String apiId = SkyBlockConstants.MASTER_STARS.get(i);
 					Calculation calc = Calculation.of(
 							Calculation.Type.MASTER_STAR,
 							apiId,
@@ -548,7 +549,7 @@ public final class ItemValueCalculator {
 			if (modifiers.enrichment().isPresent()) {
 				String enrichment = modifiers.enrichment().get();
 				// Même prix en bits, je respecte comme les autres calculator de récupérer le cheapest.
-				double price = CalculatorConstants.ENRICHMENTS.stream()
+				double price = SkyBlockConstants.ENRICHMENTS.stream()
 						.mapToDouble(value -> ctx.prices().applyAsDouble(value))
 						.filter(d -> d > 0)
 						.min()
@@ -851,6 +852,6 @@ public final class ItemValueCalculator {
 	}
 
 	private double worth(@NonNull String skyBlockId, boolean networth) {
-		return networth ? CalculatorConstants.WORTH.applyAsDouble(skyBlockId) : 1d;
+		return networth ? CalculatorHelper.WORTH.applyAsDouble(skyBlockId) : 1d;
 	}
 }

@@ -4,12 +4,12 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockEnchantment;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyblockItemStack;
 import fr.siroz.cariboustonks.core.skyblock.item.calculator.Calculation;
-import fr.siroz.cariboustonks.core.skyblock.item.calculator.CalculatorConstants;
 import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueCalculator;
 import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueResult;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.Gemstones;
@@ -494,7 +494,7 @@ public class ItemValueViewerFeature extends Feature {
 			out.add(Component.literal("Enchantments:").withStyle(ChatFormatting.GRAY));
 			// Ultimate enchantment en priorité
 			if (ultimate != null) {
-				int base = CalculatorConstants.ULTIMATE_BASE_LEVELS.getOrDefault(ultimate.skyBlockId(), 1);
+				int base = SkyBlockConstants.ULTIMATE_BASE_LEVELS.getOrDefault(ultimate.skyBlockId(), 1);
 				String level = RomanNumeralUtils.generate(base);
 				String ultimateName = StonksUtils.capitalize(ultimate.skyBlockId()) + " " + level;
 				// Pourquoi j'ai fait comme ça ? je ne sais pas, mais avoir une map dédié serait pas mal, je pense.
