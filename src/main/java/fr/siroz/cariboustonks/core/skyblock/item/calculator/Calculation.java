@@ -38,6 +38,8 @@ public record Calculation(
 		WINNING_BID,
 		// Armor Upgrades
 		PRESTIGE,
+		// Pet
+		PET_ITEM,
 		// Base
 		REFORGE,
 		// Enchanted Books
