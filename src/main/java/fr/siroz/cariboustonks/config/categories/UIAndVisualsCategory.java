@@ -67,6 +67,20 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								newValue -> current.uiAndVisuals.abiphoneFavoriteContacts = newValue)
 						.controller(this::createBooleanController)
 						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Rare Drops Visual Effect"))
+						.description(OptionDescription.of(
+								Component.literal("Play a visual effect triggered upon obtaining Rare Drops."),
+								Component.literal(SPACE + "Available for:"),
+								Component.literal(" - Slayers RNG loots").withStyle(ChatFormatting.DARK_PURPLE),
+								Component.literal(" - Mythological Ritual (Rare loots)").withStyle(ChatFormatting.DARK_GREEN),
+								Component.literal(" - Fishing (Rare loots)").withStyle(ChatFormatting.AQUA),
+								Component.literal(" - Mining (Mineshaft)").withStyle(ChatFormatting.DARK_AQUA)))
+						.binding(defaults.uiAndVisuals.rareDropVisualEffect,
+								() -> current.uiAndVisuals.rareDropVisualEffect,
+								newValue -> current.uiAndVisuals.rareDropVisualEffect = newValue)
+						.controller(this::createBooleanController)
+						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Deployable").withStyle(ChatFormatting.BOLD))
 						.description(OptionDescription.of(

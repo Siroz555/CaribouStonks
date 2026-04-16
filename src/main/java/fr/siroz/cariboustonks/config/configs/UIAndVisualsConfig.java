@@ -21,6 +21,9 @@ public class UIAndVisualsConfig {
 	public boolean abiphoneFavoriteContacts = true;
 
 	@SerialEntry
+	public boolean rareDropVisualEffect = true;
+
+	@SerialEntry
 	public Deployables deployables = new Deployables();
 
 	@SerialEntry
