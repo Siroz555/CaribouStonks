@@ -201,6 +201,12 @@ public interface SkyBlockConstants {
 			"Paid Chest", "Paid Chest Chest"
 	);
 
+	Set<String> LVL_200_PETS = Set.of(
+			"GOLDEN_DRAGON",
+			"JADE_DRAGON",
+			"ROSE_DRAGON"
+	);
+
 	/**
 	 * Rarity to Attribute levels Mapping.
 	 * <p>

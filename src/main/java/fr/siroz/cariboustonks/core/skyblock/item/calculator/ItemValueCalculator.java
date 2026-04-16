@@ -121,9 +121,9 @@ public final class ItemValueCalculator {
 		double initial = basePricePerUnit * item.amount();
 		PriceAccumulator acc = new PriceAccumulator(initial);
 
-		// Pets - Je les gère pas pour le moment
+		// Pets
 		if (ctx.skyBlockId().equals("PET")) {
-			return ItemValueResult.EMPTY;
+			return PetValueCalculator.handle(metadata.petInfo(), prices, networth);
 		}
 
 		// Special Auction (Shen, Dark Auction)
