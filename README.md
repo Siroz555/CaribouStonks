@@ -70,6 +70,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 **UI & Visuals**
 
+- Rare Drops Visual Effect: Visual effect triggered upon obtaining Rare Drops.
 - Deployable:
     - Display all active Deployable in a HUD with their respective timer.
     - Individual detection config.

@@ -69,6 +69,21 @@ public final class AnimationUtils {
 	 * @param item item
 	 * @param particle particle
 	 * @param particleAge particle age between 1-120
+	 */
+	public static void showSpecialEffect(
+			@NonNull ItemStack item,
+			@Nullable ParticleOptions particle,
+			int particleAge
+	) {
+		showSpecialEffect(null, item, particle, particleAge, null, 0f, 0f);
+	}
+
+	/**
+	 * Show Special Effet
+	 *
+	 * @param item item
+	 * @param particle particle
+	 * @param particleAge particle age between 1-120
 	 * @param sound sound
 	 * @param soundVolume sound volume
 	 * @param soundPitch sound pitch
@@ -77,7 +92,7 @@ public final class AnimationUtils {
 			@NonNull ItemStack item,
 			@Nullable ParticleOptions particle,
 			int particleAge,
-			@NonNull SoundEvent sound,
+			@Nullable SoundEvent sound,
 			float soundVolume,
 			float soundPitch
 	) {
@@ -100,7 +115,7 @@ public final class AnimationUtils {
 			@NonNull ItemStack item,
 			@Nullable ParticleOptions particle,
 			int particleAge,
-			@NonNull SoundEvent sound,
+			@Nullable SoundEvent sound,
 			float soundVolume,
 			float soundPitch
 	) {
@@ -115,7 +130,9 @@ public final class AnimationUtils {
 				CLIENT.particleEngine.createTrackingEmitter(CLIENT.player, particle, particleAge);
 			}
 
-			CLIENT.player.playSound(sound, soundVolume, soundPitch);
+			if (sound != null) {
+				CLIENT.player.playSound(sound, soundVolume, soundPitch);
+			}
 		}
 	}
 

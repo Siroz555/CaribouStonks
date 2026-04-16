@@ -55,6 +55,7 @@ import fr.siroz.cariboustonks.features.stonks.tooltips.ItemValueTooltipFeature;
 import fr.siroz.cariboustonks.features.stonks.tooltips.auction.AuctionLowestBinTooltipFeature;
 import fr.siroz.cariboustonks.features.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
 import fr.siroz.cariboustonks.features.ui.AbiphoneFavoriteContactFeature;
+import fr.siroz.cariboustonks.features.ui.RareDropVisualEffectFeature;
 import fr.siroz.cariboustonks.features.ui.SelectedPetHighlightFeature;
 import fr.siroz.cariboustonks.features.ui.TabListWidgetExtractorFeature;
 import fr.siroz.cariboustonks.features.ui.deployable.DeployableFeature;
@@ -121,8 +122,6 @@ public final class FeatureManager {
 		registerFeature(new TooltipDecoratorFeature());
 		// KeyShortcut
 		registerFeature(new KeyShortcutFeature());
-		// Pet
-		registerFeature(new SelectedPetHighlightFeature());
 		// Reminders
 		registerFeature(new BoosterCookieReminderFeature());
 		registerFeature(new ChocolateLimitReminderFeature());
@@ -147,6 +146,8 @@ public final class FeatureManager {
 		registerFeature(new DeployableFeature());
 		registerFeature(new MobTrackingFeature());
 		registerFeature(new AbiphoneFavoriteContactFeature(0));
+		registerFeature(new RareDropVisualEffectFeature());
+		registerFeature(new SelectedPetHighlightFeature());
 		registerFeature(new TabListWidgetExtractorFeature());
 		// UI - HUDs
 		registerFeature(new FpsHud());
