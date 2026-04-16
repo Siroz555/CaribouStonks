@@ -1,87 +1,33 @@
-package fr.siroz.cariboustonks.core.skyblock.item.calculator;
+package fr.siroz.cariboustonks.core.skyblock;
 
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import it.unimi.dsi.fastutil.Pair;
-import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
-import it.unimi.dsi.fastutil.objects.Object2DoubleMaps;
-import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Constants for the {@link ItemValueCalculator}.
- *
- * <h2>Worth Mapping</h2>
- * See <a href="https://github.com/Altpapier/SkyHelper-Networth/blob/master/constants/applicationWorth.js">SkyHelper Networth Calculator GitHub</a>
- *
- * <h2> Enchantment Upgrades</h2>
- * <a href="https://wiki.hypixel.net/Enchantments">Hypixel Wiki Enchantments</a>
- *
- * <h2>Reforges Mapping</h2>
- * <a href="https://wiki.hypixel.net/Reforging">Hypixel Wiki Reforging</a>
+ * SkyBlock Constants.
  */
-public interface CalculatorConstants {
+public interface SkyBlockConstants {
 
 	/**
-	 * Represents the worth of an item type.
+	 * Enchantment Upgrades.
 	 * <p>
-	 * SIROZ-NOTE : J'ai volontairement modifié certaine valeur de SkyHelper, pour avoir de meilleurs résultats.
-	 * Avec les mises à jour du SkyBlock, certain item type ont de meilleurs prix (moins volatil) (selon moi).
+	 * Key: {@code enchantId} value: {@code maxLevel:upgradeId}
+	 * <p>
+	 * Example: {@code SCAVENGER} -> {@code (Level 6) GOLDEN_BOUNTY}
+	 * <p>
+	 * <a href="https://wiki.hypixel.net/Enchantments">Hypixel Wiki Enchantments</a>
 	 */
-	Object2DoubleMap<String> WORTH = Object2DoubleMaps.unmodifiable(StonksUtils.make(new Object2DoubleOpenHashMap<>(), map -> {
-		// Cosmetics
-		map.put("skins", 0.67); // Community (-33% when applied)
-		map.put("dye", 0.9);
-		map.put("runes", 0.6);
-		// Pets
-		map.put("petItem", 1);
-		// Special Auction
-		map.put("specialAuctionPrice", 1);
-		map.put("winningBid", 1);
-		// Base
-		map.put("reforge", 1);
-		// Enchantements
-		map.put("enchantments", 0.95); // 0.85
-		map.put("enchantmentUpgrades", 0.95); // 0.8
-		// Books
-		map.put("fumingPotatoBook", 0.75); // 0.6
-		map.put("hotPotatoBook", 1);
-		map.put("artOfWar", 0.8); // 0.6
-		map.put("artOfPeace", 0.8);
-		map.put("farmingForDummies", 0.6); // 0.5
-		map.put("polarvoidBook", 0.8); // 1
-		map.put("jalapenoBook", 0.8);
-		// Modifiers
-		map.put("recombobulator", 0.95); // 0.8
-		map.put("enrichment", 0.75); // 0.5
-		map.put("woodSingularity", 0.7); // 0.5
-		map.put("manaDisintegrator", 0.8);
-		map.put("transmissionTuner", 0.7);
-		map.put("etherwarp", 1);
-		map.put("pocketSackInASack", 0.85); // 0.7
-		map.put("divanPowderCoating", 0.8);
-		map.put("powerScroll", 0.6); // 0.5
-		map.put("witherScroll", 1);
-		map.put("overclocker", 0.8); // -
-		// Gemstones
-		map.put("gemstones", 1);
-		map.put("gemstoneSlots", 0.75); // 0.6
-		// Parts
-		map.put("drillPart", 1);
-		map.put("rodPart", 1);
-		// Boosters
-		map.put("boosters", 0.8);
-		// Others
-		map.put("essence", 0.9); // 0.9
-		map.put("masterStars", 1);
-		// Default
-		map.defaultReturnValue(1d);
-	}));
-
 	Object2ObjectMap<String, Map<Integer, String>> ENCHANTMENT_UPGRADES = Object2ObjectMaps.unmodifiable(StonksUtils.make(new Object2ObjectOpenHashMap<>(), map -> {
 		map.put("SCAVENGER", Map.of(6, "GOLDEN_BOUNTY"));
 		map.put("PESTERMINATOR", Map.of(6, "PESTHUNTING_GUIDE"));
@@ -96,50 +42,21 @@ public interface CalculatorConstants {
 		map.put("VENOMOUS", Map.of(7, "FATEFUL_STINGER"));
 	}));
 
-	List<String> MASTER_STARS = List.of(
-			"FIRST_MASTER_STAR",
-			"SECOND_MASTER_STAR",
-			"THIRD_MASTER_STAR",
-			"FOURTH_MASTER_STAR",
-			"FIFTH_MASTER_STAR"
-	);
-
 	Map<String, Integer> ULTIMATE_BASE_LEVELS = Map.of(
 			"ULTIMATE_THE_ONE", 4,
 			"ULTIMATE_BOBBIN_TIME", 3,
 			"ULTIMATE_HABANERO_TACTICS", 4
 	);
 
-	Set<String> STACKING_ENCHANTMENTS = Set.of(
-			"EXPERTISE",
-			"COMPACT",
-			"CULTIVATING",
-			"CHAMPION",
-			"HECATOMB",
-			"TOXOPHILITE"
-	);
-
-	Object2ObjectMap<String, Pair<Long, String>> MIDAS_WEAPONS = Object2ObjectMaps.unmodifiable(StonksUtils.make(new Object2ObjectOpenHashMap<>(), map -> {
-		map.put("MIDAS_SWORD", Pair.of(50_000_000L, "MIDAS_SWORD_50M"));
-		map.put("STARRED_MIDAS_SWORD", Pair.of(250_000_000L, "STARRED_MIDAS_SWORD_250M"));
-		map.put("MIDAS_STAFF", Pair.of(100_000_000L, "MIDAS_STAFF_100M"));
-		map.put("STARRED_MIDAS_STAFF", Pair.of(500_000_000L, "STARRED_MIDAS_STAFF_500M"));
-	}));
-
-	Set<String> ENRICHMENTS = Set.of(
-			"TALISMAN_ENRICHMENT_ATTACK_SPEED",
-			"TALISMAN_ENRICHMENT_CRITICAL_CHANCE",
-			"TALISMAN_ENRICHMENT_CRITICAL_DAMAGE",
-			"TALISMAN_ENRICHMENT_DEFENSE",
-			"TALISMAN_ENRICHMENT_FEROCITY",
-			"TALISMAN_ENRICHMENT_HEALTH",
-			"TALISMAN_ENRICHMENT_INTELLIGENCE",
-			"TALISMAN_ENRICHMENT_MAGIC_FIND",
-			"TALISMAN_ENRICHMENT_SEA_CREATURE_CHANCE",
-			"TALISMAN_ENRICHMENT_STRENGTH",
-			"TALISMAN_ENRICHMENT_WALK_SPEED"
-	);
-
+	/**
+	 * Reforges Mapping.
+	 * <p>
+	 * Key: {@code reforgeId} value: {@code skyBlockId}
+	 * <p>
+	 * Example: {@code withered} -> {@code WITHER_BLOOD}
+	 * <p>
+	 * <a href="https://wiki.hypixel.net/Reforging">Hypixel Wiki Reforging</a>
+	 */
 	Object2ObjectMap<String, String> REFORGES = Object2ObjectMaps.unmodifiable(StonksUtils.make(new Object2ObjectOpenHashMap<>(), map -> {
 		// Unavailable from Bazaar
 		map.put("dirty", "DIRT_BOTTLE");
@@ -232,10 +149,130 @@ public interface CalculatorConstants {
 		map.put("erudite", "DAEDALUS_NOTES");
 	}));
 
+	List<String> MASTER_STARS = List.of(
+			"FIRST_MASTER_STAR",
+			"SECOND_MASTER_STAR",
+			"THIRD_MASTER_STAR",
+			"FOURTH_MASTER_STAR",
+			"FIFTH_MASTER_STAR"
+	);
+
+	Set<String> STACKING_ENCHANTMENTS = Set.of(
+			"EXPERTISE",
+			"COMPACT",
+			"CULTIVATING",
+			"CHAMPION",
+			"HECATOMB",
+			"TOXOPHILITE"
+	);
+
+	Object2ObjectMap<String, Pair<Long, String>> MIDAS_WEAPONS = Object2ObjectMaps.unmodifiable(StonksUtils.make(new Object2ObjectOpenHashMap<>(), map -> {
+		map.put("MIDAS_SWORD", Pair.of(50_000_000L, "MIDAS_SWORD_50M"));
+		map.put("STARRED_MIDAS_SWORD", Pair.of(250_000_000L, "STARRED_MIDAS_SWORD_250M"));
+		map.put("MIDAS_STAFF", Pair.of(100_000_000L, "MIDAS_STAFF_100M"));
+		map.put("STARRED_MIDAS_STAFF", Pair.of(500_000_000L, "STARRED_MIDAS_STAFF_500M"));
+	}));
+
+	Set<String> ENRICHMENTS = Set.of(
+			"TALISMAN_ENRICHMENT_ATTACK_SPEED",
+			"TALISMAN_ENRICHMENT_CRITICAL_CHANCE",
+			"TALISMAN_ENRICHMENT_CRITICAL_DAMAGE",
+			"TALISMAN_ENRICHMENT_DEFENSE",
+			"TALISMAN_ENRICHMENT_FEROCITY",
+			"TALISMAN_ENRICHMENT_HEALTH",
+			"TALISMAN_ENRICHMENT_INTELLIGENCE",
+			"TALISMAN_ENRICHMENT_MAGIC_FIND",
+			"TALISMAN_ENRICHMENT_SEA_CREATURE_CHANCE",
+			"TALISMAN_ENRICHMENT_STRENGTH",
+			"TALISMAN_ENRICHMENT_WALK_SPEED"
+	);
+
+	Set<String> DUNGEON_CHESTS = Set.of(
+			"Wood Chest", "Wood",
+			"Gold Chest", "Gold",
+			"Diamond Chest", "Diamond",
+			"Emerald Chest", "Emerald",
+			"Obsidian Chest", "Obsidian",
+			"Bedrock Chest", "Bedrock"
+	);
+
+	Set<String> KUUDRA_CHESTS = Set.of(
+			"Free Chest", "Free Chest Chest",
+			"Paid Chest", "Paid Chest Chest"
+	);
+
+	/**
+	 * Rarity to Attribute levels Mapping.
+	 * <p>
+	 * Key: {@code Rarity} value: {@code level:maxShard}
+	 * <p>
+	 * Example: {@code LEGENDARY} -> {@code 10:24}
+	 */
+	Map<Rarity, Int2IntMap> ATTRIBUTE_LEVELS = Collections.unmodifiableMap(StonksUtils.make(new EnumMap<>(Rarity.class), map -> {
+		map.put(Rarity.COMMON, StonksUtils.make(new Int2IntArrayMap(), common -> {
+			common.put(1, 1);
+			common.put(2, 4);
+			common.put(3, 9);
+			common.put(4, 15);
+			common.put(5, 22);
+			common.put(6, 30);
+			common.put(7, 40);
+			common.put(8, 54);
+			common.put(9, 72);
+			common.put(10, 96);
+		}));
+		map.put(Rarity.UNCOMMON, StonksUtils.make(new Int2IntArrayMap(), uncommon -> {
+			uncommon.put(1, 1);
+			uncommon.put(2, 3);
+			uncommon.put(3, 6);
+			uncommon.put(4, 10);
+			uncommon.put(5, 15);
+			uncommon.put(6, 21);
+			uncommon.put(7, 28);
+			uncommon.put(8, 36);
+			uncommon.put(9, 48);
+			uncommon.put(10, 64);
+		}));
+		map.put(Rarity.RARE, StonksUtils.make(new Int2IntArrayMap(), rare -> {
+			rare.put(1, 1);
+			rare.put(2, 3);
+			rare.put(3, 6);
+			rare.put(4, 9);
+			rare.put(5, 13);
+			rare.put(6, 17);
+			rare.put(7, 22);
+			rare.put(8, 28);
+			rare.put(9, 39);
+			rare.put(10, 48);
+		}));
+		map.put(Rarity.EPIC, StonksUtils.make(new Int2IntArrayMap(), epic -> {
+			epic.put(1, 1);
+			epic.put(2, 2);
+			epic.put(3, 4);
+			epic.put(4, 6);
+			epic.put(5, 9);
+			epic.put(6, 12);
+			epic.put(7, 16);
+			epic.put(8, 20);
+			epic.put(9, 25);
+			epic.put(10, 32);
+		}));
+		map.put(Rarity.LEGENDARY, StonksUtils.make(new Int2IntArrayMap(), legendary -> {
+			legendary.put(1, 1);
+			legendary.put(2, 2);
+			legendary.put(3, 3);
+			legendary.put(4, 5);
+			legendary.put(5, 7);
+			legendary.put(6, 9);
+			legendary.put(7, 12);
+			legendary.put(8, 15);
+			legendary.put(9, 19);
+			legendary.put(10, 24);
+		}));
+	}));
+
 	/**
 	 * Represents all prestiges on Kuudra Armors.
-	 * <p>
-	 * SIROZ-NOTE : J'ai volontairement retiré l'armure Hollow et Fervor
 	 */
 	Object2ObjectMap<String, Set<String>> PRESTIGES = Object2ObjectMaps.unmodifiable(StonksUtils.make(new Object2ObjectOpenHashMap<>(), map -> {
 		// Crimson
@@ -300,5 +337,47 @@ public interface CalculatorConstants {
 		map.put("INFERNAL_TERROR_CHESTPLATE", Set.of("FIERY_TERROR_CHESTPLATE", "BURNING_TERROR_CHESTPLATE", "HOT_TERROR_CHESTPLATE", "TERROR_CHESTPLATE"));
 		map.put("INFERNAL_TERROR_LEGGINGS", Set.of("FIERY_TERROR_LEGGINGS", "BURNING_TERROR_LEGGINGS", "HOT_TERROR_LEGGINGS", "TERROR_LEGGINGS"));
 		map.put("INFERNAL_TERROR_BOOTS", Set.of("FIERY_TERROR_BOOTS", "BURNING_TERROR_BOOTS", "HOT_TERROR_BOOTS", "TERROR_BOOTS"));
+
+		// Hollow Armour
+		map.put("HOT_HOLLOW_HELMET", Set.of("HOLLOW_HELMET"));
+		map.put("HOT_HOLLOW_CHESTPLATE", Set.of("HOLLOW_CHESTPLATE"));
+		map.put("HOT_HOLLOW_LEGGINGS", Set.of("HOLLOW_LEGGINGS"));
+		map.put("HOT_HOLLOW_BOOTS", Set.of("HOLLOW_BOOTS"));
+
+		map.put("BURNING_HOLLOW_HELMET", Set.of("HOT_HOLLOW_HELMET", "HOLLOW_HELMET"));
+		map.put("BURNING_HOLLOW_CHESTPLATE", Set.of("HOT_HOLLOW_CHESTPLATE", "HOLLOW_CHESTPLATE"));
+		map.put("BURNING_HOLLOW_LEGGINGS", Set.of("HOT_HOLLOW_LEGGINGS", "HOLLOW_LEGGINGS"));
+		map.put("BURNING_HOLLOW_BOOTS", Set.of("HOT_HOLLOW_BOOTS", "HOLLOW_BOOTS"));
+
+		map.put("FIERY_HOLLOW_HELMET", Set.of("BURNING_HOLLOW_HELMET", "HOT_HOLLOW_HELMET", "HOLLOW_HELMET"));
+		map.put("FIERY_HOLLOW_CHESTPLATE", Set.of("BURNING_HOLLOW_CHESTPLATE", "HOT_HOLLOW_CHESTPLATE", "HOLLOW_CHESTPLATE"));
+		map.put("FIERY_HOLLOW_LEGGINGS", Set.of("BURNING_HOLLOW_LEGGINGS", "HOT_HOLLOW_LEGGINGS", "HOLLOW_LEGGINGS"));
+		map.put("FIERY_HOLLOW_BOOTS", Set.of("BURNING_HOLLOW_BOOTS", "HOT_HOLLOW_BOOTS", "HOLLOW_BOOTS"));
+
+		map.put("INFERNAL_HOLLOW_HELMET", Set.of("FIERY_HOLLOW_HELMET", "BURNING_HOLLOW_HELMET", "HOT_HOLLOW_HELMET", "HOLLOW_HELMET"));
+		map.put("INFERNAL_HOLLOW_CHESTPLATE", Set.of("FIERY_HOLLOW_CHESTPLATE", "BURNING_HOLLOW_CHESTPLATE", "HOT_HOLLOW_CHESTPLATE", "HOLLOW_CHESTPLATE"));
+		map.put("INFERNAL_HOLLOW_LEGGINGS", Set.of("FIERY_HOLLOW_LEGGINGS", "BURNING_HOLLOW_LEGGINGS", "HOT_HOLLOW_LEGGINGS", "HOLLOW_LEGGINGS"));
+		map.put("INFERNAL_HOLLOW_BOOTS", Set.of("FIERY_HOLLOW_BOOTS", "BURNING_HOLLOW_BOOTS", "HOT_HOLLOW_BOOTS", "HOLLOW_BOOTS"));
+
+		// Fervor Armour
+		map.put("HOT_FERVOR_HELMET", Set.of("FERVOR_HELMET"));
+		map.put("HOT_FERVOR_CHESTPLATE", Set.of("FERVOR_CHESTPLATE"));
+		map.put("HOT_FERVOR_LEGGINGS", Set.of("FERVOR_LEGGINGS"));
+		map.put("HOT_FERVOR_BOOTS", Set.of("FERVOR_BOOTS"));
+
+		map.put("BURNING_FERVOR_HELMET", Set.of("HOT_FERVOR_HELMET", "FERVOR_HELMET"));
+		map.put("BURNING_FERVOR_CHESTPLATE", Set.of("HOT_FERVOR_CHESTPLATE", "FERVOR_CHESTPLATE"));
+		map.put("BURNING_FERVOR_LEGGINGS", Set.of("HOT_FERVOR_LEGGINGS", "FERVOR_LEGGINGS"));
+		map.put("BURNING_FERVOR_BOOTS", Set.of("HOT_FERVOR_BOOTS", "FERVOR_BOOTS"));
+
+		map.put("FIERY_FERVOR_HELMET", Set.of("BURNING_FERVOR_HELMET", "HOT_FERVOR_HELMET", "FERVOR_HELMET"));
+		map.put("FIERY_FERVOR_CHESTPLATE", Set.of("BURNING_FERVOR_CHESTPLATE", "HOT_FERVOR_CHESTPLATE", "FERVOR_CHESTPLATE"));
+		map.put("FIERY_FERVOR_LEGGINGS", Set.of("BURNING_FERVOR_LEGGINGS", "HOT_FERVOR_LEGGINGS", "FERVOR_LEGGINGS"));
+		map.put("FIERY_FERVOR_BOOTS", Set.of("BURNING_FERVOR_BOOTS", "HOT_FERVOR_BOOTS", "FERVOR_BOOTS"));
+
+		map.put("INFERNAL_FERVOR_HELMET", Set.of("FIERY_FERVOR_HELMET", "BURNING_FERVOR_HELMET", "HOT_FERVOR_HELMET", "FERVOR_HELMET"));
+		map.put("INFERNAL_FERVOR_CHESTPLATE", Set.of("FIERY_FERVOR_CHESTPLATE", "BURNING_FERVOR_CHESTPLATE", "HOT_FERVOR_CHESTPLATE", "FERVOR_CHESTPLATE"));
+		map.put("INFERNAL_FERVOR_LEGGINGS", Set.of("FIERY_FERVOR_LEGGINGS", "BURNING_FERVOR_LEGGINGS", "HOT_FERVOR_LEGGINGS", "FERVOR_LEGGINGS"));
+		map.put("INFERNAL_FERVOR_BOOTS", Set.of("FIERY_FERVOR_BOOTS", "BURNING_FERVOR_BOOTS", "HOT_FERVOR_BOOTS", "FERVOR_BOOTS"));
 	}));
 }
