@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
@@ -65,7 +67,11 @@ public final class ForgeReminderFeature extends Feature {
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Forge] ").withStyle(ChatFormatting.GOLD))
 				.append(text)
-				.append(Component.literal(" was ended!").withStyle(ChatFormatting.GREEN));
+				.append(Component.literal(" was ended!").withStyle(ChatFormatting.GREEN))
+				.append(Component.literal(" CLICK").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
+				.withStyle(style -> style
+						.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to call Forge").withStyle(ChatFormatting.YELLOW)))
+						.withClickEvent(new ClickEvent.RunCommand("/call forge")));
 		MutableComponent notification = Component.empty()
 				.append(Component.literal("Forge !").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD))
 				.append(Component.literal("\n"))
