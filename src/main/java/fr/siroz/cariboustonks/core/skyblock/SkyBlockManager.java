@@ -125,7 +125,7 @@ public final class SkyBlockManager {
 				IslandType islandType = IslandType.getById(mode.orElse(""));
 
 				SkyBlockAPI.handleInternalLocationUpdate(null, null, gameType, islandType);
-				SkyBlockEvents.ISLAND_CHANGE_EVENT.invoker().onIslandChange(islandType);
+				SkyBlockEvents.ISLAND_CHANGE_EVENT.invoker().onIslandChange(islandType, serverName);
 
 				if (gameType.equals("SKYBLOCK")) {
 					SkyBlockAPI.handleInternalLocationUpdate(null, true, null, null);
