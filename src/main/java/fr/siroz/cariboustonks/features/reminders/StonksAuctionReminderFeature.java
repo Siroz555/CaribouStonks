@@ -19,7 +19,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
@@ -98,7 +100,11 @@ public final class StonksAuctionReminderFeature extends Feature {
 	private void onReminderExpire(@NonNull TimedObjectModel timedObject) {
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Stonks Auction] ").withStyle(ChatFormatting.LIGHT_PURPLE))
-				.append(Component.literal("Diaz Stonks Auction available!").withStyle(ChatFormatting.DARK_PURPLE));
+				.append(Component.literal("Diaz Stonks Auction available!").withStyle(ChatFormatting.DARK_PURPLE))
+				.append(Component.literal(" CLICK").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
+				.withStyle(style -> style
+						.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to Warp stonks").withStyle(ChatFormatting.YELLOW)))
+						.withClickEvent(new ClickEvent.RunCommand("/warp stonks")));
 		MutableComponent notification = Component.empty()
 				.append(Component.literal("Stonks Auction").withStyle(ChatFormatting.LIGHT_PURPLE))
 				.append(Component.literal("\n"))
