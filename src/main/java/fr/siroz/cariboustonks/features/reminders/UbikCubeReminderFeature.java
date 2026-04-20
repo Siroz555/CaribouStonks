@@ -18,7 +18,9 @@ import java.time.Instant;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
@@ -66,7 +68,11 @@ public final class UbikCubeReminderFeature extends Feature {
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Ubik's Cube] ").withStyle(ChatFormatting.GOLD))
 				.append(Component.literal("Ready to play ").withStyle(ChatFormatting.GREEN))
-				.append(SPLIT_OR_STEAL_TEXT);
+				.append(SPLIT_OR_STEAL_TEXT)
+				.append(Component.literal(" CLICK").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
+				.withStyle(style -> style
+						.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to Warp rift").withStyle(ChatFormatting.YELLOW)))
+						.withClickEvent(new ClickEvent.RunCommand("/warp rift")));
 		MutableComponent notification = Component.empty()
 				.append(Component.literal("Ubik's Cube !").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD))
 				.append(Component.literal("\n"))
