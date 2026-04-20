@@ -37,6 +37,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Bazaar: Press ENTER to validate the last input.
 
 - Reminders
+    - Booster Cookie: Buff Status & Buff Inactive Reminder.
     - Greenhouse: Growth Stage Reminder & Pre-Reminder.
     - Chocolate Factory: Reminders when the number of chocolates reaches the limit.
     - Split or Steal: Reminder when the Ubik's Cube is ready.

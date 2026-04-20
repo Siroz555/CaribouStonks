@@ -296,9 +296,9 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Booster Cookie").append(BETA))
+								.name(Component.literal("Booster Cookie"))
 								.description(OptionDescription.of(
-										Component.literal("Activate a reminder when your Booster Cookie time is low.")))
+										Component.literal("Activate a reminder when your Booster Cookie Buff is inactive.")))
 								.binding(defaults.general.reminders.boosterCookie,
 										() -> current.general.reminders.boosterCookie,
 										newValue -> current.general.reminders.boosterCookie = newValue)
