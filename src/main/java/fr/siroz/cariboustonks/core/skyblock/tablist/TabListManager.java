@@ -93,7 +93,6 @@ public final class TabListManager {
 	 * @param keyword    the keyword
 	 * @return an Optional {@link String}
 	 */
-	@SuppressWarnings("unused")
 	public Optional<String> findLine(@NonNull String widgetName, @NonNull String keyword) {
 		return get(widgetName)
 				.flatMap(w -> w.getLines().stream()
