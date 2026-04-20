@@ -76,6 +76,15 @@ public class MiscCategory extends AbstractCategory {
 								newValue -> current.misc.showHexOnDyedItemEverywhere = newValue)
 						.controller(this::createBooleanController)
 						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Server Visit History"))
+						.description(OptionDescription.of(
+								Component.literal("Allows you to display a message in the chat indicating when you were last on the server or that you've just arrived.")))
+						.binding(defaults.misc.serverTracker,
+								() -> current.misc.serverTracker,
+								newValue -> current.misc.serverTracker = newValue)
+						.controller(this::createBooleanController)
+						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Other Mods").withStyle(ChatFormatting.BOLD))
 						.collapsed(false)

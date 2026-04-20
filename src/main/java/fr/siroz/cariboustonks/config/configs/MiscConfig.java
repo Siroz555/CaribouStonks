@@ -20,6 +20,9 @@ public class MiscConfig {
 	public boolean showHexOnDyedItemEverywhere = false;
 
 	@SerialEntry
+	public boolean serverTracker = false;
+
+	@SerialEntry
 	public Compatibility compatibility = new Compatibility();
 
 	@SerialEntry

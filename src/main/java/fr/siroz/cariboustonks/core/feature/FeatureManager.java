@@ -38,6 +38,7 @@ import fr.siroz.cariboustonks.features.misc.HighlightMobFeature;
 import fr.siroz.cariboustonks.features.misc.HoppityEggFinderFeature;
 import fr.siroz.cariboustonks.features.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.features.misc.REISearchBarCalculatorFeature;
+import fr.siroz.cariboustonks.features.misc.ServerTrackerFeature;
 import fr.siroz.cariboustonks.features.reminders.BoosterCookieReminderFeature;
 import fr.siroz.cariboustonks.features.reminders.ChocolateLimitReminderFeature;
 import fr.siroz.cariboustonks.features.reminders.EnchantedCloakReminderFeature;
@@ -162,6 +163,7 @@ public final class FeatureManager {
 		// Misc
 		registerFeature(new BestiaryHighlightFeature());
 		registerFeature(new HexTooltipFeature(5));
+		registerFeature(new ServerTrackerFeature());
 		registerFeature(new HighlightMobFeature());
 		registerFeature(new HoppityEggFinderFeature());
 		registerFeature(new PartyCommandFeature());
