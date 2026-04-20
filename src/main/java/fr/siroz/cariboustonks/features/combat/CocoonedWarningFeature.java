@@ -90,7 +90,7 @@ public class CocoonedWarningFeature extends Feature {
 	}
 
 	@EventHandler(event = "SkyBlockEvents.ISLAND_CHANGE_EVENT")
-	private void onChangeIsland(@NonNull IslandType islandType) {
+	private void onChangeIsland(@NonNull IslandType islandType, String serverName) {
 		canBeTriggered = islandType != IslandType.DUNGEON
 				&& islandType != IslandType.KUUDRA_HOLLOW
 				&& islandType != IslandType.THE_RIFT; // Parce que dans le rift il y a les mêmes cocoons

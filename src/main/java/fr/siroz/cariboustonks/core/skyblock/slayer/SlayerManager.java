@@ -203,7 +203,7 @@ public final class SlayerManager {
 	 * if it is available upon arrival on the server.
 	 */
 	@EventHandler(event = "SkyBlockEvents.ISLAND_CHANGE_EVENT")
-	private void onIslandChangeHandler(@NonNull IslandType islandType) {
+	private void onIslandChangeHandler(@NonNull IslandType islandType, String serverName) {
 		bossFight = null;
 		quest = null;
 		TickScheduler.getInstance().runLater(
