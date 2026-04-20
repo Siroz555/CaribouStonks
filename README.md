@@ -194,6 +194,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - Bestiary Highlight: Highlights entities by middle-clicking on an entity.
 - Guess Hoppity Eggs: Predict the location of Hoppity Eggs.
 - Show Hex Color on Dyed Items.
+- Server Visit History: Display a message indicating when you were last on the server.
 - Party Commands (!warp, !coords, !dice, ..)
 - RoughlyEnoughItems (REI) Search Bar Calculator
 
