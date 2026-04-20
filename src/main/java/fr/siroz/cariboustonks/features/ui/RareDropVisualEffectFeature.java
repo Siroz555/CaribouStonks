@@ -65,7 +65,7 @@ public class RareDropVisualEffectFeature extends Feature {
 
 	static {
 		// Mining - Mineshaft
-		RARE_DROP_ITEMS.put("Pocket-sized Igloo", "POCKET_SIZED_IGLOO");
+		RARE_DROP_ITEMS.put("Littlefoot Fluff", "LITTLEFOOT_FLUFF");
 		// Fishing
 		RARE_DROP_ITEMS.put("Radioactive Vial", "RADIOACTIVE_VIAL");
 		RARE_DROP_ITEMS.put("Titanoboa Shed", "TITANOBOA_SHED");
