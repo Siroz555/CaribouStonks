@@ -107,6 +107,10 @@ public final class AttributeAPI {
 		}
 	}
 
+	public static @Nullable SkyBlockAttribute getAttributeByName(@Nullable String name) {
+		return CaribouStonks.mod().getModDataSource().getAttributeByShardName(name);
+	}
+
 	private static String getAttributeId(@Nullable String id, @NonNull String fallback) {
 		SkyBlockAttribute attribute = CaribouStonks.mod().getModDataSource().getAttributeById(id);
 		return attribute != null ? attribute.skyBlockApiId() : fallback;
