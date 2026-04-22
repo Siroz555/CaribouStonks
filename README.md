@@ -139,6 +139,9 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Hunting
     - Display Shard prices in Hunting Box, Attribute Menu and Fusion Machine.
+    - Shards Tracker:
+        - Displays a HUD showing live statistics for your current shard hunting session.
+        - Tracks total shards caught, their coin value, and calculates your hourly rates.
     - Display the number of missing Shards and the price to max it out.
     - Quick Fusion for the Fusion Machine. Repeat and Confirm Keybinds.
 
