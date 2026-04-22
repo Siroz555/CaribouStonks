@@ -40,6 +40,18 @@ public interface SkyBlockConstants {
 		map.put("ENDER_SLAYER", Map.of(7, "ENDSTONE_IDOL"));
 		map.put("BANE_OF_ARTHROPODS", Map.of(7, "ENSNARED_SNAIL"));
 		map.put("VENOMOUS", Map.of(7, "FATEFUL_STINGER"));
+		map.put("THORNS", Map.of(4, "PRICKLY_CREEPER"));
+	}));
+
+	/**
+	 * Enchantment Upgrades.
+	 * <p>
+	 * Key: {@code enchantPrefixId} value: {@code maxLevel:upgradeId}
+	 * <p>
+	 * Example: {@code TURBO_} -> {@code (Level 6/7) TURBO_GOURD/ENCHANTED_TURBO_GOURD}
+	 */
+	Object2ObjectMap<String, Map<Integer, String>> ENCHANTMENT_PREFIX_UPGRADES = Object2ObjectMaps.unmodifiable(StonksUtils.make(new Object2ObjectOpenHashMap<>(), map -> {
+		map.put("TURBO_",  Map.of(6, "TURBO_GOURD", 7, "ENCHANTED_TURBO_GOURD"));
 	}));
 
 	Map<String, Integer> ULTIMATE_BASE_LEVELS = Map.of(
