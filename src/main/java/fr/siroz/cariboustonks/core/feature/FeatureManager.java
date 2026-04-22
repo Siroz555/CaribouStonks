@@ -29,6 +29,7 @@ import fr.siroz.cariboustonks.features.garden.pest.PestFinderFeature;
 import fr.siroz.cariboustonks.features.garden.pest.PlotInfestedFeature;
 import fr.siroz.cariboustonks.features.hunting.AttributeInfoTooltipFeature;
 import fr.siroz.cariboustonks.features.hunting.QuickFusionFeature;
+import fr.siroz.cariboustonks.features.hunting.tracking.TrackingShardsFeature;
 import fr.siroz.cariboustonks.features.item.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.features.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.features.keyshortcut.KeyShortcutFeature;
@@ -116,6 +117,7 @@ public final class FeatureManager {
 		registerFeature(new GreenhouseGrowthStageFeature());
 		registerFeature(new MouseLockFeature());
 		// Hunting
+		registerFeature(new TrackingShardsFeature());
 		registerFeature(new AttributeInfoTooltipFeature(3));
 		registerFeature(new QuickFusionFeature());
 		// Item
