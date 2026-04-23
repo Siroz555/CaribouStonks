@@ -2,14 +2,10 @@ package fr.siroz.cariboustonks.core.service.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import fr.siroz.cariboustonks.core.service.json.adapters.CodecTypeAdapter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 public final class GsonProvider {
 
@@ -39,21 +35,5 @@ public final class GsonProvider {
 	@NonNull
 	public static Gson prettyPrinting() {
 		return PRETTY_PRINTING_GSON;
-	}
-
-	@Nullable
-	public static JsonObject safeGetAsObject(@Nullable JsonObject parent, @NonNull String member) {
-		if (parent == null || !parent.has(member) || parent.get(member).isJsonNull()) return null;
-
-		JsonElement element = parent.get(member);
-		return element.isJsonObject() ? element.getAsJsonObject() : null;
-	}
-
-	@Nullable
-	public static JsonArray safeGetAsArray(@Nullable JsonObject parent, @NonNull String member) {
-		if (parent == null || !parent.has(member) || parent.get(member).isJsonNull()) return null;
-
-		JsonElement element = parent.get(member);
-		return element.isJsonArray() ? element.getAsJsonArray() : null;
 	}
 }

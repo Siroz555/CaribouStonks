@@ -7,12 +7,12 @@ import com.google.gson.JsonParser;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.module.http.Http;
 import fr.siroz.cariboustonks.core.module.http.HttpResponse;
-import fr.siroz.cariboustonks.core.service.json.GsonProvider;
 import fr.siroz.cariboustonks.core.service.scheduler.AsyncScheduler;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.ElectionResult;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Mayor;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Perk;
+import fr.siroz.cariboustonks.util.JsonUtils;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashSet;
@@ -128,9 +128,9 @@ public final class ElectionFetcher {
 				throw new RuntimeException("SkyBlock API Election failed");
 			}
 
-			JsonObject mayorJson = GsonProvider.safeGetAsObject(root, "mayor");
+			JsonObject mayorJson = JsonUtils.getObject(root, "mayor");
 			// Le minister n'est pas dans le root mais bien dans le mayor object
-			JsonObject ministerJson = GsonProvider.safeGetAsObject(mayorJson, "minister");
+			JsonObject ministerJson = JsonUtils.getObject(mayorJson, "minister");
 
 			Mayor mayor = parseMayor(mayorJson);
 			Mayor minister = parseMayor(ministerJson);
