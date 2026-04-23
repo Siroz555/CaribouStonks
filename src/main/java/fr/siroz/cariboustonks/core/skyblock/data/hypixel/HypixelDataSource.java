@@ -163,19 +163,41 @@ public final class HypixelDataSource {
 				return fallback;
 			}
 
-			String hypixelMaterial = skyBlockItem.material();
-			String minecraftId = modDataSource.getMinecraftId(hypixelMaterial);
-			if (minecraftId == null || minecraftId.equals("NO_MATCH")) {
-				return fallback;
-			}
-
+			// Nouvel item, pas sur le fallback en pour éviter le throw en dernier
 			ItemStack itemStack = new ItemStack(Items.BARRIER, 1);
+			// Flag pour éviter d'appliqué le material si item_model est présent.
+			// Peut arriver si item_model et material sont présents sur le même item.
+			boolean hasItemModelApplied = false;
 
-			Optional<Item> item = ItemUtils.getItemById(minecraftId);
-			if (item.isPresent()) {
-				itemStack = new ItemStack(item.get(), 1);
+			// ------------------------------------------------------
+			// Hypixel SkyBlock Latest Version - OPTION A
+			// > item_model | Minecraft Item ID Mapping
+			// ------------------------------------------------------
+			Optional<String> itemModel = skyBlockItem.itemModel();
+			if (itemModel.isPresent()) {
+				Optional<Item> item = ItemUtils.getItemById(itemModel.get());
+				if (item.isPresent()) {
+					itemStack = new ItemStack(item.get(), 1);
+					hasItemModelApplied = true;
+				}
+			}
+			// ------------------------------------------------------
+			// Hypixel SkyBlock Latest Version - OPTION B
+			// > material | Hypixel Material ID > Minecraft Item ID
+			// ------------------------------------------------------
+			Optional<String> hypixelMaterial = skyBlockItem.material();
+			if (!hasItemModelApplied && hypixelMaterial.isPresent()) {
+				String minecraftId = modDataSource.getMinecraftId(hypixelMaterial.get());
+				if (minecraftId == null || minecraftId.equals("NO_MATCH")) return fallback;
+
+				Optional<Item> item = ItemUtils.getItemById(minecraftId);
+				if (item.isPresent()) {
+					itemStack = new ItemStack(item.get(), 1);
+				}
 			}
 
+			// Peu importe si item_model ou material est utilisé, tant qu'il y a une texture.
+			// Toujours utilisé dans le cas des SKULL.
 			if (skyBlockItem.skullTexture().isPresent()) {
 				itemStack = ItemUtils.createSkull(skyBlockItem.skullTexture().get());
 			}
@@ -306,22 +328,38 @@ public final class HypixelDataSource {
 			}
 
 			if (DeveloperTools.isInDevelopment()) {
-				List<String> hypixelMaterials = itemsFetcher.getSkyBlockItemsSnapshot().values().stream()
-						.map(SkyBlockItemData::material)
-						.collect(Collectors.toSet())
-						.stream()
-						.toList();
-
-				for (String material : hypixelMaterials) {
-					if (!modDataSource.containsItem(material)) {
-						CaribouStonks.LOGGER.warn(
-								"[HypixelDataSource] (Minecraft Ids Mapping) -> {} is not registered!", material);
-					}
-				}
-
-				CaribouStonks.LOGGER.info("[HypixelDataSource] Fixed {} enchants, {} essences and {} Shards from Bazaar to SkyBlock Items",
-						fixedEnchants, fixedEssences, fixedShards);
+				debugDeveloperMode(fixedEnchants, fixedEssences, fixedShards);
 			}
 		}
+	}
+
+	private void debugDeveloperMode(int fixedEnchants, int fixedEssences, int fixedShards) {
+		List<String> hypixelMaterials = itemsFetcher.getSkyBlockItemsSnapshot().values().stream()
+				.map(SkyBlockItemData::material)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toSet())
+				.stream()
+				.toList();
+
+		for (String material : hypixelMaterials) {
+			if (!modDataSource.containsItem(material)) {
+				CaribouStonks.LOGGER.warn(
+						"[HypixelDataSource] (Minecraft Ids Mapping) -> {} is not registered!", material);
+			}
+		}
+
+		List<String> itemModels = itemsFetcher.getSkyBlockItemsSnapshot().values().stream()
+				.map(SkyBlockItemData::itemModel)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toSet())
+				.stream()
+				.toList();
+
+		CaribouStonks.LOGGER.info("[HypixelDataSource] {} item_model is present", itemModels.size());
+
+		CaribouStonks.LOGGER.info("[HypixelDataSource] Fixed {} enchants, {} essences and {} Shards from Bazaar to SkyBlock Items",
+				fixedEnchants, fixedEssences, fixedShards);
 	}
 }
