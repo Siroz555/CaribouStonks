@@ -7,17 +7,19 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.mod.ModDataSource;
 import fr.siroz.cariboustonks.core.module.http.Http;
 import fr.siroz.cariboustonks.core.module.http.HttpResponse;
-import fr.siroz.cariboustonks.core.service.json.GsonProvider;
 import fr.siroz.cariboustonks.core.service.scheduler.AsyncScheduler;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelAPIFixer;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemParseException;
+import fr.siroz.cariboustonks.util.JsonUtils;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
@@ -172,7 +174,7 @@ public final class ItemsFetcher {
 				throw new RuntimeException("SkyBlock API Items Resource failed. Cause: " + cause);
 			}
 
-			JsonArray itemsArray = GsonProvider.safeGetAsArray(root, "items");
+			JsonArray itemsArray = JsonUtils.getArray(root, "items");
 
 			Map<String, SkyBlockItemData> items = parseItems(itemsArray);
 			if (items != null && !items.isEmpty()) {
@@ -201,7 +203,7 @@ public final class ItemsFetcher {
 				try {
 					SkyBlockItemData skyBlockItem = SkyBlockItemData.parse(item);
 					items.put(id, skyBlockItem);
-				} catch (Exception ex) {
+				} catch (SkyBlockItemParseException ex) {
 					CaribouStonks.LOGGER.error("[ItemFetcher] Unable to parse SkyBlock Item: {}", id, ex);
 				}
 			}
@@ -223,6 +225,8 @@ public final class ItemsFetcher {
 			if (lastFetchSuccessful.get() && !modDataSource.isItemsMappingError()) {
 				List<String> hypixelMaterials = skyBlockItems.get().values().stream()
 						.map(SkyBlockItemData::material)
+						.filter(Optional::isPresent)
+						.map(Optional::get)
 						.collect(Collectors.toSet())
 						.stream()
 						.toList();
