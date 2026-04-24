@@ -24,6 +24,17 @@ import java.util.concurrent.TimeUnit;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * GenericDataSource
+ * <p>
+ * <h3>Auction House Data</h3>
+ * Moulberry (NEU) > Elite's API Endpoints.
+ * <p>
+ * Elite's API is used. <a href="https://eliteskyblock.com/"EliteSkyBlock</a> .
+ * All requests to the Elite API are subject to its Privacy Policy.
+ * <a href="https://api.eliteskyblock.com/">Elite API</a>
+ * Credits to {@code ptlthg} for the API backend/access
+ */
 public final class GenericDataSource {
 
 	// Price History Mapping (NEU API)
@@ -31,8 +42,8 @@ public final class GenericDataSource {
 	private final Map<String, GraphCacheEntry> graphCache = new HashMap<>();
 	public static final Duration CACHE_EXPIRATION_PRICE_HISTORY = Duration.ofMinutes(30);
 
-	// Liste des items à l'Auction (NEU API)
-	private static final String NEU_LOWEST_BIN_AUCTION_URL = "https://moulberry.codes/lowestbin.json";
+	// Liste des items à l'Auction (Elite's LBIN API)
+	private static final String LOWEST_BIN_AUCTION_URL = "https://api.eliteskyblock.com/resources/auctions/neu";
 	private final Object2DoubleMap<String> lowestBinsNEU = new Object2DoubleOpenHashMap<>();
 
 	private boolean lowestBinsInUpdate = false;
@@ -50,6 +61,7 @@ public final class GenericDataSource {
 		}, 5, TimeUnit.MINUTES));
 	}
 
+	@SuppressWarnings("unused")
 	public boolean isLowestBinsInUpdate() {
 		return lowestBinsInUpdate;
 	}
@@ -134,7 +146,7 @@ public final class GenericDataSource {
 
 	private @NonNull CompletableFuture<Map<String, Double>> fetchLowestBins() {
 		return CompletableFuture.supplyAsync(() -> {
-			try (HttpResponse response = Http.request(NEU_LOWEST_BIN_AUCTION_URL)) {
+			try (HttpResponse response = Http.request(LOWEST_BIN_AUCTION_URL)) {
 				if (!response.success()) {
 					throw new RuntimeException("Auction Lowest Bin API returned an error code: " + response.statusCode());
 				}

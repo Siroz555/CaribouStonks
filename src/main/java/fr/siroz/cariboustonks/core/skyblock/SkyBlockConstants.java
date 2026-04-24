@@ -5,6 +5,9 @@ import fr.siroz.cariboustonks.util.StonksUtils;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMaps;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -51,7 +54,7 @@ public interface SkyBlockConstants {
 	 * Example: {@code TURBO_} -> {@code (Level 6/7) TURBO_GOURD/ENCHANTED_TURBO_GOURD}
 	 */
 	Object2ObjectMap<String, Map<Integer, String>> ENCHANTMENT_PREFIX_UPGRADES = Object2ObjectMaps.unmodifiable(StonksUtils.make(new Object2ObjectOpenHashMap<>(), map -> {
-		map.put("TURBO_",  Map.of(6, "TURBO_GOURD", 7, "ENCHANTED_TURBO_GOURD"));
+		map.put("TURBO_", Map.of(6, "TURBO_GOURD", 7, "ENCHANTED_TURBO_GOURD"));
 	}));
 
 	Map<String, Integer> ULTIMATE_BASE_LEVELS = Map.of(
@@ -213,11 +216,11 @@ public interface SkyBlockConstants {
 			"Paid Chest", "Paid Chest Chest"
 	);
 
-	Set<String> LVL_200_PETS = Set.of(
-			"GOLDEN_DRAGON",
-			"JADE_DRAGON",
-			"ROSE_DRAGON"
-	);
+	Object2IntMap<String> PET_SPECIALS = Object2IntMaps.unmodifiable(StonksUtils.make(new Object2IntOpenHashMap<>(), map -> {
+		map.put("GOLDEN_DRAGON", 200);
+		map.put("JADE_DRAGON", 200);
+		map.put("ROSE_DRAGON", 200);
+	}));
 
 	/**
 	 * Rarity to Attribute levels Mapping.
