@@ -242,6 +242,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - **HypixelModAPI** Official Hypixel Mod API as a dependency.
 - **Skyblocker** (<3) & **Wynntils** (<3) for some code logic in the latest version of Minecraft, such as Mixins.
 - **SkyHanni** & **NotEnoughUpdates** for ideas and adaptations since version 1.8.
+- **EliteSkyBlock** for the Elite API used for the Auction House Data.
 
 | Software                                                                 | License                                                                                           |
 |--------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
@@ -255,3 +256,4 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 | [SoopyV2](https://github.com/Soopyboo32/SoopyV2)                         | [GPL-3.0 license](https://github.com/Soopyboo32/SoopyV2/blob/master/LICENSE)                      |
 | [Skytils](https://github.com/Skytils/SkytilsMod)                         | [AGPL-3.0 license ](https://github.com/Skytils/SkytilsMod/blob/1.x/LICENSE.md)                    |
 | [NotEnoughUpdates](https://github.com/NotEnoughUpdates/NotEnoughUpdates) | [LGPL-3.0 license ](https://github.com/NotEnoughUpdates/NotEnoughUpdates/blob/master/COPYING)     |
+| [EliteSkyBlock](https://eliteskyblock.com)                               | [API TOS](https://eliteskyblock.com/apiterms)                                                     |

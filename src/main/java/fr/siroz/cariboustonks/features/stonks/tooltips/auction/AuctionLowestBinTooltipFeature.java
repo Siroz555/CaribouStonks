@@ -46,11 +46,6 @@ public class AuctionLowestBinTooltipFeature extends Feature {
 			return;
 		}
 
-		if (genericDataSource.isLowestBinsInUpdate()) {
-			lines.add(Component.literal("Auction is currently updating...").withStyle(ChatFormatting.RED));
-			return;
-		}
-
 		Optional<Double> lowestBin = genericDataSource.getLowestBin(key);
 		if (lowestBin.isEmpty() || lowestBin.get() <= 0) {
 			lines.add(Component.literal("Auction API error.").withStyle(ChatFormatting.RED));
