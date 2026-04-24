@@ -3,6 +3,8 @@ package fr.siroz.cariboustonks.util;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import java.time.Instant;
+import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -48,6 +50,19 @@ public final class JsonUtils {
 	 * @param key    the key
 	 * @return the {@link String} value, or {@code null} if absent.
 	 */
+	public static @Nullable Instant getInstant(@Nullable JsonObject parent, @NonNull String key) {
+		if (parent == null) return null;
+		JsonElement element = parent.get(key);
+		return element != null && element.isJsonPrimitive() ? Instant.parse(element.getAsString()) : null;
+	}
+
+	/**
+	 * Returns the {@link String} value for the given key
+	 *
+	 * @param parent the parent
+	 * @param key    the key
+	 * @return the {@link String} value, or {@code null} if absent.
+	 */
 	public static @Nullable String getString(@Nullable JsonObject parent, @NonNull String key) {
 		if (parent == null) return null;
 		JsonElement element = parent.get(key);
@@ -78,5 +93,18 @@ public final class JsonUtils {
 		if (parent == null) return OptionalInt.empty();
 		JsonElement element = parent.get(key);
 		return element != null && element.isJsonPrimitive() ? OptionalInt.of(element.getAsInt()) : OptionalInt.empty();
+	}
+
+	/**
+	 * Returns an {@link OptionalDouble} for the given key
+	 *
+	 * @param parent the parent
+	 * @param key    the key
+	 * @return an {@link OptionalInt}, or empty if absent.
+	 */
+	public static @NonNull OptionalDouble getOptionalDouble(@Nullable JsonObject parent, @NonNull String key) {
+		if (parent == null) return OptionalDouble.empty();
+		JsonElement element = parent.get(key);
+		return element != null && element.isJsonPrimitive() ? OptionalDouble.of(element.getAsInt()) : OptionalDouble.empty();
 	}
 }
