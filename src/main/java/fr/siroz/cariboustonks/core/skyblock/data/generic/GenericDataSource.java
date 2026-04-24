@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.core.skyblock.data.generic;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.siroz.cariboustonks.CaribouStonks;
@@ -10,6 +11,7 @@ import fr.siroz.cariboustonks.core.service.json.GsonProvider;
 import fr.siroz.cariboustonks.core.service.scheduler.AsyncScheduler;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
+import fr.siroz.cariboustonks.util.JsonUtils;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.time.Duration;
@@ -19,10 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * GenericDataSource
@@ -30,21 +35,21 @@ import org.jspecify.annotations.NonNull;
  * <h3>Auction House Data</h3>
  * Moulberry (NEU) > Elite's API Endpoints.
  * <p>
- * Elite's API is used. <a href="https://eliteskyblock.com/"EliteSkyBlock</a> .
+ * Elite's API is used. <a href="https://eliteskyblock.com/">EliteSkyBlock</a>
  * All requests to the Elite API are subject to its Privacy Policy.
  * <a href="https://api.eliteskyblock.com/">Elite API</a>
  * Credits to {@code ptlthg} for the API backend/access
  */
 public final class GenericDataSource {
 
-	// Price History Mapping (NEU API)
-	private static final String NEU_PRICE_HISTORY_URL = "https://pricehistory.notenoughupdates.org/";
+	// Price History Mapping (Elite's History API)
+	private static final String PRICE_HISTORY_BASE_URL = "https://api.eliteskyblock.com/resources/";
 	private final Map<String, GraphCacheEntry> graphCache = new HashMap<>();
-	public static final Duration CACHE_EXPIRATION_PRICE_HISTORY = Duration.ofMinutes(30);
+	public static final Duration CACHE_EXPIRATION_PRICE_HISTORY = Duration.ofMinutes(15);
 
 	// Liste des items à l'Auction (Elite's LBIN API)
 	private static final String LOWEST_BIN_AUCTION_URL = "https://api.eliteskyblock.com/resources/auctions/neu";
-	private final Object2DoubleMap<String> lowestBinsNEU = new Object2DoubleOpenHashMap<>();
+	private final Object2DoubleMap<String> lowestBinsPrices = new Object2DoubleOpenHashMap<>();
 
 	private boolean lowestBinsInUpdate = false;
 	private boolean lowestBinsError = false;
@@ -52,7 +57,7 @@ public final class GenericDataSource {
 	public GenericDataSource() {
 		ClientLifecycleEvents.CLIENT_STARTED.register(_ -> TickScheduler.getInstance().runRepeating(() -> {
 			if (ConfigManager.getConfig().general.internal.fetchAuctionData) {
-				updateLowestBins().thenRun(() -> {
+				this.updateLowestBins().thenRun(() -> {
 					lowestBinsInUpdate = false;
 					lowestBinsError = false;
 					checkLowestBinsResult();
@@ -67,13 +72,13 @@ public final class GenericDataSource {
 	}
 
 	public boolean hasLowestBin(@NonNull ItemLookupKey key) {
-		if (key.isNull() || key.neuId() == null || lowestBinsNEU.isEmpty()) return false;
-		return lowestBinsNEU.containsKey(key.neuId());
+		if (key.isNull() || key.neuId() == null || lowestBinsPrices.isEmpty()) return false;
+		return lowestBinsPrices.containsKey(key.neuId());
 	}
 
 	public Optional<Double> getLowestBin(@NonNull ItemLookupKey key) {
-		if (key.isNull() || key.neuId() == null || lowestBinsNEU.isEmpty()) return Optional.empty();
-		return Optional.of(lowestBinsNEU.getDouble(key.neuId()));
+		if (key.isNull() || key.neuId() == null || lowestBinsPrices.isEmpty()) return Optional.empty();
+		return Optional.of(lowestBinsPrices.getDouble(key.neuId()));
 	}
 
 	public CompletableFuture<List<ItemPrice>> loadGraphData(@NonNull ItemLookupKey key) {
@@ -92,42 +97,86 @@ public final class GenericDataSource {
 	}
 
 	private @NonNull CompletableFuture<List<ItemPrice>> fetchGraphData(@NonNull ItemLookupKey key) {
+		final GraphFetchStrategy strategy = resolveStrategy(key);
 		return CompletableFuture.supplyAsync(() -> {
-			try (HttpResponse response = Http.request(NEU_PRICE_HISTORY_URL + "?item=" + key.neuId())) {
+			try (HttpResponse response = Http.request(strategy.url())) {
 				if (!response.success()) {
-					throw new RuntimeException("Price History API returned an error code: " + response.statusCode());
+					CaribouStonks.LOGGER.warn("[GenericDataSource] Price History API returned error {} for {}", response.statusCode(), key.hypixelSkyBlockId());
+					return null;
 				}
 
 				JsonObject json = GsonProvider.prettyPrinting().fromJson(response.content(), JsonObject.class);
 				if (json == null) {
-					throw new IllegalStateException("Json is null or empty");
+					CaribouStonks.LOGGER.warn("[GenericDataSource] Json is null or empty for {}", key.hypixelSkyBlockId());
+					return null;
 				}
 
-				List<ItemPrice> result = new ArrayList<>();
-				for (Map.Entry<String, JsonElement> element : json.entrySet()) {
-					try {
-						Instant instant = Instant.parse(element.getKey());
-						JsonObject jsonPrice = element.getValue().getAsJsonObject();
-						double buyPrice = jsonPrice.get("b").getAsDouble();
-						Double sellPrice = jsonPrice.has("s") ? jsonPrice.get("s").getAsDouble() : null;
-						result.add(new ItemPrice(instant, buyPrice, sellPrice));
-					} catch (Exception ex) {
-						CaribouStonks.LOGGER.error(
-								"[GenericDataSource] Failed to parse price history for {}", key.neuId(), ex);
-					}
-				}
-
-				if (result.size() > 2) {
-					GraphCacheEntry entry = new GraphCacheEntry(result, Instant.now());
-					graphCache.put(key.neuId(), entry);
+				List<ItemPrice> result = strategy.parser().apply(json);
+				if (result != null && result.size() > 2) {
+					graphCache.put(key.hypixelSkyBlockId(), new GraphCacheEntry(result, Instant.now()));
 				}
 
 				return result;
 			} catch (Exception ex) {
-				CaribouStonks.LOGGER.error("[GenericDataSource] Failed to fetch price history for {}", key.neuId(), ex);
+				CaribouStonks.LOGGER.error("[GenericDataSource] Failed to fetch price history for {}", key.hypixelSkyBlockId(), ex);
 				return null;
 			}
 		}, AsyncScheduler.getInstance().blockingExecutor());
+	}
+
+	private @NonNull GraphFetchStrategy resolveStrategy(@NonNull ItemLookupKey key) {
+		if (CaribouStonks.skyBlock().getHypixelDataSource().hasBazaarItem(key.hypixelSkyBlockId())) {
+			return new GraphFetchStrategy(
+					PRICE_HISTORY_BASE_URL + "bazaar/" + key.hypixelSkyBlockId() + "/history?timespan=30d",
+					this::parseBazaarGraph
+			);
+		} else {
+			return new GraphFetchStrategy(
+					PRICE_HISTORY_BASE_URL + "auctions/" + key.hypixelSkyBlockId() + "/default?timespan=30d",
+					this::parseAuctionHouseGraph
+			);
+		}
+	}
+
+	@Nullable
+	private List<ItemPrice> parseBazaarGraph(@NonNull JsonObject json) {
+		JsonArray historyArray = JsonUtils.getArray(json, "history");
+		if (historyArray == null) return null;
+
+		List<ItemPrice> result = new ArrayList<>();
+		for (JsonElement element : historyArray) {
+			if (element.isJsonObject()) {
+				JsonObject history = element.getAsJsonObject();
+				Instant timestamp = JsonUtils.getInstant(history, "timestamp");
+				OptionalDouble buyPrice = JsonUtils.getOptionalDouble(history, "instaBuyPrice");
+				OptionalDouble sellPrice = JsonUtils.getOptionalDouble(history, "instaSellPrice");
+				if (timestamp != null && buyPrice.isPresent() && sellPrice.isPresent()) {
+					result.add(new ItemPrice(timestamp, buyPrice.getAsDouble(), sellPrice.getAsDouble()));
+				}
+			}
+		}
+
+		return result;
+	}
+
+	@Nullable
+	private List<ItemPrice> parseAuctionHouseGraph(@NonNull JsonObject json) {
+		JsonArray historyArray = JsonUtils.getArray(json, "history");
+		if (historyArray == null) return null;
+
+		List<ItemPrice> result = new ArrayList<>();
+		for (JsonElement element : historyArray) {
+			if (element.isJsonObject()) {
+				JsonObject history = element.getAsJsonObject();
+				Instant timestamp = JsonUtils.getInstant(history, "timestamp");
+				OptionalDouble price = JsonUtils.getOptionalDouble(history, "lowestBinPrice");
+				if (timestamp != null && price.isPresent()) {
+					result.add(new ItemPrice(timestamp, price.getAsDouble(), null));
+				}
+			}
+		}
+
+		return result;
 	}
 
 	private @NonNull CompletableFuture<Void> updateLowestBins() {
@@ -139,8 +188,8 @@ public final class GenericDataSource {
 				return;
 			}
 
-			lowestBinsNEU.clear();
-			lowestBinsNEU.putAll(result);
+			lowestBinsPrices.clear();
+			lowestBinsPrices.putAll(result);
 		});
 	}
 
@@ -176,9 +225,15 @@ public final class GenericDataSource {
 
 	private void checkLowestBinsResult() {
 		if (!lowestBinsError) {
-			CaribouStonks.LOGGER.info("[GenericDataSource] Updated {} lowest bins", lowestBinsNEU.size());
+			CaribouStonks.LOGGER.info("[GenericDataSource] Updated {} lowest bins", lowestBinsPrices.size());
 		} else {
 			CaribouStonks.LOGGER.warn("[GenericDataSource] Unable to update lowest bins");
 		}
+	}
+
+	private record GraphFetchStrategy(
+			@NonNull String url,
+			@NonNull Function<JsonObject, List<ItemPrice>> parser
+	) {
 	}
 }
