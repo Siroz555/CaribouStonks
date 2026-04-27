@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
+import java.util.OptionalInt;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -51,24 +52,17 @@ public final class GenericDataSource {
 	private static final String LOWEST_BIN_AUCTION_URL = "https://api.eliteskyblock.com/resources/auctions/neu";
 	private final Object2DoubleMap<String> lowestBinsPrices = new Object2DoubleOpenHashMap<>();
 
-	private boolean lowestBinsInUpdate = false;
 	private boolean lowestBinsError = false;
 
 	public GenericDataSource() {
 		ClientLifecycleEvents.CLIENT_STARTED.register(_mc -> TickScheduler.getInstance().runRepeating(() -> {
 			if (ConfigManager.getConfig().general.internal.fetchAuctionData) {
 				this.updateLowestBins().thenRun(() -> {
-					lowestBinsInUpdate = false;
 					lowestBinsError = false;
 					checkLowestBinsResult();
 				});
 			}
 		}, 5, TimeUnit.MINUTES));
-	}
-
-	@SuppressWarnings("unused")
-	public boolean isLowestBinsInUpdate() {
-		return lowestBinsInUpdate;
 	}
 
 	public boolean hasLowestBin(@NonNull ItemLookupKey key) {
@@ -81,22 +75,22 @@ public final class GenericDataSource {
 		return Optional.of(lowestBinsPrices.getDouble(key.neuId()));
 	}
 
-	public CompletableFuture<List<ItemPrice>> loadGraphData(@NonNull ItemLookupKey key) {
+	public CompletableFuture<GraphParseResult> loadGraphData(@NonNull ItemLookupKey key) {
 		if (key.isNull()) {
 			return CompletableFuture.completedFuture(null);
 		}
 
-		GraphCacheEntry cacheEntry = graphCache.get(key.neuId());
+		GraphCacheEntry cacheEntry = graphCache.get(key.hypixelSkyBlockId());
 		if (cacheEntry != null && cacheEntry.isValid()) {
 			return CompletableFuture.completedFuture(cacheEntry.data());
 		} else if (cacheEntry != null && !cacheEntry.isValid()) {
-			graphCache.remove(key.neuId());
+			graphCache.remove(key.hypixelSkyBlockId());
 		}
 
 		return fetchGraphData(key);
 	}
 
-	private @NonNull CompletableFuture<List<ItemPrice>> fetchGraphData(@NonNull ItemLookupKey key) {
+	private @NonNull CompletableFuture<GraphParseResult> fetchGraphData(@NonNull ItemLookupKey key) {
 		final GraphFetchStrategy strategy = resolveStrategy(key);
 		return CompletableFuture.supplyAsync(() -> {
 			try (HttpResponse response = Http.request(strategy.url())) {
@@ -111,8 +105,8 @@ public final class GenericDataSource {
 					return null;
 				}
 
-				List<ItemPrice> result = strategy.parser().apply(json);
-				if (result != null && result.size() > 2) {
+				GraphParseResult result = strategy.parser().apply(json);
+				if (result != null && result.prices() != null && result.prices().size() > 2) {
 					graphCache.put(key.hypixelSkyBlockId(), new GraphCacheEntry(result, Instant.now()));
 				}
 
@@ -128,7 +122,7 @@ public final class GenericDataSource {
 		if (CaribouStonks.skyBlock().getHypixelDataSource().hasBazaarItem(key.hypixelSkyBlockId())) {
 			return new GraphFetchStrategy(
 					PRICE_HISTORY_BASE_URL + "bazaar/" + key.hypixelSkyBlockId() + "/history?timespan=30d",
-					this::parseBazaarGraph
+					json -> GraphParseResult.ofBazaar(parseBazaarGraph(json))
 			);
 		} else {
 			return new GraphFetchStrategy(
@@ -160,28 +154,34 @@ public final class GenericDataSource {
 	}
 
 	@Nullable
-	private List<ItemPrice> parseAuctionHouseGraph(@NonNull JsonObject json) {
+	private GraphParseResult parseAuctionHouseGraph(@NonNull JsonObject json) {
 		JsonArray historyArray = JsonUtils.getArray(json, "history");
 		if (historyArray == null) return null;
 
-		List<ItemPrice> result = new ArrayList<>();
+		List<ItemPrice> itemPrices = new ArrayList<>();
+		List<AuctionStatistics.AuctionDataPoint> dataPoints = new ArrayList<>();
+
 		for (JsonElement element : historyArray) {
 			if (element.isJsonObject()) {
 				JsonObject history = element.getAsJsonObject();
 				Instant timestamp = JsonUtils.getInstant(history, "timestamp");
 				OptionalDouble price = JsonUtils.getOptionalDouble(history, "lowestBinPrice");
-				if (timestamp != null && price.isPresent()) {
-					result.add(new ItemPrice(timestamp, price.getAsDouble(), null));
+				OptionalInt itemsSold    = JsonUtils.getOptionalInt(history, "itemsSold");
+				// Skip dans tout les cas si null
+				if (timestamp == null) continue;
+				// Prix -> Graphique
+				if (price.isPresent()) {
+					itemPrices.add(new ItemPrice(timestamp, price.getAsDouble(), null));
 				}
+				// Stats -> agrégation
+				dataPoints.add(new AuctionStatistics.AuctionDataPoint(timestamp, itemsSold.orElse(0), price));
 			}
 		}
 
-		return result;
+		return GraphParseResult.ofAuction(itemPrices, AuctionStatistics.compute(dataPoints));
 	}
 
 	private @NonNull CompletableFuture<Void> updateLowestBins() {
-		lowestBinsInUpdate = true;
-
 		return fetchLowestBins().thenAccept(result -> {
 			if (result == null || result.isEmpty() || result.size() < 2) {
 				lowestBinsError = true;
@@ -231,9 +231,6 @@ public final class GenericDataSource {
 		}
 	}
 
-	private record GraphFetchStrategy(
-			@NonNull String url,
-			@NonNull Function<JsonObject, List<ItemPrice>> parser
-	) {
+	private record GraphFetchStrategy(@NonNull String url, @NonNull Function<JsonObject, GraphParseResult> parser) {
 	}
 }
