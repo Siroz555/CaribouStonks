@@ -7,7 +7,7 @@ Siroz555's Mod – Fabric mod for Hypixel SkyBlock on the latest versions of Min
 The main features are Bazaar/Auctions price displays on items, a graphical representation of prices over time,
 in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
-**✅ Supported Minecraft Versions**: **26.1**, **1.21.11** and **1.21.10**
+**✅ Supported Minecraft Versions**: **26.1.x**, **1.21.11** and **1.21.10**
 
 ### Installation
 
@@ -17,14 +17,10 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 > [!IMPORTANT]
 > This is a `personal` mod, it's not intended to be widely distributed or anything like that at the moment.
-> The mod is currently stable and is compatible with most 1.21 mods.
-> Updates are planned to correct translation and general issues.
 
 ### Features
 
 **General**
-
-- KeyShortcut: Link Keybinds to commands to be executed.
 
 - Stonks
     - Configure the display of item prices in Tooltips.
@@ -44,6 +40,8 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Stonks Auction: Reminder when the Diaz Stonks Auction is ready to bid or recovered.
     - Forge: Reminder when a forge item is completed.
     - Enchanted Cloak: Reminders when a boost is ready.
+
+- KeyShortcut: Link Keybinds to commands to be executed.
 
 **Vanilla**
 
@@ -114,8 +112,8 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Combat
     - Cocooned Warning: Allows you to be alerted when a mob has been cocooned.
-      - _(works with The Primordial Belt & Bloodshot Reforge Stone)_
-      - Alerts, Sound, Timer and Beacon Beam.
+        - _(works with The Primordial Belt & Bloodshot Reforge Stone)_
+        - Alerts, Sound, Timer and Beacon Beam.
     - Low health warning: Display a red screen when your health is low.
     - Ragnarock Axe:
         - Cast Title / Personalized message
@@ -176,11 +174,6 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 **Dungeons**
 
-- Croesus:
-    - Highlight Opened Chests.
-    - Highlight Kismet Feather Available.
-    - Highlight No more Chests.
-
 - Thorn - F4/M4 - Spirit Bear Spawn Timer.
 - Sadan - F6/M6 - Terracotta Timers.
 - Wither King - M7:
@@ -190,6 +183,10 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Target Line.
     - Last Breath Target.
 
+- Croesus:
+    - Highlight Opened Chests.
+    - Highlight Kismet Feather Available.
+    - Highlight No more Chests.
 
 **Misc**
 
@@ -218,7 +215,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 ### Release & Update Policy
 
 * Major features → shipped on the **master** branch first.
-* Bug fixes → backported to 1.21.10 when safe.
+* Bug fixes → backported to x when safe.
 * Small QoL features may be added to both branches.
 
 ---
@@ -227,9 +224,9 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 | Version             |                   Status | Notes                               |
 |---------------------|-------------------------:|-------------------------------------|
-| **26.1**            |            ✅ **Current** | Latest                              |
+| **26.1.x**          |            ✅ **Current** | Latest                              |
 | **1.21.11**         |            ✅ **Current** | Maintained                          |
-| **1.21.10**         |           ⚠️ **Current** | Maintained (Hypixel Version Policy) |
+| **1.21.10**         |    ⚠️ **End of Support** | Maintained (Hypixel Version Policy) |
 | **1.21.7 / 1.21.8** | ⚠️ **No Longer Updated** | Latest Mod Version: 0.10.1          |
 | **1.21.5**          | ⚠️ **No Longer Updated** | Latest Mod Version: 0.8.0           |
 

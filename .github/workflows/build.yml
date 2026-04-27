@@ -13,7 +13,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           java-version: '25'
-          # Celui de Eclipse est mieux que Microslop, a changer
+          # Celui de Eclipse est mieux que Microslop (Typo: In word 'Microslop')
           distribution: 'microsoft'
 
       - name: Setup Gradle
