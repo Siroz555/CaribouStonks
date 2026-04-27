@@ -4,6 +4,7 @@ import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -16,6 +17,7 @@ public final class TimeUtils {
 
 	private static final Locale LOCALE = Locale.getDefault();
 	private static final ZoneId ZONE_ID = ZoneId.systemDefault();
+	public static final ZoneId UTC = ZoneOffset.UTC.normalized();
 
 	/**
 	 * | => 10s | => 50m 10s | => 16h 50m 10s | => 4d 16h 50m 10s

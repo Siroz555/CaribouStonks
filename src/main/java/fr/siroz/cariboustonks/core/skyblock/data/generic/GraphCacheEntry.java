@@ -1,10 +1,9 @@
 package fr.siroz.cariboustonks.core.skyblock.data.generic;
 
 import java.time.Instant;
-import java.util.List;
 
 public record GraphCacheEntry(
-		List<ItemPrice> data,
+		GraphParseResult data,
 		Instant timestamp
 ) {
 
