@@ -59,8 +59,9 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 
 		// LINE #2
 
-		adder.addChild(Button.builder(Component.literal("Reminders"),
-						button -> openScreen(ReminderScreen.create(this)))
+		adder.addChild(Button.builder(Component.literal("Stonks"),
+						button -> openScreen(new StonksSearchScreen(this)))
+				.tooltip(Tooltip.create(Component.literal("Search a SkyBlock item to show more informations about.")))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
@@ -71,33 +72,32 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 
 		// LINE #3
 
-		adder.addChild(Button.builder(Component.literal("Stonks"),
-						button -> openScreen(new StonksSearchScreen(this)))
-				.tooltip(Tooltip.create(Component.literal("Search a SkyBlock item to show more informations about.")))
-				.width(HALF_BUTTON_WIDTH)
-				.build());
-
-		Button keybinds = Button.builder(Component.literal("Key Shortcuts"),
-						button -> openScreen(KeyShortcutScreen.create(this)))
-				.tooltip(Tooltip.create(Component.literal("Link Keybinds to commands to be executed.")))
-				.width(HALF_BUTTON_WIDTH)
-				.build();
-		adder.addChild(keybinds);
-
-		// LINE #4
-
 		adder.addChild(Button.builder(Component.literal("Mob Tracking"),
 						button -> openScreen(MobTrackingScreen.create(this)))
 				.tooltip(Tooltip.create(Component.literal("Configure all Mob Tracking")))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
-		Button surprise = Button.builder(Component.literal("?"), button -> {})
-				.tooltip(Tooltip.create(Component.literal("Mmmmm ?")))
+		adder.addChild(Button.builder(Component.literal("Reminders"),
+						button -> openScreen(ReminderScreen.create(this)))
+				.width(HALF_BUTTON_WIDTH)
+				.build());
+
+		// LINE #4
+
+		Button surprise = Button.builder(Component.literal("?"), button -> {
+				})
+				.tooltip(Tooltip.create(Component.literal("Available on 26.1+ Soon")))
 				.width(HALF_BUTTON_WIDTH)
 				.build();
 		surprise.active = false;
 		adder.addChild(surprise);
+
+		adder.addChild(Button.builder(Component.literal("Key Shortcuts"),
+						button -> openScreen(KeyShortcutScreen.create(this)))
+				.tooltip(Tooltip.create(Component.literal("Link Keybinds to commands to be executed.")))
+				.width(HALF_BUTTON_WIDTH)
+				.build());
 
 		// LINE #5
 
@@ -144,11 +144,9 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 
 	@Override
 	public void onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-		//this.renderBackground(context, mouseX, mouseY, delta);
-        /*RenderSystem.enableBlend();
-        context.drawTexture(BACKGROUND_TEXTURE,
-                0, 0, 0, 0, 0, width, height, width, height);
-        RenderSystem.disableBlend();*/
+		if (minecraft.level == null) {
+			renderPanorama(guiGraphics, delta);
+		}
 		super.onRender(guiGraphics, mouseX, mouseY, delta);
 	}
 
