@@ -137,7 +137,7 @@ public class TabListWidgetExtractorFeature extends Feature {
 					.map(String::trim)
 					.filter(s -> !s.isEmpty())
 					.collect(Collectors.toCollection(LinkedHashSet::new)); // pas de doublons
-		} catch (Throwable _) { // la syntaxe peut sauter si la chaine n'est pas correctement parsé par la config.
+		} catch (Throwable ignored) { // la syntaxe peut sauter si la chaine n'est pas correctement parsé par la config.
 			return Collections.emptySet();
 		}
 	}

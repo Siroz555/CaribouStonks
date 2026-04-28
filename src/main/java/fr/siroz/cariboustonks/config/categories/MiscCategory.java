@@ -35,7 +35,7 @@ public class MiscCategory extends AbstractCategory {
 				.option(ButtonOption.createBuilder()
 						.name(Component.literal("Bestiary Highlight"))
 						.text(Component.literal("/bestiaryHighlight add <name>"))
-						.action((screen, _) -> {
+						.action((screen, opt) -> {
 							Client.sendMessageWithPrefix(Component.literal("Use /bestiaryHighlight <add|clear> <name>").withStyle(ChatFormatting.GREEN));
 							screen.onClose();
 						})
