@@ -6,6 +6,7 @@ import fr.siroz.cariboustonks.core.component.CommandComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.data.generic.GenericDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
@@ -26,17 +27,16 @@ import net.minecraft.sounds.SoundEvents;
 import org.jspecify.annotations.NonNull;
 
 public class StonksCommandFeature extends Feature {
-
-	// SIROZ-NOTE :: Implémentation pour les Auctions Items
-
 	private static final String SEPARATOR = "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
 
 	private final HypixelDataSource hypixelDataSource;
+	private final GenericDataSource genericDataSource;
 
 	private String lastItem = "";
 
 	public StonksCommandFeature() {
 		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
+		this.genericDataSource = CaribouStonks.skyBlock().getGenericDataSource();
 
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
 				.standalone("stonks", builder -> {
@@ -69,21 +69,22 @@ public class StonksCommandFeature extends Feature {
 	private int handle(FabricClientCommandSource source, String item) {
 		int result = 1;
 
-		if (hypixelDataSource.isBazaarInUpdate()) {
-			source.sendFeedback(Component.literal("Bazaar is currently updating.. Retry in few seconds.").withStyle(ChatFormatting.RED));
+		Optional<BazaarProduct> bazaarOpt = hypixelDataSource.getBazaarItem(item);
+		Optional<Double> auctionOpt = genericDataSource.getLowestBin(ItemLookupKey.ofNeuId(item));
+		if (bazaarOpt.isEmpty() && auctionOpt.isEmpty()) {
+			source.sendFeedback(Component.literal("Unable to find '" + item + "' in the Bazaar and the Auction House.").withStyle(ChatFormatting.RED));
 			return result;
 		}
 
-		if (!hypixelDataSource.hasBazaarItem(item)) {
-			source.sendFeedback(Component.literal("Unable to find '" + item + "' item in the Bazaar.").withStyle(ChatFormatting.RED));
-			return result;
-		}
-
-		Optional<BazaarProduct> productOptional = hypixelDataSource.getBazaarItem(item);
-		productOptional.ifPresent(product -> {
+		if (bazaarOpt.isPresent()) {
 			lastItem = item;
-			showBazaarInfo(source, item, product);
-		});
+			showBazaarInfo(source, item, bazaarOpt.get());
+		}
+
+		if (auctionOpt.isPresent()) {
+			lastItem = item;
+			showAuctionInfo(source, item, auctionOpt.get());
+		}
 
 		return result;
 	}
@@ -218,6 +219,38 @@ public class StonksCommandFeature extends Feature {
 		);
 		source.sendFeedback(Component.empty());
 		source.sendFeedback(Component.literal(" Click HERE to show in the Graph Screen!").withStyle(ChatFormatting.YELLOW)
+				.withStyle(style -> style
+						.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to open in the Graph Screen!").withStyle(ChatFormatting.YELLOW)))
+						.withClickEvent(new ClickEvent.RunCommand("/stonks"))));
+
+		source.sendFeedback(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));
+	}
+
+	private void showAuctionInfo(@NonNull FabricClientCommandSource source, @NonNull String item, double lowestBin) {
+		Client.playSound(SoundEvents.TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
+
+		source.sendFeedback(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));
+
+		SkyBlockItemData skyBlockItem = hypixelDataSource.getSkyBlockItem(item);
+		if (skyBlockItem == null) {
+			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.ORANGE.asInt()))
+					.append(" " + Component.literal(item + " :").withStyle(ChatFormatting.GOLD)));
+		} else {
+			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.ORANGE.asInt()))
+					.append(Component.literal(" " + skyBlockItem.name()).withColor(skyBlockItem.tier().getColor()))
+					.append(Component.literal(" (" + skyBlockItem.skyBlockId() + ")").withStyle(ChatFormatting.DARK_GRAY)));
+		}
+		source.sendFeedback(Component.empty());
+
+		String lowestBinPriceDisplay = StonksUtils.INTEGER_NUMBERS.format(lowestBin);
+		String lowestBinPriceShortDisplay = StonksUtils.SHORT_FLOAT_NUMBERS.format(lowestBin);
+		source.sendFeedback(Component.literal("Auction Lowest BIN: ").withStyle(ChatFormatting.YELLOW)
+				.append(Component.literal(lowestBinPriceDisplay + " Coins").withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal(lowestBinPriceShortDisplay).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(")").withStyle(ChatFormatting.GRAY)));
+		source.sendFeedback(Component.empty());
+		source.sendFeedback(Component.literal(" Click HERE to show more statistics!").withStyle(ChatFormatting.YELLOW)
 				.withStyle(style -> style
 						.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to open in the Graph Screen!").withStyle(ChatFormatting.YELLOW)))
 						.withClickEvent(new ClickEvent.RunCommand("/stonks"))));
