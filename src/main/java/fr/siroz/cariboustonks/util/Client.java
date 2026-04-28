@@ -33,6 +33,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
@@ -93,6 +94,15 @@ public final class Client {
 	 */
 	public static boolean hasShiftDown() {
 		return InputConstants.isKeyDown(CLIENT.getWindow(), 340) || InputConstants.isKeyDown(CLIENT.getWindow(), 344);
+	}
+
+	/**
+	 * Checks if a {@link Player} as {@code Entity} is a real player, and not an enemy or NPC
+	 *
+	 * @return {@code true} if is a real player
+	 */
+	public static boolean isPlayer(@NonNull Entity entity) {
+		return entity instanceof Player player && player.getUUID().version() == 4;
 	}
 
 	/**
@@ -585,8 +595,8 @@ public final class Client {
 	 * Handle a Mouse Click within a Container.
 	 *
 	 * @param containerId the container id
-	 * @param slotId the slot id
-	 * @param type the click type
+	 * @param slotId      the slot id
+	 * @param type        the click type
 	 */
 	public static void handleMouseClick(int containerId, int slotId, ClickType type) {
 		if (CLIENT.player != null && CLIENT.gameMode != null) {

@@ -25,10 +25,8 @@ import org.slf4j.LoggerFactory;
  * The Main entrypoint of the CaribouStonks Mod
  */
 public final class CaribouStonks implements ClientModInitializer {
-
-	public static final Logger LOGGER = LoggerFactory.getLogger("CaribouStonks");
-
 	public static final String NAMESPACE = "cariboustonks";
+	public static final Logger LOGGER = LoggerFactory.getLogger("CaribouStonks");
 	public static final ModContainer MOD_CONTAINER = FabricLoader.getInstance().getModContainer(NAMESPACE).orElseThrow();
 	public static final Version VERSION = MOD_CONTAINER.getMetadata().getVersion();
 	public static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir().resolve(NAMESPACE);
