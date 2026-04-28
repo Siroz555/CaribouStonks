@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -41,7 +41,7 @@ public class BestiaryHighlightFeature extends Feature {
 				.build());
 
 		this.addComponent(CommandComponent.class, CommandComponent.builder().standalone("bestiaryHighlight", builder -> {
-			builder.then(ClientCommands.literal("clear").executes(_ -> {
+			builder.then(ClientCommandManager.literal("clear").executes(_ctx -> {
 				if (!entityNames.isEmpty()) {
 					Iterator<String> nameIterator = entityNames.iterator();
 					while (nameIterator.hasNext()) {
@@ -52,7 +52,7 @@ public class BestiaryHighlightFeature extends Feature {
 				}
 				return 1;
 			}));
-			builder.then(ClientCommands.literal("add").then(ClientCommands.argument("name", StringArgumentType.string()).executes(ctx -> {
+			builder.then(ClientCommandManager.literal("add").then(ClientCommandManager.argument("name", StringArgumentType.string()).executes(ctx -> {
 				String custom = StringArgumentType.getString(ctx, "name");
 				if (custom != null && !custom.isBlank() && custom.length() >= 3) {
 					entityNames.add(custom);
