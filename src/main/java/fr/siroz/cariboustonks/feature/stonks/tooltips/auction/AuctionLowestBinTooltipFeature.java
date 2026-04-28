@@ -45,7 +45,6 @@ public class AuctionLowestBinTooltipFeature extends Feature implements Container
 	@Override
     public void appendToTooltip(@Nullable Slot focusedSlot, @NotNull ItemStack item, @NotNull List<Text> lines) {
         if (genericDataSource.isLowestBinsInUpdate()) {
-            lines.add(Text.literal("Auction is currently updating...").formatted(Formatting.RED));
             return;
         }
 

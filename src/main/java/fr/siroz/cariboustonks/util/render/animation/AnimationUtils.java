@@ -69,8 +69,16 @@ public final class AnimationUtils {
 	public static void showSpecialEffect(
 			@NotNull ItemStack item,
 			@Nullable ParticleEffect particle,
+			@Range(from = 1, to = 120) int particleAge
+	) {
+		showSpecialEffect(item, particle, particleAge, null, 0, 0);
+	}
+
+	public static void showSpecialEffect(
+			@NotNull ItemStack item,
+			@Nullable ParticleEffect particle,
 			@Range(from = 1, to = 120) int particleAge,
-			@NotNull SoundEvent sound,
+			@Nullable SoundEvent sound,
 			float soundVolume,
 			float soundPitch
 	) {
@@ -82,7 +90,7 @@ public final class AnimationUtils {
 			@NotNull ItemStack item,
 			@Nullable ParticleEffect particle,
 			@Range(from = 1, to = 120) int particleAge,
-			@NotNull SoundEvent sound,
+			@Nullable SoundEvent sound,
 			float soundVolume,
 			float soundPitch
 	) {
@@ -97,7 +105,9 @@ public final class AnimationUtils {
 				CLIENT.particleManager.addEmitter(CLIENT.player, particle, particleAge);
 			}
 
-			CLIENT.player.playSound(sound, soundVolume, soundPitch);
+			if (sound != null) {
+				CLIENT.player.playSound(sound, soundVolume, soundPitch);
+			}
 		}
 	}
 

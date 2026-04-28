@@ -8,10 +8,14 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
+import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
+import dev.isxander.yacl3.api.controller.LongSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
+import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarPriceType;
 import fr.siroz.cariboustonks.util.Client;
 import java.awt.Color;
+import java.util.concurrent.TimeUnit;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.option.KeybindsScreen;
 import net.minecraft.text.Text;
@@ -73,9 +77,9 @@ public class SkillsCategory extends AbstractCategory {
 										Text.literal(SPACE + " - Bloodshot on the Primordial Belt").formatted(Formatting.GOLD),
 										Text.literal(" - Slayer Minibosses").formatted(Formatting.RED),
 										Text.literal(SPACE + "Note: In rare cases, other players' cocoons that are too close to you may be detected.").formatted(Formatting.YELLOW)))
-								.binding(defaults.combat.cocoonedMob.cocoonedWarning,
-										() -> current.combat.cocoonedMob.cocoonedWarning,
-										newValue -> current.combat.cocoonedMob.cocoonedWarning = newValue)
+								.binding(defaults.combat.cocoonedMob.warning,
+										() -> current.combat.cocoonedMob.warning,
+										newValue -> current.combat.cocoonedMob.warning = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
@@ -94,6 +98,15 @@ public class SkillsCategory extends AbstractCategory {
 								.binding(defaults.combat.cocoonedMob.cocoonedWarningSound,
 										() -> current.combat.cocoonedMob.cocoonedWarningSound,
 										newValue -> current.combat.cocoonedMob.cocoonedWarningSound = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Cocooned Warning - Timer"))
+								.description(OptionDescription.of(
+										Text.literal("When a mob is Cocooned, show a Text as timer before the entity revive.")))
+								.binding(defaults.combat.cocoonedMob.cocoonedWarningTime,
+										() -> current.combat.cocoonedMob.cocoonedWarningTime,
+										newValue -> current.combat.cocoonedMob.cocoonedWarningTime = newValue)
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
@@ -379,6 +392,57 @@ public class SkillsCategory extends AbstractCategory {
 										() -> current.hunting.attributeInfos,
 										newValue -> current.hunting.attributeInfos = newValue)
 								.controller(this::createBooleanController)
+								.build())
+						.option(LabelOption.create(Text.literal("| Shards Tracker").formatted(Formatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Enable Shards Tracker"))
+								.description(OptionDescription.of(
+										Text.literal("Displays a HUD showing live statistics for your current shard hunting session."),
+										Text.literal("Tracks total shards caught, their coin value, and calculates your hourly rates."),
+										Text.literal("A new session starts automatically on the first catch, and resets after a period of inactivity.")))
+								.binding(defaults.hunting.trackingShards.hud.enabled,
+										() -> current.hunting.trackingShards.hud.enabled,
+										newValue -> current.hunting.trackingShards.hud.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Integer>createBuilder()
+								.name(Text.literal("Minimum Start Catches"))
+								.description(OptionDescription.of(
+										Text.literal("Sets the minimum number of Shard catches required before the Tracker starts and begins the Hunting Session."),
+										Text.literal(SPACE + "Note: If the value is below 5, the tracker starts, for example, when you retrieve your Traps, or when you're Fishing.").formatted(Formatting.YELLOW)))
+								.binding(defaults.hunting.trackingShards.minPreWarmCatch,
+										() -> current.hunting.trackingShards.minPreWarmCatch,
+										newValue -> current.hunting.trackingShards.minPreWarmCatch = newValue)
+								.controller(opt -> IntegerSliderControllerBuilder.create(opt)
+										.range(1, 20)
+										.step(1))
+								.build())
+						.option(Option.<Long>createBuilder()
+								.name(Text.literal("Session Timeout"))
+								.description(OptionDescription.of(
+										Text.literal("Time without catching a shard before the current session is automatically reset."),
+										Text.literal("Increase this value if you take frequent breaks between catches. (Touch the grass?)")))
+								.binding(TimeUnit.MILLISECONDS.toMinutes(defaults.hunting.trackingShards.inactivityResetMs),
+										() -> TimeUnit.MILLISECONDS.toMinutes(current.hunting.trackingShards.inactivityResetMs),
+										newValue -> current.hunting.trackingShards.inactivityResetMs = TimeUnit.MINUTES.toMillis(newValue))
+								.controller(opt -> LongSliderControllerBuilder.create(opt)
+										.range(1L, 30L)
+										.step(1L)
+										.formatValue(i -> i > 1 ? Text.of(i + " minutes") : Text.of(i + " minute")))
+								.build())
+						.option(Option.<BazaarPriceType>createBuilder()
+								.name(Text.literal("Bazaar Price Type"))
+								.description(OptionDescription.of(
+										Text.literal("Select the type of price from the Bazaar"),
+										Text.literal(SPACE + "BUY :").formatted(Formatting.UNDERLINE),
+										Text.literal(SPACE + "Show the Insta-Buy / Best Sell Order"),
+										Text.literal(SPACE + "SELL :").formatted(Formatting.UNDERLINE),
+										Text.literal(SPACE + "Show the Insta-Sell / Best Buy Order"),
+										Text.literal(SPACE + "Note: Changing this setting will only affect future Shards you catch.").formatted(Formatting.YELLOW)))
+								.binding(defaults.hunting.trackingShards.priceType,
+										() -> current.hunting.trackingShards.priceType,
+										newValue -> current.hunting.trackingShards.priceType = newValue)
+								.controller(this::createEnumCyclingController)
 								.build())
 						.option(LabelOption.create(Text.literal("| Fusion Machine").formatted(Formatting.BOLD)))
 						.option(ButtonOption.createBuilder()

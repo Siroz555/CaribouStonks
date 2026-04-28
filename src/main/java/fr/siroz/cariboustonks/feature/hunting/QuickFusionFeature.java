@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.feature.hunting;
 
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.keybinds.KeyBind;
@@ -29,7 +28,7 @@ public class QuickFusionFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && SkyBlockAPI.getIsland() == IslandType.GALATEA;
+		return SkyBlockAPI.isOnSkyBlock();
 	}
 
 	private void onFusionKey(Screen screen, Slot slot) {

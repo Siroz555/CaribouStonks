@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.MinecraftClient;
@@ -27,13 +28,21 @@ public final class AttributeAPI {
 	public static final String FUSION_BOX = "Fusion Box";
 	public static final String SHARD_FUSION = "Shard Fusion";
 	public static final String CONFIRM_FUSION = "Confirm Fusion";
+	public static final Pattern SHARD_WITH_QUANTITY_PATTERN = Pattern.compile("[A-Za-z ]+ Shard(?: x(?<amount>\\d+))?");
 	public static final Pattern SHARD_GUI_PATTERN = Pattern.compile("(" + HUNTING_BOX + "|" + ATTRIBUTE_MENU + ")");
 	public static final Pattern SOURCE_PATTERN = Pattern.compile("Source: (?<shardName>[A-Za-z ]+?) Shard \\((?<id>[CUREL]\\d+)\\)");
 	public static final Pattern RARITY_AND_ID_PATTERN = Pattern.compile("(COMMON|UNCOMMON|RARE|EPIC|LEGENDARY).*?SHARD \\(ID ([CUREL]\\d+)\\)");
 
+	private static final Set<String> DUNGEON_CHESTS;
+	private static final Set<String> KUUDRA_CHESTS;
+
 	private static final Map<Rarity, Int2IntMap> RARITY_2_LEVELS = new EnumMap<>(Rarity.class);
 
 	private AttributeAPI() {
+	}
+
+	public static @Nullable SkyBlockAttribute getAttributeByName(@Nullable String name) {
+		return CaribouStonks.core().getModDataSource().getAttributeByShardName(name);
 	}
 
 	/**
@@ -98,6 +107,15 @@ public final class AttributeAPI {
 				return getAttributeId(id, fallback);
 			}
 			case null, default -> {
+				// Les rewards chest de Dungeon & Kuudra
+				if (DUNGEON_CHESTS.contains(title) || KUUDRA_CHESTS.contains(title)) {
+					String name = item.getOrDefault(DataComponentTypes.CUSTOM_NAME, Text.empty()).getString();
+					Matcher matcher = SHARD_WITH_QUANTITY_PATTERN.matcher(name);
+					if (name.contains("Shard") && matcher.matches()) {
+						SkyBlockAttribute attribute = CaribouStonks.core().getModDataSource().getAttributeByShardName(name);
+						return attribute != null ? attribute.skyBlockApiId() : fallback;
+					}
+				}
 				return fallback;
 			}
 		}
@@ -190,5 +208,17 @@ public final class AttributeAPI {
 			map.put(9, 19);
 			map.put(10, 24);
 		}));
+		DUNGEON_CHESTS = Set.of(
+				"Wood Chest", "Wood",
+				"Gold Chest", "Gold",
+				"Diamond Chest", "Diamond",
+				"Emerald Chest", "Emerald",
+				"Obsidian Chest", "Obsidian",
+				"Bedrock Chest", "Bedrock"
+		);
+		KUUDRA_CHESTS = Set.of(
+				"Free Chest", "Free Chest Chest",
+				"Paid Chest", "Paid Chest Chest"
+		);
 	}
 }

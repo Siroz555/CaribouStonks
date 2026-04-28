@@ -42,6 +42,23 @@ public class MiscCategory extends AbstractCategory {
 								newValue -> current.misc.highlighterColor = newValue)
 						.controller(ColorControllerBuilder::create)
 						.build())
+				.option(ButtonOption.createBuilder()
+						.name(Text.literal("Bestiary Highlight"))
+						.text(Text.literal("/bestiaryHighlight add <name>"))
+						.action((screen, _b) -> {
+							Client.sendMessageWithPrefix(Text.literal("Use /bestiaryHighlight <add|clear> <name>").formatted(Formatting.GREEN));
+							screen.close();
+						})
+						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Text.literal("Bestiary Highlight Middle Click"))
+						.description(OptionDescription.of(
+								Text.literal("Highlights entities with the same name by middle-clicking on an entity.")))
+						.binding(defaults.misc.bestiaryHighlight,
+								() -> current.misc.bestiaryHighlight,
+								newValue -> current.misc.bestiaryHighlight = newValue)
+						.controller(this::createBooleanController)
+						.build())
                 .option(Option.<Boolean>createBuilder()
                         .name(Text.literal("Locating Hoppity Eggs"))
                         .description(OptionDescription.of(
@@ -58,6 +75,15 @@ public class MiscCategory extends AbstractCategory {
 						.binding(defaults.misc.showHexOnDyedItemEverywhere,
 								() -> current.misc.showHexOnDyedItemEverywhere,
 								newValue -> current.misc.showHexOnDyedItemEverywhere = newValue)
+						.controller(this::createBooleanController)
+						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Text.literal("Server Visit History"))
+						.description(OptionDescription.of(
+								Text.literal("Allows you to display a message in the chat indicating when you were last on the server or that you've just arrived.")))
+						.binding(defaults.misc.serverTracker,
+								() -> current.misc.serverTracker,
+								newValue -> current.misc.serverTracker = newValue)
 						.controller(this::createBooleanController)
 						.build())
 				.group(OptionGroup.createBuilder()

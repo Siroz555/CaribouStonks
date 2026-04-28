@@ -60,6 +60,8 @@ public record Calculation(
 		POLARVOID_BOOK,
 		JALAPENO_BOOK,
 		WET_BOOK,
+		// Pet
+		PET_ITEM,
 		// Modifiers
 		RECOMBOBULATOR,
 		MASTER_STAR,

@@ -1080,6 +1080,12 @@
     "skyBlockApiId": "SHARD_STARBORN"
   },
   {
+    "name": "Groovy Radar",
+    "shardName": "Cocoaleech",
+    "id": "L46",
+    "skyBlockApiId": "SHARD_COCOALEECH"
+  },
+  {
     "name": "Bayou Biter",
     "shardName": "Titanoboa",
     "id": "L47",

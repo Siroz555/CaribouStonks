@@ -124,7 +124,7 @@ public class ItemValueViewerFeature extends Feature {
 				return;
 			}
 			// Si c'est globalement un Enchanted Book ou un item avec un prix unique du Bazaar ou de l'Auction
-			if (result.calculations().size() < 2) {
+			if (result.calculations().size() < 2 && result.get(Calculation.Type.PET_ITEM) == null) {
 				lines.clear();
 				return;
 			}
@@ -173,6 +173,7 @@ public class ItemValueViewerFeature extends Feature {
 		}
 		out.add(Text.literal(" "));
 
+		addPetItem(result, out);
 		addEnchantedBook(result, out);
 		addUltimateEnchantedBook(result, out);
 		addCosmetic(result, out);
@@ -220,6 +221,18 @@ public class ItemValueViewerFeature extends Feature {
 		}
 
 		return out;
+	}
+
+	private void addPetItem(ItemValueResult result, List<Text> out) {
+		Calculation petItem = result.get(Calculation.Type.PET_ITEM);
+		if (petItem != null) {
+			Pair<String, Rarity> infos = getInfos(petItem.skyBlockId());
+			out.add(Text.empty()
+					.append(Text.literal("Pet Item: ").formatted(Formatting.GRAY))
+					.append(Text.literal(infos.left()).formatted(infos.right().getFormatting()))
+					.append(priceShortFormat(petItem.price()))
+			);
+		}
 	}
 
 	private void addCosmetic(@NotNull ItemValueResult result, List<Text> out) {

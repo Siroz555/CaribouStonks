@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.util;
 
+import java.time.ZoneOffset;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.DateTimeException;
@@ -19,9 +20,10 @@ public final class TimeUtils {
 
 	private static final Locale LOCALE = Locale.getDefault();
 	private static final ZoneId ZONE_ID = ZoneId.systemDefault();
+	public static final ZoneId UTC = ZoneOffset.UTC.normalized();
 
-	private static final Pattern TIME_PATTERN = Pattern.compile(
-			"(\\d+)d?|([01]?\\d|2[0-3])h?|([0-5]?\\d)m?|([0-5]?\\d)s?"
+	public static final Pattern TIME_PATTERN = Pattern.compile(
+			"(?:(\\d+)d)?\\s*(?:(\\d+)h)?\\s*(?:(\\d+)m)?\\s*(?:(\\d+)s)?"
 	);
 
 	/**
@@ -61,6 +63,28 @@ public final class TimeUtils {
 			.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.MEDIUM).withLocale(LOCALE);
 
 	private TimeUtils() {
+	}
+
+	/**
+	 * Extracts the {@link Duration} from the given input ({@link TimeUtils#TIME_PATTERN})
+	 * <p>
+	 * Input: 4d 16h 50m 10s => Duration: 4d 16h 50m 10s
+	 *
+	 * @param input the input String
+	 * @return the Duration result {@code or} {@link Duration#ZERO}
+	 */
+	public static Duration extractDuration(String input) {
+		Matcher matcher = TIME_PATTERN.matcher(input);
+		if (!matcher.find()) return Duration.ZERO;
+		try {
+			long days = matcher.group(1) != null ? Long.parseLong(matcher.group(1)) : 0;
+			long hours = matcher.group(2) != null ? Long.parseLong(matcher.group(2)) : 0;
+			long minutes = matcher.group(3) != null ? Long.parseLong(matcher.group(3)) : 0;
+			long seconds = matcher.group(4) != null ? Long.parseLong(matcher.group(4)) : 0;
+			return Duration.ofDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
+		} catch (Exception ignored) {
+			return Duration.ZERO;
+		}
 	}
 
 	/**

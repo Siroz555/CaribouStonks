@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.feature.garden.MouseLockFeature;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
+import net.minecraft.client.input.MouseInput;
 import net.minecraft.client.network.ClientPlayerEntity;
 import org.lwjgl.glfw.GLFW;
 import org.objectweb.asm.Opcodes;
@@ -60,6 +61,13 @@ public abstract class MouseMixin {
 	private void cariboustonks$trackWheel(long window, double horizontal, double vertical, CallbackInfo ci) {
 		if (!MouseEvents.ALLOW_MOUSE_SCROLL.invoker().allowMouseScroll(horizontal, vertical)) {
 			ci.cancel();
+		}
+	}
+
+	@Inject(method = "onMouseButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;setKeyPressed(Lnet/minecraft/client/util/InputUtil$Key;Z)V"))
+	private void cariboustonks$onMiddleClickEvent(long handle, MouseInput rawButtonInfo, int action, CallbackInfo ci) {
+		if (rawButtonInfo.button() == 2) {
+			MouseEvents.MIDDLE_CLICK_AIR_EVENT.invoker().onMiddleClickAir();
 		}
 	}
 }

@@ -21,6 +21,10 @@ import java.util.List;
 
 public final class HudConfigScreen extends CaribousStonksScreen {
 
+	private static final float SCALE_SIZE_MIN = 0.25f;
+	private static final float SCALE_SIZE_MAX = 5.0f;
+	private static final float SCALE_SIZE_STEP = 0.1f;
+
 	private final List<Hud> hudList;
 	@Nullable
 	private final Screen parent;
@@ -56,7 +60,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 				"RIGHT-CLICK to unselect an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
 		context.drawCenteredTextWithShadow(textRenderer,
-				"Press +/- to scale an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
+				"Press +/- or Mouse Wheel to scale an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
 		y += lineSpacing;
 		context.drawCenteredTextWithShadow(textRenderer,
 				"Press R to reset an HUD's position & scale", width >> 1, y, Colors.LIGHT_GRAY.asInt());
@@ -133,7 +137,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			case GLFW.GLFW_KEY_EQUAL, GLFW.GLFW_KEY_KP_ADD -> {
 				// Pour '=' il faut Maj (AZERTY/+, sinon ignore), et pour KP_ADD jamais besoin de shift
 				if (selected != null && (input.getKeycode() != GLFW.GLFW_KEY_EQUAL || (input.modifiers() & GLFW.GLFW_MOD_SHIFT) != 0)) {
-					selected.setScale(selected.scale() + 0.1f);
+					selected.setScale(selected.scale() + SCALE_SIZE_STEP);
 					return true;
 				}
 			}
@@ -141,7 +145,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			case GLFW.GLFW_KEY_MINUS, GLFW.GLFW_KEY_KP_SUBTRACT -> {
 				// Pour '-' il faut Maj (AZERTY/+, sinon ignore), et pour KP_SUBTRACT jamais besoin de shift
 				if (selected != null && (input.getKeycode() != GLFW.GLFW_KEY_MINUS || (input.modifiers() & GLFW.GLFW_MOD_SHIFT) != 0)) {
-					selected.setScale(selected.scale() - 0.1f);
+					selected.setScale(selected.scale() - SCALE_SIZE_STEP);
 					return true;
 				}
 			}
@@ -171,6 +175,17 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 		}
 
 		return super.keyPressed(input);
+	}
+
+	@Override
+	public boolean mouseScrolled(double x, double y, double scrollX, double scrollY) {
+		if (selected != null) {
+			float newScale = selected.scale() + (float) scrollY * SCALE_SIZE_STEP;
+			newScale = Math.clamp(newScale, SCALE_SIZE_MIN, SCALE_SIZE_MAX);
+			selected.setScale(newScale);
+			return true;
+		}
+		return super.mouseScrolled(x, y, scrollX, scrollY);
 	}
 
 	@Override

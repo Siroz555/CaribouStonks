@@ -44,7 +44,7 @@ final class HypixelModAPI {
 				IslandType islandType = IslandType.getById(mode.orElse(""));
 
 				SkyBlockAPI.handleInternalLocationUpdate(null, null, gameType, islandType);
-				SkyBlockEvents.ISLAND_CHANGE.invoker().onIslandChange(islandType);
+				SkyBlockEvents.ISLAND_CHANGE.invoker().onIslandChange(islandType, serverName);
 
 				if (gameType.equals("SKYBLOCK")) {
 					SkyBlockAPI.handleInternalLocationUpdate(null, true, null, null);

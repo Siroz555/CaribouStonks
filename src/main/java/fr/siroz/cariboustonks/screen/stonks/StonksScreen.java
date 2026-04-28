@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.screen.stonks;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.data.generic.ItemPrice;
+import fr.siroz.cariboustonks.core.data.generic.GraphParseResult;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
@@ -10,7 +10,6 @@ import fr.siroz.cariboustonks.screen.CaribousStonksScreen;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.util.colors.Colors;
 import java.awt.Color;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -48,7 +47,7 @@ public class StonksScreen extends CaribousStonksScreen {
 
 	private InformationWidget itemInformationWidget;
 	private GraphWidget itemGraphWidget;
-	private List<ItemPrice> graphData = null;
+	private GraphParseResult graphData = null;
 	private BazaarProduct bazaarItem = null;
 
 	private volatile boolean notFound = false;
@@ -81,11 +80,11 @@ public class StonksScreen extends CaribousStonksScreen {
 
 		CompletableFuture<Void> graphFuture = CompletableFuture.runAsync(() ->
 				itemGraphWidget = new GraphWidget(
-						graphData, getGraphWidgetWidth(), getGraphWidgetHeight())
+						graphData.prices(), getGraphWidgetWidth(), getGraphWidgetHeight())
 		);
 		CompletableFuture<Void> informationsFuture = CompletableFuture.runAsync(() ->
 				itemInformationWidget = new InformationWidget(
-						bazaarItem, getInformationWidgetWidth(), getInformationWidgetHeight())
+						bazaarItem, graphData.auctionStats(), getInformationWidgetWidth(), getInformationWidgetHeight())
 		);
 
 		CompletableFuture.allOf(graphFuture, informationsFuture).thenRun(() -> {
@@ -234,25 +233,13 @@ public class StonksScreen extends CaribousStonksScreen {
 		CompletableFuture<Void> priceHistory = CaribouStonks.core().getGenericDataSource()
 				.loadGraphData(key)
 				.thenAccept(data -> {
-					if (data == null || data.isEmpty()) notFound = true;
+					if (data == null || data.prices().isEmpty()) notFound = true;
 					graphData = data;
 				});
 
 		bazaarItem = CaribouStonks.core().getHypixelDataSource()
 				.getBazaarItem(key.hypixelSkyBlockId())
 				.orElse(null);
-
-		/*CompletableFuture<Void> auctionItem;
-		if (bazaarItem != null) {
-			auctionItem = CompletableFuture.completedFuture(null);
-		} else {
-			auctionItem = CaribouStonks.core()
-					.getCoreComponent(GenericDataSource.class)
-					.loadGraphData(null, null)
-					.thenAccept(instantPriceObjectMap -> {
-
-					});
-		}*/
 
 		return CompletableFuture.allOf(priceHistory);
 	}

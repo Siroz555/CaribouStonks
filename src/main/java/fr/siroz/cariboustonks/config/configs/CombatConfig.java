@@ -26,13 +26,16 @@ public class CombatConfig {
 	public static class CocoonedMob {
 
 		@SerialEntry
-		public boolean cocoonedWarning = false;
+		public boolean warning = true;
 
 		@SerialEntry
 		public String message = "§c§lCocooned!";
 
 		@SerialEntry
 		public boolean cocoonedWarningTitle = true;
+
+		@SerialEntry
+		public boolean cocoonedWarningTime = true;
 
 		@SerialEntry
 		public boolean cocoonedWarningSound = true;

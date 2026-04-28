@@ -69,7 +69,7 @@ public final class HypixelDataSource {
 	public HypixelDataSource(@NotNull ModDataSource modDataSource) {
 		this.modDataSource = modDataSource;
 		// Fetchers
-		this.itemsFetcher = new ItemsFetcher(this, modDataSource, apiFixer);
+		this.itemsFetcher = new ItemsFetcher(this, apiFixer);
 		this.bazaarFetcher = new BazaarFetcher(this, 5, () -> ConfigManager.getConfig().general.internal.fetchBazaarData);
 		this.electionFetcher = new ElectionFetcher();
 		// Event listener
@@ -165,19 +165,41 @@ public final class HypixelDataSource {
 				return fallback;
 			}
 
-			String hypixelMaterial = skyBlockItem.material();
-			String minecraftId = modDataSource.getMinecraftId(hypixelMaterial);
-			if (minecraftId == null || minecraftId.equals("NO_MATCH")) {
-				return fallback;
-			}
-
+			// Nouvel item, pas sur le fallback en pour éviter le throw en dernier
 			ItemStack itemStack = new ItemStack(Items.BARRIER, 1);
+			// Flag pour éviter d'appliqué le material si item_model est présent.
+			// Peut arriver si item_model et material sont présents sur le même item.
+			boolean hasItemModelApplied = false;
 
-			Optional<Item> item = ItemUtils.getItemById(minecraftId);
-			if (item.isPresent()) {
-				itemStack = new ItemStack(item.get(), 1);
+			// ------------------------------------------------------
+			// Hypixel SkyBlock Latest Version - OPTION A
+			// > item_model | Minecraft Item ID Mapping
+			// ------------------------------------------------------
+			Optional<String> itemModel = skyBlockItem.itemModel();
+			if (itemModel.isPresent()) {
+				Optional<Item> item = ItemUtils.getItemById(itemModel.get());
+				if (item.isPresent()) {
+					itemStack = new ItemStack(item.get(), 1);
+					hasItemModelApplied = true;
+				}
+			}
+			// ------------------------------------------------------
+			// Hypixel SkyBlock Latest Version - OPTION B
+			// > material | Hypixel Material ID > Minecraft Item ID
+			// ------------------------------------------------------
+			Optional<String> hypixelMaterial = skyBlockItem.material();
+			if (!hasItemModelApplied && hypixelMaterial.isPresent()) {
+				String minecraftId = modDataSource.getMinecraftId(hypixelMaterial.get());
+				if (minecraftId == null || minecraftId.equals("NO_MATCH")) return fallback;
+
+				Optional<Item> item = ItemUtils.getItemById(minecraftId);
+				if (item.isPresent()) {
+					itemStack = new ItemStack(item.get(), 1);
+				}
 			}
 
+			// Peu importe si item_model ou material est utilisé, tant qu'il y a une texture.
+			// Toujours utilisé dans le cas des SKULL.
 			if (skyBlockItem.skullTexture().isPresent()) {
 				itemStack = ItemUtils.createSkull(skyBlockItem.skullTexture().get());
 			}

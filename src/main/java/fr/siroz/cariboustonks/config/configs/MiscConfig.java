@@ -15,7 +15,13 @@ public class MiscConfig {
 	public Color highlighterColor = ColorUtils.getAwtColor(Formatting.AQUA);
 
 	@SerialEntry
+	public boolean bestiaryHighlight = true;
+
+	@SerialEntry
 	public boolean showHexOnDyedItemEverywhere = false;
+
+	@SerialEntry
+	public boolean serverTracker = false;
 
 	@SerialEntry
 	public Compatibility compatibility = new Compatibility();

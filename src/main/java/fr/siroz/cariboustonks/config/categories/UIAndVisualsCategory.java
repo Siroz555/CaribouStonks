@@ -11,6 +11,7 @@ import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.manager.waypoint.Waypoint;
 import fr.siroz.cariboustonks.screen.HudConfigScreen;
 import fr.siroz.cariboustonks.screen.mobtracking.MobTrackingScreen;
+import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.render.animation.AnimationUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
@@ -56,6 +57,15 @@ public class UIAndVisualsCategory extends AbstractCategory {
 						.binding(defaults.uiAndVisuals.highlightSelectedPet,
 								() -> current.uiAndVisuals.highlightSelectedPet,
 								newValue -> current.uiAndVisuals.highlightSelectedPet = newValue)
+						.controller(this::createBooleanController)
+						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Text.literal("Abiphone Favorite Contacts"))
+						.description(OptionDescription.of(
+								Text.literal("Create and highlight contacts in your Abiphone Menu.")))
+						.binding(defaults.uiAndVisuals.abiphoneFavoriteContacts,
+								() -> current.uiAndVisuals.abiphoneFavoriteContacts,
+								newValue -> current.uiAndVisuals.abiphoneFavoriteContacts = newValue)
 						.controller(this::createBooleanController)
 						.build())
 				.group(OptionGroup.createBuilder()
@@ -126,19 +136,17 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
-						.name(Text.literal("Mob Tracking").formatted(Formatting.BOLD).append(BETA))
+						.name(Text.literal("Mob Tracking").formatted(Formatting.BOLD))
 						.description(OptionDescription.of(
 								Text.literal("Mob Tracking combines features that allow you to view information about a specific Mob in real time."),
-								Text.literal(SPACE + "Allow the display of mob health and other information in a custom Boss Bar or via a HUD. Also allows you to be alerted when a mob spawns."),
-								Text.literal(SPACE + "These features are in BETA. Adjustments will be made.").formatted(Formatting.RED)))
+								Text.literal(SPACE + "Allow the display of mob health and other information in a custom Boss Bar or via a HUD. Also allows you to be alerted when a mob spawns.")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Enable Mob Tracking"))
 								.description(OptionDescription.of(
 										Text.literal("Once activated, mobs such as Slayers, rare fishing mobs, and others will be displayed in the form of a Boss Bar or HUD."),
 										Text.literal(SPACE + "The display shows the life and other information of the mob being tracked in real time."),
-										Text.literal(SPACE + "Each mob can be activated or deactivated, display an alert, in the dedicated menu."),
-										Text.literal(SPACE + "These features are in BETA. Adjustments will be made.").formatted(Formatting.RED)))
+										Text.literal(SPACE + "Each mob can be activated or deactivated, display an alert, in the dedicated menu.")))
 								.binding(defaults.uiAndVisuals.mobTracking.tracking,
 										() -> current.uiAndVisuals.mobTracking.tracking,
 										newValue -> current.uiAndVisuals.mobTracking.tracking = newValue)
@@ -181,6 +189,16 @@ public class UIAndVisualsCategory extends AbstractCategory {
 										newValue -> current.uiAndVisuals.mobTracking.spawnMessage = newValue)
 								.controller(StringControllerBuilder::create)
 								.build())
+						.option(Option.<Color>createBuilder()
+								.name(Text.literal("Track Glowing Color"))
+								.description(OptionDescription.of(
+										Text.literal("Change the Glowing color"),
+										Text.literal(SPACE + "Note: Must be enabled in the Mob Tracking menu for each desired entity").formatted(Formatting.GOLD)))
+								.binding(defaults.uiAndVisuals.mobTracking.highlightColor,
+										() -> current.uiAndVisuals.mobTracking.highlightColor,
+										newValue -> current.uiAndVisuals.mobTracking.highlightColor = newValue)
+								.controller(ColorControllerBuilder::create)
+								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Text.literal("Track Spawn Sound"))
 								.description(OptionDescription.of(
@@ -195,6 +213,95 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.name(Text.literal("Configure each tracked mob"))
 								.text(Text.literal("Open"))
 								.action((screen, opt) -> MinecraftClient.getInstance().setScreen(MobTrackingScreen.create(screen)))
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Text.literal("TabList Widgets Extractor").formatted(Formatting.BOLD))
+						.description(OptionDescription.of(
+								Text.literal("Widgets Extractor")))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Enable Widgets Extractor"))
+								.description(OptionDescription.of(
+										Text.literal("Allows you to extract widgets from the TabList and display them as a HUD."),
+										Text.literal("Check each widget below, and make sure to enable the widgets on the islands whenever you want using /widgets"),
+										Text.literal(SPACE + "Currently, the HUD display is a single view; if multiple widgets are enabled, they will all be displayed one after another.").formatted(Formatting.GOLD)))
+								.binding(defaults.uiAndVisuals.tabListWidget.hud.enabled,
+										() -> current.uiAndVisuals.tabListWidget.hud.enabled,
+										newValue -> {
+											current.uiAndVisuals.tabListWidget.hud.enabled = newValue;
+											if (newValue) {
+												Client.sendMessageWithPrefix(Text.literal("[Widgets Extractor] Currently, the HUD display is a single view; if multiple widgets are enabled, they will all be displayed one after another.").formatted(Formatting.RED));
+												Client.sendMessageWithPrefix(Text.literal("[Widgets Extractor] You must enable or disable widgets on each desired Island via /widgets").formatted(Formatting.GOLD));
+											}
+										})
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<String>createBuilder()
+								.name(Text.literal("Add custom Widgets"))
+								.description(OptionDescription.of(
+										Text.literal("Allows you to add custom widgets."),
+										Text.literal("Enter the widget name, followed by a §f§lcomma (,) §r§fto add additional names if you want multiple widgets. Leave this field blank if you don't want custom widgets."),
+										Text.literal(SPACE + "§f§lFor example: §dJacob's Contest, Event Tracker"),
+										Text.literal(SPACE + "§eNames are displayed in bold before the “:”, such as “§d§nJacob's Contest§r§e: 1m 16s”")))
+								.binding(defaults.uiAndVisuals.tabListWidget.customWidgets,
+										() -> current.uiAndVisuals.tabListWidget.customWidgets,
+										newValue -> current.uiAndVisuals.tabListWidget.customWidgets = newValue)
+								.controller(StringControllerBuilder::create)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Widget > Bestiary"))
+								.description(OptionDescription.of(
+										Text.literal("")))
+								.binding(defaults.uiAndVisuals.tabListWidget.bestiary,
+										() -> current.uiAndVisuals.tabListWidget.bestiary,
+										newValue -> current.uiAndVisuals.tabListWidget.bestiary = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Widget > Slayer"))
+								.description(OptionDescription.of(
+										Text.literal("")))
+								.binding(defaults.uiAndVisuals.tabListWidget.slayer,
+										() -> current.uiAndVisuals.tabListWidget.slayer,
+										newValue -> current.uiAndVisuals.tabListWidget.slayer = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Widget > Pet"))
+								.description(OptionDescription.of(
+										Text.literal("")))
+								.binding(defaults.uiAndVisuals.tabListWidget.pet,
+										() -> current.uiAndVisuals.tabListWidget.pet,
+										newValue -> current.uiAndVisuals.tabListWidget.pet = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Widget > Pickaxe Ability"))
+								.description(OptionDescription.of(
+										Text.literal("")))
+								.binding(defaults.uiAndVisuals.tabListWidget.pickaxeAbility,
+										() -> current.uiAndVisuals.tabListWidget.pickaxeAbility,
+										newValue -> current.uiAndVisuals.tabListWidget.pickaxeAbility = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Widget > Pity"))
+								.description(OptionDescription.of(
+										Text.literal("")))
+								.binding(defaults.uiAndVisuals.tabListWidget.pity,
+										() -> current.uiAndVisuals.tabListWidget.pity,
+										newValue -> current.uiAndVisuals.tabListWidget.pity = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Widget > Commissions"))
+								.description(OptionDescription.of(
+										Text.literal("")))
+								.binding(defaults.uiAndVisuals.tabListWidget.commissions,
+										() -> current.uiAndVisuals.tabListWidget.commissions,
+										newValue -> current.uiAndVisuals.tabListWidget.commissions = newValue)
+								.controller(this::createYesNoController)
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()

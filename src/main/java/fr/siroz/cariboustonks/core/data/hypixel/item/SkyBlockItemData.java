@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.core.data.hypixel.item;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import fr.siroz.cariboustonks.util.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param skyBlockId    the skyBlockId (e.g. "BOOSTER_COOKIE")
  * @param material      the material (e.g. "COOKIE")
+ * @param itemModel     the item_Model (e.g. "COOKIE")
  * @param name          the name (e.g. "Booster Cookie")
  * @param tier          the tier (e.g. "COMMON")
  * @param category      the category if the item has a category field (e.g. "ACCESSORY")
@@ -31,7 +33,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public record SkyBlockItemData(
 		@NotNull String skyBlockId,
-		@NotNull String material,
+		Optional<String> material,
+		Optional<String> itemModel,
 		@NotNull String name,
 		@NotNull Rarity tier,
 		Optional<String> category,
@@ -45,8 +48,10 @@ public record SkyBlockItemData(
 	 */
 	public static final SkyBlockItemData EMPTY = new SkyBlockItemData(
 			"",
+			Optional.empty(),
+			Optional.empty(),
 			"",
-			"", Rarity.UNKNOWN,
+			Rarity.UNKNOWN,
 			Optional.empty(),
 			Optional.empty(),
 			Optional.empty(),
@@ -63,14 +68,15 @@ public record SkyBlockItemData(
 	public static @NotNull SkyBlockItemData parse(@NotNull JsonObject jsonItem) throws RuntimeException {
 		try {
 			String id = jsonItem.get("id").getAsString();
-			String material = jsonItem.get("material").getAsString();
+			Optional<String> material = Optional.ofNullable(JsonUtils.getString(jsonItem, "material"));
+			Optional<String> itemModel = Optional.ofNullable(JsonUtils.getString(jsonItem, "item_model"));
 			String name = jsonItem.get("name").getAsString();
 			Rarity rarity = computeTier(jsonItem);
 			Optional<String> category = Optional.ofNullable(computeCategory(jsonItem));
-			Optional<String> skullTexture = Optional.ofNullable(computeSkullTexture(jsonItem, material));
+			Optional<String> skullTexture = Optional.ofNullable(computeSkullTexture(jsonItem, material.orElse(null)));
 			Optional<List<GemstoneSlot>> gemstoneSlots = Optional.ofNullable(computeGemstoneSlots(jsonItem));
 			Optional<PrestigeItem> prestige = Optional.ofNullable(computePrestige(jsonItem));
-			return new SkyBlockItemData(id, material, name, rarity, category, skullTexture, gemstoneSlots, prestige);
+			return new SkyBlockItemData(id, material, itemModel, name, rarity, category, skullTexture, gemstoneSlots, prestige);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -245,7 +251,7 @@ public record SkyBlockItemData(
 		return null;
 	}
 
-	private static @Nullable String computeSkullTexture(@NotNull JsonObject jsonItem, String material) {
+	private static @Nullable String computeSkullTexture(@NotNull JsonObject jsonItem, @Nullable String material) {
 		if (jsonItem.has("skin") && "SKULL_ITEM".equals(material)) {
 			JsonObject skin = jsonItem.get("skin").getAsJsonObject();
 			return skin.has("value") ? skin.get("value").getAsString() : null;

@@ -11,6 +11,7 @@ import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.WorldEvents;
 import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.manager.command.CommandComponent;
+import fr.siroz.cariboustonks.manager.glowing.EntityGlowProvider;
 import fr.siroz.cariboustonks.manager.hud.Hud;
 import fr.siroz.cariboustonks.manager.hud.HudProvider;
 import fr.siroz.cariboustonks.manager.hud.MultiElementHud;
@@ -25,7 +26,9 @@ import fr.siroz.cariboustonks.util.StonksUtils;
 import it.unimi.dsi.fastutil.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -41,8 +44,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-@ApiStatus.Experimental
-public class MobTrackingFeature extends Feature implements HudProvider {
+public class MobTrackingFeature extends Feature implements HudProvider, EntityGlowProvider {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_mob_tracking");
 	private static final int MAX_TRACKED_ENTITIES = 3;
@@ -54,6 +56,7 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 	private final Cache<Integer, Integer> notified;
 
 	private final List<TrackedEntity> tracked = new ArrayList<>(MAX_TRACKED_ENTITIES);
+	private final Map<Integer, Boolean> trackedHighlight = new HashMap<>();
 	private boolean showingBossBar = false;
 
 	public MobTrackingFeature() {
@@ -72,6 +75,7 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
 		WorldEvents.ARMORSTAND_REMOVED.register(this::onRemoveArmorStand);
 		ClientEntityEvents.ENTITY_LOAD.register((entity, world) -> this.onEntityLoad(entity));
+		ClientEntityEvents.ENTITY_UNLOAD.register((entity, world) -> this.onEntityUnload(entity));
 
 		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal(CaribouStonks.NAMESPACE)
 				.then(ClientCommandManager.literal("mobTracking")
@@ -96,6 +100,7 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 	protected void onClientJoinServer() {
 		tracked.clear();
 		notified.invalidateAll();
+		trackedHighlight.clear();
 		if (showingBossBar) {
 			Client.removeBossBar(bossEvent);
 			showingBossBar = false;
@@ -152,6 +157,14 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 		);
 	}
 
+	@Override
+	public int getEntityGlowColor(@NotNull Entity entity) {
+		if (!(entity instanceof ArmorStandEntity) && trackedHighlight.getOrDefault(entity.getId(), false)) {
+			return ConfigManager.getConfig().uiAndVisuals.mobTracking.highlightColor.getRGB();
+		}
+		return EntityGlowProvider.DEFAULT;
+	}
+
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
 	private void onUpdateArmorStand(@NotNull ArmorStandEntity armorStand, boolean equipment) {
 		if (CLIENT.player == null || CLIENT.world == null) return;
@@ -171,7 +184,7 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 			);
 			if (mobEntry != null) {
 				addTrackedEntity(new TrackedEntity(armorStand, mobEntry.priority()));
-				onTrackEntity(armorStand.getId(), mobEntry);
+				notifyEntity(armorStand.getId(), mobEntry);
 			}
 		} catch (Exception ex) {
 			if (DeveloperTools.isInDevelopment()) {
@@ -201,8 +214,15 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 				SkyBlockAPI.getIsland()
 		);
 		if (mobEntry != null) {
-			onTrackEntity(entity.getId(), mobEntry);
+			int entityId = entity.getId();
+			trackedHighlight.put(entityId, mobEntry.config().highlightable);
+			notifyEntity(entityId, mobEntry);
 		}
+	}
+
+	@EventHandler(event = "ClientEntityEvents.ENTITY_UNLOAD")
+	private void onEntityUnload(Entity entity) {
+		trackedHighlight.remove(entity.getId());
 	}
 
 	private void updateSlayerBoss(@NotNull ArmorStandEntity slayerBoss) {
@@ -238,7 +258,7 @@ public class MobTrackingFeature extends Feature implements HudProvider {
 		}
 	}
 
-	private void onTrackEntity(Integer entityId, @NotNull MobTrackingRegistry.MobTrackingEntry mobEntry) {
+	private void notifyEntity(Integer entityId, @NotNull MobTrackingRegistry.MobTrackingEntry mobEntry) {
 		if (notified.getIfPresent(entityId) == null && mobEntry.config().notifyOnSpawn) {
 			notified.put(entityId, entityId);
 			Client.showTitleAndSubtitle(

@@ -15,11 +15,13 @@ import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.Contract;
@@ -121,9 +123,9 @@ public final class ItemValueCalculator {
 		double initial = basePricePerUnit * item.amount();
 		PriceAccumulator acc = new PriceAccumulator(initial);
 
-		// Pets - Je les gère pas pour le moment
+		// Pets
 		if (ctx.skyBlockId().equals("PET")) {
-			return ItemValueResult.EMPTY;
+			return PetValueCalculator.handle(metadata.petInfo(), prices, networth);
 		}
 
 		// Special Auction (Shen, Dark Auction)
@@ -340,6 +342,8 @@ public final class ItemValueCalculator {
 			Enchantments enchantments = ctx.metadata().enchantments();
 			if (enchantments.enchantments().isEmpty()) return ComponentDecision.CONTINUE;
 
+			Set<String> seenPrefixUpgrades = new HashSet<>();
+
 			for (Object2IntMap.Entry<String> entry : Object2IntMaps.fastIterable(enchantments.enchantments())) {
 				String enchantmentId = entry.getKey().toUpperCase(Locale.ENGLISH);
 				int lvl = entry.getIntValue();
@@ -356,6 +360,28 @@ public final class ItemValueCalculator {
 						acc.add(calc.price());
 						acc.push(calc);
 						// À voir, mais ça me semble logique
+						continue;
+					}
+				}
+				// Enchantment Upgrades - Prefix-based (TURBO_X, ...)
+				Map<Integer, String> prefixUpgrades = null;
+				for (Map.Entry<String, Map<Integer, String>> e : CalculatorConstants.ENCHANTMENT_PREFIX_UPGRADES.entrySet()) {
+					if (enchantmentId.startsWith(e.getKey())) {
+						prefixUpgrades = e.getValue();
+						break;
+					}
+				}
+				if (prefixUpgrades != null) {
+					String upgradeKey = prefixUpgrades.getOrDefault(lvl, null);
+					// éviter d'avoir x2 la même upgrade sur 2 enchant
+					if (upgradeKey != null && seenPrefixUpgrades.add(upgradeKey)) {
+						Calculation calc = Calculation.of(
+								Calculation.Type.ENCHANTMENT_UPGRADE,
+								upgradeKey,
+								ctx.prices().applyAsDouble(upgradeKey) * worth("enchantmentUpgrades", ctx.networth())
+						);
+						acc.add(calc.price());
+						acc.push(calc);
 						continue;
 					}
 				}
@@ -516,6 +542,8 @@ public final class ItemValueCalculator {
 	@Contract(pure = true)
 	private @NotNull PriceComponent masterStars() {
 		return (ctx, acc) -> {
+			if (CalculatorConstants.PRESTIGES.containsKey(ctx.skyBlockId())) return ComponentDecision.CONTINUE;
+
 			int dungeonItemLevel = ctx.metadata().modifiers().dungeonItemLevel().orElse(0);
 			int upgradeLevel = ctx.metadata().modifiers().upgradeLevel();
 			if (dungeonItemLevel > 5 || upgradeLevel > 5) {

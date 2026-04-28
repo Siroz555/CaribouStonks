@@ -1,12 +1,21 @@
 package fr.siroz.cariboustonks.core.data.hypixel.bazaar;
 
 import java.util.List;
+import java.util.function.Function;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Interface for analyzing Bazaar Products statistics and market dynamics derived from order data.
  */
 public interface BazaarItemAnalytics {
+	/**
+	 * Insta-Buy / Best Sell Order
+	 */
+	Function<BazaarProduct, Double> BUY = BazaarProduct::buyPrice;
+	/**
+	 * Insta-Sell / Best Buy Order
+	 */
+	Function<BazaarProduct, Double> SELL = BazaarProduct::sellPrice;
 
 	/**
 	 * Retrieves the instant buy price.

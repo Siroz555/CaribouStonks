@@ -3,7 +3,7 @@
   "id": "cariboustonks",
   "version": "${version}",
   "name": "CaribouStonks",
-  "description": "Siroz555's Mod – Hypixel SkyBlock Fabric Mod",
+  "description": "Hypixel SkyBlock Mod. Control price displays on items / GUI, Zoom, Scrollable Tooltips, KeyShortcut, Vanilla Tweaks and lots of Qol features",
   "authors": [
     "Siroz555"
   ],

@@ -13,15 +13,17 @@ import fr.siroz.cariboustonks.feature.Feature;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.TimeUtils;
 import fr.siroz.cariboustonks.util.render.gui.ColorHighlight;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -65,7 +67,11 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
 		MutableText message = Text.empty()
 				.append(Text.literal("[Forge] ").formatted(Formatting.GOLD))
 				.append(text)
-				.append(Text.literal(" was ended!").formatted(Formatting.GREEN));
+				.append(Text.literal(" was ended!").formatted(Formatting.GREEN))
+				.append(Text.literal(" CLICK").formatted(Formatting.YELLOW, Formatting.BOLD))
+				.styled(style -> style
+						.withHoverEvent(new HoverEvent.ShowText(Text.literal("Click to call Forge").formatted(Formatting.YELLOW)))
+						.withClickEvent(new ClickEvent.RunCommand("/call forge")));
 		MutableText notification = Text.empty()
 				.append(Text.literal("Forge !").formatted(Formatting.GOLD, Formatting.BOLD))
 				.append(Text.literal("\n"))
@@ -90,21 +96,12 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
                 highlights.add(ColorHighlight.green(entry.getIntKey(), 0.5f));
             } else {
                 String lore = ItemUtils.getLoreLineIf(itemStack, s -> s.contains("Time"));
-                if (lore == null) {
-					continue;
-				}
+                if (lore == null) continue;
 
-                String timeRemaining = lore.replace("Time Remaining: ", "");
-                int[] time = extractTime(timeRemaining);
-                int hours = time[0];
-                int minutes = time[1];
-                int seconds = time[2];
-                if (hours == 0 && minutes == 0 && seconds == 0) {
-					continue;
-				}
+				Duration duration = TimeUtils.extractDuration(lore.replace("Time Remaining: ", ""));
+				if (duration.isZero()) continue;
 
-                String text = StonksUtils.textToJson(itemStack.getName()).orElse(itemStack.getName().getString());
-                Duration duration = Duration.ofHours(hours).plusMinutes(minutes).plusSeconds(seconds);
+				String text = StonksUtils.textToJson(itemStack.getName()).orElse(itemStack.getName().getString());
                 Instant expirationTime = Instant.now().plus(duration);
 
                 TimedObject timedObject = new TimedObject(
@@ -120,28 +117,5 @@ public final class ForgeReminderFeature extends Feature implements ContainerMatc
         }
 
         return highlights;
-    }
-
-    @Contract("_ -> new")
-    private int @NotNull [] extractTime(@NotNull String input) {
-        int hours = 0;
-		int minutes = 0;
-		int seconds = 0;
-
-        try {
-            String[] parts = input.split(" ");
-            for (String part : parts) {
-                if (part.endsWith("h")) {
-                    hours = Integer.parseInt(part.replace("h", ""));
-                } else if (part.endsWith("m")) {
-                    minutes = Integer.parseInt(part.replace("m", ""));
-                } else if (part.endsWith("s")) {
-                    seconds = Integer.parseInt(part.replace("s", ""));
-                }
-            }
-        } catch (NumberFormatException ignored) {
-        }
-
-        return new int[]{hours, minutes, seconds};
     }
 }

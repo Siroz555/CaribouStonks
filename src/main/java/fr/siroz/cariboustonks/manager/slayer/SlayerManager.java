@@ -12,14 +12,12 @@ import fr.siroz.cariboustonks.event.NetworkEvents;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.manager.Manager;
 import fr.siroz.cariboustonks.util.Client;
-import java.util.UUID;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -207,7 +205,7 @@ public final class SlayerManager implements Manager {
 	 * if it is available upon arrival on the server.
 	 */
 	@EventHandler(event = "SkyBlockEvents.ISLAND_CHANGE")
-	private void onIslandChange(@NotNull IslandType islandType) {
+	private void onIslandChange(@NotNull IslandType islandType, String serverName) {
 		bossFight = null;
 		quest = null;
 		TickScheduler.getInstance().runLater(

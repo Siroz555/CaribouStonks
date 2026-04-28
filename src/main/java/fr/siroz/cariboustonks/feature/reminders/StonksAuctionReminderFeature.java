@@ -22,6 +22,8 @@ import java.util.regex.Pattern;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -99,7 +101,11 @@ public final class StonksAuctionReminderFeature extends Feature implements Conta
 	public void onExpire(@NotNull TimedObject timedObject) {
 		MutableText message = Text.empty()
 				.append(Text.literal("[Stonks Auction] ").formatted(Formatting.LIGHT_PURPLE))
-				.append(Text.literal("Diaz Stonks Auction available!").formatted(Formatting.DARK_PURPLE));
+				.append(Text.literal("Diaz Stonks Auction available!").formatted(Formatting.DARK_PURPLE))
+				.append(Text.literal(" CLICK").formatted(Formatting.YELLOW, Formatting.BOLD))
+				.styled(style -> style
+						.withHoverEvent(new HoverEvent.ShowText(Text.literal("Click to Warp stonks").formatted(Formatting.YELLOW)))
+						.withClickEvent(new ClickEvent.RunCommand("/warp stonks")));
 		MutableText notification = Text.empty()
 				.append(Text.literal("Stonks Auction").formatted(Formatting.LIGHT_PURPLE))
 				.append(Text.literal("\n"))

@@ -15,10 +15,8 @@ import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-@ApiStatus.Experimental // SIROZ-NOTE: C'est qu'une preview pour le moment
 class MobTrackingListWidget extends ElementListWidget<MobTrackingListWidget.MobTrackingListEntry> {
 
 	MobTrackingListWidget(MinecraftClient client, MobTrackingScreen screen, int width, int height, int y, int itemHeight) {
@@ -79,11 +77,13 @@ class MobTrackingListWidget extends ElementListWidget<MobTrackingListWidget.MobT
 		private final List<ClickableWidget> children;
 		private final CheckboxWidget enabledWidget;
 		private final CheckboxWidget notifyOnSpawnWidget;
+		private final CheckboxWidget highlightableWidget;
 
 		protected MobTrackingListEntry() { // Pour le CategorySeparatorEntry
 			this.entry = null;
 			this.enabledWidget = null;
 			this.notifyOnSpawnWidget = null;
+			this.highlightableWidget = null;
 			this.children = List.of();
 		}
 
@@ -102,7 +102,13 @@ class MobTrackingListWidget extends ElementListWidget<MobTrackingListWidget.MobT
 					.callback((checkbox, checked) -> entry.config().notifyOnSpawn = checked)
 					.build();
 
-			this.children = List.of(this.enabledWidget, this.notifyOnSpawnWidget);
+			this.highlightableWidget = CheckboxWidget.builder(Text.literal(""), client.textRenderer)
+					.checked(entry.config().highlightable)
+					.tooltip(Tooltip.of(Text.literal("Click to enable the Glowing effect on this entity")))
+					.callback((checkbox, checked) -> entry.config().highlightable = checked)
+					.build();
+
+			this.children = List.of(this.enabledWidget, this.notifyOnSpawnWidget, this.highlightableWidget);
 		}
 
 		@Override
@@ -117,13 +123,15 @@ class MobTrackingListWidget extends ElementListWidget<MobTrackingListWidget.MobT
 
 		@Override
 		public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			int x = this.getContentMiddleX() - 100;
+			int x = this.getContentMiddleX() - 80;
 			int y = this.getY();
+
+			enabledWidget.setPosition(x - 35, y);
 
 			context.drawTextWithShadow(client.textRenderer, entry.displayName(), x - 10, y + 5, Colors.WHITE.asInt());
 
-			enabledWidget.setPosition(x + 150, y);
-			notifyOnSpawnWidget.setPosition(x + 175, y);
+			notifyOnSpawnWidget.setPosition(x + 150, y);
+			highlightableWidget.setPosition(x + 175, y);
 
 			for (ClickableWidget child : children) {
 				child.render(context, mouseX, mouseY, deltaTicks);

@@ -5,6 +5,9 @@ import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMaps;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMaps;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -94,6 +97,17 @@ public interface CalculatorConstants {
 		map.put("ENDER_SLAYER", Map.of(7, "ENDSTONE_IDOL"));
 		map.put("BANE_OF_ARTHROPODS", Map.of(7, "ENSNARED_SNAIL"));
 		map.put("VENOMOUS", Map.of(7, "FATEFUL_STINGER"));
+		map.put("THORNS", Map.of(4, "PRICKLY_CREEPER"));
+	}));
+
+	Object2ObjectMap<String, Map<Integer, String>> ENCHANTMENT_PREFIX_UPGRADES = Object2ObjectMaps.unmodifiable(StonksUtils.make(new Object2ObjectOpenHashMap<>(), map -> {
+		map.put("TURBO_",  Map.of(6, "TURBO_GOURD", 7, "ENCHANTED_TURBO_GOURD"));
+	}));
+
+	Object2IntMap<String> PET_SPECIALS = Object2IntMaps.unmodifiable(StonksUtils.make(new Object2IntOpenHashMap<>(), map -> {
+		map.put("GOLDEN_DRAGON", 200);
+		map.put("JADE_DRAGON", 200);
+		map.put("ROSE_DRAGON", 200);
 	}));
 
 	List<String> MASTER_STARS = List.of(

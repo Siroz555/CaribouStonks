@@ -56,13 +56,13 @@ public final class HypixelAPIFixer {
 		String material = "ENCHANTED_BOOK";
 		String name = getEnchantName(skyBlockIdEnchantment);
 		Rarity tier = skyBlockIdEnchantment.contains("ULTIMATE") ? Rarity.MYTHIC : Rarity.UNCOMMON;
-		return new SkyBlockItemData(skyBlockIdEnchantment, material, name, tier, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+		return new SkyBlockItemData(skyBlockIdEnchantment, Optional.of(material), Optional.empty(), name, tier, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 	}
 
 	public @NotNull SkyBlockItemData createEssence(@NotNull String skyBlockIdEssence) {
 		String material = "SKULL_ITEM";
 		String name = getEssenceName(skyBlockIdEssence);
-		return new SkyBlockItemData(skyBlockIdEssence, material, name, Rarity.MYTHIC, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+		return new SkyBlockItemData(skyBlockIdEssence, Optional.of(material), Optional.empty(), name, Rarity.MYTHIC, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 	}
 
 	public @Nullable SkyBlockItemData createShard(@NotNull String skyBlockIdShard) {
@@ -71,7 +71,7 @@ public final class HypixelAPIFixer {
 			String material = "PRISMARINE_SHARD";
 			String name = attribute.name() + " (" + attribute.id() + ")";
 			Rarity tier = attribute.getRarityFromId();
-			return new SkyBlockItemData(skyBlockIdShard, material, name, tier, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+			return new SkyBlockItemData(skyBlockIdShard, Optional.of(material), Optional.empty(), name, tier, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 		}
 
 		return null;

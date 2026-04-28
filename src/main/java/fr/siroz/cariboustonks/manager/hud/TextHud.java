@@ -42,7 +42,9 @@ public final class TextHud extends Hud {
 
 	@Override
 	public void renderScreen(DrawContext context) {
-		render(defaultText, context, x(), y(), scale());
+		if (hudConfig.shouldRender()) {
+			render(defaultText, context, x(), y(), scale());
+		}
 	}
 
 	@Override

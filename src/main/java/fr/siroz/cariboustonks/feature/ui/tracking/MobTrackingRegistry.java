@@ -40,22 +40,23 @@ public final class MobTrackingRegistry {
 	private void loadDefaultMobs() {
 		// Slayer Boss "register" en temps réel
 		// Crimson Isle - Minibosses
-		register("Bladesoul", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Text.literal("Bladesoul").formatted(Formatting.GRAY), false, IslandType.CRIMSON_ISLE);
-		register("Magma Boss", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Text.literal("Magma Boss").formatted(Formatting.DARK_RED), false, IslandType.CRIMSON_ISLE);
-		register("Ashfang", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Text.literal("Ashfang").formatted(Formatting.GRAY), false, IslandType.CRIMSON_ISLE);
-		register("Mage Outlaw", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Text.literal("Mage Outlaw").formatted(Formatting.DARK_PURPLE), false, IslandType.CRIMSON_ISLE);
-		register("Barbarian Duke X", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Text.literal("Barbarian Duke X").formatted(Formatting.GRAY), false, IslandType.CRIMSON_ISLE);
+		register("Bladesoul", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Text.literal("Bladesoul").formatted(Formatting.GRAY), false, false, IslandType.CRIMSON_ISLE);
+		register("Magma Boss", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Text.literal("Magma Boss").formatted(Formatting.DARK_RED), false, false, IslandType.CRIMSON_ISLE);
+		register("Ashfang", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Text.literal("Ashfang").formatted(Formatting.GRAY), false, false, IslandType.CRIMSON_ISLE);
+		register("Mage Outlaw", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Text.literal("Mage Outlaw").formatted(Formatting.DARK_PURPLE), false, false, IslandType.CRIMSON_ISLE);
+		register("Barbarian Duke X", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Text.literal("Barbarian Duke X").formatted(Formatting.GRAY), false, false, IslandType.CRIMSON_ISLE);
 		// Crimson Isle - Special
-		register("Vanquisher", 1, MobCategory.SPECIAL, Text.literal("Vanquisher").formatted(Formatting.DARK_PURPLE), true, IslandType.CRIMSON_ISLE);
+		register("Vanquisher", 1, MobCategory.SPECIAL, Text.literal("Vanquisher").formatted(Formatting.DARK_PURPLE), true, true, IslandType.CRIMSON_ISLE);
 		// Mythological Ritual
-		register("Manticore", 50, MobCategory.MYTHOLOGICAL, Text.literal("Manticore").formatted(Formatting.DARK_GREEN), false, IslandType.HUB);
-		register("Minos Inquisitor", 50, MobCategory.MYTHOLOGICAL, Text.literal("Minos Inquisitor").formatted(Formatting.LIGHT_PURPLE), false, IslandType.HUB);
-		register("King Minos", 55, MobCategory.MYTHOLOGICAL, Text.literal("King Minos").formatted(Formatting.RED), false, IslandType.HUB);
+		register("Manticore", 50, MobCategory.MYTHOLOGICAL, Text.literal("Manticore").formatted(Formatting.DARK_GREEN), false, false, IslandType.HUB);
+		register("Minos Inquisitor", 50, MobCategory.MYTHOLOGICAL, Text.literal("Minos Inquisitor").formatted(Formatting.LIGHT_PURPLE), false, false, IslandType.HUB);
+		register("King Minos", 55, MobCategory.MYTHOLOGICAL, Text.literal("King Minos").formatted(Formatting.RED), false, false, IslandType.HUB);
 		// Rare Fishing Mobs
 		for (RareSeaCreature seaCreature : RareSeaCreature.values()) {
-			register(seaCreature.getName(), 50, MobCategory.FISHING, Text.literal(seaCreature.getName()).formatted(seaCreature.getColor()), true, seaCreature.getIslandType());
+			register(seaCreature.getName(), 50, MobCategory.FISHING, Text.literal(seaCreature.getName()).formatted(seaCreature.getColor()), true, seaCreature.isHighlightable(), seaCreature.getIslandType());
 		}
-		register("Littlefoot", 50, MobCategory.MINING, Text.literal("Littlefoot").formatted(Formatting.BLUE), true, IslandType.GLACITE_MINESHAFT);
+		// Mining - Mineshaft
+		register("Littlefoot", 50, MobCategory.MINING, Text.literal("Littlefoot").formatted(Formatting.BLUE), true, true, IslandType.GLACITE_MINESHAFT);
 	}
 
 	public void updateMobTrackingConfig(Map<String, MobTrackingEntry> newTrackedMobs) {
@@ -84,7 +85,8 @@ public final class MobTrackingRegistry {
 				String mobName = entry.getValue().config().name;
 				boolean enabled = entry.getValue().config().enabled;
 				boolean notifyOnSpawn = entry.getValue().config().notifyOnSpawn;
-				configs.add(new MobTrackingConfig(mobName, enabled, notifyOnSpawn));
+				boolean highlightable = entry.getValue().config().highlightable;
+				configs.add(new MobTrackingConfig(mobName, enabled, notifyOnSpawn, highlightable));
 			}
 			CaribouStonks.core().getJsonFileService().save(MOB_TRACKING_PATH, configs);
 		} catch (JsonProcessingException ex) {
@@ -135,9 +137,10 @@ public final class MobTrackingRegistry {
 			int priority, MobCategory category,
 			Text displayName,
 			boolean notifyOnSpawn,
+			boolean highlightable,
 			IslandType... islandTypes
 	) {
-		MobTrackingConfig config = new MobTrackingConfig(mobName, true, notifyOnSpawn);
+		MobTrackingConfig config = new MobTrackingConfig(mobName, true, notifyOnSpawn, highlightable);
 		trackedMobs.put(mobName, new MobTrackingEntry(config, priority, category, displayName, islandTypes));
 	}
 
@@ -196,11 +199,13 @@ public final class MobTrackingRegistry {
 		public String name;
 		public boolean enabled;
 		public boolean notifyOnSpawn;
+		public boolean highlightable;
 
-		public MobTrackingConfig(String name, boolean enabled, boolean notifyOnSpawn) {
+		public MobTrackingConfig(String name, boolean enabled, boolean notifyOnSpawn, boolean highlightable) {
 			this.name = name;
 			this.enabled = enabled;
 			this.notifyOnSpawn = notifyOnSpawn;
+			this.highlightable = highlightable;
 		}
 	}
 

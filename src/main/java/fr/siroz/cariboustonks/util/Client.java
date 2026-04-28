@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.Toast;
@@ -48,7 +47,6 @@ public final class Client {
 	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 	private static final SystemToast.Type STONKS_SYSTEM = new SystemToast.Type(10000L); // 10000L
 	private static final List<String> STRING_SCOREBOARD = new ArrayList<>();
-	private static final List<String> STRING_TAB = new ArrayList<>();
 
 	private Client() {
 	}
@@ -109,17 +107,6 @@ public final class Client {
 	@Contract(value = " -> new", pure = true)
 	public static @NotNull List<String> getScoreboard() {
 		return new ArrayList<>(STRING_SCOREBOARD);
-	}
-
-	/**
-	 * Retrieves the current tab list lines.
-	 *
-	 * @return the current tab list lines
-	 */
-	@SuppressWarnings("unused")
-	@Contract(value = " -> new", pure = true)
-	public static @NotNull List<String> getTabList() {
-		return new ArrayList<>(STRING_TAB);
 	}
 
 	/**
@@ -370,7 +357,6 @@ public final class Client {
 	@ApiStatus.Internal
 	public static void handleUpdates() {
 		updateScoreboard();
-		updateTabList();
 	}
 
 	private static void updateScoreboard() {
@@ -408,37 +394,6 @@ public final class Client {
 			STRING_SCOREBOARD.addAll(stringLines);
 			if (SkyBlockAPI.isOnSkyBlock()) {
 				HudEvents.SCOREBOARD_UPDATE.invoker().onUpdate(STRING_SCOREBOARD);
-			}
-		} catch (Exception ignored) {
-		}
-	}
-
-	private static void updateTabList() {
-		try {
-			STRING_TAB.clear();
-
-			if (CLIENT.getNetworkHandler() == null) {
-				return;
-			}
-
-			List<String> stringLines = new ArrayList<>();
-			for (PlayerListEntry playerListEntry : CLIENT.getNetworkHandler().getPlayerList()) {
-				if (playerListEntry.getDisplayName() == null) {
-					continue;
-				}
-
-				String name = playerListEntry.getDisplayName().getString();
-				if (name.isEmpty() || name.startsWith("[")) {
-					continue;
-				}
-
-				//String formatted = StonksUtils.strip(name); // ?
-				stringLines.add(name);
-			}
-
-			STRING_TAB.addAll(stringLines);
-			if (SkyBlockAPI.isOnSkyBlock()) {
-				HudEvents.TAB_LIST_UPDATE.invoker().onUpdate(STRING_TAB);
 			}
 		} catch (Exception ignored) {
 		}

@@ -48,7 +48,7 @@ public class AbiphoneFavoriteContactFeature
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock();
+		return SkyBlockAPI.isOnSkyBlock() && ConfigManager.getConfig().uiAndVisuals.abiphoneFavoriteContacts;
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class AbiphoneFavoriteContactFeature
 			if (isContact(itemStack)) {
 				String name = StonksUtils.stripColor(itemStack.getName().getString());
 				if (ConfigManager.getConfig().uiAndVisuals.favoriteAbiphoneContacts.contains(name)) {
-					highlights.add(ColorHighlight.yellow(entry.getIntKey(), 0.25f));
+					highlights.add(ColorHighlight.yellow(entry.getIntKey(), 0.35f));
 				}
 			}
 		}

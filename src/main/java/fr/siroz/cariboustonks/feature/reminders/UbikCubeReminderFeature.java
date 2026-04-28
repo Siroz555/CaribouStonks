@@ -15,6 +15,8 @@ import fr.siroz.cariboustonks.util.HeadTextures;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -67,7 +69,11 @@ public final class UbikCubeReminderFeature extends Feature implements Reminder {
 		MutableText message = Text.empty()
 				.append(Text.literal("[Ubik's Cube] ").formatted(Formatting.GOLD))
 				.append(Text.literal("Ready to play ").formatted(Formatting.GREEN))
-				.append(SPLIT_OR_STEAL_TEXT);
+				.append(SPLIT_OR_STEAL_TEXT)
+				.append(Text.literal(" CLICK").formatted(Formatting.YELLOW, Formatting.BOLD))
+				.styled(style -> style
+						.withHoverEvent(new HoverEvent.ShowText(Text.literal("Click to Warp rift").formatted(Formatting.YELLOW)))
+						.withClickEvent(new ClickEvent.RunCommand("/warp rift")));
 		MutableText notification = Text.empty()
 				.append(Text.literal("Ubik's Cube !").formatted(Formatting.GOLD, Formatting.BOLD))
 				.append(Text.literal("\n"))

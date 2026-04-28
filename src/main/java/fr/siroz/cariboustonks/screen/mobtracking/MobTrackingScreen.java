@@ -15,12 +15,10 @@ import net.minecraft.client.gui.widget.SimplePositioningWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@ApiStatus.Experimental
 public class MobTrackingScreen extends CaribousStonksScreen {
 
 	@Nullable
@@ -29,10 +27,7 @@ public class MobTrackingScreen extends CaribousStonksScreen {
 	protected final Map<String, MobTrackingRegistry.MobTrackingEntry> trackedMobs;
 
 	private MobTrackingScreen(@Nullable Screen parent) {
-		super(Text.empty()
-				.append(Text.literal("Mob Tracking ").formatted(Formatting.RED, Formatting.BOLD))
-				.append(Text.literal(" (Beta)").formatted(Formatting.GRAY))
-		);
+		super(Text.literal("Mob Tracking ").formatted(Formatting.RED, Formatting.BOLD));
 		this.parent = parent;
 		this.mobTrackingFeature = CaribouStonks.features().getFeature(MobTrackingFeature.class);
 		this.trackedMobs = this.mobTrackingFeature.getRegistry().getTrackedMobs();

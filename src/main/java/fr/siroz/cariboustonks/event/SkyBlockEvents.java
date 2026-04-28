@@ -42,9 +42,9 @@ public final class SkyBlockEvents {
 	 * Called when the client changes of SkyBlock Island
 	 */
 	@OnlySkyBlock
-	public static final Event<IslandChange> ISLAND_CHANGE = EventFactory.createArrayBacked(IslandChange.class, listeners -> (location) -> {
+	public static final Event<IslandChange> ISLAND_CHANGE = EventFactory.createArrayBacked(IslandChange.class, listeners -> (location, serverName) -> {
 		for (IslandChange listener : listeners) {
-			listener.onIslandChange(location);
+			listener.onIslandChange(location, serverName);
 		}
 	});
 
@@ -109,7 +109,7 @@ public final class SkyBlockEvents {
 
 	@FunctionalInterface
 	public interface IslandChange {
-		void onIslandChange(@NotNull IslandType islandType);
+		void onIslandChange(@NotNull IslandType islandType, String serverName);
 	}
 
 	@FunctionalInterface

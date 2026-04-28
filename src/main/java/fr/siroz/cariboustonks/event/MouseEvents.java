@@ -23,9 +23,23 @@ public final class MouseEvents {
 		return true;
 	});
 
+	/**
+	 * Called when the Middle Click is handled out of a Screen.
+	 */
+	public static final Event<MiddleClickAir> MIDDLE_CLICK_AIR_EVENT = EventFactory.createArrayBacked(MiddleClickAir.class, listeners -> () -> {
+		for (MiddleClickAir listener : listeners) {
+			listener.onMiddleClickAir();
+		}
+	});
+
 	@FunctionalInterface
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public interface AllowMouseScroll {
 		boolean allowMouseScroll(double horizontal, double vertical);
+	}
+
+	@FunctionalInterface
+	public interface MiddleClickAir {
+		void onMiddleClickAir();
 	}
 }

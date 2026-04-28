@@ -26,14 +26,17 @@ import fr.siroz.cariboustonks.feature.garden.MouseLockFeature;
 import fr.siroz.cariboustonks.feature.garden.pest.PestFinderFeature;
 import fr.siroz.cariboustonks.feature.hunting.AttributeInfoTooltipFeature;
 import fr.siroz.cariboustonks.feature.hunting.QuickFusionFeature;
+import fr.siroz.cariboustonks.feature.hunting.tracking.TrackingShardsFeature;
 import fr.siroz.cariboustonks.feature.item.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.feature.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.feature.keyshortcut.KeyShortcutFeature;
+import fr.siroz.cariboustonks.feature.misc.BestiaryHighlightFeature;
 import fr.siroz.cariboustonks.feature.misc.HexTooltipFeature;
 import fr.siroz.cariboustonks.feature.misc.HighlightMobFeature;
 import fr.siroz.cariboustonks.feature.misc.HoppityEggFinderFeature;
 import fr.siroz.cariboustonks.feature.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.feature.misc.REISearchBarCalculatorFeature;
+import fr.siroz.cariboustonks.feature.misc.ServerTrackerFeature;
 import fr.siroz.cariboustonks.feature.reminders.BoosterCookieReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.ChocolateLimitReminderFeature;
 import fr.siroz.cariboustonks.feature.reminders.EnchantedCloakReminderFeature;
@@ -52,6 +55,7 @@ import fr.siroz.cariboustonks.feature.stonks.tooltips.auction.AuctionLowestBinTo
 import fr.siroz.cariboustonks.feature.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
 import fr.siroz.cariboustonks.feature.ui.AbiphoneFavoriteContactFeature;
 import fr.siroz.cariboustonks.feature.ui.SelectedPetHighlightFeature;
+import fr.siroz.cariboustonks.feature.ui.TabListWidgetExtractorFeature;
 import fr.siroz.cariboustonks.feature.ui.deployable.DeployableFeature;
 import fr.siroz.cariboustonks.feature.ui.hud.DayHud;
 import fr.siroz.cariboustonks.feature.ui.hud.FpsHud;
@@ -107,6 +111,7 @@ public final class Features {
 		registerFeature(new GreenhouseGrowthStageFeature());
 		registerFeature(new MouseLockFeature());
 		// Hunting
+		registerFeature(new TrackingShardsFeature());
 		registerFeature(new QuickFusionFeature());
 		registerFeature(new AttributeInfoTooltipFeature(3));
 		// Item
@@ -141,6 +146,7 @@ public final class Features {
 		registerFeature(new MobTrackingFeature());
 		registerFeature(new AbiphoneFavoriteContactFeature(0));
 		// UI - HUDs
+		registerFeature(new TabListWidgetExtractorFeature());
 		registerFeature(new FpsHud());
 		registerFeature(new PingHud());
 		registerFeature(new TpsHud());
@@ -151,7 +157,9 @@ public final class Features {
 		// Waypoint
 		registerFeature(new WaypointFeature());
 		// Misc
+		registerFeature(new ServerTrackerFeature());
 		registerFeature(new HighlightMobFeature());
+		registerFeature(new BestiaryHighlightFeature());
 		registerFeature(new HoppityEggFinderFeature());
 		registerFeature(new HexTooltipFeature(5));
 		registerFeature(new PartyCommandFeature());

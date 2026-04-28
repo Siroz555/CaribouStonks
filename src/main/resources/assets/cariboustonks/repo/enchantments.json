@@ -175,6 +175,12 @@
     "goodLevel": 6
   },
   {
+    "id": "feast",
+    "name": "Feast",
+    "maxLevel": 5,
+    "goodLevel": 4
+  },
+  {
     "id": "ferocious_mana",
     "name": "Ferocious Mana",
     "maxLevel": 10,
@@ -539,7 +545,7 @@
   {
     "id": "thorns",
     "name": "Thorns",
-    "maxLevel": 3
+    "maxLevel": 4
   },
   {
     "id": "thunderbolt",
@@ -587,67 +593,80 @@
   {
     "id": "turbo_cactus",
     "name": "Turbo-Cacti",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "turbo_cane",
     "name": "Turbo-Cane",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "turbo_carrot",
     "name": "Turbo-Carrot",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "turbo_cocoa",
     "name": "Turbo-Cocoa",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "turbo_melon",
     "name": "Turbo-Melon",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "turbo_mushrooms",
     "name": "Turbo-Mushrooms",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "turbo_potato",
     "name": "Turbo-Potato",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "turbo_pumpkin",
     "name": "Turbo-Pumpkin",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "turbo_warts",
     "name": "Turbo-Warts",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "turbo_wheat",
     "name": "Turbo-Wheat",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "turbo_sunflower",
     "name": "Turbo-Sunflower",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "turbo_moonflower",
     "name": "Turbo-Moonflower",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "turbo_rose",
     "name": "Turbo-Rose",
-    "maxLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "vampirism",

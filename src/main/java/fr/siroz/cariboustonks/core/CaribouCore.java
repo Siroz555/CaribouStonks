@@ -9,6 +9,7 @@ import fr.siroz.cariboustonks.core.dev.DeveloperManager;
 import fr.siroz.cariboustonks.core.json.JsonFileService;
 import fr.siroz.cariboustonks.core.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.tablist.TabListManager;
 import fr.siroz.cariboustonks.event.EventHandler;
 import fr.siroz.cariboustonks.event.SkyBlockEvents;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
@@ -28,6 +29,7 @@ public final class CaribouCore {
 	private final ModDataSource modDataSource;
 	private final HypixelDataSource hypixelDataSource;
 	private final GenericDataSource genericDataSource;
+	private final TabListManager tabListManager;
 
 	@ApiStatus.Internal
 	public CaribouCore() {
@@ -45,6 +47,7 @@ public final class CaribouCore {
 		this.modDataSource = new ModDataSource();
 		this.hypixelDataSource = new HypixelDataSource(this.modDataSource);
 		this.genericDataSource = new GenericDataSource();
+		this.tabListManager = new TabListManager();
 
 		// General Tick Scheduler for the SkyBlock API
 		TickScheduler.getInstance().runRepeating(SkyBlockAPI::handleInternalUpdate, 3, TimeUnit.SECONDS);
@@ -104,6 +107,10 @@ public final class CaribouCore {
 	 */
 	public GenericDataSource getGenericDataSource() {
 		return genericDataSource;
+	}
+
+	public TabListManager getTabListManager() {
+		return tabListManager;
 	}
 
 	@EventHandler(event = "ClientPlayConnectionEvents.DISCONNECT")
