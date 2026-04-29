@@ -42,22 +42,6 @@ public class GeneralCategory extends AbstractCategory {
 						.text(Text.literal("Open"))
 						.action((screen, opt) -> MinecraftClient.getInstance().setScreen(HudConfigScreen.create(screen)))
 						.build())
-				.option(LabelOption.create(Text.literal("| Key Shortcuts").formatted(Formatting.BOLD)))
-				.option(ButtonOption.createBuilder()
-						.name(Text.literal("KeyShortcut Menu"))
-						.text(Text.literal("Open"))
-						.action((screen, opt) -> MinecraftClient.getInstance().setScreen(KeyShortcutScreen.create(screen)))
-						.build())
-				.option(Option.<Integer>createBuilder()
-						.name(Text.literal("KeyShortcut Cooldown"))
-						.description(OptionDescription.of(
-								Text.literal("Allows you to change the cooldown in milliseconds between each action."),
-								Text.literal(SPACE + "Note: It is possible to be kicked for spamming if this value is too low. Generally, when it's “instant,” even though Hypixel prevents you by default.").formatted(Formatting.GOLD)))
-						.binding(defaults.general.keyShortcutCooldown,
-								() -> current.general.keyShortcutCooldown,
-								newValue -> current.general.keyShortcutCooldown = newValue)
-						.controller(opt -> createIntegerMsController(opt, 2500))
-						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Stonks").formatted(Formatting.BOLD))
 						.description(OptionDescription.of(
@@ -360,6 +344,26 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(LabelOption.create(Text.empty()))
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Text.literal("Key Shortcuts").formatted(Formatting.BOLD))
+						.description(OptionDescription.of(Text.empty()))
+						.collapsed(false)
+						.option(ButtonOption.createBuilder()
+								.name(Text.literal("KeyShortcut Menu"))
+								.text(Text.literal("Open"))
+								.action((screen, opt) -> MinecraftClient.getInstance().setScreen(KeyShortcutScreen.create(screen)))
+								.build())
+						.option(Option.<Integer>createBuilder()
+								.name(Text.literal("KeyShortcut Cooldown"))
+								.description(OptionDescription.of(
+										Text.literal("Allows you to change the cooldown in milliseconds between each action."),
+										Text.literal(SPACE + "Note: It is possible to be kicked for spamming if this value is too low. Generally, when it's “instant,” even though Hypixel prevents you by default.").formatted(Formatting.GOLD)))
+								.binding(defaults.general.keyShortcutCooldown,
+										() -> current.general.keyShortcutCooldown,
+										newValue -> current.general.keyShortcutCooldown = newValue)
+								.controller(opt -> createIntegerMsController(opt, 2500))
+								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Text.literal("Danger Zone").formatted(Formatting.RED, Formatting.BOLD))

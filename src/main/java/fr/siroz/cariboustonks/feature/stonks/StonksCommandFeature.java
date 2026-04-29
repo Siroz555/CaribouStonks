@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.feature.stonks;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.data.generic.GenericDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.data.hypixel.item.SkyBlockItemData;
@@ -27,16 +28,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class StonksCommandFeature extends Feature {
 
-	// SIROZ-NOTE :: Implémentation pour les Auctions Items
-
 	private static final String SEPARATOR = "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
 
 	private final HypixelDataSource hypixelDataSource;
+	private final GenericDataSource genericDataSource;
 
 	private String lastItem = "";
 
 	public StonksCommandFeature() {
 		this.hypixelDataSource = CaribouStonks.core().getHypixelDataSource();
+		this.genericDataSource = CaribouStonks.core().getGenericDataSource();
 
 		addComponent(CommandComponent.class, d -> d.register(ClientCommandManager.literal("stonks")
 				.executes(context -> {
@@ -67,21 +68,22 @@ public class StonksCommandFeature extends Feature {
 	private int handle(FabricClientCommandSource source, String item) {
 		int result = 1;
 
-		if (hypixelDataSource.isBazaarInUpdate()) {
-			source.sendFeedback(Text.literal("Bazaar is currently updating.. Retry in few seconds.").formatted(Formatting.RED));
+		Optional<BazaarProduct> bazaarOpt = hypixelDataSource.getBazaarItem(item);
+		Optional<Double> auctionOpt = genericDataSource.getLowestBin(ItemLookupKey.ofNeuId(item));
+		if (bazaarOpt.isEmpty() && auctionOpt.isEmpty()) {
+			source.sendFeedback(Text.literal("Unable to find '" + item + "' in the Bazaar and the Auction House.").formatted(Formatting.RED));
 			return result;
 		}
 
-		if (!hypixelDataSource.hasBazaarItem(item)) {
-			source.sendFeedback(Text.literal("Unable to find '" + item + "' item in the Bazaar.").formatted(Formatting.RED));
-			return result;
-		}
-
-		Optional<BazaarProduct> productOptional = hypixelDataSource.getBazaarItem(item);
-		productOptional.ifPresent(product -> {
+		if (bazaarOpt.isPresent()) {
 			lastItem = item;
-			showBazaarInfo(source, item, product);
-		});
+			showBazaarInfo(source, item, bazaarOpt.get());
+		}
+
+		if (auctionOpt.isPresent()) {
+			lastItem = item;
+			showAuctionInfo(source, item, auctionOpt.get());
+		}
 
 		return result;
 	}
@@ -216,6 +218,38 @@ public class StonksCommandFeature extends Feature {
 		);
 		source.sendFeedback(Text.empty());
 		source.sendFeedback(Text.literal(" Click HERE to show in the Graph Screen!").formatted(Formatting.YELLOW)
+				.styled(style -> style
+						.withHoverEvent(new HoverEvent.ShowText(Text.literal("Click to open in the Graph Screen!").formatted(Formatting.YELLOW)))
+						.withClickEvent(new ClickEvent.RunCommand("/stonks"))));
+
+		source.sendFeedback(Text.literal(SEPARATOR).formatted(Formatting.RED));
+	}
+
+	private void showAuctionInfo(FabricClientCommandSource source, String item, double lowestBin) {
+		Client.playSound(SoundEvents.BLOCK_TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
+
+		source.sendFeedback(Text.literal(SEPARATOR).formatted(Formatting.RED));
+
+		SkyBlockItemData skyBlockItem = hypixelDataSource.getSkyBlockItem(item);
+		if (skyBlockItem == null) {
+			source.sendFeedback(Text.empty().append(Text.literal("⭐").withColor(Colors.ORANGE.asInt()))
+					.append(" " + Text.literal(item + " :").formatted(Formatting.GOLD)));
+		} else {
+			source.sendFeedback(Text.empty().append(Text.literal("⭐").withColor(Colors.ORANGE.asInt()))
+					.append(Text.literal(" " + skyBlockItem.name()).withColor(skyBlockItem.tier().getColor()))
+					.append(Text.literal(" (" + skyBlockItem.skyBlockId() + ")").formatted(Formatting.DARK_GRAY)));
+		}
+		source.sendFeedback(Text.empty());
+
+		String lowestBinPriceDisplay = StonksUtils.INTEGER_NUMBERS.format(lowestBin);
+		String lowestBinPriceShortDisplay = StonksUtils.SHORT_FLOAT_NUMBERS.format(lowestBin);
+		source.sendFeedback(Text.literal("Auction Lowest BIN: ").formatted(Formatting.YELLOW)
+				.append(Text.literal(lowestBinPriceDisplay + " Coins").formatted(Formatting.GOLD))
+				.append(Text.literal(" (").formatted(Formatting.GRAY))
+				.append(Text.literal(lowestBinPriceShortDisplay).formatted(Formatting.GOLD))
+				.append(Text.literal(")").formatted(Formatting.GRAY)));
+		source.sendFeedback(Text.empty());
+		source.sendFeedback(Text.literal(" Click HERE to show more statistics!").formatted(Formatting.YELLOW)
 				.styled(style -> style
 						.withHoverEvent(new HoverEvent.ShowText(Text.literal("Click to open in the Graph Screen!").formatted(Formatting.YELLOW)))
 						.withClickEvent(new ClickEvent.RunCommand("/stonks"))));

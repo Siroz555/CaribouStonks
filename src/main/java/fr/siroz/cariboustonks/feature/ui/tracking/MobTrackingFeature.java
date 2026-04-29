@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
@@ -45,7 +46,9 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 public class MobTrackingFeature extends Feature implements HudProvider, EntityGlowProvider {
-
+	// Après "[LvXXX] ", le 1er char doit être un symbole (non-lettre) qui est le MobType.
+	// "[^\p{L}]" -> UN caractère qui N'EST PAS une lettre Unicode (emoji, symbole...)
+	private static final Pattern MOB_PATTERN = Pattern.compile("\\[Lv\\d+]\\s+[^\\p{L}]");
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_mob_tracking");
 	private static final int MAX_TRACKED_ENTITIES = 3;
 
@@ -173,12 +176,16 @@ public class MobTrackingFeature extends Feature implements HudProvider, EntityGl
 		if (isAlreadyTracked(armorStand)) return;
 
 		try {
+			String armorStandName = armorStand.getCustomName().getString();
+			// MobTracking Patch - Permet d'éviter de détecter les ArmorStand des Pets ou autre
+			if (!MOB_PATTERN.matcher(armorStandName).find()) return;
+
 			// La recherche se fait uniquement si (dans l'ordre).
 			// - La config est activé.
 			// - L'Island actuel est présent dans sa liste.
 			// Le nom est présent.
 			MobTrackingRegistry.MobTrackingEntry mobEntry = registry.findMob(
-					armorStand.getCustomName().getString(),
+					armorStandName,
 					MobTrackingRegistry.CONTAINS,
 					SkyBlockAPI.getIsland()
 			);
@@ -207,6 +214,8 @@ public class MobTrackingFeature extends Feature implements HudProvider, EntityGl
 	private void onEntityLoad(Entity entity) {
 		if (!isEnabled()) return;
 		if (entity instanceof ArmorStandEntity) return;
+		// MobTracking Patch - Évite les joueurs avec un nom de mobs -_-
+		if (Client.isPlayer(entity)) return;
 
 		MobTrackingRegistry.MobTrackingEntry mobEntry = registry.findMob(
 				entity.getName().getString(),

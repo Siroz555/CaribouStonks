@@ -12,7 +12,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.Toast;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.BossBar;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.BossBarS2CPacket;
 import net.minecraft.scoreboard.ScoreHolder;
@@ -97,6 +99,15 @@ public final class Client {
 		}
 
 		return CLIENT.player.getBlockPos();
+	}
+
+	/**
+	 * Checks if a {@link PlayerEntity} as {@code Entity} is a real player, and not an enemy or NPC
+	 *
+	 * @return {@code true} if is a real player
+	 */
+	public static boolean isPlayer(@NotNull Entity entity) {
+		return entity instanceof PlayerEntity player && player.getUuid().version() == 4;
 	}
 
 	/**

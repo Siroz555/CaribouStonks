@@ -24,67 +24,6 @@ public class DungeonsCategory extends AbstractCategory {
 				.name(Text.literal("Dungeons"))
 				.tooltip(Text.literal("Dungeons-related Settings"))
 				.group(OptionGroup.createBuilder()
-						.name(Text.literal("Croesus").formatted(Formatting.BOLD))
-						.description(OptionDescription.of(
-								Text.literal("Croesus Helpers")))
-						.collapsed(false)
-						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Highlight Opened Chests"))
-								.description(OptionDescription.of(
-										Text.literal("Highlights the chests you opened in the Croesus.")))
-								.binding(defaults.instance.croesus.mainMenuOpenedChest,
-										() -> current.instance.croesus.mainMenuOpenedChest,
-										newValue -> current.instance.croesus.mainMenuOpenedChest = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(Option.<Color>createBuilder()
-								.name(Text.literal("Highlight Opened Chests - color"))
-								.description(OptionDescription.of(
-										Text.literal("Change the highlight color of the chests you opened in the Croesus.")))
-								.binding(defaults.instance.croesus.mainMenuOpenedChestColor,
-										() -> current.instance.croesus.mainMenuOpenedChestColor,
-										newValue -> current.instance.croesus.mainMenuOpenedChestColor = newValue)
-								.controller(ColorControllerBuilder::create)
-								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Highlight Kismet Feather Available"))
-								.description(OptionDescription.of(
-										Text.literal("Highlight where Kismet Feathers can be used in Croesus."),
-										Text.literal(SPACE + "If “Opened Chest” is enabled, Kismet Feathers will have priority.").formatted(Formatting.YELLOW)))
-								.binding(defaults.instance.croesus.mainMenuKismetAvailable,
-										() -> current.instance.croesus.mainMenuKismetAvailable,
-										newValue -> current.instance.croesus.mainMenuKismetAvailable = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(Option.<Color>createBuilder()
-								.name(Text.literal("Highlight Kismet Feather Available - color"))
-								.description(OptionDescription.of(
-										Text.literal("Change the highlight color of where Kismet Feathers can be used in Croesus.")))
-								.binding(defaults.instance.croesus.mainMenuKismetAvailableColor,
-										() -> current.instance.croesus.mainMenuKismetAvailableColor,
-										newValue -> current.instance.croesus.mainMenuKismetAvailableColor = newValue)
-								.controller(ColorControllerBuilder::create)
-								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Text.literal("Highlight No more Chests"))
-								.description(OptionDescription.of(
-										Text.literal("Highlights the chests you opened in the Croesus.")))
-								.binding(defaults.instance.croesus.mainMenuNoMoreChest,
-										() -> current.instance.croesus.mainMenuNoMoreChest,
-										newValue -> current.instance.croesus.mainMenuNoMoreChest = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(Option.<Color>createBuilder()
-								.name(Text.literal("Highlight No more Chests - color"))
-								.description(OptionDescription.of(
-										Text.literal("Change the highlight color of the chests you opened in the Croesus.")))
-								.binding(defaults.instance.croesus.mainMenuNoMoreChestColor,
-										() -> current.instance.croesus.mainMenuNoMoreChestColor,
-										newValue -> current.instance.croesus.mainMenuNoMoreChestColor = newValue)
-								.controller(ColorControllerBuilder::create)
-								.build())
-						.build())
-				.group(OptionGroup.createBuilder()
 						.name(Text.literal("The Catacombs").formatted(Formatting.BOLD))
 						.description(OptionDescription.of(
 								Text.literal("Settings for the dungeon The Catacombs.")))
@@ -185,6 +124,67 @@ public class DungeonsCategory extends AbstractCategory {
 										() -> current.instance.theCatacombs.witherKing.showLastBreathTarget,
 										newValue -> current.instance.theCatacombs.witherKing.showLastBreathTarget = newValue)
 								.controller(this::createBooleanController)
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Text.literal("Croesus").formatted(Formatting.BOLD))
+						.description(OptionDescription.of(
+								Text.literal("Croesus Helpers")))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Highlight Opened Chests"))
+								.description(OptionDescription.of(
+										Text.literal("Highlights the chests you opened in the Croesus.")))
+								.binding(defaults.instance.croesus.mainMenuOpenedChest,
+										() -> current.instance.croesus.mainMenuOpenedChest,
+										newValue -> current.instance.croesus.mainMenuOpenedChest = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Color>createBuilder()
+								.name(Text.literal("Highlight Opened Chests - color"))
+								.description(OptionDescription.of(
+										Text.literal("Change the highlight color of the chests you opened in the Croesus.")))
+								.binding(defaults.instance.croesus.mainMenuOpenedChestColor,
+										() -> current.instance.croesus.mainMenuOpenedChestColor,
+										newValue -> current.instance.croesus.mainMenuOpenedChestColor = newValue)
+								.controller(ColorControllerBuilder::create)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Highlight Kismet Feather Available"))
+								.description(OptionDescription.of(
+										Text.literal("Highlight where Kismet Feathers can be used in Croesus."),
+										Text.literal(SPACE + "If “Opened Chest” is enabled, Kismet Feathers will have priority.").formatted(Formatting.YELLOW)))
+								.binding(defaults.instance.croesus.mainMenuKismetAvailable,
+										() -> current.instance.croesus.mainMenuKismetAvailable,
+										newValue -> current.instance.croesus.mainMenuKismetAvailable = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Color>createBuilder()
+								.name(Text.literal("Highlight Kismet Feather Available - color"))
+								.description(OptionDescription.of(
+										Text.literal("Change the highlight color of where Kismet Feathers can be used in Croesus.")))
+								.binding(defaults.instance.croesus.mainMenuKismetAvailableColor,
+										() -> current.instance.croesus.mainMenuKismetAvailableColor,
+										newValue -> current.instance.croesus.mainMenuKismetAvailableColor = newValue)
+								.controller(ColorControllerBuilder::create)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Text.literal("Highlight No more Chests"))
+								.description(OptionDescription.of(
+										Text.literal("Highlights the chests you opened in the Croesus.")))
+								.binding(defaults.instance.croesus.mainMenuNoMoreChest,
+										() -> current.instance.croesus.mainMenuNoMoreChest,
+										newValue -> current.instance.croesus.mainMenuNoMoreChest = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Color>createBuilder()
+								.name(Text.literal("Highlight No more Chests - color"))
+								.description(OptionDescription.of(
+										Text.literal("Change the highlight color of the chests you opened in the Croesus.")))
+								.binding(defaults.instance.croesus.mainMenuNoMoreChestColor,
+										() -> current.instance.croesus.mainMenuNoMoreChestColor,
+										newValue -> current.instance.croesus.mainMenuNoMoreChestColor = newValue)
+								.controller(ColorControllerBuilder::create)
 								.build())
 						.build())
 				.build();
