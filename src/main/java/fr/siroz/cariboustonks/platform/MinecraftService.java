@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.platform;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.platform.api.ClientContext;
+import fr.siroz.cariboustonks.platform.api.PlayerContext;
 import fr.siroz.cariboustonks.platform.api.WorldContext;
-import fr.siroz.cariboustonks.platform.impl.VanillaClientContext;
+import fr.siroz.cariboustonks.platform.impl.VanillaPlayerContext;
 import fr.siroz.cariboustonks.platform.impl.VanillaWorldContext;
 import org.jspecify.annotations.NonNull;
 
@@ -11,24 +11,24 @@ import org.jspecify.annotations.NonNull;
  * Central access point for Minecraft-facing runtime contexts.
  * <p>
  * {@code MinecraftService} is a singleton facade initialized once during
- * client startup. It exposes the two foundational contexts; client and world.
+ * client startup. It exposes foundational contexts; client, player and world.
  * <p>
  * The intended usage pattern within features is through the shorthand
  * methods inherited from {@link Feature}, not through direct calls to this
  * class. Direct access is reserved for infrastructure code that operates
  * outside the feature lifecycle.
  *
- * @see ClientContext
+ * @see PlayerContext
  * @see WorldContext
  * @see Feature
  */
 public final class MinecraftService {
 	private static MinecraftService INSTANCE;
 
-	private final ClientContext playerContext;
+	private final PlayerContext playerContext;
 	private final WorldContext worldContext;
 
-	private MinecraftService(ClientContext playerContext, WorldContext worldContext) {
+	private MinecraftService(PlayerContext playerContext, WorldContext worldContext) {
 		this.playerContext = playerContext;
 		this.worldContext = worldContext;
 	}
@@ -49,15 +49,15 @@ public final class MinecraftService {
 	 */
 	public static void bootstrap() {
 		if (INSTANCE != null) throw new IllegalStateException("Already bootstrapped");
-		INSTANCE = new MinecraftService(new VanillaClientContext(), new VanillaWorldContext());
+		INSTANCE = new MinecraftService(new VanillaPlayerContext(), new VanillaWorldContext());
 	}
 
 	/**
-	 * Returns the {@link ClientContext} to provides a view of the local player's state.
+	 * Returns the {@link PlayerContext} to provides a view of the local player's state.
 	 *
 	 * @return the context
 	 */
-	public ClientContext client() {
+	public PlayerContext player() {
 		return playerContext;
 	}
 

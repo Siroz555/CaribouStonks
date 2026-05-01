@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ClientEvents;
-import fr.siroz.cariboustonks.platform.api.ClientContext;
+import fr.siroz.cariboustonks.platform.api.PlayerContext;
 import fr.siroz.cariboustonks.mixin.accessors.PlayerTabOverlayAccessor;
 import fr.siroz.cariboustonks.rendering.gui.element.StonksToast;
 import fr.siroz.cariboustonks.util.DeveloperTools;
@@ -49,15 +49,15 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Vanilla-backed implementation of {@link ClientContext}.
+ * Vanilla-backed implementation of {@link PlayerContext}.
  */
-public final class VanillaClientContext implements ClientContext {
+public final class VanillaPlayerContext implements PlayerContext {
 	private static final Minecraft CLIENT = Minecraft.getInstance();
 
 	private static final SystemToast.SystemToastId STONKS_SYSTEM = new SystemToast.SystemToastId(10000L);
 	private static final List<String> STRING_SCOREBOARD = new ArrayList<>();
 
-	public VanillaClientContext() {
+	public VanillaPlayerContext() {
 		TickScheduler.getInstance().runRepeating(this::updateScoreboard, 1, TimeUnit.SECONDS);
 	}
 

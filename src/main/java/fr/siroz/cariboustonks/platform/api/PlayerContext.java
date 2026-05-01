@@ -29,9 +29,9 @@ import org.jspecify.annotations.Nullable;
  * Implementations are responsible for handling the case where the player is not yet available.
  * Every method is guaranteed to return a safe default or return {@code null}.
  *
- * @see MinecraftService#client()
+ * @see MinecraftService#player()
  */
-public interface ClientContext {
+public interface PlayerContext {
 
 	/**
 	 * Checks if the {@code LocalPlayer} is available.
