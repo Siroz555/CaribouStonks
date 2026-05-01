@@ -1,7 +1,7 @@
-package fr.siroz.cariboustonks.mc.api;
+package fr.siroz.cariboustonks.platform.api;
 
 import com.mojang.brigadier.Command;
-import fr.siroz.cariboustonks.mc.MinecraftAPI;
+import fr.siroz.cariboustonks.platform.MinecraftAPI;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;

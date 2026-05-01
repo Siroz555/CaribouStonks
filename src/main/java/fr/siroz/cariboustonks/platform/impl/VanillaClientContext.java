@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.mc.impl;
+package fr.siroz.cariboustonks.platform.impl;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.Command;
@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ClientEvents;
-import fr.siroz.cariboustonks.mc.api.ClientContext;
+import fr.siroz.cariboustonks.platform.api.ClientContext;
 import fr.siroz.cariboustonks.mixin.accessors.PlayerTabOverlayAccessor;
 import fr.siroz.cariboustonks.rendering.gui.element.StonksToast;
 import fr.siroz.cariboustonks.util.DeveloperTools;

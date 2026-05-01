@@ -1,6 +1,6 @@
-package fr.siroz.cariboustonks.mc.api;
+package fr.siroz.cariboustonks.platform.api;
 
-import fr.siroz.cariboustonks.mc.MinecraftAPI;
+import fr.siroz.cariboustonks.platform.MinecraftAPI;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.world.entity.Entity;

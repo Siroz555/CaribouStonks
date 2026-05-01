@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.mod.ModManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockManager;
 import fr.siroz.cariboustonks.core.system.SystemManager;
-import fr.siroz.cariboustonks.mc.MinecraftAPI;
+import fr.siroz.cariboustonks.platform.MinecraftAPI;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.nio.file.Path;

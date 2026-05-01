@@ -1,10 +1,10 @@
-package fr.siroz.cariboustonks.mc;
+package fr.siroz.cariboustonks.platform;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.mc.api.ClientContext;
-import fr.siroz.cariboustonks.mc.api.WorldContext;
-import fr.siroz.cariboustonks.mc.impl.VanillaClientContext;
-import fr.siroz.cariboustonks.mc.impl.VanillaWorldContext;
+import fr.siroz.cariboustonks.platform.api.ClientContext;
+import fr.siroz.cariboustonks.platform.api.WorldContext;
+import fr.siroz.cariboustonks.platform.impl.VanillaClientContext;
+import fr.siroz.cariboustonks.platform.impl.VanillaWorldContext;
 
 /**
  * Central access point for Minecraft-facing runtime contexts.
