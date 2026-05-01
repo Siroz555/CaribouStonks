@@ -5,11 +5,12 @@ import fr.siroz.cariboustonks.platform.api.ClientContext;
 import fr.siroz.cariboustonks.platform.api.WorldContext;
 import fr.siroz.cariboustonks.platform.impl.VanillaClientContext;
 import fr.siroz.cariboustonks.platform.impl.VanillaWorldContext;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Central access point for Minecraft-facing runtime contexts.
  * <p>
- * {@code MinecraftAPI} is a singleton facade initialized once during
+ * {@code MinecraftService} is a singleton facade initialized once during
  * client startup. It exposes the two foundational contexts; client and world.
  * <p>
  * The intended usage pattern within features is through the shorthand
@@ -21,34 +22,35 @@ import fr.siroz.cariboustonks.platform.impl.VanillaWorldContext;
  * @see WorldContext
  * @see Feature
  */
-public final class MinecraftAPI {
-	private static volatile MinecraftAPI INSTANCE;
+public final class MinecraftService {
+	private static volatile MinecraftService INSTANCE;
 
 	private final ClientContext playerContext;
 	private final WorldContext worldContext;
 
-	private MinecraftAPI(ClientContext playerContext, WorldContext worldContext) {
+	private MinecraftService(ClientContext playerContext, WorldContext worldContext) {
 		this.playerContext = playerContext;
 		this.worldContext = worldContext;
 	}
 
 	/**
-	 * Returns the {@link MinecraftAPI} instance
+	 * Returns the {@link MinecraftService} instance
 	 *
 	 * @return the instance
 	 * @throws IllegalStateException if not bootstrapped yet
 	 */
-	public static MinecraftAPI getInstance() {
-		if (INSTANCE == null) throw new IllegalStateException("MinecraftAPI not bootstrapped yet");
-		return INSTANCE;
+	public static @NonNull MinecraftService getInstance() {
+		MinecraftService instance = INSTANCE;
+		if (instance == null) throw new IllegalStateException("MinecraftService not bootstrapped yet");
+		return instance;
 	}
 
 	/**
 	 * Init
 	 */
-	public static void bootstrap() {
+	public static synchronized void bootstrap() {
 		if (INSTANCE != null) throw new IllegalStateException("Already bootstrapped");
-		INSTANCE = new MinecraftAPI(new VanillaClientContext(), new VanillaWorldContext());
+		INSTANCE = new MinecraftService(new VanillaClientContext(), new VanillaWorldContext());
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.platform.api;
 
-import fr.siroz.cariboustonks.platform.MinecraftAPI;
+import fr.siroz.cariboustonks.platform.MinecraftService;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.world.entity.Entity;
@@ -16,7 +16,7 @@ import org.jspecify.annotations.Nullable;
  * Implementations are responsible for handling the case where the world is not yet available.
  * Every method is guaranteed to return a safe default or return {@code null}.
  *
- * @see MinecraftAPI#world()
+ * @see MinecraftService#world()
  */
 public interface WorldContext {
 

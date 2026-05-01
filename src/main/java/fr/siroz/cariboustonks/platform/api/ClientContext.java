@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.platform.api;
 
 import com.mojang.brigadier.Command;
-import fr.siroz.cariboustonks.platform.MinecraftAPI;
+import fr.siroz.cariboustonks.platform.MinecraftService;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
  * Implementations are responsible for handling the case where the player is not yet available.
  * Every method is guaranteed to return a safe default or return {@code null}.
  *
- * @see MinecraftAPI#client()
+ * @see MinecraftService#client()
  */
 public interface ClientContext {
 

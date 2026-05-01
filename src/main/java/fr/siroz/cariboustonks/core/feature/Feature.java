@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.core.feature;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.Component;
-import fr.siroz.cariboustonks.platform.MinecraftAPI;
+import fr.siroz.cariboustonks.platform.MinecraftService;
 import fr.siroz.cariboustonks.platform.api.ClientContext;
 import fr.siroz.cariboustonks.platform.api.WorldContext;
 import java.util.HashMap;
@@ -97,19 +97,19 @@ public abstract class Feature {
 	/**
 	 * Returns the {@link ClientContext} instance to manage the {@code LocalPlayer}.
 	 *
-	 * @return the context instance provided by the {@link MinecraftAPI}
+	 * @return the context instance provided by the {@link MinecraftService}
 	 */
 	protected final ClientContext client() {
-		return MinecraftAPI.getInstance().client();
+		return MinecraftService.getInstance().client();
 	}
 
 	/**
 	 * Returns the {@link WorldContext} instance to manage the {@code ClientWorld}.
 	 *
-	 * @return the context instance provided by the {@link MinecraftAPI}
+	 * @return the context instance provided by the {@link MinecraftService}
 	 */
 	protected final WorldContext world() {
-		return MinecraftAPI.getInstance().world();
+		return MinecraftService.getInstance().world();
 	}
 
 	/**
