@@ -23,7 +23,7 @@ import org.jspecify.annotations.NonNull;
  * @see Feature
  */
 public final class MinecraftService {
-	private static volatile MinecraftService INSTANCE;
+	private static MinecraftService INSTANCE;
 
 	private final ClientContext playerContext;
 	private final WorldContext worldContext;
@@ -40,15 +40,14 @@ public final class MinecraftService {
 	 * @throws IllegalStateException if not bootstrapped yet
 	 */
 	public static @NonNull MinecraftService getInstance() {
-		MinecraftService instance = INSTANCE;
-		if (instance == null) throw new IllegalStateException("MinecraftService not bootstrapped yet");
-		return instance;
+		if (INSTANCE == null) throw new IllegalStateException("MinecraftService not bootstrapped yet");
+		return INSTANCE;
 	}
 
 	/**
 	 * Init
 	 */
-	public static synchronized void bootstrap() {
+	public static void bootstrap() {
 		if (INSTANCE != null) throw new IllegalStateException("Already bootstrapped");
 		INSTANCE = new MinecraftService(new VanillaClientContext(), new VanillaWorldContext());
 	}
