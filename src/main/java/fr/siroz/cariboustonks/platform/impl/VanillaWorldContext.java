@@ -32,6 +32,11 @@ public final class VanillaWorldContext implements WorldContext {
 	}
 
 	@Override
+	public @NonNull Iterable<Entity> getEntities() {
+		return isAvailable() ? CLIENT.level.entitiesForRendering() : Collections.emptyList();
+	}
+
+	@Override
 	public <T extends Entity> List<T> findClosestEntities(@NonNull Class<T> entity, double distanceInBlocks, @NonNull Predicate<? super T> entityPredicate) {
 		if (CLIENT.player == null || !isAvailable()) return Collections.emptyList();
 

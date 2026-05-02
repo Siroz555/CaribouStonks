@@ -1,12 +1,14 @@
 package fr.siroz.cariboustonks.platform.api;
 
 import fr.siroz.cariboustonks.platform.MinecraftService;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -37,11 +39,11 @@ public interface PlayerContext {
 	boolean isAvailable();
 
 	/**
-	 * Retrieves the current username of the player.
+	 * Returns the {@link LocalPlayer}
 	 *
-	 * @return the player's username, or {@code null} if unavailable
+	 * @return the {@code LocalPlayer} instance
 	 */
-	@Nullable String getPlayerName();
+	@Nullable LocalPlayer asLocalPlayer();
 
 	/**
 	 * Retrieves the current position of the player.
@@ -90,6 +92,13 @@ public interface PlayerContext {
 	 * @see #getMainHandItem()
 	 */
 	@Nullable ItemStack getHeldItem();
+
+	/**
+	 * Returns the player {@link HitResult} if available
+	 *
+	 * @return the {@code HitResult}
+	 */
+	@Nullable HitResult getHitResult();
 
 	/**
 	 * Send a message to the <b>client</b>.
@@ -241,9 +250,4 @@ public interface PlayerContext {
 	 * @param pitch  the pitch
 	 */
 	void playSound(@NonNull SoundEvent sound, float volume, float pitch);
-
-	/**
-	 * Play {@code UI_BUTTON_CLICK} sound.
-	 */
-	void playSoundButtonClickUI();
 }

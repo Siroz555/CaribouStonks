@@ -51,6 +51,13 @@ public interface WorldContext {
 	long getWorldTime();
 
 	/**
+	 * Returns a {@link Iterable} view of {@link Entity} currently rendered in the world
+	 *
+	 * @return an Iterable view
+	 */
+	@NonNull Iterable<Entity> getEntities();
+
+	/**
 	 * Returns a List of {@link Entity}s close to the player, according to the given conditions.
 	 * <p>
 	 * {@code Safe Client null} & {@code Safe World null}

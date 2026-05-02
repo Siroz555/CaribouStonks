@@ -8,13 +8,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.ErrorScreen;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.item.ItemStack;
@@ -39,8 +38,8 @@ public final class VanillaPlayerContext implements PlayerContext {
 	}
 
 	@Override
-	public @Nullable String getPlayerName() {
-		return isAvailable() ? CLIENT.player.getName().getString() : null;
+	public @Nullable LocalPlayer asLocalPlayer() {
+		return CLIENT.player;
 	}
 
 	@Override
@@ -55,7 +54,7 @@ public final class VanillaPlayerContext implements PlayerContext {
 
 	@Override
 	public @NonNull BlockPos blockPosition(boolean crosshairTargetAsBlockPos) {
-		if (CLIENT.player == null) return BlockPos.ZERO;
+		if (!isAvailable()) return BlockPos.ZERO;
 
 		if (crosshairTargetAsBlockPos
 				&& CLIENT.hitResult instanceof BlockHitResult blockHitResult
@@ -68,12 +67,17 @@ public final class VanillaPlayerContext implements PlayerContext {
 
 	@Override
 	public @Nullable ItemStack getMainHandItem() {
-		return CLIENT.player != null ? CLIENT.player.getMainHandItem() : null;
+		return isAvailable() ? CLIENT.player.getMainHandItem() : null;
 	}
 
 	@Override
 	public @Nullable ItemStack getHeldItem() {
-		return CLIENT.player != null ? CLIENT.player.getInventory().getSelectedItem() : null;
+		return isAvailable() ? CLIENT.player.getInventory().getSelectedItem() : null;
+	}
+
+	@Override
+	public @Nullable HitResult getHitResult() {
+		return CLIENT.hitResult;
 	}
 
 	@Override
@@ -109,7 +113,7 @@ public final class VanillaPlayerContext implements PlayerContext {
 
 	@Override
 	public void showTitleAndSubtitle(@NonNull Component title, @NonNull Component subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks) {
-		if (CLIENT.player != null) {
+		if (isAvailable()) {
 			CLIENT.gui.setTimes(fadeInTicks, stayTicks, fadeOutTicks);
 			CLIENT.gui.setTitle(title);
 			CLIENT.gui.setSubtitle(subtitle);
@@ -129,12 +133,14 @@ public final class VanillaPlayerContext implements PlayerContext {
 
 	@Override
 	public void showFatalErrorScreen(@NonNull Component title, @NonNull Component message) {
-		if (CLIENT.player != null) CLIENT.setScreen(new ErrorScreen(title, message));
+		if (isAvailable()) {
+			CLIENT.setScreen(new ErrorScreen(title, message));
+		}
 	}
 
 	@Override
 	public void showBossBar(@NonNull BossEvent bossBar) {
-		if (CLIENT.player != null) {
+		if (isAvailable()) {
 			try {
 				CLIENT.gui.getBossOverlay().update(ClientboundBossEventPacket.createAddPacket(bossBar));
 			} catch (Exception ex) {
@@ -147,7 +153,7 @@ public final class VanillaPlayerContext implements PlayerContext {
 
 	@Override
 	public void removeBossBar(@NonNull BossEvent bossBar) {
-		if (CLIENT.player != null) {
+		if (isAvailable()) {
 			try {
 				CLIENT.gui.getBossOverlay().update(ClientboundBossEventPacket.createRemovePacket(bossBar.getId()));
 			} catch (Exception ex) {
@@ -160,20 +166,15 @@ public final class VanillaPlayerContext implements PlayerContext {
 
 	@Override
 	public void playSound(@NonNull SoundEvent sound, float volume, float pitch) {
-		if (CLIENT.player != null) CLIENT.player.playSound(sound, volume, pitch);
-	}
-
-	@Override
-	public void playSoundButtonClickUI() {
-		CLIENT.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+		if (isAvailable()) CLIENT.player.playSound(sound, volume, pitch);
 	}
 
 	private void sendMessageInternal(@NonNull Component message) {
-		if (CLIENT.player != null) CLIENT.player.sendSystemMessage(message);
+		if (isAvailable()) CLIENT.player.sendSystemMessage(message);
 	}
 
 	private void sendToServerInternal(@NonNull String content, boolean hideToClient, boolean command) {
-		if (CLIENT.player != null) {
+		if (isAvailable()) {
 			content = StringUtil.trimChatMessage(StringUtils.normalizeSpace(content.trim()));
 
 			if (!hideToClient) {
