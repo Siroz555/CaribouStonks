@@ -28,7 +28,7 @@ import net.minecraft.world.item.Items;
 
 public class AbiphoneFavoriteContactFeature extends Feature {
 
-	private static final Pattern TITLE_PATTERN = Pattern.compile("^Abiphone.*");
+	private static final Pattern TITLE_PATTERN = Pattern.compile("^(?:\\(\\d+/\\d+\\) )?Abiphone.*");
 	private static final Cooldown COOLDOWN = Cooldown.of(1, TimeUnit.SECONDS);
 
 	private final MatcherTrait trait;
