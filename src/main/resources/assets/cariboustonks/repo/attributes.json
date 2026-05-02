@@ -858,7 +858,7 @@
     "skyBlockApiId": "SHARD_DRAGONFLY"
   },
   {
-    "name": "Big Game Hunter",
+    "name": "Mythological Tracker",
     "shardName": "Sphinx",
     "id": "E39",
     "skyBlockApiId": "SHARD_SPHINX"
@@ -1003,7 +1003,7 @@
   },
   {
     "name": "Attack Speed",
-    "shardName": "Burningsoul",
+    "shardName": "Inferno Demonlord",
     "id": "L27",
     "skyBlockApiId": "SHARD_BURNINGSOUL"
   },
