@@ -43,8 +43,11 @@ public final class SkyBlockManager {
 		this.slayerManager = new SlayerManager();
 		this.tabListManager = new TabListManager();
 
-		// General Tick Scheduler for the SkyBlock API
-		TickScheduler.getInstance().runRepeating(SkyBlockAPI::handleInternalUpdate, 3, TimeUnit.SECONDS);
+		// General Tick Scheduler for the SkyBlock Manager/API
+		TickScheduler.getInstance().runRepeating(() -> {
+			SkyBlockAPI.handleInternalUpdate();
+			this.updateTimeSystem();
+		}, 1, TimeUnit.SECONDS);
 
 		// Event listeners
 		ClientPlayConnectionEvents.DISCONNECT.register((_, _) -> this.onDisconnect());
@@ -146,5 +149,22 @@ public final class SkyBlockManager {
 			default -> {
 			}
 		}
+	}
+
+	private void updateTimeSystem() {
+		SkyBlockTime prevTime = SkyBlockAPI.getTime();
+		SkyBlockTime nowTime = SkyBlockTime.of(SkyBlockAPI.getSkyBlockMillis());
+		SkyBlockSeason nowSeason = SkyBlockSeason.VALUES[nowTime.month() / 3];
+		SkyBlockSeason prevSeason = SkyBlockSeason.VALUES[prevTime.month() / 3];
+		SkyBlockSeason.Month nowMonth = SkyBlockSeason.Month.VALUES[nowTime.month()];
+		SkyBlockSeason.Month prevMonth = SkyBlockSeason.Month.VALUES[prevTime.month()];
+		// Update
+		SkyBlockAPI.handleInternalTimeUpdate(nowTime, nowSeason, nowMonth);
+		// Events
+		if (nowTime.year() != prevTime.year()) SkyBlockEvents.YEAR_CHANGE_EVENT.invoker().onYearChange(nowTime.year());
+		if (nowSeason != prevSeason) SkyBlockEvents.SEASON_CHANGE_EVENT.invoker().onSeasonChange(nowSeason);
+		if (nowMonth != prevMonth) SkyBlockEvents.MONTH_CHANGE_EVENT.invoker().onMonthChange(nowMonth);
+		if (nowTime.day() != prevTime.day()) SkyBlockEvents.DAY_CHANGE_EVENT.invoker().onDayChange(nowTime.day());
+		if (nowTime.hour() != prevTime.hour()) SkyBlockEvents.HOUR_CHANGE_EVENT.invoker().onHourChange(nowTime.hour());
 	}
 }

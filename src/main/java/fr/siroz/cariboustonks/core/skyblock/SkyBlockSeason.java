@@ -6,6 +6,8 @@ public enum SkyBlockSeason {
 	AUTUMN,
 	WINTER;
 
+	public static final SkyBlockSeason[] VALUES = values();
+
 	public enum Month {
 		EARLY_SPRING,
 		SPRING,
@@ -18,6 +20,8 @@ public enum SkyBlockSeason {
 		LATE_AUTUMN,
 		EARLY_WINTER,
 		WINTER,
-		LATE_WINTER
+		LATE_WINTER;
+
+		public static final Month[] VALUES = values();
 	}
 }
