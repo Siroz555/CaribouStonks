@@ -8,6 +8,7 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
+import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.LongSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
@@ -440,6 +441,53 @@ public class SkillsCategory extends AbstractCategory {
 								.binding(defaults.hunting.trackingShards.priceType,
 										() -> current.hunting.trackingShards.priceType,
 										newValue -> current.hunting.trackingShards.priceType = newValue)
+								.controller(this::createEnumCyclingController)
+								.build())
+						.option(LabelOption.create(Component.literal("| Hunting Box Overlay").withStyle(ChatFormatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Enable Hunting Box Overlay"))
+								.description(OptionDescription.of(
+										Component.literal("Displays an overlay when you are in the Hunting Box menu."),
+										Component.literal("Showing all collected Shards along with their quantities and prices, as well as the total value")))
+								.binding(defaults.hunting.huntingBoxOverlay.enabled,
+										() -> current.hunting.huntingBoxOverlay.enabled,
+										newValue -> current.hunting.huntingBoxOverlay.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Integer>createBuilder()
+								.name(Component.literal("Hunting Box Overlay - Max Lines"))
+								.description(OptionDescription.of(
+										Component.literal("Allows to control the number of attributes to display in the Hunting Box Overlay")))
+								.binding(defaults.hunting.huntingBoxOverlay.listSize,
+										() -> current.hunting.huntingBoxOverlay.listSize,
+										newValue -> current.hunting.huntingBoxOverlay.listSize = newValue)
+								.controller(opt -> IntegerSliderControllerBuilder.create(opt)
+										.range(5, 32)
+										.step(1))
+								.build())
+						.option(Option.<Float>createBuilder()
+								.name(Component.literal("Hunting Box Overlay - Scale"))
+								.description(OptionDescription.of(
+										Component.literal("Scale the Display of the Hunting Box Overlay.")))
+								.binding(defaults.hunting.huntingBoxOverlay.scale,
+										() -> current.hunting.huntingBoxOverlay.scale,
+										newValue -> current.hunting.huntingBoxOverlay.scale = newValue)
+								.controller(opt -> FloatSliderControllerBuilder.create(opt)
+										.range(0.5f, 2.5f)
+										.step(0.1f)
+										.formatValue(d -> Component.nullToEmpty("x " + String.format("%.1f", d))))
+								.build())
+						.option(Option.<BazaarPriceType>createBuilder()
+								.name(Component.literal("Hunting Box Overlay - Bazaar Price Type"))
+								.description(OptionDescription.of(
+										Component.literal("Select the type of price from the Bazaar for the Hunting Box Overlay"),
+										Component.literal(SPACE + "BUY :").withStyle(ChatFormatting.UNDERLINE),
+										Component.literal(SPACE + "Show the Insta-Buy / Best Sell Order"),
+										Component.literal(SPACE + "SELL :").withStyle(ChatFormatting.UNDERLINE),
+										Component.literal(SPACE + "Show the Insta-Sell / Best Buy Order")))
+								.binding(defaults.hunting.huntingBoxOverlay.priceType,
+										() -> current.hunting.huntingBoxOverlay.priceType,
+										newValue -> current.hunting.huntingBoxOverlay.priceType = newValue)
 								.controller(this::createEnumCyclingController)
 								.build())
 						.option(LabelOption.create(Component.literal("| Fusion Machine").withStyle(ChatFormatting.BOLD)))
