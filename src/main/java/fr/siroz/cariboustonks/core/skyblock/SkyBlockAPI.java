@@ -30,7 +30,10 @@ import org.jspecify.annotations.Nullable;
  * The {@code SkyBlockAPI} class provides a utility layer to interact with SkyBlock-related states and contents.
  */
 public final class SkyBlockAPI {
-
+	/**
+	 *  Real-world Unix timestamp (ms) corresponding to the SkyBlock Day 1, Year 1.
+	 */
+	public static final long SKYBLOCK_EPOCH_START_MILLIS = 1_560_275_700_000L;
 	private static final Minecraft CLIENT = Minecraft.getInstance();
 	// Common constants
 	private static final Pattern ABILITY = Pattern.compile("Ability: (?<name>.*?) *");
