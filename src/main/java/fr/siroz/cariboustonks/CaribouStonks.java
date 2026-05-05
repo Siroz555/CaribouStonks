@@ -5,6 +5,7 @@ import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.mod.ModManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockManager;
 import fr.siroz.cariboustonks.core.system.SystemManager;
+import fr.siroz.cariboustonks.platform.MinecraftService;
 import fr.siroz.cariboustonks.rendering.CaribouRenderer;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.nio.file.Path;
@@ -44,6 +45,7 @@ public final class CaribouStonks implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		MinecraftService.bootstrap(); // Minecraft API
 		ConfigManager.loadConfig(); // Mod Configuration
 		StonksUtils.initUtilities(); // Utilities
 		CaribouRenderer.init(); // Rendering
