@@ -14,7 +14,6 @@ import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.loader.api.FabricLoader;
@@ -45,9 +44,9 @@ public final class SkyBlockAPI {
 	private static boolean onSkyBlockState = false;
 	private static IslandType islandType = IslandType.UNKNOWN;
 	private static String gameType = "";
-	private static final AtomicReference<SkyBlockTime> TIME = new AtomicReference<>(SkyBlockTime.DEFAULT);
-	private static final AtomicReference<SkyBlockSeason> SEASON = new AtomicReference<>(SkyBlockSeason.SPRING);
-	private static final AtomicReference<SkyBlockSeason.Month> MONTH = new AtomicReference<>(SkyBlockSeason.Month.EARLY_SPRING);
+	private static SkyBlockTime time = SkyBlockTime.DEFAULT;
+	private static SkyBlockSeason season = SkyBlockSeason.SPRING;
+	private static SkyBlockSeason.Month month = SkyBlockSeason.Month.EARLY_SPRING;
 
 	private SkyBlockAPI() {
 		throw new UnsupportedOperationException();
@@ -108,7 +107,7 @@ public final class SkyBlockAPI {
 	 * @return the {@code SkyBlockTime}
 	 */
 	public static SkyBlockTime getTime() {
-		return TIME.get();
+		return time;
 	}
 
 	/**
@@ -117,7 +116,7 @@ public final class SkyBlockAPI {
 	 * @return the {@code SkyBlockSeason}
 	 */
 	public static SkyBlockSeason getSeason() {
-		return SEASON.get();
+		return season;
 	}
 
 	/**
@@ -126,7 +125,7 @@ public final class SkyBlockAPI {
 	 * @return the {@code Month}
 	 */
 	public static SkyBlockSeason.Month getMonth() {
-		return MONTH.get();
+		return month;
 	}
 
 	/**
@@ -386,18 +385,18 @@ public final class SkyBlockAPI {
 	}
 
 	static void handleInternalTimeUpdate(
-			@Nullable SkyBlockTime time,
-			@Nullable SkyBlockSeason season,
-			SkyBlockSeason.@Nullable Month month
+			@Nullable SkyBlockTime skyBlockTime,
+			@Nullable SkyBlockSeason skyBlockSeason,
+			SkyBlockSeason.@Nullable Month skyBlockMonth
 	) {
-		if (time != null) TIME.set(time);
-		if (season != null) SEASON.set(season);
-		if (month != null) MONTH.set(month);
+		if (skyBlockTime != null) time = skyBlockTime;
+		if (skyBlockSeason != null) season = skyBlockSeason;
+		if (skyBlockMonth != null) month = skyBlockMonth;
 
 		// Log dans une fenêtre de 1s autour de x multiple de 5s pour éviter le spam en dev
 		if (DeveloperTools.isInDevelopment() && (System.currentTimeMillis() % 5000L < 1000L)) {
 			CaribouStonks.LOGGER.info("[SkyBlockAPI] Time Updated: Year {}, Season {}, Month {}, Day {}, Hour {}",
-					TIME.get().year(), SEASON.get(), MONTH.get(), TIME.get().day(), TIME.get().hour());
+					time.year(), season, month, time.day(), time.hour());
 		}
 	}
 }
