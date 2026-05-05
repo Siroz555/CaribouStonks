@@ -10,7 +10,6 @@ import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
@@ -40,7 +39,6 @@ public final class SkyBlockAPI {
 	private static final String ITEM_ID = "id";
 	private static final String ITEM_UUID = "uuid";
 	// General states
-	private static boolean onHypixelState = false;
 	private static boolean onSkyBlockState = false;
 	private static IslandType islandType = IslandType.UNKNOWN;
 	private static String gameType = "";
@@ -350,37 +348,24 @@ public final class SkyBlockAPI {
 	}
 
 	static void handleInternalUpdate() {
-		FabricLoader fabricLoader = FabricLoader.getInstance();
-
 		if (CLIENT.level == null || CLIENT.isLocalServer()) {
-			if (fabricLoader.isDevelopmentEnvironment()) {
+			if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
 				onSkyBlockState = true;
 			}
-		}
-
-		if (fabricLoader.isDevelopmentEnvironment() || StonksUtils.isConnectedToHypixel()) {
-			if (!StonksUtils.isConnectedToHypixel()) {
-				onHypixelState = true;
-			}
-		} else if (onHypixelState) {
-			onHypixelState = false;
 		}
 	}
 
 	static void handleInternalLocationUpdate(
-			@Nullable Boolean onHypixel,
 			@Nullable Boolean onSkyBlock,
 			@Nullable String gameTypeFromServer,
 			@Nullable IslandType islandTypeFromMode
 	) {
-		if (onHypixel != null) onHypixelState = onHypixel;
 		if (onSkyBlock != null) onSkyBlockState = onSkyBlock;
 		if (gameTypeFromServer != null) gameType = gameTypeFromServer;
 		if (islandTypeFromMode != null) islandType = islandTypeFromMode;
 
 		if (DeveloperTools.isInDevelopment()) {
-			CaribouStonks.LOGGER.info("[SkyBlockAPI] Updated: {}, {}, {}, {}",
-					onHypixelState, onSkyBlockState, gameType, islandType.name());
+			CaribouStonks.LOGGER.info("[SkyBlockAPI] Updated: {}, {}, {}", onSkyBlockState, gameType, islandType.name());
 		}
 	}
 
