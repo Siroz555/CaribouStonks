@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.events;
 
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockSeason;
 import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonBoss;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerTier;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerType;
@@ -87,6 +88,36 @@ public final class SkyBlockEvents {
 		}
 	});
 
+	public static final Event<YearChange> YEAR_CHANGE_EVENT = EventFactory.createArrayBacked(YearChange.class, listeners -> year -> {
+		for (YearChange listener : listeners) {
+			listener.onYearChange(year);
+		}
+	});
+
+	public static final Event<SeasonChange> SEASON_CHANGE_EVENT = EventFactory.createArrayBacked(SeasonChange.class, listeners -> season -> {
+		for (SeasonChange listener : listeners) {
+			listener.onSeasonChange(season);
+		}
+	});
+
+	public static final Event<MonthChange> MONTH_CHANGE_EVENT = EventFactory.createArrayBacked(MonthChange.class, listeners -> month -> {
+		for (MonthChange listener : listeners) {
+			listener.onMonthChange(month);
+		}
+	});
+
+	public static final Event<DayChange> DAY_CHANGE_EVENT = EventFactory.createArrayBacked(DayChange.class, listeners -> day -> {
+		for (DayChange listener : listeners) {
+			listener.onDayChange(day);
+		}
+	});
+
+	public static final Event<HourChange> HOUR_CHANGE_EVENT = EventFactory.createArrayBacked(HourChange.class, listeners -> hour -> {
+		for (HourChange listener : listeners) {
+			listener.onHourChange(hour);
+		}
+	});
+
 	@FunctionalInterface
 	public interface Join {
 		void onJoin(@NonNull String serverName);
@@ -135,5 +166,30 @@ public final class SkyBlockEvents {
 	@FunctionalInterface
 	public interface DungeonBossSpawn {
 		void onBossSpawn(@NonNull DungeonBoss boss);
+	}
+
+	@FunctionalInterface
+	public interface YearChange {
+		void onYearChange(int year);
+	}
+
+	@FunctionalInterface
+	public interface SeasonChange {
+		void onSeasonChange(@NonNull SkyBlockSeason season);
+	}
+
+	@FunctionalInterface
+	public interface MonthChange {
+		void onMonthChange(SkyBlockSeason.@NonNull Month month);
+	}
+
+	@FunctionalInterface
+	public interface DayChange {
+		void onDayChange(int day);
+	}
+
+	@FunctionalInterface
+	public interface HourChange {
+		void onHourChange(int hour);
 	}
 }

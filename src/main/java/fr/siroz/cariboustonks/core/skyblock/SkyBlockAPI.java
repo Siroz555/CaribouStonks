@@ -30,7 +30,10 @@ import org.jspecify.annotations.Nullable;
  * The {@code SkyBlockAPI} class provides a utility layer to interact with SkyBlock-related states and contents.
  */
 public final class SkyBlockAPI {
-
+	/**
+	 *  Real-world Unix timestamp (ms) corresponding to the SkyBlock Day 1, Year 1.
+	 */
+	private static final long SKYBLOCK_EPOCH_START_MILLIS = 1_560_275_700_000L;
 	private static final Minecraft CLIENT = Minecraft.getInstance();
 	// Common constants
 	private static final Pattern ABILITY = Pattern.compile("Ability: (?<name>.*?) *");
@@ -41,9 +44,21 @@ public final class SkyBlockAPI {
 	private static boolean onSkyBlockState = false;
 	private static IslandType islandType = IslandType.UNKNOWN;
 	private static String gameType = "";
+	private static SkyBlockTime time = SkyBlockTime.DEFAULT;
+	private static SkyBlockSeason season = SkyBlockSeason.SPRING;
+	private static SkyBlockSeason.Month month = SkyBlockSeason.Month.EARLY_SPRING;
 
 	private SkyBlockAPI() {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Returns the current SkyBlock Time milliseconds
+	 *
+	 * @return the current SkyBlock Time in milliseconds
+	 */
+	public static long getSkyBlockMillis() {
+		return System.currentTimeMillis() - SKYBLOCK_EPOCH_START_MILLIS;
 	}
 
 	/**
@@ -84,6 +99,33 @@ public final class SkyBlockAPI {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Returns the current {@link SkyBlockTime}
+	 *
+	 * @return the {@code SkyBlockTime}
+	 */
+	public static SkyBlockTime getTime() {
+		return time;
+	}
+
+	/**
+	 * Returns the current {@link SkyBlockSeason}
+	 *
+	 * @return the {@code SkyBlockSeason}
+	 */
+	public static SkyBlockSeason getSeason() {
+		return season;
+	}
+
+	/**
+	 * Returns the current {@link SkyBlockSeason.Month}
+	 *
+	 * @return the {@code Month}
+	 */
+	public static SkyBlockSeason.Month getMonth() {
+		return month;
 	}
 
 	/**
@@ -339,6 +381,22 @@ public final class SkyBlockAPI {
 		if (DeveloperTools.isInDevelopment()) {
 			CaribouStonks.LOGGER.info("[SkyBlockAPI] Updated: {}, {}, {}, {}",
 					onHypixelState, onSkyBlockState, gameType, islandType.name());
+		}
+	}
+
+	static void handleInternalTimeUpdate(
+			@Nullable SkyBlockTime skyBlockTime,
+			@Nullable SkyBlockSeason skyBlockSeason,
+			SkyBlockSeason.@Nullable Month skyBlockMonth
+	) {
+		if (skyBlockTime != null) time = skyBlockTime;
+		if (skyBlockSeason != null) season = skyBlockSeason;
+		if (skyBlockMonth != null) month = skyBlockMonth;
+
+		// Log dans une fenêtre de 1s autour de x multiple de 5s pour éviter le spam en dev
+		if (DeveloperTools.isInDevelopment() && (System.currentTimeMillis() % 5000L < 1000L)) {
+			CaribouStonks.LOGGER.info("[SkyBlockAPI] Time Updated: Year {}, Season {}, Month {}, Day {}, Hour {}",
+					time.year(), season, month, time.day(), time.hour());
 		}
 	}
 }
