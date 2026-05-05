@@ -48,15 +48,15 @@ public final class SkyBlockManager {
 	public void initialize() {
 		var modDataSource = CaribouStonks.mod().getModDataSource();
 
-		// Bootstrap SkyBlockAPI dep
+		// Bootstrap SkyBlockAPI dependencies
 		SkyBlockAPI.bootstrap(hypixelDataSource::getElection, modDataSource::getAttributeByShardName);
 
-		// Bootstrap AttributeAPI dep
+		// Bootstrap AttributeAPI dependencies
 		AttributeAPI.bootstrap(modDataSource::getAttributeByShardName, modDataSource::getAttributeById);
 
 		// General Tick Scheduler for the SkyBlock Manager/API
 		TickScheduler.getInstance().runRepeating(() -> {
-			SkyBlockAPI.handleInternalUpdate();
+			SkyBlockAPI.handleInternalUpdate(); // Pour avoir onSkyBlockState en local
 			this.updateTimeSystem();
 		}, 1, TimeUnit.SECONDS);
 

@@ -37,7 +37,7 @@ public final class SkyBlockAPI {
 	// Common constants
 	private static final String ITEM_ID = "id";
 	private static final String ITEM_UUID = "uuid";
-	// Dep
+	// Factory dependencies
 	private static Supplier<ElectionResult> electionSource;
 	private static Function<String, SkyBlockAttribute> attributeLookup;
 	// General states
@@ -94,13 +94,8 @@ public final class SkyBlockAPI {
 	 * @return {@code true} if the current island type matches any of the specified types
 	 */
 	public static boolean isOnIslands(IslandType @NonNull ... islandTypes) {
-		if (islandTypes.length == 0) {
-			return false;
-		}
-
-		if (islandTypes.length == 1) {
-			return islandTypes[0] == islandType;
-		}
+		if (islandTypes.length == 0) return false;
+		if (islandTypes.length == 1) return islandTypes[0] == islandType;
 
 		for (IslandType type : islandTypes) {
 			if (type == islandType) return true;
