@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.core.skyblock;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.Minecraft;
@@ -31,6 +31,17 @@ public final class AttributeAPI {
 	private AttributeAPI() {
 	}
 
+	private static Function<String, SkyBlockAttribute> byName;
+	private static Function<String, SkyBlockAttribute> byId;
+
+	static void bootstrap(
+			@NonNull Function<String, SkyBlockAttribute> byNameFactory,
+			@NonNull Function<String, SkyBlockAttribute> byIdFactory
+	) {
+		byName = byNameFactory;
+		byId = byIdFactory;
+	}
+
 	/**
 	 * Returns the {@code SkyBlock API ID} of the ItemStack in Hunting Box, Attribute Menu, Fusion Machine GUIs.
 	 * <p>
@@ -48,14 +59,12 @@ public final class AttributeAPI {
 	public static String getSkyBlockApiIdFromNewShard(@NonNull String fallback, ItemStack item, List<Component> lines) {
 		Screen currentScreen = Minecraft.getInstance().screen;
 		if (!fallback.isEmpty() || currentScreen == null) return fallback;
-		// Certaines shards ne sont pas des PLAYER_HEAD
-		//if (!item.isOf(Items.PLAYER_HEAD)) return fallback; // pas sûr de cette verification là, à voir
 
 		String title = currentScreen.getTitle().getString();
 		switch (title) {
 			case HUNTING_BOX -> {
 				String name = item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
-				SkyBlockAttribute attribute = CaribouStonks.mod().getModDataSource().getAttributeByShardName(name);
+				SkyBlockAttribute attribute = byName != null ? byName.apply(name) : null;
 				return attribute != null ? attribute.skyBlockApiId() : fallback;
 			}
 			case ATTRIBUTE_MENU -> {
@@ -98,7 +107,7 @@ public final class AttributeAPI {
 					String name = item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
 					Matcher matcher = SHARD_WITH_QUANTITY_PATTERN.matcher(name);
 					if (name.contains("Shard") && matcher.matches()) {
-						SkyBlockAttribute attribute = CaribouStonks.mod().getModDataSource().getAttributeByShardName(name);
+						SkyBlockAttribute attribute = byName != null ? byName.apply(name) : null;
 						return attribute != null ? attribute.skyBlockApiId() : fallback;
 					}
 				}
@@ -108,11 +117,15 @@ public final class AttributeAPI {
 	}
 
 	public static @Nullable SkyBlockAttribute getAttributeByName(@Nullable String name) {
-		return CaribouStonks.mod().getModDataSource().getAttributeByShardName(name);
+		return byName != null ? byName.apply(name) : null;
+	}
+
+	public static @Nullable SkyBlockAttribute getAttributeById(@Nullable String id) {
+		return byId != null ? byId.apply(id) : null;
 	}
 
 	private static String getAttributeId(@Nullable String id, @NonNull String fallback) {
-		SkyBlockAttribute attribute = CaribouStonks.mod().getModDataSource().getAttributeById(id);
+		SkyBlockAttribute attribute = getAttributeById(id);
 		return attribute != null ? attribute.skyBlockApiId() : fallback;
 	}
 

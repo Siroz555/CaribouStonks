@@ -46,9 +46,13 @@ public final class SkyBlockManager {
 	}
 
 	public void initialize() {
-		// Bootstrap SkyBlockAPI dep
 		var modDataSource = CaribouStonks.mod().getModDataSource();
+
+		// Bootstrap SkyBlockAPI dep
 		SkyBlockAPI.bootstrap(hypixelDataSource::getElection, modDataSource::getAttributeByShardName);
+
+		// Bootstrap AttributeAPI dep
+		AttributeAPI.bootstrap(modDataSource::getAttributeByShardName, modDataSource::getAttributeById);
 
 		// General Tick Scheduler for the SkyBlock Manager/API
 		TickScheduler.getInstance().runRepeating(() -> {
