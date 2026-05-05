@@ -53,6 +53,13 @@ public interface ClientContext {
 	@Nullable String getTabListFooter();
 
 	/**
+	 * Returns the current {@link Screen}
+	 *
+	 * @return the current screen
+	 */
+	@Nullable Screen getScreen();
+
+	/**
 	 * Sets to the client the given {@link Screen}
 	 *
 	 * @param screen the screen, can be null

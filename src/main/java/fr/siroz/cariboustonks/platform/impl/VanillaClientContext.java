@@ -65,6 +65,11 @@ public final class VanillaClientContext implements ClientContext {
 	}
 
 	@Override
+	public @Nullable Screen getScreen() {
+		return CLIENT.screen;
+	}
+
+	@Override
 	public void setScreen(@Nullable Screen screen) {
 		CLIENT.setScreen(screen);
 	}
