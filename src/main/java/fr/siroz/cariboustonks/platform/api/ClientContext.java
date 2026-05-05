@@ -187,6 +187,13 @@ public interface ClientContext {
 	void setToClipboard(@NonNull String toClipboard);
 
 	/**
+	 * Checks if the client is in {@code Singleplayer}
+	 *
+	 * @return {@code true} if is in Singleplayer Mode
+	 */
+	boolean isLocalServer();
+
+	/**
 	 * Determines if the given {@code keyCode} is pressed.
 	 * <p>
 	 * See {@code GLFW}

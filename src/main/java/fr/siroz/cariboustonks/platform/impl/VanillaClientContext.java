@@ -162,6 +162,11 @@ public final class VanillaClientContext implements ClientContext {
 	}
 
 	@Override
+	public boolean isLocalServer() {
+		return CLIENT.isLocalServer();
+	}
+
+	@Override
 	public boolean isKeyPressed(int keyCode) {
 		return InputConstants.isKeyDown(CLIENT.getWindow(), keyCode);
 	}
