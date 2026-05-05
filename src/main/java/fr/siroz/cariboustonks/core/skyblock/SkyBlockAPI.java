@@ -13,6 +13,8 @@ import fr.siroz.cariboustonks.util.ItemUtils;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.loader.api.FabricLoader;
@@ -30,7 +32,7 @@ import org.jspecify.annotations.Nullable;
  */
 public final class SkyBlockAPI {
 	/**
-	 *  Real-world Unix timestamp (ms) corresponding to the SkyBlock Day 1, Year 1.
+	 * Real-world Unix timestamp (ms) corresponding to the SkyBlock Day 1, Year 1.
 	 */
 	private static final long SKYBLOCK_EPOCH_START_MILLIS = 1_560_275_700_000L;
 	private static final Minecraft CLIENT = Minecraft.getInstance();
@@ -38,6 +40,9 @@ public final class SkyBlockAPI {
 	private static final Pattern ABILITY = Pattern.compile("Ability: (?<name>.*?) *");
 	private static final String ITEM_ID = "id";
 	private static final String ITEM_UUID = "uuid";
+	// Dep
+	private static Supplier<ElectionResult> electionSource;
+	private static Function<String, SkyBlockAttribute> attributeLookup;
 	// General states
 	private static boolean onSkyBlockState = false;
 	private static IslandType islandType = IslandType.UNKNOWN;
@@ -48,6 +53,14 @@ public final class SkyBlockAPI {
 
 	private SkyBlockAPI() {
 		throw new UnsupportedOperationException();
+	}
+
+	static void bootstrap(
+			@NonNull Supplier<ElectionResult> electionSourceFactory,
+			@NonNull Function<String, SkyBlockAttribute> attributeLookupFactory
+	) {
+		electionSource = electionSourceFactory;
+		attributeLookup = attributeLookupFactory;
 	}
 
 	/**
@@ -163,7 +176,7 @@ public final class SkyBlockAPI {
 	 * @see #isMayorOrMinister(Mayor)
 	 */
 	public static boolean isMayorOrMinister(@NonNull Mayor mayor, @Nullable Perk perk) {
-		ElectionResult result = CaribouStonks.skyBlock().getHypixelDataSource().getElection();
+		ElectionResult result = electionSource != null ? electionSource.get() : null;
 		if (result == null) return false;
 
 		if (perk == null) {
@@ -319,7 +332,7 @@ public final class SkyBlockAPI {
 
 			case "ATTRIBUTE_SHARD" -> {
 				String name = itemStack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
-				SkyBlockAttribute attribute = CaribouStonks.mod().getModDataSource().getAttributeByShardName(name);
+				SkyBlockAttribute attribute = attributeLookup != null ? attributeLookup.apply(name) : null;
 				if (attribute != null) {
 					return attribute.skyBlockApiId();
 				}

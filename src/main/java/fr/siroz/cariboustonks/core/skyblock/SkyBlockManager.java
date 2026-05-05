@@ -37,11 +37,18 @@ public final class SkyBlockManager {
 		// Data Sources
 		this.hypixelDataSource = new HypixelDataSource();
 		this.genericDataSource = new GenericDataSource();
-
 		// SkyBlock Managers
 		this.dungeonManager = new DungeonManager();
 		this.slayerManager = new SlayerManager();
 		this.tabListManager = new TabListManager();
+		// Init
+		this.initialize();
+	}
+
+	public void initialize() {
+		// Bootstrap SkyBlockAPI dep
+		var modDataSource = CaribouStonks.mod().getModDataSource();
+		SkyBlockAPI.bootstrap(hypixelDataSource::getElection, modDataSource::getAttributeByShardName);
 
 		// General Tick Scheduler for the SkyBlock Manager/API
 		TickScheduler.getInstance().runRepeating(() -> {
