@@ -15,8 +15,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponentHolder;
@@ -37,7 +35,6 @@ public final class SkyBlockAPI {
 	private static final long SKYBLOCK_EPOCH_START_MILLIS = 1_560_275_700_000L;
 	private static final Minecraft CLIENT = Minecraft.getInstance();
 	// Common constants
-	private static final Pattern ABILITY = Pattern.compile("Ability: (?<name>.*?) *");
 	private static final String ITEM_ID = "id";
 	private static final String ITEM_UUID = "uuid";
 	// Dep
@@ -274,17 +271,6 @@ public final class SkyBlockAPI {
 		}
 
 		return PetInfo.parse(ItemUtils.getCustomData(stack));
-	}
-
-	/**
-	 * Gets the {@code ability} of the given ItemStack.
-	 *
-	 * @param stack the ItemStack
-	 * @return the ability name or {@code null} if the item does not have an ability
-	 */
-	public static @Nullable String getAbility(@NonNull ItemStack stack) {
-		Matcher abilityMatcher = ItemUtils.getLoreLineIfMatch(stack, ABILITY);
-		return abilityMatcher != null ? abilityMatcher.group("name") : null;
 	}
 
 	/**
