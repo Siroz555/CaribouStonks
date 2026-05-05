@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.platform.impl;
+package fr.siroz.cariboustonks.platform.impl.context;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.Command;
@@ -8,7 +8,7 @@ import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.mixin.accessors.ChatComponentAccessor;
 import fr.siroz.cariboustonks.mixin.accessors.ChatListenerAccessor;
 import fr.siroz.cariboustonks.mixin.accessors.PlayerTabOverlayAccessor;
-import fr.siroz.cariboustonks.platform.api.ClientContext;
+import fr.siroz.cariboustonks.platform.api.context.ClientContext;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.time.Instant;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.platform.api;
+package fr.siroz.cariboustonks.platform.api.context;
 
 import com.mojang.brigadier.Command;
 import fr.siroz.cariboustonks.platform.MinecraftService;

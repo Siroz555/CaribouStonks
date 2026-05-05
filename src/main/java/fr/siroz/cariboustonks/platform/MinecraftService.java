@@ -1,12 +1,12 @@
 package fr.siroz.cariboustonks.platform;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.platform.api.ClientContext;
-import fr.siroz.cariboustonks.platform.api.PlayerContext;
-import fr.siroz.cariboustonks.platform.api.WorldContext;
-import fr.siroz.cariboustonks.platform.impl.VanillaClientContext;
-import fr.siroz.cariboustonks.platform.impl.VanillaPlayerContext;
-import fr.siroz.cariboustonks.platform.impl.VanillaWorldContext;
+import fr.siroz.cariboustonks.platform.api.context.ClientContext;
+import fr.siroz.cariboustonks.platform.api.context.PlayerContext;
+import fr.siroz.cariboustonks.platform.api.context.WorldContext;
+import fr.siroz.cariboustonks.platform.impl.context.VanillaClientContext;
+import fr.siroz.cariboustonks.platform.impl.context.VanillaPlayerContext;
+import fr.siroz.cariboustonks.platform.impl.context.VanillaWorldContext;
 import org.jspecify.annotations.NonNull;
 
 /**

@@ -1,6 +1,6 @@
-package fr.siroz.cariboustonks.platform.impl;
+package fr.siroz.cariboustonks.platform.impl.context;
 
-import fr.siroz.cariboustonks.platform.api.WorldContext;
+import fr.siroz.cariboustonks.platform.api.context.WorldContext;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;

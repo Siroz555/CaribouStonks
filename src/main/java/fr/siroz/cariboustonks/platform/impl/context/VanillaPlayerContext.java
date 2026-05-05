@@ -1,7 +1,7 @@
-package fr.siroz.cariboustonks.platform.impl;
+package fr.siroz.cariboustonks.platform.impl.context;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.platform.api.PlayerContext;
+import fr.siroz.cariboustonks.platform.api.context.PlayerContext;
 import fr.siroz.cariboustonks.rendering.gui.element.StonksToast;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import net.minecraft.ChatFormatting;
