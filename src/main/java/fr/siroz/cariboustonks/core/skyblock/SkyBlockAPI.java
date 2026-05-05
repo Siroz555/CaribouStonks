@@ -10,12 +10,11 @@ import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponentHolder;
@@ -31,16 +30,17 @@ import org.jspecify.annotations.Nullable;
  */
 public final class SkyBlockAPI {
 	/**
-	 *  Real-world Unix timestamp (ms) corresponding to the SkyBlock Day 1, Year 1.
+	 * Real-world Unix timestamp (ms) corresponding to the SkyBlock Day 1, Year 1.
 	 */
 	private static final long SKYBLOCK_EPOCH_START_MILLIS = 1_560_275_700_000L;
 	private static final Minecraft CLIENT = Minecraft.getInstance();
 	// Common constants
-	private static final Pattern ABILITY = Pattern.compile("Ability: (?<name>.*?) *");
 	private static final String ITEM_ID = "id";
 	private static final String ITEM_UUID = "uuid";
+	// Factory dependencies
+	private static Supplier<ElectionResult> electionSource;
+	private static Function<String, SkyBlockAttribute> attributeLookup;
 	// General states
-	private static boolean onHypixelState = false;
 	private static boolean onSkyBlockState = false;
 	private static IslandType islandType = IslandType.UNKNOWN;
 	private static String gameType = "";
@@ -50,6 +50,14 @@ public final class SkyBlockAPI {
 
 	private SkyBlockAPI() {
 		throw new UnsupportedOperationException();
+	}
+
+	static void bootstrap(
+			@NonNull Supplier<ElectionResult> electionSourceFactory,
+			@NonNull Function<String, SkyBlockAttribute> attributeLookupFactory
+	) {
+		electionSource = electionSourceFactory;
+		attributeLookup = attributeLookupFactory;
 	}
 
 	/**
@@ -86,13 +94,8 @@ public final class SkyBlockAPI {
 	 * @return {@code true} if the current island type matches any of the specified types
 	 */
 	public static boolean isOnIslands(IslandType @NonNull ... islandTypes) {
-		if (islandTypes.length == 0) {
-			return false;
-		}
-
-		if (islandTypes.length == 1) {
-			return islandTypes[0] == islandType;
-		}
+		if (islandTypes.length == 0) return false;
+		if (islandTypes.length == 1) return islandTypes[0] == islandType;
 
 		for (IslandType type : islandTypes) {
 			if (type == islandType) return true;
@@ -165,7 +168,7 @@ public final class SkyBlockAPI {
 	 * @see #isMayorOrMinister(Mayor)
 	 */
 	public static boolean isMayorOrMinister(@NonNull Mayor mayor, @Nullable Perk perk) {
-		ElectionResult result = CaribouStonks.skyBlock().getHypixelDataSource().getElection();
+		ElectionResult result = electionSource != null ? electionSource.get() : null;
 		if (result == null) return false;
 
 		if (perk == null) {
@@ -266,17 +269,6 @@ public final class SkyBlockAPI {
 	}
 
 	/**
-	 * Gets the {@code ability} of the given ItemStack.
-	 *
-	 * @param stack the ItemStack
-	 * @return the ability name or {@code null} if the item does not have an ability
-	 */
-	public static @Nullable String getAbility(@NonNull ItemStack stack) {
-		Matcher abilityMatcher = ItemUtils.getLoreLineIfMatch(stack, ABILITY);
-		return abilityMatcher != null ? abilityMatcher.group("name") : null;
-	}
-
-	/**
 	 * Gets the {@code SkyBlock API ID} of the ItemStack.
 	 *
 	 * @return the SkyBlock API ID or an empty String
@@ -321,7 +313,7 @@ public final class SkyBlockAPI {
 
 			case "ATTRIBUTE_SHARD" -> {
 				String name = itemStack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
-				SkyBlockAttribute attribute = CaribouStonks.mod().getModDataSource().getAttributeByShardName(name);
+				SkyBlockAttribute attribute = attributeLookup != null ? attributeLookup.apply(name) : null;
 				if (attribute != null) {
 					return attribute.skyBlockApiId();
 				}
@@ -350,37 +342,24 @@ public final class SkyBlockAPI {
 	}
 
 	static void handleInternalUpdate() {
-		FabricLoader fabricLoader = FabricLoader.getInstance();
-
 		if (CLIENT.level == null || CLIENT.isLocalServer()) {
-			if (fabricLoader.isDevelopmentEnvironment()) {
+			if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
 				onSkyBlockState = true;
 			}
-		}
-
-		if (fabricLoader.isDevelopmentEnvironment() || StonksUtils.isConnectedToHypixel()) {
-			if (!StonksUtils.isConnectedToHypixel()) {
-				onHypixelState = true;
-			}
-		} else if (onHypixelState) {
-			onHypixelState = false;
 		}
 	}
 
 	static void handleInternalLocationUpdate(
-			@Nullable Boolean onHypixel,
 			@Nullable Boolean onSkyBlock,
 			@Nullable String gameTypeFromServer,
 			@Nullable IslandType islandTypeFromMode
 	) {
-		if (onHypixel != null) onHypixelState = onHypixel;
 		if (onSkyBlock != null) onSkyBlockState = onSkyBlock;
 		if (gameTypeFromServer != null) gameType = gameTypeFromServer;
 		if (islandTypeFromMode != null) islandType = islandTypeFromMode;
 
 		if (DeveloperTools.isInDevelopment()) {
-			CaribouStonks.LOGGER.info("[SkyBlockAPI] Updated: {}, {}, {}, {}",
-					onHypixelState, onSkyBlockState, gameType, islandType.name());
+			CaribouStonks.LOGGER.info("[SkyBlockAPI] Updated: {}, {}, {}", onSkyBlockState, gameType, islandType.name());
 		}
 	}
 

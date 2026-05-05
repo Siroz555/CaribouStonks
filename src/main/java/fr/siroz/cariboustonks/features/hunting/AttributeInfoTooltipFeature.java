@@ -174,7 +174,7 @@ public class AttributeInfoTooltipFeature extends Feature {
 				.append(Component.literal("Shards Until Maxed: ").withStyle(ChatFormatting.GREEN))
 				.append(Component.literal(String.valueOf(required)).withStyle(ChatFormatting.AQUA)));
 
-		SkyBlockAttribute attribute = CaribouStonks.mod().getModDataSource().getAttributeById(id);
+		SkyBlockAttribute attribute = AttributeAPI.getAttributeById(id);
 		if (attribute != null) {
 			addTotalCost(lines, required - owned, attribute.skyBlockApiId());
 		}
