@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.util.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import fr.siroz.cariboustonks.mixin.accessors.FrustumAccessor;
+import fr.siroz.cariboustonks.platform.mixin.accessors.FrustumAccessor;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;

@@ -13,7 +13,7 @@ import org.lwjgl.glfw.GLFW;
  * This feature allows users to temporarily zoom the view while the designated key is pressed.
  * <p>
  * <b>Note:</b> The main logic for visual transformation may be handled in
- * {@code Mixin >} {@link fr.siroz.cariboustonks.mixin.GameRendererMixin}
+ * {@code Mixin >} {@link fr.siroz.cariboustonks.platform.mixin.GameRendererMixin}
  */
 public final class ZoomFeature extends Feature {
 

@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.mixin.accessors.ChatListenerAccessor;
+import fr.siroz.cariboustonks.platform.mixin.accessors.ChatListenerAccessor;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.time.Instant;
 import java.util.regex.Matcher;

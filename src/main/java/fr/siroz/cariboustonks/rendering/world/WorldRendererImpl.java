@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.rendering.world;
 
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.mixin.accessors.BlockEntityRenderStateAccessor;
+import fr.siroz.cariboustonks.platform.mixin.accessors.BlockEntityRenderStateAccessor;
 import fr.siroz.cariboustonks.rendering.world.renderer.CircleRendererCommand;
 import fr.siroz.cariboustonks.rendering.world.renderer.CuboidOutlineRendererCommand;
 import fr.siroz.cariboustonks.rendering.world.renderer.CursorLineRendererCommand;

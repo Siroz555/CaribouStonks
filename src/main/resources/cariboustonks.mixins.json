@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "fr.siroz.cariboustonks.mixin",
+  "package": "fr.siroz.cariboustonks.platform.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixinextras": {
     "minVersion": "0.5.0"

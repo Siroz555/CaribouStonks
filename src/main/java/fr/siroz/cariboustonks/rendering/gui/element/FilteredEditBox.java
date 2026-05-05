@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.rendering.gui.element;
 
-import fr.siroz.cariboustonks.mixin.accessors.EditBoxAccessor;
+import fr.siroz.cariboustonks.platform.mixin.accessors.EditBoxAccessor;
 import java.util.Objects;
 import java.util.function.Predicate;
 import net.minecraft.client.gui.Font;

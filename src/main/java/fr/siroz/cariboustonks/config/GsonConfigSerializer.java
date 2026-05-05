@@ -8,7 +8,7 @@ import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.ConfigField;
 import dev.isxander.yacl3.config.v2.api.ConfigSerializer;
 import dev.isxander.yacl3.config.v2.api.FieldAccess;
-import fr.siroz.cariboustonks.mixin.accessors.ConfigClassHandlerImplAccessor;
+import fr.siroz.cariboustonks.platform.mixin.accessors.ConfigClassHandlerImplAccessor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;

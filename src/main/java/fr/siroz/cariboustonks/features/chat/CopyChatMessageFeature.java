@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.features.chat;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.mixin.accessors.ChatComponentAccessor;
+import fr.siroz.cariboustonks.platform.mixin.accessors.ChatComponentAccessor;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.math.MathUtils;

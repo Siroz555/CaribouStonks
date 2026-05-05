@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.core.module.hud;
 
-import fr.siroz.cariboustonks.mixin.accessors.PlayerTabOverlayAccessor;
+import fr.siroz.cariboustonks.platform.mixin.accessors.PlayerTabOverlayAccessor;
 import java.util.function.Supplier;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;

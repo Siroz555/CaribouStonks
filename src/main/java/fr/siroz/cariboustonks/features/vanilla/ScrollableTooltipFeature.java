@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
-import fr.siroz.cariboustonks.mixin.accessors.ClientTextTooltipAccessor;
+import fr.siroz.cariboustonks.platform.mixin.accessors.ClientTextTooltipAccessor;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import java.util.List;
