@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.platform.rendering.world.renderer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import fr.siroz.cariboustonks.platform.rendering.CaribouRenderPipelines;
-import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.CaribouWorldRenderer;
 import fr.siroz.cariboustonks.platform.rendering.world.state.LinesRenderState;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
@@ -20,7 +20,7 @@ public final class LinesRendererCommand implements RendererCommand<LinesRenderSt
 				? CaribouRenderPipelines.LINES_THROUGH_BLOCKS
 				: RenderPipelines.LINES;
 
-		BufferBuilder buffer = WorldRenderer.getBuffer(pipeline);
+		BufferBuilder buffer = CaribouWorldRenderer.getBuffer(pipeline);
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fr.siroz.cariboustonks.platform.rendering.CaribouRenderPipelines;
-import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.CaribouWorldRenderer;
 import fr.siroz.cariboustonks.platform.rendering.world.state.OutlineBoxRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -20,7 +20,7 @@ public final class OutlineBoxRendererCommand implements RendererCommand<OutlineB
 				? CaribouRenderPipelines.LINES_THROUGH_BLOCKS
 				: RenderPipelines.LINES;
 
-		BufferBuilder buffer = WorldRenderer.getBuffer(pipeline);
+		BufferBuilder buffer = CaribouWorldRenderer.getBuffer(pipeline);
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());

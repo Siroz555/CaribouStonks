@@ -1,434 +1,204 @@
 package fr.siroz.cariboustonks.platform.rendering.world;
 
-import com.mojang.blaze3d.buffers.GpuBuffer;
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.systems.CommandEncoder;
-import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.GpuTextureView;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.MeshData;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.events.RenderEvents;
-import fr.siroz.cariboustonks.platform.impl.render.VanillaWorldRenderer;
-import fr.siroz.cariboustonks.platform.rendering.CaribouRenderPipelines;
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMaps;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.renderer.MappableRingBuffer;
-import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.state.level.LevelRenderState;
-import org.joml.Matrix4f;
-import org.joml.Matrix4fStack;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
-import org.lwjgl.system.MemoryUtil;
 
-public final class WorldRenderer {
-	private static final Minecraft CLIENT = Minecraft.getInstance();
-
-	private static final ByteBufferBuilder GENERAL_ALLOCATOR = new ByteBufferBuilder(RenderType.TRANSIENT_BUFFER_SIZE);
-	private static final Vector4f COLOR_MODULATOR = new Vector4f(1f, 1f, 1f, 1f);
-	private static final Vector3f MODEL_OFFSET = new Vector3f();
-	private static final Matrix4f TEXTURE_MATRICE = new Matrix4f();
-
-	private static final List<RenderPipeline> EXCLUDED_FROM_BATCHING = new ArrayList<>();
-	private static final Int2ObjectMap<ByteBufferBuilder> ALLOCATORS = new Int2ObjectArrayMap<>(5);
-	private static final Map<VertexFormat, MappableRingBuffer> VERTEX_BUFFERS = new Object2ObjectOpenHashMap<>();
-
-	private static final Int2ObjectMap<BatchedDraw> BATCHED_DRAWS = new Int2ObjectArrayMap<>(5);
-	private static final List<PreparedDraw> PREPARED_DRAWS = new ArrayList<>();
-	private static final List<Draw> DRAWS = new ArrayList<>();
-	@Nullable
-	private static BatchedDraw lastUnbatchedDraw = null;
-
-	private static VanillaWorldRenderer worldRenderer;
-
-	private WorldRenderer() {
-	}
+/**
+ * Provides methods to render various visual elements in the world with
+ * the {@link RenderEvents#WORLD_RENDER_EVENT}.
+ */
+public interface WorldRenderer {
 
 	/**
-	 * Init
-	 */
-	public static void bootstrap() {
-		// Les cercles sont exclus.
-		excludePipelineFromBatching(CaribouRenderPipelines.CIRCLE);
-		excludePipelineFromBatching(CaribouRenderPipelines.CIRCLE_THROUGH_BLOCKS);
-		// Instancie l'implémentation du WorldRenderer (Event extraction)
-		worldRenderer = new VanillaWorldRenderer();
-	}
-
-	/**
-	 * Returns the {@link BufferBuilder} for the given {@link RenderPipeline}
+	 * Submits a {@link Component} to be rendered.
 	 *
-	 * @param pipeline the pipeline
-	 * @return the BufferBuilder
-	 * @see #getBuffer(RenderPipeline, TextureSetup)
+	 * @param text          the text
+	 * @param position      the position
+	 * @param scale         the scale
+	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	public static BufferBuilder getBuffer(@NonNull RenderPipeline pipeline) {
-		return getBuffer(pipeline, TextureSetup.noTexture());
+	default void submitText(@NonNull Component text, @NonNull Vec3 position, float scale, boolean throughBlocks) {
+		submitText(text, position, scale, 0, throughBlocks);
 	}
 
 	/**
-	 * Returns the {@link BufferBuilder} for the given {@link RenderPipeline}
+	 * Submits a {@link Component} to be rendered.
 	 *
-	 * @param pipeline     the pipeline
-	 * @param textureSetup the textureSetup
-	 * @return the BufferBuilder
-	 * @see #getBuffer(RenderPipeline)
+	 * @param text          the text
+	 * @param position      the position
+	 * @param scale         the scale
+	 * @param offsetY       the offsetY
+	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	public static BufferBuilder getBuffer(@NonNull RenderPipeline pipeline, @NonNull TextureSetup textureSetup) {
-		return getBufferInternal(pipeline, textureSetup);
+	default void submitText(@NonNull Component text, @NonNull Vec3 position, float scale, float offsetY, boolean throughBlocks) {
+		submitText(text.getVisualOrderText(), position, scale, offsetY, throughBlocks);
 	}
 
 	/**
-	 * >>> <b>MIXIN</b> <<<
+	 * Submits a {@link FormattedCharSequence} to be rendered.
 	 *
-	 * @param levelRenderState levelRenderState
-	 * @param frustum          frustum
+	 * @param text          the text
+	 * @param position      the position
+	 * @param scale         the scale
+	 * @param offsetY       the offsetY
+	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	public static void extract(LevelRenderState levelRenderState, Frustum frustum) {
-		if (worldRenderer == null) return;
-
-		worldRenderer.begin(levelRenderState, frustum);
-		RenderEvents.WORLD_RENDER_EVENT.invoker().onWorldRender(worldRenderer);
-		worldRenderer.end();
-	}
+	void submitText(@NonNull FormattedCharSequence text, @NonNull Vec3 position, float scale, float offsetY, boolean throughBlocks);
 
 	/**
-	 * >>> <b>MIXIN</b> <<<
+	 * Submits a {@code Texture} to be rendered with the given {@link Identifier}, facing to the player.
 	 *
-	 * @param cameraRenderState cameraRenderState
+	 * @param position      the position
+	 * @param width         the width
+	 * @param height        the height
+	 * @param textureWidth  the amount of texture width
+	 * @param textureHeight the amount of texture height
+	 * @param renderOffset  the offset
+	 * @param texture       the texture
+	 * @param color         the color
+	 * @param alpha         the alpha
+	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	public static void executeDraws(CameraRenderState cameraRenderState) {
-		if (worldRenderer == null) return;
+	void submitTexture(@NonNull Vec3 position, float width, float height, float textureWidth, float textureHeight, @NonNull Vec3 renderOffset, @NonNull Identifier texture, @NonNull Color color, float alpha, boolean throughBlocks);
 
-		worldRenderer.flush(cameraRenderState);
-		executeDraws();
+	/**
+	 * Submits a {@code circle} to be rendered on the plane defined by the specified axis.
+	 * <p>
+	 * The circle is drawn in outline mode (border).
+	 * <h3>Axis</h3>
+	 * Defines the plane in which the circle lies
+	 * <ul>
+	 *     <li>{@code Axis.X}: Circle in YZ plane (vertical, perpendicular to X axis)</li>
+	 *     <li>{@code Axis.Y}: Circle in XZ plane (horizontal, perpendicular to Y axis)</li>
+	 *     <li>{@code Axis.Z}: Circle in XY plane (vertical, perpendicular to Z axis)</li>
+	 * </ul>
+	 * <p>
+	 * DEV-NOTE: To draw the border, a ring is created by drawing two circles (outer and inner)
+	 * and connecting them with a TRIANGLE_STRIP.
+	 *
+	 * @param center           the center
+	 * @param radius           the radius ({@code in blocks ~}) between 1-32
+	 * @param segments         number of segments between 8-64
+	 * @param thicknessPercent thickness in {@code %} of radius (0.05 = 5% of radius)
+	 * @param color            the color
+	 * @param axis             the axis
+	 * @param throughBlocks    if rendering can be done through blocks
+	 */
+	void submitCircle(@NonNull Vec3 center, double radius, int segments, float thicknessPercent, @NonNull Color color, Direction.@NonNull Axis axis, boolean throughBlocks);
+
+	/**
+	 * Submits a {@code thick circle (disk)} to be rendered extruding a <b>horizontal</b> circle.
+	 *
+	 * @param center        the center
+	 * @param radius        the radius ({@code in blocks ~}) between 1-32
+	 * @param thickness     the thickness (in blocks ~)
+	 * @param segments      number of segments between 8-64
+	 * @param color         the color
+	 * @param throughBlocks if rendering can be done through blocks
+	 */
+	void submitThickCircle(@NonNull Vec3 center, double radius, double thickness, int segments, @NonNull Color color, boolean throughBlocks);
+
+	/**
+	 * Submits a {@code quad} to be rendered.
+	 *
+	 * @param points        the points
+	 * @param color         the color
+	 * @param throughBlocks if rendering can be done through blocks
+	 */
+	void submitQuad(@NonNull Vec3[] points, @NonNull Color color, boolean throughBlocks);
+
+	/**
+	 * Submits a {@code Filled Box} to be rendered.
+	 *
+	 * @param pos           the position
+	 * @param color         the color
+	 * @param throughBlocks if rendering can be done through blocks
+	 */
+	default void submitFilled(@NonNull BlockPos pos, @NonNull Color color, boolean throughBlocks) {
+		submitFilled(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1, color, throughBlocks);
 	}
 
 	/**
-	 * >>> <b>MIXIN</b> <<<
+	 * Submits a {@code Filled Box} to be rendered.
+	 *
+	 * @param box           the box
+	 * @param color         the color
+	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	public static void close() {
-		GENERAL_ALLOCATOR.close();
-
-		for (ByteBufferBuilder allocator : ALLOCATORS.values()) {
-			allocator.close();
-		}
-
-		for (MappableRingBuffer vertexBuffer : VERTEX_BUFFERS.values()) {
-			vertexBuffer.close();
-		}
-	}
-
-	public static void excludePipelineFromBatching(RenderPipeline pipeline) {
-		EXCLUDED_FROM_BATCHING.add(pipeline);
-	}
-
-	private static void executeDraws() {
-		// End all the batches and prepare the draws
-		endBatches();
-
-		// Set up the draws
-		setupDraws();
-
-		// Execute the draws
-		for (Draw draw : DRAWS) {
-			draw(draw);
-		}
-
-		// Rotate the buffers
-		// ensures that we're likely to be using buffers that the GPU isn't (prevents synchronization/stalls)
-		for (MappableRingBuffer buffer : VERTEX_BUFFERS.values()) {
-			buffer.rotate();
-		}
-
-		// Clear the draws from this frame
-		BATCHED_DRAWS.clear();
-		PREPARED_DRAWS.clear();
-		DRAWS.clear();
+	default void submitFilled(@NonNull AABB box, @NonNull Color color, boolean throughBlocks) {
+		submitFilled(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, color, throughBlocks);
 	}
 
 	/**
-	 * Returns the appropriate {@code BufferBuilder} that should be used with the given pipeline, texture view, and line width.
+	 * Submits a {@code Filled Box} to be rendered.
+	 *
+	 * @param minX          the minimum x
+	 * @param minY          the minimum y
+	 * @param minZ          the minimum z
+	 * @param maxX          the maximum x
+	 * @param maxY          the maximum y
+	 * @param maxZ          the maximum z
+	 * @param color         the color
+	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	private static BufferBuilder getBufferInternal(RenderPipeline pipeline, TextureSetup textureSetup) {
-		if (!EXCLUDED_FROM_BATCHING.contains(pipeline)) {
-			return setupBatched(pipeline, textureSetup);
-		} else {
-			return setupUnbatched(pipeline, textureSetup);
-		}
-	}
-
-	private static BufferBuilder setupBatched(RenderPipeline pipeline, TextureSetup textureSetup) {
-		int hash = hash(pipeline, textureSetup);
-		BatchedDraw draw = BATCHED_DRAWS.get(hash);
-
-		if (draw == null) {
-			ByteBufferBuilder allocator = ALLOCATORS.computeIfAbsent(hash, _ -> new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE));
-			BufferBuilder bufferBuilder = new BufferBuilder(allocator, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-			BATCHED_DRAWS.put(hash, new BatchedDraw(bufferBuilder, pipeline, textureSetup));
-			return bufferBuilder;
-		} else {
-			return draw.bufferBuilder();
-		}
-	}
-
-	private static @NonNull BufferBuilder setupUnbatched(RenderPipeline pipeline, TextureSetup textureSetup) {
-		if (lastUnbatchedDraw != null) {
-			prepareBatchedDraw(lastUnbatchedDraw);
-		}
-
-		BufferBuilder bufferBuilder = new BufferBuilder(GENERAL_ALLOCATOR, pipeline.getVertexFormatMode(), pipeline.getVertexFormat());
-		lastUnbatchedDraw = new BatchedDraw(bufferBuilder, pipeline, textureSetup);
-
-		return bufferBuilder;
-	}
+	void submitFilled(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, @NonNull Color color, boolean throughBlocks);
 
 	/**
-	 * Calculates the hash of the given inputs which serves as the keys to our maps where we store stuff for the batched draws.
-	 * This is much faster than using an object-based key as we do not need to create any objects to find the instances we want.
+	 * Submits a {@code Beacon beam} to be rendered.
+	 *
+	 * @param position the position
+	 * @param color    the color
 	 */
-	private static int hash(@NonNull RenderPipeline pipeline, TextureSetup textureSetup) {
-		// This manually calculates the hash, avoiding Objects#hash to not incur the array allocation each time
-		int hash = 1;
-		hash = 31 * hash + pipeline.hashCode();
-		hash = 31 * hash + textureSetup.hashCode();
-
-		return hash;
-	}
-
-	private static void endBatches() {
-		for (Int2ObjectMap.Entry<BatchedDraw> entry : Int2ObjectMaps.fastIterable(BATCHED_DRAWS)) {
-			prepareBatchedDraw(entry.getValue());
-		}
-
-		if (lastUnbatchedDraw != null) {
-			prepareBatchedDraw(lastUnbatchedDraw);
-			lastUnbatchedDraw = null;
-		}
-	}
-
-	private static void prepareBatchedDraw(@NonNull BatchedDraw draw) {
-		PREPARED_DRAWS.add(new PreparedDraw(
-				draw.bufferBuilder().buildOrThrow(),
-				draw.pipeline(),
-				draw.textureSetup()
-		));
-	}
-
-	private static void setupDraws() {
-		setupVertexBuffers();
-		Object2IntMap<VertexFormat> vertexBufferPositions = new Object2IntOpenHashMap<>();
-
-		for (PreparedDraw prepared : PREPARED_DRAWS) {
-			MeshData builtBuffer = prepared.builtBuffer();
-			MeshData.DrawState drawParameters = builtBuffer.drawState();
-			VertexFormat format = drawParameters.format();
-
-			MappableRingBuffer vertices = VERTEX_BUFFERS.get(format);
-			ByteBuffer vertexData = builtBuffer.vertexBuffer();
-			int vertexBufferPosition = vertexBufferPositions.getInt(format);
-			int remainingVertexBytes = vertexData.remaining();
-
-			// Copy vertex data into the shared vertex buffer
-			copyDataInto(vertices, vertexData, vertexBufferPosition, remainingVertexBytes);
-			// Update vertex buffer position
-			vertexBufferPositions.put(format, vertexBufferPosition + remainingVertexBytes);
-
-			DRAWS.add(new Draw(
-					builtBuffer,
-					vertices.currentBuffer(),
-					vertexBufferPosition / format.getVertexSize(),
-					drawParameters.indexCount(),
-					prepared.pipeline(),
-					prepared.textureSetup()
-			));
-		}
-	}
+	void submitBeaconBeam(@NonNull BlockPos position, @NonNull Color color);
 
 	/**
-	 * Maps the {@code target} buffer and copies the {@code source} data into it.
+	 * Submits an {@code Outline Box} to be rendered.
+	 *
+	 * @param box           the box
+	 * @param color         the color
+	 * @param lineWidth     the line width
+	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	private static void copyDataInto(@NonNull MappableRingBuffer target, ByteBuffer source, int position, int remainingBytes) {
-		CommandEncoder commandEncoder = RenderSystem.getDevice().createCommandEncoder();
-
-		try (GpuBuffer.MappedView mappedView = commandEncoder.mapBuffer(target.currentBuffer().slice(position, remainingBytes), false, true)) {
-			MemoryUtil.memCopy(source, mappedView.data());
-		}
-	}
+	void submitOutline(@NonNull AABB box, @NonNull Color color, float lineWidth, boolean throughBlocks);
 
 	/**
-	 * Resizes/allocates the necessary vertex buffers.
+	 * Submits multiple {@code Lines} to be rendered.
+	 *
+	 * @param points        the points
+	 * @param color         the color
+	 * @param lineWidth     the line width
+	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	private static void setupVertexBuffers() {
-		Object2IntMap<VertexFormat> vertexBufferSizes = collectVertexBufferSizes();
-
-		for (Object2IntMap.Entry<VertexFormat> entry : Object2IntMaps.fastIterable(vertexBufferSizes)) {
-			VertexFormat format = entry.getKey();
-			int vertexBufferSize = entry.getIntValue();
-
-			VERTEX_BUFFERS.compute(format, (_, vertexBuffer) -> initOrResizeBuffer(vertexBuffer, "CaribouStonks vertex buffer for: " + format, vertexBufferSize));
-		}
-	}
-
-	private static @NonNull MappableRingBuffer initOrResizeBuffer(MappableRingBuffer buffer, String name, int neededSize) {
-		if (buffer == null || buffer.size() < neededSize) {
-			if (buffer != null) {
-				buffer.close();
-			}
-
-			return new MappableRingBuffer(() -> name, GpuBuffer.USAGE_MAP_WRITE | GpuBuffer.USAGE_VERTEX, neededSize);
-		}
-
-		return buffer;
-	}
+	void submitLines(Vec3 @NonNull [] points, @NonNull Color color, float lineWidth, boolean throughBlocks);
 
 	/**
-	 * Collect the required buffer size for each vertex format in use.
+	 * Submits a {@code Line} from the cursor to the given point.
+	 *
+	 * @param point     the point
+	 * @param color     the color
+	 * @param lineWidth the line width
 	 */
-	private static @NonNull Object2IntMap<VertexFormat> collectVertexBufferSizes() {
-		// If we ever need to create our own shared index buffers,
-		// then we can turn this into an Object2LongMap and pack
-		// both the vertex & index buffer sizes into a single long (since they're two ints)
-		Object2IntMap<VertexFormat> vertexSizes = new Object2IntOpenHashMap<>();
+	void submitLineFromCursor(@NonNull Vec3 point, @NonNull Color color, float lineWidth);
 
-		for (PreparedDraw prepared : PREPARED_DRAWS) {
-			// ignore :: builtBuffer() :: 'MeshData' used without 'try'-with-resources statement
-			MeshData.DrawState drawParameters = prepared.builtBuffer().drawState();
-			VertexFormat format = drawParameters.format();
-
-			vertexSizes.put(format, vertexSizes.getOrDefault(format, 0) + drawParameters.vertexCount() * format.getVertexSize());
-		}
-
-		return vertexSizes;
-	}
-
-	private static void draw(@NonNull Draw draw) {
-		GpuBuffer indices;
-		VertexFormat.IndexType indexType;
-
-		if (draw.pipeline().getVertexFormatMode() == VertexFormat.Mode.QUADS) {
-			// The quads we're rendering are translucent, so they need to be sorted for our index buffer
-			// ignore :: builtBuffer() :: 'MeshData' used without 'try'-with-resources statement
-			draw.builtBuffer().sortQuads(GENERAL_ALLOCATOR, RenderSystem.getProjectionType().vertexSorting());
-			indices = draw.pipeline().getVertexFormat().uploadImmediateIndexBuffer(Objects.requireNonNull(draw.builtBuffer().indexBuffer()));
-			indexType = draw.builtBuffer().drawState().indexType();
-		} else {
-			// Use a general shape index buffer for other draw modes
-			RenderSystem.AutoStorageIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(draw.pipeline().getVertexFormatMode());
-			indices = shapeIndexBuffer.getBuffer(draw.indexCount());
-			indexType = shapeIndexBuffer.type();
-		}
-
-		draw(draw, indices, indexType);
-	}
-
-	private static void draw(@NonNull Draw draw, GpuBuffer indices, VertexFormat.IndexType indexType) {
-		applyViewOffsetZLayering();
-		GpuBufferSlice dynamicTransforms = setupDynamicTransforms();
-
-		try (RenderPass renderPass = RenderSystem.getDevice()
-				.createCommandEncoder()
-				.createRenderPass(() -> "cariboustonks world rendering",
-						getMainColorTexture(),
-						OptionalInt.empty(),
-						getMainDepthTexture(),
-						OptionalDouble.empty())
-		) {
-			renderPass.setPipeline(draw.pipeline);
-
-			RenderSystem.bindDefaultUniforms(renderPass);
-			renderPass.setUniform("DynamicTransforms", dynamicTransforms);
-
-			if (draw.textureSetup().texure0() != null) {
-				// Sampler0 is used for normal texture inputs in shaders
-				renderPass.bindTexture("Sampler0", draw.textureSetup().texure0(), draw.textureSetup().sampler0());
-			}
-
-			if (draw.textureSetup().texure2() != null) {
-				// Sampler2 is used for lightmap texture inputs in shaders
-				renderPass.bindTexture("Sampler2", draw.textureSetup().texure2(), draw.textureSetup().sampler2());
-			}
-
-			renderPass.setVertexBuffer(0, draw.vertices);
-			renderPass.setIndexBuffer(indices, indexType);
-
-			renderPass.drawIndexed(draw.baseVertex, 0, draw.indexCount, 1);
-		}
-
-		draw.builtBuffer().close();
-		unapplyViewOffsetZLayering();
-	}
-
-	private static GpuBufferSlice setupDynamicTransforms() {
-		return RenderSystem.getDynamicUniforms().writeTransform(
-				RenderSystem.getModelViewMatrix(),
-				COLOR_MODULATOR,
-				MODEL_OFFSET,
-				TEXTURE_MATRICE // SIROZ-NOTE RenderSystem.getModelViewMatrix()
-		);
-	}
-
-	private static GpuTextureView getMainColorTexture() {
-		return CLIENT.getMainRenderTarget().getColorTextureView();
-	}
-
-	private static GpuTextureView getMainDepthTexture() {
-		return CLIENT.getMainRenderTarget().getDepthTextureView();
-	}
-
-	private static void applyViewOffsetZLayering() {
-		Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
-		modelViewStack.pushMatrix();
-		RenderSystem.getProjectionType().applyLayeringTransform(modelViewStack, 1f);
-	}
-
-	private static void unapplyViewOffsetZLayering() {
-		RenderSystem.getModelViewStack().popMatrix();
-	}
-
-	private record Draw(
-            MeshData builtBuffer,
-            GpuBuffer vertices,
-            int baseVertex,
-            int indexCount,
-            RenderPipeline pipeline,
-            TextureSetup textureSetup
-	) {
-	}
-
-	private record PreparedDraw(
-            MeshData builtBuffer,
-            RenderPipeline pipeline,
-            TextureSetup textureSetup
-	) {
-	}
-
-	private record BatchedDraw(
-            BufferBuilder bufferBuilder,
-            RenderPipeline pipeline,
-            TextureSetup textureSetup
-	) {
-	}
+	/**
+	 * Submits a cuboid outline.
+	 *
+	 * @param center      the center
+	 * @param depth       the depth
+	 * @param size        the size
+	 * @param minY        the minY
+	 * @param maxY        the maxY
+	 * @param lineWidth   the line width
+	 * @param mainColor   the main color
+	 * @param secondColor the second color
+	 */
+	void submitCuboidOutline(@NonNull Vec3 center, int depth, int size, int minY, int maxY, float lineWidth, @NonNull Color mainColor, @NonNull Color secondColor);
 }

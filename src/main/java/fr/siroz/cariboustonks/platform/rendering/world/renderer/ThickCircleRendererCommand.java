@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.platform.rendering.world.renderer;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import fr.siroz.cariboustonks.platform.rendering.CaribouRenderPipelines;
-import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.CaribouWorldRenderer;
 import fr.siroz.cariboustonks.platform.rendering.world.state.ThickCircleRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
@@ -18,7 +18,7 @@ public final class ThickCircleRendererCommand implements RendererCommand<ThickCi
 				? CaribouRenderPipelines.CIRCLE_THROUGH_BLOCKS
 				: CaribouRenderPipelines.CIRCLE;
 
-		BufferBuilder buffer = WorldRenderer.getBuffer(pipeline);
+		BufferBuilder buffer = CaribouWorldRenderer.getBuffer(pipeline);
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());

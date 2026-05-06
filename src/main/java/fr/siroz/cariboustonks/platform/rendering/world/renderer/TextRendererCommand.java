@@ -4,7 +4,7 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.CaribouWorldRenderer;
 import fr.siroz.cariboustonks.platform.rendering.world.state.TextRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.gui.Font;
@@ -49,7 +49,7 @@ public final class TextRendererCommand implements RendererCommand<TextRenderStat
 						RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)
 				);
 
-				BufferBuilder buffer = WorldRenderer.getBuffer(pipeline, textureSetup);
+				BufferBuilder buffer = CaribouWorldRenderer.getBuffer(pipeline, textureSetup);
 				textRenderable.render(matrix4f, buffer, RenderUtils.FULL_BRIGHT, false);
 			}
 		});

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.platform.rendering.CaribouRenderPipelines;
-import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.CaribouWorldRenderer;
 import fr.siroz.cariboustonks.platform.rendering.world.state.CuboidOutlineRenderState;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
@@ -20,7 +20,7 @@ public final class CuboidOutlineRendererCommand implements RendererCommand<Cuboi
 
 	@Override
 	public void emit(@NonNull CuboidOutlineRenderState state, @NonNull CameraRenderState camera) {
-		BufferBuilder buffer = WorldRenderer.getBuffer(CaribouRenderPipelines.LINE_STRIP);
+		BufferBuilder buffer = CaribouWorldRenderer.getBuffer(CaribouRenderPipelines.LINE_STRIP);
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());

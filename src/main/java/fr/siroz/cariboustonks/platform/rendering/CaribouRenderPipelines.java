@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.mod.integration.IrisIntegration;
-import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.CaribouWorldRenderer;
 import java.util.Optional;
 import net.minecraft.client.renderer.RenderPipelines;
 
@@ -20,8 +20,8 @@ public final class CaribouRenderPipelines {
 		// Enregistre les pipelines pour Iris
 		IrisIntegration.assignPipelines();
 		// Les cercles sont exclus.
-		WorldRenderer.excludePipelineFromBatching(CIRCLE);
-		WorldRenderer.excludePipelineFromBatching(CIRCLE_THROUGH_BLOCKS);
+		CaribouWorldRenderer.excludePipelineFromBatching(CIRCLE);
+		CaribouWorldRenderer.excludePipelineFromBatching(CIRCLE_THROUGH_BLOCKS);
 	}
 
 	public static final RenderPipeline FILLED = RenderPipelines.register(

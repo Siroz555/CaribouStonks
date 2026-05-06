@@ -1,8 +1,7 @@
-package fr.siroz.cariboustonks.platform.impl.render;
+package fr.siroz.cariboustonks.platform.rendering.world;
 
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.platform.api.render.WorldRenderer;
 import fr.siroz.cariboustonks.platform.mixin.accessors.BlockEntityRenderStateAccessor;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.CircleRendererCommand;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.CuboidOutlineRendererCommand;
@@ -49,7 +48,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * Implementation of {@link WorldRenderer}.
  */
-public final class VanillaWorldRenderer implements WorldRenderer {
+final class VanillaWorldRenderer implements WorldRenderer {
 	// Commands
 	private final TextRendererCommand textRendererCommand;
 	private final TextureRendererCommand textureRendererCommand;

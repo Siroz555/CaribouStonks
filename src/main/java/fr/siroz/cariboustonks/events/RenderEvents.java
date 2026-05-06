@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.events;
 
-import fr.siroz.cariboustonks.platform.api.render.WorldRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.world.entity.Entity;
