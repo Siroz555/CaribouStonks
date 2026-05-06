@@ -23,6 +23,7 @@ import org.jspecify.annotations.NonNull;
  * @see FeatureManager
  */
 public abstract class Feature {
+	private static final MinecraftService MINECRAFT_SERVICE = MinecraftService.getInstance();
 
 	/**
 	 * Shared Minecraft client instance for all features.
@@ -101,7 +102,7 @@ public abstract class Feature {
 	 * @return the context instance provided by the {@link MinecraftService}
 	 */
 	protected final ClientContext client() {
-		return MinecraftService.getInstance().client();
+		return MINECRAFT_SERVICE.client();
 	}
 
 	/**
@@ -110,7 +111,7 @@ public abstract class Feature {
 	 * @return the context instance provided by the {@link MinecraftService}
 	 */
 	protected final PlayerContext player() {
-		return MinecraftService.getInstance().player();
+		return MINECRAFT_SERVICE.player();
 	}
 
 	/**
@@ -119,7 +120,7 @@ public abstract class Feature {
 	 * @return the context instance provided by the {@link MinecraftService}
 	 */
 	protected final WorldContext world() {
-		return MinecraftService.getInstance().world();
+		return MINECRAFT_SERVICE.world();
 	}
 
 	/**
