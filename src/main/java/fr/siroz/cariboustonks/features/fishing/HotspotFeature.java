@@ -10,7 +10,7 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.platform.mixin.accessors.DustParticleOptionsAccessor;
-import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.api.render.WorldRenderer;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.List;

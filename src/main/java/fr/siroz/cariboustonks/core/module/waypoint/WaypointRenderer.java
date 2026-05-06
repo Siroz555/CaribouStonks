@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.waypoint.options.IconOption;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.api.render.WorldRenderer;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

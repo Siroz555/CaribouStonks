@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.core.mod.dev;
 
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.api.render.WorldRenderer;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;

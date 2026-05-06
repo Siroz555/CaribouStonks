@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.platform.mixin;
 
-import fr.siroz.cariboustonks.rendering.CaribouRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -21,16 +21,11 @@ public abstract class LevelRendererMixin {
 
 	@Inject(method = "extractLevel", at = @At("RETURN"))
 	private void cariboustonks$afterExtractLevel(DeltaTracker deltaTracker, Camera camera, float deltaPartialTick, CallbackInfo ci) {
-		CaribouRenderer.startExtraction(
-				this.levelRenderState,
-				this.levelRenderState.cameraRenderState.cullFrustum
-		);
+		WorldRenderer.extract(this.levelRenderState, this.levelRenderState.cameraRenderState.cullFrustum);
 	}
 
 	@Inject(method = "lambda$addMainPass$0", at = @At("RETURN"))
 	private void cariboustonks$drawEndMainRender(CallbackInfo ci) {
-		CaribouRenderer.executeDraws(
-				this.levelRenderState.cameraRenderState
-		);
+		WorldRenderer.executeDraws(this.levelRenderState.cameraRenderState);
 	}
 }

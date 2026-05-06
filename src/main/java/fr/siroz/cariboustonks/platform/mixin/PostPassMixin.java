@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.platform.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReceiver;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderPass;
-import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
+import fr.siroz.cariboustonks.platform.rendering.gui.GuiRenderer;
 import net.minecraft.client.renderer.PostPass;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.NonNull;

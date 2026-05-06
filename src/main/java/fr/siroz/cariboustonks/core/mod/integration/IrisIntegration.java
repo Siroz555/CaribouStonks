@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.core.mod.integration;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.rendering.CaribouRenderPipelines;
+import fr.siroz.cariboustonks.platform.rendering.CaribouRenderPipelines;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;

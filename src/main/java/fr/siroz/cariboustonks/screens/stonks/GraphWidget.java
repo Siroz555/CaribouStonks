@@ -2,8 +2,8 @@ package fr.siroz.cariboustonks.screens.stonks;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.data.generic.ItemPrice;
-import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
-import fr.siroz.cariboustonks.rendering.gui.element.Point;
+import fr.siroz.cariboustonks.platform.rendering.gui.GuiRenderer;
+import fr.siroz.cariboustonks.platform.rendering.gui.element.Point;
 import fr.siroz.cariboustonks.util.ColorUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;

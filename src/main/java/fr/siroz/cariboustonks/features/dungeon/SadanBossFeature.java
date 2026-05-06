@@ -10,7 +10,7 @@ import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
-import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.api.render.WorldRenderer;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.HashSet;
 import java.util.Iterator;

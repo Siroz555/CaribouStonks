@@ -11,7 +11,7 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.RenderEvents;
-import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.api.render.WorldRenderer;
 import fr.siroz.cariboustonks.screens.waypoints.WaypointScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;

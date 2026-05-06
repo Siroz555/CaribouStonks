@@ -7,6 +7,9 @@ import fr.siroz.cariboustonks.platform.api.context.WorldContext;
 import fr.siroz.cariboustonks.platform.impl.context.VanillaClientContext;
 import fr.siroz.cariboustonks.platform.impl.context.VanillaPlayerContext;
 import fr.siroz.cariboustonks.platform.impl.context.VanillaWorldContext;
+import fr.siroz.cariboustonks.platform.rendering.CaribouRenderPipelines;
+import fr.siroz.cariboustonks.platform.rendering.gui.GuiRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -36,6 +39,10 @@ public final class MinecraftService {
 		this.clientContext = clientContext;
 		this.playerContext = playerContext;
 		this.worldContext = worldContext;
+		// Bootstrap rendering
+		WorldRenderer.bootstrap();
+		GuiRenderer.bootstrap();
+		CaribouRenderPipelines.bootstrap();
 	}
 
 	/**

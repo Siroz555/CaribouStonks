@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.system.System;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.RenderEvents;
-import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.api.render.WorldRenderer;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;

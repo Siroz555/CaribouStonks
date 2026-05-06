@@ -12,7 +12,7 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
-import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.api.render.WorldRenderer;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.core.particles.ParticleTypes;

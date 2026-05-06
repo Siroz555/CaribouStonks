@@ -13,7 +13,7 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.InteractionEvents;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
-import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.api.render.WorldRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;

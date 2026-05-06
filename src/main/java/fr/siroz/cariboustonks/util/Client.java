@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.platform.mixin.accessors.PlayerTabOverlayAccessor;
-import fr.siroz.cariboustonks.rendering.gui.element.StonksToast;
+import fr.siroz.cariboustonks.platform.rendering.gui.element.StonksToast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
-import fr.siroz.cariboustonks.rendering.gui.GuiRenderer;
+import fr.siroz.cariboustonks.platform.rendering.gui.GuiRenderer;
 import it.unimi.dsi.fastutil.Pair;
 import java.awt.Color;
 import java.util.List;

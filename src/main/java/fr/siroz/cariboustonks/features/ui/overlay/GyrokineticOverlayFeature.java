@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.RenderEvents;
-import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.api.render.WorldRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;

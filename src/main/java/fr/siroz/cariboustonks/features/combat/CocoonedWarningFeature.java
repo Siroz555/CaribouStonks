@@ -16,7 +16,7 @@ import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
 import fr.siroz.cariboustonks.features.slayer.SlayerCocoonedWarningFeature;
-import fr.siroz.cariboustonks.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.platform.api.render.WorldRenderer;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
