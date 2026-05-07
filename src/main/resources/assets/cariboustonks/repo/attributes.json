@@ -804,10 +804,10 @@
     "skyBlockApiId": "SHARD_TOUCAN"
   },
   {
-    "name": "Matriarch Cubs",
-    "shardName": "Hellwisp",
+    "name": "Attack Speed",
+    "shardName": "Inferno Demonlord",
     "id": "E29",
-    "skyBlockApiId": "SHARD_HELLWISP"
+    "skyBlockApiId": "SHARD_BURNINGSOUL"
   },
   {
     "name": "Echo of Ruler",
@@ -858,7 +858,7 @@
     "skyBlockApiId": "SHARD_DRAGONFLY"
   },
   {
-    "name": "Big Game Hunter",
+    "name": "Mythological Tracker",
     "shardName": "Sphinx",
     "id": "E39",
     "skyBlockApiId": "SHARD_SPHINX"
@@ -924,7 +924,7 @@
     "skyBlockApiId": "SHARD_TORTOISE"
   },
   {
-    "name": "Paramount Fortitude",
+    "name": "Unlimited Fortitude",
     "shardName": "End Stone Protector",
     "id": "L9",
     "skyBlockApiId": "SHARD_ENDSTONE_PROTECTOR"
@@ -960,7 +960,7 @@
     "skyBlockApiId": "SHARD_KRAKEN"
   },
   {
-    "name": "Maximal Torment",
+    "name": "Unlimited Torment",
     "shardName": "Taurus",
     "id": "L17",
     "skyBlockApiId": "SHARD_TAURUS"
@@ -1002,10 +1002,10 @@
     "skyBlockApiId": "SHARD_LORD_JAWBUS"
   },
   {
-    "name": "Attack Speed",
-    "shardName": "Burningsoul",
+    "name": "Matriarch Cubs",
+    "shardName": "Hellwisp",
     "id": "L27",
-    "skyBlockApiId": "SHARD_BURNINGSOUL"
+    "skyBlockApiId": "SHARD_HELLWISP"
   },
   {
     "name": "Magic Find",
