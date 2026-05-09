@@ -15,7 +15,6 @@ import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import java.awt.Color;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
 @SuppressWarnings("checkstyle:linelength")
