@@ -12,12 +12,11 @@ import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.features.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.features.stonks.tooltips.auction.AuctionTooltipPriceType;
 import fr.siroz.cariboustonks.features.stonks.tooltips.bazaar.BazaarTooltipPriceType;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.CaribouStonksMenuScreen;
 import fr.siroz.cariboustonks.screens.HudConfigScreen;
 import fr.siroz.cariboustonks.screens.keyshortcut.KeyShortcutScreen;
-import fr.siroz.cariboustonks.util.Client;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
 @SuppressWarnings("checkstyle:linelength")
@@ -35,12 +34,12 @@ public class GeneralCategory extends AbstractCategory {
 				.option(ButtonOption.createBuilder()
 						.name(Component.literal("CaribouStonks Menu"))
 						.text(Component.literal("Open"))
-						.action((_, _) -> Minecraft.getInstance().setScreen(new CaribouStonksMenuScreen()))
+						.action((_, _) -> this.openScreen(new CaribouStonksMenuScreen()))
 						.build())
 				.option(ButtonOption.createBuilder()
 						.name(Component.literal("Change HUD positions"))
 						.text(Component.literal("Open"))
-						.action((screen, _) -> Minecraft.getInstance().setScreen(HudConfigScreen.create(screen)))
+						.action((screen, _) -> this.openScreen(HudConfigScreen.create(screen)))
 						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Stonks").withStyle(ChatFormatting.BOLD))
@@ -60,7 +59,7 @@ public class GeneralCategory extends AbstractCategory {
 										newValue -> {
 											current.general.stonks.bazaarTooltipPrice = newValue;
 											if (newValue) {
-												Client.sendMessageWithPrefix(Component.literal("Bazaar Prices Enabled.").withStyle(ChatFormatting.GREEN)
+												PlayerContext.sendMessageWithPrefix(Component.literal("Bazaar Prices Enabled.").withStyle(ChatFormatting.GREEN)
 														.append(Component.literal(" Prices will be available in the next 5 minutes.").withStyle(ChatFormatting.YELLOW, ChatFormatting.ITALIC)));
 											}
 										})
@@ -124,7 +123,7 @@ public class GeneralCategory extends AbstractCategory {
 										newValue -> {
 											current.general.stonks.auctionTooltipPrice = newValue;
 											if (newValue) {
-												Client.sendMessageWithPrefix(Component.literal("Auction Prices Enabled.").withStyle(ChatFormatting.GREEN)
+												PlayerContext.sendMessageWithPrefix(Component.literal("Auction Prices Enabled.").withStyle(ChatFormatting.GREEN)
 														.append(Component.literal(" Prices will be available in the next 5 minutes.").withStyle(ChatFormatting.YELLOW, ChatFormatting.ITALIC)));
 											}
 										})
@@ -351,7 +350,7 @@ public class GeneralCategory extends AbstractCategory {
 						.option(ButtonOption.createBuilder()
 								.name(Component.literal("KeyShortcut Menu"))
 								.text(Component.literal("Open"))
-								.action((screen, _) -> Minecraft.getInstance().setScreen(KeyShortcutScreen.create(screen)))
+								.action((screen, _) -> this.openScreen(KeyShortcutScreen.create(screen)))
 								.build())
 						.option(Option.<Integer>createBuilder()
 								.name(Component.literal("KeyShortcut Cooldown"))

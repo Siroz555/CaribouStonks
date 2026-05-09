@@ -7,7 +7,7 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.awt.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -28,7 +28,7 @@ public class MiscCategory extends AbstractCategory {
 						.name(Component.literal("Highlighter Mob"))
 						.text(Component.literal("/highlighter <mob>"))
 						.action((screen, _) -> {
-							Client.sendMessageWithPrefix(Component.literal("Use /highlighter <mob>").withStyle(ChatFormatting.GREEN));
+							PlayerContext.sendMessageWithPrefix(Component.literal("Use /highlighter <mob>").withStyle(ChatFormatting.GREEN));
 							screen.onClose();
 						})
 						.build())
@@ -36,7 +36,7 @@ public class MiscCategory extends AbstractCategory {
 						.name(Component.literal("Bestiary Highlight"))
 						.text(Component.literal("/bestiaryHighlight add <name>"))
 						.action((screen, _) -> {
-							Client.sendMessageWithPrefix(Component.literal("Use /bestiaryHighlight <add|clear> <name>").withStyle(ChatFormatting.GREEN));
+							PlayerContext.sendMessageWithPrefix(Component.literal("Use /bestiaryHighlight <add|clear> <name>").withStyle(ChatFormatting.GREEN));
 							screen.onClose();
 						})
 						.build())

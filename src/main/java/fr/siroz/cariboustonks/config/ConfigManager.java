@@ -12,7 +12,7 @@ import fr.siroz.cariboustonks.config.categories.SlayerCategory;
 import fr.siroz.cariboustonks.config.categories.UIAndVisualsCategory;
 import fr.siroz.cariboustonks.config.categories.VanillaCategory;
 import fr.siroz.cariboustonks.core.service.json.adapters.CodecTypeAdapter;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.CodecUtils;
 import java.awt.Color;
 import java.io.IOException;
@@ -100,7 +100,7 @@ public final class ConfigManager {
 			}).generateScreen(parent);
 		} catch (Throwable throwable) {
 			CaribouStonks.LOGGER.error("[ConfigManager] Unable to generate CaribouStonks Screen for YACL Screen.", throwable);
-			Client.sendErrorMessage("Unable to open the Configuration Menu! This may be due to a Snapshot or Pre-Release. If this is not the case, please report the issue!", true);
+			PlayerContext.sendErrorMessage("Unable to open the Configuration Menu! This may be due to a Snapshot or Pre-Release. If this is not the case, please report the issue!", true);
 			return null;
 		}
 	}

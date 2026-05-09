@@ -14,7 +14,7 @@ import dev.isxander.yacl3.api.controller.LongSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarPriceType;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.awt.Color;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.ChatFormatting;
@@ -330,7 +330,7 @@ public class SkillsCategory extends AbstractCategory {
                                 .description(OptionDescription.of(
                                         Component.literal("Allows you to block the movements of the mouse during farming."),
                                         Component.literal(SPACE + "Use /lockMouse or go to KeyBinds Options.")))
-                                .action((_, _) -> Client.sendMessageWithPrefix(Component.literal("Use /lockMouse or go to KeyBinds Options.")))
+                                .action((_, _) -> PlayerContext.sendMessageWithPrefix(Component.literal("Use /lockMouse or go to KeyBinds Options.")))
                                 .build())
                         .option(this::shortcutToKeybindsOptions)
                         .option(Option.<Boolean>createBuilder()

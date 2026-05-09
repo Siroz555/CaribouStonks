@@ -7,6 +7,7 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -31,13 +32,13 @@ abstract class AbstractCategory {
     public abstract ConfigCategory create();
 
 	protected void openScreen(@Nullable Screen screen) {
-		Minecraft.getInstance().setScreen(screen);
+		ClientContext.setScreen(screen);
 	}
 
 	public ButtonOption shortcutToKeybindsOptions() {
 		return ButtonOption.createBuilder()
 				.name(Component.literal("Edit keybind"))
-				.action((screen, _) -> Minecraft.getInstance()
+				.action((screen, _) -> ClientContext
 						.setScreen(new KeyBindsScreen(screen, Minecraft.getInstance().options)))
 				.text(Component.literal("Open the Keybinds Options"))
 				.build();

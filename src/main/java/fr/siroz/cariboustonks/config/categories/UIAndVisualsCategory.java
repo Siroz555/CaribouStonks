@@ -9,9 +9,9 @@ import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.HudConfigScreen;
 import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import java.awt.Color;
 import net.minecraft.ChatFormatting;
@@ -226,7 +226,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 						.option(ButtonOption.createBuilder()
 								.name(Component.literal("Configure each tracked mob"))
 								.text(Component.literal("Open"))
-								.action((screen, _) -> Minecraft.getInstance().setScreen(MobTrackingScreen.create(screen)))
+								.action((screen, _) -> this.openScreen(MobTrackingScreen.create(screen)))
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
@@ -245,8 +245,8 @@ public class UIAndVisualsCategory extends AbstractCategory {
 										newValue -> {
 											current.uiAndVisuals.tabListWidget.hud.enabled = newValue;
 											if (newValue) {
-												Client.sendMessageWithPrefix(Component.literal("[Widgets Extractor] Currently, the HUD display is a single view; if multiple widgets are enabled, they will all be displayed one after another.").withStyle(ChatFormatting.RED));
-												Client.sendMessageWithPrefix(Component.literal("[Widgets Extractor] You must enable or disable widgets on each desired Island via /widgets").withStyle(ChatFormatting.GOLD));
+												PlayerContext.sendMessageWithPrefix(Component.literal("[Widgets Extractor] Currently, the HUD display is a single view; if multiple widgets are enabled, they will all be displayed one after another.").withStyle(ChatFormatting.RED));
+												PlayerContext.sendMessageWithPrefix(Component.literal("[Widgets Extractor] You must enable or disable widgets on each desired Island via /widgets").withStyle(ChatFormatting.GOLD));
 											}
 										})
 								.controller(this::createBooleanController)
@@ -545,7 +545,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 						.option(ButtonOption.createBuilder()
 								.name(Component.literal("Changing HUD positions"))
 								.text(Component.literal("Open"))
-								.action((screen, _) -> Minecraft.getInstance().setScreen(HudConfigScreen.create(screen)))
+								.action((screen, _) -> this.openScreen(HudConfigScreen.create(screen)))
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Ping"))
