@@ -16,7 +16,7 @@ import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerTier;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerType;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.time.Duration;
 import java.time.Instant;
@@ -88,14 +88,14 @@ public class SlayerStatsFeature extends Feature {
 	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_SPAWN_EVENT")
 	private void onBossSpawn(@NonNull SlayerType type, @NonNull SlayerTier tier) {
 		if (this.config().slayer.bossSpawnAlert) {
-			Client.showTitle(Component.literal("Boss spawned!").withStyle(ChatFormatting.DARK_RED), 1, 15, 1);
+			PlayerContext.showTitle(Component.literal("Boss spawned!").withStyle(ChatFormatting.DARK_RED), 1, 15, 1);
 		}
 	}
 
 	@EventHandler(event = "SkyBlockEvents.SLAYER_MINIBOSS_SPAWN_EVENT")
 	private void onMinibossSpawn(@NonNull SlayerType type, @NonNull SlayerTier tier) {
 		if (this.config().slayer.minibossSpawnAlert) {
-			Client.showTitle(Component.literal("Miniboss spawned!").withStyle(ChatFormatting.RED), 1, 15, 1);
+			PlayerContext.showTitle(Component.literal("Miniboss spawned!").withStyle(ChatFormatting.RED), 1, 15, 1);
 		}
 	}
 
@@ -197,7 +197,7 @@ public class SlayerStatsFeature extends Feature {
 				.append(Component.literal(" (Total: ").withStyle(ChatFormatting.GRAY))
 				.append(Component.literal(currentRun.cycleDuration() != null ? simpleFormatMillis(currentRun.cycleDuration().toMillis()) : "N/A").withStyle(ChatFormatting.YELLOW))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
-		Client.sendMessage(message);
+		PlayerContext.sendMessage(message);
 	}
 
 	private void showStats() {
@@ -211,7 +211,7 @@ public class SlayerStatsFeature extends Feature {
 				.append(Component.literal(stats.bossPerHour).withStyle(ChatFormatting.YELLOW))
 				.append(Component.literal(" XP/h: ").withStyle(ChatFormatting.AQUA))
 				.append(Component.literal(stats.xpPerHour).withStyle(ChatFormatting.YELLOW));
-		Client.sendMessage(message);
+		PlayerContext.sendMessage(message);
 	}
 
 	private void updateStats() {

@@ -16,7 +16,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
@@ -248,10 +248,10 @@ public class TrackingShardsFeature extends Feature {
 		if (infoConfigNotified) return;
 		infoConfigNotified = true;
 
-		Client.sendMessage(Component.empty());
-		Client.sendMessageWithPrefix(Component.literal("⚔ Shards Tracker").withStyle(ChatFormatting.GOLD)
+		PlayerContext.sendMessage(Component.empty());
+		PlayerContext.sendMessageWithPrefix(Component.literal("⚔ Shards Tracker").withStyle(ChatFormatting.GOLD)
 				.append(Component.literal(" is currently running.").withStyle(ChatFormatting.YELLOW)));
-		Client.sendMessage(Component.literal(" Disable this in Skills > Hunting > Shards Tracker").withStyle(ChatFormatting.DARK_GRAY));
-		Client.sendMessage(Component.empty());
+		PlayerContext.sendMessage(Component.literal(" Disable this in Skills > Hunting > Shards Tracker").withStyle(ChatFormatting.DARK_GRAY));
+		PlayerContext.sendMessage(Component.empty());
 	}
 }

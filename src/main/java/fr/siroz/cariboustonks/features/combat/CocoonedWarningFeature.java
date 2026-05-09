@@ -16,8 +16,8 @@ import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
 import fr.siroz.cariboustonks.features.slayer.SlayerCocoonedWarningFeature;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.Ticks;
@@ -190,14 +190,14 @@ public class CocoonedWarningFeature extends Feature {
 
 	private void onMobCocooned(BlockPos pos) {
 		if (!isSlayerBossCocooned()) { // Avoir le system de Cocoon sans les alerts si le Slayer Boss est cocooned.
-			Client.sendMessageWithPrefix(Component.literal(configMessage.get()));
+			PlayerContext.sendMessageWithPrefix(Component.literal(configMessage.get()));
 
 			if (this.config().combat.cocoonedMob.cocoonedWarningSound) {
-				Client.playSound(SoundEvents.ELDER_GUARDIAN_CURSE, 1f, 1f);
+				PlayerContext.playSound(SoundEvents.ELDER_GUARDIAN_CURSE, 1f, 1f);
 			}
 
 			if (this.config().combat.cocoonedMob.cocoonedWarningTitle) {
-				Client.showTitle(Component.literal(configMessage.get()), 0, 27, 0);
+				PlayerContext.showTitle(Component.literal(configMessage.get()), 0, 27, 0);
 			}
 		}
 
@@ -226,13 +226,13 @@ public class CocoonedWarningFeature extends Feature {
 	}
 
 	private boolean matchesCocoonCriteria(@NonNull ArmorStand as) {
-		if (CLIENT.player == null) return false;
+		if (MINECRAFT.player == null) return false;
 		if (as.isCustomNameVisible() || !as.hasItemInSlot(EquipmentSlot.HEAD)) return false;
 		// Récupère la texture si présente
 		String headTexture = ItemUtils.getHeadTexture(as.getItemBySlot(EquipmentSlot.HEAD));
 		if (headTexture.isBlank()) return false;
 		// Check de la distance minimale
-		if (CLIENT.player.position().distanceToSqr(as.position()) > MAX_PLAYER_COCOON_DISTANCE_SQ) return false;
+		if (MINECRAFT.player.position().distanceToSqr(as.position()) > MAX_PLAYER_COCOON_DISTANCE_SQ) return false;
 		// Check de la texture
 		return headTexture.equals(HeadTextures.COCOON);
 	}

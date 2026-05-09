@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -44,11 +44,11 @@ public class BobberTimerFeature extends Feature {
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
 	private void onArmorStandUpdate(@NonNull ArmorStand armorStand, boolean equipment) {
 		if (equipment || !armorStand.hasCustomName()) return;
-		if (CLIENT.player == null || CLIENT.player.fishing == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.player.fishing == null) return;
 		if (bobberTimerArmorStand != null) return;
 		if (!isEnabled()) return;
 
-		double distance = armorStand.position().distanceTo(CLIENT.player.fishing.position());
+		double distance = armorStand.position().distanceTo(MINECRAFT.player.fishing.position());
 		if (distance > MIN_BOBBER_TIMER_DISTANCE) return;
 
 		Matcher timerMatcher = TIMER_PATTERN.matcher(armorStand.getName().getString());
@@ -66,7 +66,7 @@ public class BobberTimerFeature extends Feature {
 			return;
 		}
 
-		if (CLIENT.player == null || CLIENT.player.fishing == null || bobberTimerArmorStand == null) {
+		if (MINECRAFT.player == null || MINECRAFT.player.fishing == null || bobberTimerArmorStand == null) {
 			return;
 		}
 
@@ -74,7 +74,7 @@ public class BobberTimerFeature extends Feature {
 		if (isEnabled() && bobberTimerText != null) {
 			// Priorité pour RareSeaCreatureFeature
 			if (rareSeaCreatureFeature == null || !rareSeaCreatureFeature.hasFoundCreature()) {
-				Client.showSubtitle(bobberTimerText, 0, 25, 1);
+				PlayerContext.showSubtitle(bobberTimerText, 0, 25, 1);
 			}
 		}
 	}

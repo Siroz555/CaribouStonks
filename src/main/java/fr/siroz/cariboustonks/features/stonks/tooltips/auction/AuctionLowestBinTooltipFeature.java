@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.generic.GenericDataSource;
 import fr.siroz.cariboustonks.features.stonks.tooltips.TooltipPriceDisplayType;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -54,7 +54,7 @@ public class AuctionLowestBinTooltipFeature extends Feature {
 
 		int count = item.getCount();
 		double price = lowestBin.get();
-		if (Client.hasShiftDown() && count > 1) price *= count;
+		if (ClientContext.hasShiftDown() && count > 1) price *= count;
 
 		TooltipPriceDisplayType displayType = this.config().general.stonks.auctionTooltipPriceDisplayType;
 		switch (displayType) {
@@ -81,7 +81,7 @@ public class AuctionLowestBinTooltipFeature extends Feature {
 			}
 		}
 
-		if (!Client.hasShiftDown() && count > 1) {
+		if (!ClientContext.hasShiftDown() && count > 1) {
 			lines.add(Component.literal("[Press SHIFT for x" + count + "]").withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}

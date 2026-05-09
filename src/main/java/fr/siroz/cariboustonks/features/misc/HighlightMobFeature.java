@@ -12,7 +12,7 @@ import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -87,7 +87,7 @@ public class HighlightMobFeature extends Feature {
 	@Override
 	protected void onClientJoinServer() {
 		if (currentEntityTypeGlow != null) {
-			Client.sendMessageWithPrefix(Component.literal("Glowing entities are no longer displayed due to a server change.").withStyle(ChatFormatting.RED));
+			PlayerContext.sendMessageWithPrefix(Component.literal("Glowing entities are no longer displayed due to a server change.").withStyle(ChatFormatting.RED));
 		}
 
 		currentEntityTypeGlow = null;

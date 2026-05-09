@@ -98,7 +98,7 @@ public class ItemValueViewerFeature extends Feature {
 
 		int y = START_Y;
 		for (Component text : lines) {
-			guiGraphics.text(CLIENT.font, text, PADDING_LEFT, y, Colors.WHITE.asInt());
+			guiGraphics.text(MINECRAFT.font, text, PADDING_LEFT, y, Colors.WHITE.asInt());
 			if (text.getString().isBlank()) {
 				y += (LINE_HEIGHT / 2);
 			} else {

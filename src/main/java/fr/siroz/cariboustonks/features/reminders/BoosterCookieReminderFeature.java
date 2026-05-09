@@ -7,8 +7,9 @@ import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import java.time.Duration;
 import java.time.Instant;
@@ -48,7 +49,7 @@ public final class BoosterCookieReminderFeature extends Feature {
 	}
 
 	private void updateBoosterCookieStatus() {
-		if (CLIENT.player == null || CLIENT.level == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
 		if (!isEnabled()) return;
 
 		// --- TabList ---
@@ -86,7 +87,7 @@ public final class BoosterCookieReminderFeature extends Feature {
 		// --- TabList Footer ---
 
 		if (!notified) {
-			String footer = Client.getTabListFooter();
+			String footer = ClientContext.getTabListFooter();
 			if (footer == null || !footer.contains("Cookie Buff")) return;
 
 			if (footer.contains("Not active! Obtain booster cookies from the community")) {
@@ -107,10 +108,10 @@ public final class BoosterCookieReminderFeature extends Feature {
 				.append(Component.literal("\n"))
 				.append(MESSAGE);
 
-		Client.sendMessageWithPrefix(message);
-		Client.showNotification(notification, ICON.create());
+		PlayerContext.sendMessageWithPrefix(message);
+		PlayerContext.showNotification(notification, ICON.create());
 		if (this.config().general.reminders.playSound) {
-			Client.playSound(SoundEvents.BLAZE_DEATH, 1f, 0.75f);
+			PlayerContext.playSound(SoundEvents.BLAZE_DEATH, 1f, 0.75f);
 		}
 	}
 }

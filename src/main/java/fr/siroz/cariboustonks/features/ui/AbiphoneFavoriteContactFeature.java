@@ -10,7 +10,8 @@ import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 		if (!isEnabled() || screen == null) return;
 		if (isMatcherBlocking(screen)) return;
 
-		if (Client.hasShiftDown() && COOLDOWN.test()) {
+		if (ClientContext.hasShiftDown() && COOLDOWN.test()) {
 			ItemStack itemStack = slot.getItem();
 			if (isContact(itemStack)) {
 				String name = StonksUtils.stripColor(itemStack.getHoverName().getString());
@@ -117,16 +118,16 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 		updated = true;
 		if (ConfigManager.getConfig().uiAndVisuals.favoriteAbiphoneContacts.contains(contactName)) {
 			ConfigManager.getConfig().uiAndVisuals.favoriteAbiphoneContacts.remove(contactName);
-			Client.sendMessageWithPrefix(Component.literal("Removed ").withStyle(ChatFormatting.RED)
+			PlayerContext.sendMessageWithPrefix(Component.literal("Removed ").withStyle(ChatFormatting.RED)
 					.append(rawContactName)
 					.append(" from favourite contacts.").withStyle(ChatFormatting.RED));
-			Client.playSound(SoundEvents.VILLAGER_NO, 1f, 1f);
+			PlayerContext.playSound(SoundEvents.VILLAGER_NO, 1f, 1f);
 		} else {
 			ConfigManager.getConfig().uiAndVisuals.favoriteAbiphoneContacts.add(contactName);
-			Client.sendMessageWithPrefix(Component.literal("Added ").withStyle(ChatFormatting.GREEN)
+			PlayerContext.sendMessageWithPrefix(Component.literal("Added ").withStyle(ChatFormatting.GREEN)
 					.append(rawContactName)
 					.append(" to favourite contacts.").withStyle(ChatFormatting.GREEN));
-			Client.playSound(SoundEvents.VILLAGER_YES, 1f, 1f);
+			PlayerContext.playSound(SoundEvents.VILLAGER_YES, 1f, 1f);
 		}
 	}
 }

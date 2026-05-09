@@ -27,13 +27,13 @@ public class GyrokineticOverlayFeature extends Feature {
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	private void render(WorldRenderer renderer) {
-		if (CLIENT.player == null || CLIENT.level == null || CLIENT.getCameraEntity() == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null || MINECRAFT.getCameraEntity() == null) return;
 		if (!isEnabled()) return;
 
-		String skyBlockId = SkyBlockAPI.getSkyBlockItemId(CLIENT.player.getMainHandItem());
+		String skyBlockId = SkyBlockAPI.getSkyBlockItemId(MINECRAFT.player.getMainHandItem());
 		if (!GYROKINETIC_ITEM_ID.equals(skyBlockId)) return;
 
-		HitResult hitResult = CLIENT.getCameraEntity().pick(REACH, 1.0F, false);
+		HitResult hitResult = MINECRAFT.getCameraEntity().pick(REACH, 1.0F, false);
 		if (hitResult.getType() == HitResult.Type.MISS) return;
 
 		Vec3 position = hitResult.getLocation().subtract(0, 0.1D, 0);

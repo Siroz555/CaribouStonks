@@ -10,8 +10,8 @@ import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.time.Instant;
@@ -107,11 +107,11 @@ public class GreenhouseGrowthStageFeature extends Feature {
 				.append(Component.literal("\n"))
 				.append(Component.literal("Next Growth Stage is reached!").withStyle(ChatFormatting.GREEN));
 
-		Client.sendMessageWithPrefix(message);
-		Client.showNotification(notification, ICON.create());
+		PlayerContext.sendMessageWithPrefix(message);
+		PlayerContext.showNotification(notification, ICON.create());
 
 		if (this.config().general.reminders.playSound) {
-			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+			PlayerContext.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}
 	}
 }

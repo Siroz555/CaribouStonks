@@ -10,8 +10,8 @@ import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -135,14 +135,14 @@ public final class ChocolateLimitReminderFeature extends Feature {
 	private void onReminderExpire(TimedObjectModel timedObject) {
 		Component text = Component.literal("The chocolate limit is reached!").withStyle(ChatFormatting.RESET, ChatFormatting.RED);
 
-		Client.sendMessageWithPrefix(Component.literal("[Chocolate Factory] ").withStyle(ChatFormatting.GOLD)
+		PlayerContext.sendMessageWithPrefix(Component.literal("[Chocolate Factory] ").withStyle(ChatFormatting.GOLD)
 				.append(text));
 
-		Client.showNotification(Component.literal("Chocolate Factory\n").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
+		PlayerContext.showNotification(Component.literal("Chocolate Factory\n").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD)
 				.append(text), ICON.create());
 
 		if (this.config().general.reminders.playSound) {
-			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+			PlayerContext.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}
 	}
 
@@ -156,7 +156,7 @@ public final class ChocolateLimitReminderFeature extends Feature {
 				.append(Component.literal("\n"))
 				.append(text);
 
-		Client.sendMessageWithPrefix(message);
-		Client.showNotification(notification, ICON.create());
+		PlayerContext.sendMessageWithPrefix(message);
+		PlayerContext.showNotification(notification, ICON.create());
 	}
 }

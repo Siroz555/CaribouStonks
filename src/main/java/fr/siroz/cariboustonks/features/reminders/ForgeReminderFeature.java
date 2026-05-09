@@ -9,8 +9,8 @@ import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.CodecUtils;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
@@ -78,10 +78,10 @@ public final class ForgeReminderFeature extends Feature {
 				.append(text)
 				.append(Component.literal(" was ended!").withStyle(ChatFormatting.GREEN));
 
-		Client.sendMessageWithPrefix(message);
-		Client.showNotification(notification, ICON.create());
+		PlayerContext.sendMessageWithPrefix(message);
+		PlayerContext.showNotification(notification, ICON.create());
 		if (this.config().general.reminders.playSound) {
-			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+			PlayerContext.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}
 	}
 

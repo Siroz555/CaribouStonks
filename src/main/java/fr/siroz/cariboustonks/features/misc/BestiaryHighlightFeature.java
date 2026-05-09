@@ -9,7 +9,7 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -46,7 +46,7 @@ public class BestiaryHighlightFeature extends Feature {
 					Iterator<String> nameIterator = entityNames.iterator();
 					while (nameIterator.hasNext()) {
 						String nextName = nameIterator.next();
-						Client.sendMessageWithPrefix(Component.literal("Glowing effect removed to " + nextName).withStyle(ChatFormatting.YELLOW));
+						PlayerContext.sendMessageWithPrefix(Component.literal("Glowing effect removed to " + nextName).withStyle(ChatFormatting.YELLOW));
 						nameIterator.remove();
 					}
 				}
@@ -56,10 +56,10 @@ public class BestiaryHighlightFeature extends Feature {
 				String custom = StringArgumentType.getString(ctx, "name");
 				if (custom != null && !custom.isBlank() && custom.length() >= 3) {
 					entityNames.add(custom);
-					Client.sendMessageWithPrefix(Component.literal(custom + " can now have the Glowing effect.").withStyle(ChatFormatting.GREEN));
-					Client.sendMessage(Component.literal(" | MIDDLE-CLICK on the target to disable!").withStyle(ChatFormatting.DARK_GRAY));
+					PlayerContext.sendMessageWithPrefix(Component.literal(custom + " can now have the Glowing effect.").withStyle(ChatFormatting.GREEN));
+					PlayerContext.sendMessage(Component.literal(" | MIDDLE-CLICK on the target to disable!").withStyle(ChatFormatting.DARK_GRAY));
 				} else {
-					Client.sendMessageWithPrefix(Component.literal("Unable to add this entity name. (null or already registered)").withStyle(ChatFormatting.RED));
+					PlayerContext.sendMessageWithPrefix(Component.literal("Unable to add this entity name. (null or already registered)").withStyle(ChatFormatting.RED));
 				}
 				return 1;
 			})));
@@ -79,7 +79,7 @@ public class BestiaryHighlightFeature extends Feature {
 		if (!isEnabled()) return;
 		if (!COOLDOWN.test()) return;
 
-		HitResult hitResult = CLIENT.hitResult;
+		HitResult hitResult = MINECRAFT.hitResult;
 		if (hitResult == null) return;
 		if (hitResult.getType() != HitResult.Type.ENTITY) return;
 		if (!(hitResult instanceof EntityHitResult entityHitResult)) return;
@@ -102,18 +102,18 @@ public class BestiaryHighlightFeature extends Feature {
 
 		String skyBlockNameChecker = skyBlockName.replace(" ", "");
 		if (blacklist.contains(skyBlockNameChecker)) {
-			Client.sendMessageWithPrefix(Component.literal(skyBlockName + " cannot have the Glowing effect because of its name.").withStyle(ChatFormatting.RED));
+			PlayerContext.sendMessageWithPrefix(Component.literal(skyBlockName + " cannot have the Glowing effect because of its name.").withStyle(ChatFormatting.RED));
 			return;
 		}
 
 		boolean hadGlowing = entityNames.remove(skyBlockName);
 		if (!hadGlowing) entityNames.add(skyBlockName);
 
-		Client.sendMessageWithPrefix(Component.empty().append(entityName).append(Component.literal(hadGlowing
+		PlayerContext.sendMessageWithPrefix(Component.empty().append(entityName).append(Component.literal(hadGlowing
 						? " no longer has the Glowing effect."
 						: " now has the Glowing effect.")
 				.withStyle(hadGlowing ? ChatFormatting.RED : ChatFormatting.GREEN))
 		);
-		Client.sendMessage(Component.literal(" | You can disable MIDDLE-CLICKING in Misc Category.").withStyle(ChatFormatting.DARK_GRAY));
+		PlayerContext.sendMessage(Component.literal(" | You can disable MIDDLE-CLICKING in Misc Category.").withStyle(ChatFormatting.DARK_GRAY));
 	}
 }

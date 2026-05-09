@@ -13,7 +13,7 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.text.DecimalFormat;
@@ -103,7 +103,7 @@ public class SecondLifeFeature extends Feature {
 		serverHasChanged = false;
 
 		if (secondLife.isUseConfig()) {
-			Client.showTitleAndSubtitle(Component.literal(secondLife.getName()).withStyle(secondLife.getColor()),
+			PlayerContext.showTitleAndSubtitle(Component.literal(secondLife.getName()).withStyle(secondLife.getColor()),
 					Component.literal("Used!").withStyle(ChatFormatting.RED),
 					0, 25, 0);
 		}
@@ -120,15 +120,15 @@ public class SecondLifeFeature extends Feature {
 		// Pas de notification si le serveur a changé
 		if (!serverHasChanged && secondLife.isBackConfigEnabled()) {
 			if (this.config().combat.secondLife.backMessage) {
-				Client.sendMessageWithPrefix(Component.literal(secondLife.getName() + " is back!").withStyle(ChatFormatting.GREEN));
+				PlayerContext.sendMessageWithPrefix(Component.literal(secondLife.getName() + " is back!").withStyle(ChatFormatting.GREEN));
 			}
 			if (this.config().combat.secondLife.backTitle) {
-				Client.showTitleAndSubtitle(Component.literal(secondLife.getName()).withStyle(secondLife.getColor()),
+				PlayerContext.showTitleAndSubtitle(Component.literal(secondLife.getName()).withStyle(secondLife.getColor()),
 						Component.literal("Ready!").withStyle(ChatFormatting.GREEN),
 						0, 25, 0);
 			}
 			if (this.config().combat.secondLife.backSound) {
-				Client.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1f, 1f);
+				PlayerContext.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1f, 1f);
 			}
 		}
 	}

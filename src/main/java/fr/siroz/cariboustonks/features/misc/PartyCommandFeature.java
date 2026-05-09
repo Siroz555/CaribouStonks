@@ -7,8 +7,8 @@ import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.NetworkSystem;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class PartyCommandFeature extends Feature {
 
 		String input = StonksUtils.stripColor(text.getString());
 		if (!input.startsWith("Party >")) return;
-		if (CLIENT.player == null || CLIENT.level == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
 
 		for (PartyCommand command : PartyCommand.values()) {
 			if (command.getConfig().test(this.config().misc.partyCommands)) {
@@ -71,34 +71,34 @@ public class PartyCommandFeature extends Feature {
 
 	private enum PartyCommand {
 		COORDS(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !coords"), cmd -> cmd.coords, _ -> {
-			Position position = Position.of(Client.getCurrentPosition());
-			Client.sendCommandToServer("/pc " + position.asChatCoordinates(), true);
+			Position position = Position.of(PlayerContext.position());
+			PlayerContext.sendCommandToServer("/pc " + position.asChatCoordinates(), true);
 		}),
 		WARP(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !warp"), cmd -> cmd.warp, _ -> {
-			Client.sendCommandToServer("/p warp", true); // -_-
+			PlayerContext.sendCommandToServer("/p warp", true); // -_-
 		}),
 		DICE(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !dice"), cmd -> cmd.diceGame, matcher -> {
 			int roll = (int) (1 + Math.floor(Math.random() * 6));
 			String extra = roll == 1 ? " Sheeh!" : roll == 6 ? " Waw!" : "";
 			String message = matcher.group(2) + " rolled a " + roll + "." + extra;
-			Client.sendCommandToServer("/pc " + message, true);
+			PlayerContext.sendCommandToServer("/pc " + message, true);
 		}),
 		EIGHT_BALL(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !8ball"), cmd -> cmd.magic8Ball, _ -> {
 			int r = new Random().nextInt(MAGIC_8BALL_ANSWERS.size());
 			String selected = MAGIC_8BALL_ANSWERS.get(r);
-			Client.sendCommandToServer("/pc " + selected, true);
+			PlayerContext.sendCommandToServer("/pc " + selected, true);
 		}),
 		CF(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !cf"), cmd -> cmd.coinFlip, _ -> {
 			if (new Random().nextBoolean()) {
-				Client.sendCommandToServer("/pc HEADS!", true);
+				PlayerContext.sendCommandToServer("/pc HEADS!", true);
 			} else {
-				Client.sendCommandToServer("/pc TAILS!", true);
+				PlayerContext.sendCommandToServer("/pc TAILS!", true);
 			}
 		}),
 		TPS(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !tps"), cmd -> cmd.tps, _ -> {
 			float tps = CaribouStonks.systems().getSystem(NetworkSystem.class).getTickRate();
 			String message = String.format("TPS: %.1f", tps);
-			Client.sendCommandToServer("/pc " + message, true);
+			PlayerContext.sendCommandToServer("/pc " + message, true);
 		}),
 		;
 

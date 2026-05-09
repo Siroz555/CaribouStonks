@@ -9,8 +9,9 @@ import fr.siroz.cariboustonks.core.service.json.JsonFileService;
 import fr.siroz.cariboustonks.core.service.json.JsonProcessingException;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.keyshortcut.KeyShortcutScreen;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -40,7 +41,7 @@ public class KeyShortcutFeature extends Feature {
 
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
 				.namespaced("keyShortcuts", ctx -> {
-					ctx.executes(Client.openScreen(() -> KeyShortcutScreen.create(null)));
+					ctx.executes(ClientContext.openScreen(() -> KeyShortcutScreen.create(null)));
 				})
 				.build());
 	}
@@ -101,12 +102,12 @@ public class KeyShortcutFeature extends Feature {
 				int mouseButton = -2000 - shortcut.keyCode();
 				pressed = GLFW.glfwGetMouseButton(client.getWindow().handle(), mouseButton) == GLFW.GLFW_PRESS;
 			} else {
-				pressed = Client.isKeyPressed(shortcut.keyCode());
+				pressed = ClientContext.isKeyPressed(shortcut.keyCode());
 			}
 
 			if (pressed) {
 				lastKeyPressed = System.currentTimeMillis();
-				Client.sendCommandToServer(shortcut.command(), true);
+				PlayerContext.sendCommandToServer(shortcut.command(), true);
 			}
 		}
 	}

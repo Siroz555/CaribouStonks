@@ -23,7 +23,7 @@ public abstract class Feature {
 	/**
 	 * Shared Minecraft client instance for all features.
 	 */
-	protected static final Minecraft CLIENT = Minecraft.getInstance();
+	protected static final Minecraft MINECRAFT = Minecraft.getInstance();
 
 	private final Map<Class<? extends Component>, Component> components = new HashMap<>();
 

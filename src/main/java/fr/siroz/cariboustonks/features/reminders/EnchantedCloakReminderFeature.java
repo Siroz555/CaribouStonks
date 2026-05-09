@@ -9,8 +9,8 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.CodecUtils;
 import java.time.Duration;
 import java.time.Instant;
@@ -76,10 +76,10 @@ public final class EnchantedCloakReminderFeature extends Feature {
 				.append(Component.literal("\n"))
 				.append(text);
 
-		Client.sendMessageWithPrefix(message);
-		Client.showNotification(notification, ICON.create());
+		PlayerContext.sendMessageWithPrefix(message);
+		PlayerContext.showNotification(notification, ICON.create());
 		if (this.config().general.reminders.playSound) {
-			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+			PlayerContext.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}
 	}
 

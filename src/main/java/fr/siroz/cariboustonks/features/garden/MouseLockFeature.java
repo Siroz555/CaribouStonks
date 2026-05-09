@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.core.module.input.KeyBind;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -44,7 +44,7 @@ public final class MouseLockFeature extends Feature {
 	private void onJoinWorld() {
 		if (locked) {
 			locked = false;
-			Client.sendMessageWithPrefix(
+			PlayerContext.sendMessageWithPrefix(
 					Component.literal("The mouse is no longer blocked due to a server change.").withStyle(ChatFormatting.RED));
 		}
 	}
@@ -57,6 +57,6 @@ public final class MouseLockFeature extends Feature {
 		Component message = locked ?
 				Component.literal("The Mouse is locked").withStyle(ChatFormatting.RED).append(extra) :
 				Component.literal("The Mouse is unlocked").withStyle(ChatFormatting.GREEN);
-		Client.sendMessageWithPrefix(message);
+		PlayerContext.sendMessageWithPrefix(message);
 	}
 }

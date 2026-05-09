@@ -68,7 +68,7 @@ public class DeployableFeature extends Feature {
 
 	@Override
 	protected void onSecondPassed() {
-		if (CLIENT.player == null || CLIENT.level == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
 		if (trackedDeployables.isEmpty()) return;
 		if (!isEnabled()) return;
 
@@ -76,7 +76,7 @@ public class DeployableFeature extends Feature {
 			ArmorStand armorStand = trackedDeployable.getArmorStand();
 			if (armorStand == null) continue;
 
-			Vec3 playerPos = CLIENT.player.position();
+			Vec3 playerPos = MINECRAFT.player.position();
 			double deployableRange = trackedDeployable.getDeployable().getBlockRange();
 			double deployableDistanceSQ = deployableRange * deployableRange;
 			trackedDeployable.setActive(!(armorStand.position().distanceToSqr(playerPos) > deployableDistanceSQ));
@@ -85,7 +85,7 @@ public class DeployableFeature extends Feature {
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
 	private void onArmorStandUpdate(@NonNull ArmorStand armorStand, boolean equipment) {
-		if (CLIENT.player == null || CLIENT.level == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
 		if (!isEnabled()) return;
 		if (isAlreadyTracked(armorStand)) return;
 
@@ -146,7 +146,7 @@ public class DeployableFeature extends Feature {
 		String customName = armorStand.getCustomName().getString();
 		if (customName.isBlank()) return;
 
-		if (customName.contains(CLIENT.getUser().getName())) {
+		if (customName.contains(MINECRAFT.getUser().getName())) {
 			List<Entity> entities = armorStand.level().getEntities(armorStand,
 					armorStand.getBoundingBox().inflate(0.1D, 1.5D, 0.1D),
 					target -> target instanceof ArmorStand && target.getCustomName() != null

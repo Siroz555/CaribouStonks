@@ -48,7 +48,7 @@ public class TooltipDecoratorFeature extends Feature {
             Font font,
             List<ClientTooltipComponent> components
 	) {
-		if (CLIENT.player == null || CLIENT.level == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
 		if (!isEnabled()) return;
 		if (itemStack == null || itemStack.isEmpty()) return;
 

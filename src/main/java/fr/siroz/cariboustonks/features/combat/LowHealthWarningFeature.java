@@ -65,7 +65,7 @@ public class LowHealthWarningFeature extends Feature {
 
 	@Override
 	protected void onClientTick() {
-		if (isEnabled() && CLIENT.player != null && CLIENT.level != null) {
+		if (isEnabled() && MINECRAFT.player != null && MINECRAFT.level != null) {
 			updateHealth(currentHealth.value(), currentHealth.max(), currentHealth.overflow());
 		}
 	}
@@ -109,9 +109,9 @@ public class LowHealthWarningFeature extends Feature {
 	}
 
 	private void updateHealth(int value, int max, int overflow) {
-		if (CLIENT.player != null) {
-			value = (int) (CLIENT.player.getHealth() * max / CLIENT.player.getMaxHealth());
-			overflow = (int) (CLIENT.player.getAbsorptionAmount() * max / CLIENT.player.getMaxHealth());
+		if (MINECRAFT.player != null) {
+			value = (int) (MINECRAFT.player.getHealth() * max / MINECRAFT.player.getMaxHealth());
+			overflow = (int) (MINECRAFT.player.getAbsorptionAmount() * max / MINECRAFT.player.getMaxHealth());
 		}
 
 		currentHealth = new Health(Math.min(value, max), max, Math.min(overflow, max));

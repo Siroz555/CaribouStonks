@@ -17,9 +17,11 @@ import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
+import fr.siroz.cariboustonks.util.MinecraftUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -73,7 +75,7 @@ public class MobTrackingFeature extends Feature {
 
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
 				.namespaced("mobTracking", ctx -> {
-					ctx.executes(Client.openScreen(() -> MobTrackingScreen.create(null)));
+					ctx.executes(ClientContext.openScreen(() -> MobTrackingScreen.create(null)));
 				})
 				.build());
 
@@ -118,14 +120,14 @@ public class MobTrackingFeature extends Feature {
 		trackedHighlight.clear();
 		notified.invalidateAll();
 		if (showingBossBar) {
-			Client.removeBossBar(bossEvent);
+			PlayerContext.removeBossBar(bossEvent);
 			showingBossBar = false;
 		}
 	}
 
 	@Override
 	protected void onClientTick() {
-		if (CLIENT.player == null || CLIENT.level == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
 		if (!isEnabled()) return;
 
 		if (slayerManager.isInQuest()) {
@@ -147,7 +149,7 @@ public class MobTrackingFeature extends Feature {
 			Component name = tracked.getFirst().armorStand().getCustomName();
 			if (name != null) {
 				bossEvent.setName(name);
-				Client.showBossBar(bossEvent);
+				PlayerContext.showBossBar(bossEvent);
 				showingBossBar = true;
 			}
 		}
@@ -155,7 +157,7 @@ public class MobTrackingFeature extends Feature {
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
 	private void onUpdateArmorStand(ArmorStand armorStand, boolean equipment) {
-		if (CLIENT.player == null || CLIENT.level == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
 		if (!armorStand.hasCustomName() || armorStand.getCustomName() == null) return;
 		if (equipment || !isEnabled()) return;
 		if (isAlreadyTracked(armorStand)) return;
@@ -190,7 +192,7 @@ public class MobTrackingFeature extends Feature {
 		if (!tracked.isEmpty()) {
 			boolean removed = tracked.removeIf(entity -> entity.armorStand().getId() == armorStand.getId());
 			if (removed) {
-				Client.removeBossBar(bossEvent);
+				PlayerContext.removeBossBar(bossEvent);
 			}
 		}
 	}
@@ -200,7 +202,7 @@ public class MobTrackingFeature extends Feature {
 		if (!isEnabled()) return;
 		if (entity instanceof ArmorStand) return;
 		// MobTracking Patch - Évite les joueurs avec un nom de mobs -_-
-		if (Client.isPlayer(entity)) return;
+		if (MinecraftUtils.isPlayer(entity)) return;
 
 		MobTrackingRegistry.MobTrackingEntry mobEntry = registry.findMob(
 				entity.getName().getString(),
@@ -256,13 +258,13 @@ public class MobTrackingFeature extends Feature {
 		if (notified.getIfPresent(entityId) == null && mobEntry.model().isNotifyOnSpawn()) {
 			notified.put(entityId, entityId);
 
-			Client.showTitleAndSubtitle(
+			PlayerContext.showTitleAndSubtitle(
 					mobEntry.displayName(),
 					Component.literal(this.config().uiAndVisuals.mobTracking.spawnMessage),
 					1, 25, 1
 			);
 			if (this.config().uiAndVisuals.mobTracking.playSoundWhenSpawn) {
-				Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+				PlayerContext.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 			}
 		}
 	}

@@ -5,6 +5,7 @@ import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.RenderEvents;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
@@ -40,11 +41,11 @@ public class EtherWarpOverlayFeature extends Feature {
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	private void render(WorldRenderer renderer) {
-		if (CLIENT.player == null || CLIENT.level == null) return;
-		if (!isEnabled() || !CLIENT.options.keyShift.isDown()) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
+		if (!isEnabled() || !MINECRAFT.options.keyShift.isDown()) return;
 
-		ItemStack heldItem = CLIENT.player.getMainHandItem();
-		if (heldItem.isEmpty()) return;
+		ItemStack heldItem = PlayerContext.getMainHandItem();
+		if (heldItem == null || heldItem.isEmpty()) return;
 
 		String skyBlockItemId = SkyBlockAPI.getSkyBlockItemId(heldItem);
 		CompoundTag customData = ItemUtils.getCustomData(heldItem);
@@ -57,20 +58,20 @@ public class EtherWarpOverlayFeature extends Feature {
 				: RANGE;
 
 		// Dans le cas ou le target du crosshair est valide
-		HitResult hitResult = CLIENT.hitResult;
+		HitResult hitResult = MINECRAFT.hitResult;
 		if (hitResult != null && hitResult.getType() == HitResult.Type.BLOCK
 				&& hitResult instanceof BlockHitResult blockHitResult
-				&& blockHitResult.getLocation().closerThan(CLIENT.player.position(), range)
+				&& blockHitResult.getLocation().closerThan(MINECRAFT.player.position(), range)
 		) {
 			renderOverlayAt(renderer, blockHitResult);
 			return;
 		}
 
 		// Sinon récupérer un HitResult depuis un rayCast
-		AttributeInstance blockInteractionRange = CLIENT.player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE);
+		AttributeInstance blockInteractionRange = MINECRAFT.player.getAttribute(Attributes.BLOCK_INTERACTION_RANGE);
 		if (blockInteractionRange != null && range > blockInteractionRange.getValue()) {
 
-			HitResult rayCastResult = CLIENT.player.pick(range, RenderUtils.getTickCounter().getGameTimeDeltaPartialTick(true), false);
+			HitResult rayCastResult = MINECRAFT.player.pick(range, RenderUtils.getTickCounter().getGameTimeDeltaPartialTick(true), false);
 			if (rayCastResult.getType() == HitResult.Type.BLOCK && rayCastResult instanceof BlockHitResult blockHitResult) {
 				renderOverlayAt(renderer, blockHitResult);
 			}
@@ -78,12 +79,12 @@ public class EtherWarpOverlayFeature extends Feature {
 	}
 
 	private void renderOverlayAt(WorldRenderer renderer, BlockHitResult blockHitResult) {
-		if (blockHitResult == null || CLIENT.level == null) return;
+		if (blockHitResult == null || MINECRAFT.level == null) return;
 
 		BlockPos pos = blockHitResult.getBlockPos();
-		BlockState targetState = CLIENT.level.getBlockState(pos);
-		BlockState targetAbove1State = CLIENT.level.getBlockState(pos.above());
-		BlockState targetAbove2State = CLIENT.level.getBlockState(pos.above(2));
+		BlockState targetState = MINECRAFT.level.getBlockState(pos);
+		BlockState targetAbove1State = MINECRAFT.level.getBlockState(pos.above());
+		BlockState targetAbove2State = MINECRAFT.level.getBlockState(pos.above(2));
 
 		if (!targetState.isAir() && targetAbove1State.isAir() && targetAbove2State.isAir()) {
 			// SIROZ-NOTE: config color

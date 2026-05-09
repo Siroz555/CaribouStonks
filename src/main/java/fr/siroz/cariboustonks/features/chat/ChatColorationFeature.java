@@ -51,7 +51,7 @@ public class ChatColorationFeature extends Feature {
 
 		// Parce que mon Mixin de ChatEvents est invoké trop tot ?
 		//client.inGameHud.getChatHud().addMessage(message);
-		((ChatListenerAccessor) CLIENT.getChatListener()).invokeAddToChatLog(newText, Instant.now());
-		CLIENT.getNarrator().saySystemQueued(newText);
+		((ChatListenerAccessor) MINECRAFT.getChatListener()).invokeAddToChatLog(newText, Instant.now());
+		MINECRAFT.getNarrator().saySystemQueued(newText);
 	}
 }

@@ -9,7 +9,7 @@ import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonManager;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -47,7 +47,7 @@ public class ThornBossFeature extends Feature {
 		if (spawnTicks > 0 && isEnabled()) {
 			String seconds = StonksUtils.DECIMAL_FORMAT.format(spawnTicks / 20f) + "s";
 			Component message = Component.literal(seconds).withStyle(spawnTicks <= 20 ? ChatFormatting.RED : ChatFormatting.YELLOW);
-			Client.showTitle(message, 0, 5, 0);
+			PlayerContext.showTitle(message, 0, 5, 0);
 		}
 	}
 

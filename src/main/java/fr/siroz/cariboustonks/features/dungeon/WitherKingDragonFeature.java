@@ -12,8 +12,8 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.Ticks;
 import java.util.ArrayList;
@@ -173,19 +173,19 @@ public class WitherKingDragonFeature extends Feature {
 		}
 
 		if (this.config().instance.theCatacombs.witherKing.dragPrioTitle) {
-			Client.showTitleAndSubtitle(
+			PlayerContext.showTitleAndSubtitle(
 					Component.literal(dragonName).withColor(color).withStyle(ChatFormatting.BOLD),
 					Component.literal("is Spawning!").withColor(color),
 					0, 30, 0
 			);
-			Client.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 5f, 1f);
+			PlayerContext.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 5f, 1f);
 		}
 
 		if (this.config().instance.theCatacombs.witherKing.dragPrioMessage) {
 			if (split) {
-				Client.sendMessageWithPrefix(Component.literal(dragonName + " is Spawning! (Split Prio)").withColor(color));
+				PlayerContext.sendMessageWithPrefix(Component.literal(dragonName + " is Spawning! (Split Prio)").withColor(color));
 			} else {
-				Client.sendMessageWithPrefix(Component.literal(dragonName + " is Spawning!").withColor(color));
+				PlayerContext.sendMessageWithPrefix(Component.literal(dragonName + " is Spawning!").withColor(color));
 			}
 		}
 	}

@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -76,20 +76,20 @@ public class RareSeaCreatureFeature extends Feature {
 				.append(seaCreature.getText())
 				.append(Component.literal(" Li]").withStyle(seaCreature.getColor(), ChatFormatting.OBFUSCATED));
 		Component doubleHookText = doubleHook ? Component.literal("Double Hook").withStyle(ChatFormatting.GREEN) : Component.empty();
-		Client.showTitleAndSubtitle(seaCreatureText, doubleHookText, 0, 40, 5);
+		PlayerContext.showTitleAndSubtitle(seaCreatureText, doubleHookText, 0, 40, 5);
 
 		if (this.config().fishing.rareSeaCreatureSound) {
 			if (doubleHook) {
-				Client.playSound(SoundEvents.WARDEN_SONIC_BOOM, 2.5f, 1f);
+				PlayerContext.playSound(SoundEvents.WARDEN_SONIC_BOOM, 2.5f, 1f);
 			} else {
-				Client.playSound(SoundEvents.ARMOR_EQUIP_NETHERITE.value(), 2.5f, 1f);
+				PlayerContext.playSound(SoundEvents.ARMOR_EQUIP_NETHERITE.value(), 2.5f, 1f);
 			}
 		}
 	}
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean hasFishingRod() {
-		ItemStack item = Client.getHeldItem();
+		ItemStack item = PlayerContext.getHeldItem();
 		return item != null && !item.isEmpty() && item.is(Items.FISHING_ROD);
 	}
 }

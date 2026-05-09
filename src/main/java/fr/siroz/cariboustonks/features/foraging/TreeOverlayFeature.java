@@ -5,7 +5,9 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
+import fr.siroz.cariboustonks.platform.context.WorldContext;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.network.chat.Component;
@@ -49,10 +51,10 @@ public class TreeOverlayFeature extends Feature {
 
 	@Override
 	protected void onSecondPassed() {
-		if (CLIENT.player == null || CLIENT.level == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
 		if (!isEnabled()) return;
 
-		ItemStack heldItem = Client.getMainHandItem();
+		ItemStack heldItem = PlayerContext.getMainHandItem();
 		if (heldItem == null) return;
 
 		String itemId = SkyBlockAPI.getSkyBlockItemId(heldItem);
@@ -68,7 +70,7 @@ public class TreeOverlayFeature extends Feature {
 		}
 
 		if (currentInfo != null) {
-			Client.showSubtitle(currentInfo, 0, 60, 20);
+			PlayerContext.showSubtitle(currentInfo, 0, 60, 20);
 		}
 	}
 
@@ -91,13 +93,13 @@ public class TreeOverlayFeature extends Feature {
 	}
 
 	private Optional<ArmorStand> findClosestTreeInfoInRange() {
-		if (CLIENT.level == null || CLIENT.player == null) return Optional.empty();
+		if (MINECRAFT.level == null || MINECRAFT.player == null) return Optional.empty();
 
-		ArmorStand closestTreeInfoArmorStand = Client.findClosestEntity(
+		ArmorStand closestTreeInfoArmorStand = WorldContext.findClosestEntity(
 				ArmorStand.class,
 				DISTANCE_TO_TREE_INFO_IN_BLOCKS,
 				Entity::hasCustomName,
-				as -> as.getName().getString().contains(CLIENT.getUser().getName())
+				as -> as.getName().getString().contains(ClientContext.getPlayerName())
 		);
 		if (closestTreeInfoArmorStand == null) {
 			return Optional.empty();

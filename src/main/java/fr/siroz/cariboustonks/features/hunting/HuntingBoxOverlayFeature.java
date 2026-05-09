@@ -13,6 +13,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarItemAnalyt
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarPriceType;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -80,7 +81,7 @@ public class HuntingBoxOverlayFeature extends Feature {
 				leftToRightPadding = true;
 			}
 			int xPadding = leftToRightPadding ? LEFT_TO_RIGHT : 0;
-			guiGraphics.text(CLIENT.font, line.text(), PADDING_LEFT + xPadding, y + 2, Colors.WHITE.asInt());
+			guiGraphics.text(ClientContext.getFont(), line.text(), PADDING_LEFT + xPadding, y + 2, Colors.WHITE.asInt());
 			y += LINE_HEIGHT;
 		}
 		guiGraphics.pose().popMatrix();

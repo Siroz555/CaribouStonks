@@ -9,9 +9,10 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
+import fr.siroz.cariboustonks.platform.context.WorldContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.DustParticleOptionsAccessor;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.List;
 import java.util.Optional;
@@ -67,9 +68,9 @@ public class HotspotFeature extends Feature {
 
 	@Override
 	protected void onSecondPassed() {
-		if (!isEnabled() || CLIENT.player == null || CLIENT.level == null) return;
+		if (!isEnabled() || MINECRAFT.player == null || MINECRAFT.level == null) return;
 
-		ItemStack item = Client.getHeldItem();
+		ItemStack item = PlayerContext.getHeldItem();
 		if (item == null || item.isEmpty() || !item.is(Items.FISHING_ROD)) {
 			reset();
 			return;
@@ -89,11 +90,11 @@ public class HotspotFeature extends Feature {
 	}
 
 	private void updateBobber() {
-		if (!isEnabled() || CLIENT.player == null) return;
+		if (!isEnabled() || MINECRAFT.player == null) return;
 		if (currentHotspot == null || hotspotRadius == null) return;
 
-		FishingHook bobber = CLIENT.player.fishing;
-		if (bobber != null && bobber.isAlive() && bobber.getOwner() == CLIENT.player) {
+		FishingHook bobber = MINECRAFT.player.fishing;
+		if (bobber != null && bobber.isAlive() && bobber.getOwner() == MINECRAFT.player) {
 			Vec3 bobberPos = bobber.position();
 			double distanceToIgnoringY = StonksUtils.squaredDistanceToIgnoringY(currentHotspot.centerPos(), bobberPos);
 			bobberInHotspot = distanceToIgnoringY <= hotspotRadius * hotspotRadius;
@@ -167,15 +168,15 @@ public class HotspotFeature extends Feature {
 	}
 
 	private Optional<Hotspot> findClosestHotspotInRange() {
-		if (CLIENT.level == null) return Optional.empty();
+		if (MINECRAFT.level == null) return Optional.empty();
 
-		List<ArmorStand> armorStands = Client.findClosestEntities(
+		List<ArmorStand> armorStands = WorldContext.findClosestEntities(
 				ArmorStand.class,
 				DISTANCE_TO_HOTSPOT_IN_BLOCKS,
 				Entity::hasCustomName
 		);
 
-		ArmorStand closestHotspotArmorStand = Client.findClosestEntity(
+		ArmorStand closestHotspotArmorStand = WorldContext.findClosestEntity(
 				armorStands,
 				as -> "HOTSPOT".equals(as.getName().getString())
 		);

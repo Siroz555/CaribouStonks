@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.features.chat;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.ChatComponentAccessor;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import java.util.HashMap;
@@ -39,10 +39,10 @@ public class CopyChatMessageFeature extends Feature {
 	@EventHandler(event = "ScreenMouseEvents.afterMouseClick")
 	private boolean onMouseClick(Screen screen, MouseButtonEvent event, boolean consumed) {
 		if (!isEnabled()) return false;
-		if (!Client.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL)) return false;
+		if (!ClientContext.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL)) return false;
 
 		try {
-			ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) CLIENT.gui.getChat());
+			ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) MINECRAFT.gui.getChat());
 			double chatLineX = toChatLineX(event.x());
 			double chatLineY = toChatLineY(event.y());
 			int messageIndex = getMessageAt(chatLineX, chatLineY);
@@ -51,7 +51,7 @@ public class CopyChatMessageFeature extends Feature {
 			if (messageIndex > -1 && messageIndex < messages.size()) {
 				Component message = messages.get(messageIndex).content();
 				String toClipboard = StonksUtils.stripColor(message.getString());
-				Client.setToClipboard(toClipboard);
+				ClientContext.setToClipboard(toClipboard);
 				return true;
 			}
 		} catch (Exception ex) {
@@ -62,20 +62,20 @@ public class CopyChatMessageFeature extends Feature {
 	}
 
 	private double toChatLineX(double x) {
-		ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) CLIENT.gui.getChat());
+		ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) MINECRAFT.gui.getChat());
 		return x / chatAccessor.invokeGetScale() - 4.0d;
 	}
 
 	private double toChatLineY(double y) {
-		ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) CLIENT.gui.getChat());
-		double height = CLIENT.getWindow().getGuiScaledHeight() - y - 40.0d;
+		ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) MINECRAFT.gui.getChat());
+		double height = MINECRAFT.getWindow().getGuiScaledHeight() - y - 40.0d;
 		return height / (chatAccessor.invokeGetScale() * chatAccessor.invokeGetLineHeight());
 	}
 
 	private int getMessageAt(double chatLineX, double chatLineY) {
-		ChatComponent chatHud = CLIENT.gui.getChat();
+		ChatComponent chatHud = MINECRAFT.gui.getChat();
 		ChatComponentAccessor chatAccessor = (ChatComponentAccessor) chatHud;
-		if (!chatHud.isChatFocused() /*|| chatAccessor.invokeIsChatHidden()*/) { // TODO :: 26.1 :: useless maintenant?
+		if (!chatHud.isChatFocused()) {
 			return -1;
 		}
 

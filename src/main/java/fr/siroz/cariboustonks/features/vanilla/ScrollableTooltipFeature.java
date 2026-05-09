@@ -6,8 +6,8 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.ClientTextTooltipAccessor;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -80,7 +80,7 @@ public class ScrollableTooltipFeature extends Feature {
 			return allowScroll;
 		}
 
-		if (Client.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+		if (ClientContext.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT)) {
 			if (vertical > 0) {
 				scrollLeft();
 			} else if (vertical < 0) {

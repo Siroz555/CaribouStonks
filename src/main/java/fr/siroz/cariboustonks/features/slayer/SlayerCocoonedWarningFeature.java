@@ -8,7 +8,7 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,8 +55,8 @@ public class SlayerCocoonedWarningFeature extends Feature {
 
 		Matcher cocoonBossMatcher = COCOONED_BOSS_PATTERN.matcher(message);
 		if (cocoonBossMatcher.matches()) {
-			Client.showTitle(Component.literal("Slayer Boss Cocooned!").withStyle(ChatFormatting.RED, ChatFormatting.BOLD), 1, 60, 1);
-			Client.playSound(SoundEvents.ELDER_GUARDIAN_CURSE, 1f, 1f);
+			PlayerContext.showTitle(Component.literal("Slayer Boss Cocooned!").withStyle(ChatFormatting.RED, ChatFormatting.BOLD), 1, 60, 1);
+			PlayerContext.playSound(SoundEvents.ELDER_GUARDIAN_CURSE, 1f, 1f);
 			cocoonedBoss = true;
 			TickScheduler.getInstance().runLater(() -> cocoonedBoss = false, 3, TimeUnit.SECONDS);
 		}

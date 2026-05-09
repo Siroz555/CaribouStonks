@@ -80,7 +80,7 @@ public class TabListWidgetExtractorFeature extends Feature {
 
 	@Override
 	protected void onSecondPassed() {
-		if (CLIENT.player == null || CLIENT.level == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
 		if (!isEnabled()) return;
 
 		// Widgets prédéfinis

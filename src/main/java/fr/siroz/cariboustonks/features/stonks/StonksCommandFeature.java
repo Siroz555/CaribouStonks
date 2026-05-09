@@ -10,8 +10,9 @@ import fr.siroz.cariboustonks.core.skyblock.data.generic.GenericDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.stonks.StonksScreen;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -40,9 +41,9 @@ public class StonksCommandFeature extends Feature {
 
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
 				.standalone("stonks", builder -> {
-					builder.executes(ctx -> {
+					builder.executes(_ -> {
 						if (lastItem != null && !lastItem.isBlank()) {
-							ctx.getSource().getClient().setScreen(StonksScreen.create(ItemLookupKey.of(
+							ClientContext.setScreen(StonksScreen.create(ItemLookupKey.of(
 									NotEnoughUpdatesUtils.getNeuIdFromSkyBlockId(lastItem),
 									lastItem
 							)));
@@ -90,7 +91,7 @@ public class StonksCommandFeature extends Feature {
 	}
 
 	private void showBazaarInfo(@NonNull FabricClientCommandSource source, @NonNull String item, @NonNull BazaarProduct bazaarProduct) {
-		Client.playSound(SoundEvents.TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
+		PlayerContext.playSound(SoundEvents.TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
 
 		source.sendFeedback(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));
 
@@ -227,7 +228,7 @@ public class StonksCommandFeature extends Feature {
 	}
 
 	private void showAuctionInfo(@NonNull FabricClientCommandSource source, @NonNull String item, double lowestBin) {
-		Client.playSound(SoundEvents.TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
+		PlayerContext.playSound(SoundEvents.TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
 
 		source.sendFeedback(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));
 

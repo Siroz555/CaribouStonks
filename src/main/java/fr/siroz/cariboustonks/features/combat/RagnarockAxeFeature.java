@@ -8,9 +8,10 @@ import fr.siroz.cariboustonks.core.module.hud.TextHud;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtils;
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,9 +63,9 @@ public class RagnarockAxeFeature extends Feature {
 	private void onPlaySound(ClientboundSoundPacket packet) {
 		if (!isEnabled()) return;
 		if (packet.getPitch() != 1.4920635f) return;
-		if (!Client.convertSoundPacketToName(packet).startsWith("entity.wolf.death")) return;
+		if (!MinecraftUtils.convertSoundPacketToName(packet).startsWith("entity.wolf.death")) return;
 
-		ItemStack held = Client.getHeldItem();
+		ItemStack held = PlayerContext.getHeldItem();
 		if (held == null || held.isEmpty()) return;
 
 		if (SkyBlockAPI.getSkyBlockItemId(held).equals(RAGNAROCK_AXE_ITEM_ID)) {
@@ -75,7 +76,7 @@ public class RagnarockAxeFeature extends Feature {
 			lastStrength = strength > 0 ? (strength * 1.5) : 0;
 			lastCastTime = System.currentTimeMillis() + (RAGNAROCK_AXE_CAST_TIME * 1000L);
 			// Si jamais la Strength est mal détecté, le Title sera quand même là.
-			Client.showTitle(Component.literal(configCastMessage.get()), 1, 20, 1);
+			PlayerContext.showTitle(Component.literal(configCastMessage.get()), 1, 20, 1);
 		}
 	}
 

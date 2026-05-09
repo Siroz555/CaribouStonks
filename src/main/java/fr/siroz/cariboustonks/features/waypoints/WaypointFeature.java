@@ -11,9 +11,9 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.RenderEvents;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.screens.waypoints.WaypointScreen;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -50,7 +50,7 @@ public final class WaypointFeature extends Feature {
 
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
 				.namespaced("waypoints", ctx -> {
-					ctx.executes(Client.openScreen(() -> WaypointScreen.create(null)));
+					ctx.executes(ClientContext.openScreen(() -> WaypointScreen.create(null)));
 				})
 				.build());
     }

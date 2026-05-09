@@ -13,6 +13,7 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.InteractionEvents;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
+import fr.siroz.cariboustonks.platform.context.WorldContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
@@ -96,13 +97,13 @@ public final class PestFinderFeature extends Feature {
 	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
 	private void onWorldRender(WorldRenderer renderer) {
 		if (!isEnabled()) return;
-		if (CLIENT.player == null || CLIENT.level == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
 
 		if (waypoint.isEnabled()) {
 			waypoint.getRenderer().render(renderer);
 		}
 
-		for (Entity entity : CLIENT.level.entitiesForRendering()) {
+		for (Entity entity : WorldContext.getEntities()) {
 			if (!(entity instanceof ArmorStand as)) continue;
 			if (!as.hasCustomName() || !as.getName().getString().startsWith(PEST_PREFIX)) continue;
 

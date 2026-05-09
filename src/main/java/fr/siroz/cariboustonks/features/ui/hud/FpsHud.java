@@ -31,6 +31,6 @@ public class FpsHud extends Feature {
 	}
 
 	private @NonNull Component getText() {
-		return Component.literal(CLIENT.getFps() + " FPS");
+		return Component.literal(MINECRAFT.getFps() + " FPS");
 	}
 }

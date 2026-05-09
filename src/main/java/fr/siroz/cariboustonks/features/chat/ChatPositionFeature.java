@@ -13,7 +13,9 @@ import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
+import fr.siroz.cariboustonks.util.MinecraftUtils;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -21,10 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.scores.PlayerTeam;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class ChatPositionFeature extends Feature {
@@ -98,7 +97,7 @@ public class ChatPositionFeature extends Feature {
 				area = " | " + SkyBlockAPI.getArea().orElse("");
 			}
 			String message = position.asChatCoordinates() + area;
-			Client.sendChatToServer(message, false);
+			PlayerContext.sendChatToServer(message, false);
 		} else {
 			source.sendFeedback(CaribouStonks.prefix().get()
 					.append(Component.literal("Command on cooldown!").withStyle(ChatFormatting.RED)));
@@ -143,24 +142,12 @@ public class ChatPositionFeature extends Feature {
 	}
 
 	private @Nullable Component getTabListName(String playerName) {
-		if (CLIENT.getConnection() == null) return null;
-
-		for (PlayerInfo playerInfo : CLIENT.getConnection().getOnlinePlayers()) {
+		for (var playerInfo : ClientContext.getOnlinePlayers()) {
 			String profileName = playerInfo.getProfile().name();
 			if (profileName != null && profileName.equals(playerName)) {
-				return getNameForDisplay(playerInfo, profileName);
+				return MinecraftUtils.getNameForDisplay(playerInfo, profileName);
 			}
 		}
-
 		return null;
-	}
-
-	/**
-	 * Import depuis PlayerTabOverlay
-	 */
-	private Component getNameForDisplay(@NonNull PlayerInfo playerInfo, String profileName) {
-		return playerInfo.getTabListDisplayName() != null
-				? playerInfo.getTabListDisplayName().copy()
-				: PlayerTeam.formatNameForTeam(playerInfo.getTeam(), Component.literal(profileName));
 	}
 }

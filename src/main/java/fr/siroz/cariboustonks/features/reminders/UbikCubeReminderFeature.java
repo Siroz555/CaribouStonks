@@ -10,8 +10,8 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import java.time.Duration;
 import java.time.Instant;
@@ -79,10 +79,10 @@ public final class UbikCubeReminderFeature extends Feature {
 				.append(Component.literal("Ready to play ").withStyle(ChatFormatting.GREEN))
 				.append(SPLIT_OR_STEAL_TEXT);
 
-        Client.sendMessageWithPrefix(message);
-        Client.showNotification(notification, ubikCube.create());
+		PlayerContext.sendMessageWithPrefix(message);
+		PlayerContext.showNotification(notification, ubikCube.create());
 		if (this.config().general.reminders.playSound) {
-			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
+			PlayerContext.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}
     }
 

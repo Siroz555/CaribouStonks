@@ -10,7 +10,7 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.features.stonks.tooltips.TooltipPriceDisplayType;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.List;
 import java.util.Optional;
@@ -70,7 +70,7 @@ public class BazaarPriceTooltipFeature extends Feature {
 				addBazaarLine(lines, "Bazaar Buy-Avg: ", product.get().weightedAverageBuyPrice(), 1);
 				addBazaarLine(lines, "Bazaar Sell-Avg: ", product.get().weightedAverageSellPrice(), 1);
 
-				if (!Client.hasShiftDown() && count > 1) {
+				if (!ClientContext.hasShiftDown() && count > 1) {
 					lines.add(Component.literal("[Press SHIFT for x" + count + "]").withStyle(ChatFormatting.DARK_GRAY));
 				}
 			}
@@ -78,7 +78,7 @@ public class BazaarPriceTooltipFeature extends Feature {
 				addBazaarLine(lines, "Bazaar Buy: ", product.get().buyPrice(), count);
 				addBazaarLine(lines, "Bazaar Sell: ", product.get().sellPrice(), count);
 
-				if (!Client.hasShiftDown() && count > 1) {
+				if (!ClientContext.hasShiftDown() && count > 1) {
 					lines.add(Component.literal("[Press SHIFT for x" + count + "]").withStyle(ChatFormatting.DARK_GRAY));
 				}
 			}
@@ -118,7 +118,7 @@ public class BazaarPriceTooltipFeature extends Feature {
 			display = StonksUtils.FLOAT_NUMBERS.format(value);
 		} else {
 
-			if (Client.hasShiftDown() && count > 1) value *= count;
+			if (ClientContext.hasShiftDown() && count > 1) value *= count;
 
 			if (displayType == TooltipPriceDisplayType.SHORT) {
 				display = StonksUtils.SHORT_FLOAT_NUMBERS.format(value);

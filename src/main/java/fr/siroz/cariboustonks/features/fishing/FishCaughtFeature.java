@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -34,15 +34,15 @@ public class FishCaughtFeature extends Feature {
 
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
 	private void onArmorStandUpdate(@NonNull ArmorStand armorStand, boolean equipment) {
-		if (CLIENT.player == null || CLIENT.level == null || CLIENT.player.fishing == null) return;
+		if (MINECRAFT.player == null || MINECRAFT.level == null || MINECRAFT.player.fishing == null) return;
 		if (equipment || !armorStand.isInvisible() || !armorStand.hasCustomName() || !armorStand.isCustomNameVisible()) return;
 		if (!isEnabled()) return;
 
 		String name = armorStand.getCustomName() != null ? armorStand.getCustomName().getString() : "";
-		if (name.equals(CAUGHT_FISH_NAME) && CLIENT.player.fishing.getBoundingBox().inflate(4D).contains(armorStand.position())) {
+		if (name.equals(CAUGHT_FISH_NAME) && MINECRAFT.player.fishing.getBoundingBox().inflate(4D).contains(armorStand.position())) {
 			// Priorité pour RareSeaCreatureFeature
 			if (rareSeaCreatureFeature == null || !rareSeaCreatureFeature.hasFoundCreature()) {
-				Client.showTitle(Component.literal(CAUGHT_FISH_NAME).withStyle(ChatFormatting.RED, ChatFormatting.BOLD), 1, 25, 1);
+				PlayerContext.showTitle(Component.literal(CAUGHT_FISH_NAME).withStyle(ChatFormatting.RED, ChatFormatting.BOLD), 1, 25, 1);
 			}
 		}
 	}

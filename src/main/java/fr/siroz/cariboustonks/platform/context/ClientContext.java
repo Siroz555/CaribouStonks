@@ -5,10 +5,8 @@ import com.mojang.brigadier.Command;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ClientEvents;
-import fr.siroz.cariboustonks.platform.mixin.accessors.ChatListenerAccessor;
 import fr.siroz.cariboustonks.platform.mixin.accessors.PlayerTabOverlayAccessor;
 import fr.siroz.cariboustonks.util.StonksUtils;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,7 +23,6 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.scores.DisplaySlot;
 import net.minecraft.world.scores.Objective;
@@ -117,15 +114,6 @@ public final class ClientContext {
 	}
 
 	/**
-	 * Returns the {@link Entity} camera from the {@code GameRenderer}
-	 *
-	 * @return the {@code Entity}
-	 */
-	public static @Nullable Entity getCameraEntity() {
-		return CLIENT.getCameraEntity();
-	}
-
-	/**
 	 * Play a sound to the client in {@code UI} interface
 	 *
 	 * @param sound the sound
@@ -173,25 +161,6 @@ public final class ClientContext {
 		if (CLIENT.getConnection() != null) {
 			CLIENT.getConnection().send(packet);
 		}
-	}
-
-	/**
-	 * Add to the client chat log the given message
-	 *
-	 * @param component the component message
-	 * @param instant   the instance
-	 */
-	public static void addToChatLog(@NonNull Component component, @NonNull Instant instant) {
-		((ChatListenerAccessor) CLIENT.getChatListener()).invokeAddToChatLog(component, instant);
-	}
-
-	/**
-	 * Queue to the Narrator the given message
-	 *
-	 * @param component the component message
-	 */
-	public static void queueNarrator(@NonNull Component component) {
-		CLIENT.getNarrator().saySystemQueued(component);
 	}
 
 	/**
