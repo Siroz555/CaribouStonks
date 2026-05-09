@@ -42,7 +42,7 @@ public class CopyChatMessageFeature extends Feature {
 		if (!ClientContext.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL)) return false;
 
 		try {
-			ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) MINECRAFT.gui.getChat());
+			ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) ClientContext.getChat());
 			double chatLineX = toChatLineX(event.x());
 			double chatLineY = toChatLineY(event.y());
 			int messageIndex = getMessageAt(chatLineX, chatLineY);
@@ -62,18 +62,18 @@ public class CopyChatMessageFeature extends Feature {
 	}
 
 	private double toChatLineX(double x) {
-		ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) MINECRAFT.gui.getChat());
+		ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) ClientContext.getChat());
 		return x / chatAccessor.invokeGetScale() - 4.0d;
 	}
 
 	private double toChatLineY(double y) {
-		ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) MINECRAFT.gui.getChat());
+		ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) ClientContext.getChat());
 		double height = MINECRAFT.getWindow().getGuiScaledHeight() - y - 40.0d;
 		return height / (chatAccessor.invokeGetScale() * chatAccessor.invokeGetLineHeight());
 	}
 
 	private int getMessageAt(double chatLineX, double chatLineY) {
-		ChatComponent chatHud = MINECRAFT.gui.getChat();
+		ChatComponent chatHud = ClientContext.getChat();
 		ChatComponentAccessor chatAccessor = (ChatComponentAccessor) chatHud;
 		if (!chatHud.isChatFocused()) {
 			return -1;

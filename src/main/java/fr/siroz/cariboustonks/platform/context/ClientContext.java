@@ -16,9 +16,11 @@ import java.util.function.Supplier;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.screens.ErrorScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.multiplayer.chat.ChatListener;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -129,6 +131,24 @@ public final class ClientContext {
 	 */
 	public static @NonNull Font getFont() {
 		return CLIENT.font;
+	}
+
+	/**
+	 * Returns the {@link ChatListener}
+	 *
+	 * @return the {@code ChatListener}
+	 */
+	public static @NonNull ChatListener getChatListener() {
+		return CLIENT.getChatListener();
+	}
+
+	/**
+	 * Returns the {@link ChatComponent}
+	 *
+	 * @return the {@code ChatComponent}
+	 */
+	public static @NonNull ChatComponent getChat() {
+		return CLIENT.gui.getChat();
 	}
 
 	/**

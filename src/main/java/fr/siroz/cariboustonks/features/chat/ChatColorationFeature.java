@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.ChatListenerAccessor;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.time.Instant;
@@ -51,7 +52,7 @@ public class ChatColorationFeature extends Feature {
 
 		// Parce que mon Mixin de ChatEvents est invoké trop tot ?
 		//client.inGameHud.getChatHud().addMessage(message);
-		((ChatListenerAccessor) MINECRAFT.getChatListener()).invokeAddToChatLog(newText, Instant.now());
+		((ChatListenerAccessor) ClientContext.getChatListener()).invokeAddToChatLog(newText, Instant.now());
 		MINECRAFT.getNarrator().saySystemQueued(newText);
 	}
 }

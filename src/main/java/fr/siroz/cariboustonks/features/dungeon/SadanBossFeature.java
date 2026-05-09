@@ -21,6 +21,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -105,7 +106,7 @@ public class SadanBossFeature extends Feature {
 			}
 
 			Component message = getTimeFrom(terracotta.getTicks());
-			renderer.submitText(message, terracotta.getPos().getCenter(), 1.5f, true);
+			renderer.submitText(message, Vec3.atCenterOf(terracotta.getPos()), 1.5f, true);
 		}
 	}
 

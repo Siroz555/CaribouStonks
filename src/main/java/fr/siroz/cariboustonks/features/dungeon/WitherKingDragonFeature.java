@@ -27,6 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -106,17 +107,17 @@ public class WitherKingDragonFeature extends Feature {
 			}
 
 			if (canShowLastBreathTarget) {
-				renderer.submitCircle(dragon.getLbPos().getCenter(), 1.5d, 16, 0.02f, dragon.getColor(), Direction.Axis.Y, false);
+				renderer.submitCircle(Vec3.atCenterOf(dragon.getLbPos()), 1.5d, 16, 0.02f, dragon.getColor(), Direction.Axis.Y, false);
 			}
 
 			if (target != null && target.getName().equals(dragon.getName())) { // .equals avec un spawn time different pas confiance
-				renderer.submitLineFromCursor(target.getText().getCenter(), target.getColor(), 1f);
+				renderer.submitLineFromCursor(Vec3.atCenterOf(target.getText()), target.getColor(), 1f);
 			}
 
 			if (canShowSpawnTime && dragon.getSpawnTime() > 0) {
 				int timeUntilSpawn = dragon.getSpawnTime() * Ticks.MILLISECONDS_PER_TICK;
 				Component spawnText = Component.literal(timeUntilSpawn + " ms").withStyle(colorFor(timeUntilSpawn));
-				renderer.submitText(spawnText, dragon.getText().getCenter(), 8.5f, true);
+				renderer.submitText(spawnText, Vec3.atCenterOf(dragon.getText()), 8.5f, true);
 			}
 		}
 	}

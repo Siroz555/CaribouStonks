@@ -193,7 +193,7 @@ public class HotspotFeature extends Feature {
 				.map(e -> e.getName().getString())
 				.findFirst();
 
-		Vec3 centerPos = closestHotspotArmorStand.blockPosition().getCenter();
+		Vec3 centerPos = Vec3.atCenterOf(closestHotspotArmorStand.blockPosition());
 
 		return Optional.of(new Hotspot(closestHotspotArmorStand, centerPos, perk));
 	}

@@ -170,7 +170,7 @@ public class CocoonedWarningFeature extends Feature {
 						StonksUtils.DECIMAL_FORMAT.format(finalTimeTick / 20f) + "s"
 				).withStyle(getColorFromTicks(finalTimeTick));
 
-				Vec3 position = entry.getKey().getCenter().add(0, 2.1D, 0);
+				Vec3 position = Vec3.atCenterOf(entry.getKey()).add(0, 2.1D, 0);
 				renderer.submitText(message, position, 2f, false);
 			}
 		}

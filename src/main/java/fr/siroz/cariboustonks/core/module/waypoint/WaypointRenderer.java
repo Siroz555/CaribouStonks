@@ -60,7 +60,7 @@ public final class WaypointRenderer {
 			}
 		}
 
-		Vec3 centerPos = pos.getCenter();
+		Vec3 centerPos = Vec3.atCenterOf(pos);
 		double distance = -1;
 
 		IconOption iconOption = waypoint.getIconOption();

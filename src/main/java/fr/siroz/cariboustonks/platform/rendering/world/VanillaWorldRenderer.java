@@ -162,7 +162,7 @@ final class VanillaWorldRenderer implements WorldRenderer {
 			colorInt = color.withAlpha(1f).asInt();
 		}
 
-		float length = (float) RenderUtils.getCamera().position().subtract(position.getCenter()).horizontalDistance();
+		float length = (float) RenderUtils.getCamera().position().subtract(Vec3.atCenterOf(position)).horizontalDistance();
 		float animationTime = Math.floorMod(WorldContext.getWorldTime(), 40) + RenderUtils.getTickCounter().getGameTimeDeltaPartialTick(true);
 
 		BeaconRenderState state = new BeaconRenderState();
