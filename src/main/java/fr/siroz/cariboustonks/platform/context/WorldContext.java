@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -87,6 +88,21 @@ public final class WorldContext {
 		if (!isAvailable()) return Collections.emptyList();
 
 		return CLIENT.level.getEntities(except, boundingBox, entityPredicate);
+	}
+
+	/**
+	 * Returns a List of {@link Entity}s according to the given conditions.
+	 *
+	 * @param type            the entityType test
+	 * @param boundingBox     the bounding box
+	 * @param entityPredicate the entity predicate (e.g. {@code Entity::hasCustomName})
+	 * @param <T>             the entityTyPE
+	 * @return a List of {@link Entity}s if the conditions are met, otherwise an empty list
+	 */
+	public static <T extends Entity> List<T> getEntities(@NonNull EntityTypeTest<Entity, T> type, @NonNull AABB boundingBox, @NonNull Predicate<? super T> entityPredicate) {
+		if (!isAvailable()) return Collections.emptyList();
+
+		return CLIENT.level.getEntities(type, boundingBox, entityPredicate);
 	}
 
 	/**

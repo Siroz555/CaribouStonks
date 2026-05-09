@@ -11,6 +11,7 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.platform.context.WorldContext;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -308,7 +309,7 @@ public final class SlayerManager {
 		if (entityType == null) return null;
 		if (armorStand == null) return null;
 
-		List<T> entities = armorStand.level().getEntities(
+		List<T> entities = WorldContext.getEntities(
 				entityType,
 				armorStand.getBoundingBox().inflate(0, 1.5D, 0),
 				e -> e.isAlive() && !(e instanceof Mob mob && mob.isBaby())
@@ -326,7 +327,7 @@ public final class SlayerManager {
 	}
 
 	private List<Entity> getArmorStands(@NonNull Entity entity) {
-		return entity.level().getEntities(
+		return WorldContext.getEntities(
 				entity,
 				entity.getBoundingBox().inflate(0.1D, 1.5D, 0.1D),
 				e -> e instanceof ArmorStand && e.hasCustomName());

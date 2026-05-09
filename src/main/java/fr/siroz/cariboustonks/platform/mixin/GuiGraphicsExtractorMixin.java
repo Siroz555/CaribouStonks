@@ -7,9 +7,9 @@ import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.events.GuiEvents;
 import fr.siroz.cariboustonks.features.vanilla.ScrollableTooltipFeature;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.AbstractContainerScreenAccessor;
 import java.util.List;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -57,7 +57,7 @@ public abstract class GuiGraphicsExtractorMixin {
 	private void cariboustonks$onDrawTooltipInternalEvent(Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, Identifier texture, CallbackInfo ci) {
 		ItemStack stack = ItemStack.EMPTY;
 
-		Screen currentScreen = Minecraft.getInstance().screen;
+		Screen currentScreen = ClientContext.getScreen();
 		if (currentScreen instanceof AbstractContainerScreen<?> handledScreen) {
 			Slot hovered = ((AbstractContainerScreenAccessor) handledScreen).getFocusedSlot();
 			if (hovered != null) {

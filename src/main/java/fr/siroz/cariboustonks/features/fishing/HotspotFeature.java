@@ -13,7 +13,7 @@ import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.context.WorldContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.DustParticleOptionsAccessor;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -96,7 +96,7 @@ public class HotspotFeature extends Feature {
 		FishingHook bobber = MINECRAFT.player.fishing;
 		if (bobber != null && bobber.isAlive() && bobber.getOwner() == MINECRAFT.player) {
 			Vec3 bobberPos = bobber.position();
-			double distanceToIgnoringY = StonksUtils.squaredDistanceToIgnoringY(currentHotspot.centerPos(), bobberPos);
+			double distanceToIgnoringY = MinecraftUtils.squaredDistanceToIgnoringY(currentHotspot.centerPos(), bobberPos);
 			bobberInHotspot = distanceToIgnoringY <= hotspotRadius * hotspotRadius;
 		} else {
 			bobberInHotspot = false;

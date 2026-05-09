@@ -11,8 +11,8 @@ import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.CodecUtils;
 import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.time.Duration;
@@ -63,7 +63,7 @@ public final class ForgeReminderFeature extends Feature {
 	}
 
 	private void onReminderExpire(@NonNull TimedObjectModel timedObject) {
-		Component text = CodecUtils.jsonToText(timedObject.message()).orElse(Component.literal(timedObject.message()));
+		Component text = MinecraftUtils.jsonToText(timedObject.message()).orElse(Component.literal(timedObject.message()));
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Forge] ").withStyle(ChatFormatting.GOLD))
 				.append(text)
@@ -99,7 +99,7 @@ public final class ForgeReminderFeature extends Feature {
 				Duration duration = TimeUtils.extractDuration(lore.replace("Time Remaining: ", ""));
 				if (duration.isZero()) continue;
 
-				String text = CodecUtils.textToJson(itemStack.getHoverName())
+				String text = MinecraftUtils.textToJson(itemStack.getHoverName())
 						.orElse(itemStack.getHoverName().getString());
 
 				TimedObjectModel timedObject = new TimedObjectModel(

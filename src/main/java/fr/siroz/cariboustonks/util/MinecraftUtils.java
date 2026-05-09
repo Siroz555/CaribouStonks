@@ -1,9 +1,18 @@
 package fr.siroz.cariboustonks.util;
 
+import com.mojang.serialization.Codec;
+import fr.siroz.cariboustonks.core.service.json.GsonProvider;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
+import java.awt.Color;
 import java.util.List;
+import java.util.Optional;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.core.Position;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
@@ -15,6 +24,9 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public final class MinecraftUtils {
+	private static final Minecraft MINECRAFT = Minecraft.getInstance();
+
+	public static final Codec<Color> COLOR_CODEC = Codec.INT.xmap(argb -> new Color(argb, true), Color::getRGB);
 
 	private MinecraftUtils() {
 	}
@@ -39,6 +51,19 @@ public final class MinecraftUtils {
 	public static @NonNull String convertSoundPacketToName(@Nullable ClientboundSoundPacket soundPacket) {
 		if (soundPacket == null) return "";
 		return soundPacket.getSound().value().location().getPath();
+	}
+
+	/**
+	 * Calculates the squared distance between two positions, ignoring their Y coordinates.
+	 *
+	 * @param from the starting position
+	 * @param to   the destination position
+	 * @return the squared distance between the two positions
+	 */
+	public static double squaredDistanceToIgnoringY(@NonNull Position from, @NonNull Position to) {
+		double dx = from.x() - to.x();
+		double dz = from.z() - to.z();
+		return dx * dx + dz * dz;
 	}
 
 	/**
@@ -68,5 +93,96 @@ public final class MinecraftUtils {
 				.filter(slot -> slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
 				.map(entity::getItemBySlot)
 				.toList();
+	}
+
+	/**
+	 * Show Special Effet
+	 *
+	 * @param item item
+	 * @param particle particle
+	 * @param particleAge particle age between 1-120
+	 */
+	public static void showSpecialEffect(
+			@NonNull ItemStack item,
+			@Nullable ParticleOptions particle,
+			int particleAge
+	) {
+		showSpecialEffect(null, item, particle, particleAge, null, 0f, 0f);
+	}
+
+	/**
+	 * Show Special Effet
+	 *
+	 * @param item item
+	 * @param particle particle
+	 * @param particleAge particle age between 1-120
+	 * @param sound sound
+	 * @param soundVolume sound volume
+	 * @param soundPitch sound pitch
+	 */
+	public static void showSpecialEffect(
+			@NonNull ItemStack item,
+			@Nullable ParticleOptions particle,
+			int particleAge,
+			@Nullable SoundEvent sound,
+			float soundVolume,
+			float soundPitch
+	) {
+		showSpecialEffect(null, item, particle, particleAge, sound, soundVolume, soundPitch);
+	}
+
+	/**
+	 * Show Special Effet
+	 *
+	 * @param title title
+	 * @param item item
+	 * @param particle particle
+	 * @param particleAge particle age between 1-120
+	 * @param sound sound
+	 * @param soundVolume sound volume
+	 * @param soundPitch sound pitch
+	 */
+	public static void showSpecialEffect(
+			@Nullable Component title,
+			@NonNull ItemStack item,
+			@Nullable ParticleOptions particle,
+			int particleAge,
+			@Nullable SoundEvent sound,
+			float soundVolume,
+			float soundPitch
+	) {
+		if (MINECRAFT.player != null && MINECRAFT.level != null) {
+			if (title != null) {
+				PlayerContext.showTitle(title, 0, 60, 20);
+			}
+
+			MINECRAFT.gameRenderer.displayItemActivation(item);
+
+			if (particle != null) {
+				MINECRAFT.particleEngine.createTrackingEmitter(MINECRAFT.player, particle, particleAge);
+			}
+
+			if (sound != null) {
+				MINECRAFT.player.playSound(sound, soundVolume, soundPitch);
+			}
+		}
+	}
+
+	public static Optional<String> textToJson(@NonNull Component text) {
+		try {
+			String json = GsonProvider.standard().toJson(text);
+			return Optional.of(json);
+		} catch (Exception _) {
+			return Optional.empty();
+		}
+	}
+
+	public static Optional<Component> jsonToText(@NonNull String json) {
+		try {
+			Component text = GsonProvider.standard().fromJson(json, Component.class);
+			return Optional.ofNullable(text);
+		} catch (Exception _) {
+			return Optional.empty();
+		}
 	}
 }

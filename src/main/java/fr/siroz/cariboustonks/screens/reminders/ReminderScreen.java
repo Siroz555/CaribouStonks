@@ -71,7 +71,7 @@ public class ReminderScreen extends CaribousStonksScreen {
 
     @Override
     public void close() {
-		minecraft.setScreen(parent);
+		this.openScreen(parent);
     }
 
     public void itemSelected(Object o) {

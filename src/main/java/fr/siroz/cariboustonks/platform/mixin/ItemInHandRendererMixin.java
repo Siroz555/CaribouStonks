@@ -8,9 +8,9 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.VanillaConfig;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.screens.HeldItemViewConfigScreen;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -55,7 +55,7 @@ public abstract class ItemInHandRendererMixin {
 
 	@Inject(method = "renderArmWithItem", at = @At("HEAD"))
 	private void cariboustonks$changeHeldItemForConfigScreen(CallbackInfo ci, @Local(argsOnly = true) LocalRef<InteractionHand> hand, @Local(argsOnly = true, ordinal = 2) LocalFloatRef swingProgress, @Local(argsOnly = true) LocalRef<ItemStack> stack, @Local(argsOnly = true, ordinal = 3) LocalFloatRef equipProgress, @Local(argsOnly = true) LocalIntRef light) {
-		if (Minecraft.getInstance().screen instanceof HeldItemViewConfigScreen heldItemViewConfigScreen) {
+		if (ClientContext.getScreen() instanceof HeldItemViewConfigScreen heldItemViewConfigScreen) {
 			hand.set(heldItemViewConfigScreen.getHand());
 			swingProgress.set(0f);
 			stack.set(heldItemViewConfigScreen.getPreviewItem());

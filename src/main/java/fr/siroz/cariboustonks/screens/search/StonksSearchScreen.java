@@ -43,7 +43,7 @@ public class StonksSearchScreen extends CaribousStonksScreen {
 								.ifPresent(ItemListWidget.ItemEntry::load))
 				.bounds(this.width / 2 - 154, this.height - 38, 150, 20).build()); // 52
 
-		addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, _ -> this.minecraft.setScreen(parent))
+		addRenderableWidget(Button.builder(CommonComponents.GUI_BACK, _ -> this.openScreen(parent))
 				.bounds(this.width / 2 + 4, this.height - 38, 150, 20)
 				.build()); // 52
 
@@ -65,7 +65,7 @@ public class StonksSearchScreen extends CaribousStonksScreen {
 
 	@Override
 	public void close() {
-		this.minecraft.setScreen(parent);
+		this.openScreen(parent);
 	}
 
 	public void itemSelected(Object o) {

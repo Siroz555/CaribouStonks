@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base Mod Screen.
@@ -35,6 +36,10 @@ public abstract class CaribousStonksScreen extends Screen {
 				this.getClass().getName(),
 				method, throwable);
 		PlayerContext.sendErrorMessage("Forced closing of screen", false);
+	}
+
+	protected final void openScreen(@Nullable Screen screen) {
+		ClientContext.setScreen(screen);
 	}
 
 	@Override

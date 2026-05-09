@@ -15,6 +15,7 @@ import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueResult;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.Gemstones;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.RomanNumeralUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -98,7 +99,7 @@ public class ItemValueViewerFeature extends Feature {
 
 		int y = START_Y;
 		for (Component text : lines) {
-			guiGraphics.text(MINECRAFT.font, text, PADDING_LEFT, y, Colors.WHITE.asInt());
+			guiGraphics.text(ClientContext.getFont(), text, PADDING_LEFT, y, Colors.WHITE.asInt());
 			if (text.getString().isBlank()) {
 				y += (LINE_HEIGHT / 2);
 			} else {

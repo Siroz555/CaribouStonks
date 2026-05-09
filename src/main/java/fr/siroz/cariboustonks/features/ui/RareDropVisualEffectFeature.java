@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.util.render.AnimationUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -52,7 +52,7 @@ public class RareDropVisualEffectFeature extends Feature {
 
 		ItemStack itemStack = parseItemStack(item);
 		if (itemStack != null && !itemStack.isEmpty() && !itemStack.is(Items.BARRIER)) {
-			AnimationUtils.showSpecialEffect(itemStack, ParticleTypes.TRIAL_SPAWNER_DETECTED_PLAYER_OMINOUS, 10);
+			MinecraftUtils.showSpecialEffect(itemStack, ParticleTypes.TRIAL_SPAWNER_DETECTED_PLAYER_OMINOUS, 10);
 		}
 	}
 

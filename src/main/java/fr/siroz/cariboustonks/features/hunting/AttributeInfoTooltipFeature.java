@@ -10,6 +10,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.RomanNumeralUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.List;
@@ -18,7 +19,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
@@ -43,7 +43,7 @@ public class AttributeInfoTooltipFeature extends Feature {
 				.appender((focusedSlot, _, lines) -> {
 					if (hypixelDataSource.isBazaarInUpdate()) return;
 
-					Screen currentScreen = Minecraft.getInstance().screen;
+					Screen currentScreen = ClientContext.getScreen();
 					if (focusedSlot == null || currentScreen == null || lines.isEmpty()) return;
 					if (StonksUtils.isEdgeSlot(focusedSlot.index, 6)) return;
 

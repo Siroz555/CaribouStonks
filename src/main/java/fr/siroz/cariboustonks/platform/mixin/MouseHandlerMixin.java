@@ -5,6 +5,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.features.garden.MouseLockFeature;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -50,7 +51,7 @@ public abstract class MouseHandlerMixin {
 
 	@Inject(method = "releaseMouse", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/InputConstants;grabOrReleaseMouse(Lcom/mojang/blaze3d/platform/Window;IDD)V", shift = At.Shift.AFTER))
 	private void cariboustonks$unlockCursorPosition(CallbackInfo ci) {
-		if (ConfigManager.getConfig().vanilla.stopCursorResetPosition && Minecraft.getInstance().screen instanceof ContainerScreen) {
+		if (ConfigManager.getConfig().vanilla.stopCursorResetPosition && ClientContext.getScreen() instanceof ContainerScreen) {
 			this.xpos = this.guiX;
 			this.ypos = this.guiY;
 			GLFW.glfwSetCursorPos(Minecraft.getInstance().getWindow().handle(), this.xpos, this.ypos);

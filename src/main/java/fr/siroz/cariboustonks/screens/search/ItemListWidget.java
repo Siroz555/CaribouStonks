@@ -266,7 +266,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 			loadingSearch = true;
 
 			if (client.player != null) {
-				client.setScreen(StonksScreen.create(ItemLookupKey.of(
+				ClientContext.setScreen(StonksScreen.create(ItemLookupKey.of(
 						NotEnoughUpdatesUtils.getNeuIdFromSkyBlockId(item.hypixelSkyBlockId()),
 						item.hypixelSkyBlockId()
 				)));
@@ -284,16 +284,16 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 
 		@Override
 		public void extractContent(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			if (this.client == null || this.client.screen == null) {
+			if (this.client == null || ClientContext.getScreen() == null) {
 				return;
 			}
 
-			int x1 = (this.client.screen.width - this.client.font.width(LOADING_LIST_TEXT)) / 2;
+			int x1 = (ClientContext.getScreen().width - this.client.font.width(LOADING_LIST_TEXT)) / 2;
 			int y1 = this.getY() + (this.getHeight() - 9) / 2;
 			guiGraphics.text(this.client.font, LOADING_LIST_TEXT, x1, y1,  Colors.WHITE.asInt());
 
 			String string = LoadingDotsText.get(Util.getMillis());
-			int x2 = (this.client.screen.width - this.client.font.width(string)) / 2;
+			int x2 = (ClientContext.getScreen().width - this.client.font.width(string)) / 2;
 			int y2 = y1 + 9;
 			guiGraphics.text(this.client.font, string, x2, y2, Colors.GRAY.asInt());
 		}

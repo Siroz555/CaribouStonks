@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.mod.integration.RoughlyEnoughItemsIntegration;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.Calculator;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -75,6 +76,6 @@ public class REISearchBarCalculatorFeature extends Feature {
 		int x = RoughlyEnoughItemsIntegration.isSearchBarAtBottomSide() ? handledScreen.width / 2 + 90 : handledScreen.width / 2 - 80;
 		int y = handledScreen.height - 32;
 
-		context.text(Minecraft.getInstance().font, displayText, x, y, Colors.WHITE.asInt(), false);
+		context.text(ClientContext.getFont(), displayText, x, y, Colors.WHITE.asInt(), false);
 	}
 }

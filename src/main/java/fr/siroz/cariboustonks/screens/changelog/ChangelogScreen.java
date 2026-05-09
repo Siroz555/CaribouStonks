@@ -57,6 +57,6 @@ public class ChangelogScreen extends CaribousStonksScreen {
 			onCloseAction.run();
 		}
 
-		this.minecraft.setScreen(null);
+		this.openScreen(null);
 	}
 }

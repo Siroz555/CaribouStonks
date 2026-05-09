@@ -3,7 +3,8 @@ package fr.siroz.cariboustonks.screens.reminders;
 import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.util.CodecUtils;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.util.MinecraftUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import it.unimi.dsi.fastutil.Pair;
 import java.time.Instant;
@@ -73,11 +74,11 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 
 		@Override
 		public void extractContent(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			if (minecraft.screen == null) {
+			if (ClientContext.getScreen() == null) {
 				return;
 			}
 
-			int x1 = (minecraft.screen.width - minecraft.font.width(TEXT)) / 2;
+			int x1 = (ClientContext.getScreen().width - minecraft.font.width(TEXT)) / 2;
 			int y1 = this.getY() + (this.getHeight() - 9) / 2; // getContentHeight()
 			guiGraphics.text(minecraft.font, TEXT, x1, y1, Colors.WHITE.asInt());
 		}
@@ -105,7 +106,7 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 
 			this.description = reminder.left().getDisplay().description() != null
 					? reminder.left().getDisplay().description()
-					: CodecUtils.jsonToText(reminder.right().message()).orElse(Component.literal(reminder.right().message()));
+					: MinecraftUtils.jsonToText(reminder.right().message()).orElse(Component.literal(reminder.right().message()));
 
 			this.icon = reminder.left().getDisplay().icon().create();
 		}
@@ -117,7 +118,7 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 
 		@Override
 		public void extractContent(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-			if (minecraft.screen == null) {
+			if (ClientContext.getScreen() == null) {
 				return;
 			}
 

@@ -2,30 +2,22 @@ package fr.siroz.cariboustonks.util.render;
 
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Util;
-import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 public final class AnimationUtils {
-
-	private static final Minecraft CLIENT = Minecraft.getInstance();
-
 	private static final int RAINBOW_CHANGE_RATE = 10;
 	private static Color currentRainbowColor = Colors.RED;
 
 	private AnimationUtils() {
 	}
 
-	public static void initAnimationUtilities() {
+	public static void init() {
 		ClientTickEvents.END_CLIENT_TICK.register(AnimationUtils::onTick);
 	}
 
@@ -61,79 +53,6 @@ public final class AnimationUtils {
 
 	public static Color getCurrentRainbowColor() {
 		return currentRainbowColor;
-	}
-
-	/**
-	 * Show Special Effet
-	 *
-	 * @param item item
-	 * @param particle particle
-	 * @param particleAge particle age between 1-120
-	 */
-	public static void showSpecialEffect(
-			@NonNull ItemStack item,
-			@Nullable ParticleOptions particle,
-			int particleAge
-	) {
-		showSpecialEffect(null, item, particle, particleAge, null, 0f, 0f);
-	}
-
-	/**
-	 * Show Special Effet
-	 *
-	 * @param item item
-	 * @param particle particle
-	 * @param particleAge particle age between 1-120
-	 * @param sound sound
-	 * @param soundVolume sound volume
-	 * @param soundPitch sound pitch
-	 */
-	public static void showSpecialEffect(
-			@NonNull ItemStack item,
-			@Nullable ParticleOptions particle,
-			int particleAge,
-			@Nullable SoundEvent sound,
-			float soundVolume,
-			float soundPitch
-	) {
-		showSpecialEffect(null, item, particle, particleAge, sound, soundVolume, soundPitch);
-	}
-
-	/**
-	 * Show Special Effet
-	 *
-	 * @param title title
-	 * @param item item
-	 * @param particle particle
-	 * @param particleAge particle age between 1-120
-	 * @param sound sound
-	 * @param soundVolume sound volume
-	 * @param soundPitch sound pitch
-	 */
-	public static void showSpecialEffect(
-			@Nullable Component title,
-			@NonNull ItemStack item,
-			@Nullable ParticleOptions particle,
-			int particleAge,
-			@Nullable SoundEvent sound,
-			float soundVolume,
-			float soundPitch
-	) {
-		if (CLIENT.player != null && CLIENT.level != null) {
-			if (title != null) {
-				Client.showTitle(title, 0, 60, 20);
-			}
-
-			CLIENT.gameRenderer.displayItemActivation(item);
-
-			if (particle != null) {
-				CLIENT.particleEngine.createTrackingEmitter(CLIENT.player, particle, particleAge);
-			}
-
-			if (sound != null) {
-				CLIENT.player.playSound(sound, soundVolume, soundPitch);
-			}
-		}
 	}
 
 	private static void onTick(Minecraft _client) {

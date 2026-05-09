@@ -2,12 +2,12 @@ package fr.siroz.cariboustonks.core.skyblock;
 
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -57,7 +57,7 @@ public final class AttributeAPI {
 	 * @return the skyBlockApiId or the fallback
 	 */
 	public static String getSkyBlockApiIdFromNewShard(@NonNull String fallback, ItemStack item, List<Component> lines) {
-		Screen currentScreen = Minecraft.getInstance().screen;
+		Screen currentScreen = ClientContext.getScreen();
 		if (!fallback.isEmpty() || currentScreen == null) return fallback;
 
 		String title = currentScreen.getTitle().getString();

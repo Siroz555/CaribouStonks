@@ -72,7 +72,7 @@ public class MobTrackingScreen extends CaribousStonksScreen {
 
 	@Override
 	public void close() {
-		minecraft.setScreen(parent);
+		this.openScreen(parent);
 	}
 
 	private void saveMobTrackingConfig() {

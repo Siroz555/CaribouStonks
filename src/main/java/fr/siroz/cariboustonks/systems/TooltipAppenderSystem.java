@@ -7,6 +7,7 @@ import fr.siroz.cariboustonks.core.mod.crash.CrashType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.system.System;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.AbstractContainerScreenAccessor;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public final class TooltipAppenderSystem implements System {
             TooltipFlag _flags,
             List<Component> lines
 	) {
-		if (Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> containerScreen) {
+		if (ClientContext.getScreen() instanceof AbstractContainerScreen<?> containerScreen) {
 			appendToTooltip(((AbstractContainerScreenAccessor) containerScreen).getFocusedSlot(), stack, lines);
 		} else {
 			appendToTooltip(null, stack, lines);

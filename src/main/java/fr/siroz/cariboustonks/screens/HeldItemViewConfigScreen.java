@@ -190,16 +190,16 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 	@Override
 	public void close() {
 		if (changed) {
-			this.minecraft.setScreen(new ConfirmScreen(confirmation -> {
+			this.openScreen(new ConfirmScreen(confirmation -> {
 				if (confirmation) {
 					revert();
-					this.minecraft.setScreen(parent);
+					this.openScreen(parent);
 				} else {
-					this.minecraft.setScreen(this);
+					this.openScreen(this);
 				}
 			}, CONFIRM_SCREEN_UNSAVED_CHANGE, CONFIRM_SCREEN_PROMPT, CONFIRM_SCREEN_QUIT_MESSAGE, CommonComponents.GUI_CANCEL));
 		} else {
-			this.minecraft.setScreen(parent);
+			this.openScreen(parent);
 		}
 	}
 

@@ -88,7 +88,7 @@ public class KeyShortcutFeature extends Feature {
 	@EventHandler(event = "ClientTickEvents.END_CLIENT_TICK")
 	private void onTick(Minecraft client) {
 		if (client.player == null || client.level == null) return;
-		if (client.screen != null) return;
+		if (ClientContext.getScreen() != null) return;
 		if (!isEnabled()) return;
 		if (System.currentTimeMillis() - lastKeyPressed < ConfigManager.getConfig().general.keyShortcutCooldown) return;
 

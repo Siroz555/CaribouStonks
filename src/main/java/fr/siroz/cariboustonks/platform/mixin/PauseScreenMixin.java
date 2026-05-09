@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.platform.mixin;
 
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.screens.CaribouStonksMenuScreen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -21,7 +22,7 @@ public abstract class PauseScreenMixin extends Screen {
 	private void cariboustonks$addButtonForCaribouStonksMenu(CallbackInfo ci) {
 		this.addRenderableWidget(Button.builder(
 				Component.literal("CaribouStonks"),
-				_ -> this.minecraft.setScreen(new CaribouStonksMenuScreen()))
+				_ -> ClientContext.setScreen(new CaribouStonksMenuScreen()))
 				.bounds(this.width - 105, this.height - 25, 100, 20)
 				.build()
 		);

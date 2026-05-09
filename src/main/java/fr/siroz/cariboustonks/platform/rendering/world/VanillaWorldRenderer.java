@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.platform.rendering.world;
 
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
+import fr.siroz.cariboustonks.platform.context.WorldContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.BlockEntityRenderStateAccessor;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.CircleRendererCommand;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.CuboidOutlineRendererCommand;
@@ -23,7 +24,6 @@ import fr.siroz.cariboustonks.platform.rendering.world.state.QuadRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.TextRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.TextureRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.ThickCircleRenderState;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import java.util.ArrayList;
@@ -163,7 +163,7 @@ final class VanillaWorldRenderer implements WorldRenderer {
 		}
 
 		float length = (float) RenderUtils.getCamera().position().subtract(position.getCenter()).horizontalDistance();
-		float animationTime = Math.floorMod(Client.getWorldTime(), 40) + RenderUtils.getTickCounter().getGameTimeDeltaPartialTick(true);
+		float animationTime = Math.floorMod(WorldContext.getWorldTime(), 40) + RenderUtils.getTickCounter().getGameTimeDeltaPartialTick(true);
 
 		BeaconRenderState state = new BeaconRenderState();
 		state.blockPos = position;

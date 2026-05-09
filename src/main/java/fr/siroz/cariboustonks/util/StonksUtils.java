@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.util;
 
-import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -8,12 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.Position;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -70,8 +67,7 @@ public final class StonksUtils {
 	 * Init utilities
 	 */
 	public static void initUtilities() {
-		AnimationUtils.initAnimationUtilities();
-		TickScheduler.getInstance().runRepeating(Client::handleUpdates, 1, TimeUnit.SECONDS);
+		AnimationUtils.init();
 	}
 
 	public static @NonNull String stripColor(@Nullable String input) {
@@ -139,19 +135,6 @@ public final class StonksUtils {
 		} else {
 			return (sorted.get(n / 2 - 1) + sorted.get(n / 2)) / 2.0;
 		}
-	}
-
-	/**
-	 * Calculates the squared distance between two positions, ignoring their Y coordinates.
-	 *
-	 * @param from the starting position
-	 * @param to   the destination position
-	 * @return the squared distance between the two positions
-	 */
-	public static double squaredDistanceToIgnoringY(@NonNull Position from, @NonNull Position to) {
-		double dx = from.x() - to.x();
-		double dz = from.z() - to.z();
-		return dx * dx + dz * dz;
 	}
 
 	/**

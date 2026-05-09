@@ -343,7 +343,7 @@ public final class SkyBlockAPI {
 	}
 
 	static void handleInternalUpdate() {
-		if (CLIENT.level == null || CLIENT.isLocalServer()) {
+		if (CLIENT.level == null || ClientContext.isLocalServer()) {
 			if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
 				onSkyBlockState = true;
 			}

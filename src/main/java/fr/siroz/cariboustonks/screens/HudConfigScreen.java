@@ -198,6 +198,6 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			ConfigManager.saveConfig();
 		}
 
-		minecraft.setScreen(parent);
+		this.openScreen(parent);
 	}
 }

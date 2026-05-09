@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.system.System;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -85,8 +86,6 @@ public final class NetworkSystem implements System {
 	}
 
 	private void sendPingPacket() {
-		if (CLIENT.player != null && CLIENT.level != null && CLIENT.getConnection() != null) {
-			CLIENT.getConnection().send(new ServerboundPingRequestPacket(Util.getMillis()));
-		}
+		ClientContext.sendPacket(new ServerboundPingRequestPacket(Util.getMillis()));
 	}
 }

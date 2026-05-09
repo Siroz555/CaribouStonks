@@ -158,7 +158,7 @@ public final class ClientContext {
 	 * @param packet the packet to send
 	 */
 	public static void sendPacket(@NonNull Packet<?> packet) {
-		if (CLIENT.getConnection() != null) {
+		if (CLIENT.player != null && CLIENT.level != null && CLIENT.getConnection() != null) {
 			CLIENT.getConnection().send(packet);
 		}
 	}

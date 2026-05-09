@@ -67,18 +67,6 @@ public final class PlayerContext {
 	}
 
 	/**
-	 * Retrieves the current block position of the player.
-	 * <p>
-	 * If the player is not available, returns {@link BlockPos#ZERO}.
-	 *
-	 * @return the player's {@link BlockPos}, or {@link BlockPos#ZERO} if unavailable
-	 * @see #blockPosition(boolean)
-	 */
-	public static @NonNull BlockPos blockPosition() {
-		return blockPosition(false);
-	}
-
-	/**
 	 * Retrieves the current position related to the client.
 	 * <p>
 	 * If {@code crosshairTargetAsBlockPos} is {@code true} and the crosshair is currently targeting a block,
@@ -87,7 +75,6 @@ public final class PlayerContext {
 	 *
 	 * @param crosshairTargetAsBlockPos if {@code true}, use the block targeted by the crosshair if available
 	 * @return the {@link BlockPos} corresponding to the current position
-	 * @see #blockPosition()
 	 */
 	public static @NonNull BlockPos blockPosition(boolean crosshairTargetAsBlockPos) {
 		if (!isAvailable()) return BlockPos.ZERO;
@@ -119,15 +106,6 @@ public final class PlayerContext {
 	 */
 	public static @Nullable ItemStack getHeldItem() {
 		return isAvailable() ? CLIENT.player.getInventory().getSelectedItem() : null;
-	}
-
-	/**
-	 * Returns the player {@link HitResult} if available
-	 *
-	 * @return the {@code HitResult}
-	 */
-	public static @Nullable HitResult getHitResult() {
-		return CLIENT.hitResult;
 	}
 
 	/**

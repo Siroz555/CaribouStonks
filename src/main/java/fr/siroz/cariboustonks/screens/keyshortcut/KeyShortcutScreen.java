@@ -62,7 +62,7 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 		buttonDelete = Button.builder(Component.translatable("selectServer.deleteButton"), _ -> {
 			if (listWidget.getSelected() instanceof KeyShortcutListWidget.KeyShortcutEntry entry) {
 				scrollBackup = listWidget.scrollAmount();
-				minecraft.setScreen(new ConfirmScreen(
+				this.openScreen(new ConfirmScreen(
 						confirmation -> deleteEntry(confirmation, entry),
 						Component.literal("Confirm?"),
 						Component.empty(),
@@ -124,7 +124,7 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 
 	@Override
 	public void close() {
-		minecraft.setScreen(parent);
+		this.openScreen(parent);
 	}
 
 	void updateButtons() {
@@ -141,7 +141,7 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 			listWidget.removeEntry(entry);
 		}
 
-		minecraft.setScreen(this);
+		this.openScreen(this);
 		listWidget.setScrollAmount(scrollBackup);
 	}
 

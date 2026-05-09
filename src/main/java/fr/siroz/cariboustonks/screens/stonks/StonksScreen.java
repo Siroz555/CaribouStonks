@@ -6,11 +6,11 @@ import fr.siroz.cariboustonks.core.skyblock.data.generic.GraphParseResult;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.screens.CaribousStonksScreen;
 import fr.siroz.cariboustonks.screens.search.StonksSearchScreen;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
 import java.awt.Color;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
@@ -118,7 +118,7 @@ public class StonksScreen extends CaribousStonksScreen {
 		adder.addChild(graphType);
 
 		Button search = Button.builder(Component.literal("Search an item.."), _ ->
-				Objects.requireNonNull(minecraft).setScreen(new StonksSearchScreen(null))
+				this.openScreen(new StonksSearchScreen(null))
 		).build();
 		adder.addChild(search);
 
@@ -201,22 +201,22 @@ public class StonksScreen extends CaribousStonksScreen {
 
 	@Override
 	public void close() {
-		minecraft.setScreen(null);
+		this.openScreen(null);
 	}
 
 	private void showLoadingScreen(GuiGraphicsExtractor context) {
-		if (minecraft.screen == null) {
+		if (ClientContext.getScreen() == null) {
 			return;
 		}
 
 		Component loadingText = Component.literal("Loading..");
 
-		int x1 = (minecraft.screen.width - font.width(loadingText)) / 2;
+		int x1 = (ClientContext.getScreen().width - font.width(loadingText)) / 2;
 		int y1 = getBackgroundHeight() / 2;
 		context.text(font, loadingText, x1, y1, Colors.WHITE.asInt());
 
 		String string = LoadingDotsText.get(Util.getMillis());
-		int x2 = (minecraft.screen.width - font.width(string)) / 2;
+		int x2 = (ClientContext.getScreen().width - font.width(string)) / 2;
 		int y2 = y1 + 9;
 		context.text(font, string, x2, y2, Colors.WHITE.asInt());
 	}

@@ -118,6 +118,6 @@ public class WaypointScreen extends CaribousStonksScreen {
 
 	@Override
 	public void close() {
-		minecraft.setScreen(parent);
+		this.openScreen(parent);
 	}
 }
