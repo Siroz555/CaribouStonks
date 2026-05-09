@@ -55,7 +55,7 @@ public class BestiaryHighlightFeature extends Feature {
 			builder.then(ClientCommands.literal("add").then(ClientCommands.argument("name", StringArgumentType.string()).executes(ctx -> {
 				String custom = StringArgumentType.getString(ctx, "name");
 				if (custom != null && !custom.isBlank() && custom.length() >= 3) {
-					entityNames.add(custom);
+					entityNames.add(custom.toLowerCase(Locale.ENGLISH));
 					PlayerContext.sendMessageWithPrefix(Component.literal(custom + " can now have the Glowing effect.").withStyle(ChatFormatting.GREEN));
 					PlayerContext.sendMessage(Component.literal(" | MIDDLE-CLICK on the target to disable!").withStyle(ChatFormatting.DARK_GRAY));
 				} else {
@@ -102,7 +102,7 @@ public class BestiaryHighlightFeature extends Feature {
 
 		String skyBlockNameChecker = skyBlockName.replace(" ", "");
 		if (blacklist.contains(skyBlockNameChecker)) {
-			PlayerContext.sendMessageWithPrefix(Component.literal(skyBlockName + " cannot have the Glowing effect because of its name.").withStyle(ChatFormatting.RED));
+			PlayerContext.sendMessageWithPrefix(Component.literal(entityName.getString() + " cannot have the Glowing effect because of its name.").withStyle(ChatFormatting.RED));
 			return;
 		}
 
