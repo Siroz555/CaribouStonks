@@ -2,8 +2,8 @@ package fr.siroz.cariboustonks.screens;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.mod.crash.CrashType;
-import fr.siroz.cariboustonks.util.Client;
-import net.minecraft.client.Minecraft;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -29,12 +29,12 @@ public abstract class CaribousStonksScreen extends Screen {
 	}
 
 	private void failure(String method, Throwable throwable) {
-		Minecraft.getInstance().setScreen(null);
+		ClientContext.setScreen(null);
 		CaribouStonks.mod().getCrashManager().reportCrash(CrashType.SCREEN,
 				this.getClass().getSimpleName(),
 				this.getClass().getName(),
 				method, throwable);
-		Client.sendErrorMessage("Forced closing of screen", false);
+		PlayerContext.sendErrorMessage("Forced closing of screen", false);
 	}
 
 	@Override

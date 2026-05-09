@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.screens;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.module.color.Colors;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.screens.keyshortcut.KeyShortcutScreen;
 import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.screens.reminders.ReminderScreen;
@@ -139,7 +140,7 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 	}
 
 	private void openScreen(Screen screen) {
-		this.minecraft.setScreen(screen);
+		ClientContext.setScreen(screen);
 	}
 
 	@Override

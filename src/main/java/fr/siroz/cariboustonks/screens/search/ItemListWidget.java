@@ -6,8 +6,8 @@ import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataException;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.screens.stonks.StonksScreen;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
@@ -85,7 +86,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 				return itemSummaries;
 			});
 		} catch (HypixelDataException exception) {
-			Client.showFatalErrorScreen(Component.literal("Unable to load items!"), exception.getMessageText());
+			ClientContext.showFatalErrorScreen(Component.literal("Unable to load items!"), exception.getMessageText());
 			return CompletableFuture.completedFuture(Collections.emptyList());
 		}
 	}
@@ -176,7 +177,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 		if (input.isConfirmation()) {
 			Optional<ItemEntry> itemEntry = getSelectedOptional();
 			if (itemEntry.isPresent()) {
-				Client.playSoundButtonClickUI();
+				ClientContext.playSound(SoundEvents.UI_BUTTON_CLICK.value());
 				itemEntry.get().load();
 				return true;
 			}
@@ -251,7 +252,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 				time = Util.getMillis();
 				return super.mouseClicked(click, doubled);
 			} else {
-				Client.playSoundButtonClickUI();
+				ClientContext.playSound(SoundEvents.UI_BUTTON_CLICK.value());
 				load();
 				return true;
 			}

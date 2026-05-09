@@ -6,9 +6,9 @@ import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.EmptyInput;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.FilteredEditBox;
-import fr.siroz.cariboustonks.util.Client;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.Arrays;
 import java.util.List;
@@ -62,7 +62,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 	}
 
 	void createWaypoint(boolean crosshair) {
-		Position position = Position.of(Client.getCurrentPosition(crosshair));
+		Position position = Position.of(PlayerContext.blockPosition(crosshair));
 		Waypoint waypoint = Waypoint.builder(position).build();
 
 		WaypointEntry waypointEntry = new WaypointEntry(waypoint);
