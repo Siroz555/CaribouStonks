@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.screens;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.screens.keyshortcut.KeyShortcutScreen;
 import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.screens.reminders.ReminderScreen;
@@ -18,7 +17,6 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.CommonComponents;
@@ -54,33 +52,33 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 		// LINE #1
 
 		adder.addChild(Button.builder(Component.literal("Configuration"),
-						_ -> openScreen(ConfigManager.createConfigGUI(this)))
+						_ -> this.openScreen(ConfigManager.createConfigGUI(this)))
 				.width(BUTTON_WIDTH)
 				.build(), 2);
 
 		// LINE #2
 
 		adder.addChild(Button.builder(Component.literal("Stonks"),
-						_ -> openScreen(new StonksSearchScreen(this)))
+						_ -> this.openScreen(new StonksSearchScreen(this)))
 				.tooltip(Tooltip.create(Component.literal("Search a SkyBlock item to show more informations about.")))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
 		adder.addChild(Button.builder(Component.literal("Waypoints"),
-						_ -> openScreen(WaypointScreen.create(this)))
+						_ -> this.openScreen(WaypointScreen.create(this)))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
 		// LINE #3
 
 		adder.addChild(Button.builder(Component.literal("Mob Tracking"),
-						_ -> openScreen(MobTrackingScreen.create(this)))
+						_ -> this.openScreen(MobTrackingScreen.create(this)))
 				.tooltip(Tooltip.create(Component.literal("Configure all Mob Tracking")))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
 		adder.addChild(Button.builder(Component.literal("Reminders"),
-						_ -> openScreen(ReminderScreen.create(this)))
+						_ -> this.openScreen(ReminderScreen.create(this)))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
@@ -137,10 +135,6 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 	protected void repositionElements() {
 		super.repositionElements();
 		layout.arrangeElements();
-	}
-
-	private void openScreen(Screen screen) {
-		ClientContext.setScreen(screen);
 	}
 
 	@Override
