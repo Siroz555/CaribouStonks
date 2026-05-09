@@ -13,10 +13,11 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -77,7 +78,7 @@ public final class DeveloperManager {
 
 	@EventHandler(event = "ClientPlayConnectionEvents.JOIN")
 	private void onPlayConnection(ClientPacketListener _handler, PacketSender _sender, Minecraft _c) {
-		Client.sendMessageWithPrefix(Component.literal("Debug mode enabled (" + SharedConstants.getCurrentVersion().name() + ")").withStyle(ChatFormatting.RED)
+		PlayerContext.sendMessageWithPrefix(Component.literal("Debug mode enabled (" + SharedConstants.getCurrentVersion().name() + ")").withStyle(ChatFormatting.RED)
 				.append(DeveloperTools.isSnapshot() ? Component.literal(" (Snapshot)").withStyle(ChatFormatting.DARK_RED) : Component.empty()));
 	}
 
@@ -86,7 +87,7 @@ public final class DeveloperManager {
 		if (dumpSound) {
 			String soundId = soundEvent.location().getPath();
 			String time = TimeUtils.formatInstant(Instant.now(), TimeUtils.TIME_HH_MM_SS);
-			Client.sendMessage(Component.literal("(Client) " + time + " :: " + soundId));
+			PlayerContext.sendMessage(Component.literal("(Client) " + time + " :: " + soundId));
 		}
 		return true;
 	}
@@ -94,7 +95,7 @@ public final class DeveloperManager {
 	@EventHandler(event = "NetworkEvents.PLAY_SOUND_PACKET")
 	private void onSoundPacket(ClientboundSoundPacket packet) {
 		if (dumpSound) {
-			String soundId = Client.convertSoundPacketToName(packet);
+			String soundId = MinecraftUtils.convertSoundPacketToName(packet);
 			String time = TimeUtils.formatInstant(Instant.now(), TimeUtils.TIME_HH_MM_SS);
 			String pitch = BigDecimal.valueOf(packet.getPitch())
 					.setScale(3, RoundingMode.DOWN)
@@ -104,7 +105,7 @@ public final class DeveloperManager {
 					.setScale(3, RoundingMode.DOWN)
 					.stripTrailingZeros()
 					.toPlainString();
-			Client.sendMessage(Component.literal("(Server) " + time + " :: " + soundId + " Pitch: " + pitch + " Volume: " + volume));
+			PlayerContext.sendMessage(Component.literal("(Server) " + time + " :: " + soundId + " Pitch: " + pitch + " Volume: " + volume));
 		}
 	}
 
@@ -166,7 +167,7 @@ public final class DeveloperManager {
 			int id = 0;
 			for (ArmorStand armorStand : armorStands) {
 				texturedArmorStands.put(armorStand, id);
-				Iterable<ItemStack> equippedItems = Client.getArmorFromEntity(armorStand);
+				Iterable<ItemStack> equippedItems = MinecraftUtils.getArmorFromEntity(armorStand);
 
 				ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("Head texture #" + id + ": ")));
 

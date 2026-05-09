@@ -10,7 +10,7 @@ import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -207,7 +207,7 @@ public final class SlayerManager {
 		bossFight = null;
 		quest = null;
 		TickScheduler.getInstance().runLater(
-				() -> updateSlayerBossInfo(false, Client.getScoreboard()),
+				() -> updateSlayerBossInfo(false, ClientContext.getScoreboard()),
 				3, TimeUnit.SECONDS
 		);
 	}

@@ -11,7 +11,7 @@ import fr.siroz.cariboustonks.core.service.scheduler.AsyncScheduler;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -102,21 +102,21 @@ final class UpdateChecker {
 		notified = true;
 
 		TickScheduler.getInstance().runLater(() -> {
-			Client.sendMessage(Component.empty());
-			Client.sendMessageWithPrefix(Component.empty()
+			PlayerContext.sendMessage(Component.empty());
+			PlayerContext.sendMessageWithPrefix(Component.empty()
 					.append(Component.literal("?i").withStyle(ChatFormatting.GOLD, ChatFormatting.OBFUSCATED))
 					.append(Component.literal(" Update Available! ").withStyle(ChatFormatting.YELLOW))
 					.append(Component.literal("i?").withStyle(ChatFormatting.GOLD, ChatFormatting.OBFUSCATED)));
-			Client.sendMessageWithPrefix(Component.empty()
+			PlayerContext.sendMessageWithPrefix(Component.empty()
 					.append(Component.literal(newestModrinthVersionInfo.name()).withStyle(ChatFormatting.AQUA))
 					.append(Component.literal(" CLICK").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
 					.withStyle(style -> style
 							.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to open on Modrinth!").withStyle(ChatFormatting.YELLOW)))
 							.withClickEvent(new ClickEvent.OpenUrl(URI.create(MODRINTH_VERSION_URL + newestModrinthVersionInfo.id())))));
-			Client.sendMessage(Component.empty());
+			PlayerContext.sendMessage(Component.empty());
 
-			Client.playSound(SoundEvents.TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
-			Client.showNotificationSystem("CaribouStonks Update Available!", "Update to " + newestModrinthVersionInfo.version().getFriendlyString());
+			PlayerContext.playSound(SoundEvents.TRIAL_SPAWNER_ABOUT_TO_SPAWN_ITEM, 1f, 1f);
+			PlayerContext.showNotificationSystem("CaribouStonks Update Available!", "Update to " + newestModrinthVersionInfo.version().getFriendlyString());
 		}, 3, TimeUnit.SECONDS);
 	}
 

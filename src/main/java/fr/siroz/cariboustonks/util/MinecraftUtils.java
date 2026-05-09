@@ -1,10 +1,15 @@
 package fr.siroz.cariboustonks.util;
 
+import java.util.List;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -49,5 +54,19 @@ public final class MinecraftUtils {
 		return playerInfo.getTabListDisplayName() != null
 				? playerInfo.getTabListDisplayName().copy()
 				: PlayerTeam.formatNameForTeam(playerInfo.getTeam(), Component.literal(profileName));
+	}
+
+	/**
+	 * Retrieves a list of armor items currently equipped by the given {@link LivingEntity}.
+	 *
+	 * @param entity the living entity
+	 * @return list of {@link ItemStack} representing the armor items equipped by the entity
+	 */
+	@NonNull
+	public static List<ItemStack> getArmorFromEntity(@NonNull LivingEntity entity) {
+		return EquipmentSlotGroup.ARMOR.slots().stream()
+				.filter(slot -> slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
+				.map(entity::getItemBySlot)
+				.toList();
 	}
 }

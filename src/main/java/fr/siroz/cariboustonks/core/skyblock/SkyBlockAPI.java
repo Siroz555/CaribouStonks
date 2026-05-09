@@ -7,7 +7,8 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Perk;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.PetInfo;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import java.util.Locale;
@@ -194,7 +195,7 @@ public final class SkyBlockAPI {
 	 * @return an {@link Optional} containing the area name
 	 */
 	public static @NonNull Optional<String> getArea() {
-		for (String line : Client.getScoreboard()) {
+		for (String line : ClientContext.getScoreboard()) {
 			if (line.contains("⏣") || line.contains("ф")) {
 				return Optional.of(line.strip());
 			}
@@ -229,7 +230,7 @@ public final class SkyBlockAPI {
 	 * @return {@code true} if the currently held is not null, and the skyBlockItemId matches
 	 */
 	public static boolean isHoldingItem(@NonNull String skyBlockItemId) {
-		ItemStack held = Client.getHeldItem();
+		ItemStack held = PlayerContext.getHeldItem();
 		return held != null && getSkyBlockItemId(held).equals(skyBlockItemId);
 	}
 

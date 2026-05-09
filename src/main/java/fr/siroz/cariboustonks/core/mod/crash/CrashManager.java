@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.mod.crash;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -61,7 +61,7 @@ public final class CrashManager {
 
 		if (shouldSendChat) {
 			if (!reportedCrashes.contains(crashSignature)) { // Vérifier si ce crash a déjà été reporté
-				Client.sendErrorMessage("CaribouStonks error: "
+				PlayerContext.sendErrorMessage("CaribouStonks error: "
 						+ type.getName() + " '" + niceName + "' was crashed in " + reason, shouldSendNotification);
 			}
 		}

@@ -10,8 +10,9 @@ import fr.siroz.cariboustonks.core.service.json.GsonProvider;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.changelog.ChangelogScreen;
-import fr.siroz.cariboustonks.util.Client;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.nio.file.Files;
@@ -64,7 +65,7 @@ public final class ChangelogManager {
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, _) ->
 				dispatcher.register(ClientCommands.literal("csviewchangelog")
-						.executes(Client.openScreen(
+						.executes(ClientContext.openScreen(
 								() -> ChangelogScreen.create(changelogEntries, this::markChangelogAsSeen)))));
 	}
 
@@ -90,20 +91,20 @@ public final class ChangelogManager {
 		if (notified || lastSeenVersion == null || changelogEntries.isEmpty()) return;
 		notified = true;
 		TickScheduler.getInstance().runLater(() -> {
-			Client.sendMessage(Component.empty());
-			Client.sendMessageWithPrefix(Component.empty()
+			PlayerContext.sendMessage(Component.empty());
+			PlayerContext.sendMessageWithPrefix(Component.empty()
 					.append(Component.literal("Updated!").withStyle(ChatFormatting.GREEN))
 					.append(Component.literal(" " + lastSeenVersion + " ").withStyle(ChatFormatting.YELLOW))
 					.append(Component.literal("->").withStyle(ChatFormatting.GRAY))
 					.append(Component.literal(" " + CURRENT_VERSION + " ").withStyle(ChatFormatting.GREEN)));
-			Client.sendMessageWithPrefix(Component.empty()
+			PlayerContext.sendMessageWithPrefix(Component.empty()
 					.append(Component.literal("Click").withStyle(ChatFormatting.YELLOW))
 					.append(Component.literal(" HERE ").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
 					.append(Component.literal("to see the changelogs in-game!").withStyle(ChatFormatting.YELLOW))
 					.withStyle(style -> style
 							.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to see the changelogs!").withStyle(ChatFormatting.YELLOW)))
 							.withClickEvent(new ClickEvent.RunCommand("/csviewchangelog"))));
-			Client.sendMessage(Component.empty());
+			PlayerContext.sendMessage(Component.empty());
 		}, 3, TimeUnit.SECONDS);
 	}
 

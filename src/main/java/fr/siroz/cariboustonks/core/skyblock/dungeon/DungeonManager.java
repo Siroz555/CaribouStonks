@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
-import fr.siroz.cariboustonks.util.Client;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.network.chat.Component;
@@ -57,8 +57,7 @@ public final class DungeonManager {
 	}
 
 	private void updateDungeonClass(String message) {
-		String playerName = Client.getPlayerName();
-		if (playerName == null) return;
+		String playerName = ClientContext.getPlayerName();
 
 		for (DungeonClass dgClass : DungeonClass.values()) {
 			String byTag = "[" + dgClass.getName() + "]";
