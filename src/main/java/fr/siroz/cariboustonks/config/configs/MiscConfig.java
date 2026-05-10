@@ -23,6 +23,9 @@ public class MiscConfig {
 	public boolean serverTracker = false;
 
 	@SerialEntry
+	public boolean disableAbiphonePlacement = false;
+
+	@SerialEntry
 	public Compatibility compatibility = new Compatibility();
 
 	@SerialEntry

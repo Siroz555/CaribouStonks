@@ -35,6 +35,7 @@ import fr.siroz.cariboustonks.features.item.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.features.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.features.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.features.misc.BestiaryHighlightFeature;
+import fr.siroz.cariboustonks.features.misc.DisableAbiphonePlacementFeature;
 import fr.siroz.cariboustonks.features.misc.HexTooltipFeature;
 import fr.siroz.cariboustonks.features.misc.HighlightMobFeature;
 import fr.siroz.cariboustonks.features.misc.HoppityEggFinderFeature;
@@ -166,6 +167,7 @@ public final class FeatureManager {
 		registerFeature(new WaypointFeature());
 		// Misc
 		registerFeature(new BestiaryHighlightFeature());
+		registerFeature(new DisableAbiphonePlacementFeature());
 		registerFeature(new HexTooltipFeature(5));
 		registerFeature(new ServerTrackerFeature());
 		registerFeature(new HighlightMobFeature());
