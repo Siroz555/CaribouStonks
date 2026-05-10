@@ -65,7 +65,7 @@ public class RareSeaCreatureFeature extends Feature {
 		if (seaCreature != null && !foundCreature) {
 			foundCreature = true;
 			showNotification(seaCreature, doubleHook);
-			TickScheduler.getInstance().runLater(() -> foundCreature = false, 3, TimeUnit.SECONDS);
+			TickScheduler.getInstance().runLater(() -> foundCreature = false, 2, TimeUnit.SECONDS);
 		}
 		doubleHook = false;
 	}
