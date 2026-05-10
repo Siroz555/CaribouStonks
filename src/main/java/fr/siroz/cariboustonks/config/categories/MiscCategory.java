@@ -85,6 +85,15 @@ public class MiscCategory extends AbstractCategory {
 								newValue -> current.misc.serverTracker = newValue)
 						.controller(this::createBooleanController)
 						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Disable Abiphone placement"))
+						.description(OptionDescription.of(
+								Component.literal("If enabled, disables the placement of all Abiphone on the ground.")))
+						.binding(defaults.misc.disableAbiphonePlacement,
+								() -> current.misc.disableAbiphonePlacement,
+								newValue -> current.misc.disableAbiphonePlacement = newValue)
+						.controller(this::createBooleanController)
+						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Other Mods").withStyle(ChatFormatting.BOLD))
 						.collapsed(false)

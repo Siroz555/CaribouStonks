@@ -197,6 +197,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - Guess Hoppity Eggs: Predict the location of Hoppity Eggs.
 - Show Hex Color on Dyed Items.
 - Server Visit History: Display a message indicating when you were last on the server.
+- Disable Abiphone placement: Disables the placement of all Abiphone on the ground.
 - Party Commands (!warp, !coords, !dice, ..)
 - RoughlyEnoughItems (REI) Search Bar Calculator
 
