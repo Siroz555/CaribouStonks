@@ -372,11 +372,5 @@ public final class SkyBlockAPI {
 		if (skyBlockTime != null) time = skyBlockTime;
 		if (skyBlockSeason != null) season = skyBlockSeason;
 		if (skyBlockMonth != null) month = skyBlockMonth;
-
-		// Log dans une fenêtre de 1s autour de x multiple de 5s pour éviter le spam en dev
-		if (DeveloperTools.isInDevelopment() && (System.currentTimeMillis() % 5000L < 1000L)) {
-			CaribouStonks.LOGGER.info("[SkyBlockAPI] Time Updated: Year {}, Season {}, Month {}, Day {}, Hour {}",
-					time.year(), season, month, time.day(), time.hour());
-		}
 	}
 }
