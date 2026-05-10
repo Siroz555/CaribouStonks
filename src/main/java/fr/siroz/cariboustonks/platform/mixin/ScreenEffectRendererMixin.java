@@ -12,7 +12,7 @@ public abstract class ScreenEffectRendererMixin {
 
 	@Inject(method = "renderFire", at = @At("HEAD"), cancellable = true)
 	private static void cariboustonks$hideFireOverlay(CallbackInfo ci) {
-		if (ConfigManager.getConfig().vanilla.overlay.hideFireOverlay) { // TODO :: feat -> feature -> mixin
+		if (ConfigManager.getConfig().vanilla.overlay.hideFireOverlay) {
 			ci.cancel();
 		}
 	}

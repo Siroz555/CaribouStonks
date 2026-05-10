@@ -13,7 +13,7 @@ public abstract class LevelLoadingScreenMixin {
 	// Pas le Panorama, perso ça me dérange pas, car un black screen...
 	@Inject(method = "extractRenderState", at = @At("HEAD"), cancellable = true)
 	private void cariboustonks$hideLoadingScreen(CallbackInfo ci) {
-		if (ConfigManager.getConfig().vanilla.hideWorldLoadingScreen) { // TODO :: feat -> feature -> mixin
+		if (ConfigManager.getConfig().vanilla.hideWorldLoadingScreen) {
 			ci.cancel();
 		}
 	}
