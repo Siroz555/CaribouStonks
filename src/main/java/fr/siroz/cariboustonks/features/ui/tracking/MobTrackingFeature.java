@@ -7,6 +7,7 @@ import fr.siroz.cariboustonks.core.component.CommandComponent;
 import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
@@ -17,6 +18,7 @@ import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
+import fr.siroz.cariboustonks.features.fishing.RareSeaCreatureFeature;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
@@ -38,6 +40,7 @@ import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class MobTrackingFeature extends Feature {
 	// Après "[LvXXX] ", le 1er char doit être un symbole (non-lettre) qui est le MobType.
@@ -50,6 +53,7 @@ public class MobTrackingFeature extends Feature {
 	private final BossEvent bossEvent;
 	private final HudElementBuilder hudBuilder;
 	private final Cache<Integer, Integer> notified;
+	private @Nullable RareSeaCreatureFeature rareSeaCreatureFeature;
 
 	private final List<TrackedEntity> tracked = new ArrayList<>(MAX_TRACKED_ENTITIES);
 	private final Map<Integer, Boolean> trackedHighlight = new HashMap<>();
@@ -112,6 +116,11 @@ public class MobTrackingFeature extends Feature {
 				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
 				&& SkyBlockAPI.getIsland() != IslandType.KUUDRA_HOLLOW
 				&& this.config().uiAndVisuals.mobTracking.tracking;
+	}
+
+	@Override
+	protected void postInitialize(@NonNull FeatureManager features) {
+		rareSeaCreatureFeature = features.getFeature(RareSeaCreatureFeature.class);
 	}
 
 	@Override
@@ -257,6 +266,14 @@ public class MobTrackingFeature extends Feature {
 	private void notifyEntity(Integer entityId, MobTrackingRegistry.@NonNull MobTrackingEntry mobEntry) {
 		if (notified.getIfPresent(entityId) == null && mobEntry.model().isNotifyOnSpawn()) {
 			notified.put(entityId, entityId);
+
+			if (mobEntry.category() == MobTrackingRegistry.MobCategory.FISHING
+					&& rareSeaCreatureFeature != null && rareSeaCreatureFeature.hasFoundCreature()
+			) {
+				// Évite de trigger le Title/Subtiltle si le joueur a une RareSeaCreature a lui,
+				// pour garder la notification du côté de RareSeaCreatureFeature
+				return;
+			}
 
 			PlayerContext.showTitleAndSubtitle(
 					mobEntry.displayName(),
