@@ -9,7 +9,7 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(Tutorial.class) // TutorialManager
+@Mixin(Tutorial.class)
 public abstract class TutorialMixin {
 
     @WrapOperation(method = {"start", "setStep"}, at = @At(value = "FIELD", target = "Lnet/minecraft/client/tutorial/Tutorial;instance:Lnet/minecraft/client/tutorial/TutorialStepInstance;", opcode = Opcodes.PUTFIELD), require = 2)

@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MultiPlayerGameModeMixin {
 
 	@Inject(method = "performUseItemOn", at = @At(value = "HEAD"), cancellable = true)
-	public void cariboustonks$cancelBlockInteraction(LocalPlayer player, InteractionHand hand, BlockHitResult blockHitResult, CallbackInfoReturnable<InteractionResult> info) {
+	public void cariboustonks$cancelBlockInteraction(LocalPlayer player, InteractionHand hand, BlockHitResult blockHit, CallbackInfoReturnable<InteractionResult> info) {
 		ItemStack heldItem = player.getItemInHand(hand);
 		if (heldItem.isEmpty()) {
 			return; //return ActionResult.PASS;

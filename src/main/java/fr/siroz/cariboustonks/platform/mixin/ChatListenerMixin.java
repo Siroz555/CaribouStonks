@@ -13,7 +13,6 @@ public abstract class ChatListenerMixin {
 
 	@Inject(method = "handleSystemMessage", at = @At("HEAD"))
 	private void cariboustonks$onSystemMessageEvent(Component message, boolean remote, CallbackInfo ci) {
-		// overlay (ActionBar) est séparé maintenant, on a remote a la place, jcp c'est quoi
 		if (message != null) {
 			ChatEvents.MESSAGE_RECEIVE_EVENT.invoker().onMessage(message);
 		}

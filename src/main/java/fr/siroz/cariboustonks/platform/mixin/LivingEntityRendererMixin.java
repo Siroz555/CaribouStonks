@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class LivingEntityRendererMixin {
 
 	@ModifyReturnValue(method = "shouldShowName(Lnet/minecraft/world/entity/LivingEntity;D)Z", at = @At("RETURN"))
-	private boolean cariboustonks$ShouldShowOwnNametag(boolean original, @Local(argsOnly = true) LivingEntity entity) {
+	private boolean cariboustonks$ShouldShowOwnNametag(boolean original, @Local(argsOnly = true, name = "entity") LivingEntity entity) {
 		return entity instanceof LocalPlayer && ConfigManager.getConfig().vanilla.displayOwnNametagUsername || original;
 	}
 }

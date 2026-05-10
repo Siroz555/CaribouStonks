@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(AbstractContainerScreen.class) // HandledScreen
+@Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> extends Screen {
 
 	@Shadow
@@ -42,18 +42,16 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
 	@SuppressWarnings("unchecked")
 	@Inject(method = "extractTooltip", at = @At("HEAD"))
-	private void cariboustonks$drawContainerOverlay(CallbackInfo ci, @Local(argsOnly = true) GuiGraphicsExtractor context) {
-		overlayManager.draw(context, (AbstractContainerScreen<ChestMenu>) (Object) this, this.menu.slots);
+	private void cariboustonks$drawContainerOverlay(CallbackInfo ci, @Local(argsOnly = true, name = "graphics") GuiGraphicsExtractor graphics) {
+		overlayManager.draw(graphics, (AbstractContainerScreen<ChestMenu>) (Object) this, this.menu.slots);
 	}
 
 	@Inject(method = "keyPressed", at = @At("HEAD"))
-	private void cariboustonks$onKeyPressedEvent(KeyEvent input, CallbackInfoReturnable<Boolean> cir) {
-		if (this.minecraft.player == null) {
-			return;
-		}
+	private void cariboustonks$onKeyPressedEvent(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
+		if (this.minecraft.player == null) return;
 
-		if (this.hoveredSlot != null && input.input() != 256 && !this.minecraft.options.keyInventory.matches(input)) {
-			GuiEvents.SCREEN_KEY_PRESS_EVENT.invoker().onKeyPressed(this, input, this.hoveredSlot);
+		if (this.hoveredSlot != null && event.input() != 256 && !this.minecraft.options.keyInventory.matches(event)) {
+			GuiEvents.SCREEN_KEY_PRESS_EVENT.invoker().onKeyPressed(this, event, this.hoveredSlot);
 		}
 	}
 }

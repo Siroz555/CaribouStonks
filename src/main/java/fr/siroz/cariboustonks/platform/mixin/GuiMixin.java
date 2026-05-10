@@ -9,18 +9,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Gui.class) // InGameHud
+@Mixin(Gui.class) // 26.2 Hud.class
 public abstract class GuiMixin {
 
 	@Inject(method = "extractArmor", at = @At("HEAD"), cancellable = true)
-	private static void cariboustonks$hideArmorOverlay(GuiGraphicsExtractor context, Player player, int i, int j, int k, int x, CallbackInfo ci) {
+	private static void cariboustonks$hideArmorOverlay(GuiGraphicsExtractor graphics, Player player, int yLineBase, int numHealthRows, int healthRowHeight, int xLeft, CallbackInfo ci) {
 		if (ConfigManager.getConfig().vanilla.overlay.hideArmorOverlay) {
 			ci.cancel();
 		}
 	}
 
 	@Inject(method = "extractFood", at = @At("HEAD"), cancellable = true)
-	private void cariboustonks$hideFoodOverlay(GuiGraphicsExtractor context, Player player, int top, int right, CallbackInfo ci) {
+	private void cariboustonks$hideFoodOverlay(GuiGraphicsExtractor graphics, Player player, int yLineBase, int xRight, CallbackInfo ci) {
 		if (ConfigManager.getConfig().vanilla.overlay.hideFoodOverlay) {
 			ci.cancel();
 		}

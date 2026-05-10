@@ -13,11 +13,14 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Camera.class)
 public abstract class CameraMixin {
+
 	@Shadow
 	@Final
 	private Minecraft minecraft;
+
 	@Unique
 	private boolean smoothCamera = false;
+
 	@Unique
 	private final ZoomFeature zoomFeature = CaribouStonks.features().getFeature(ZoomFeature.class);
 

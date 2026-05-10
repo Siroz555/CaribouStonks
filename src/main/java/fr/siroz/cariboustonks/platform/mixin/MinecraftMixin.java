@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Minecraft.class) // MinecraftClient
+@Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
 
 	@Shadow
@@ -23,11 +23,4 @@ public abstract class MinecraftMixin {
 	private void cariboustonks$leftClickAirEvent(CallbackInfoReturnable<Boolean> cir) {
 		InteractionEvents.LEFT_CLICK_AIR_EVENT.invoker().onLeftClick(player, InteractionHand.MAIN_HAND);
 	}
-
-	// https://github.com/architectury/architectury-api/blob/1.19.2/fabric/src/main/java/dev/architectury/mixin/fabric/client/MixinMinecraft.java#L70
-	/*@Inject(method = "doItemUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z"), locals = LocalCapture.CAPTURE_FAILSOFT)
-	private void rightClickAirEvent(CallbackInfo ci, Hand[] var1, int var2, int var3, Hand hand, ItemStack itemStack, EntityHitResult entityHitResult, Entity entity, ActionResult actionResult, BlockHitResult blockHitResult, int i, ActionResult actionResult2, ActionResult.Success success2) {
-		if (itemStack.isEmpty() && (this.crosshairTarget == null || this.crosshairTarget.getType() == HitResult.Type.MISS))
-			InteractionEvents.RIGHT_CLICK_AIR.invoker().onClick(player, Hand.MAIN_HAND);
-	}*/
 }

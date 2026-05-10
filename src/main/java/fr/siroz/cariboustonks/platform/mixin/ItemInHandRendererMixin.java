@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ItemInHandRendererMixin {
 
 	@Inject(method = "renderArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"))
-	private void cariboustonks$renderCustomHeldItem(CallbackInfo ci, @Local(argsOnly = true) InteractionHand hand, @Local(argsOnly = true) PoseStack matrices) {
+	private void cariboustonks$renderCustomHeldItem(CallbackInfo ci, @Local(argsOnly = true, name = "hand") InteractionHand hand, @Local(argsOnly = true, name = "poseStack") PoseStack poseStack) {
 		if (ConfigManager.getConfig().vanilla.itemModelCustomization.enabled) {
 
 			VanillaConfig.ItemModelCustomization.CustomHand config = switch (hand) {
@@ -39,11 +39,11 @@ public abstract class ItemInHandRendererMixin {
 			}*/
 
 			if (config.scale != 1f) {
-				matrices.scale(config.scale, config.scale, config.scale);
+				poseStack.scale(config.scale, config.scale, config.scale);
 			}
 
 			if (config.x != 0 || config.y != 0 || config.z != 0) {
-				matrices.translate(config.x, config.y, config.z);
+				poseStack.translate(config.x, config.y, config.z);
 			}
 		}
 	}
@@ -54,7 +54,7 @@ public abstract class ItemInHandRendererMixin {
 	}
 
 	@Inject(method = "renderArmWithItem", at = @At("HEAD"))
-	private void cariboustonks$changeHeldItemForConfigScreen(CallbackInfo ci, @Local(argsOnly = true) LocalRef<InteractionHand> hand, @Local(argsOnly = true, ordinal = 2) LocalFloatRef swingProgress, @Local(argsOnly = true) LocalRef<ItemStack> stack, @Local(argsOnly = true, ordinal = 3) LocalFloatRef equipProgress, @Local(argsOnly = true) LocalIntRef light) {
+	private void cariboustonks$changeHeldItemForConfigScreen(CallbackInfo ci, @Local(argsOnly = true, name = "hand") LocalRef<InteractionHand> hand, @Local(argsOnly = true, name = "attack") LocalFloatRef swingProgress, @Local(argsOnly = true, name = "itemStack") LocalRef<ItemStack> stack, @Local(argsOnly = true, name = "inverseArmHeight") LocalFloatRef equipProgress, @Local(argsOnly = true, name = "lightCoords") LocalIntRef light) {
 		if (ClientContext.getScreen() instanceof HeldItemViewConfigScreen heldItemViewConfigScreen) {
 			hand.set(heldItemViewConfigScreen.getHand());
 			swingProgress.set(0f);

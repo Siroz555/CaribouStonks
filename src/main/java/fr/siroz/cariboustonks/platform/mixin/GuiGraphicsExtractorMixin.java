@@ -28,13 +28,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(value = GuiGraphicsExtractor.class, priority = 1111) // DrawContext
+@Mixin(value = GuiGraphicsExtractor.class, priority = 1111)
 public abstract class GuiGraphicsExtractorMixin {
 
 	@Unique
 	private int storedTooltipWidth;
+
 	@Unique
 	private int storedTooltipHeight;
+
 	@Unique
 	private Vector2ic storedPos;
 
@@ -46,15 +48,15 @@ public abstract class GuiGraphicsExtractorMixin {
 	@Expression("? = ?.x()")
 	@Group(name = "storeLocals", min = 1, max = 1)
 	@Inject(method = "tooltip", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
-	private void cariboustonks$onDrawTooltipEventAndStoreLocals(Font font, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, Identifier resource, CallbackInfo info, int tooltipWidth, int tooltipHeight, int tooltipWidth2, int tooltipHeight2, Vector2ic postPos) {
-		GuiEvents.TOOLTIP_TRACKER_EVENT.invoker().onTooltipTracker(components);
+	private void cariboustonks$onDrawTooltipEventAndStoreLocals(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, Identifier style, CallbackInfo info, int tooltipWidth, int tooltipHeight, int tooltipWidth2, int tooltipHeight2, Vector2ic postPos) {
+		GuiEvents.TOOLTIP_TRACKER_EVENT.invoker().onTooltipTracker(lines);
 		storedTooltipWidth = tooltipWidth2;
 		storedTooltipHeight = tooltipHeight2;
 		storedPos = postPos;
 	}
 
 	@Inject(method = "tooltip", at = @At(value = "TAIL"))
-	private void cariboustonks$onDrawTooltipInternalEvent(Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, Identifier texture, CallbackInfo ci) {
+	private void cariboustonks$onDrawTooltipInternalEvent(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, Identifier style, CallbackInfo ci) {
 		ItemStack stack = ItemStack.EMPTY;
 
 		Screen currentScreen = ClientContext.getScreen();
@@ -65,7 +67,7 @@ public abstract class GuiGraphicsExtractorMixin {
 			}
 		}
 
-		if (!stack.isEmpty() && !components.isEmpty()) {
+		if (!stack.isEmpty() && !lines.isEmpty()) {
 			GuiEvents.POST_TOOLTIP_EVENT.invoker().onPostTooltip(
 					(GuiGraphicsExtractor) (Object) this,
 					stack,
@@ -73,8 +75,8 @@ public abstract class GuiGraphicsExtractorMixin {
 					storedPos.y() + getYOffset(),
 					storedTooltipWidth,
 					storedTooltipHeight,
-					textRenderer,
-					components
+					font,
+					lines
 			);
 		}
 	}

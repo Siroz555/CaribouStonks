@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PauseScreen.class) // GameMenuScreen
+@Mixin(PauseScreen.class)
 public abstract class PauseScreenMixin extends Screen {
 
 	protected PauseScreenMixin(Component title) {

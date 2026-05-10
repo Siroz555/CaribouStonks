@@ -23,8 +23,8 @@ public abstract class SignEditScreenMixin extends Screen {
 	}
 
 	@Inject(method = "keyPressed", at = @At("HEAD"))
-	private void cariboustonks$onKeyPressedEvent(KeyEvent input, CallbackInfoReturnable<Boolean> cir) {
-		if (input.input() != 257) return;
+	private void cariboustonks$onKeyPressedEvent(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
+		if (event.input() != 257) return;
 		if (!SkyBlockAPI.isOnSkyBlock() || !ConfigManager.getConfig().general.stonks.bazaarSignEditEnterValidation) return;
 		this.onClose();
 	}

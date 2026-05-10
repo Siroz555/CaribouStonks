@@ -20,15 +20,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MouseHandler.class) // Mouse
+@Mixin(MouseHandler.class)
 public abstract class MouseHandlerMixin {
 
 	@Shadow
 	private double xpos;
+
 	@Shadow
 	private double ypos;
+
 	@Unique
 	private double guiX;
+
 	@Unique
 	private double guiY;
 
@@ -59,8 +62,8 @@ public abstract class MouseHandlerMixin {
 	}
 
 	@Inject(method = "onScroll", at = @At("HEAD"), cancellable = true)
-	private void cariboustonks$trackWheel(long window, double horizontal, double vertical, CallbackInfo ci) {
-		if (!ClientEvents.ALLOW_MOUSE_SCROLL_EVENT.invoker().allowMouseScroll(horizontal, vertical)) {
+	private void cariboustonks$trackWheel(long handle, double xoffset, double yoffset, CallbackInfo ci) {
+		if (!ClientEvents.ALLOW_MOUSE_SCROLL_EVENT.invoker().allowMouseScroll(xoffset, yoffset)) {
 			ci.cancel();
 		}
 	}

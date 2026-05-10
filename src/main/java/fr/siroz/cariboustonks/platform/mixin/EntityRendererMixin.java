@@ -24,7 +24,7 @@ public abstract class EntityRendererMixin {
 	private final GlowingSystem glowingSystem = CaribouStonks.systems().getSystem(GlowingSystem.class);
 
 	@Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
-	private void cariboustonks$shouldRenderEntity(Entity entity, Frustum frustum, double x, double y, double z, CallbackInfoReturnable<Boolean> cir) {
+	private void cariboustonks$shouldRenderEntity(Entity entity, Frustum culler, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir) {
 		if (SkyBlockAPI.isOnSkyBlock()) {
 			if (!RenderEvents.ALLOW_RENDER_ENTITY_EVENT.invoker().allowRenderEntity(entity)) {
 				cir.setReturnValue(false);
@@ -33,7 +33,7 @@ public abstract class EntityRendererMixin {
 	}
 
 	@Inject(method = "extractRenderState", at = @At("TAIL"))
-	private void cariboustonks$updateOutlineColorWhenRenderStateUpdate(CallbackInfo ci, @Local(argsOnly = true) Entity entity, @Local(argsOnly = true) EntityRenderState state) {
+	private void cariboustonks$updateOutlineColorWhenRenderStateUpdate(CallbackInfo ci, @Local(argsOnly = true, name = "entity") Entity entity, @Local(argsOnly = true, name = "state") EntityRenderState state) {
 		boolean hasModGlow = glowingSystem.hasOrComputeEntity(entity);
 		boolean updateGlow = state.appearsGlowing() || hasModGlow;
 		if (updateGlow && hasModGlow) {

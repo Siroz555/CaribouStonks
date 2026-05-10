@@ -17,34 +17,34 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ClientLevel.class) // ClientWorld
+@Mixin(ClientLevel.class)
 public abstract class ClientLevelMixin implements BlockGetter {
 
 	@Inject(method = "playSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZJ)V", at = @At("HEAD"), cancellable = true)
-	private void cariboustonks$cancelSoundEvents(CallbackInfo ci, @Local(argsOnly = true) SoundEvent soundEvent) {
+	private void cariboustonks$cancelSoundEvents(CallbackInfo ci, @Local(argsOnly = true, name = "sound") SoundEvent sound) {
 		if (SkyBlockAPI.isOnSkyBlock()) {
-			if (!WorldEvents.ALLOW_SOUND_EVENT.invoker().allowSound(soundEvent)) {
+			if (!WorldEvents.ALLOW_SOUND_EVENT.invoker().allowSound(sound)) {
 				ci.cancel();
 			}
 		}
 	}
 
 	@Inject(method = "removeEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onClientRemoval()V"))
-	private void cariboustonks$onRemoveEntityEvent(int entityId, Entity.RemovalReason removalReason, CallbackInfo ci, @Local(name = "entity") Entity entity) {
+	private void cariboustonks$onRemoveEntityEvent(int id, Entity.RemovalReason reason, CallbackInfo ci, @Local(name = "entity") Entity entity) {
 		if (SkyBlockAPI.isOnSkyBlock() && entity instanceof ArmorStand armorStand) {
 			WorldEvents.ARMORSTAND_REMOVE_EVENT.invoker().onRemove(armorStand);
 		}
 	}
 
 	@Inject(method = "setServerVerifiedBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z"))
-	private void cariboustonks$handleBlockUpdate(CallbackInfo ci, @Local(argsOnly = true) BlockPos pos, @Share("old") LocalRef<BlockState> oldState) {
+	private void cariboustonks$handleBlockUpdate(CallbackInfo ci, @Local(argsOnly = true, name = "pos") BlockPos pos, @Share("old") LocalRef<BlockState> oldState) {
 		oldState.set(getBlockState(pos));
 	}
 
 	@Inject(method = "setServerVerifiedBlockState", at = @At("RETURN"))
-	private void cariboustonks$handleBlockUpdateEvent(CallbackInfo ci, @Local(argsOnly = true) BlockPos pos, @Local(argsOnly = true) BlockState state, @Share("old") LocalRef<BlockState> oldState) {
+	private void cariboustonks$handleBlockUpdateEvent(CallbackInfo ci, @Local(argsOnly = true, name = "pos") BlockPos pos, @Local(argsOnly = true, name = "blockState") BlockState blockState, @Share("old") LocalRef<BlockState> oldState) {
 		if (pos != null) {
-			WorldEvents.BLOCK_STATE_UPDATE_EVENT.invoker().onBlockStateUpdate(pos, oldState.get(), state);
+			WorldEvents.BLOCK_STATE_UPDATE_EVENT.invoker().onBlockStateUpdate(pos, oldState.get(), blockState);
 		}
 	}
 }

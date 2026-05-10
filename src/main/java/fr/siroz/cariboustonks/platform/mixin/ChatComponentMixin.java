@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.ChatComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(ChatComponent.class) // ChatHud
+@Mixin(ChatComponent.class)
 public abstract class ChatComponentMixin {
 
 	@ModifyExpressionValue(method = {"addMessageToDisplayQueue", "addMessageToQueue", "addRecentChat"}, at = @At(value = "CONSTANT", args = "intValue=100"), require = 3)
