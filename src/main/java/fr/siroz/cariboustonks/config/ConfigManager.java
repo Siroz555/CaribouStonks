@@ -15,8 +15,6 @@ import fr.siroz.cariboustonks.core.service.json.adapters.CodecTypeAdapter;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.MinecraftUtils;
 import java.awt.Color;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screens.Screen;
@@ -49,17 +47,10 @@ public final class ConfigManager {
 	private ConfigManager() {
 	}
 
+	/**
+	 * Load the config
+	 */
 	public static void loadConfig() {
-		if (StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).getCallerClass() != CaribouStonks.class) {
-			throw new RuntimeException("Noo noo and noo");
-		}
-
-		try {
-			Files.createDirectories(CaribouStonks.CONFIG_DIR);
-		} catch (IOException ex) {
-			CaribouStonks.LOGGER.error("[ConfigManager] Unable to create the CaribouStonks folder", ex);
-		}
-
 		HANDLER.load();
 	}
 

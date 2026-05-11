@@ -7,6 +7,8 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockManager;
 import fr.siroz.cariboustonks.core.system.SystemManager;
 import fr.siroz.cariboustonks.platform.MinecraftService;
 import fr.siroz.cariboustonks.util.StonksUtils;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 import net.fabricmc.api.ClientModInitializer;
@@ -44,6 +46,13 @@ public final class CaribouStonks implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		// Setup Mod directory
+		try {
+			Files.createDirectories(CONFIG_DIR);
+		} catch (IOException ex) {
+			LOGGER.error("[CaribouStonks] Unable to create the mod folder!", ex);
+		}
+
 		MinecraftService.bootstrap(); // Minecraft API
 		ConfigManager.loadConfig(); // Mod Configuration
 		StonksUtils.initUtilities(); // Utilities
