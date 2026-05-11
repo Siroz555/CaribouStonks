@@ -7,7 +7,7 @@ import net.minecraft.ChatFormatting;
  */
 public enum EggStatus {
 	WAITING(ChatFormatting.DARK_GRAY, "○"),
-	AVAILABLE(ChatFormatting.GOLD, "◎"),
+	AVAILABLE(ChatFormatting.LIGHT_PURPLE, "◎"),
 	CLAIMED(ChatFormatting.GREEN, "✔");
 
 	private final ChatFormatting color;

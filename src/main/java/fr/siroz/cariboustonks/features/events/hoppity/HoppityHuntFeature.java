@@ -12,6 +12,8 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockSeason;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
+import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -24,25 +26,22 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 
-public class HoppityHuntFeature extends Feature {
-
+public class HoppityHuntFeature extends Feature { // TODO :: CONFIG et final tests
+	private static final String CUTE_RABBIT = "\uD83D\uDC07";
 	private static final Pattern EGG_FOUND_PATTERN = Pattern.compile("HOPPITY'S HUNT You found a Chocolate (?<eggType>.+?) Egg\\b.*$");
 	private static final Pattern EGG_SPAWN_PATTERN = Pattern.compile("HOPPITY'S HUNT A Chocolate (?<eggType>.+?) Egg has appeared!");
 	private static final String NO_MORE_EGGS_MESSAGE = "There are no hidden Chocolate Rabbit Eggs nearby! Try again later!";
-
-	/**
-	 * Eggs grouped by spawn hour (7, 14, 21), in chronological order.
-	 * Each entry holds exactly two {@link EggType}: the regular and alternate variant.
-	 */
-	private static final Map<Integer, List<EggType>> EGG_GROUPS = Arrays.stream(EggType.VALUES)
+	private static final long DELTA_DISPLAY_MS = 5_000;
+	private static final Map<Integer, List<EggType>> EGG_GROUPS_BY_HOUR = Arrays.stream(EggType.VALUES)
 			.collect(Collectors.groupingBy(
 					EggType::getResetDay,
 					TreeMap::new,
 					Collectors.toList()
-			));
+			)); // Eggs grouped by spawn hour (7, 14, 21), in chronological order.
 
 	private final Map<EggType, EggStatus> eggStates = new EnumMap<>(EggType.class);
-	private boolean initialized = false;
+	private boolean allAvailableNotified = false;
+	private long deltaTimestamp = 0L;
 
 	private final HudElementBuilder hudBuilder = new HudElementBuilder();
 
@@ -55,9 +54,13 @@ public class HoppityHuntFeature extends Feature {
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(CaribouStonks.identifier("hoppity_hunt"))
 				.hud(new MultiElementHud(
-						this::isEnabled,
+						this::isEnabled, // TODO :: config + hud + season
 						new HudElementTextBuilder()
-								.append(Component.literal("TEST"))
+								.append(Component.literal("Hoppity's Hunt Eggs " + CUTE_RABBIT))
+								.appendSpace()
+								.append(Component.literal("§8○ §7?"))
+								.append(Component.literal("§8○ §7?"))
+								.append(Component.literal("§8○ §7?"))
 								.build(),
 						this::getHudLines,
 						this.config().uiAndVisuals.deployables.hud,
@@ -69,7 +72,7 @@ public class HoppityHuntFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() /*&& SkyBlockAPI.getSeason() == SkyBlockSeason.SPRING*/;
+		return SkyBlockAPI.isOnSkyBlock() && SkyBlockAPI.getSeason() == SkyBlockSeason.SPRING;
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
@@ -97,39 +100,23 @@ public class HoppityHuntFeature extends Feature {
 
 	@EventHandler(event = "SkyBlockEvents.HOUR_CHANGE_EVENT")
 	private void onSkyBlockHourChange(int hour) {
-		if (!isEnabled()) {
-			initialized = false;
-			return;
-		}
+		if (!isEnabled()) return;
 
-		// TODO - useless SAUF au début de l'Event, mais a voir je ne sais pas..
-		//  Il faudrait possiblement init ça au moment ou le joueur rejoint le SB,
-		//  mais en cas de kick..
-		// State de départ pour l'heure en cours
-		if (!initialized) {
-			initializeFromHour(hour);
-			initialized = true;
-			return;
-		}
+		boolean isAlternateDay = (SkyBlockAPI.getTime().day() % 2 == 0);
 
-		// --- Egg Spawn Tick ---
-		// L'état précédent n'a aucune importance, même un œuf CLAIM est remplacé par un nouvel œuf,
-		// car chaque œuf ne dure que jusqu'à sa prochaine réapparition
-		// (toutes les 40m~ dans le temps réel / tous les 2 jours SkyBlock).
-		EGG_GROUPS.getOrDefault(hour, List.of()).forEach(egg -> {
-			// Simple check dans le cas ou le joueur recup l'Egg avant ce tick,
-			// mais "normalement" pas possible...
-			/*if (eggStates.getOrDefault(egg, EggStatus.WAITING) != EggStatus.CLAIMED) {
-				eggStates.put(egg, EggStatus.AVAILABLE);
-			}*/
-			eggStates.put(egg, EggStatus.AVAILABLE);
-		});
+		EGG_GROUPS_BY_HOUR.getOrDefault(hour, List.of())
+				.stream()
+				.filter(egg -> egg.isAlternateDay() == isAlternateDay)
+				.forEach(egg -> eggStates.put(egg, EggStatus.AVAILABLE));
+
+		checkAndNotifyAllAvailable();
 	}
 
 	private void handleEggFound(@NonNull String eggTypeName) {
 		EggType eggType = EggType.getByName(eggTypeName);
 		if (eggType != null) {
 			eggStates.put(eggType, EggStatus.CLAIMED);
+			allAvailableNotified = false;
 		}
 	}
 
@@ -147,48 +134,55 @@ public class HoppityHuntFeature extends Feature {
 		EggType eggType = EggType.getByName(eggTypeName);
 		if (eggType != null) {
 			eggStates.put(eggType, EggStatus.AVAILABLE);
+			checkAndNotifyAllAvailable();
 		}
 	}
 
 	private void handleNoMoreEggs() {
 		// Force le passage a CLAIMED
 		eggStates.replaceAll((_, status) -> status == EggStatus.AVAILABLE ? EggStatus.CLAIMED : status);
+		allAvailableNotified = false;
 	}
 
-	/**
-	 * Seeds the egg states based on the current SkyBlock hour, for mid-session startup.
-	 * <p>
-	 * Tout œuf don't l'heure de spawn ({@link EggType#getResetDay()}) est déjà passée
-	 * pour la journée en cours est marqué {@link EggStatus#AVAILABLE};
-	 * les autres restent en {@link EggStatus#WAITING}.
-	 *
-	 * @param currentHour the hour
-	 */
-	private void initializeFromHour(int currentHour) {
-		for (EggType eggType : EggType.VALUES) {
-			EggStatus initial = currentHour >= eggType.getResetDay()
-					? EggStatus.AVAILABLE
-					: EggStatus.WAITING;
-			eggStates.put(eggType, initial);
+	private void checkAndNotifyAllAvailable() {
+		if (allAvailableNotified) return;
+
+		boolean allAvailable = Arrays.stream(EggType.VALUES)
+				.allMatch(egg -> eggStates.get(egg) == EggStatus.AVAILABLE);
+
+		if (allAvailable) {
+			allAvailableNotified = true;
+			deltaTimestamp = System.currentTimeMillis();
+
+			PlayerContext.sendMessageWithPrefix(
+					Component.literal(CUTE_RABBIT + " All Hoppity eggs are ready to collect!").withStyle(ChatFormatting.GOLD)
+			);
 		}
 	}
 
 	private List<? extends HudElement> getHudLines() {
 		hudBuilder.clear();
 
-		EGG_GROUPS.values().stream()
-				.flatMap(List::stream)
-				.forEach(egg -> {
-					EggStatus status = eggStates.getOrDefault(egg, EggStatus.WAITING);
+		String title = "Hoppity's Hunt Eggs " + CUTE_RABBIT;
+		boolean showDelta = System.currentTimeMillis() - deltaTimestamp < DELTA_DISPLAY_MS;
+		if (showDelta) {
+			hudBuilder.appendTitle(AnimationUtils.applyColorCycle(title, 500, ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE));
+		} else {
+			hudBuilder.appendTitle(Component.literal(title).withStyle(ChatFormatting.LIGHT_PURPLE));
+		}
 
-					hudBuilder.appendTableRow(
-							Component.literal(status.getSymbol()).withStyle(status.getColor()),
-							status == EggStatus.CLAIMED
-									? Component.literal(egg.getName()).withStyle(ChatFormatting.GRAY, ChatFormatting.STRIKETHROUGH)
-									: Component.literal(egg.getName()).withStyle(egg.getColor()),
-							Component.empty()
-					);
-				});
+		for (EggType egg : EggType.VALUES) {
+			EggStatus status = eggStates.getOrDefault(egg, EggStatus.WAITING);
+
+			hudBuilder.appendTableRow(
+					Component.literal(status.getSymbol()).withStyle(status.getColor()),
+					status == EggStatus.CLAIMED
+							? Component.literal(egg.getName()).withStyle(ChatFormatting.GRAY, ChatFormatting.STRIKETHROUGH)
+							: Component.literal(egg.getName()).withStyle(egg.getColor()),
+					Component.empty()
+			);
+			hudBuilder.appendSpace();
+		}
 
 		return hudBuilder.build();
 	}
