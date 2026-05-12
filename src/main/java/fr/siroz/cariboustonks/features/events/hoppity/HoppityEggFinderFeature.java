@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.features.misc;
+package fr.siroz.cariboustonks.features.events.hoppity;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -64,7 +64,7 @@ public class HoppityEggFinderFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().misc.hoppityEggFinderGuess;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().events.hoppityHunt.eggFinderGuess;
 	}
 
 	@Override

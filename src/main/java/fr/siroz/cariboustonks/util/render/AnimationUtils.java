@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -49,6 +50,16 @@ public final class AnimationUtils {
 		}
 
 		return result;
+	}
+
+	public static @NonNull Component applyColorCycle(@NonNull String text, long cycleTimeMs, ChatFormatting... colors) {
+		if (colors == null || colors.length <= 1) return Component.literal(text);
+
+		long currentTime = Util.getEpochMillis();
+		// Calcul de l'index de la couleur actuelle dans le cycle
+		int colorIndex = (int) ((currentTime / cycleTimeMs) % colors.length);
+
+		return Component.literal(text).withStyle(colors[colorIndex]);
 	}
 
 	public static Color getCurrentRainbowColor() {

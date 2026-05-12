@@ -194,7 +194,10 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 - Highlight entities (/highlighter)
 - Bestiary Highlight: Highlights entities by middle-clicking on an entity.
-- Guess Hoppity Eggs: Predict the location of Hoppity Eggs.
+- Hoppity's Hunt:
+    - Eggs Finder Guess: Predict the location of Hoppity Eggs.
+    - Unclaimed Eggs HUD: Display the status of Hoppity's Eggs.
+    - Warn When Unclaimed: Warn when all 6 Eggs are ready to be found.
 - Show Hex Color on Dyed Items.
 - Server Visit History: Display a message indicating when you were last on the server.
 - Disable Abiphone placement: Disables the placement of all Abiphone on the ground.

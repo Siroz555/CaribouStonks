@@ -7,8 +7,9 @@ import net.minecraft.ChatFormatting;
 
 public class MiscConfig {
 
+	@Deprecated
 	@SerialEntry
-	public boolean hoppityEggFinderGuess = false;
+	public boolean hoppityEggFinderGuess = false; // Event Config -> hoppityHunt -> eggFinderGuess
 
 	@SerialEntry
 	public Color highlighterColor = ColorUtils.getAwtColor(ChatFormatting.AQUA);

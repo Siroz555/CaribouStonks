@@ -12,11 +12,11 @@ public record SkyBlockTime(
 
 	public static final SkyBlockTime DEFAULT = new SkyBlockTime(1, 1, 1, 0);
 
-	private static final long HOUR_MILLIS = 50_000;
-	private static final long DAY_MILLIS = HOUR_MILLIS * 24;
-	private static final long MONTH_MILLIS = DAY_MILLIS * 31;
-	private static final long SEASON_MILLIS = MONTH_MILLIS * 3;
-	private static final long YEAR_MILLIS = SEASON_MILLIS * 4;
+	public static final long HOUR_MILLIS = 50_000;
+	public static final long DAY_MILLIS = HOUR_MILLIS * 24;
+	public static final long MONTH_MILLIS = DAY_MILLIS * 31;
+	public static final long SEASON_MILLIS = MONTH_MILLIS * 3;
+	public static final long YEAR_MILLIS = SEASON_MILLIS * 4;
 
 	public static SkyBlockTime of(long millis) {
 		return new SkyBlockTime(
