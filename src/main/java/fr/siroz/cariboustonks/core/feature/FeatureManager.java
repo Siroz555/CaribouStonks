@@ -15,6 +15,7 @@ import fr.siroz.cariboustonks.features.dungeon.CroesusMenuFeature;
 import fr.siroz.cariboustonks.features.dungeon.SadanBossFeature;
 import fr.siroz.cariboustonks.features.dungeon.ThornBossFeature;
 import fr.siroz.cariboustonks.features.dungeon.WitherKingDragonFeature;
+import fr.siroz.cariboustonks.features.events.hoppity.HoppityEggFinderFeature;
 import fr.siroz.cariboustonks.features.events.hoppity.HoppityHuntFeature;
 import fr.siroz.cariboustonks.features.fishing.BobberTimerFeature;
 import fr.siroz.cariboustonks.features.fishing.FishCaughtFeature;
@@ -39,7 +40,6 @@ import fr.siroz.cariboustonks.features.misc.BestiaryHighlightFeature;
 import fr.siroz.cariboustonks.features.misc.DisableAbiphonePlacementFeature;
 import fr.siroz.cariboustonks.features.misc.HexTooltipFeature;
 import fr.siroz.cariboustonks.features.misc.HighlightMobFeature;
-import fr.siroz.cariboustonks.features.misc.HoppityEggFinderFeature;
 import fr.siroz.cariboustonks.features.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.features.misc.REISearchBarCalculatorFeature;
 import fr.siroz.cariboustonks.features.misc.ServerTrackerFeature;
@@ -105,6 +105,7 @@ public final class FeatureManager {
 		registerFeature(new SadanBossFeature());
 		registerFeature(new WitherKingDragonFeature());
 		// Events
+		registerFeature(new HoppityEggFinderFeature());
 		registerFeature(new HoppityHuntFeature());
 		// Fishing
 		registerFeature(new RareSeaCreatureFeature());
@@ -174,7 +175,6 @@ public final class FeatureManager {
 		registerFeature(new HexTooltipFeature(5));
 		registerFeature(new ServerTrackerFeature());
 		registerFeature(new HighlightMobFeature());
-		registerFeature(new HoppityEggFinderFeature());
 		registerFeature(new PartyCommandFeature());
 		registerFeature(new REISearchBarCalculatorFeature());
 		// Vanilla
