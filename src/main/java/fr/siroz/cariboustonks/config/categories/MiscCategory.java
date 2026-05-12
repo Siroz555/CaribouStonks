@@ -124,9 +124,11 @@ public class MiscCategory extends AbstractCategory {
 						.description(OptionDescription.of(
 								Component.literal("Features of mods other than CaribouStonks.")))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("RoughlyEnoughItems Calculator"))
+								.name(Component.literal("RoughlyEnoughItems / JustEnoughItems Calculator"))
 								.description(OptionDescription.of(
-										Component.literal("Allows you to have a calculator in the RoughlyEnoughItems Search Bar.")))
+										Component.literal("Allows you to have a calculator in the Search Bar from:"),
+										Component.literal(SPACE + "- RoughlyEnoughItems"),
+										Component.literal("- JustEnoughItems")))
 								.binding(defaults.misc.compatibility.reiSearchBarCalculator,
 										() -> current.misc.compatibility.reiSearchBarCalculator,
 										newValue -> current.misc.compatibility.reiSearchBarCalculator = newValue)

@@ -35,7 +35,7 @@ public class MiscConfig {
 	public static class Compatibility {
 
 		@SerialEntry
-		public boolean reiSearchBarCalculator = false;
+		public boolean reiSearchBarCalculator = false; // REI / JEI
 	}
 
 	public static class PartyCommands {

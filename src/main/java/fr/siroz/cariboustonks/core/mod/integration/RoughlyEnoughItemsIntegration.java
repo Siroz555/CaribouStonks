@@ -6,7 +6,7 @@ package fr.siroz.cariboustonks.core.mod.integration;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jspecify.annotations.Nullable;
 
-public final class RoughlyEnoughItemsIntegration { // TODO :: 26.1
+public final class RoughlyEnoughItemsIntegration {
 
 	private RoughlyEnoughItemsIntegration() {
 	}
@@ -17,17 +17,30 @@ public final class RoughlyEnoughItemsIntegration { // TODO :: 26.1
 
 	@Nullable
 	public static String getSearchBarText() {
-//		TextField searchBarField = REIRuntime.getInstance().getSearchTextField();
-//		if (searchBarField == null) {
+//		try {
+//			TextField searchBarField = REIRuntime.getInstance().getSearchTextField();
+//			if (searchBarField == null) {
+//				return null;
+//			}
+//			return searchBarField.getText();
+//		} catch (Exception ex) {
+//			if (DeveloperTools.isInDevelopment()) {
+//				CaribouStonks.LOGGER.error("[RoughlyEnoughItemsIntegration] getSearchBarText failed", ex);
+//			}
 //			return null;
 //		}
-//
-//		return searchBarField.getText();
 		return null;
 	}
 
 	public static boolean isSearchBarAtBottomSide() {
-		//return REIRuntime.getInstance().getContextualSearchFieldLocation() == SearchFieldLocation.BOTTOM_SIDE;
+//		try {
+//			return REIRuntime.getInstance().getContextualSearchFieldLocation() == SearchFieldLocation.BOTTOM_SIDE;
+//		} catch (Exception ex) {
+//			if (DeveloperTools.isInDevelopment()) {
+//				CaribouStonks.LOGGER.error("[RoughlyEnoughItemsIntegration] isSearchBarAtBottomSide failed", ex);
+//			}
+//			return true;
+//		}
 		return true;
 	}
 }

@@ -202,7 +202,9 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 - Server Visit History: Display a message indicating when you were last on the server.
 - Disable Abiphone placement: Disables the placement of all Abiphone on the ground.
 - Party Commands (!warp, !coords, !dice, ..)
-- RoughlyEnoughItems (REI) Search Bar Calculator
+- Search Bar Calculator from:
+    - RoughlyEnoughItems (REI)
+    - JustEnoughItems (JEI)
 
 **Commands**
 
