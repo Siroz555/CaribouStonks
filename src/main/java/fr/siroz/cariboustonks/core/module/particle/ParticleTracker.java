@@ -14,10 +14,13 @@ public final class ParticleTracker {
 	private final Consumer<Vec3> onPositionPredicted;
 	private final Runnable onTrackingStarted;
 	private final Runnable onTrackingReset;
+	private final boolean proximityResetOnly;
+	private final double proximityThresholdSq;
 
 	private Vec3 predictedPosition;
 	private long trackingStartTime;
 	private boolean isTracking;
+	private boolean canCheckProximity;
 
 	private ParticleTracker(
 			ParticlePathPredictor predictor,
@@ -25,7 +28,9 @@ public final class ParticleTracker {
 			Predicate<ParticleData> particleFilter,
 			Consumer<Vec3> onPositionPredicted,
 			Runnable onTrackingStarted,
-			Runnable onTrackingReset
+			Runnable onTrackingReset,
+			boolean proximityResetOnly,
+			double proximityThresholdSq
 	) {
 		this.predictor = predictor;
 		this.trackingDurationMs = trackingDurationMs;
@@ -33,7 +38,10 @@ public final class ParticleTracker {
 		this.onPositionPredicted = onPositionPredicted;
 		this.onTrackingStarted = onTrackingStarted;
 		this.onTrackingReset = onTrackingReset;
+		this.proximityResetOnly = proximityResetOnly;
+		this.proximityThresholdSq = proximityThresholdSq;
 		this.isTracking = false;
+		this.canCheckProximity = false;
 	}
 
 	/**
@@ -42,6 +50,7 @@ public final class ParticleTracker {
 	public void startTracking() {
 		reset();
 		isTracking = true;
+		canCheckProximity = proximityResetOnly;
 		trackingStartTime = System.currentTimeMillis();
 
 		if (onTrackingStarted != null) {
@@ -59,7 +68,11 @@ public final class ParticleTracker {
 
 		long currentTime = System.currentTimeMillis();
 		if (currentTime - trackingStartTime > trackingDurationMs) {
-			reset();
+			if (proximityResetOnly) {
+				stopTracking();
+			} else {
+				reset();
+			}
 			return;
 		}
 
@@ -88,16 +101,42 @@ public final class ParticleTracker {
 	}
 
 	/**
+	 * Checks if the given {@link Vec3} is close enough to the predicted pos and resets tracking.
+	 * <p>
+	 * Safe to handle without condition
+	 *
+	 * @param currentPosition the current pos to check against the predicted target
+	 */
+	public void checkProximity(@Nullable Vec3 currentPosition) {
+		if (currentPosition == null) return;
+		if (predictedPosition == null) return;
+		if (!canCheckProximity) return;
+
+		double distSq = currentPosition.distanceToSqr(predictedPosition);
+		if (distSq <= proximityThresholdSq) {
+			reset();
+		}
+	}
+
+	/**
 	 * Resets the tracking state
 	 */
 	public void reset() {
-		predictor.reset();
+		stopTracking();
 		predictedPosition = null;
-		isTracking = false;
+		canCheckProximity = false;
 
 		if (onTrackingReset != null) {
 			onTrackingReset.run();
 		}
+	}
+
+	/**
+	 * Stops listening to new particles without clearing the predicted position
+	 */
+	private void stopTracking() {
+		predictor.reset();
+		isTracking = false;
 	}
 
 	@Nullable
@@ -121,6 +160,8 @@ public final class ParticleTracker {
 		private Consumer<Vec3> onPositionPredicted;
 		private Runnable onTrackingStarted;
 		private Runnable onTrackingReset;
+		private boolean proximityResetOnly = false;
+		private double proximityThreshold = 2.0;
 
 		/**
 		 * Sets the number of points used for prediction
@@ -184,6 +225,28 @@ public final class ParticleTracker {
 			return this;
 		}
 
+		/**
+		 * If enabled, tracking is reset only when {@link #checkProximity(Vec3)} detects the
+		 * position is close enough to the target. The trackingDurationMs timeout is ignored.
+		 *
+		 * @param enabled {@code true} to use proximity only reset (default: false)
+		 */
+		public Builder proximityResetOnly(boolean enabled) {
+			this.proximityResetOnly = enabled;
+			return this;
+		}
+
+		/**
+		 * Sets the distance threshold (in blocks) used by {@link #checkProximity(Vec3)}.
+		 *
+		 * @param distance max distance to trigger a reset (default: 2.0)
+		 */
+		public Builder proximityThreshold(double distance) {
+			if (distance <= 0) throw new IllegalArgumentException("distance must be > 0");
+			this.proximityThreshold = distance;
+			return this;
+		}
+
 		@NonNull
 		public ParticleTracker build() {
 			Objects.requireNonNull(particleFilter, "Particle filter must be set");
@@ -195,7 +258,9 @@ public final class ParticleTracker {
 					particleFilter,
 					onPositionPredicted,
 					onTrackingStarted,
-					onTrackingReset
+					onTrackingReset,
+					proximityResetOnly,
+					proximityThreshold * proximityThreshold
 			);
 		}
 	}
