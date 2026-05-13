@@ -12,6 +12,7 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.ChatFormatting;
@@ -52,6 +53,8 @@ public class HotspotRadarFeature extends Feature {
 					waypoint.setEnabled(true);
 					waypoint.updatePosition(Position.of(vec3));
 				})
+				.proximityResetOnly(true)
+				.proximityThreshold(20)
 				.onTrackingReset(() -> this.waypoint.setEnabled(false))
 				.build();
 
@@ -70,6 +73,11 @@ public class HotspotRadarFeature extends Feature {
 	@Override
 	protected void onClientJoinServer() {
 		reset();
+	}
+
+	@Override
+	protected void onSecondPassed() {
+		if (isEnabled()) tracker.checkProximity(PlayerContext.position());
 	}
 
 	public void reset() {

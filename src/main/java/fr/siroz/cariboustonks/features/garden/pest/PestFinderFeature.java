@@ -13,6 +13,7 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.InteractionEvents;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.context.WorldContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
 import net.minecraft.ChatFormatting;
@@ -52,6 +53,8 @@ public final class PestFinderFeature extends Feature {
 					waypoint.setEnabled(true);
 					waypoint.updatePosition(Position.of(vec3));
 				})
+				.proximityResetOnly(true)
+				.proximityThreshold(10)
 				.onTrackingReset(() -> this.waypoint.setEnabled(false))
 				.build();
 
@@ -71,6 +74,11 @@ public final class PestFinderFeature extends Feature {
 	protected void onClientJoinServer() {
 		waypoint.setEnabled(false);
 		tracker.reset();
+	}
+
+	@Override
+	protected void onSecondPassed() {
+		if (isEnabled()) tracker.checkProximity(PlayerContext.position());
 	}
 
 	@EventHandler(event = "InteractionEvents.LEFT_CLICK_AIR_EVENT")
