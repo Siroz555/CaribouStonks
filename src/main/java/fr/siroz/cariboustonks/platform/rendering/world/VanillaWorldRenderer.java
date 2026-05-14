@@ -78,7 +78,7 @@ final class VanillaWorldRenderer implements WorldRenderer {
 	private Frustum frustum = null;
 	private boolean frozen = false;
 
-	public VanillaWorldRenderer() {
+	VanillaWorldRenderer() {
 		this.textRendererCommand = new TextRendererCommand();
 		this.textureRendererCommand = new TextureRendererCommand();
 		this.circleRendererCommand = new CircleRendererCommand();
