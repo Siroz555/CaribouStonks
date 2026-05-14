@@ -9,7 +9,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 **✅ Supported Minecraft Versions**: **26.1.x**, **1.21.11** and **1.21.10**
 
-### Installation
+## Installation
 
 1. Requirements:
     - [Fabric API](https://modrinth.com/mod/fabric-api)
@@ -17,8 +17,12 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 > [!IMPORTANT]
 > This is a `personal` mod, it's not intended to be widely distributed or anything like that at the moment.
+>
+> **Contact**:
+> _In-game_: `Siroz555`
+> _Discord_: `#siroz (Siroz#0086)`
 
-### Features
+## Features
 
 **General**
 
@@ -218,7 +222,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 ---
 
-### Release & Update Policy
+## Release & Update Policy
 
 * Major features → shipped on the **master** branch first.
 * Bug fixes → backported to x when safe.
@@ -226,7 +230,59 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 ---
 
-### Minecraft Versions History
+## Q&A
+
+### What's in the mod?
+
+> The mod includes YetAnotherConfigLib (YACL) and HypixelModAPI (hm-api) as libraries.
+> Assets, such as images or internal repositories, such as enchantments or attributes.
+> The final JAR file is about ~2 MB in size
+
+### Where does the data come from?
+
+> There are several types of data, each one is collected and processed differently.
+>
+> **Items**:
+> The Item's data comes from the Hypixel Official API.
+> Information such as the cost of gemstones, the rarity of items, Minecraft materials,
+> and other data is collected and stored internally, to be processed by features or other internal components of the mod.
+> The data is retrieved only once when the game starts.
+>
+> **Bazaar**:
+> The Bazaar's data comes from the Hypixel Official API.
+> All data displayed and processed is calculated in real time within the mod as it is retrieved.
+> The data is updated every 5 minutes.
+>
+> **Auctions**:
+> The Auction's data comes from the EliteSkyBlock API.
+> The lowest bins are retrieved. All other calculations and elements displayed by the mod are calculated in real time.
+> The data is updated every 5 minutes.
+>
+> **Price chart (Graph)**:
+> The charts displayed are based on data from NotEnoughUpdates (formerly)
+> and now include data from the EliteSkyBlock API to provide a one-month history.
+> The retrieved data is processed and calculated at the time of display.
+> The Bazaar statistics are not included; only the Auction House statistics are included.
+> The data is updated as needed and cached for 15 minutes
+
+### What does the mod save in the .minecraft folder?
+
+> The Mod saves its configuration and the player's entries, such as waypoints and reminders locally.
+
+_TODO :: more..._
+
+---
+
+# Developers
+
+This is a personal mod, but it's open to everyone!
+The structure and organization still need a few tweaks before it's "officially open" to contributors.
+
+_TODO :: more..._
+
+---
+
+## Minecraft Versions History
 
 | Version             |                   Status | Notes                               |
 |---------------------|-------------------------:|-------------------------------------|
@@ -238,14 +294,33 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 ---
 
-### Credits & Open Source Software
+## Credits
 
 - **Fabric** & **Yarn** for the development environment.
 - **YACL** (for the system and configuration GUI) as a library.
-- **HypixelModAPI** Official Hypixel Mod API as a dependency.
+- **HypixelModAPI** AzureAaron hm-api as a dependency.
 - **Skyblocker** (<3) & **Wynntils** (<3) for some code logic in the latest version of Minecraft, such as Mixins.
 - **SkyHanni** & **NotEnoughUpdates** for ideas and adaptations since version 1.8.
 - **EliteSkyBlock** for the Elite API used for the Auction House Data.
+
+There are several reworkings, adaptations, and ideas drawn from other projects.
+
+**SkyHanni / SoopyV2**
+
+To predict the position of a Guess using items, _PolynomialFitter_ has been completely rewritten.
+[Bézier Math Utils](/src/main/java/fr/siroz/cariboustonks/util/math/bezier)
+It has been rewritten in Java, adapted to the codebase, and renamed and reorganized.
+
+**NotEnoughUpdates / aaron-mod**
+
+To display colors based on whether enchantments on items are maxed out or nearly maxed out.
+[ColoredEnchantment Feature](/src/main/java/fr/siroz/cariboustonks/features/item/ColoredEnchantmentFeature.java)
+This is a rework and rewrite, designed to improve compatibility and eliminate reliance on an external API.
+This also means you don't have to install a resource pack to get the Rainbow effect on maxed-out enchantments.
+
+---
+
+## Open Source Software
 
 | Software                                                                 | License                                                                                           |
 |--------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
@@ -254,7 +329,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 | [YACL](https://github.com/isXander/YetAnotherConfigLib)                  | [LGPL-3.0 license](https://github.com/isXander/YetAnotherConfigLib/blob/multiversion/dev/LICENSE) |
 | [Skyblocker](https://github.com/SkyblockerMod/Skyblocker)                | [LGPL-3.0](https://github.com/SkyblockerMod/Skyblocker/blob/master/LICENSE)                       |
 | [Wynntils](https://github.com/Wynntils/Wynntils)                         | [AGPL 3.0](https://github.com/Wynntils/Wynntils/blob/development/LICENSE)                         |
-| [HypixelModAPI](https://github.com/HypixelDev/ModAPI)                    | [MIT license](https://github.com/HypixelDev/ModAPI/blob/master/LICENSE)                           |
+| [HypixelModAPI](https://github.com/AzureAaron/hm-api)                    | [Apache-2.0 license](https://github.com/AzureAaron/hm-api/blob/master/LICENSE)                    |
 | [SkyHanni](https://github.com/hannibal002/SkyHanni)                      | [LGPL-2.1 license](https://github.com/hannibal002/SkyHanni/blob/beta/LICENSE)                     |
 | [SoopyV2](https://github.com/Soopyboo32/SoopyV2)                         | [GPL-3.0 license](https://github.com/Soopyboo32/SoopyV2/blob/master/LICENSE)                      |
 | [Skytils](https://github.com/Skytils/SkytilsMod)                         | [AGPL-3.0 license ](https://github.com/Skytils/SkytilsMod/blob/1.x/LICENSE.md)                    |

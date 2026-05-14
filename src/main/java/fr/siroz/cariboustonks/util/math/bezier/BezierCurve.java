@@ -1,3 +1,19 @@
+/*
+ * This implementation is adapted from the original code in the project
+ * SkyHanni (<a href="https://github.com/hannibal002/SkyHanni">GitHub</a>)
+ * a Minecraft 1.8/1.21 Mod written in Kotlin, which was licensed under LGPL-2.1.
+ * <p>
+ * This class has been completely rewritten in Java;
+ * Changes have been made, particularly to field, method, and parameter names,
+ * as well as to the logic and code simplifications.
+ * <p>
+ * Original access:
+ * https://github.com/hannibal002/SkyHanni/blob/beta/src/main/java/at/hannibal2/skyhanni/utils/PolynomialFitter.kt
+ * <p>
+ * Original authors: [SkyHanni Contributors]
+ * Adaptations by: [Siroz555]
+ */
+
 package fr.siroz.cariboustonks.util.math.bezier;
 
 import java.util.List;
