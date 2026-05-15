@@ -116,6 +116,11 @@ public enum IslandType {
 	BACKWATER_BAYOU("fishing_1", "Backwater Bayou", true),
 
 	/**
+	 * Lotus Atoll
+	 */
+	LOTUS_ATOLL("lotus_atoll", "Lotus Atoll", true),
+
+	/**
 	 * Jerry's Workshop
 	 */
 	JERRY_WORKSHOP("winter", "Jerry's Workshop", true),
