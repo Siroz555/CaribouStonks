@@ -164,6 +164,8 @@ public interface SkyBlockConstants {
 		map.put("buzzing", "CLIPPED_WINGS");
 		// Spades
 		map.put("erudite", "DAEDALUS_NOTES");
+		// Froggles
+		map.put("geometric", "GEOMETRIC_ODDITY");
 	}));
 
 	List<String> MASTER_STARS = List.of(
