@@ -103,7 +103,7 @@ public enum IslandType {
 	/**
 	 * The Park
 	 */
-	THE_PARK("foraging_1", "The Park"),
+	THE_PARK("foraging_1", "The Park", true),
 
 	/**
 	 * The Foraging Update - Galatea
