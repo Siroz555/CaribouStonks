@@ -155,6 +155,9 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Fish Caught Warning: Display a Title when you catch a fish.
     - Guess Hotspot: Predict the location of the nearest hotspot.
     - Highlight Hotspot: A colored circle appears if your bobber is within the hotspot radius.
+    - Lotus Atoll:
+        - Wormholes Finder: Detect Wormholes from a distance by creating a Waypoint.
+        - Fishing Buffs: Displays a HUD showing the time remaining before they expire.
 
 **Slayers**
 
