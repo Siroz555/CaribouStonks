@@ -542,7 +542,8 @@ public class SkillsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Fish Caught Warning"))
 								.description(OptionDescription.of(
-										Component.literal("Show a Title when you catch a fish.")))
+										Component.literal("Show a Title when you catch a fish."),
+										Component.literal(SPACE + "Note: Bobber Timer Display option must be disabled.").withStyle(ChatFormatting.GOLD)))
 								.binding(defaults.fishing.fishCaughtWarning,
 										() -> current.fishing.fishCaughtWarning,
 										newValue -> current.fishing.fishCaughtWarning = newValue)
@@ -565,6 +566,35 @@ public class SkillsCategory extends AbstractCategory {
 								.binding(defaults.fishing.hotspotHighlight,
 										() -> current.fishing.hotspotHighlight,
 										newValue -> current.fishing.hotspotHighlight = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(LabelOption.create(Component.literal("| Lotus Atoll").withStyle(ChatFormatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Lotus Atoll - Wormholes Finder"))
+								.description(OptionDescription.of(
+										Component.literal("Detect Wormholes from a distance in the Lotus Atoll Island by creating a Waypoint."),
+										Component.literal("If you're close enough, the Waypoint will disappear.")))
+								.binding(defaults.fishing.lotusAtoll.wormholeFinder,
+										() -> current.fishing.lotusAtoll.wormholeFinder,
+										newValue -> current.fishing.lotusAtoll.wormholeFinder = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Lotus Atoll - Buffs HUD"))
+								.description(OptionDescription.of(
+										Component.literal("Displays a HUD in the Lotus Atoll Island showing the current number of Fishing Buffs and the time remaining before they expire.")))
+								.binding(defaults.fishing.lotusAtoll.buffHud.enabled,
+										() -> current.fishing.lotusAtoll.buffHud.enabled,
+										newValue -> current.fishing.lotusAtoll.buffHud.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Lotus Atoll - Buffs Expired Warning"))
+								.description(OptionDescription.of(
+										Component.literal("Receive a notification in the Lotus Atoll Island when Fishing Buffs have expired.")))
+								.binding(defaults.fishing.lotusAtoll.buffExpiredWarn,
+										() -> current.fishing.lotusAtoll.buffExpiredWarn,
+										newValue -> current.fishing.lotusAtoll.buffExpiredWarn = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(LabelOption.create(Component.empty()))
