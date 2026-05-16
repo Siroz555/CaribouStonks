@@ -132,6 +132,12 @@
     "skyBlockApiId": "SHARD_MUDWORM"
   },
   {
+    "name": "Lotus Trophy",
+    "shardName": "Lotusfish",
+    "id": "C26",
+    "skyBlockApiId": "SHARD_LOTUSFISH"
+  },
+  {
     "name": "Midas Touch",
     "shardName": "Golden Ghoul",
     "id": "C27",
@@ -288,6 +294,12 @@
     "skyBlockApiId": "SHARD_PRAYING_MANTIS"
   },
   {
+    "name": "Lily Tracker",
+    "shardName": "Lotum",
+    "id": "U23",
+    "skyBlockApiId": "SHARD_LOTUM"
+  },
+  {
     "name": "Undead Ruler",
     "shardName": "Zombie Soldier",
     "id": "U24",
@@ -370,6 +382,18 @@
     "shardName": "Termite",
     "id": "U40",
     "skyBlockApiId": "SHARD_TERMITE"
+  },
+  {
+    "name": "Golden Frog",
+    "shardName": "Flipflopper",
+    "id": "U41",
+    "skyBlockApiId": "SHARD_FLIPFLOPPER"
+  },
+  {
+    "name": "Lily Puncher",
+    "shardName": "Tewtil",
+    "id": "U59",
+    "skyBlockApiId": "SHARD_TEWTIL"
   },
   {
     "name": "Forest Elemental",
@@ -514,6 +538,12 @@
     "shardName": "Thyst",
     "id": "R31",
     "skyBlockApiId": "SHARD_THYST"
+  },
+  {
+    "name": "Diamond Frog",
+    "shardName": "Seashine",
+    "id": "R32",
+    "skyBlockApiId": "SHARD_SEASHINE"
   },
   {
     "name": "Quartz Speed",

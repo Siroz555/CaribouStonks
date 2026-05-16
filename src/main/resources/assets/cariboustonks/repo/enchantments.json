@@ -329,6 +329,12 @@
     "maxLevel": 6
   },
   {
+    "id": "magmarizer",
+    "name": "Magmarizer",
+    "maxLevel": 6,
+    "goodLevel": 5
+  },
+  {
     "id": "magnet",
     "name": "Magnet",
     "maxLevel": 6,
