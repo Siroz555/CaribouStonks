@@ -36,6 +36,9 @@ public enum RareSeaCreature {
 	BLUE_RINGED_OCTOPUS("Blue Ringed Octopus", "A garish set of tentacles arise. It's a Blue Ringed Octopus!", ChatFormatting.LIGHT_PURPLE, false),
 	TITANOBOA("Titanoboa", "A massive Titanoboa surfaces. Its body stretches as far as the eye can see.", ChatFormatting.DARK_GREEN, false),
 	WIKI_TIKI("Wiki Tiki", "The water bubbles and froths. A massive form emerges- you have disturbed the Wiki Tiki! You shall pay the price.", ChatFormatting.LIGHT_PURPLE, false),
+	// Water - Lotus Atoll
+	FROG_PRINCE("Frog Prince", "Bow down before the Frog Prince... or pay the hefty price!", ChatFormatting.LIGHT_PURPLE, false),
+	PUDDLE_JUMPER("Puddle Jumper", "A Puddle Jumper is preparing for liftoff-cast your rod into it and hold on tight!", ChatFormatting.GOLD, false),
 	// Lava - Crimson Isle
 	FIERY_SCUTTLER("Fiery Scuttler", "A Fiery Scuttler inconspicuously waddles up to you, friends in tow.", ChatFormatting.GOLD, false, IslandType.CRIMSON_ISLE),
 	THUNDER("Thunder", "You hear a massive rumble as Thunder emerges.", ChatFormatting.AQUA, true, IslandType.CRIMSON_ISLE),
