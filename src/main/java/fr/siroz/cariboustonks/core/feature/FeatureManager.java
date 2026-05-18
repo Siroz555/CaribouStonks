@@ -41,7 +41,7 @@ import fr.siroz.cariboustonks.features.misc.DisableAbiphonePlacementFeature;
 import fr.siroz.cariboustonks.features.misc.HexTooltipFeature;
 import fr.siroz.cariboustonks.features.misc.HighlightMobFeature;
 import fr.siroz.cariboustonks.features.misc.PartyCommandFeature;
-import fr.siroz.cariboustonks.features.misc.REISearchBarCalculatorFeature;
+import fr.siroz.cariboustonks.features.misc.SearchBarCalculatorFeature;
 import fr.siroz.cariboustonks.features.misc.ServerTrackerFeature;
 import fr.siroz.cariboustonks.features.reminders.BoosterCookieReminderFeature;
 import fr.siroz.cariboustonks.features.reminders.ChocolateLimitReminderFeature;
@@ -176,7 +176,7 @@ public final class FeatureManager {
 		registerFeature(new ServerTrackerFeature());
 		registerFeature(new HighlightMobFeature());
 		registerFeature(new PartyCommandFeature());
-		registerFeature(new REISearchBarCalculatorFeature());
+		registerFeature(new SearchBarCalculatorFeature());
 		// Vanilla
 		registerFeature(new HideStatusEffectsFeature());
 		registerFeature(new MuteVanillaSoundFeature());
