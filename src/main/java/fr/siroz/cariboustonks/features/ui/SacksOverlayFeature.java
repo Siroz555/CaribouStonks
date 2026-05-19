@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.features.ui;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
@@ -9,7 +10,8 @@ import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarItemAnalytics;
-import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarPriceType;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -22,10 +24,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -34,17 +34,8 @@ import net.minecraft.world.item.Items;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+@Experimental // SIROZ-NOTE: Gemstone & Rune sacks handler + failed items?
 public class SacksOverlayFeature extends Feature {
-
-	// TODO
-	//  - config
-	//  - gemstone sack handler
-	//  - missing skyBlockApiId
-	//  - failed items
-	//  - sort system
-	//  - NPC price ?
-	//  - failed stored pattern parsing
-
 	private static final Pattern TITLE_PATTERN = Pattern.compile("^(?:.* Sack|Enchanted .* Sack)$");
 	private static final Pattern STORED_PATTERN = Pattern.compile("Stored: (?<stored>[0-9.,kKmMbB]+)/(?<total>\\d+(?:[0-9.,]+)?[kKmMbB]?)");
 	private static final Set<String> BLACKLISTED_ITEM_NAMES = Set.of(
@@ -57,11 +48,12 @@ public class SacksOverlayFeature extends Feature {
 			"Enchanted ", "Ench ",
 			"Compacted ", "Comp "
 	);
+	private static final int MAX_NAME_WIDTH = 100; // 80
 	private static final int SPACING = 4;
-	private static final int PADDING_LEFT = 10;
-	private static final int START_Y = 20;
+	private static final int PADDING_LEFT = 5;
+	private static final int START_Y = 20; // 20
 	private static final int ICON_SIZE = 16;
-	private static final int ICON_GAP = 2;
+	private static final int ICON_GAP = 4;
 
 	private final HypixelDataSource hypixelDataSource;
 	private final List<Line> lines = new ArrayList<>();
@@ -69,29 +61,56 @@ public class SacksOverlayFeature extends Feature {
 	public SacksOverlayFeature() {
 		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
 
-		ScreenEvents.AFTER_INIT.register((_, screen, _, _) -> {
-			ScreenEvents.afterExtract(screen).register(this::render);
-			ScreenEvents.remove(screen).register(_ -> this.lines.clear());
-		});
-
 		this.addComponent(ContainerOverlayComponent.class, ContainerOverlayComponent.builder()
 				.trait(MatcherTrait.pattern(TITLE_PATTERN))
 				.content(this::contentAnalyzer)
+				.render(this::render)
 				.onReset(this.lines::clear)
 				.build());
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock();
+		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.sacksOverlay.enabled;
 	}
 
-	@EventHandler(event = "ScreenEvents.afterRender")
-	private void render(Screen screen, GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float tickDelta) {
+	private @NonNull List<ColorHighlight> contentAnalyzer(@NonNull Int2ObjectMap<ItemStack> slots) {
+		List<Item> items = new ArrayList<>();
+		for (Int2ObjectMap.Entry<ItemStack> entry : slots.int2ObjectEntrySet()) {
+			ItemStack itemStack = entry.getValue();
+			Component name = itemStack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty());
+			if (isBlacklisted(itemStack, name)) continue;
+
+			String skyBlockId = SkyBlockAPI.getSkyBlockApiId(itemStack);
+			if (skyBlockId.isEmpty()) continue;
+
+			SkyBlockItemData skyBlockItemData = hypixelDataSource.getSkyBlockItem(skyBlockId);
+			// La couleur noire est par défault si jamais l'item de l'API est fail,
+			// ou que l'item n'a pas de tier défini, la couleur de base est keep.
+			if (skyBlockItemData != null && skyBlockItemData.tier().getFormatting() != ChatFormatting.BLACK) {
+				name = Component.literal(name.getString()).withStyle(skyBlockItemData.tier().getFormatting());
+			}
+
+			StoredInfo info = extractStored(itemStack);
+			if (info == null) continue;
+
+			double unitPrice = getBazaarPrice(skyBlockId);
+			double value = unitPrice * info.storedAmount();
+
+			items.add(new Item(itemStack, truncateName(shortenName(name)), value, info));
+		}
+		items.sort(Comparator.comparingDouble(Item::value).reversed());
+		buildDisplayLines(items);
+		items.clear();
+
+		return Collections.emptyList();
+	}
+
+	private void render(GuiGraphicsExtractor guiGraphics, int screenWidth, int screenHeight, int x, int y) {
 		if (lines.isEmpty()) return;
 
 		guiGraphics.pose().pushMatrix();
-		final float scale = this.config().hunting.huntingBoxOverlay.scale; // .8
+		final float scale = this.config().uiAndVisuals.sacksOverlay.scale;
 		guiGraphics.pose().scale(scale, scale);
 
 		int[] colWidth = new int[3];
@@ -143,35 +162,23 @@ public class SacksOverlayFeature extends Feature {
 		guiGraphics.pose().popMatrix();
 	}
 
-	private @NonNull List<ColorHighlight> contentAnalyzer(@NonNull Int2ObjectMap<ItemStack> slots) {
-		List<Item> items = new ArrayList<>();
-		for (Int2ObjectMap.Entry<ItemStack> entry : slots.int2ObjectEntrySet()) {
-			ItemStack itemStack = entry.getValue();
-			Component name = itemStack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty());
-			if (isBlacklisted(itemStack, name)) continue;
-
-			String skyBlockId = SkyBlockAPI.getSkyBlockApiId(itemStack);
-			if (skyBlockId.isEmpty()) continue;
-
-			StoredInfo info = extractStored(itemStack);
-			if (info == null) continue;
-
-			double unitPrice = getBazaarPrice(skyBlockId);
-			double value = unitPrice * info.storedAmount();
-
-			items.add(new Item(itemStack, shortenName(name), value, info));
-		}
-		items.sort(Comparator.comparingDouble(Item::value).reversed());
-		buildDisplayLines(items);
-		items.clear();
-
-		return Collections.emptyList();
-	}
-
 	private void buildDisplayLines(List<Item> items) {
 		lines.clear();
 
-		int maxLines = 15;
+		final int maxLines = this.config().uiAndVisuals.sacksOverlay.listSize;
+		double totalPrice = items.stream()
+				.mapToDouble(Item::value)
+				.sum();
+
+		lines.add(new Line(Component.empty()
+				.append(Component.literal(" Sack Overlay:").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
+				.append(Component.literal(" Value: ").withStyle(ChatFormatting.YELLOW))
+				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+				.append(Component.literal(StonksUtils.SHORT_INTEGER_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
+		));
+		lines.add(new Line(Component.empty()));
 
 		items.stream().limit(maxLines).forEach(item -> lines.add(new Line(
 				item.itemStack(),
@@ -183,21 +190,8 @@ public class SacksOverlayFeature extends Feature {
 		)));
 
 		if (items.size() > maxLines) {
-			lines.add(new Line(Component.literal(" … and " + (items.size() - maxLines) + " more").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC)));
+			lines.add(new Line(Component.literal("  … and " + (items.size() - maxLines) + " more").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC)));
 		}
-
-		double totalPrice = items.stream()
-				.mapToDouble(Item::value)
-				.sum();
-
-		lines.add(new Line(Component.empty()));
-		lines.add(new Line(Component.empty()
-				.append(Component.literal("Sack Value: ").withStyle(ChatFormatting.YELLOW))
-				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
-				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.SHORT_INTEGER_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
-				.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
-		));
 	}
 
 	private boolean isBlacklisted(@NonNull ItemStack itemStack, @NonNull Component itemName) {
@@ -212,8 +206,9 @@ public class SacksOverlayFeature extends Feature {
 	}
 
 	private double getBazaarPrice(@NonNull String skyBlockId) {
+		boolean useBuyPrice = this.config().uiAndVisuals.sacksOverlay.priceType == BazaarPriceType.BUY;
 		return hypixelDataSource.getBazaarItem(skyBlockId)
-				.map(BazaarItemAnalytics.BUY)
+				.map(useBuyPrice ? BazaarItemAnalytics.BUY : BazaarItemAnalytics.SELL)
 				.orElse(0.0);
 	}
 
@@ -234,6 +229,20 @@ public class SacksOverlayFeature extends Feature {
 		}
 	}
 
+	private @NonNull Component truncateName(@NonNull Component name) {
+		if (MINECRAFT.font.width(name) <= MAX_NAME_WIDTH) return name;
+
+		String text = name.getString();
+		Style style = findStyle(name);
+
+		// Réduit caractère par caractère jusqu'à rentrer avec "..."
+		while (!text.isEmpty() && MINECRAFT.font.width(text + "…") > MAX_NAME_WIDTH) {
+			text = text.substring(0, text.length() - 1);
+		}
+
+		return Component.literal(text + "…").withStyle(style);
+	}
+
 	private @NonNull Component shortenName(@NonNull Component name) {
 		String text = name.getString();
 		for (Map.Entry<String, String> entry : NAME_SHORTCUTS.entrySet()) {
@@ -246,8 +255,9 @@ public class SacksOverlayFeature extends Feature {
 	}
 
 	private @NonNull Style findStyle(@NonNull Component component) {
-		// Le dernier a tjs la couleur
-		return component.getSiblings().getLast().getStyle();
+		return component.getSiblings().isEmpty()
+				? component.getStyle()
+				: component.getSiblings().getLast().getStyle();
 	}
 
 	private record Line(

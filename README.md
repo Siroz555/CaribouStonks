@@ -88,6 +88,11 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
     - Allows you to extract Widgets from the TabList and display them as a HUD.
     - Add custom Widgets.
     - Add predefined Widgets (Bestiary, Slayer, Pickaxe Ability, Commissions...)
+- Sacks Overlay (BETA):
+    - Overlay in the Sack menus listing the items inside.
+    - Displays the total value of an item and its quantity.
+    - Displays the item stored and the max capacity.
+    - Displays the total value of the sack.
 - Highlight selected Pet in the Pet Menu.
 - Create & highlight favorite contacts in the Abiphone Menu
 - Create and customize Waypoints.
