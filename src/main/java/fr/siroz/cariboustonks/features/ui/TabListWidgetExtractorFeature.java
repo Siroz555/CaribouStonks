@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
-import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabLine;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabWidget;
@@ -32,8 +31,6 @@ public class TabListWidgetExtractorFeature extends Feature {
 	private final Map<String, TabWidget> currentWidgets = new HashMap<>();
 	private final List<WidgetEntry> widgetEntries;
 	private final Set<String> predefinedNames;
-
-	private final HudElementBuilder hudBuilder = new HudElementBuilder();
 
 	public TabListWidgetExtractorFeature() {
 		this.widgetEntries = new LinkedList<>(List.of(
@@ -112,22 +109,16 @@ public class TabListWidgetExtractorFeature extends Feature {
 		}
 	}
 
-	private List<? extends HudElement> getHudLines() {
-		hudBuilder.clear();
-
-		if (currentWidgets.isEmpty()) {
-			return hudBuilder.build();
-		}
+	private void getHudLines(HudElementBuilder builder) {
+		if (currentWidgets.isEmpty()) return;
 
 		for (TabWidget widget : currentWidgets.values()) {
-			hudBuilder.appendLine(widget.getHeader().component());
+			builder.appendLine(widget.getHeader().component());
 			for (TabLine line : widget.getLines()) {
-				hudBuilder.appendLine(line.component());
+				builder.appendLine(line.component());
 			}
-			hudBuilder.appendLine(Component.empty());
+			builder.appendLine(Component.empty());
 		}
-
-		return hudBuilder.build();
 	}
 
 	private Set<String> parseCustomWidgets(String raw) {

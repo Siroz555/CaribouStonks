@@ -1,13 +1,17 @@
 package fr.siroz.cariboustonks.core.module.hud;
 
+import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.annotation.Experimental;
+import fr.siroz.cariboustonks.core.mod.crash.CrashType;
 import fr.siroz.cariboustonks.core.module.color.Colors;
+import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
 import fr.siroz.cariboustonks.core.module.hud.element.HudIconLine;
 import fr.siroz.cariboustonks.core.module.hud.element.HudTableRow;
 import fr.siroz.cariboustonks.core.module.hud.element.HudTextLine;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -22,14 +26,15 @@ public final class MultiElementHud extends Hud {
 	private static final int SPACING = 2;
 
 	private final List<HudTextLine> defaultText;
-	private final Supplier<List<? extends HudElement>> elementSupplier;
+	private final Consumer<HudElementBuilder> elementConsumer;
+	private final HudElementBuilder hudBuilder = new HudElementBuilder();
 
 	/**
 	 * Create a new {@link MultiElementHud} instance.
 	 *
 	 * @param enabledSupplier the enabled state supplier
 	 * @param defaultText     the default list of {@link HudTextLine}
-	 * @param elementSupplier the supplier of element list
+	 * @param elementConsumer the consumer of the element builder
 	 * @param hudConfig       the {@link HudConfig} from the config file
 	 * @param defaultX        the default X
 	 * @param defaultY        the default Y
@@ -37,7 +42,7 @@ public final class MultiElementHud extends Hud {
 	public MultiElementHud(
 			@NonNull Supplier<Boolean> enabledSupplier,
 			@NonNull List<HudTextLine> defaultText,
-			@NonNull Supplier<List<? extends HudElement>> elementSupplier,
+			@NonNull Consumer<HudElementBuilder> elementConsumer,
 			@NonNull HudConfig hudConfig,
 			int defaultX,
 			int defaultY
@@ -48,7 +53,7 @@ public final class MultiElementHud extends Hud {
 		}
 
 		this.defaultText = defaultText;
-		this.elementSupplier = elementSupplier;
+		this.elementConsumer = elementConsumer;
 	}
 
 	@Override
@@ -80,18 +85,31 @@ public final class MultiElementHud extends Hud {
 
 	@Override
 	public void renderHud(GuiGraphicsExtractor guiGraphics, DeltaTracker tickCounter) {
-		// SIROZ-NOTE: un try-catch pour le rendu hud hors screen avec le système de crash en préparation
-		if (shouldRender()) {
-			render(elementSupplier.get(), guiGraphics, hudConfig.x(), hudConfig.y(), hudConfig.scale());
+		if (!shouldRender()) return;
+
+		hudBuilder.clear();
+		elementConsumer.accept(hudBuilder);
+
+		try {
+			render(hudBuilder.build(), guiGraphics, hudConfig.x(), hudConfig.y(), hudConfig.scale());
+		} catch (Throwable throwable) {
+			// SIROZ-NOTE: Mettre la Class<?> feature en param pour les nom au lieu d'avoir MultiElementHud...
+			CaribouStonks.mod().getCrashManager().reportCrash(CrashType.HUD,
+					getClass().getSimpleName(),
+					getClass().getName(),
+					"renderHud", throwable
+			);
 		}
 	}
 
 	private void render(@NonNull List<? extends HudElement> elements, @NonNull GuiGraphicsExtractor guiGraphics, int x, int y, float scale) {
+		if (elements.isEmpty()) return;
+
 		guiGraphics.pose().pushMatrix();
 		guiGraphics.pose().scale(scale, scale);
 
 		// Récupère le nombre max de columns uniquement pour les HudTableRow
-		// SIROZ-NOTE: Supprimer les cells pour les elements qui en on pas besoin
+		// SIROZ-NOTE: supprimer les cells pour les elements qui en on pas besoin
 		int maxCols = elements.stream()
 				.filter(e -> e instanceof HudTableRow)
 				.mapToInt(r -> r.getCells().length)

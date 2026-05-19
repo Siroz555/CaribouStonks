@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
-import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -32,12 +31,9 @@ public class DeployableFeature extends Feature {
 	private static final Pattern DEPLOYABLE_PATTERN = Pattern.compile("^(.+?)\\s+(\\d+)s$");
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_deployable");
 
-	private final HudElementBuilder hudBuilder;
 	private final List<TrackedDeployable> trackedDeployables = new CopyOnWriteArrayList<>(); // SIROZ-NOTE :: non-concurrent
 
 	public DeployableFeature() {
-		this.hudBuilder = new HudElementBuilder();
-
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onArmorStandUpdate);
 		WorldEvents.ARMORSTAND_REMOVE_EVENT.register(this::onRemoveArmorStand);
 
@@ -227,8 +223,8 @@ public class DeployableFeature extends Feature {
 		return false;
 	}
 
-	private List<? extends HudElement> getHudLines() {
-		hudBuilder.clear();
+	private void getHudLines(HudElementBuilder builder) {
+		if (trackedDeployables.isEmpty()) return;
 
 		for (TrackedDeployable tracked : trackedDeployables) {
 			if (!tracked.isActive()) continue;
@@ -238,13 +234,11 @@ public class DeployableFeature extends Feature {
 			Component customName = tracked.getArmorStand().getCustomName();
 
 			if (displayName != null && deployable.getType() == Deployable.Type.FLARE) {
-				hudBuilder.appendIconLine(deployable.getItemDisplay(), displayName);
+				builder.appendIconLine(deployable.getItemDisplay(), displayName);
 
 			} else if (customName != null) {
-				hudBuilder.appendIconLine(deployable.getItemDisplay(), customName);
+				builder.appendIconLine(deployable.getItemDisplay(), customName);
 			}
 		}
-
-		return hudBuilder.build();
 	}
 }

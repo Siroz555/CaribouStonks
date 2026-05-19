@@ -11,7 +11,6 @@ import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
-import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
@@ -51,7 +50,6 @@ public class MobTrackingFeature extends Feature {
 	private final SlayerManager slayerManager;
 	private final MobTrackingRegistry registry;
 	private final BossEvent bossEvent;
-	private final HudElementBuilder hudBuilder;
 	private final Cache<Integer, Integer> notified;
 	private @Nullable RareSeaCreatureFeature rareSeaCreatureFeature;
 
@@ -67,7 +65,6 @@ public class MobTrackingFeature extends Feature {
 				BossEvent.BossBarColor.RED, BossEvent.BossBarOverlay.PROGRESS,
 				false, false, false
 		);
-		this.hudBuilder = new HudElementBuilder();
 		this.notified = CacheBuilder.newBuilder()
 				.expireAfterWrite(10, TimeUnit.SECONDS)
 				.build();
@@ -286,17 +283,15 @@ public class MobTrackingFeature extends Feature {
 		}
 	}
 
-	private List<? extends HudElement> getHudLines() {
-		hudBuilder.clear();
+	private void getHudLines(HudElementBuilder builder) {
+		if (tracked.isEmpty()) return;
 
 		// SIROZ-NOTE: mettre une option si on affiche tout, 1 seul ou de facon custom a l'avenir
 		for (TrackedEntity entity : tracked) {
 			Component customName = entity.armorStand().getCustomName();
 			if (customName != null) {
-				hudBuilder.appendLine(customName);
+				builder.appendLine(customName);
 			}
 		}
-
-		return hudBuilder.build();
 	}
 }

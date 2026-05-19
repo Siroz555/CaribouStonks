@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
-import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Mayor;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Perk;
@@ -23,7 +22,6 @@ import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.DoubleSummaryStatistics;
-import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.Objects;
 import java.util.OptionalDouble;
@@ -41,7 +39,6 @@ public class SlayerStatsFeature extends Feature {
 	private static final String ARROW = "⤷";
 
 	private final SlayerManager slayerManager;
-	private final HudElementBuilder hudBuilder = new HudElementBuilder();
 
 	private final Deque<SlayerBossRun> runs = new ArrayDeque<>();
 	private SlayerBossRun currentRun = null;
@@ -149,30 +146,24 @@ public class SlayerStatsFeature extends Feature {
 		}
 	}
 
-	private List<? extends HudElement> getHudLines() {
-		hudBuilder.clear();
+	private void getHudLines(HudElementBuilder builder) {
+		if (currentRun == null) return;
 
-		if (currentRun == null) {
-			return hudBuilder.build();
-		}
-
-		hudBuilder.appendIconLine(currentRun.getSlayerType().getIcon(), Component.literal(currentRun.getSlayerType().getBossName() + " " + currentRun.getSlayerTier().getName()).withStyle(currentRun.getSlayerTier().getColor()));
-		hudBuilder.appendSpace();
-		hudBuilder.appendTableRow(Component.literal(ARROW + " Spawn Avg: ").withStyle(ChatFormatting.DARK_GREEN), Component.literal(stats.spawnAverage).withStyle(ChatFormatting.YELLOW), Component.empty());
-		hudBuilder.appendTableRow(Component.literal(ARROW + " Kill Avg: ").withStyle(ChatFormatting.DARK_RED), Component.literal(stats.killAverage).withStyle(ChatFormatting.YELLOW), Component.empty());
-		hudBuilder.appendTableRow(Component.literal(ARROW + " Boss/h: ").withStyle(ChatFormatting.RED), Component.literal(stats.bossPerHour).withStyle(ChatFormatting.YELLOW), Component.empty());
-		hudBuilder.appendTableRow(Component.literal(ARROW + " XP/h: ").withStyle(ChatFormatting.AQUA), Component.literal(stats.xpPerHour).withStyle(ChatFormatting.YELLOW), Component.empty());
+		builder.appendIconLine(currentRun.getSlayerType().getIcon(), Component.literal(currentRun.getSlayerType().getBossName() + " " + currentRun.getSlayerTier().getName()).withStyle(currentRun.getSlayerTier().getColor()));
+		builder.appendSpace();
+		builder.appendTableRow(Component.literal(ARROW + " Spawn Avg: ").withStyle(ChatFormatting.DARK_GREEN), Component.literal(stats.spawnAverage).withStyle(ChatFormatting.YELLOW), Component.empty());
+		builder.appendTableRow(Component.literal(ARROW + " Kill Avg: ").withStyle(ChatFormatting.DARK_RED), Component.literal(stats.killAverage).withStyle(ChatFormatting.YELLOW), Component.empty());
+		builder.appendTableRow(Component.literal(ARROW + " Boss/h: ").withStyle(ChatFormatting.RED), Component.literal(stats.bossPerHour).withStyle(ChatFormatting.YELLOW), Component.empty());
+		builder.appendTableRow(Component.literal(ARROW + " XP/h: ").withStyle(ChatFormatting.AQUA), Component.literal(stats.xpPerHour).withStyle(ChatFormatting.YELLOW), Component.empty());
 		if (xpBuffActive) {
-			hudBuilder.appendLine(Component.empty()
+			builder.appendLine(Component.empty()
 					.append(Component.literal(" x1.25").withStyle(ChatFormatting.LIGHT_PURPLE))
 					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
 					.append(Component.literal("Aatrox XP Buff").withStyle(ChatFormatting.DARK_AQUA))
 					.append(Component.literal(")").withStyle(ChatFormatting.GRAY)));
 		}
-		hudBuilder.appendSpace();
-		hudBuilder.appendLine(Component.literal("Session Count: " + stats.sessionCount).withStyle(ChatFormatting.YELLOW));
-
-		return hudBuilder.build();
+		builder.appendSpace();
+		builder.appendLine(Component.literal("Session Count: " + stats.sessionCount).withStyle(ChatFormatting.YELLOW));
 	}
 
 	private void finalizeRun(SlayerBossRun run) {

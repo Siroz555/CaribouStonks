@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
-import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -43,7 +42,6 @@ public class SecondLifeFeature extends Feature {
 
 	private final Map<SecondLife, Long> activeCooldowns = new HashMap<>();
 	private boolean serverHasChanged = false;
-	private final HudElementBuilder hudBuilder = new HudElementBuilder();
 
 	public SecondLifeFeature() {
 		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
@@ -133,12 +131,8 @@ public class SecondLifeFeature extends Feature {
 		}
 	}
 
-	private List<? extends HudElement> getHudLines() {
-		hudBuilder.clear();
-
-		if (activeCooldowns.isEmpty()) {
-			return hudBuilder.build();
-		}
+	private void getHudLines(HudElementBuilder builder) {
+		if (activeCooldowns.isEmpty()) return;
 
 		try {
 			long currentTime = System.currentTimeMillis();
@@ -154,7 +148,7 @@ public class SecondLifeFeature extends Feature {
 				if (timeRemaining > 0) {
 					SecondLife secondLife = entry.getKey();
 					String formattedTime = TIME_FORMAT.format(timeRemaining);
-					hudBuilder.appendLine(Component.empty()
+					builder.appendLine(Component.empty()
 							.append(Component.literal(secondLife.getName()).withStyle(secondLife.getColor()))
 							.append(Component.literal(": ").withStyle(ChatFormatting.WHITE))
 							.append(Component.literal(formattedTime + "s").withStyle(getColor(timeRemaining)))
@@ -166,8 +160,6 @@ public class SecondLifeFeature extends Feature {
 				CaribouStonks.LOGGER.warn("{} Unable to update hud lines", getShortName(), ex);
 			}
 		}
-
-		return hudBuilder.build();
 	}
 
 	private ChatFormatting getColor(double timeRemaining) {

@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
-import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockSeason;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockTime;
@@ -47,8 +46,6 @@ public class HoppityHuntFeature extends Feature {
 			)); // Œufs triés par groupe de spawn d'heure (7, 14, 21), dans l'ordre
 	private boolean allAvailableNotified = false;
 	private long deltaTimestamp = 0L;
-
-	private final HudElementBuilder hudBuilder = new HudElementBuilder();
 
 	public HoppityHuntFeature() {
 		Arrays.stream(EggType.VALUES).forEach(egg -> this.eggStates.put(egg, EggStatus.WAITING));
@@ -173,15 +170,13 @@ public class HoppityHuntFeature extends Feature {
 		}
 	}
 
-	private List<? extends HudElement> getHudLines() {
-		hudBuilder.clear();
-
+	private void getHudLines(HudElementBuilder builder) {
 		String title = "Hoppity's Hunt Eggs " + CUTE_RABBIT;
 		boolean showDelta = System.currentTimeMillis() - deltaTimestamp < DELTA_DISPLAY_MS;
 		if (showDelta) {
-			hudBuilder.appendTitle(AnimationUtils.applyColorCycle(title, 500, ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE));
+			builder.appendTitle(AnimationUtils.applyColorCycle(title, 500, ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE));
 		} else {
-			hudBuilder.appendTitle(Component.literal(title).withStyle(ChatFormatting.LIGHT_PURPLE));
+			builder.appendTitle(Component.literal(title).withStyle(ChatFormatting.LIGHT_PURPLE));
 		}
 
 		for (EggType egg : EggType.VALUES) {
@@ -191,7 +186,7 @@ public class HoppityHuntFeature extends Feature {
 			String countdown = TimeUtils.getDurationFormatted(Instant.now(), nextSpawn, false);
 			Component timeLeft = Component.literal(" " + countdown).withStyle(ChatFormatting.YELLOW);
 
-			hudBuilder.appendTableRow(
+			builder.appendTableRow(
 					Component.literal(status.getSymbol()).withStyle(status.getColor()),
 					status == EggStatus.CLAIMED
 							? Component.empty()
@@ -202,10 +197,8 @@ public class HoppityHuntFeature extends Feature {
 							  .append(timeLeft),
 					Component.empty()
 			);
-			hudBuilder.appendSpace();
+			builder.appendSpace();
 		}
-
-		return hudBuilder.build();
 	}
 
 	private Instant computeNextSpawn(@NonNull EggType egg) {

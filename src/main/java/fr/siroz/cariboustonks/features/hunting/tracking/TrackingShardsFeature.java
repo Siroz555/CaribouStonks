@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
-import fr.siroz.cariboustonks.core.module.hud.element.HudElement;
 import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarItemAnalytics;
@@ -22,7 +21,6 @@ import fr.siroz.cariboustonks.util.StonksUtils;
 import fr.siroz.cariboustonks.util.TimeUtils;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -41,7 +39,6 @@ public class TrackingShardsFeature extends Feature {
 	private static final long DELTA_DISPLAY_MS = 2_000;
 
 	private final Map<String, Optional<SkyBlockAttribute>> attributeCache = new HashMap<>();
-	private final HudElementBuilder hud = new HudElementBuilder();
 	private final ConfigValue<Long> inactivityResetConfig = ConfigValue.of(
 			() -> this.config().hunting.trackingShards.inactivityResetMs
 	);
@@ -127,15 +124,14 @@ public class TrackingShardsFeature extends Feature {
 		}
 	}
 
-	private List<? extends HudElement> getHudLines() {
+	private void getHudLines(HudElementBuilder builder) {
 		// Trigger le reset de l'inactivité pendant le rendu, clear le cache si nécessaire
 		if (session.tickInactivityCheck()) {
 			cachedStats = null;
 		}
 
-		hud.clear();
-		hud.appendLine(Component.literal("⚔ Shards Tracker").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
-		hud.appendSpace();
+		builder.appendLine(Component.literal("⚔ Shards Tracker").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
+		builder.appendSpace();
 
 		if (cachedStats == null) {
 			// Pour informer le joueur
@@ -143,31 +139,29 @@ public class TrackingShardsFeature extends Feature {
 
 			if (session.getState() == ShardSession.State.WARMING_UP) {
 				int remaining = ShardSession.MIN_CATCHES_FOR_STATS - session.getCatchCount();
-				hud.appendLine(Component.literal("Collecting... (" + remaining + " more needed)").withStyle(ChatFormatting.DARK_GRAY));
+				builder.appendLine(Component.literal("Collecting... (" + remaining + " more needed)").withStyle(ChatFormatting.DARK_GRAY));
 			}
 		} else {
-			renderActiveSession(cachedStats);
+			renderActiveSession(builder, cachedStats);
 		}
 
-		renderInactivityWarning();
-
-		return hud.build();
+		renderInactivityWarning(builder);
 	}
 
-	private void renderActiveSession(@NonNull ShardSessionStats stats) {
+	private void renderActiveSession(HudElementBuilder builder, @NonNull ShardSessionStats stats) {
 		boolean showDelta = System.currentTimeMillis() - deltaTimestamp < DELTA_DISPLAY_MS;
 
 		// 1 type breakdown visible uniquement quand il y a uniquement une type de shards
 		if (stats.shardsByType().size() == 1 && stats.totalShards() > 1) {
 			String type = stats.shardsByType().keySet().iterator().next();
-			hud.appendLine(Component.literal(type).withStyle(resolveShardRarity(type).getFormatting()));
-			hud.appendSpace();
+			builder.appendLine(Component.literal(type).withStyle(resolveShardRarity(type).getFormatting()));
+			builder.appendSpace();
 		}
 
-		hud.appendLine(Component.literal("Session: ").withStyle(ChatFormatting.GRAY).append(
+		builder.appendLine(Component.literal("Session: ").withStyle(ChatFormatting.GRAY).append(
 				Component.literal(TimeUtils.getDurationFormatted(Instant.ofEpochMilli(session.getSessionStartMs()), Instant.now(), false)).withStyle(ChatFormatting.YELLOW))
 		);
-		hud.appendSpace();
+		builder.appendSpace();
 
 		MutableComponent shardsLine = Component.literal("Total Shards: ").withStyle(ChatFormatting.GRAY).append(
 				Component.literal(StonksUtils.INTEGER_NUMBERS.format(stats.totalShards())).withStyle(ChatFormatting.GREEN));
@@ -181,31 +175,31 @@ public class TrackingShardsFeature extends Feature {
 			coinsLine.append(Component.literal(" (+" + StonksUtils.SHORT_FLOAT_NUMBERS.format(lastCoinDelta) + ")").withStyle(ChatFormatting.YELLOW));
 		}
 
-		hud.appendLine(shardsLine);
-		hud.appendLine(coinsLine);
-		hud.appendSpace();
+		builder.appendLine(shardsLine);
+		builder.appendLine(coinsLine);
+		builder.appendSpace();
 
-		hud.appendLine(Component.literal("Shards/h: ").withStyle(ChatFormatting.GRAY).append(
+		builder.appendLine(Component.literal("Shards/h: ").withStyle(ChatFormatting.GRAY).append(
 				Component.literal(StonksUtils.INTEGER_NUMBERS.format(stats.shardsPerHour())).withStyle(ChatFormatting.GREEN))
 		);
-		hud.appendLine(Component.literal("Coins/h: ").withStyle(ChatFormatting.GRAY).append(
+		builder.appendLine(Component.literal("Coins/h: ").withStyle(ChatFormatting.GRAY).append(
 				Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(stats.coinsPerHour())).withStyle(ChatFormatting.GOLD))
 		);
 
 		// Par type breakdown visible uniquement quand il y a plusieurs type de shards
 		if (stats.shardsByType().size() > 1) {
-			hud.appendSpace();
-			hud.appendLine(Component.literal("By type:").withStyle(ChatFormatting.DARK_GRAY));
-			hud.appendSpace();
+			builder.appendSpace();
+			builder.appendLine(Component.literal("By type:").withStyle(ChatFormatting.DARK_GRAY));
+			builder.appendSpace();
 			for (Map.Entry<String, Integer> entry : stats.shardsByType().entrySet()) {
-				hud.appendLine(Component.literal(" " + entry.getKey() + ": ").withStyle(resolveShardRarity(entry.getKey()).getFormatting())
+				builder.appendLine(Component.literal(" " + entry.getKey() + ": ").withStyle(resolveShardRarity(entry.getKey()).getFormatting())
 						.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(entry.getValue())).withStyle(ChatFormatting.YELLOW))
 				);
 			}
 		}
 	}
 
-	private void renderInactivityWarning() {
+	private void renderInactivityWarning(HudElementBuilder builder) {
 		long timeSinceCatch = System.currentTimeMillis() - session.getLastCatchTime();
 		long timeout = inactivityResetConfig.get();
 		long halfTimeout = timeout / 2;
@@ -214,8 +208,8 @@ public class TrackingShardsFeature extends Feature {
 		long remaining = (timeout - timeSinceCatch) / 1_000; // en secondes
 		if (remaining < 0) return;
 
-		hud.appendSpace();
-		hud.appendLine(Component.literal("Reset in ").withStyle(ChatFormatting.RED, ChatFormatting.BOLD)
+		builder.appendSpace();
+		builder.appendLine(Component.literal("Reset in ").withStyle(ChatFormatting.RED, ChatFormatting.BOLD)
 				.append(Component.literal(remaining + "s").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
 		);
 	}
