@@ -61,6 +61,7 @@ import fr.siroz.cariboustonks.features.stonks.tooltips.auction.AuctionLowestBinT
 import fr.siroz.cariboustonks.features.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
 import fr.siroz.cariboustonks.features.ui.AbiphoneFavoriteContactFeature;
 import fr.siroz.cariboustonks.features.ui.RareDropVisualEffectFeature;
+import fr.siroz.cariboustonks.features.ui.SacksOverlayFeature;
 import fr.siroz.cariboustonks.features.ui.SelectedPetHighlightFeature;
 import fr.siroz.cariboustonks.features.ui.TabListWidgetExtractorFeature;
 import fr.siroz.cariboustonks.features.ui.deployable.DeployableFeature;
@@ -157,6 +158,7 @@ public final class FeatureManager {
 		registerFeature(new MobTrackingFeature());
 		registerFeature(new AbiphoneFavoriteContactFeature(0));
 		registerFeature(new RareDropVisualEffectFeature());
+		registerFeature(new SacksOverlayFeature());
 		registerFeature(new SelectedPetHighlightFeature());
 		registerFeature(new TabListWidgetExtractorFeature());
 		// UI - HUDs
