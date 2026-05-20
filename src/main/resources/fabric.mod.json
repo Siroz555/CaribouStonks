@@ -37,6 +37,7 @@
         "modmenu.modrinth": "https://modrinth.com/mod/cariboustonks"
       },
       "update_checker": true
-    }
+    },
+    "firmament:hide_from_modlist": true
   }
 }
