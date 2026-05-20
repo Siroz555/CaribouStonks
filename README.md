@@ -185,7 +185,7 @@ in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
 
 **Dungeons**
 
-- Thorn - F4/M4 - Spirit Bear Spawn Timer.
+- Thorn - F4/M4 - Spirit Bear State: Kills/Total, Spawn Timer and Alive state.
 - Sadan - F6/M6 - Terracotta Timers.
 - Wither King - M7:
     - Dragon Priority & Spawn alerts.
