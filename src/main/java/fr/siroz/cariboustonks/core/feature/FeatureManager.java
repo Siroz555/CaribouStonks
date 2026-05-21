@@ -22,6 +22,7 @@ import fr.siroz.cariboustonks.features.fishing.FishCaughtFeature;
 import fr.siroz.cariboustonks.features.fishing.HotspotFeature;
 import fr.siroz.cariboustonks.features.fishing.HotspotRadarFeature;
 import fr.siroz.cariboustonks.features.fishing.LotusAtollBuffFeature;
+import fr.siroz.cariboustonks.features.fishing.LotusAtollLilyPadFeature;
 import fr.siroz.cariboustonks.features.fishing.LotusAtollWormholeFeature;
 import fr.siroz.cariboustonks.features.fishing.RareSeaCreatureFeature;
 import fr.siroz.cariboustonks.features.foraging.BreakTreeAnimationFeature;
@@ -116,6 +117,7 @@ public final class FeatureManager {
 		registerFeature(new HotspotFeature());
 		registerFeature(new HotspotRadarFeature());
 		registerFeature(new LotusAtollBuffFeature());
+		registerFeature(new LotusAtollLilyPadFeature());
 		registerFeature(new LotusAtollWormholeFeature());
 		// Foraging
 		registerFeature(new BreakTreeAnimationFeature());

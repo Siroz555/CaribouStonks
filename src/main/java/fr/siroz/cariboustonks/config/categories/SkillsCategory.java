@@ -580,6 +580,15 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Lotus Atoll - Lily Pads Highlighter"))
+								.description(OptionDescription.of(
+										Component.literal("Highlight Lily Pads in the Lotus Atoll with a colorful Glowing effect that changes depending on the size of the Lily Pads, leading up to the explosion.")))
+								.binding(defaults.fishing.lotusAtoll.lilyPadHighlighter,
+										() -> current.fishing.lotusAtoll.lilyPadHighlighter,
+										newValue -> current.fishing.lotusAtoll.lilyPadHighlighter = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Lotus Atoll - Buffs HUD"))
 								.description(OptionDescription.of(
 										Component.literal("Displays a HUD in the Lotus Atoll Island showing the current number of Fishing Buffs and the time remaining before they expire.")))

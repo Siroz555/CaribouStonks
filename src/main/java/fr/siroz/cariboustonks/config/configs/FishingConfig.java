@@ -37,6 +37,9 @@ public class FishingConfig {
 		@SerialEntry
 		public boolean buffExpiredWarn = false;
 
+		@SerialEntry
+		public boolean lilyPadHighlighter = false;
+
 		public static class BuffHud implements HudConfig {
 
 			@SerialEntry
