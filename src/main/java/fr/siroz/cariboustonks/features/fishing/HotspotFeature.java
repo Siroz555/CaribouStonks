@@ -17,6 +17,7 @@ import fr.siroz.cariboustonks.util.MinecraftUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -110,12 +111,13 @@ public class HotspotFeature extends Feature {
 		if (!isEnabled() || currentHotspot == null) return;
 
 		if (hotspotRadius != null && hotspotRadius > 0D && hotspotRadius <= 16D) {
-			renderer.submitThickCircle(
-					currentHotspot.centerPos().subtract(0D, 2.5D, 0D), // 2
+			renderer.submitCircle(
+					currentHotspot.centerPos().subtract(0D, 1.5D, 0D), // 2
 					hotspotRadius,
-					1,
-					32,
+					16,
+					0.025f,
 					bobberInHotspot ? BOBBER_IN : BOBBER_OUT,
+					Direction.Axis.Y,
 					true
 			);
 		}
