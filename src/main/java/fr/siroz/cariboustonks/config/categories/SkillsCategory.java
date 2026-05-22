@@ -429,6 +429,15 @@ public class SkillsCategory extends AbstractCategory {
 										.step(1L)
 										.formatValue(i -> i > 1 ? Component.nullToEmpty(i + " minutes") : Component.nullToEmpty(i + " minute")))
 								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Include Loot Share"))
+								.description(OptionDescription.of(
+										Component.literal("If enabled, this option allows you to include Loot Shares in the overall tracker and adds the number of Shards obtained through Loot Shares.")))
+								.binding(defaults.hunting.trackingShards.includeLootShare,
+										() -> current.hunting.trackingShards.includeLootShare,
+										newValue -> current.hunting.trackingShards.includeLootShare = newValue)
+								.controller(this::createYesNoController)
+								.build())
 						.option(Option.<BazaarPriceType>createBuilder()
 								.name(Component.literal("Bazaar Price Type"))
 								.description(OptionDescription.of(

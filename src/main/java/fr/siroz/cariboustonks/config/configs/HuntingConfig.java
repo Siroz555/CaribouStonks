@@ -25,6 +25,9 @@ public class HuntingConfig {
 		public long inactivityResetMs = TimeUnit.MINUTES.toMillis(2);
 
 		@SerialEntry
+		public boolean includeLootShare = true;
+
+		@SerialEntry
 		public BazaarPriceType priceType = BazaarPriceType.BUY;
 
 		@SerialEntry
