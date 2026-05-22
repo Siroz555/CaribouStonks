@@ -2,10 +2,7 @@
 
 [![modrinth](https://img.shields.io/badge/dynamic/json?color=00AF5C&label=Downloads&prefix=+%20&query=downloads&url=https://api.modrinth.com/v2/project/fraWWQSJ&logo=modrinth)](https://modrinth.com/mod/cariboustonks)
 
-Siroz555's Mod – Fabric mod for Hypixel SkyBlock on the latest versions of Minecraft
-
-The main features are Bazaar/Auctions price displays on items, a graphical representation of prices over time,
-in-game Zoom, Scrollable Tooltips, Reminders, and general SkyBlock Qol features.
+Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla Tweaks, and a ton of QoL features! Lightweight and efficient.
 
 **✅ Supported Minecraft Versions**: **26.1.x**, **1.21.11** and **1.21.10**
 
