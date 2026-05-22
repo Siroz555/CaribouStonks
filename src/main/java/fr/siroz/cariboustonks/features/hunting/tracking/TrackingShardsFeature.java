@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
 import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarItemAnalytics;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarPriceType;
@@ -36,6 +37,7 @@ public class TrackingShardsFeature extends Feature {
 	// Group 1 → optional quantité (absent = 1)
 	// Group 2 → shard type name
 	private static final Pattern SHARD_CAUGHT_PATTERN = Pattern.compile("You caught (?:x(\\d+) )?(.+?) Shards?!");
+	private static final Pattern LOOT_SHARE_PATTERN = Pattern.compile("LOOT SHARE You received (?:(\\d+) )?(.+?) Shards for assisting \\w+!");
 	private static final long DELTA_DISPLAY_MS = 2_000;
 
 	private final Map<String, Optional<SkyBlockAttribute>> attributeCache = new HashMap<>();
@@ -83,7 +85,9 @@ public class TrackingShardsFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().hunting.trackingShards.hud.enabled;
+		return SkyBlockAPI.isOnSkyBlock()
+				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
+				&& this.config().hunting.trackingShards.hud.enabled;
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
@@ -92,29 +96,40 @@ public class TrackingShardsFeature extends Feature {
 
 		// Il faut strip, ty Hypixel -_-
 		String message = StonksUtils.stripColor(component.getString());
-		Matcher shardCaughtMatcher = SHARD_CAUGHT_PATTERN.matcher(message);
-		if (!shardCaughtMatcher.find()) return;
 
+		Matcher shardCaughtMatcher = SHARD_CAUGHT_PATTERN.matcher(message);
+		if (shardCaughtMatcher.find()) {
+			handleCatchParsing(shardCaughtMatcher, message, false);
+			return;
+		}
+
+		Matcher lootShareMatcher = LOOT_SHARE_PATTERN.matcher(message);
+		if (lootShareMatcher.find() && this.config().hunting.trackingShards.includeLootShare) {
+			handleCatchParsing(lootShareMatcher, message, true);
+		}
+	}
+
+	private void handleCatchParsing(Matcher matcher, String debugMessage, boolean isLootShare) {
 		try {
-			int quantity = StonksUtils.toInt(shardCaughtMatcher.group(1), 1);
-			String shardType = shardCaughtMatcher.group(2).trim();
+			int quantity = StonksUtils.toInt(matcher.group(1), 1);
+			String shardType = matcher.group(2).trim();
 			if (!shardType.isEmpty()) {
-				handleCatch(quantity, shardType);
+				handleCatch(quantity, shardType, isLootShare);
 			}
 		} catch (Exception ex) { // Je n'ai jamais confiance au Matcher
 			if (DeveloperTools.isInDevelopment()) {
-				CaribouStonks.LOGGER.error("[{}] Unable to parse shard ({})", getShortName(), message, ex);
+				CaribouStonks.LOGGER.error("[{}] Unable to parse LS shard ({})", getShortName(), debugMessage, ex);
 			}
 		}
 	}
 
-	private void handleCatch(int quantity, @NonNull String shardType) {
+	private void handleCatch(int quantity, @NonNull String shardType, boolean isLootShare) {
 		// Gestion du delta
 		final int prevShards = cachedStats != null ? cachedStats.totalShards() : 0;
 		final double prevCoins = cachedStats != null ? cachedStats.totalCoins() : 0;
 
 		// Compute | recordCatch() computes tout
-		cachedStats = session.recordCatch(shardType, quantity).orElse(null);
+		cachedStats = session.recordCatch(shardType, quantity, isLootShare).orElse(null);
 
 		// Gestion du delta
 		if (cachedStats != null) {
@@ -185,6 +200,13 @@ public class TrackingShardsFeature extends Feature {
 		builder.appendLine(Component.literal("Coins/h: ").withStyle(ChatFormatting.GRAY).append(
 				Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(stats.coinsPerHour())).withStyle(ChatFormatting.GOLD))
 		);
+
+		if (stats.lootShareCount() > 0) {
+			builder.appendSpace();
+			builder.appendLine(Component.literal("Loot Share: ").withStyle(ChatFormatting.YELLOW).append(
+					Component.literal(StonksUtils.INTEGER_NUMBERS.format(stats.lootShareCount())).withStyle(ChatFormatting.AQUA))
+			);
+		}
 
 		// Par type breakdown visible uniquement quand il y a plusieurs type de shards
 		if (stats.shardsByType().size() > 1) {

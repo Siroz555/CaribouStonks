@@ -12,7 +12,8 @@ record ShardSessionStats(
 		double totalCoins,
 		double shardsPerHour,
 		double coinsPerHour,
-		int catchCount
+		int catchCount,
+		int lootShareCount
 ) {
 
 	ShardSessionStats {
