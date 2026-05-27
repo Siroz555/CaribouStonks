@@ -53,8 +53,6 @@ public final class MobTrackingRegistry {
 		for (RareSeaCreature seaCreature : RareSeaCreature.values()) {
 			register(seaCreature.getName(), 50, MobCategory.FISHING, Component.literal(seaCreature.getName()).withStyle(seaCreature.getColor()), true, seaCreature.isHighlightable(), seaCreature.getIslandType());
 		}
-		// Rare Fishing Mobs - Special
-		register("Flipflopper", 75, MobCategory.FISHING, Component.literal("Flipflopper").withStyle(ChatFormatting.GREEN), true, false, IslandType.LOTUS_ATOLL);
 		// Mining - Mineshaft
 		register("Littlefoot", 50, MobCategory.MINING, Component.literal("Littlefoot").withStyle(ChatFormatting.BLUE), true, true, IslandType.GLACITE_MINESHAFT);
 	}
