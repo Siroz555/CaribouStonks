@@ -13,6 +13,9 @@ public class HuntingConfig {
 	@SerialEntry
 	public TrackingShards trackingShards = new TrackingShards();
 
+	@SerialEntry
+	public HuntingBoxOverlay huntingBoxOverlay = new HuntingBoxOverlay();
+
 	public static class TrackingShards {
 
 		@SerialEntry
@@ -20,6 +23,9 @@ public class HuntingConfig {
 
 		@SerialEntry
 		public long inactivityResetMs = TimeUnit.MINUTES.toMillis(2);
+
+		@SerialEntry
+		public boolean includeLootShare = true;
 
 		@SerialEntry
 		public BazaarPriceType priceType = BazaarPriceType.BUY;
@@ -76,5 +82,20 @@ public class HuntingConfig {
 				return this.enabled;
 			}
 		}
+	}
+
+	public static class HuntingBoxOverlay {
+
+		@SerialEntry
+		public boolean enabled = false;
+
+		@SerialEntry
+		public int listSize = 15;
+
+		@SerialEntry
+		public BazaarPriceType priceType = BazaarPriceType.BUY;
+
+		@SerialEntry
+		public float scale = 1f;
 	}
 }

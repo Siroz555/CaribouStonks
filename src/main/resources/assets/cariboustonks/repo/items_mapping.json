@@ -327,5 +327,6 @@
   "GOLD_PICKAXE": "minecraft:golden_pickaxe",
   "SNOW_BLOCK": "minecraft:snow_block",
   "ACTIVATOR_RAIL": "minecraft:activator_rail",
-  "BOWL": "minecraft:bowl"
+  "BOWL": "minecraft:bowl",
+  "MOB_SPAWNER": "minecraft:mob_spawner"
 }

@@ -103,7 +103,7 @@ public enum IslandType {
 	/**
 	 * The Park
 	 */
-	THE_PARK("foraging_1", "The Park"),
+	THE_PARK("foraging_1", "The Park", true),
 
 	/**
 	 * The Foraging Update - Galatea
@@ -114,6 +114,11 @@ public enum IslandType {
 	 * Backwater Bayou
 	 */
 	BACKWATER_BAYOU("fishing_1", "Backwater Bayou", true),
+
+	/**
+	 * Lotus Atoll
+	 */
+	LOTUS_ATOLL("lotus_atoll", "Lotus Atoll", true),
 
 	/**
 	 * Jerry's Workshop

@@ -32,6 +32,7 @@ import org.jspecify.annotations.Nullable;
 public final class SkyBlockAPI {
 
 	private static final Minecraft CLIENT = Minecraft.getInstance();
+	private static final long SKYBLOCK_EPOCH_START_MILLIS = 1_560_275_700_000L;
 	// Common constants
 	private static final Pattern ABILITY = Pattern.compile("Ability: (?<name>.*?) *");
 	private static final String ITEM_ID = "id";
@@ -41,6 +42,10 @@ public final class SkyBlockAPI {
 	private static boolean onSkyBlockState = false;
 	private static IslandType islandType = IslandType.UNKNOWN;
 	private static String gameType = "";
+
+	private static SkyBlockTime time = SkyBlockTime.DEFAULT;
+	private static SkyBlockSeason season = SkyBlockSeason.SPRING;
+	private static SkyBlockSeason.Month month = SkyBlockSeason.Month.EARLY_SPRING;
 
 	private SkyBlockAPI() {
 		throw new UnsupportedOperationException();
@@ -53,6 +58,15 @@ public final class SkyBlockAPI {
 	 */
 	public static boolean isOnSkyBlock() {
 		return onSkyBlockState;
+	}
+
+	/**
+	 * Returns the current SkyBlock Time milliseconds
+	 *
+	 * @return the current SkyBlock Time in milliseconds
+	 */
+	public static long getSkyBlockMillis() {
+		return System.currentTimeMillis() - SKYBLOCK_EPOCH_START_MILLIS;
 	}
 
 	/**
@@ -84,6 +98,33 @@ public final class SkyBlockAPI {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Returns the current {@link SkyBlockTime}
+	 *
+	 * @return the {@code SkyBlockTime}
+	 */
+	public static SkyBlockTime getTime() {
+		return time;
+	}
+
+	/**
+	 * Returns the current {@link SkyBlockSeason}
+	 *
+	 * @return the {@code SkyBlockSeason}
+	 */
+	public static SkyBlockSeason getSeason() {
+		return season;
+	}
+
+	/**
+	 * Returns the current {@link SkyBlockSeason.Month}
+	 *
+	 * @return the {@code Month}
+	 */
+	public static SkyBlockSeason.Month getMonth() {
+		return month;
 	}
 
 	/**
@@ -340,5 +381,15 @@ public final class SkyBlockAPI {
 			CaribouStonks.LOGGER.info("[SkyBlockAPI] Updated: {}, {}, {}, {}",
 					onHypixelState, onSkyBlockState, gameType, islandType.name());
 		}
+	}
+
+	static void handleInternalTimeUpdate(
+			@Nullable SkyBlockTime skyBlockTime,
+			@Nullable SkyBlockSeason skyBlockSeason,
+			SkyBlockSeason.@Nullable Month skyBlockMonth
+	) {
+		if (skyBlockTime != null) time = skyBlockTime;
+		if (skyBlockSeason != null) season = skyBlockSeason;
+		if (skyBlockMonth != null) month = skyBlockMonth;
 	}
 }

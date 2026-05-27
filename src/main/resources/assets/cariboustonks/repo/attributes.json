@@ -36,12 +36,6 @@
     "skyBlockApiId": "SHARD_PHANFLARE"
   },
   {
-    "name": "Fisherman",
-    "shardName": "Night Squid",
-    "id": "C8",
-    "skyBlockApiId": "SHARD_NIGHT_SQUID"
-  },
-  {
     "name": "Experience",
     "shardName": "Lapis Zombie",
     "id": "C9",
@@ -132,6 +126,12 @@
     "skyBlockApiId": "SHARD_MUDWORM"
   },
   {
+    "name": "Lotus Trophy",
+    "shardName": "Lotusfish",
+    "id": "C26",
+    "skyBlockApiId": "SHARD_LOTUS_FISH"
+  },
+  {
     "name": "Midas Touch",
     "shardName": "Golden Ghoul",
     "id": "C27",
@@ -148,6 +148,12 @@
     "shardName": "Bezal",
     "id": "C30",
     "skyBlockApiId": "SHARD_BEZAL"
+  },
+  {
+    "name": "Fisherman",
+    "shardName": "Inkling",
+    "id": "C32",
+    "skyBlockApiId": "SHARD_NIGHT_SQUID"
   },
   {
     "name": "Yog Membrane",
@@ -288,6 +294,12 @@
     "skyBlockApiId": "SHARD_PRAYING_MANTIS"
   },
   {
+    "name": "Lily Tracker",
+    "shardName": "Lotum",
+    "id": "U23",
+    "skyBlockApiId": "SHARD_LOTUM"
+  },
+  {
     "name": "Undead Ruler",
     "shardName": "Zombie Soldier",
     "id": "U24",
@@ -370,6 +382,18 @@
     "shardName": "Termite",
     "id": "U40",
     "skyBlockApiId": "SHARD_TERMITE"
+  },
+  {
+    "name": "Golden Frog",
+    "shardName": "Flipflopper",
+    "id": "U41",
+    "skyBlockApiId": "SHARD_FLIP_FLOPPER"
+  },
+  {
+    "name": "Lily Puncher",
+    "shardName": "Tewtil",
+    "id": "U59",
+    "skyBlockApiId": "SHARD_TEWTIL"
   },
   {
     "name": "Forest Elemental",
@@ -514,6 +538,12 @@
     "shardName": "Thyst",
     "id": "R31",
     "skyBlockApiId": "SHARD_THYST"
+  },
+  {
+    "name": "Diamond Frog",
+    "shardName": "Seashine",
+    "id": "R32",
+    "skyBlockApiId": "SHARD_SEA_SHINE"
   },
   {
     "name": "Quartz Speed",
@@ -804,10 +834,10 @@
     "skyBlockApiId": "SHARD_TOUCAN"
   },
   {
-    "name": "Matriarch Cubs",
-    "shardName": "Hellwisp",
+    "name": "Attack Speed",
+    "shardName": "Inferno Demonlord",
     "id": "E29",
-    "skyBlockApiId": "SHARD_HELLWISP"
+    "skyBlockApiId": "SHARD_BURNINGSOUL"
   },
   {
     "name": "Echo of Ruler",
@@ -858,7 +888,7 @@
     "skyBlockApiId": "SHARD_DRAGONFLY"
   },
   {
-    "name": "Big Game Hunter",
+    "name": "Mythological Tracker",
     "shardName": "Sphinx",
     "id": "E39",
     "skyBlockApiId": "SHARD_SPHINX"
@@ -924,7 +954,7 @@
     "skyBlockApiId": "SHARD_TORTOISE"
   },
   {
-    "name": "Paramount Fortitude",
+    "name": "Unlimited Fortitude",
     "shardName": "End Stone Protector",
     "id": "L9",
     "skyBlockApiId": "SHARD_ENDSTONE_PROTECTOR"
@@ -960,7 +990,7 @@
     "skyBlockApiId": "SHARD_KRAKEN"
   },
   {
-    "name": "Maximal Torment",
+    "name": "Unlimited Torment",
     "shardName": "Taurus",
     "id": "L17",
     "skyBlockApiId": "SHARD_TAURUS"
@@ -1002,10 +1032,10 @@
     "skyBlockApiId": "SHARD_LORD_JAWBUS"
   },
   {
-    "name": "Attack Speed",
-    "shardName": "Burningsoul",
+    "name": "Matriarch Cubs",
+    "shardName": "Hellwisp",
     "id": "L27",
-    "skyBlockApiId": "SHARD_BURNINGSOUL"
+    "skyBlockApiId": "SHARD_HELLWISP"
   },
   {
     "name": "Magic Find",

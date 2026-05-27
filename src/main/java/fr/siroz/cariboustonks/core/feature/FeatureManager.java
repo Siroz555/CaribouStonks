@@ -15,10 +15,14 @@ import fr.siroz.cariboustonks.features.dungeon.CroesusMenuFeature;
 import fr.siroz.cariboustonks.features.dungeon.SadanBossFeature;
 import fr.siroz.cariboustonks.features.dungeon.ThornBossFeature;
 import fr.siroz.cariboustonks.features.dungeon.WitherKingDragonFeature;
+import fr.siroz.cariboustonks.features.events.hoppity.HoppityHuntFeature;
 import fr.siroz.cariboustonks.features.fishing.BobberTimerFeature;
 import fr.siroz.cariboustonks.features.fishing.FishCaughtFeature;
 import fr.siroz.cariboustonks.features.fishing.HotspotFeature;
 import fr.siroz.cariboustonks.features.fishing.HotspotRadarFeature;
+import fr.siroz.cariboustonks.features.fishing.LotusAtollBuffFeature;
+import fr.siroz.cariboustonks.features.fishing.LotusAtollLilyPadFeature;
+import fr.siroz.cariboustonks.features.fishing.LotusAtollWormholeFeature;
 import fr.siroz.cariboustonks.features.fishing.RareSeaCreatureFeature;
 import fr.siroz.cariboustonks.features.foraging.BreakTreeAnimationFeature;
 import fr.siroz.cariboustonks.features.foraging.TreeOverlayFeature;
@@ -28,12 +32,14 @@ import fr.siroz.cariboustonks.features.garden.MouseLockFeature;
 import fr.siroz.cariboustonks.features.garden.pest.PestFinderFeature;
 import fr.siroz.cariboustonks.features.garden.pest.PlotInfestedFeature;
 import fr.siroz.cariboustonks.features.hunting.AttributeInfoTooltipFeature;
+import fr.siroz.cariboustonks.features.hunting.HuntingBoxOverlayFeature;
 import fr.siroz.cariboustonks.features.hunting.QuickFusionFeature;
 import fr.siroz.cariboustonks.features.hunting.tracking.TrackingShardsFeature;
 import fr.siroz.cariboustonks.features.item.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.features.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.features.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.features.misc.BestiaryHighlightFeature;
+import fr.siroz.cariboustonks.features.misc.DisableAbiphonePlacementFeature;
 import fr.siroz.cariboustonks.features.misc.HexTooltipFeature;
 import fr.siroz.cariboustonks.features.misc.HighlightMobFeature;
 import fr.siroz.cariboustonks.features.misc.HoppityEggFinderFeature;
@@ -58,6 +64,7 @@ import fr.siroz.cariboustonks.features.stonks.tooltips.auction.AuctionLowestBinT
 import fr.siroz.cariboustonks.features.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
 import fr.siroz.cariboustonks.features.ui.AbiphoneFavoriteContactFeature;
 import fr.siroz.cariboustonks.features.ui.RareDropVisualEffectFeature;
+import fr.siroz.cariboustonks.features.ui.SacksOverlayFeature;
 import fr.siroz.cariboustonks.features.ui.SelectedPetHighlightFeature;
 import fr.siroz.cariboustonks.features.ui.TabListWidgetExtractorFeature;
 import fr.siroz.cariboustonks.features.ui.deployable.DeployableFeature;
@@ -107,6 +114,9 @@ public final class FeatureManager {
 		registerFeature(new FishCaughtFeature());
 		registerFeature(new HotspotFeature());
 		registerFeature(new HotspotRadarFeature());
+		registerFeature(new LotusAtollBuffFeature());
+		registerFeature(new LotusAtollLilyPadFeature());
+		registerFeature(new LotusAtollWormholeFeature());
 		// Foraging
 		registerFeature(new BreakTreeAnimationFeature());
 		registerFeature(new TreeOverlayFeature());
@@ -119,6 +129,7 @@ public final class FeatureManager {
 		// Hunting
 		registerFeature(new TrackingShardsFeature());
 		registerFeature(new AttributeInfoTooltipFeature(3));
+		registerFeature(new HuntingBoxOverlayFeature());
 		registerFeature(new QuickFusionFeature());
 		// Item
 		registerFeature(new ColoredEnchantmentFeature());
@@ -152,6 +163,7 @@ public final class FeatureManager {
 		registerFeature(new RareDropVisualEffectFeature());
 		registerFeature(new SelectedPetHighlightFeature());
 		registerFeature(new TabListWidgetExtractorFeature());
+		registerFeature(new SacksOverlayFeature());
 		// UI - HUDs
 		registerFeature(new FpsHud());
 		registerFeature(new PingHud());
@@ -170,6 +182,8 @@ public final class FeatureManager {
 		registerFeature(new HoppityEggFinderFeature());
 		registerFeature(new PartyCommandFeature());
 		registerFeature(new REISearchBarCalculatorFeature());
+		registerFeature(new DisableAbiphonePlacementFeature());
+		registerFeature(new HoppityHuntFeature());
 		// Vanilla
 		registerFeature(new HideStatusEffectsFeature());
 		registerFeature(new MuteVanillaSoundFeature());

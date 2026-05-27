@@ -70,6 +70,7 @@ public class RareDropVisualEffectFeature extends Feature {
 		RARE_DROP_ITEMS.put("Radioactive Vial", "RADIOACTIVE_VIAL");
 		RARE_DROP_ITEMS.put("Titanoboa Shed", "TITANOBOA_SHED");
 		RARE_DROP_ITEMS.put("Tiki Mask", "TIKI_MASK");
+		RARE_DROP_ITEMS.put("Prince's Crown Jewel", "PRINCE_CROWN_JEWEL");
 		// Mythological Ritual
 		RARE_DROP_ITEMS.put("Enchanted Book (Chimera I)", "ENCHANTMENT_ULTIMATE_CHIMERA_1");
 		RARE_DROP_ITEMS.put("Minos Relic", "MINOS_RELIC");

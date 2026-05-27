@@ -157,11 +157,15 @@ public interface SkyBlockConstants {
 		// Hoes (https://wiki.hypixel.net/Reforging#Hoes_)
 		map.put("bountiful", "GOLDEN_BALL"); // (Hoes / Axes)
 		map.put("blessed", "BLESSED_FRUIT"); // (Hoes / Axe)
+		map.put("deep_fried", "HASHBROWN");
+		map.put("overpriced", "OVERPRICED_DRINK");
 		// Vacuums (https://wiki.hypixel.net/Reforging#Vacuums_)
 		map.put("beady", "BEADY_EYES");
 		map.put("buzzing", "CLIPPED_WINGS");
 		// Spades
 		map.put("erudite", "DAEDALUS_NOTES");
+		// Froggles
+		map.put("geometric", "GEOMETRIC_ODDITY");
 	}));
 
 	List<String> MASTER_STARS = List.of(

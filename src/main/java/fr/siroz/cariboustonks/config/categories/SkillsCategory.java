@@ -8,6 +8,7 @@ import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
 import dev.isxander.yacl3.api.controller.DoubleSliderControllerBuilder;
+import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.LongSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
@@ -430,6 +431,15 @@ public class SkillsCategory extends AbstractCategory {
 										.step(1L)
 										.formatValue(i -> i > 1 ? Component.nullToEmpty(i + " minutes") : Component.nullToEmpty(i + " minute")))
 								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Include Loot Share"))
+								.description(OptionDescription.of(
+										Component.literal("If enabled, this option allows you to include Loot Shares in the overall tracker and adds the number of Shards obtained through Loot Shares.")))
+								.binding(defaults.hunting.trackingShards.includeLootShare,
+										() -> current.hunting.trackingShards.includeLootShare,
+										newValue -> current.hunting.trackingShards.includeLootShare = newValue)
+								.controller(this::createYesNoController)
+								.build())
 						.option(Option.<BazaarPriceType>createBuilder()
 								.name(Component.literal("Bazaar Price Type"))
 								.description(OptionDescription.of(
@@ -442,6 +452,53 @@ public class SkillsCategory extends AbstractCategory {
 								.binding(defaults.hunting.trackingShards.priceType,
 										() -> current.hunting.trackingShards.priceType,
 										newValue -> current.hunting.trackingShards.priceType = newValue)
+								.controller(this::createEnumCyclingController)
+								.build())
+						.option(LabelOption.create(Component.literal("| Hunting Box Overlay").withStyle(ChatFormatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Enable Hunting Box Overlay"))
+								.description(OptionDescription.of(
+										Component.literal("Displays an overlay when you are in the Hunting Box menu."),
+										Component.literal("Showing all collected Shards along with their quantities and prices, as well as the total value")))
+								.binding(defaults.hunting.huntingBoxOverlay.enabled,
+										() -> current.hunting.huntingBoxOverlay.enabled,
+										newValue -> current.hunting.huntingBoxOverlay.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Integer>createBuilder()
+								.name(Component.literal("Hunting Box Overlay - Max Lines"))
+								.description(OptionDescription.of(
+										Component.literal("Allows to control the number of attributes to display in the Hunting Box Overlay")))
+								.binding(defaults.hunting.huntingBoxOverlay.listSize,
+										() -> current.hunting.huntingBoxOverlay.listSize,
+										newValue -> current.hunting.huntingBoxOverlay.listSize = newValue)
+								.controller(opt -> IntegerSliderControllerBuilder.create(opt)
+										.range(5, 32)
+										.step(1))
+								.build())
+						.option(Option.<Float>createBuilder()
+								.name(Component.literal("Hunting Box Overlay - Scale"))
+								.description(OptionDescription.of(
+										Component.literal("Scale the Display of the Hunting Box Overlay.")))
+								.binding(defaults.hunting.huntingBoxOverlay.scale,
+										() -> current.hunting.huntingBoxOverlay.scale,
+										newValue -> current.hunting.huntingBoxOverlay.scale = newValue)
+								.controller(opt -> FloatSliderControllerBuilder.create(opt)
+										.range(0.5f, 2.5f)
+										.step(0.1f)
+										.formatValue(d -> Component.nullToEmpty("x " + String.format("%.1f", d))))
+								.build())
+						.option(Option.<BazaarPriceType>createBuilder()
+								.name(Component.literal("Hunting Box Overlay - Bazaar Price Type"))
+								.description(OptionDescription.of(
+										Component.literal("Select the type of price from the Bazaar for the Hunting Box Overlay"),
+										Component.literal(SPACE + "BUY :").withStyle(ChatFormatting.UNDERLINE),
+										Component.literal(SPACE + "Show the Insta-Buy / Best Sell Order"),
+										Component.literal(SPACE + "SELL :").withStyle(ChatFormatting.UNDERLINE),
+										Component.literal(SPACE + "Show the Insta-Sell / Best Buy Order")))
+								.binding(defaults.hunting.huntingBoxOverlay.priceType,
+										() -> current.hunting.huntingBoxOverlay.priceType,
+										newValue -> current.hunting.huntingBoxOverlay.priceType = newValue)
 								.controller(this::createEnumCyclingController)
 								.build())
 						.option(LabelOption.create(Component.literal("| Fusion Machine").withStyle(ChatFormatting.BOLD)))
@@ -496,7 +553,8 @@ public class SkillsCategory extends AbstractCategory {
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Fish Caught Warning"))
 								.description(OptionDescription.of(
-										Component.literal("Show a Title when you catch a fish.")))
+										Component.literal("Show a Title when you catch a fish."),
+										Component.literal(SPACE + "Note: Bobber Timer Display option must be disabled.").withStyle(ChatFormatting.GOLD)))
 								.binding(defaults.fishing.fishCaughtWarning,
 										() -> current.fishing.fishCaughtWarning,
 										newValue -> current.fishing.fishCaughtWarning = newValue)
@@ -519,6 +577,44 @@ public class SkillsCategory extends AbstractCategory {
 								.binding(defaults.fishing.hotspotHighlight,
 										() -> current.fishing.hotspotHighlight,
 										newValue -> current.fishing.hotspotHighlight = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(LabelOption.create(Component.literal("| Lotus Atoll").withStyle(ChatFormatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Lotus Atoll - Wormholes Finder"))
+								.description(OptionDescription.of(
+										Component.literal("Detect Wormholes from a distance in the Lotus Atoll Island by creating a Waypoint."),
+										Component.literal("If you're close enough, the Waypoint will disappear.")))
+								.binding(defaults.fishing.lotusAtoll.wormholeFinder,
+										() -> current.fishing.lotusAtoll.wormholeFinder,
+										newValue -> current.fishing.lotusAtoll.wormholeFinder = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Lotus Atoll - Lily Pads Highlighter"))
+								.description(OptionDescription.of(
+										Component.literal("Highlight Lily Pads in the Lotus Atoll with a colorful Glowing effect that changes depending on the size of the Lily Pads, leading up to the explosion.")))
+								.binding(defaults.fishing.lotusAtoll.lilyPadHighlighter,
+										() -> current.fishing.lotusAtoll.lilyPadHighlighter,
+										newValue -> current.fishing.lotusAtoll.lilyPadHighlighter = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Lotus Atoll - Buffs HUD"))
+								.description(OptionDescription.of(
+										Component.literal("Displays a HUD in the Lotus Atoll Island showing the current number of Fishing Buffs and the time remaining before they expire.")))
+								.binding(defaults.fishing.lotusAtoll.buffHud.enabled,
+										() -> current.fishing.lotusAtoll.buffHud.enabled,
+										newValue -> current.fishing.lotusAtoll.buffHud.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Lotus Atoll - Buffs Expired Warning"))
+								.description(OptionDescription.of(
+										Component.literal("Receive a notification in the Lotus Atoll Island when Fishing Buffs have expired.")))
+								.binding(defaults.fishing.lotusAtoll.buffExpiredWarn,
+										() -> current.fishing.lotusAtoll.buffExpiredWarn,
+										newValue -> current.fishing.lotusAtoll.buffExpiredWarn = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(LabelOption.create(Component.empty()))

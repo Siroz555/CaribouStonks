@@ -16,6 +16,7 @@ import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -33,6 +34,8 @@ import org.jspecify.annotations.Nullable;
 public class HotspotFeature extends Feature {
 
 	private static final double DISTANCE_TO_HOTSPOT_IN_BLOCKS = 10;
+	private static final int HOTSPOT_THRESHOLD = 5; // Distance max (blocks) pour rattacher une particule
+	private static final double HOTSPOT_THRESHOLD_SQ = HOTSPOT_THRESHOLD * HOTSPOT_THRESHOLD;
 	private static final Color BOBBER_IN = Colors.GREEN.withAlpha(0.5F);
 	private static final Color BOBBER_OUT = Colors.RED.withAlpha(0.5F);
 
@@ -107,12 +110,13 @@ public class HotspotFeature extends Feature {
 		if (!isEnabled() || currentHotspot == null) return;
 
 		if (hotspotRadius != null && hotspotRadius > 0D && hotspotRadius <= 16D) {
-			renderer.submitThickCircle(
-					currentHotspot.centerPos().subtract(0D, 2.5D, 0D), // 2
+			renderer.submitCircle(
+					currentHotspot.centerPos().subtract(0D, 1.5D, 0D), // 2
 					hotspotRadius,
-					1,
-					32,
+					16,
+					0.025f,
 					bobberInHotspot ? BOBBER_IN : BOBBER_OUT,
+					Direction.Axis.Y,
 					true
 			);
 		}
@@ -158,7 +162,8 @@ public class HotspotFeature extends Feature {
 	}
 
 	private void handleParticle(Vec3 particlePos, ParticleType<?> particleType) {
-		if (currentHotspot == null) return; // "false" ide warn
+		if (currentHotspot == null) return; // "false" ide war
+		if (currentHotspot.centerPos().distanceToSqr(particlePos) > HOTSPOT_THRESHOLD_SQ) return;
 
 		hotspotRadius = currentHotspot.centerPos().distanceTo(particlePos);
 		if (particleType == ParticleTypes.DUST) {

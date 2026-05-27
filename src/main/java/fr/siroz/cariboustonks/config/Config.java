@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.config;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import fr.siroz.cariboustonks.config.configs.ChatConfig;
 import fr.siroz.cariboustonks.config.configs.CombatConfig;
+import fr.siroz.cariboustonks.config.configs.EventConfig;
 import fr.siroz.cariboustonks.config.configs.FarmingConfig;
 import fr.siroz.cariboustonks.config.configs.FishingConfig;
 import fr.siroz.cariboustonks.config.configs.ForagingConfig;
@@ -51,6 +52,9 @@ public class Config {
 
     @SerialEntry
     public MiscConfig misc = new MiscConfig();
+
+	@SerialEntry
+	public EventConfig events = new EventConfig();
 
 	@SerialEntry
 	public VanillaConfig vanilla = new VanillaConfig();

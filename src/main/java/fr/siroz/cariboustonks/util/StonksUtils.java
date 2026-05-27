@@ -80,6 +80,23 @@ public final class StonksUtils {
 		return COLOR_CODE_PATTERN.matcher(input).replaceAll("");
 	}
 
+	public static long parseAmount(@Nullable String value) {
+		if (value == null || value.isEmpty()) return 0;
+
+		value = value.replace(",", "").trim();
+		char suffix = Character.toLowerCase(value.charAt(value.length() - 1));
+
+		long multiplier = switch (suffix) {
+			case 'k' -> 1_000L;
+			case 'm' -> 1_000_000L;
+			case 'b' -> 1_000_000_000L;
+			default  -> 1L;
+		};
+
+		String digits = multiplier != 1 ? value.substring(0, value.length() - 1) : value;
+		return (long) (Double.parseDouble(digits) * multiplier);
+	}
+
 	/**
 	 * Vérifie si le client est connecté à Hypixel.
 	 *

@@ -39,6 +39,7 @@
     "accessors.ChatListenerAccessor",
     "accessors.ClientTextTooltipAccessor",
     "accessors.ConfigClassHandlerImplAccessor",
+    "accessors.DisplayEntityDataScaleAccessor",
     "accessors.DustParticleOptionsAccessor",
     "accessors.FrustumAccessor",
     "accessors.PlayerTabOverlayAccessor"

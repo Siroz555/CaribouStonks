@@ -29,9 +29,9 @@ public class DungeonsCategory extends AbstractCategory {
 								Component.literal("Settings for the dungeon The Catacombs.")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Thorn - F4/M4 - Spirit Bear Timer"))
+								.name(Component.literal("Thorn - F4/M4 - Spirit Bear State"))
 								.description(OptionDescription.of(
-										Component.literal("Displays a timer to warn of the spawn of a Spirit Bear."),
+										Component.literal("Displays the current state of the Spirit Bear. Showing Kills, Spawn Timer and Alive state."),
 										Component.literal(SPACE + "Adapted according to the server's TPS.").withStyle(ChatFormatting.AQUA)))
 								.binding(defaults.instance.theCatacombs.bossThornSpiritBearTimers,
 										() -> current.instance.theCatacombs.bossThornSpiritBearTimers,

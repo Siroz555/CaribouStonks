@@ -71,19 +71,18 @@ public class StonksCommandFeature extends Feature {
 
 		Optional<BazaarProduct> bazaarOpt = hypixelDataSource.getBazaarItem(item);
 		Optional<Double> auctionOpt = genericDataSource.getLowestBin(ItemLookupKey.ofNeuId(item));
-		if (bazaarOpt.isEmpty() && auctionOpt.isEmpty()) {
-			source.sendFeedback(Component.literal("Unable to find '" + item + "' in the Bazaar and the Auction House.").withStyle(ChatFormatting.RED));
-			return result;
-		}
 
 		if (bazaarOpt.isPresent()) {
 			lastItem = item;
 			showBazaarInfo(source, item, bazaarOpt.get());
-		}
-
-		if (auctionOpt.isPresent()) {
+		} else if (auctionOpt.isPresent()) {
 			lastItem = item;
 			showAuctionInfo(source, item, auctionOpt.get());
+		}
+
+		if (bazaarOpt.isEmpty() && auctionOpt.isEmpty()) {
+			source.sendFeedback(Component.literal("Unable to find '" + item + "' in the Bazaar and the Auction House.").withStyle(ChatFormatting.RED));
+			return result;
 		}
 
 		return result;

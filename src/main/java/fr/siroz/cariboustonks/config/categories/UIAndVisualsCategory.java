@@ -6,9 +6,12 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
+import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
+import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.StringControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarPriceType;
 import fr.siroz.cariboustonks.screens.HudConfigScreen;
 import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.Client;
@@ -316,6 +319,62 @@ public class UIAndVisualsCategory extends AbstractCategory {
 										() -> current.uiAndVisuals.tabListWidget.commissions,
 										newValue -> current.uiAndVisuals.tabListWidget.commissions = newValue)
 								.controller(this::createYesNoController)
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Component.literal("Sacks Overlay").append(BETA).withStyle(ChatFormatting.BOLD))
+						.description(OptionDescription.of(
+								Component.literal("Sacks overlays settings")))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Enable Sacks Overlay"))
+								.description(OptionDescription.of(
+										Component.literal("Displays an Overlay in the Sack menus listing the items inside."),
+										Component.literal(SPACE + "- Displays the total value of an item and its quantity"),
+										Component.literal("- Displays the item stored and the max capacity"),
+										Component.literal("- Displays the total value of the sack"),
+										Component.literal("- Sort by highest price"),
+										Component.literal(SPACE + "Note: NPC prices are not supported, and the Gemstone Sack and Rune Sack are not fully supported.").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.uiAndVisuals.sacksOverlay.enabled,
+										() -> current.uiAndVisuals.sacksOverlay.enabled,
+										newValue -> current.uiAndVisuals.sacksOverlay.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Integer>createBuilder()
+								.name(Component.literal("Sacks Overlay - Max Lines"))
+								.description(OptionDescription.of(
+										Component.literal("Allows to control the number of items to display in the Sacks Overlay.")))
+								.binding(defaults.uiAndVisuals.sacksOverlay.listSize,
+										() -> current.uiAndVisuals.sacksOverlay.listSize,
+										newValue -> current.uiAndVisuals.sacksOverlay.listSize = newValue)
+								.controller(opt -> IntegerSliderControllerBuilder.create(opt)
+										.range(5, 32)
+										.step(1))
+								.build())
+						.option(Option.<Float>createBuilder()
+								.name(Component.literal("Sacks Overlay - Scale"))
+								.description(OptionDescription.of(
+										Component.literal("Scale the Display of the Sacks Overlay.")))
+								.binding(defaults.uiAndVisuals.sacksOverlay.scale,
+										() -> current.uiAndVisuals.sacksOverlay.scale,
+										newValue -> current.uiAndVisuals.sacksOverlay.scale = newValue)
+								.controller(opt -> FloatSliderControllerBuilder.create(opt)
+										.range(0.5f, 2.5f)
+										.step(0.1f)
+										.formatValue(d -> Component.nullToEmpty("x " + String.format("%.1f", d))))
+								.build())
+						.option(Option.<BazaarPriceType>createBuilder()
+								.name(Component.literal("Sacks Overlay - Bazaar Price Type"))
+								.description(OptionDescription.of(
+										Component.literal("Select the type of price from the Bazaar for the Sacks Overlay"),
+										Component.literal(SPACE + "BUY :").withStyle(ChatFormatting.UNDERLINE),
+										Component.literal(SPACE + "Show the Insta-Buy / Best Sell Order"),
+										Component.literal(SPACE + "SELL :").withStyle(ChatFormatting.UNDERLINE),
+										Component.literal(SPACE + "Show the Insta-Sell / Best Buy Order")))
+								.binding(defaults.uiAndVisuals.sacksOverlay.priceType,
+										() -> current.uiAndVisuals.sacksOverlay.priceType,
+										newValue -> current.uiAndVisuals.sacksOverlay.priceType = newValue)
+								.controller(this::createEnumCyclingController)
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()

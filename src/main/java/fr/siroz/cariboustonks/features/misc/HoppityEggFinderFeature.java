@@ -54,6 +54,8 @@ public class HoppityEggFinderFeature extends Feature {
 					waypoint.setEnabled(true);
 					waypoint.updatePosition(Position.of(vec3));
 				})
+				.proximityResetOnly(true)
+				.proximityThreshold(6)
 				.onTrackingReset(() -> this.waypoint.setEnabled(false))
 				.build();
 
@@ -64,12 +66,18 @@ public class HoppityEggFinderFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().misc.hoppityEggFinderGuess;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().events.hoppityHunt.eggFinderGuess;
 	}
 
 	@Override
 	protected void onClientJoinServer() {
 		tracker.reset();
+	}
+
+	@Override
+	protected void onSecondPassed() {
+		if (CLIENT.player == null) return;
+		if (isEnabled()) tracker.checkProximity(CLIENT.player.position());
 	}
 
 	@EventHandler(event = "UseItemCallback.EVENT")

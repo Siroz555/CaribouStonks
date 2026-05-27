@@ -3,7 +3,7 @@
   "id": "cariboustonks",
   "version": "${version}",
   "name": "CaribouStonks",
-  "description": "Hypixel SkyBlock Mod. Control price displays on items / GUI, Zoom, Scrollable Tooltips, KeyShortcut, Vanilla Tweaks and lots of Qol features",
+  "description": "Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla Tweaks, and a ton of QoL features! Lightweight and efficient",
   "authors": [
     "Siroz555"
   ],
@@ -37,6 +37,7 @@
         "modmenu.modrinth": "https://modrinth.com/mod/cariboustonks"
       },
       "update_checker": true
-    }
+    },
+    "firmament:hide_from_modlist": true
   }
 }

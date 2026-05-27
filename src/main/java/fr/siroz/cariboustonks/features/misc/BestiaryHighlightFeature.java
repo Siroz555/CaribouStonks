@@ -55,7 +55,7 @@ public class BestiaryHighlightFeature extends Feature {
 			builder.then(ClientCommandManager.literal("add").then(ClientCommandManager.argument("name", StringArgumentType.string()).executes(ctx -> {
 				String custom = StringArgumentType.getString(ctx, "name");
 				if (custom != null && !custom.isBlank() && custom.length() >= 3) {
-					entityNames.add(custom);
+					entityNames.add(custom.toLowerCase(Locale.ENGLISH));
 					Client.sendMessageWithPrefix(Component.literal(custom + " can now have the Glowing effect.").withStyle(ChatFormatting.GREEN));
 					Client.sendMessage(Component.literal(" | MIDDLE-CLICK on the target to disable!").withStyle(ChatFormatting.DARK_GRAY));
 				} else {

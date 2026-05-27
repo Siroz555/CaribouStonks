@@ -45,6 +45,7 @@ class ShardSession {
 	private long lastCatchTime = 0L;
 	private double totalCoins = 0.0;
 	private int totalShards = 0;
+	private int lootShareShards = 0;
 
 	ShardSession(
 			@NonNull Function<String, Double> coinResolver,
@@ -69,7 +70,7 @@ class ShardSession {
 	 * Records un catch, update le state si besoin et retourne une nouvelle snapshot
 	 * ou {@link Optional#empty()} si warming up ou en phase de pre-warm.
 	 */
-	public Optional<ShardSessionStats> recordCatch(@NonNull String shardType, int quantity) {
+	public Optional<ShardSessionStats> recordCatch(@NonNull String shardType, int quantity, boolean isLootShare) {
 		long now = System.currentTimeMillis();
 
 		// Inactivé
@@ -97,6 +98,7 @@ class ShardSession {
 		shardTotals.merge(shardType, quantity, Integer::sum); // Permet de remapper avec/sans/null
 		totalShards += quantity;
 		totalCoins += (coinResolver.apply(shardType) * quantity);
+		if (isLootShare) lootShareShards += quantity;
 
 		// State update
 		if (state == State.WARMING_UP && catches.size() >= MIN_CATCHES_FOR_STATS) {
@@ -149,7 +151,8 @@ class ShardSession {
 				totalCoins,
 				hours > 0 ? totalShards / hours : 0.0,
 				hours > 0 ? totalCoins / hours : 0.0,
-				catches.size()
+				catches.size(),
+				lootShareShards
 		));
 	}
 
@@ -158,6 +161,7 @@ class ShardSession {
 		shardTotals.clear();
 		totalCoins = 0.0;
 		totalShards = 0;
+		lootShareShards = 0;
 		sessionStart = 0L;
 		lastCatchTime = 0L;
 		preWarmCount = 0;

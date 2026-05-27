@@ -7,6 +7,7 @@ import fr.siroz.cariboustonks.core.component.CommandComponent;
 import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
@@ -17,6 +18,7 @@ import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
+import fr.siroz.cariboustonks.features.fishing.RareSeaCreatureFeature;
 import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.Client;
 import fr.siroz.cariboustonks.util.DeveloperTools;
@@ -36,6 +38,7 @@ import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class MobTrackingFeature extends Feature {
 	// Après "[LvXXX] ", le 1er char doit être un symbole (non-lettre) qui est le MobType.
@@ -48,6 +51,7 @@ public class MobTrackingFeature extends Feature {
 	private final BossEvent bossEvent;
 	private final HudElementBuilder hudBuilder;
 	private final Cache<Integer, Integer> notified;
+	private @Nullable RareSeaCreatureFeature rareSeaCreatureFeature;
 
 	private final List<TrackedEntity> tracked = new ArrayList<>(MAX_TRACKED_ENTITIES);
 	private final Map<Integer, Boolean> trackedHighlight = new HashMap<>();
@@ -110,6 +114,11 @@ public class MobTrackingFeature extends Feature {
 				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
 				&& SkyBlockAPI.getIsland() != IslandType.KUUDRA_HOLLOW
 				&& this.config().uiAndVisuals.mobTracking.tracking;
+	}
+
+	@Override
+	protected void postInitialize(@NonNull FeatureManager features) {
+		rareSeaCreatureFeature = features.getFeature(RareSeaCreatureFeature.class);
 	}
 
 	@Override
@@ -176,7 +185,7 @@ public class MobTrackingFeature extends Feature {
 			);
 			if (mobEntry != null) {
 				addTrackedEntity(new TrackedEntity(armorStand, mobEntry.priority()));
-				notifyEntity(armorStand.getId(), mobEntry);
+				notifyEntity(armorStand, mobEntry);
 			}
 		} catch (Exception ex) {
 			if (DeveloperTools.isInDevelopment()) {
@@ -208,9 +217,8 @@ public class MobTrackingFeature extends Feature {
 				SkyBlockAPI.getIsland()
 		);
 		if (mobEntry != null) {
-			int entityId = entity.getId();
-			trackedHighlight.put(entityId, mobEntry.model().isHighlightable());
-			notifyEntity(entityId, mobEntry);
+			trackedHighlight.put(entity.getId(), mobEntry.model().isHighlightable());
+			notifyEntity(entity, mobEntry);
 		}
 	}
 
@@ -252,9 +260,29 @@ public class MobTrackingFeature extends Feature {
 		}
 	}
 
-	private void notifyEntity(Integer entityId, MobTrackingRegistry.@NonNull MobTrackingEntry mobEntry) {
+	private void notifyEntity(@NonNull Entity entity, MobTrackingRegistry.@NonNull MobTrackingEntry mobEntry) {
+		int entityId = entity.getId();
+
 		if (notified.getIfPresent(entityId) == null && mobEntry.model().isNotifyOnSpawn()) {
 			notified.put(entityId, entityId);
+
+			if (mobEntry.category() == MobTrackingRegistry.MobCategory.FISHING
+					&& rareSeaCreatureFeature != null && rareSeaCreatureFeature.hasFoundCreature()
+			) {
+				// Évite de trigger le Title/Subtiltle si le joueur a une RareSeaCreature a lui,
+				// pour garder la notification du côté de RareSeaCreatureFeature
+				return;
+			}
+
+			// TODO - Avoir dans le registry des Predicate prédéfini pour certains mobs
+			//  sous forme de class pré-faite et qui peuvent être utiliser au moment du register
+			//  > OneNotificationTrackingPredicate
+			//  > PositionTrackingPredicate
+			//  > ..
+			if (entity.position().y() >= 74 && mobEntry.model().getName().equals("Puddle Jumper")) {
+				// SIROZ-NOTE: en attendant je block le Jumper car c casse pied la notif a chaque fois qu'il jump
+				return;
+			}
 
 			Client.showTitleAndSubtitle(
 					mobEntry.displayName(),

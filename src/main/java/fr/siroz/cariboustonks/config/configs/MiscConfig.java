@@ -7,8 +7,9 @@ import net.minecraft.ChatFormatting;
 
 public class MiscConfig {
 
+	@Deprecated
 	@SerialEntry
-	public boolean hoppityEggFinderGuess = false;
+	public boolean hoppityEggFinderGuess = false; // Event Config -> hoppityHunt -> eggFinderGuess
 
 	@SerialEntry
 	public Color highlighterColor = ColorUtils.getAwtColor(ChatFormatting.AQUA);
@@ -23,6 +24,9 @@ public class MiscConfig {
 	public boolean serverTracker = false;
 
 	@SerialEntry
+	public boolean disableAbiphonePlacement = false;
+
+	@SerialEntry
 	public Compatibility compatibility = new Compatibility();
 
 	@SerialEntry
@@ -31,7 +35,7 @@ public class MiscConfig {
 	public static class Compatibility {
 
 		@SerialEntry
-		public boolean reiSearchBarCalculator = false;
+		public boolean reiSearchBarCalculator = false; // REI / JEI
 	}
 
 	public static class PartyCommands {

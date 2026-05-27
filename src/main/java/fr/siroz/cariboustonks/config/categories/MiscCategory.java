@@ -58,15 +58,6 @@ public class MiscCategory extends AbstractCategory {
 								newValue -> current.misc.highlighterColor = newValue)
 						.controller(ColorControllerBuilder::create)
 						.build())
-                .option(Option.<Boolean>createBuilder()
-                        .name(Component.literal("Locating Hoppity Eggs"))
-                        .description(OptionDescription.of(
-                                Component.literal("Locate Hoppity Eggs with your Egg Locator, creating a Guess Waypoint.")))
-                        .binding(defaults.misc.hoppityEggFinderGuess,
-                                () -> current.misc.hoppityEggFinderGuess,
-                                newValue -> current.misc.hoppityEggFinderGuess = newValue)
-                        .controller(this::createBooleanController)
-                        .build())
 				.option(Option.<Boolean>createBuilder()
 						.name(Component.literal("Show Hex Color on Items"))
 						.description(OptionDescription.of(
@@ -85,15 +76,59 @@ public class MiscCategory extends AbstractCategory {
 								newValue -> current.misc.serverTracker = newValue)
 						.controller(this::createBooleanController)
 						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Disable Abiphone placement"))
+						.description(OptionDescription.of(
+								Component.literal("If enabled, disables the placement of all Abiphone on the ground.")))
+						.binding(defaults.misc.disableAbiphonePlacement,
+								() -> current.misc.disableAbiphonePlacement,
+								newValue -> current.misc.disableAbiphonePlacement = newValue)
+						.controller(this::createBooleanController)
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Component.literal("Events - Hoppity").withStyle(ChatFormatting.BOLD))
+						.collapsed(false)
+						.description(OptionDescription.of(
+								Component.literal("Events-related settings")))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Hoppity Hunt - Eggs Finder Guess"))
+								.description(OptionDescription.of(
+										Component.literal("Locate Hoppity Eggs with your Egg Locator, creating a Guess Waypoint.")))
+								.binding(defaults.events.hoppityHunt.eggFinderGuess,
+										() -> current.events.hoppityHunt.eggFinderGuess,
+										newValue -> current.events.hoppityHunt.eggFinderGuess = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Hoppity Hunt - Unclaimed Eggs HUD"))
+								.description(OptionDescription.of(
+										Component.literal("Display the status of Hoppity's Eggs that were found or not found during the last day of SkyBlock in the form of a HUD, along with their respawn times.")))
+								.binding(defaults.events.hoppityHunt.huntHud.showHud,
+										() -> current.events.hoppityHunt.huntHud.showHud,
+										newValue -> current.events.hoppityHunt.huntHud.showHud = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Hoppity Hunt - Warn When Unclaimed"))
+								.description(OptionDescription.of(
+										Component.literal("Warn when all 6 Eggs are ready to be found.")))
+								.binding(defaults.events.hoppityHunt.huntNotification,
+										() -> current.events.hoppityHunt.huntNotification,
+										newValue -> current.events.hoppityHunt.huntNotification = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Other Mods").withStyle(ChatFormatting.BOLD))
 						.collapsed(false)
 						.description(OptionDescription.of(
 								Component.literal("Features of mods other than CaribouStonks.")))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("RoughlyEnoughItems Calculator"))
+								.name(Component.literal("RoughlyEnoughItems / JustEnoughItems Calculator"))
 								.description(OptionDescription.of(
-										Component.literal("Allows you to have a calculator in the RoughlyEnoughItems Search Bar.")))
+										Component.literal("Allows you to have a calculator in the Search Bar from:"),
+										Component.literal(SPACE + "- RoughlyEnoughItems"),
+										Component.literal("- JustEnoughItems")))
 								.binding(defaults.misc.compatibility.reiSearchBarCalculator,
 										() -> current.misc.compatibility.reiSearchBarCalculator,
 										newValue -> current.misc.compatibility.reiSearchBarCalculator = newValue)

@@ -51,6 +51,8 @@ public final class PestFinderFeature extends Feature {
 					waypoint.setEnabled(true);
 					waypoint.updatePosition(Position.of(vec3));
 				})
+				.proximityResetOnly(true)
+				.proximityThreshold(10)
 				.onTrackingReset(() -> this.waypoint.setEnabled(false))
 				.build();
 
@@ -70,6 +72,12 @@ public final class PestFinderFeature extends Feature {
 	protected void onClientJoinServer() {
 		waypoint.setEnabled(false);
 		tracker.reset();
+	}
+
+	@Override
+	protected void onSecondPassed() {
+		if (CLIENT.player == null) return;
+		if (isEnabled()) tracker.checkProximity(CLIENT.player.position());
 	}
 
 	@EventHandler(event = "InteractionEvents.LEFT_CLICK_AIR_EVENT")

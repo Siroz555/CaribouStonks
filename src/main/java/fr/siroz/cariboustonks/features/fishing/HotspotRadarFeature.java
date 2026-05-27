@@ -52,6 +52,8 @@ public class HotspotRadarFeature extends Feature {
 					waypoint.setEnabled(true);
 					waypoint.updatePosition(Position.of(vec3));
 				})
+				.proximityResetOnly(true)
+				.proximityThreshold(20)
 				.onTrackingReset(() -> this.waypoint.setEnabled(false))
 				.build();
 
@@ -70,6 +72,12 @@ public class HotspotRadarFeature extends Feature {
 	@Override
 	protected void onClientJoinServer() {
 		reset();
+	}
+
+	@Override
+	protected void onSecondPassed() {
+		if (CLIENT.player == null) return;
+		if (isEnabled()) tracker.checkProximity(CLIENT.player.position());
 	}
 
 	public void reset() {

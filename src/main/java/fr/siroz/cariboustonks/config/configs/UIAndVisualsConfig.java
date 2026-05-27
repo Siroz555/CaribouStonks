@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.config.configs;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import fr.siroz.cariboustonks.core.module.hud.HudConfig;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarPriceType;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import java.awt.Color;
 
@@ -31,6 +32,9 @@ public class UIAndVisualsConfig {
 
 	@SerialEntry
 	public TabListWidget tabListWidget = new TabListWidget();
+
+	@SerialEntry
+	public SacksOverlay sacksOverlay = new SacksOverlay();
 
 	@SerialEntry
 	public ObjectOpenHashSet<String> favoriteAbiphoneContacts = new ObjectOpenHashSet<>();
@@ -276,6 +280,21 @@ public class UIAndVisualsConfig {
 				return this.enabled;
 			}
 		}
+	}
+
+	public static class SacksOverlay {
+
+		@SerialEntry
+		public boolean enabled = false;
+
+		@SerialEntry
+		public int listSize = 15;
+
+		@SerialEntry
+		public BazaarPriceType priceType = BazaarPriceType.BUY;
+
+		@SerialEntry
+		public float scale = 1f;
 	}
 
 	public static class Overlay {
