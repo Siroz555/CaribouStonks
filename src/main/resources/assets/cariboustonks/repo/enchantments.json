@@ -320,8 +320,8 @@
   {
     "id": "luck_of_the_sea",
     "name": "Luck of the Sea",
-    "maxLevel": 6,
-    "goodLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "lure",
