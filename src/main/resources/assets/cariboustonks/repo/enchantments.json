@@ -320,13 +320,19 @@
   {
     "id": "luck_of_the_sea",
     "name": "Luck of the Sea",
-    "maxLevel": 6,
-    "goodLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "lure",
     "name": "Lure",
     "maxLevel": 6
+  },
+  {
+    "id": "magmarizer",
+    "name": "Magmarizer",
+    "maxLevel": 6,
+    "goodLevel": 5
   },
   {
     "id": "magnet",
@@ -368,8 +374,8 @@
   {
     "id": "piscary",
     "name": "Piscary",
-    "maxLevel": 6,
-    "goodLevel": 5
+    "maxLevel": 7,
+    "goodLevel": 6
   },
   {
     "id": "power",
