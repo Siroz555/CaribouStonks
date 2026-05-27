@@ -184,7 +184,7 @@ public class MobTrackingFeature extends Feature {
 			);
 			if (mobEntry != null) {
 				addTrackedEntity(new TrackedEntity(armorStand, mobEntry.priority()));
-				notifyEntity(armorStand.getId(), mobEntry);
+				notifyEntity(armorStand, mobEntry);
 			}
 		} catch (Exception ex) {
 			if (DeveloperTools.isInDevelopment()) {
@@ -216,9 +216,8 @@ public class MobTrackingFeature extends Feature {
 				SkyBlockAPI.getIsland()
 		);
 		if (mobEntry != null) {
-			int entityId = entity.getId();
-			trackedHighlight.put(entityId, mobEntry.model().isHighlightable());
-			notifyEntity(entityId, mobEntry);
+			trackedHighlight.put(entity.getId(), mobEntry.model().isHighlightable());
+			notifyEntity(entity, mobEntry);
 		}
 	}
 
@@ -260,7 +259,9 @@ public class MobTrackingFeature extends Feature {
 		}
 	}
 
-	private void notifyEntity(Integer entityId, MobTrackingRegistry.@NonNull MobTrackingEntry mobEntry) {
+	private void notifyEntity(@NonNull Entity entity, MobTrackingRegistry.@NonNull MobTrackingEntry mobEntry) {
+		int entityId = entity.getId();
+
 		if (notified.getIfPresent(entityId) == null && mobEntry.model().isNotifyOnSpawn()) {
 			notified.put(entityId, entityId);
 
@@ -269,6 +270,16 @@ public class MobTrackingFeature extends Feature {
 			) {
 				// Évite de trigger le Title/Subtiltle si le joueur a une RareSeaCreature a lui,
 				// pour garder la notification du côté de RareSeaCreatureFeature
+				return;
+			}
+
+			// TODO - Avoir dans le registry des Predicate prédéfini pour certains mobs
+			//  sous forme de class pré-faite et qui peuvent être utiliser au moment du register
+			//  > OneNotificationTrackingPredicate
+			//  > PositionTrackingPredicate
+			//  > ..
+			if (entity.position().y() >= 74 && mobEntry.model().getName().equals("Puddle Jumper")) {
+				// SIROZ-NOTE: en attendant je block le Jumper car c casse pied la notif a chaque fois qu'il jump
 				return;
 			}
 
