@@ -57,10 +57,9 @@ public final class CaribouWorldRenderer {
 	private static final Int2ObjectMap<BatchedDraw> BATCHED_DRAWS = new Int2ObjectArrayMap<>(5);
 	private static final List<PreparedDraw> PREPARED_DRAWS = new ArrayList<>();
 	private static final List<Draw> DRAWS = new ArrayList<>();
-	@Nullable
-	private static BatchedDraw lastUnbatchedDraw = null;
+	private static @Nullable BatchedDraw lastUnbatchedDraw = null;
 
-	private static VanillaWorldRenderer worldRenderer;
+	private static RenderDispatcher renderDispatcher;
 
 	private CaribouWorldRenderer() {
 	}
@@ -73,7 +72,7 @@ public final class CaribouWorldRenderer {
 		excludePipelineFromBatching(CaribouRenderPipelines.CIRCLE);
 		excludePipelineFromBatching(CaribouRenderPipelines.CIRCLE_THROUGH_BLOCKS);
 		// Instancie l'implémentation du WorldRenderer (Event extraction)
-		worldRenderer = new VanillaWorldRenderer();
+		renderDispatcher = new RenderDispatcher();
 	}
 
 	/**
@@ -96,7 +95,7 @@ public final class CaribouWorldRenderer {
 	 * @see #getBuffer(RenderPipeline)
 	 */
 	public static BufferBuilder getBuffer(@NonNull RenderPipeline pipeline, @NonNull TextureSetup textureSetup) {
-		return getBufferInternal(pipeline, textureSetup);
+		return selectBuffer(pipeline, textureSetup);
 	}
 
 	/**
@@ -106,11 +105,11 @@ public final class CaribouWorldRenderer {
 	 * @param frustum          frustum
 	 */
 	public static void extract(LevelRenderState levelRenderState, Frustum frustum) {
-		if (worldRenderer == null) return;
+		if (renderDispatcher == null) return;
 
-		worldRenderer.begin(levelRenderState, frustum);
-		RenderEvents.WORLD_RENDER_EVENT.invoker().onWorldRender(worldRenderer);
-		worldRenderer.end();
+		renderDispatcher.begin(levelRenderState, frustum);
+		RenderEvents.WORLD_RENDER_EVENT.invoker().onWorldRender(renderDispatcher);
+		renderDispatcher.end();
 	}
 
 	/**
@@ -119,9 +118,9 @@ public final class CaribouWorldRenderer {
 	 * @param cameraRenderState cameraRenderState
 	 */
 	public static void executeDraws(CameraRenderState cameraRenderState) {
-		if (worldRenderer == null) return;
+		if (renderDispatcher == null) return;
 
-		worldRenderer.flush(cameraRenderState);
+		renderDispatcher.flush(cameraRenderState);
 		executeDraws();
 	}
 
@@ -171,7 +170,7 @@ public final class CaribouWorldRenderer {
 	/**
 	 * Returns the appropriate {@code BufferBuilder} that should be used with the given pipeline, texture view, and line width.
 	 */
-	private static BufferBuilder getBufferInternal(RenderPipeline pipeline, TextureSetup textureSetup) {
+	private static BufferBuilder selectBuffer(RenderPipeline pipeline, TextureSetup textureSetup) {
 		if (!EXCLUDED_FROM_BATCHING.contains(pipeline)) {
 			return setupBatched(pipeline, textureSetup);
 		} else {

@@ -97,16 +97,6 @@ public final class CaribouRenderPipelines {
 					.build()
 	);
 
-	@Deprecated
-	public static final RenderPipeline GUI_LINES = RenderPipelines.register(
-			RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
-					.withLocation(CaribouStonks.identifier("pipeline/gui_lines"))
-					.withVertexFormat(DefaultVertexFormat.POSITION_COLOR_NORMAL, VertexFormat.Mode.DEBUG_LINE_STRIP)
-					.withDepthStencilState(Optional.empty())
-					.withCull(false)
-					.build()
-	);
-
 	public static final RenderPipeline GUI_QUADS = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/gui_quads"))

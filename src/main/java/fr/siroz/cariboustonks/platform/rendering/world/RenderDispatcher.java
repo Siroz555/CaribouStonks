@@ -48,7 +48,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * Implementation of {@link WorldRenderer}.
  */
-final class VanillaWorldRenderer implements WorldRenderer {
+final class RenderDispatcher implements WorldRenderer {
 	// Commands
 	private final TextRendererCommand textRendererCommand;
 	private final TextureRendererCommand textureRendererCommand;
@@ -72,13 +72,11 @@ final class VanillaWorldRenderer implements WorldRenderer {
 	private final List<CursorLineRenderState> cursorLineRenderStates = new ArrayList<>();
 	private final List<CuboidOutlineRenderState> cuboidOutlineRenderStates = new ArrayList<>();
 
-	@Nullable
-	private LevelRenderState levelRenderState = null;
-	@Nullable
-	private Frustum frustum = null;
+	private @Nullable LevelRenderState levelRenderState = null;
+	private @Nullable Frustum frustum = null;
 	private boolean frozen = false;
 
-	VanillaWorldRenderer() {
+	RenderDispatcher() {
 		this.textRendererCommand = new TextRendererCommand();
 		this.textureRendererCommand = new TextureRendererCommand();
 		this.circleRendererCommand = new CircleRendererCommand();
