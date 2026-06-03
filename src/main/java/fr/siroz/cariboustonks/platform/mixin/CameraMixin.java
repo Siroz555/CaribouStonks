@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.platform.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.features.ui.overlay.EtherWarpOverlayFeature;
 import fr.siroz.cariboustonks.features.vanilla.ZoomFeature;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -22,20 +23,40 @@ public abstract class CameraMixin {
 	private boolean smoothCamera = false;
 
 	@Unique
-	private final ZoomFeature zoomFeature = CaribouStonks.features().getFeature(ZoomFeature.class);
+	private ZoomFeature zoomFeature;
+
+	@Unique
+	private EtherWarpOverlayFeature etherWarpOverlayFeature;
+
+	@Unique
+	private ZoomFeature zoomFeature() {
+		if (zoomFeature == null) zoomFeature = CaribouStonks.features().getFeature(ZoomFeature.class);
+		return zoomFeature;
+	}
+
+	@Unique
+	private EtherWarpOverlayFeature etherWarpOverlayFeature() {
+		if (etherWarpOverlayFeature == null) etherWarpOverlayFeature = CaribouStonks.features().getFeature(EtherWarpOverlayFeature.class);
+		return etherWarpOverlayFeature;
+	}
 
 	@ModifyReturnValue(method = "calculateFov", at = @At("TAIL"))
 	private float cariboustonks$changeFov(float original) {
-		if (zoomFeature.isZooming()) {
+		boolean isEtherwarpZoom = etherWarpOverlayFeature().canZoom();
+		if (zoomFeature().isZooming() || isEtherwarpZoom) {
 			if (!smoothCamera) {
 				smoothCamera = true;
 				minecraft.options.smoothCamera = true;
 			}
-			return (float) (original * zoomFeature.getCurrentZoomMultiplier());
+			double multiplier = isEtherwarpZoom
+					? etherWarpOverlayFeature().getZoomMultiplier()
+					: zoomFeature().getCurrentZoomMultiplier();
+			return (float) (original * multiplier);
 		} else if (smoothCamera) {
 			smoothCamera = false;
 			minecraft.options.smoothCamera = false;
-			zoomFeature.resetZoomMultiplier();
+			zoomFeature().resetZoomMultiplier();
+			etherWarpOverlayFeature().resetTarget();
 		}
 
 		return original;

@@ -529,13 +529,41 @@ public class UIAndVisualsCategory extends AbstractCategory {
 						.name(Component.literal("Overlay").withStyle(ChatFormatting.BOLD))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show Etherwarp Teleport Target"))
+								.name(Component.literal("Etherwarp Teleport Target"))
 								.description(OptionDescription.of(
-										Component.literal("Shows the block you will teleport to with the Etherwarp Transmission ability.")))
+										Component.literal("Shows the block you will teleport to with the Etherwarp Transmission ability."),
+										Component.literal("A color will appear depending on whether teleportation is possible, whether it is not possible to teleport, or whether you are blocked by something you can interact with."),
+										Component.literal(SPACE + "⬜️ : Success").withStyle(ChatFormatting.GREEN),
+										Component.literal("⬜️ : Interaction blocked").withStyle(ChatFormatting.GOLD),
+										Component.literal("⬜️ : Too far away").withStyle(ChatFormatting.DARK_PURPLE),
+										Component.literal("⬜️ : Occupied").withStyle(ChatFormatting.RED)))
 								.binding(defaults.uiAndVisuals.overlay.etherWarp,
 										() -> current.uiAndVisuals.overlay.etherWarp,
 										newValue -> current.uiAndVisuals.overlay.etherWarp = newValue)
 								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Etherwarp Teleport Target - Zoom"))
+								.description(OptionDescription.of(
+										Component.literal("Creates a slight zoom effect toward the teleport target."),
+										Component.literal(SPACE + "The Etherwarp Teleport Target option must be enabled").withStyle(ChatFormatting.YELLOW)))
+								.binding(defaults.uiAndVisuals.overlay.etherWarpZoom,
+										() -> current.uiAndVisuals.overlay.etherWarpZoom,
+										newValue -> current.uiAndVisuals.overlay.etherWarpZoom = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Etherwarp Teleport Target - Title Message"))
+								.description(OptionDescription.of(
+										Component.literal("Displays a “!!!” in the center of the screen that clearly and colorfully explains what is preventing teleportation."),
+										Component.empty().append(Component.literal(SPACE + "“!” ").withStyle(ChatFormatting.GOLD)).append(Component.literal(": Interaction blocked")),
+										Component.empty().append(Component.literal(SPACE + "“!!” ").withStyle(ChatFormatting.DARK_PURPLE)).append(Component.literal(": Too far away")),
+										Component.empty().append(Component.literal(SPACE + "“!!!” ").withStyle(ChatFormatting.RED)).append(Component.literal(": Occupied")),
+										Component.literal(SPACE + "The Etherwarp Teleport Target option must be enabled").withStyle(ChatFormatting.YELLOW)))
+								.binding(defaults.uiAndVisuals.overlay.etherWarpSubtitle,
+										() -> current.uiAndVisuals.overlay.etherWarpSubtitle,
+										newValue -> current.uiAndVisuals.overlay.etherWarpSubtitle = newValue)
+								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Show Gyrokinetic Wand Radius"))

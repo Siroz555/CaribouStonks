@@ -89,6 +89,17 @@ public final class PlayerContext {
 	}
 
 	/**
+	 * Returns the offset from the player position to their eyes
+	 *
+	 * @return the offset float
+	 */
+	public static float getEyeHeight() {
+		if (!isAvailable()) return 1.62f;
+		if (!CLIENT.player.isShiftKeyDown()) return 1.62f;
+		return 1.27f;
+	}
+
+	/**
 	 * Retrieves the currently held item in the main hand of the client.
 	 *
 	 * @return the {@link ItemStack} representing the item currently held in the main hand of the client or {@code null}

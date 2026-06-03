@@ -104,7 +104,10 @@ Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla 
     - Single color or with animated rainbow effect.
 - Display a colored border around Tooltip items according to rarity.
 - Overlay
-    - Etherwarp Teleport Target display.
+    - Etherwarp:
+      - Coloring the Teleport Target depending on whether it is possible to teleport.
+      - Slight Zoom effect toward the Teleport Target.
+      - Subtitle prevent teleportation.
     - Gyrokinetic Wand radius display.
 - Change the color of Party messages.
 - Change the color of Guild messages.
