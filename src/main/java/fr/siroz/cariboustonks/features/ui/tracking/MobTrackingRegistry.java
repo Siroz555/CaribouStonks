@@ -25,52 +25,52 @@ import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("checkstyle:linelength")
 public final class MobTrackingRegistry {
-
-	public static final BiFunction<String, String, Boolean> CONTAINS = String::contains;
-	public static final BiFunction<String, String, Boolean> EQUALS = String::equals;
 	private static final Path MOB_TRACKING_PATH = CaribouStonks.CONFIG_DIR.resolve("mobTracking.json");
 
 	private Map<String, MobTrackingEntry> trackedMobs = new HashMap<>();
 
 	public MobTrackingRegistry() {
+		this.registerDefaults();
+
 		ClientLifecycleEvents.CLIENT_STARTED.register(_ -> this.onClientStarted());
 		ClientLifecycleEvents.CLIENT_STOPPING.register(_ -> this.onClientStopping());
+	}
 
+	private void registerDefaults() {
 		// Slayer Boss "register" en temps réel
 		// Crimson Isle - Minibosses
-		register("Bladesoul", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Bladesoul").withStyle(ChatFormatting.GRAY), false, false, IslandType.CRIMSON_ISLE);
-		register("Magma Boss", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Magma Boss").withStyle(ChatFormatting.DARK_RED), false, false, IslandType.CRIMSON_ISLE);
-		register("Ashfang", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Ashfang").withStyle(ChatFormatting.GRAY), false, false, IslandType.CRIMSON_ISLE);
-		register("Mage Outlaw", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Mage Outlaw").withStyle(ChatFormatting.DARK_PURPLE), false, false, IslandType.CRIMSON_ISLE);
-		register("Barbarian Duke X", 5, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Barbarian Duke X").withStyle(ChatFormatting.GRAY), false, false, IslandType.CRIMSON_ISLE);
+		register("Bladesoul", 5, NotifyConditions.ONCE, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Bladesoul").withStyle(ChatFormatting.GRAY), false, false, IslandType.CRIMSON_ISLE);
+		register("Magma Boss", 5, NotifyConditions.ONCE, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Magma Boss").withStyle(ChatFormatting.DARK_RED), false, false, IslandType.CRIMSON_ISLE);
+		register("Ashfang", 5, NotifyConditions.ONCE, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Ashfang").withStyle(ChatFormatting.GRAY), false, false, IslandType.CRIMSON_ISLE);
+		register("Mage Outlaw", 5, NotifyConditions.ONCE, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Mage Outlaw").withStyle(ChatFormatting.DARK_PURPLE), false, false, IslandType.CRIMSON_ISLE);
+		register("Barbarian Duke X", 5, NotifyConditions.ONCE, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Barbarian Duke X").withStyle(ChatFormatting.GRAY), false, false, IslandType.CRIMSON_ISLE);
 		// Crimson Isle - Special
-		register("Vanquisher", 1, MobCategory.SPECIAL, Component.literal("Vanquisher").withStyle(ChatFormatting.DARK_PURPLE), true, true, IslandType.CRIMSON_ISLE);
+		register("Vanquisher", 1, NotifyConditions.maxTimes(2), MobCategory.SPECIAL, Component.literal("Vanquisher").withStyle(ChatFormatting.DARK_PURPLE), true, true, IslandType.CRIMSON_ISLE);
 		// Mythological Ritual
-		register("Manticore", 50, MobCategory.MYTHOLOGICAL, Component.literal("Manticore").withStyle(ChatFormatting.DARK_GREEN), false, false, IslandType.HUB);
-		register("Minos Inquisitor", 50, MobCategory.MYTHOLOGICAL, Component.literal("Minos Inquisitor").withStyle(ChatFormatting.LIGHT_PURPLE), false, false, IslandType.HUB);
-		register("King Minos", 55, MobCategory.MYTHOLOGICAL, Component.literal("King Minos").withStyle(ChatFormatting.RED), false, false, IslandType.HUB);
+		register("Manticore", 50, NotifyConditions.ONCE, MobCategory.MYTHOLOGICAL, Component.literal("Manticore").withStyle(ChatFormatting.DARK_GREEN), false, false, IslandType.HUB);
+		register("Minos Inquisitor", 50, NotifyConditions.ONCE, MobCategory.MYTHOLOGICAL, Component.literal("Minos Inquisitor").withStyle(ChatFormatting.LIGHT_PURPLE), false, false, IslandType.HUB);
+		register("King Minos", 55, NotifyConditions.ONCE, MobCategory.MYTHOLOGICAL, Component.literal("King Minos").withStyle(ChatFormatting.RED), false, false, IslandType.HUB);
 		// Rare Fishing Mobs
 		for (RareSeaCreature seaCreature : RareSeaCreature.values()) {
-			register(seaCreature.getName(), 50, MobCategory.FISHING, Component.literal(seaCreature.getName()).withStyle(seaCreature.getColor()), true, seaCreature.isHighlightable(), seaCreature.getIslandType());
+			NotifyCondition notifyCondition = NotifyConditions.ONCE;
+			// Cas particulier pour le Puddle Jumper, car il se fait détecter tout le long des jumps
+			if (seaCreature == RareSeaCreature.PUDDLE_JUMPER) notifyCondition = NotifyConditions.onceIfBelowY(74);
+
+			register(seaCreature.getName(), 50, notifyCondition, MobCategory.FISHING, Component.literal(seaCreature.getName()).withStyle(seaCreature.getColor()), true, seaCreature.isHighlightable(), seaCreature.getIslandType());
 		}
 		// Mining - Mineshaft
-		register("Littlefoot", 50, MobCategory.MINING, Component.literal("Littlefoot").withStyle(ChatFormatting.BLUE), true, true, IslandType.GLACITE_MINESHAFT);
+		register("Littlefoot", 50, NotifyConditions.ALWAYS, MobCategory.MINING, Component.literal("Littlefoot").withStyle(ChatFormatting.BLUE), true, true, IslandType.GLACITE_MINESHAFT);
 	}
 
 	public void updateMobTrackingConfig(Map<String, MobTrackingEntry> newTrackedMobs) {
-		if (newTrackedMobs == null || newTrackedMobs.isEmpty()) {
-			return;
-		}
+		if (newTrackedMobs == null || newTrackedMobs.isEmpty()) return;
 
 		Map<String, MobTrackingEntry> copy = new HashMap<>();
 		for (Map.Entry<String, MobTrackingEntry> entry : newTrackedMobs.entrySet()) {
-			if (entry.getValue() == null) {
-				MobTrackingEntry backup = trackedMobs.get(entry.getKey());
-				if (backup != null) {
-					copy.put(entry.getKey(), backup);
-				}
-			} else {
-				copy.put(entry.getKey(), entry.getValue());
+			// Si la nouvelle valeur est null, on conserve l'entrée existante, "hot reload" partiel
+			MobTrackingEntry resolved = entry.getValue() != null ? entry.getValue() : trackedMobs.get(entry.getKey());
+			if (resolved != null) {
+				copy.put(entry.getKey(), resolved);
 			}
 		}
 		trackedMobs = copy;
@@ -132,6 +132,7 @@ public final class MobTrackingRegistry {
 	private void register(
 			@NonNull String mobName,
 			int priority,
+			NotifyCondition notifyCondition,
 			MobCategory category,
 			Component displayName,
 			boolean notifyOnSpawn,
@@ -139,7 +140,7 @@ public final class MobTrackingRegistry {
 			IslandType... islandTypes
 	) {
 		MobTrackingModel model = new MobTrackingModel(mobName, true, notifyOnSpawn, highlightable);
-		trackedMobs.put(mobName, new MobTrackingEntry(model, priority, category, displayName, islandTypes));
+		trackedMobs.put(mobName, new MobTrackingEntry(model, priority, notifyCondition, category, displayName, islandTypes));
 	}
 
 	private CompletableFuture<List<MobTrackingModel>> loadMobTrackingConfig() {
@@ -160,31 +161,15 @@ public final class MobTrackingRegistry {
 	private void loadExistingMobTracking(@NonNull List<MobTrackingModel> models) {
 		for (MobTrackingModel model : models) {
 
-			int priority = 0;
-			MobTrackingEntry priorityEntry = trackedMobs.get(model.getName());
-			if (priorityEntry != null) {
-				priority = priorityEntry.priority();
-			}
+			MobTrackingEntry existing = trackedMobs.get(model.getName());
 
-			MobCategory category = MobCategory.DEFAULT;
-			MobTrackingEntry categoryEntry = trackedMobs.get(model.getName());
-			if (categoryEntry != null) {
-				category = categoryEntry.category();
-			}
+			int priority = existing != null ? existing.priority() : 0;
+			NotifyCondition condition = existing != null ? existing.notifyCondition() : NotifyConditions.ONCE;
+			MobCategory category = existing != null ? existing.category() : MobCategory.DEFAULT;
+			IslandType[] islands = existing != null ? existing.allowedIslands() : null;
+			Component displayName = existing != null ? existing.displayName() : Component.literal(model.getName());
 
-			IslandType[] allowedIslands = null;
-			MobTrackingEntry islandEntry = trackedMobs.get(model.getName());
-			if (islandEntry != null) {
-				allowedIslands = islandEntry.allowedIslands();
-			}
-
-			Component displayName = Component.literal(model.getName());
-			MobTrackingEntry displayNameEntry = trackedMobs.get(model.getName());
-			if (displayNameEntry != null) {
-				displayName = displayNameEntry.displayName();
-			}
-
-			MobTrackingEntry entry = new MobTrackingEntry(model, priority, category, displayName, allowedIslands);
+			MobTrackingEntry entry = new MobTrackingEntry(model, priority, condition, category, displayName, islands);
 			trackedMobs.put(entry.model().getName(), entry);
 		}
 
@@ -196,21 +181,17 @@ public final class MobTrackingRegistry {
 	public record MobTrackingEntry(
 			@NonNull MobTrackingModel model,
 			int priority,
+			@NonNull NotifyCondition notifyCondition,
 			@NonNull MobCategory category,
 			@NonNull Component displayName,
 			@Nullable IslandType... allowedIslands
 	) {
 
 		public boolean isAllowedOn(IslandType currentIsland) {
-			if (allowedIslands == null || allowedIslands.length == 0) {
-				return true;
-			}
+			if (allowedIslands == null || allowedIslands.length == 0) return true;
 
 			if (allowedIslands.length == 1) {
-				if (allowedIslands[0] == IslandType.ANY) {
-					return true;
-				}
-
+				if (allowedIslands[0] == IslandType.ANY) return true;
 				return allowedIslands[0] == currentIsland;
 			}
 
