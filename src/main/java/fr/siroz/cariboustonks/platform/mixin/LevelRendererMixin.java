@@ -21,11 +21,13 @@ public abstract class LevelRendererMixin {
 
 	@Inject(method = "extractLevel", at = @At("RETURN"))
 	private void cariboustonks$afterExtractLevel(DeltaTracker deltaTracker, Camera camera, float deltaPartialTick, CallbackInfo ci) {
+		// Fabric >>> LevelRenderEvents.END_EXTRACTION
 		CaribouWorldRenderer.extract(this.levelRenderState, this.levelRenderState.cameraRenderState.cullFrustum);
 	}
 
 	@Inject(method = "lambda$addMainPass$0", at = @At("RETURN"))
 	private void cariboustonks$drawEndMainRender(CallbackInfo ci) {
+		// Fabric >>> LevelRenderEvents.END_MAIN
 		CaribouWorldRenderer.executeDraws(this.levelRenderState.cameraRenderState);
 	}
 }

@@ -76,7 +76,18 @@ final class RenderDispatcher implements WorldRenderer {
 	private @Nullable Frustum frustum = null;
 	private boolean frozen = false;
 
+	@SuppressWarnings("ALL")
+	private final GpuBackend gpuBackend;
+
+	enum GpuBackend {
+		VULKAN, OPENGL
+	}
+
 	RenderDispatcher() {
+		this.gpuBackend = GpuBackend.OPENGL;
+//		this.gpuBackend = ((GpuDeviceAccessor) RenderSystem.getDevice()).getBackend() instanceof VulkanDevice
+//				? GpuBackend.VULKAN
+//				: GpuBackend.OPENGL;
 		this.textRendererCommand = new TextRendererCommand();
 		this.textureRendererCommand = new TextureRendererCommand();
 		this.circleRendererCommand = new CircleRendererCommand();
