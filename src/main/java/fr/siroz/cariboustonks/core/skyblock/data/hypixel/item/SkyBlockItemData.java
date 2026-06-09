@@ -32,6 +32,7 @@ import org.jspecify.annotations.Nullable;
  * @param category      the category if the item has a category field (e.g. "ACCESSORY")
  * @param skullTexture  the skullTexture if the item is a skull and contains a skin value (Base64 encoded)
  * @param gemstoneSlots the {@link GemstoneSlot} list if the item has a gemstone_slots field
+ * @param upgradeCosts  the {@link GearUpgrade} list if the item has an upgrade_costs field
  * @param prestige      the {@link PrestigeItem} if the item has a prestige field
  */
 public record SkyBlockItemData(
@@ -43,6 +44,7 @@ public record SkyBlockItemData(
 		Optional<String> category,
 		Optional<String> skullTexture,
 		Optional<List<GemstoneSlot>> gemstoneSlots,
+		Optional<List<List<GearUpgrade>>> upgradeCosts,
 		Optional<PrestigeItem> prestige
 ) {
 
@@ -55,6 +57,7 @@ public record SkyBlockItemData(
 			Optional.empty(),
 			"",
 			Rarity.UNKNOWN,
+			Optional.empty(),
 			Optional.empty(),
 			Optional.empty(),
 			Optional.empty(),
@@ -78,8 +81,9 @@ public record SkyBlockItemData(
 			Optional<String> category = Optional.ofNullable(JsonUtils.getString(jsonItem, "category"));
 			Optional<String> skullTexture = Optional.ofNullable(computeSkullTexture(jsonItem, material));
 			Optional<List<GemstoneSlot>> gemstoneSlots = Optional.ofNullable(computeGemstoneSlots(jsonItem));
+			Optional<List<List<GearUpgrade>>> upgradeCosts = Optional.ofNullable(computeUpgradeCosts(jsonItem));
 			Optional<PrestigeItem> prestige = Optional.ofNullable(computePrestige(jsonItem));
-			return new SkyBlockItemData(id, Optional.ofNullable(material), itemModel, name, rarity, category, skullTexture, gemstoneSlots, prestige);
+			return new SkyBlockItemData(id, Optional.ofNullable(material), itemModel, name, rarity, category, skullTexture, gemstoneSlots, upgradeCosts, prestige);
 		} catch (Exception ex) {
 			String id = Optional.ofNullable(JsonUtils.getString(jsonItem, "id")).orElse("UNKNOWN");
 			throw new SkyBlockItemParseException(id, ex);
@@ -248,6 +252,27 @@ public record SkyBlockItemData(
 			}
 		}
 		return slots.isEmpty() ? null : slots;
+	}
+
+	private static @Nullable List<List<GearUpgrade>> computeUpgradeCosts(@NonNull JsonObject jsonItem) {
+		JsonArray array = JsonUtils.getArray(jsonItem, "upgrade_costs");
+		if (array == null) return null;
+
+		List<List<GearUpgrade>> costs = new ArrayList<>();
+		for (JsonElement upgradeLevel : array) {
+
+			List<GearUpgrade> levelCosts = new ArrayList<>();
+			for (JsonElement entry : upgradeLevel.getAsJsonArray()) {
+				if (entry.isJsonObject()) {
+					GearUpgrade upgrade = GearUpgrade.parse(entry.getAsJsonObject());
+					if (!upgrade.equals(GearUpgrade.EMPTY)) levelCosts.add(upgrade);
+				}
+			}
+
+			if (!levelCosts.isEmpty()) costs.add(levelCosts);
+		}
+
+		return costs.isEmpty() ? null : costs;
 	}
 
 	private static @Nullable PrestigeItem computePrestige(@NonNull JsonObject jsonItem) {
