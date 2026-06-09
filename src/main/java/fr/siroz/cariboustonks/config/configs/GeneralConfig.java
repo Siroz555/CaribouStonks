@@ -46,6 +46,9 @@ public class GeneralConfig {
 		public TooltipPriceDisplayType auctionTooltipPriceDisplayType = TooltipPriceDisplayType.FULL;
 
 		@SerialEntry
+		public boolean showTotalTooltipPriceInsteadShift = false;
+
+		@SerialEntry
 		public boolean itemValueTooltip = true;
 
 		@SerialEntry

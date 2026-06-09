@@ -113,6 +113,15 @@ public class GeneralCategory extends AbstractCategory {
 										newValue -> current.general.stonks.bazaarTooltipMoreData = newValue)
 								.controller(this::createYesNoController)
 								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Bazaar Prices - Show the total instead of pressing Shift"))
+								.description(OptionDescription.of(
+										Component.literal("If this option is enabled, it allows you to view the total price directly, instead of pressing Shift.")))
+								.binding(defaults.general.stonks.showTotalTooltipPriceInsteadShift,
+										() -> current.general.stonks.showTotalTooltipPriceInsteadShift,
+										newValue -> current.general.stonks.showTotalTooltipPriceInsteadShift = newValue)
+								.controller(this::createYesNoController)
+								.build())
 						.option(LabelOption.create(Component.literal("")))
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Auction Price"))
