@@ -14,8 +14,7 @@ import net.minecraft.network.protocol.ping.ServerboundPingRequestPacket;
 import net.minecraft.util.Util;
 
 public final class NetworkSystem implements System {
-
-	private static final Minecraft CLIENT = Minecraft.getInstance();
+	private static final Minecraft MINECRAFT = Minecraft.getInstance();
 
 	private int lastParameterS2CPing;
 
@@ -47,7 +46,7 @@ public final class NetworkSystem implements System {
 	}
 
 	public float getTickRate() {
-		if (CLIENT.level == null || CLIENT.player == null) return 0;
+		if (MINECRAFT.level == null || MINECRAFT.player == null) return 0;
 		if (java.lang.System.currentTimeMillis() - timeGameJoined < 4000) return 20;
 
 		int numTicks = 0;

@@ -21,7 +21,7 @@ import org.jspecify.annotations.Nullable;
  */
 public final class GlowingSystem implements System {
 
-	private final Map<Feature, EntityGlowComponent> registeredComponents = new HashMap<>();
+	private final Map<Feature, EntityGlowComponent> components = new HashMap<>();
 	private final Object2IntMap<Entity> cachedEntities = new Object2IntOpenHashMap<>();
 
 	public GlowingSystem() {
@@ -31,12 +31,16 @@ public final class GlowingSystem implements System {
 	@Override
 	public void register(@NonNull Feature feature) {
 		feature.getComponent(EntityGlowComponent.class)
-				.ifPresent(component ->  registeredComponents.put(feature, component));
+				.ifPresent(component -> components.put(feature, component));
 	}
 
 	/**
 	 * Retrieves the cached glow color for the given entity,
 	 * or returns the provided default color if none is cached.
+	 * <p>
+	 * <b>>>> MIXIN <<<</b>
+	 * <p>
+	 * {@code EntityRenderer} -> {@code extractRenderState} -> {@code state.outlineColor = X}
 	 *
 	 * @param entity       the entity
 	 * @param defaultColor the color to return if no color is cached
@@ -50,6 +54,10 @@ public final class GlowingSystem implements System {
 	/**
 	 * Checks whether a glow color for the given entity is already cached or attempts to compute
 	 * and cache it if not. A non-default color will be cached and cause this method to return {@code true}.
+	 * <p>
+	 * <b>>>> MIXIN <<<</b>
+	 * <p>
+	 * {@code EntityRenderer} -> {@code extractRenderState} -> {@code hasGlowFlag}
 	 *
 	 * @param entity the entity to check or compute for
 	 * @return {@code true} if a non-default glow color is cached or computed
@@ -72,7 +80,7 @@ public final class GlowingSystem implements System {
 	 * The first non-default color returned by a provider is used.
 	 */
 	private int computeEntity(@NonNull Entity entity) {
-		for (Map.Entry<Feature, EntityGlowComponent> entry : registeredComponents.entrySet()) {
+		for (Map.Entry<Feature, EntityGlowComponent> entry : components.entrySet()) {
 			if (entry.getKey().isEnabled()) {
 				int glowColor = entry.getValue().getGlowColor(entity);
 				if (glowColor != EntityGlowComponent.EntityGlowStrategy.DEFAULT) {

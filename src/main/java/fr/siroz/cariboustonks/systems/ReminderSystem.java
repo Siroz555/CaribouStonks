@@ -37,7 +37,6 @@ import org.jspecify.annotations.NonNull;
  * to add, remove, retrieve, and persist reminders across player sessions.
  */
 public final class ReminderSystem implements System {
-
 	private static final Path REMINDER_PATH = CaribouStonks.CONFIG_DIR.resolve("reminder.json");
 	private static final int MONITOR_INTERVAL_SECONDS = 10;
 	private static final int AUTO_SAVE_INTERVAL_SECONDS = 60;
@@ -45,7 +44,7 @@ public final class ReminderSystem implements System {
 	private final PriorityQueue<TimedObjectModel> queue = new PriorityQueue<>(Comparator.comparing(TimedObjectModel::expirationTime));
 	private final Map<String, TimedObjectModel> activeReminders = new ConcurrentHashMap<>();
 	private final Set<String> preNotifiedIds = ConcurrentHashMap.newKeySet();
-	private final Map<String, ReminderComponent> registeredComponents = new ConcurrentHashMap<>();
+	private final Map<String, ReminderComponent> components = new ConcurrentHashMap<>();
 
 	private final ScheduledExecutorService scheduler;
 	private volatile boolean loaded = false;
@@ -77,7 +76,7 @@ public final class ReminderSystem implements System {
 	private void registerComponent(Feature feature, ReminderComponent component) {
 		String reminderType = component.getReminderType();
 
-		if (registeredComponents.containsKey(reminderType)) {
+		if (components.containsKey(reminderType)) {
 			CaribouStonks.LOGGER.warn(
 					"[ReminderSystem] Reminder type '{}' is already registered, skipping feature '{}'",
 					reminderType,
@@ -86,7 +85,7 @@ public final class ReminderSystem implements System {
 			return;
 		}
 
-		registeredComponents.put(reminderType, component);
+		components.put(reminderType, component);
 
 		if (DeveloperTools.isInDevelopment()) {
 			CaribouStonks.LOGGER.info(
@@ -117,7 +116,7 @@ public final class ReminderSystem implements System {
 	 * @see #addTimedObject(TimedObjectModel)
 	 */
 	public void addTimedObject(@NonNull TimedObjectModel obj, boolean replaceIfExists) {
-		if (!registeredComponents.containsKey(obj.type())) {
+		if (!components.containsKey(obj.type())) {
 			throw new IllegalArgumentException("No reminder registered for type: " + obj.type());
 		}
 
@@ -167,7 +166,7 @@ public final class ReminderSystem implements System {
 
 		synchronized (queue) {
 			for (TimedObjectModel obj : queue) {
-				ReminderComponent component = registeredComponents.get(obj.type());
+				ReminderComponent component = components.get(obj.type());
 				if (component != null) {
 					result.add(Pair.of(component, obj));
 				}
@@ -181,8 +180,8 @@ public final class ReminderSystem implements System {
 	@EventHandler(event = "SkyBlockEvents.JOIN_EVENT")
 	private void onSkyBlockJoin() {
 		if (loaded) return;
-
 		loaded = true;
+
 		loadTimedObjects()
 				.thenAccept(list ->
 						TickScheduler.getInstance().runLater(() -> loadExistingObjects(list), 2, TimeUnit.SECONDS)
@@ -195,7 +194,6 @@ public final class ReminderSystem implements System {
 	@Override
 	public void onShutdown() {
 		if (!loaded) return;
-
 		loaded = false;
 
 		List<TimedObjectModel> objectsToSave;
@@ -241,7 +239,7 @@ public final class ReminderSystem implements System {
 	}
 
 	private @NonNull CompletableFuture<List<TimedObjectModel>> loadTimedObjects() {
-		if (!Files.exists(REMINDER_PATH)) return CompletableFuture.completedFuture(List.of());
+		if (!Files.exists(REMINDER_PATH)) return CompletableFuture.completedFuture(Collections.emptyList());
 
 		return CompletableFuture.supplyAsync(() -> {
 			try {
@@ -268,7 +266,7 @@ public final class ReminderSystem implements System {
 		int orphaned = 0;
 
 		for (TimedObjectModel obj : loadedObjects) {
-			if (!registeredComponents.containsKey(obj.type())) {
+			if (!components.containsKey(obj.type())) {
 				orphaned++;
 				if (DeveloperTools.isInDevelopment()) {
 					CaribouStonks.LOGGER.warn("[ReminderSystem] Orphaned reminder '{}' of type '{}' - no component registered", obj.id(), obj.type());
@@ -320,7 +318,7 @@ public final class ReminderSystem implements System {
 	private boolean shouldProcessPreNotification(@NonNull TimedObjectModel obj, @NonNull Instant now) {
 		if (!preNotifiedIds.add(obj.id())) return false;
 
-		ReminderComponent component = registeredComponents.get(obj.type());
+		ReminderComponent component = components.get(obj.type());
 		if (component == null) {
 			preNotifiedIds.remove(obj.id());
 			return false;
@@ -333,7 +331,6 @@ public final class ReminderSystem implements System {
 		}
 
 		Instant preNotifyTime = obj.expirationTime().minus(preNotifyDuration.get());
-
 		if (now.isBefore(preNotifyTime)) {
 			preNotifiedIds.remove(obj.id());
 			return false;
@@ -343,34 +340,35 @@ public final class ReminderSystem implements System {
 	}
 
 	private void processPreNotification(@NonNull TimedObjectModel obj) {
-		ReminderComponent component = registeredComponents.get(obj.type());
-		if (component != null) {
-			try {
-				component.handlePreExpiration(obj);
+		ReminderComponent component = components.get(obj.type());
+		if (component == null) return;
 
-				if (DeveloperTools.isInDevelopment()) {
-					CaribouStonks.LOGGER.info("[ReminderSystem] Pre-notification triggered for: {}", obj.id());
-				}
-			} catch (Exception ex) {
-				CaribouStonks.LOGGER.error("[ReminderSystem] Error in pre-notification handler for: {}", obj.id(), ex);
+		try {
+			component.handlePreExpiration(obj);
+
+			if (DeveloperTools.isInDevelopment()) {
+				CaribouStonks.LOGGER.info("[ReminderSystem] Pre-notification triggered for: {}", obj.id());
 			}
+		} catch (Exception ex) {
+			CaribouStonks.LOGGER.error("[ReminderSystem] Error in pre-notification handler for: {}", obj.id(), ex);
 		}
 	}
 
 	private void onExpire(@NonNull TimedObjectModel obj) {
-		ReminderComponent component = registeredComponents.get(obj.type());
-		if (component != null) {
-			try {
-				component.handleExpiration(obj);
-
-				if (DeveloperTools.isInDevelopment()) {
-					CaribouStonks.LOGGER.info("[ReminderSystem] Reminder expired: {} (type: {})", obj.id(), obj.type());
-				}
-			} catch (Exception ex) {
-				CaribouStonks.LOGGER.error("[ReminderSystem] Error in expiration handler for: {}", obj.id(), ex);
-			}
-		} else {
+		ReminderComponent component = components.get(obj.type());
+		if (component == null) {
 			CaribouStonks.LOGGER.warn("[ReminderSystem] No component found for expired reminder: {} (type: {})", obj.id(), obj.type());
+			return;
+		}
+
+		try {
+			component.handleExpiration(obj);
+
+			if (DeveloperTools.isInDevelopment()) {
+				CaribouStonks.LOGGER.info("[ReminderSystem] Reminder expired: {} (type: {})", obj.id(), obj.type());
+			}
+		} catch (Exception ex) {
+			CaribouStonks.LOGGER.error("[ReminderSystem] Error in expiration handler for: {}", obj.id(), ex);
 		}
 	}
 

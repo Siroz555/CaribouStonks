@@ -36,16 +36,15 @@ import org.jspecify.annotations.NonNull;
  * @see System
  */
 public final class WaypointSystem implements System {
+	private static final Minecraft MINECRAFT = Minecraft.getInstance();
 
-    private static final Minecraft CLIENT = Minecraft.getInstance();
+	private final Map<UUID, Waypoint> waypoints = new ConcurrentHashMap<>();
 
-    private final Map<UUID, Waypoint> waypoints = new ConcurrentHashMap<>();
-
-    public WaypointSystem() {
+	public WaypointSystem() {
 		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((_, _) -> this.resetWaypoints());
-        RenderEvents.WORLD_RENDER_EVENT.register(this::render);
+		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 		ClientTickEvents.END_CLIENT_TICK.register(_ -> this.onTick());
-    }
+	}
 
 	/**
 	 * Adds a waypoint to the collection if it is not already present.
@@ -53,47 +52,41 @@ public final class WaypointSystem implements System {
 	 * @param waypoint the waypoint to add
 	 */
 	public void addWaypoint(@NonNull Waypoint waypoint) {
-        waypoints.putIfAbsent(waypoint.getUuid(), waypoint);
-    }
+		waypoints.putIfAbsent(waypoint.getUuid(), waypoint);
+	}
 
-    /**
+	/**
 	 * Removes the specified waypoint from the collection of waypoints.
 	 *
 	 * @param waypoint the waypoint to be removed
 	 */
 	public void removeWaypoint(@NonNull Waypoint waypoint) {
-        waypoints.remove(waypoint.getUuid());
-    }
+		waypoints.remove(waypoint.getUuid());
+	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
-    private void render(WorldRenderer renderer) {
-        if (CLIENT.player == null || CLIENT.level == null || waypoints.isEmpty()) {
-			return;
-		}
+	private void render(WorldRenderer renderer) {
+		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
+		if (waypoints.isEmpty()) return;
 
-        for (Map.Entry<UUID, Waypoint> waypoint : waypoints.entrySet()) {
-            waypoint.getValue().getRenderer().render(renderer);
-        }
-    }
+		for (Map.Entry<UUID, Waypoint> waypoint : waypoints.entrySet()) {
+			waypoint.getValue().getRenderer().render(renderer);
+		}
+	}
 
 	@EventHandler(event = "ClientTickEvents.END_CLIENT_TICK")
-    private void onTick() {
-        if (waypoints.isEmpty()) {
-			return;
-		}
+	private void onTick() {
+		if (waypoints.isEmpty()) return;
 
-        for (Map.Entry<UUID, Waypoint> waypoint : waypoints.entrySet()) {
-            if (waypoint.getValue().getTimeoutTicks() == -1) {
-				continue;
+		for (Map.Entry<UUID, Waypoint> waypoint : waypoints.entrySet()) {
+			if (waypoint.getValue().getTimeoutTicks() == -1) continue;
+
+			waypoint.getValue().decreaseTimeout();
+			if (waypoint.getValue().getTimeoutTicks() == 0) {
+				waypoint.getValue().destroy();
 			}
-
-            waypoint.getValue().decreaseTimeout();
-            if (waypoint.getValue().getTimeoutTicks() == 0) {
-                //waypoints.remove(waypoint.getKey());
-                waypoint.getValue().destroy();
-            }
-        }
-    }
+		}
+	}
 
 	private void resetWaypoints() {
 		for (Map.Entry<UUID, Waypoint> waypoint : waypoints.entrySet()) {

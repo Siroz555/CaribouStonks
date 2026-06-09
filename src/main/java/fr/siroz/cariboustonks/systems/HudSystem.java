@@ -32,6 +32,11 @@ public final class HudSystem implements System {
 		HudElementRegistry.attachElementAfter(component.getLayerType(), component.getHudId(), hud::renderHud);
 	}
 
+	/**
+	 * Returns the current HUD provider
+	 *
+	 * @return a list of current HUDs
+	 */
 	public List<Hud> getHudList() {
 		return providers;
 	}

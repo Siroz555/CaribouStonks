@@ -32,15 +32,12 @@ public final class CommandSystem implements System {
 	}
 
 	private void registerComponent(CommandComponent component) {
-		for (CommandComponent.CommandRegistration registration :  component.getRegistrations()) {
-			ClientCommandRegistrationCallback.EVENT.register((d, _) ->  registration.register(d));
+		for (CommandComponent.CommandRegistration registration : component.getRegistrations()) {
+			ClientCommandRegistrationCallback.EVENT.register((d, _) -> registration.register(d));
 		}
 	}
 
-	private void registerModCommand(
-            @NonNull CommandDispatcher<FabricClientCommandSource> dispatcher,
-            CommandBuildContext registryAccess
-	) {
+	private void registerModCommand(@NonNull CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext registryAccess) {
 		LiteralArgumentBuilder<FabricClientCommandSource> builder = ClientCommands.literal(CaribouStonks.NAMESPACE)
 				.executes(ClientContext.openScreen(CaribouStonksMenuScreen::new))
 				.then(ClientCommands.literal("config")

@@ -18,24 +18,21 @@ import java.util.Map;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import org.jspecify.annotations.NonNull;
 
 public final class TooltipAppenderSystem implements System {
 
-	private final Map<Feature, TooltipAppenderComponent> registeredAppender = new LinkedHashMap<>();
+	private final Map<Feature, TooltipAppenderComponent> components = new LinkedHashMap<>();
 	private final List<TooltipAppenderComponent> currentComponents = new ArrayList<>();
 
 	public TooltipAppenderSystem() {
-		ItemTooltipCallback.EVENT.register(this::onTooltipCallback);
-		ScreenEvents.AFTER_INIT.register(this::onAfterInit);
+		ItemTooltipCallback.EVENT.register((stack, _, _, lines) -> this.onTooltipCallback(stack, lines));
+		ScreenEvents.AFTER_INIT.register((_, screen, _, _) -> this.onAfterInit(screen));
 	}
 
 	@Override
@@ -43,7 +40,7 @@ public final class TooltipAppenderSystem implements System {
 		Optional<TooltipAppenderComponent> appenderOpt = feature.getComponent(TooltipAppenderComponent.class);
 		if (appenderOpt.isEmpty()) return;
 
-		registeredAppender.put(feature, appenderOpt.get());
+		components.put(feature, appenderOpt.get());
 
 		if (DeveloperTools.isInDevelopment()) {
 			CaribouStonks.LOGGER.info("[TooltipAppenderSystem] Registered tooltip appender from feature: {}", feature.getShortName());
@@ -51,12 +48,7 @@ public final class TooltipAppenderSystem implements System {
 	}
 
 	@EventHandler(event = "ItemTooltipCallback.EVENT")
-	private void onTooltipCallback(
-            ItemStack stack,
-            Item.TooltipContext tooltipContext,
-            TooltipFlag _flags,
-            List<Component> lines
-	) {
+	private void onTooltipCallback(ItemStack stack, List<Component> lines) {
 		if (ClientContext.getScreen() instanceof AbstractContainerScreen<?> containerScreen) {
 			appendToTooltip(((AbstractContainerScreenAccessor) containerScreen).getFocusedSlot(), stack, lines);
 		} else {
@@ -65,9 +57,10 @@ public final class TooltipAppenderSystem implements System {
 	}
 
 	@EventHandler(event = "ScreenEvents.AFTER_INIT")
-	private void onAfterInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight) {
+	private void onAfterInit(Screen screen) {
 		currentComponents.clear();
-		for (Map.Entry<Feature, TooltipAppenderComponent> appender : registeredAppender.entrySet()) {
+
+		for (Map.Entry<Feature, TooltipAppenderComponent> appender : components.entrySet()) {
 			if (appender.getKey().isEnabled()) {
 				if (appender.getValue().getTrait().matches(screen, 0)) {
 					currentComponents.add(appender.getValue());
@@ -81,9 +74,8 @@ public final class TooltipAppenderSystem implements System {
 	}
 
 	private void appendToTooltip(Slot focusedSlot, ItemStack stack, List<Component> lines) {
-		if (!SkyBlockAPI.isOnSkyBlock()) {
-			return;
-		}
+		if (!SkyBlockAPI.isOnSkyBlock()) return;
+		if (currentComponents.isEmpty()) return;
 
 		for (TooltipAppenderComponent component : currentComponents) {
 			try {

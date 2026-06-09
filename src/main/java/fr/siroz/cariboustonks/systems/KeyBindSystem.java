@@ -33,7 +33,6 @@ import org.jspecify.annotations.NonNull;
  * improved tracking of the different uses of each KeyBind within the Mod.
  */
 public final class KeyBindSystem implements System {
-
 	public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(CaribouStonks.identifier("mod"));
 
 	private final Set<KeyBind> enabledKeyBinds = ConcurrentHashMap.newKeySet();
@@ -60,8 +59,7 @@ public final class KeyBindSystem implements System {
 			keyBinds.putIfAbsent(feature, new LinkedList<>());
 			keyBinds.get(feature).addAll(keyBindComponent.getKeybinds());
 		} catch (Exception ex) {
-			CaribouStonks.LOGGER.error(
-					"[KeyBindManager] Failed to register KeyBinds in {}", feature.getClass().getName(), ex);
+			CaribouStonks.LOGGER.error("[KeyBindManager] Failed to register KeyBinds in {}", feature.getClass().getName(), ex);
 		}
 
 		enableFeatureKeyBinds(feature);
@@ -71,9 +69,7 @@ public final class KeyBindSystem implements System {
 	 * Enables and registers all key binds associated with the given feature.
 	 */
 	private void enableFeatureKeyBinds(@NonNull Feature feature) {
-		if (!keyBinds.containsKey(feature)) {
-			return;
-		}
+		if (!keyBinds.containsKey(feature)) return;
 
 		for (KeyBind keyBind : keyBinds.get(feature)) {
 			registerKeyBind(keyBind);
@@ -121,9 +117,7 @@ public final class KeyBindSystem implements System {
 	private void checkAllKeyBinds(Consumer<KeyBind> checkKeyBind) {
 		for (Feature feature : keyBinds.keySet()) {
 			for (KeyBind keyBind : keyBinds.get(feature)) {
-				if (keyBind.hasScreenPressHandler()) {
-					continue;
-				}
+				if (keyBind.hasScreenPressHandler()) continue;
 
 				try {
 					checkKeyBind.accept(keyBind);

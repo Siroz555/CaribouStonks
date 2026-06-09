@@ -28,10 +28,9 @@ import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
 
 public final class ContainerOverlaySystem implements System {
+	private static final Minecraft MINECRAFT = Minecraft.getInstance();
 
-	private static final Minecraft CLIENT = Minecraft.getInstance();
-
-	private final Map<Feature, ContainerOverlayComponent> registeredOverlays = new HashMap<>();
+	private final Map<Feature, ContainerOverlayComponent> components = new HashMap<>();
 	private ContainerOverlayComponent currentContainerOverlay = null;
 	private List<ColorHighlight> highlights;
 
@@ -44,7 +43,7 @@ public final class ContainerOverlaySystem implements System {
 		Optional<ContainerOverlayComponent> overlayOpt = feature.getComponent(ContainerOverlayComponent.class);
 		if (overlayOpt.isEmpty()) return;
 
-		registeredOverlays.put(feature, overlayOpt.get());
+		components.put(feature, overlayOpt.get());
 
 		if (DeveloperTools.isInDevelopment()) {
 			CaribouStonks.LOGGER.info("[ContainerOverlaySystem] Registered overlay from feature: {}", feature.getShortName());
@@ -66,12 +65,10 @@ public final class ContainerOverlaySystem implements System {
 	}
 
 	public void draw(GuiGraphicsExtractor context, AbstractContainerScreen<ChestMenu> containerScreen, List<Slot> slots) {
-		if (currentContainerOverlay == null) {
-			return;
-		}
+		if (currentContainerOverlay == null) return;
 
-		int screenWidth = CLIENT.getWindow().getGuiScaledWidth();
-		int screenHeight = CLIENT.getWindow().getGuiScaledHeight();
+		int screenWidth = MINECRAFT.getWindow().getGuiScaledWidth();
+		int screenHeight = MINECRAFT.getWindow().getGuiScaledHeight();
 		try {
 			currentContainerOverlay.render(context, screenWidth, screenHeight, 0, 0);
 		} catch (Throwable throwable) {
@@ -109,7 +106,7 @@ public final class ContainerOverlaySystem implements System {
 	}
 
 	private void onScreen(@NonNull ContainerScreen screen) {
-		for (Map.Entry<Feature, ContainerOverlayComponent> overlay : registeredOverlays.entrySet()) {
+		for (Map.Entry<Feature, ContainerOverlayComponent> overlay : components.entrySet()) {
 			if (overlay.getKey().isEnabled()) {
 				if (overlay.getValue().getTrait().matches(screen, screen.getMenu().slots.size())) {
 					currentContainerOverlay = overlay.getValue();
