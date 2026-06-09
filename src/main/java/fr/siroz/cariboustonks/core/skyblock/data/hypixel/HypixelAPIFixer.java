@@ -6,6 +6,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jspecify.annotations.NonNull;
@@ -61,6 +62,7 @@ public final class HypixelAPIFixer {
 				tier,
 				Optional.empty(),
 				Optional.empty(),
+				OptionalDouble.empty(),
 				Optional.empty(),
 				Optional.empty(),
 				Optional.empty()
@@ -78,6 +80,7 @@ public final class HypixelAPIFixer {
 				Rarity.MYTHIC,
 				Optional.empty(),
 				Optional.empty(),
+				OptionalDouble.empty(),
 				Optional.empty(),
 				Optional.empty(),
 				Optional.empty()
@@ -98,6 +101,7 @@ public final class HypixelAPIFixer {
 					tier,
 					Optional.empty(),
 					Optional.empty(),
+					OptionalDouble.empty(),
 					Optional.empty(),
 					Optional.empty(),
 					Optional.empty()

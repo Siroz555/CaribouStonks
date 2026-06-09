@@ -7,6 +7,7 @@ import fr.siroz.cariboustonks.util.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -31,6 +32,7 @@ import org.jspecify.annotations.Nullable;
  * @param tier          the tier (e.g. "COMMON")
  * @param category      the category if the item has a category field (e.g. "ACCESSORY")
  * @param skullTexture  the skullTexture if the item is a skull and contains a skin value (Base64 encoded)
+ * @param npcSellPrice  the NPC Sell Price if the item has the npc_sell_price field
  * @param gemstoneSlots the {@link GemstoneSlot} list if the item has a gemstone_slots field
  * @param upgradeCosts  the {@link GearUpgrade} list if the item has an upgrade_costs field
  * @param prestige      the {@link PrestigeItem} if the item has a prestige field
@@ -43,6 +45,7 @@ public record SkyBlockItemData(
 		@NonNull Rarity tier,
 		Optional<String> category,
 		Optional<String> skullTexture,
+		OptionalDouble npcSellPrice,
 		Optional<List<GemstoneSlot>> gemstoneSlots,
 		Optional<List<List<GearUpgrade>>> upgradeCosts,
 		Optional<PrestigeItem> prestige
@@ -59,6 +62,7 @@ public record SkyBlockItemData(
 			Rarity.UNKNOWN,
 			Optional.empty(),
 			Optional.empty(),
+			OptionalDouble.empty(),
 			Optional.empty(),
 			Optional.empty(),
 			Optional.empty()
@@ -80,10 +84,23 @@ public record SkyBlockItemData(
 			Rarity rarity = computeTier(jsonItem);
 			Optional<String> category = Optional.ofNullable(JsonUtils.getString(jsonItem, "category"));
 			Optional<String> skullTexture = Optional.ofNullable(computeSkullTexture(jsonItem, material));
+			OptionalDouble npcSellPrice = JsonUtils.getOptionalDouble(jsonItem, "npc_sell_price");
 			Optional<List<GemstoneSlot>> gemstoneSlots = Optional.ofNullable(computeGemstoneSlots(jsonItem));
 			Optional<List<List<GearUpgrade>>> upgradeCosts = Optional.ofNullable(computeUpgradeCosts(jsonItem));
 			Optional<PrestigeItem> prestige = Optional.ofNullable(computePrestige(jsonItem));
-			return new SkyBlockItemData(id, Optional.ofNullable(material), itemModel, name, rarity, category, skullTexture, gemstoneSlots, upgradeCosts, prestige);
+			return new SkyBlockItemData(
+					id,
+					Optional.ofNullable(material),
+					itemModel,
+					name,
+					rarity,
+					category,
+					skullTexture,
+					npcSellPrice,
+					gemstoneSlots,
+					upgradeCosts,
+					prestige
+			);
 		} catch (Exception ex) {
 			String id = Optional.ofNullable(JsonUtils.getString(jsonItem, "id")).orElse("UNKNOWN");
 			throw new SkyBlockItemParseException(id, ex);

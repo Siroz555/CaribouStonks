@@ -60,6 +60,7 @@ import fr.siroz.cariboustonks.features.stonks.ItemValueViewerFeature;
 import fr.siroz.cariboustonks.features.stonks.StonksCommandFeature;
 import fr.siroz.cariboustonks.features.stonks.StonksFeature;
 import fr.siroz.cariboustonks.features.stonks.tooltips.ItemValueTooltipFeature;
+import fr.siroz.cariboustonks.features.stonks.tooltips.NpcSellPriceTooltipFeature;
 import fr.siroz.cariboustonks.features.stonks.tooltips.auction.AuctionLowestBinTooltipFeature;
 import fr.siroz.cariboustonks.features.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
 import fr.siroz.cariboustonks.features.ui.AbiphoneFavoriteContactFeature;
@@ -156,6 +157,7 @@ public final class FeatureManager {
 		registerFeature(new ItemValueViewerFeature());
 		registerFeature(new StonksCommandFeature());
 		registerFeature(new StonksFeature());
+		registerFeature(new NpcSellPriceTooltipFeature(6));
 		registerFeature(new BazaarPriceTooltipFeature(1));
 		registerFeature(new AuctionLowestBinTooltipFeature(2));
 		registerFeature(new ItemValueTooltipFeature(4));
