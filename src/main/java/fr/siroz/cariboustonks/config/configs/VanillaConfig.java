@@ -14,9 +14,6 @@ public class VanillaConfig {
 	public boolean stopCursorResetPosition = false;
 
 	@SerialEntry
-	public boolean stopFpsLimiter = false;
-
-	@SerialEntry
 	public boolean displayOwnNametagUsername = false;
 
 	@SerialEntry
