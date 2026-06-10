@@ -50,6 +50,7 @@ Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla 
 - Hide Toast tutorials at the top of the screen.
 - Stop the cursor reset position between GUIs.
 - Display your own Nametag in F5.
+- Uninterrupted Music when switching worlds.
 - In-game Zoom. (default to C).
 - Scrollable Tooltips.
 - Chat:

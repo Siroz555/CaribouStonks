@@ -60,6 +60,15 @@ public class VanillaCategory extends AbstractCategory {
 								newValue -> current.vanilla.displayOwnNametagUsername = newValue)
 						.controller(this::createBooleanController)
 						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Uninterrupted Music"))
+						.description(OptionDescription.of(
+								Component.literal("Prevents the music from stopping abruptly when switching worlds.")))
+						.binding(defaults.vanilla.uninterruptedMusic,
+								() -> current.vanilla.uninterruptedMusic,
+								newValue -> current.vanilla.uninterruptedMusic = newValue)
+						.controller(this::createBooleanController)
+						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Zoom").withStyle(ChatFormatting.BOLD))
 						.description(OptionDescription.of(
