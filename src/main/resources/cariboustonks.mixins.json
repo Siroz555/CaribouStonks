@@ -19,6 +19,7 @@
     "GameRendererMixin",
     "GuiGraphicsExtractorMixin",
     "GuiMixin",
+    "InventoryScreenMixin",
     "ItemInHandRendererMixin",
     "ItemStackMixin",
     "LevelLoadingScreenMixin",
