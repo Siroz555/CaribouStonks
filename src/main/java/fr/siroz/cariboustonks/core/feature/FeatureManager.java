@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.core.feature;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.annotation.Experimental;
-import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.features.chat.ChatColorationFeature;
 import fr.siroz.cariboustonks.features.chat.ChatPositionFeature;
 import fr.siroz.cariboustonks.features.chat.CopyChatMessageFeature;

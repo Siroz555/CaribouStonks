@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.core.service.scheduler;
+package fr.siroz.cariboustonks.core.infrastructure.scheduler;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import fr.siroz.cariboustonks.CaribouStonks;

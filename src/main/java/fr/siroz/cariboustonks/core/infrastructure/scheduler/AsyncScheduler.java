@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.core.service.scheduler;
+package fr.siroz.cariboustonks.core.infrastructure.scheduler;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import java.util.concurrent.ExecutorService;
