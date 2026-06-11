@@ -79,10 +79,14 @@ public abstract class Hud {
 	}
 
 	protected boolean shouldRender() {
-		return hudConfig.shouldRender()
+		return isConfigEnabled()
 				&& enabled.get()
 				&& !CLIENT.getDebugOverlay().showDebugScreen()
 				&& !((PlayerTabOverlayAccessor) CLIENT.gui.getTabList()).isVisible();
+	}
+
+	public boolean isConfigEnabled() {
+		return hudConfig.shouldRender();
 	}
 
 	public abstract void renderScreen(GuiGraphicsExtractor guiGraphics);
