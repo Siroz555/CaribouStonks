@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.core.service.json.adapters;
+package fr.siroz.cariboustonks.core.infrastructure.json.adapters;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

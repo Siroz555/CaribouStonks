@@ -2,11 +2,11 @@ package fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher;
 
 import com.google.gson.annotations.SerializedName;
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.core.infrastructure.json.GsonProvider;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.AsyncScheduler;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.module.http.Http;
 import fr.siroz.cariboustonks.core.module.http.HttpResponse;
-import fr.siroz.cariboustonks.core.service.json.GsonProvider;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarItemAnalytics;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;

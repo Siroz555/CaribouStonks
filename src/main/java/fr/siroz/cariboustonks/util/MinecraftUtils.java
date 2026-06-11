@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.util;
 
 import com.mojang.serialization.Codec;
-import fr.siroz.cariboustonks.core.service.json.GsonProvider;
+import fr.siroz.cariboustonks.core.infrastructure.json.GsonProvider;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.awt.Color;
 import java.util.List;

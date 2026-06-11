@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.core.service.json;
+package fr.siroz.cariboustonks.core.infrastructure.json;
 
 /**
  * Exception thrown when an error occurs during JSON processing from {@link JsonFileService}.

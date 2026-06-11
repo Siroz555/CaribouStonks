@@ -1,20 +1,20 @@
-package fr.siroz.cariboustonks.core.service.json;
+package fr.siroz.cariboustonks.core.infrastructure.json;
 
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
+import fr.siroz.cariboustonks.core.infrastructure.json.adapters.ColorAdapter;
+import fr.siroz.cariboustonks.core.infrastructure.json.adapters.InstantAdapter;
+import fr.siroz.cariboustonks.core.infrastructure.json.adapters.MobTrackingModelAdapter;
+import fr.siroz.cariboustonks.core.infrastructure.json.adapters.PositionAdapter;
+import fr.siroz.cariboustonks.core.infrastructure.json.adapters.TimedObjectAdapter;
+import fr.siroz.cariboustonks.core.infrastructure.json.adapters.WaypointAdapter;
 import fr.siroz.cariboustonks.core.model.MobTrackingModel;
 import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
-import fr.siroz.cariboustonks.core.service.json.adapters.ColorAdapter;
-import fr.siroz.cariboustonks.core.service.json.adapters.InstantAdapter;
-import fr.siroz.cariboustonks.core.service.json.adapters.MobTrackingModelAdapter;
-import fr.siroz.cariboustonks.core.service.json.adapters.PositionAdapter;
-import fr.siroz.cariboustonks.core.service.json.adapters.TimedObjectAdapter;
-import fr.siroz.cariboustonks.core.service.json.adapters.WaypointAdapter;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,8 +1,8 @@
-package fr.siroz.cariboustonks.core.service.json;
+package fr.siroz.cariboustonks.core.infrastructure.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fr.siroz.cariboustonks.core.service.json.adapters.CodecTypeAdapter;
+import fr.siroz.cariboustonks.core.infrastructure.json.adapters.CodecTypeAdapter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import org.jspecify.annotations.NonNull;

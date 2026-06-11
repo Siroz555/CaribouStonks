@@ -1,14 +1,14 @@
-package fr.siroz.cariboustonks.core.service.json.adapters;
+package fr.siroz.cariboustonks.core.infrastructure.json.adapters;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import fr.siroz.cariboustonks.core.infrastructure.json.GsonProvider;
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
-import fr.siroz.cariboustonks.core.service.json.GsonProvider;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;

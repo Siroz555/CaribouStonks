@@ -11,7 +11,7 @@ import fr.siroz.cariboustonks.config.categories.SkillsCategory;
 import fr.siroz.cariboustonks.config.categories.SlayerCategory;
 import fr.siroz.cariboustonks.config.categories.UIAndVisualsCategory;
 import fr.siroz.cariboustonks.config.categories.VanillaCategory;
-import fr.siroz.cariboustonks.core.service.json.adapters.CodecTypeAdapter;
+import fr.siroz.cariboustonks.core.infrastructure.json.adapters.CodecTypeAdapter;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.MinecraftUtils;
 import java.awt.Color;

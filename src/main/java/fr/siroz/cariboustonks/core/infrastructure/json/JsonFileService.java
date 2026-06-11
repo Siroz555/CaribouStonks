@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.core.service.json;
+package fr.siroz.cariboustonks.core.infrastructure.json;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
