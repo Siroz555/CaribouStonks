@@ -14,7 +14,7 @@ import net.minecraft.world.item.Items;
 
 public class SelectedPetHighlightFeature extends Feature {
 
-	private static final Pattern TITLE_PATTERN = Pattern.compile("^Pets.*");
+	private static final Pattern TITLE_PATTERN = Pattern.compile("^(?:\\(\\d+/\\d+\\) )?Pets.*");
 	private static final Pattern SELECTED_PATTERN = Pattern.compile("Click to despawn!");
 
 	public SelectedPetHighlightFeature() {
