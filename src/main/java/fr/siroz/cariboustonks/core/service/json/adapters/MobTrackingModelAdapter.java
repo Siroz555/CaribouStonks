@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.core.model.MobTrackingModel;
 import java.io.IOException;
 import org.jspecify.annotations.NonNull;
 
-public class MobTrackingEntryAdapter extends TypeAdapter<MobTrackingModel> {
+public class MobTrackingModelAdapter extends TypeAdapter<MobTrackingModel> {
 
 	@Override
 	public void write(@NonNull JsonWriter writer, @NonNull MobTrackingModel model) throws IOException {
