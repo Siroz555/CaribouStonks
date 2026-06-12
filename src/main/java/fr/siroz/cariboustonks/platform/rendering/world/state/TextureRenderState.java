@@ -8,6 +8,8 @@ public record TextureRenderState(
         Vec3 pos,
         float width,
         float height,
+        float u,
+        float v,
         float textureWidth,
         float textureHeight,
         Vec3 renderOffset,

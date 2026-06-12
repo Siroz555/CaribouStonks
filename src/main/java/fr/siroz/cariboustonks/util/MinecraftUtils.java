@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -38,6 +40,21 @@ public final class MinecraftUtils {
 	 */
 	public static boolean isPlayer(@NonNull Entity entity) {
 		return entity instanceof Player player && player.getUUID().version() == 4;
+	}
+
+	/**
+	 * Retrieve the {@code Player Head Texture} from the given player username
+	 *
+	 * @param playerName the player username
+	 * @return the Identifier from the Client Assets
+	 */
+	public static @NonNull Identifier getPlayerHeadTexture(@Nullable String playerName) {
+		if (playerName == null || MINECRAFT.getConnection() == null) return DefaultPlayerSkin.getDefaultTexture();
+
+		PlayerInfo entry = MINECRAFT.getConnection().getPlayerInfo(playerName);
+		if (entry == null) return DefaultPlayerSkin.getDefaultTexture();
+
+		return entry.getSkin().body().id();
 	}
 
 	/**
@@ -71,7 +88,7 @@ public final class MinecraftUtils {
 	 * <p>
 	 * Import depuis PlayerTabOverlay
 	 *
-	 * @param playerInfo the player
+	 * @param playerInfo  the player
 	 * @param profileName the profile name
 	 * @return the Component
 	 */
@@ -98,8 +115,8 @@ public final class MinecraftUtils {
 	/**
 	 * Show Special Effet
 	 *
-	 * @param item item
-	 * @param particle particle
+	 * @param item        item
+	 * @param particle    particle
 	 * @param particleAge particle age between 1-120
 	 */
 	public static void showSpecialEffect(
@@ -113,12 +130,12 @@ public final class MinecraftUtils {
 	/**
 	 * Show Special Effet
 	 *
-	 * @param item item
-	 * @param particle particle
+	 * @param item        item
+	 * @param particle    particle
 	 * @param particleAge particle age between 1-120
-	 * @param sound sound
+	 * @param sound       sound
 	 * @param soundVolume sound volume
-	 * @param soundPitch sound pitch
+	 * @param soundPitch  sound pitch
 	 */
 	public static void showSpecialEffect(
 			@NonNull ItemStack item,
@@ -134,13 +151,13 @@ public final class MinecraftUtils {
 	/**
 	 * Show Special Effet
 	 *
-	 * @param title title
-	 * @param item item
-	 * @param particle particle
+	 * @param title       title
+	 * @param item        item
+	 * @param particle    particle
 	 * @param particleAge particle age between 1-120
-	 * @param sound sound
+	 * @param sound       sound
 	 * @param soundVolume sound volume
-	 * @param soundPitch sound pitch
+	 * @param soundPitch  sound pitch
 	 */
 	public static void showSpecialEffect(
 			@Nullable Component title,

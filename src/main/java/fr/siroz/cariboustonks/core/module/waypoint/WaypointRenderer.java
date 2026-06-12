@@ -76,6 +76,7 @@ public final class WaypointRenderer {
 			}
 
 			renderer.submitTexture(centerPos, width, height,
+					RenderUtils.TEXTURE_HEAD_UV, RenderUtils.TEXTURE_HEAD_UV,
 					iconOption.getTextureWidth(), iconOption.getTextureHeight(),
 					iconOption.getRenderOffset(), iconOption.getIcon().get(),
 					iconOption.getColor(), iconOption.getAlpha(), iconOption.isThroughBlocks()

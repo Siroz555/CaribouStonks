@@ -59,6 +59,8 @@ public interface WorldRenderer {
 	 * @param position      the position
 	 * @param width         the width
 	 * @param height        the height
+	 * @param u             the U coordinate (0-1) of the top-left corner (of the sampled region)
+	 * @param v             the V coordinate (0-1) of the top-left corner (of the sampled region)
 	 * @param textureWidth  the amount of texture width
 	 * @param textureHeight the amount of texture height
 	 * @param renderOffset  the offset
@@ -67,7 +69,7 @@ public interface WorldRenderer {
 	 * @param alpha         the alpha
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
-	void submitTexture(@NonNull Vec3 position, float width, float height, float textureWidth, float textureHeight, @NonNull Vec3 renderOffset, @NonNull Identifier texture, @NonNull Color color, float alpha, boolean throughBlocks);
+	void submitTexture(@NonNull Vec3 position, float width, float height, float u, float v, float textureWidth, float textureHeight, @NonNull Vec3 renderOffset, @NonNull Identifier texture, @NonNull Color color, float alpha, boolean throughBlocks);
 
 	/**
 	 * Submits a {@code circle} to be rendered on the plane defined by the specified axis.

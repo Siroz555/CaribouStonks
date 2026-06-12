@@ -6,6 +6,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.AABB;
 import org.joml.FrustumIntersection;
 import org.joml.Matrix4f;
@@ -13,13 +14,10 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public final class RenderUtils {
-
 	public static final int MAX_BUILD_HEIGHT = 300;
-
-	/**
-	 * LightTexture :: 0xF00000 :: RGBA(240, 0, 0, 0.00)
-	 */
-	public static final int FULL_BRIGHT = 15728880; // LightCoordsUtil
+	public static final int FULL_BRIGHT = LightCoordsUtil.FULL_BRIGHT; // 0xF00000 :: RGBA(240, 0, 0, 0.00)
+	public static final float TEXTURE_FULL_UV = 0f;
+	public static final float TEXTURE_HEAD_UV = 8f / 64f;
 
 	private RenderUtils() {
 	}

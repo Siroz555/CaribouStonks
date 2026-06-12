@@ -2,7 +2,9 @@ package fr.siroz.cariboustonks.core.mod.dev;
 
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
+import fr.siroz.cariboustonks.util.MinecraftUtils;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
@@ -40,13 +42,13 @@ class DebugWorldRenderer {
 		); // Le true marche a coup sur, mais 1.21.11 j'utilise ma propre Pipeline pour
 		renderer.submitOutline(
 				new AABB(new BlockPos(57, 129, 211)),
-				Colors.PURPLE,
+				Colors.LIGHT_PURPLE,
 				1f,
 				true
 		);
 		renderer.submitOutline(
 				new AABB(new BlockPos(59, 129, 211)),
-				Colors.PINK,
+				Colors.DARK_PURPLE,
 				1f,
 				false
 		);
@@ -67,7 +69,7 @@ class DebugWorldRenderer {
 				new Vec3[]{
 						new Vec3(63, 130, 207),
 						new Vec3(66, 135, 210)},
-				Colors.MAGENTA,
+				Colors.DARK_PURPLE,
 				1.5f,
 				true
 		);
@@ -87,9 +89,20 @@ class DebugWorldRenderer {
 		renderer.submitTexture(
 				centerPos,
 				scale, scale,
+				RenderUtils.TEXTURE_FULL_UV, RenderUtils.TEXTURE_FULL_UV,
 				1f, 1f,
 				new Vec3(0, 0, 0),
 				Identifier.withDefaultNamespace("textures/item/netherite_sword.png"),
+				new Color(255, 255, 255), 1f,
+				true
+		);
+		renderer.submitTexture(
+				centerPos.add(0, 10, 0),
+				scale, scale,
+				RenderUtils.TEXTURE_HEAD_UV, RenderUtils.TEXTURE_HEAD_UV,
+				RenderUtils.TEXTURE_HEAD_UV, RenderUtils.TEXTURE_HEAD_UV,
+				new Vec3(0, 0, 0),
+				MinecraftUtils.getPlayerHeadTexture(ClientContext.getPlayerName()),
 				new Color(255, 255, 255), 1f,
 				true
 		);

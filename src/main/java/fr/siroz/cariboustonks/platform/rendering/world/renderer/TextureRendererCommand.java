@@ -35,20 +35,25 @@ public final class TextureRendererCommand implements RendererCommand<TextureRend
 
 		float[] colorComponents = state.color().asFloatComponents();
 
+		float u0 = state.u();
+		float v0 = state.v();
+		float u1 = u0 + state.textureWidth();
+		float v1 = v0 + state.textureHeight();
+
 		buffer.addVertex(matrix4f, (float) state.renderOffset().x(), (float) state.renderOffset().y(), (float) state.renderOffset().z())
-				.setUv(1, 1 + state.textureHeight())
+				.setUv(u0, v1)
 				.setColor(colorComponents[0], colorComponents[1], colorComponents[2], state.alpha());
 
 		buffer.addVertex(matrix4f, (float) state.renderOffset().x(), (float) state.renderOffset().y() + state.height(), (float) state.renderOffset().z())
-				.setUv(1, 1)
+				.setUv(u0, v0)
 				.setColor(colorComponents[0], colorComponents[1], colorComponents[2], state.alpha());
 
 		buffer.addVertex(matrix4f, (float) state.renderOffset().x() + state.width(), (float) state.renderOffset().y() + state.height(), (float) state.renderOffset().z())
-				.setUv(1 + state.textureWidth(), 1)
+				.setUv(u1, v0)
 				.setColor(colorComponents[0], colorComponents[1], colorComponents[2], state.alpha());
 
 		buffer.addVertex(matrix4f, (float) state.renderOffset().x() + state.width(), (float) state.renderOffset().y(), (float) state.renderOffset().z())
-				.setUv(1 + state.textureWidth(), 1 + state.textureHeight())
+				.setUv(u1, v1)
 				.setColor(colorComponents[0], colorComponents[1], colorComponents[2], state.alpha());
 	}
 }

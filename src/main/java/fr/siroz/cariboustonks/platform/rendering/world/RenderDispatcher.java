@@ -113,10 +113,10 @@ final class RenderDispatcher implements WorldRenderer {
 	}
 
 	@Override
-	public void submitTexture(@NonNull Vec3 position, float width, float height, float textureWidth, float textureHeight, @NonNull Vec3 renderOffset, @NonNull Identifier texture, @NonNull Color color, float alpha, boolean throughBlocks) {
+	public void submitTexture(@NonNull Vec3 position, float width, float height, float u, float v, float textureWidth, float textureHeight, @NonNull Vec3 renderOffset, @NonNull Identifier texture, @NonNull Color color, float alpha, boolean throughBlocks) {
 		if (frozen) return;
 
-		TextureRenderState state = new TextureRenderState(position, width, height, textureWidth, textureHeight, renderOffset, texture, color, alpha, throughBlocks);
+		TextureRenderState state = new TextureRenderState(position, width, height, u, v, textureWidth, textureHeight, renderOffset, texture, color, alpha, throughBlocks);
 		textureRenderStates.add(state);
 	}
 
