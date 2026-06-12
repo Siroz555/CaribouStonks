@@ -96,10 +96,10 @@ public class StonksCommandFeature extends Feature {
 
 		SkyBlockItemData skyBlockItem = hypixelDataSource.getSkyBlockItem(item);
 		if (skyBlockItem == null) {
-			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.ORANGE.asInt()))
+			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.GOLD_RGB))
 					.append(" " + Component.literal(bazaarProduct.skyBlockId() + " :").withStyle(ChatFormatting.GOLD)));
 		} else {
-			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.ORANGE.asInt()))
+			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.GOLD_RGB))
 					.append(Component.literal(" " + skyBlockItem.name()).withColor(skyBlockItem.tier().getColor()))
 					.append(Component.literal(" (" + bazaarProduct.skyBlockId() + ")").withStyle(ChatFormatting.DARK_GRAY)));
 		}
@@ -233,10 +233,10 @@ public class StonksCommandFeature extends Feature {
 
 		SkyBlockItemData skyBlockItem = hypixelDataSource.getSkyBlockItem(item);
 		if (skyBlockItem == null) {
-			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.ORANGE.asInt()))
+			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.GOLD_RGB))
 					.append(" " + Component.literal(item + " :").withStyle(ChatFormatting.GOLD)));
 		} else {
-			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.ORANGE.asInt()))
+			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.GOLD_RGB))
 					.append(Component.literal(" " + skyBlockItem.name()).withColor(skyBlockItem.tier().getColor()))
 					.append(Component.literal(" (" + skyBlockItem.skyBlockId() + ")").withStyle(ChatFormatting.DARK_GRAY)));
 		}

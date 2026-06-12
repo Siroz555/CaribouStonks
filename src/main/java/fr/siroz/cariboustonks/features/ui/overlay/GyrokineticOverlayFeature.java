@@ -37,6 +37,6 @@ public class GyrokineticOverlayFeature extends Feature {
 		if (hitResult.getType() == HitResult.Type.MISS) return;
 
 		Vec3 position = hitResult.getLocation().subtract(0, 0.1D, 0);
-		renderer.submitCircle(position, RADIUS, 16, .015f, Colors.MAGENTA, Direction.Axis.Y, true);
+		renderer.submitCircle(position, RADIUS, 16, .015f, Colors.DARK_PURPLE, Direction.Axis.Y, true);
 	}
 }

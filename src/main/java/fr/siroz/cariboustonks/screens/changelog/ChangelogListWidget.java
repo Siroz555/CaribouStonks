@@ -139,10 +139,10 @@ class ChangelogListWidget extends ContainerObjectSelectionList<ChangelogListWidg
 
 		// Backend
 		if (!entry.backend.isEmpty()) {
-			out.add(Component.literal("Backend:").withColor(Colors.ORANGE.asInt()).withStyle(ChatFormatting.BOLD));
+			out.add(Component.literal("Backend:").withColor(Colors.GOLD_RGB).withStyle(ChatFormatting.BOLD));
 			for (String item : entry.backend) {
 				for (String l : wrapText(" • " + item, maxWidth)) {
-					out.add(Component.literal(l).withColor(Colors.ORANGE.asInt()));
+					out.add(Component.literal(l).withColor(Colors.GOLD_RGB));
 				}
 			}
 			out.add(SPACE);

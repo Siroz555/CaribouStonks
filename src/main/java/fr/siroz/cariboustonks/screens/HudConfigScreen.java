@@ -51,19 +51,19 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 		int lineSpacing = font.lineHeight + 4;
 		int y = baseY;
 		guiGraphics.centeredText(font,
-				"LEFT-CLICK to select an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
+				"LEFT-CLICK to select an HUD", width >> 1, y, Colors.GRAY_RGB);
 		y += lineSpacing;
 		guiGraphics.centeredText(font,
-				"RIGHT-CLICK to unselect an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
+				"RIGHT-CLICK to unselect an HUD", width >> 1, y, Colors.GRAY_RGB);
 		y += lineSpacing;
 		guiGraphics.centeredText(font,
-				"Press +/- or Mouse Wheel to scale an HUD", width >> 1, y, Colors.LIGHT_GRAY.asInt());
+				"Press +/- or Mouse Wheel to scale an HUD", width >> 1, y, Colors.GRAY_RGB);
 		y += lineSpacing;
 		guiGraphics.centeredText(font,
-				"Press R to reset an HUD's position & scale", width >> 1, y, Colors.LIGHT_GRAY.asInt());
+				"Press R to reset an HUD's position & scale", width >> 1, y, Colors.GRAY_RGB);
 		y += lineSpacing;
 		guiGraphics.centeredText(font,
-				"Press TAB to cycle between HUDs", width >> 1, y, Colors.LIGHT_GRAY.asInt());
+				"Press TAB to cycle between HUDs", width >> 1, y, Colors.GRAY_RGB);
 	}
 
 	private void renderElements(@NonNull GuiGraphicsExtractor guiGraphics) {

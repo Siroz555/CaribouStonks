@@ -79,9 +79,9 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 			layout.addToHeader(new StringWidget(this.getTitle(), this.font));
 
 			if (!isWorldLoaded) {
-				layout.addToContents(new StringWidget(Component.literal("You must be in a world to use this.").withColor(Colors.ORANGE.asInt()), this.font));
+				layout.addToContents(new StringWidget(Component.literal("You must be in a world to use this.").withColor(Colors.GOLD_RGB), this.font));
 			} else {
-				layout.addToContents(new StringWidget(Component.literal("You must enable Held Item customization to use this.").withColor(Colors.ORANGE.asInt()), this.font));
+				layout.addToContents(new StringWidget(Component.literal("You must enable Held Item customization to use this.").withColor(Colors.GOLD_RGB), this.font));
 			}
 
 			layout.addToFooter(Button.builder(CommonComponents.GUI_DONE, _ -> close()).width(210).build());

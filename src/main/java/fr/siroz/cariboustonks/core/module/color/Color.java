@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.core.module.color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.world.item.DyeColor;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -79,16 +78,6 @@ public record Color(int r, int g, int b, int a) {
 		}
 
 		return fromInt(formatting.getColor() | 0xFF000000);
-	}
-
-	/**
-	 * Récupère la couleur d'un {@link DyeColor}.
-	 *
-	 * @param color la dye color type
-	 * @return la couleur obtenue
-	 */
-	public static @NonNull Color fromDyeColor(@NonNull DyeColor color) {
-		return fromInt(color.getTextureDiffuseColor() | 0xFF000000);
 	}
 
 	/**
@@ -209,10 +198,10 @@ public record Color(int r, int g, int b, int a) {
 	 * @return {@link java.awt.Color}
 	 */
 	public java.awt.Color toAwtColor() {
-		int ra = Math.max(0, Math.min(255, this.r));
-		int ga = Math.max(0, Math.min(255, this.g));
-		int ba = Math.max(0, Math.min(255, this.b));
-		int aa = Math.max(0, Math.min(255, this.a));
+		int ra = Math.clamp(this.r, 0, 255);
+		int ga = Math.clamp(this.g, 0, 255);
+		int ba = Math.clamp(this.b, 0, 255);
+		int aa = Math.clamp(this.a, 0, 255);
 		return new java.awt.Color(ra, ga, ba, aa);
 	}
 

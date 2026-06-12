@@ -96,7 +96,7 @@ public class SlayerConfig {
 		public boolean highlightBossEggs = true;
 
 		@SerialEntry
-		public Color highlightBossEggsColor = Colors.PURPLE.toAwtColor();
+		public Color highlightBossEggsColor = Colors.DARK_PURPLE.toAwtColor();
 
 		@SerialEntry
 		public boolean showCursorLineToBossEggs = false;

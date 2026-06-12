@@ -69,7 +69,7 @@ public class TarantulaBossFeature extends Feature {
 		if (!this.config().slayer.tarantulaBoss.showCursorLineToBossEggs) return;
 
 		for (ArmorStand egg : bossEggs) {
-			renderer.submitLineFromCursor(egg.position(), Colors.PURPLE, 1.2f);
+			renderer.submitLineFromCursor(egg.position(), Colors.DARK_PURPLE, 1.2f);
 		}
 	}
 
