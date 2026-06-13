@@ -13,12 +13,12 @@ public final class ModManager {
 
 	private final CrashManager crashManager;
 	private final ModDataSource modDataSource;
-	private final ModFlavor modFlavor;
+	private final SecretModFeatures secretModFeatures;
 
 	public ModManager() {
 		this.crashManager = new CrashManager();
 		this.modDataSource = new ModDataSource();
-		this.modFlavor = new ModFlavor();
+		this.secretModFeatures = new SecretModFeatures();
 
 		new UpdateChecker();
 		new ChangelogManager();
@@ -49,11 +49,11 @@ public final class ModManager {
 	}
 
 	/**
-	 * Retrieves the {@link ModFlavor} instance.
+	 * Retrieves the {@link SecretModFeatures} instance.
 	 *
-	 * @return the {@link ModFlavor} instance
+	 * @return the {@link SecretModFeatures} instance
 	 */
-	public ModFlavor getModFlavor() {
-		return modFlavor;
+	public SecretModFeatures getSecretModFeatures() {
+		return secretModFeatures;
 	}
 }

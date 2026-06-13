@@ -28,6 +28,6 @@ public abstract class TitleScreenMixin extends Screen {
 
 	@Inject(at = @At("RETURN"), method = "init")
 	protected void cariboustonks$coucou(CallbackInfo ci) {
-		CaribouStonks.mod().getModFlavor().getSplashText().ifPresent(text -> this.splash = text);
+		CaribouStonks.mod().getSecretModFeatures().getSplashText().ifPresent(text -> this.splash = text);
 	}
 }
