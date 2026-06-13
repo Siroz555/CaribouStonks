@@ -304,16 +304,6 @@ public class SkillsCategory extends AbstractCategory {
                                 Component.literal("Garden settings")))
                         .collapsed(false)
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Greenhouse Growth Stage Reminder"))
-								.description(OptionDescription.of(
-										Component.literal("Allows you to activate a reminder when your Greenhouse reaches the Next Growth Stage."),
-										Component.literal(SPACE + "You must use your Crop Diagnostics at least once to begin detection.").withStyle(ChatFormatting.GOLD)))
-								.binding(defaults.farming.garden.greenhouseGrowthStageReminder,
-										() -> current.farming.garden.greenhouseGrowthStageReminder,
-										newValue -> current.farming.garden.greenhouseGrowthStageReminder = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Disable Greenhouse watering can placement"))
 								.description(OptionDescription.of(
 										Component.literal("If enabled, disables the placement of watering cans in the Greenhouse."),
@@ -325,7 +315,7 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
                         .option(ButtonOption.createBuilder()
-                                .name(Component.literal("Locking the camera during farming"))
+                                .name(Component.literal("Garden | Locking the camera during farming"))
 								.text(Component.literal("/lockMouse"))
                                 .description(OptionDescription.of(
                                         Component.literal("Allows you to block the movements of the mouse during farming."),
@@ -334,7 +324,7 @@ public class SkillsCategory extends AbstractCategory {
                                 .build())
                         .option(this::shortcutToKeybindsOptions)
                         .option(Option.<Boolean>createBuilder()
-                                .name(Component.literal("Locating Pests"))
+                                .name(Component.literal("Garden | Locating Pests"))
                                 .description(OptionDescription.of(
                                         Component.literal("Locate Pests with your Vacuum, creating a Guess Waypoint. A line from your cursor to the nearest Pest will also be displayed."),
 										Component.literal(SPACE + "If you're not in an infested Plot, the Guess Waypoint will always point to the center of the Plot, so you'll have to use the ability again.").withStyle(ChatFormatting.YELLOW)))
@@ -344,7 +334,7 @@ public class SkillsCategory extends AbstractCategory {
                                 .controller(this::createBooleanController)
                                 .build())
                         .option(Option.<Boolean>createBuilder()
-                                .name(Component.literal("Highlight Infested Plots"))
+                                .name(Component.literal("Garden | Highlight Infested Plots"))
                                 .description(OptionDescription.of(
                                         Component.literal("Highlight Plots that are infested by pests with a border delimitations.")))
                                 .binding(defaults.farming.garden.highlightInfestedPlots,

@@ -188,17 +188,17 @@ public class VanillaCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(ButtonOption.createBuilder()
-								.name(Component.literal("Customize > Main Hand"))
+								.name(Component.literal("Held Item | Customize > Main Hand"))
 								.text(Component.literal("Open customization screen"))
 								.action((screen, _) -> openScreen(HeldItemViewConfigScreen.create(screen, InteractionHand.MAIN_HAND)))
 								.build())
 						.option(ButtonOption.createBuilder()
-								.name(Component.literal("Customize > Off Hand"))
+								.name(Component.literal("Held Item | Customize > Off Hand"))
 								.text(Component.literal("Open customization screen"))
 								.action((screen, _) -> openScreen(HeldItemViewConfigScreen.create(screen, InteractionHand.OFF_HAND)))
 								.build())
 						.option(Option.<Integer>createBuilder()
-								.name(Component.literal("Duration of Swing Animation"))
+								.name(Component.literal("Held Item | Duration of Swing Animation"))
 								.description(OptionDescription.of(
 										Component.literal("Duration of item swing animation. 6 is the default/vanilla time.")))
 								.binding(defaults.vanilla.itemModelCustomization.swingDuration,
@@ -207,7 +207,7 @@ public class VanillaCategory extends AbstractCategory {
 								.controller(opt -> IntegerSliderControllerBuilder.create(opt).range(1, 20).step(1))
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Ignore Mining Effects"))
+								.name(Component.literal("Held Item | Ignore Mining Effects"))
 								.description(OptionDescription.of(
 										Component.literal("Ignores effects such as Haste and Mining Fatigue when Swing animation duration is modified.")))
 								.binding(defaults.vanilla.itemModelCustomization.ignoreMiningEffects,

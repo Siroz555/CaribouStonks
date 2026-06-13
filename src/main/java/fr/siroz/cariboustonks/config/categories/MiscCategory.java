@@ -135,6 +135,7 @@ public class MiscCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.build())
+				// SIROZ-NOTE :: Deprecated
                 .group(OptionGroup.createBuilder()
                         .name(Component.literal("Party Commands").withStyle(ChatFormatting.BOLD))
                         .collapsed(false)

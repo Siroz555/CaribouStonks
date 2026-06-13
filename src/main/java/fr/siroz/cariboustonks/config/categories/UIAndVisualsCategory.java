@@ -99,7 +99,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show in a HUD"))
+								.name(Component.literal("Deployable HUD"))
 								.description(OptionDescription.of(
 										Component.literal("If Deployable is enabled, this allows you to view all active deployable close to you along with their respective timer."),
 										Component.literal(SPACE + "Only one type of deployable can be displayed at a time. However, multiple types may still appear, such as a Black Hole with a Plasmaflux Power Orb.").withStyle(ChatFormatting.YELLOW)))
@@ -169,7 +169,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show in Boss Bar"))
+								.name(Component.literal("Mob Tracking Boss Bar"))
 								.description(OptionDescription.of(
 										Component.literal("If Mob Tracking is enabled, this allows you to view the highest Mob Tracking in a custom Boss Bar.")))
 								.binding(defaults.uiAndVisuals.mobTracking.showInBossBar,
@@ -178,7 +178,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show in a HUD"))
+								.name(Component.literal("Mob Tracking HUD"))
 								.description(OptionDescription.of(
 										Component.literal("If Mob Tracking is enabled, this allows you to view all Mob Tracking in a HUD.")))
 								.binding(defaults.uiAndVisuals.mobTracking.hud.showInHud,
@@ -187,7 +187,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Track Slayer Boss"))
+								.name(Component.literal("Mob Tracking - Slayer Boss"))
 								.description(OptionDescription.of(
 										Component.literal("If Mob Tracking is enabled, this allows you to view Slayer Boss information.")))
 								.binding(defaults.uiAndVisuals.mobTracking.enableSlayer,
@@ -196,7 +196,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<String>createBuilder()
-								.name(Component.literal("Track Spawn Message"))
+								.name(Component.literal("Mob Tracking - Spawn Message"))
 								.description(OptionDescription.of(
 										Component.literal("If Mob Tracking is enabled, this allows you to customize the spawn message. Supports Minecraft color codes (§c, §b, etc)."),
 										Component.literal(SPACE + "Note: The message appears just above the mob's name; it does not contain the mob's name.").withStyle(ChatFormatting.YELLOW)))
@@ -206,7 +206,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(StringControllerBuilder::create)
 								.build())
 						.option(Option.<Color>createBuilder()
-								.name(Component.literal("Track Glowing Color"))
+								.name(Component.literal("Mob Tracking - Glowing Color"))
 								.description(OptionDescription.of(
 										Component.literal("Change the Glowing color"),
 										Component.literal(SPACE + "Note: Must be enabled in the Mob Tracking menu for each desired entity").withStyle(ChatFormatting.GOLD)))
@@ -216,7 +216,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(ColorControllerBuilder::create)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Track Spawn Sound"))
+								.name(Component.literal("Mob Tracking - Spawn Sound"))
 								.description(OptionDescription.of(
 										Component.literal("If Mob Tracking is enabled, this allows a sound to be played."),
 										Component.literal(SPACE + "The sound is not played for the Slayers. You can enable the “Notify when spawned” option in the dedicated menu.")))
@@ -468,7 +468,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Enable Waypoint display"))
+								.name(Component.literal("Enable Waypoint Share display"))
 								.description(OptionDescription.of(
 										Component.literal("When a player shares his position in the chat, a Waypoint is created."),
 										Component.literal(SPACE + "This is automatic, no interaction is required.").withStyle(ChatFormatting.ITALIC)))

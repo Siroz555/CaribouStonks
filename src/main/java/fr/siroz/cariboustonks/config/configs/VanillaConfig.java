@@ -55,7 +55,7 @@ public class VanillaConfig {
 	public static class Zoom {
 
 		@SerialEntry
-		public boolean enabled = true;
+		public boolean enabled = false;
 
 		@SerialEntry
 		public boolean mouseScrolling = false;
@@ -64,7 +64,7 @@ public class VanillaConfig {
 	public static class ScrollableTooltip {
 
 		@SerialEntry
-		public boolean enabled = true;
+		public boolean enabled = false;
 
 		@SerialEntry
 		public boolean reverseScroll = false;

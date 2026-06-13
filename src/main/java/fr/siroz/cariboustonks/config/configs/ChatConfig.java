@@ -8,7 +8,7 @@ import net.minecraft.ChatFormatting;
 public class ChatConfig {
 
     @SerialEntry
-    public boolean copyChat = true;
+    public boolean copyChat = false;
 
 	@SerialEntry
 	public int chatHistoryLength = 555;

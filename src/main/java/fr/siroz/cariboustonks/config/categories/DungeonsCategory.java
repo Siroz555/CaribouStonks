@@ -26,7 +26,7 @@ public class DungeonsCategory extends AbstractCategory {
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("The Catacombs").withStyle(ChatFormatting.BOLD))
 						.description(OptionDescription.of(
-								Component.literal("Settings for the dungeon The Catacombs.")))
+								Component.literal("Settings for The Catacombs Dungeon.")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Thorn - F4/M4 - Spirit Bear State"))

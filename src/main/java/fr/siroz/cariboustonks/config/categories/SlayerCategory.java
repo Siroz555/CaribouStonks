@@ -44,7 +44,7 @@ public class SlayerCategory extends AbstractCategory {
 						.controller(this::createBooleanController)
 						.build())
 				.group(OptionGroup.createBuilder()
-						.name(Component.literal("Spawn Alerts").withStyle(ChatFormatting.BOLD))
+						.name(Component.literal("Slayer Spawn Alerts").withStyle(ChatFormatting.BOLD))
 						.description(OptionDescription.of(
 								Component.literal("Spawn Alerts settings")))
 						.collapsed(false)
@@ -58,7 +58,7 @@ public class SlayerCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Miniboss spawn Alert"))
+								.name(Component.literal("Slayer Miniboss spawn Alert"))
 								.description(OptionDescription.of(
 										Component.literal("Show a Title when your Miniboss spawned.")))
 								.binding(defaults.slayer.minibossSpawnAlert,
@@ -73,7 +73,7 @@ public class SlayerCategory extends AbstractCategory {
 								Component.literal("Control entities highlight settings")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Highlight Boss"))
+								.name(Component.literal("Highlight Slayer Boss"))
 								.description(OptionDescription.of(
 										Component.literal("If enabled, highlight your Boss with a custom glow color.")))
 								.binding(defaults.slayer.highlightBoss,
@@ -82,7 +82,7 @@ public class SlayerCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Color>createBuilder()
-								.name(Component.literal("Highlight Boss Color"))
+								.name(Component.literal("Highlight Slayer Boss Color"))
 								.description(OptionDescription.of(
 										Component.literal("If Highlight Boss is enabled, set your Boss glow color.")))
 								.binding(defaults.slayer.highlightBossColor,
@@ -91,7 +91,7 @@ public class SlayerCategory extends AbstractCategory {
 								.controller(ColorControllerBuilder::create)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Highlight Miniboss"))
+								.name(Component.literal("Highlight Slayer Miniboss"))
 								.description(OptionDescription.of(
 										Component.literal("If enabled, highlight your Miniboss with a custom glow color.")))
 								.binding(defaults.slayer.highlightMiniboss,
@@ -100,7 +100,7 @@ public class SlayerCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Color>createBuilder()
-								.name(Component.literal("Highlight Miniboss Color"))
+								.name(Component.literal("Highlight Slayer Miniboss Color"))
 								.description(OptionDescription.of(
 										Component.literal("If Highlight Miniboss is enabled, set your Miniboss glow color.")))
 								.binding(defaults.slayer.highlightMinibossColor,
@@ -114,7 +114,7 @@ public class SlayerCategory extends AbstractCategory {
 						.description(OptionDescription.of(
 								Component.literal("Control different statistics during Quest/Boss Fight")))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show Statistics Breakdown"))
+								.name(Component.literal("Slayer | Show Statistics Breakdown"))
 								.description(OptionDescription.of(
 										Component.literal("When you kill your Boss, show a message with statistics:"),
 										Component.literal(SPACE),
@@ -127,7 +127,7 @@ public class SlayerCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show Statistics Average").append(BETA))
+								.name(Component.literal("Slayer | Show Statistics Average").append(BETA))
 								.description(OptionDescription.of(
 										Component.literal("When you kill your Boss, show a message with average statistics:"),
 										Component.literal(SPACE),

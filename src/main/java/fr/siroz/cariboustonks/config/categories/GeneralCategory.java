@@ -298,7 +298,7 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Booster Cookie"))
+								.name(Component.literal("Booster Cookie Reminder"))
 								.description(OptionDescription.of(
 										Component.literal("Activate a reminder when your Booster Cookie Buff is inactive.")))
 								.binding(defaults.general.reminders.boosterCookie,
@@ -307,7 +307,7 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Chocolate Factory | Max Chocolates"))
+								.name(Component.literal("Chocolate Factory | Max Chocolates Reminders"))
 								.description(OptionDescription.of(
 										Component.literal("Activate reminders when chocolate production is nearing its limit.")))
 								.binding(defaults.general.reminders.chocolateFactoryMaxChocolates,
@@ -316,7 +316,7 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Rift | Ubik's Cube"))
+								.name(Component.literal("Rift | Ubik's Cube Reminder"))
 								.description(OptionDescription.of(
 										Component.literal("Activate a reminder when your Ubik's Cube is ready for use.")))
 								.binding(defaults.general.reminders.ubikCube,
@@ -325,7 +325,7 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Enchanted Cloak"))
+								.name(Component.literal("Enchanted Cloak Reminder"))
 								.description(OptionDescription.of(
 										Component.literal("Activate a reminder when items are available in the Enchanted Cloak.")))
 								.binding(defaults.general.reminders.enchantedCloak,
@@ -334,7 +334,7 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Stonks Auction"))
+								.name(Component.literal("Stonks Auction Reminder"))
 								.description(OptionDescription.of(
 										Component.literal("Activate a reminder when the Diaz Stonks Auction is ready to bid or recovered.")))
 								.binding(defaults.general.reminders.stonksAuction,
@@ -343,7 +343,7 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Forge"))
+								.name(Component.literal("Forge Reminder"))
 								.description(OptionDescription.of(
 										Component.literal("Activate a reminder when an item in the forge is finished.")))
 								.binding(defaults.general.reminders.forge,

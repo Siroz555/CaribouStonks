@@ -7,8 +7,8 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
+import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
@@ -19,7 +19,7 @@ abstract class AbstractCategory {
 
 	protected static final String SPACE = "\n";
 
-	protected static final Component BETA = Component.literal(" (Beta)").withStyle(ChatFormatting.RED);
+	protected static final Component BETA = Component.literal(" (Beta)").withColor(Colors.RED_RGB);
 
 	protected Config defaults;
     protected Config current;
@@ -46,8 +46,8 @@ abstract class AbstractCategory {
 
     public BooleanControllerBuilder createBooleanController(Option<Boolean> opt) {
         return BooleanControllerBuilder.create(opt).formatValue(b -> b
-				? Component.literal("Enabled").withStyle(ChatFormatting.GREEN)
-				: Component.literal("Disabled").withStyle(ChatFormatting.RED));
+				? Component.literal("Enabled").withColor(Colors.GREEN_RGB)
+				: Component.literal("Disabled").withColor(Colors.RED_RGB));
     }
 
 	public BooleanControllerBuilder createYesNoController(Option<Boolean> opt) {
