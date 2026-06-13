@@ -157,7 +157,7 @@ public class HuntingBoxOverlayFeature extends Feature {
 				.append(Component.literal("Total Page Value: ").withStyle(ChatFormatting.YELLOW))
 				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.SHORT_INTEGER_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 		));
 		if (failed > 0) {

@@ -170,12 +170,12 @@ public class SacksOverlayFeature extends Feature {
 				.mapToDouble(Item::value)
 				.sum();
 
+		lines.add(new Line(Component.literal("| Sack Overlay").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD)));
 		lines.add(new Line(Component.empty()
-				.append(Component.literal(" Sack Overlay:").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD))
-				.append(Component.literal(" Value: ").withStyle(ChatFormatting.YELLOW))
+				.append(Component.literal("└ Value: ").withStyle(ChatFormatting.YELLOW))
 				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.SHORT_INTEGER_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 		));
 		lines.add(new Line(Component.empty()));
