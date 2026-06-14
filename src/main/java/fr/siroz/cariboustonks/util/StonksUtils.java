@@ -237,7 +237,7 @@ public final class StonksUtils {
 		private static final NumberFormat BASE = NumberFormat.getInstance(Locale.US);
 		private final int maxFractionDigits;
 
-		public CompactSuffixFormat(int maxFractionDigits) {
+		CompactSuffixFormat(int maxFractionDigits) {
 			this.maxFractionDigits = maxFractionDigits;
 		}
 
