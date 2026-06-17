@@ -20,6 +20,9 @@ public class VanillaConfig {
 	public boolean displayOwnNametagUsername = false;
 
 	@SerialEntry
+	public boolean uninterruptedMusic = false;
+
+	@SerialEntry
 	public Overlay overlay = new Overlay();
 
 	@SerialEntry

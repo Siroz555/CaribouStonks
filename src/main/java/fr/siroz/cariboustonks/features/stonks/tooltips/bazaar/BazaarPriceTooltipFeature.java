@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.features.stonks.tooltips.bazaar;
 
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.config.ConfigValue;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
@@ -22,6 +23,10 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class BazaarPriceTooltipFeature extends Feature {
+
+	private final ConfigValue<Boolean> showTotalInsteadPressingShift = ConfigValue.of(
+			() -> this.config().general.stonks.showTotalTooltipPriceInsteadShift
+	);
 
 	private final HypixelDataSource hypixelDataSource;
 
@@ -70,7 +75,7 @@ public class BazaarPriceTooltipFeature extends Feature {
 				addBazaarLine(lines, "Bazaar Buy-Avg: ", product.get().weightedAverageBuyPrice(), 1);
 				addBazaarLine(lines, "Bazaar Sell-Avg: ", product.get().weightedAverageSellPrice(), 1);
 
-				if (!Client.hasShiftDown() && count > 1) {
+				if (!Client.hasShiftDown() && count > 1 && !showTotalInsteadPressingShift.get()) {
 					lines.add(Component.literal("[Press SHIFT for x" + count + "]").withStyle(ChatFormatting.DARK_GRAY));
 				}
 			}
@@ -78,7 +83,7 @@ public class BazaarPriceTooltipFeature extends Feature {
 				addBazaarLine(lines, "Bazaar Buy: ", product.get().buyPrice(), count);
 				addBazaarLine(lines, "Bazaar Sell: ", product.get().sellPrice(), count);
 
-				if (!Client.hasShiftDown() && count > 1) {
+				if (!Client.hasShiftDown() && count > 1 && !showTotalInsteadPressingShift.get()) {
 					lines.add(Component.literal("[Press SHIFT for x" + count + "]").withStyle(ChatFormatting.DARK_GRAY));
 				}
 			}
@@ -118,7 +123,9 @@ public class BazaarPriceTooltipFeature extends Feature {
 			display = StonksUtils.FLOAT_NUMBERS.format(value);
 		} else {
 
-			if (Client.hasShiftDown() && count > 1) value *= count;
+			if (count > 1 && (Client.hasShiftDown() || showTotalInsteadPressingShift.get())) {
+				value *= count;
+			}
 
 			if (displayType == TooltipPriceDisplayType.SHORT) {
 				display = StonksUtils.SHORT_FLOAT_NUMBERS.format(value);

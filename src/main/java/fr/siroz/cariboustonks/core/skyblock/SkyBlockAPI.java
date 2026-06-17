@@ -14,6 +14,7 @@ import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.loader.api.FabricLoader;
@@ -43,9 +44,9 @@ public final class SkyBlockAPI {
 	private static IslandType islandType = IslandType.UNKNOWN;
 	private static String gameType = "";
 
-	private static SkyBlockTime time = SkyBlockTime.DEFAULT;
-	private static SkyBlockSeason season = SkyBlockSeason.SPRING;
-	private static SkyBlockSeason.Month month = SkyBlockSeason.Month.EARLY_SPRING;
+	private static final AtomicReference<SkyBlockTime> TIME = new AtomicReference<>(SkyBlockTime.DEFAULT);
+	private static final AtomicReference<SkyBlockSeason> SEASON = new AtomicReference<>(SkyBlockSeason.SPRING);
+	private static final AtomicReference<SkyBlockSeason.Month> MONTH = new AtomicReference<>(SkyBlockSeason.Month.EARLY_SPRING);
 
 	private SkyBlockAPI() {
 		throw new UnsupportedOperationException();
@@ -106,7 +107,7 @@ public final class SkyBlockAPI {
 	 * @return the {@code SkyBlockTime}
 	 */
 	public static SkyBlockTime getTime() {
-		return time;
+		return TIME.get();
 	}
 
 	/**
@@ -115,7 +116,7 @@ public final class SkyBlockAPI {
 	 * @return the {@code SkyBlockSeason}
 	 */
 	public static SkyBlockSeason getSeason() {
-		return season;
+		return SEASON.get();
 	}
 
 	/**
@@ -124,7 +125,7 @@ public final class SkyBlockAPI {
 	 * @return the {@code Month}
 	 */
 	public static SkyBlockSeason.Month getMonth() {
-		return month;
+		return MONTH.get();
 	}
 
 	/**
@@ -388,8 +389,8 @@ public final class SkyBlockAPI {
 			@Nullable SkyBlockSeason skyBlockSeason,
 			SkyBlockSeason.@Nullable Month skyBlockMonth
 	) {
-		if (skyBlockTime != null) time = skyBlockTime;
-		if (skyBlockSeason != null) season = skyBlockSeason;
-		if (skyBlockMonth != null) month = skyBlockMonth;
+		if (skyBlockTime != null) TIME.set(skyBlockTime);
+		if (skyBlockSeason != null) SEASON.set(skyBlockSeason);
+		if (skyBlockMonth != null) MONTH.set(skyBlockMonth);
 	}
 }

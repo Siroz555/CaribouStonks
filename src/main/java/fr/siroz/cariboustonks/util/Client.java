@@ -145,6 +145,17 @@ public final class Client {
 	}
 
 	/**
+	 * Returns the offset from the player position to their eyes
+	 *
+	 * @return the offset float
+	 */
+	public static float getEyeHeight() {
+		if (CLIENT.player == null) return 1.62f;
+		if (!CLIENT.player.isShiftKeyDown()) return 1.62f;
+		return 1.27f;
+	}
+
+	/**
 	 * Set the given {@code String} to the Client Clipboard.
 	 *
 	 * @param toClipboard the string

@@ -145,7 +145,7 @@ public final class ItemValueCalculator {
 		pipeline.add(regularEnchantments());
 		pipeline.add(regularUltimateEnchantment());
 		pipeline.add(books());
-		pipeline.add(masterStars());
+		pipeline.add(stars());
 		pipeline.add(modifiers());
 		pipeline.add(gemstones());
 		pipeline.add(drillParts());
@@ -531,28 +531,36 @@ public final class ItemValueCalculator {
 		};
 	}
 
-	private @NonNull PriceComponent masterStars() {
+	private @NonNull PriceComponent stars() {
 		return (ctx, acc) -> {
-			// Les upgrades costs via Hypixel API au lieu de check les Kuudra Armors maybe
-			if (SkyBlockConstants.PRESTIGES.containsKey(ctx.skyBlockId())) return ComponentDecision.CONTINUE;
-
+			SkyBlockItemData itemData = CalculatorHelper.getItemData(ctx.skyBlockId());
+			boolean hasUpgradeCosts = itemData != null && itemData.upgradeCosts().isPresent();
 			int dungeonItemLevel = ctx.metadata().modifiers().dungeonItemLevel().orElse(0);
 			int upgradeLevel = ctx.metadata().modifiers().upgradeLevel();
-			if (dungeonItemLevel > 5 || upgradeLevel > 5) {
+
+			// Stars - Master Stars
+			if (hasUpgradeCosts && (dungeonItemLevel > 5 || upgradeLevel > 5)) {
+
 				int starsUsedDungeons = dungeonItemLevel - 5;
 				int starsUsedUpgrade = upgradeLevel - 5;
 				int starsUsed = Math.max(starsUsedDungeons, starsUsedUpgrade);
-				for (int i = 0; i < starsUsed; i++) {
-					String apiId = SkyBlockConstants.MASTER_STARS.get(i);
-					Calculation calc = Calculation.of(
-							Calculation.Type.MASTER_STAR,
-							apiId,
-							ctx.prices().applyAsDouble(apiId) * worth("masterStars", ctx.networth())
-					);
-					acc.add(calc.price());
-					acc.push(calc);
+				if (itemData.upgradeCosts().get().size() <= 5) {
+					for (int i = 0; i < starsUsed; i++) {
+						String apiId = SkyBlockConstants.MASTER_STARS.get(i);
+						Calculation calc = Calculation.of(
+								Calculation.Type.MASTER_STAR,
+								apiId,
+								ctx.prices().applyAsDouble(apiId) * worth("masterStars", ctx.networth())
+						);
+						acc.add(calc.price());
+						acc.push(calc);
+					}
 				}
 			}
+
+			// Stars - Upgrades
+			// SIROZ-NOTE :: ...
+
 			return ComponentDecision.CONTINUE;
 		};
 	}

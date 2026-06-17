@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.minecraft.client.gui.components.LerpingBossEvent;
@@ -45,6 +46,8 @@ public class MobTrackingFeature extends Feature {
 	// "[^\p{L}]" -> UN caractère qui N'EST PAS une lettre Unicode (emoji, symbole...)
 	private static final Pattern MOB_PATTERN = Pattern.compile("\\[Lv\\d+]\\s+[^\\p{L}]");
 	private static final int MAX_TRACKED_ENTITIES = 3;
+	private static final BiFunction<String, String, Boolean> CONTAINS = String::contains;
+	private static final BiFunction<String, String, Boolean> EQUALS = String::equals;
 
 	private final SlayerManager slayerManager;
 	private final MobTrackingRegistry registry;
@@ -67,7 +70,7 @@ public class MobTrackingFeature extends Feature {
 		);
 		this.hudBuilder = new HudElementBuilder();
 		this.notified = CacheBuilder.newBuilder()
-				.expireAfterWrite(10, TimeUnit.SECONDS)
+				.expireAfterWrite(2, TimeUnit.MINUTES) // 5min ?
 				.build();
 
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);
@@ -180,7 +183,7 @@ public class MobTrackingFeature extends Feature {
 			// Le nom est présent.
 			MobTrackingRegistry.MobTrackingEntry mobEntry = registry.findMob(
 					armorStandName,
-					MobTrackingRegistry.CONTAINS,
+					CONTAINS,
 					SkyBlockAPI.getIsland()
 			);
 			if (mobEntry != null) {
@@ -213,7 +216,7 @@ public class MobTrackingFeature extends Feature {
 
 		MobTrackingRegistry.MobTrackingEntry mobEntry = registry.findMob(
 				entity.getName().getString(),
-				MobTrackingRegistry.EQUALS,
+				EQUALS,
 				SkyBlockAPI.getIsland()
 		);
 		if (mobEntry != null) {
@@ -261,37 +264,37 @@ public class MobTrackingFeature extends Feature {
 	}
 
 	private void notifyEntity(@NonNull Entity entity, MobTrackingRegistry.@NonNull MobTrackingEntry mobEntry) {
+		if (!mobEntry.model().isNotifyOnSpawn()) return;
+
 		int entityId = entity.getId();
+		Integer cached = notified.getIfPresent(entityId);
 
-		if (notified.getIfPresent(entityId) == null && mobEntry.model().isNotifyOnSpawn()) {
-			notified.put(entityId, entityId);
+		// -1 = définitivement bloqué (NOTIFY_ONCE déjà déclenché)
+		if (cached != null && cached == -1) return;
 
-			if (mobEntry.category() == MobTrackingRegistry.MobCategory.FISHING
-					&& rareSeaCreatureFeature != null && rareSeaCreatureFeature.hasFoundCreature()
-			) {
-				// Évite de trigger le Title/Subtiltle si le joueur a une RareSeaCreature a lui,
-				// pour garder la notification du côté de RareSeaCreatureFeature
-				return;
-			}
+		int notifyCount = cached == null ? 0 : cached;
 
-			// TODO - Avoir dans le registry des Predicate prédéfini pour certains mobs
-			//  sous forme de class pré-faite et qui peuvent être utiliser au moment du register
-			//  > OneNotificationTrackingPredicate
-			//  > PositionTrackingPredicate
-			//  > ..
-			if (entity.position().y() >= 74 && mobEntry.model().getName().equals("Puddle Jumper")) {
-				// SIROZ-NOTE: en attendant je block le Jumper car c casse pied la notif a chaque fois qu'il jump
-				return;
-			}
+		NotifyCondition.Result result = mobEntry.notifyCondition().evaluate(entity, notifyCount);
+		if (result == NotifyCondition.Result.SKIP) return;
 
-			Client.showTitleAndSubtitle(
-					mobEntry.displayName(),
-					Component.literal(this.config().uiAndVisuals.mobTracking.spawnMessage),
-					1, 25, 1
-			);
-			if (this.config().uiAndVisuals.mobTracking.playSoundWhenSpawn) {
-				Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
-			}
+		// Mise à jour du cache avant l'affichage
+		notified.put(entityId, result == NotifyCondition.Result.NOTIFY_ONCE ? -1 : notifyCount + 1);
+
+		if (mobEntry.category() == MobTrackingRegistry.MobCategory.FISHING
+				&& rareSeaCreatureFeature != null && rareSeaCreatureFeature.hasFoundCreature()
+		) {
+			// Évite de trigger le Title/Subtiltle si le joueur a une RareSeaCreature a lui,
+			// pour garder la notification du côté de RareSeaCreatureFeature
+			return;
+		}
+
+		Client.showTitleAndSubtitle(
+				mobEntry.displayName(),
+				Component.literal(this.config().uiAndVisuals.mobTracking.spawnMessage),
+				1, 25, 1
+		);
+		if (this.config().uiAndVisuals.mobTracking.playSoundWhenSpawn) {
+			Client.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1f);
 		}
 	}
 

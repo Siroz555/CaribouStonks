@@ -3,7 +3,9 @@ package fr.siroz.cariboustonks.util;
 import fr.siroz.cariboustonks.core.service.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import java.text.DecimalFormat;
+import java.text.FieldPosition;
 import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,17 +51,15 @@ public final class StonksUtils {
 			nf -> nf.setMaximumFractionDigits(1));
 
 	/**
-	 * => {@code 10B} / {@code 10M} / {@code 5K}
+	 * => {@code 10B} / {@code 10M} / {@code 5k}
 	 */
-	public static final NumberFormat SHORT_INTEGER_NUMBERS = NumberFormat.getCompactNumberInstance(
-			Locale.US, NumberFormat.Style.SHORT);
+	public static final NumberFormat SHORT_INTEGER_NUMBERS = new CompactSuffixFormat(0);
 
 	/**
-	 * => {@code 42.6B} / {@code 69.5M} / {@code 10.2K}
+	 * => {@code 42.6B} / {@code 69.5M} / {@code 10.2k}
 	 */
-	public static final NumberFormat SHORT_FLOAT_NUMBERS = StonksUtils.make(
-			NumberFormat.getCompactNumberInstance(Locale.US, NumberFormat.Style.SHORT),
-			nf -> nf.setMinimumFractionDigits(1));
+	public static final NumberFormat SHORT_FLOAT_NUMBERS = new CompactSuffixFormat(1);
+
 
 	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.00");
 
@@ -249,5 +249,58 @@ public final class StonksUtils {
 					return lower.substring(0, 1).toUpperCase(Locale.ENGLISH) + lower.substring(1);
 				})
 				.collect(Collectors.joining(" "));
+	}
+
+	private static final class CompactSuffixFormat extends NumberFormat {
+		private static final NumberFormat BASE = NumberFormat.getInstance(Locale.US);
+		private final int maxFractionDigits;
+
+		public CompactSuffixFormat(int maxFractionDigits) {
+			this.maxFractionDigits = maxFractionDigits;
+		}
+
+		@Override
+		public @NonNull StringBuffer format(double number, StringBuffer toAppendTo, FieldPosition pos) {
+			double abs = Math.abs(number);
+			String suffix;
+			double divided;
+
+			if (abs >= 1_000_000_000) {
+				divided = number / 1_000_000_000;
+				suffix = "B";
+			} else if (abs >= 1_000_000) {
+				divided = number / 1_000_000;
+				suffix = "M";
+			} else if (abs >= 1_000) {
+				divided = number / 1_000;
+				suffix = "k";
+			} else {
+				divided = number;
+				suffix = "";
+			}
+
+			int fractionDigits = maxFractionDigits == 0
+					? 0
+					: divided < 10 ? maxFractionDigits
+					  : divided < 100 ? Math.min(1, maxFractionDigits)
+						: 0;
+
+			NumberFormat nf = make(BASE, f -> {
+				f.setMinimumFractionDigits(fractionDigits);
+				f.setMaximumFractionDigits(fractionDigits);
+			});
+
+			return toAppendTo.append(nf.format(divided)).append(suffix);
+		}
+
+		@Override
+		public @NonNull StringBuffer format(long number, StringBuffer toAppendTo, FieldPosition pos) {
+			return format((double) number, toAppendTo, pos);
+		}
+
+		@Override
+		public Number parse(String source, ParsePosition parsePosition) {
+			throw new UnsupportedOperationException("Parsing is not supported");
+		}
 	}
 }

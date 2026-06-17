@@ -1,11 +1,14 @@
 package fr.siroz.cariboustonks.mixin;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
+import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.CommonListenerCookie;
+import net.minecraft.client.sounds.MusicManager;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundLoginPacket;
@@ -66,5 +69,10 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 		if (entity instanceof ArmorStand armorStandEntity) {
 			NetworkEvents.ARMORSTAND_UPDATE_PACKET.invoker().onArmorStandUpdate(armorStandEntity, true);
 		}
+	}
+
+	@WrapWithCondition(method = "handleRespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sounds/MusicManager;stopPlaying()V"))
+	private boolean cariboustonks$ignoreDimensionChangeForMusicFlag(MusicManager musicTracker) {
+		return !ConfigManager.getConfig().vanilla.uninterruptedMusic;
 	}
 }

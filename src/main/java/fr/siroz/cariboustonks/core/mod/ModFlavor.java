@@ -1,12 +1,16 @@
 package fr.siroz.cariboustonks.core.mod;
 
+import fr.siroz.cariboustonks.util.Client;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.SplashRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.animal.parrot.Parrot;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -38,6 +42,30 @@ public final class ModFlavor {
 		if (random.nextInt(50) == 0) {
 			this.splashText = PREDEFINED_SPLASH.get(random.nextInt(PREDEFINED_SPLASH.size()));
 		}
+
+		ClientCommandRegistrationCallback.EVENT.register((d, _c) -> d.register(
+				ClientCommandManager.literal("cariboustonks").then(ClientCommandManager.literal("parrot").executes(context -> {
+					var player = context.getSource().getPlayer();
+					boolean hasLeft = player.getShoulderParrotLeft().isPresent();
+					boolean hasRight = player.getShoulderParrotRight().isPresent();
+
+					if (hasLeft || hasRight) {
+						player.setShoulderParrotLeft(Optional.empty());
+						player.setShoulderParrotRight(Optional.empty());
+						Client.sendMessageWithPrefix(Component.literal("The Parrot is gone! ;(").withStyle(ChatFormatting.RED));
+					} else {
+						Parrot.Variant[] variants = Parrot.Variant.values();
+						Parrot.Variant variant = variants[player.getRandom().nextInt(variants.length)];
+						if (player.getRandom().nextBoolean()) {
+							player.setShoulderParrotLeft(Optional.of(variant));
+						} else {
+							player.setShoulderParrotRight(Optional.of(variant));
+						}
+						Client.sendMessageWithPrefix(Component.literal("A Parrot has appeared!").withStyle(ChatFormatting.GREEN));
+					}
+					return 1;
+				}))
+		));
 	}
 
 	public @NonNull Optional<SplashRenderer> getSplashText() {

@@ -114,6 +114,15 @@ public class GeneralCategory extends AbstractCategory {
 										newValue -> current.general.stonks.bazaarTooltipMoreData = newValue)
 								.controller(this::createYesNoController)
 								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Bazaar Prices - Show the total instead of pressing Shift"))
+								.description(OptionDescription.of(
+										Component.literal("If this option is enabled, it allows you to view the total price directly, instead of pressing Shift.")))
+								.binding(defaults.general.stonks.showTotalTooltipPriceInsteadShift,
+										() -> current.general.stonks.showTotalTooltipPriceInsteadShift,
+										newValue -> current.general.stonks.showTotalTooltipPriceInsteadShift = newValue)
+								.controller(this::createYesNoController)
+								.build())
 						.option(LabelOption.create(Component.literal("")))
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Auction Price"))
@@ -166,6 +175,16 @@ public class GeneralCategory extends AbstractCategory {
 										() -> current.general.stonks.auctionTooltipPriceDisplayType,
 										newValue -> current.general.stonks.auctionTooltipPriceDisplayType = newValue)
 								.controller(this::createEnumCyclingController)
+								.build())
+						.option(LabelOption.create(Component.literal("")))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("NPC Sell Price"))
+								.description(OptionDescription.of(
+										Component.literal("Displays the NPC Sell Price of an item in its Tooltip.")))
+								.binding(defaults.general.stonks.npcTooltipPrice,
+										() -> current.general.stonks.npcTooltipPrice,
+										newValue -> current.general.stonks.npcTooltipPrice = newValue)
+								.controller(this::createBooleanController)
 								.build())
 						// Item Value
 						.option(LabelOption.create(Component.literal("| Item Value").withStyle(ChatFormatting.BOLD)))

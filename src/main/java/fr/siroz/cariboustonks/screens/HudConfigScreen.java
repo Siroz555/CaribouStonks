@@ -93,6 +93,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			// Select
 			case GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
 				for (Hud element : hudList) {
+					if (!element.isConfigEnabled()) continue;
 					// overlapping behaviour
 					if (RenderUtils.pointIsInArea(click.x(), click.y(),
 							element.x(), element.y(),
@@ -154,13 +155,14 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			}
 			// Tab navigation
 			case GLFW.GLFW_KEY_TAB -> {
-				if (!hudList.isEmpty()) {
+				List<Hud> enabled = hudList.stream().filter(Hud::isConfigEnabled).toList();
+				if (!enabled.isEmpty()) {
 					if (selected == null) {
-						selected = hudList.getFirst();
+						selected = enabled.getFirst();
 					} else {
-						int index = hudList.indexOf(selected);
-						int nextIndex = (index + 1) % hudList.size();
-						selected = hudList.get(nextIndex);
+						int index = enabled.indexOf(selected);
+						int nextIndex = (index + 1) % enabled.size();
+						selected = enabled.get(nextIndex);
 					}
 
 					return true;

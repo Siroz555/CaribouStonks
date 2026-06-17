@@ -304,6 +304,9 @@ public class UIAndVisualsConfig {
 
 		@SerialEntry
 		public boolean etherWarp = false;
+
+		@SerialEntry
+		public boolean etherWarpSubtitle = false;
 	}
 
 	public static class ColoredEnchantment {

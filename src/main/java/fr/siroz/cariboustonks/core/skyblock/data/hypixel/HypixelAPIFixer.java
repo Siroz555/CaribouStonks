@@ -6,6 +6,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jspecify.annotations.NonNull;
@@ -53,13 +54,13 @@ public final class HypixelAPIFixer {
 		String material = "ENCHANTED_BOOK";
 		String name = getEnchantName(skyBlockIdEnchantment);
 		Rarity tier = skyBlockIdEnchantment.contains("ULTIMATE") ? Rarity.MYTHIC : Rarity.UNCOMMON;
-		return new SkyBlockItemData(skyBlockIdEnchantment, Optional.of(material), Optional.empty(), name, tier, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+		return new SkyBlockItemData(skyBlockIdEnchantment, Optional.of(material), Optional.empty(), name, tier, Optional.empty(), Optional.empty(), OptionalDouble.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 	}
 
 	public @NonNull SkyBlockItemData createEssence(@NonNull String skyBlockIdEssence) {
 		String material = "SKULL_ITEM";
 		String name = getEssenceName(skyBlockIdEssence);
-		return new SkyBlockItemData(skyBlockIdEssence, Optional.of(material), Optional.empty(), name, Rarity.MYTHIC, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+		return new SkyBlockItemData(skyBlockIdEssence, Optional.of(material), Optional.empty(), name, Rarity.MYTHIC, Optional.empty(), Optional.empty(), OptionalDouble.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 	}
 
 	public @Nullable SkyBlockItemData createShard(@NonNull String skyBlockIdShard) {
@@ -68,7 +69,7 @@ public final class HypixelAPIFixer {
 			String material = "PRISMARINE_SHARD";
 			String name = attribute.name() + " (" + attribute.id() + ")";
 			Rarity tier = attribute.getRarityFromId();
-			return new SkyBlockItemData(skyBlockIdShard, Optional.of(material), Optional.empty(), name, tier, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+			return new SkyBlockItemData(skyBlockIdShard, Optional.of(material), Optional.empty(), name, tier, Optional.empty(), Optional.empty(), OptionalDouble.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 		}
 
 		return null;

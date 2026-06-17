@@ -5,6 +5,7 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.events.InteractionEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.world.InteractionHand;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,4 +38,9 @@ public abstract class MinecraftMixin {
 		if (itemStack.isEmpty() && (this.crosshairTarget == null || this.crosshairTarget.getType() == HitResult.Type.MISS))
 			InteractionEvents.RIGHT_CLICK_AIR.invoker().onClick(player, Hand.MAIN_HAND);
 	}*/
+
+	@WrapWithCondition(method = "updateLevelInEngines(Lnet/minecraft/client/multiplayer/ClientLevel;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sounds/SoundManager;stop()V"))
+	private boolean cariboustonks$ignoreStopSoundFlag(SoundManager soundManager) {
+		return !ConfigManager.getConfig().vanilla.uninterruptedMusic;
+	}
 }

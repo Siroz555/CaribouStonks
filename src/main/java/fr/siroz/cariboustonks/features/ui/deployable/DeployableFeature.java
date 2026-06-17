@@ -14,6 +14,7 @@ import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -172,7 +173,7 @@ public class DeployableFeature extends Feature {
 			if (!matcher.matches()) return false;
 
 			String name = matcher.group(1);
-			int seconds = Integer.parseInt(matcher.group(2));
+			int seconds = StonksUtils.toInt(matcher.group(2), 0);
 			if (name == null || name.isBlank() || seconds <= 0) return false;
 
 			for (Deployable deployable : Deployable.VALUES) {
@@ -195,8 +196,7 @@ public class DeployableFeature extends Feature {
 		Deployable newDeployable = trackedDeployable.getDeployable();
 		Deployable.Type newType = newDeployable.getType();
 		int newPriority = newDeployable.getPriority();
-		// Même Deployable, le plus récent remplace toujours
-		trackedDeployables.removeIf(d -> d.getDeployable().ordinal() == newDeployable.ordinal());
+
 		// Une seule entrée par Type, la plus prioritaire est keep
 		TrackedDeployable sameType = trackedDeployables.stream()
 				.filter(d -> d.getDeployable().getType() == newType)
@@ -204,9 +204,23 @@ public class DeployableFeature extends Feature {
 				.orElse(null);
 
 		if (sameType != null) {
-			if (newPriority > sameType.getDeployable().getPriority()) {
+			int existingPriority = sameType.getDeployable().getPriority();
+
+			if (newPriority > existingPriority) {
 				// Nouveau plus prioritaire, remplace l'existant
 				trackedDeployables.remove(sameType);
+			} else if (newPriority == existingPriority) {
+				// Même tier, compare les timers
+				int currentSeconds = getSecondsLeft(sameType.getArmorStand());
+				int newSeconds = getSecondsLeft(trackedDeployable.getArmorStand());
+
+				if (newSeconds > currentSeconds) {
+					// Le nouveau dure plus longtemps, il prend la place
+					trackedDeployables.remove(sameType);
+				} else {
+					// L'actuel est meilleur ou égal
+					return;
+				}
 			} else {
 				// Priorité insuffisante
 				return;
@@ -215,6 +229,13 @@ public class DeployableFeature extends Feature {
 
 		trackedDeployables.add(trackedDeployable);
 		Collections.sort(trackedDeployables);
+	}
+
+	private int getSecondsLeft(ArmorStand armorStand) {
+		if (armorStand == null || armorStand.getCustomName() == null) return 0;
+
+		Matcher matcher = DEPLOYABLE_PATTERN.matcher(armorStand.getCustomName().getString());
+		return matcher.matches() ? StonksUtils.toInt(matcher.group(2), 0) : 0;
 	}
 
 	private boolean isAlreadyTracked(@NonNull ArmorStand armorStand) {

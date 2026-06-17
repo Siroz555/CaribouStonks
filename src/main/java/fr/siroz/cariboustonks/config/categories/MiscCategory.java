@@ -86,6 +86,30 @@ public class MiscCategory extends AbstractCategory {
 						.controller(this::createBooleanController)
 						.build())
 				.group(OptionGroup.createBuilder()
+						.name(Component.literal("Events - Raffle Year 500").withStyle(ChatFormatting.BOLD))
+						.collapsed(false)
+						.description(OptionDescription.of(
+								Component.literal("Raffle Event")))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Raffle Tasks HUD"))
+								.description(OptionDescription.of(
+										Component.literal("Displays a HUD showing all Tasks to be completed, indicating their progress status and the time remaining before the next reset.")))
+								.binding(defaults.events.raffle.hud.enabled,
+										() -> current.events.raffle.hud.enabled,
+										newValue -> current.events.raffle.hud.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Raffle Tasks HUD - Only Show Incomplete"))
+								.description(OptionDescription.of(
+										Component.literal("If Raffle Tasks HUD is enabled, only show Incomplete Tasks in the HUD.")))
+								.binding(defaults.events.raffle.onlyShowIncomplete,
+										() -> current.events.raffle.onlyShowIncomplete,
+										newValue -> current.events.raffle.onlyShowIncomplete = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Events - Hoppity").withStyle(ChatFormatting.BOLD))
 						.collapsed(false)
 						.description(OptionDescription.of(
