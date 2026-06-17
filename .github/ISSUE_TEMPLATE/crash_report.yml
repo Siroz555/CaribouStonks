@@ -8,9 +8,9 @@ body:
       label: Minecraft Version
       description: Minecraft Version
       options:
+        - "26.2"
         - "26.1"
         - "1.21.11"
-        - "1.21.10"
     validations:
       required: true
   - type: input
