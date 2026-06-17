@@ -1,19 +1,18 @@
 package fr.siroz.cariboustonks.util.render;
 
 import fr.siroz.cariboustonks.core.module.color.Color;
-import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Util;
 import org.jspecify.annotations.NonNull;
 
 public final class AnimationUtils {
 	private static final int RAINBOW_CHANGE_RATE = 10;
-	private static Color currentRainbowColor = Colors.RED;
+	private static Color currentRainbowColor = new Color(255, 0, 0, 255);
 
 	private AnimationUtils() {
 	}
@@ -52,14 +51,14 @@ public final class AnimationUtils {
 		return result;
 	}
 
-	public static @NonNull Component applyColorCycle(@NonNull String text, long cycleTimeMs, ChatFormatting... colors) {
+	public static @NonNull Component applyColorCycle(@NonNull String text, long cycleTimeMs, TextColor... colors) {
 		if (colors == null || colors.length <= 1) return Component.literal(text);
 
 		long currentTime = Util.getEpochMillis();
 		// Calcul de l'index de la couleur actuelle dans le cycle
 		int colorIndex = (int) ((currentTime / cycleTimeMs) % colors.length);
 
-		return Component.literal(text).withStyle(colors[colorIndex]);
+		return Component.literal(text).withColor(colors[colorIndex]);
 	}
 
 	public static Color getCurrentRainbowColor() {

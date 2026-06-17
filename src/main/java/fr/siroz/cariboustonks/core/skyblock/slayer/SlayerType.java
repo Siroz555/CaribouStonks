@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jspecify.annotations.NonNull;
@@ -13,7 +14,7 @@ import org.jspecify.annotations.NonNull;
 public enum SlayerType {
 
 	ZOMBIE(
-			EntityType.ZOMBIE,
+			EntityTypes.ZOMBIE,
 			"Revenant Horror",
 			List.of("Revenant Sycophant", "Revenant Champion", "Deformed Revenant", "Atoned Champion", "Atoned Revenant"),
 			List.of(), // Tous des ZOMBIE en T5
@@ -21,15 +22,15 @@ public enum SlayerType {
 			new ItemStack(Items.ROTTEN_FLESH)
 	),
 	SPIDER(
-			EntityType.SPIDER,
+			EntityTypes.SPIDER,
 			"Tarantula Broodfather",
 			List.of("Tarantula Vermin", "Tarantula Beast", "Mutant Tarantula", "Primordial Jockey", "Primordial Viscount"),
-			List.of(EntityType.SKELETON, EntityType.CAVE_SPIDER), // Le T5 pour respectivement ses miniboss
+			List.of(EntityTypes.SKELETON, EntityTypes.CAVE_SPIDER), // Le T5 pour respectivement ses miniboss
 			new int[]{5, 25, 100, 500, 1500},
 			new ItemStack(Items.STRING)
 	),
 	WOLF(
-			EntityType.WOLF,
+			EntityTypes.WOLF,
 			"Sven Packmaster",
 			List.of("Pack Enforcer", "Sven Follower", "Sven Alpha"),
 			List.of(), // Pas de T5
@@ -37,7 +38,7 @@ public enum SlayerType {
 			new ItemStack(Items.MUTTON)
 	),
 	ENDERMAN(
-			EntityType.ENDERMAN,
+			EntityTypes.ENDERMAN,
 			"Voidgloom Seraph",
 			List.of("Voidling Devotee", "Voidling Radical", "Voidcrazed Maniac"),
 			List.of(), // Pas de T5
@@ -45,7 +46,7 @@ public enum SlayerType {
 			new ItemStack(Items.ENDER_PEARL)
 	),
 	BLAZE(
-			EntityType.BLAZE,
+			EntityTypes.BLAZE,
 			"Inferno Demonlord",
 			List.of("Flare Demon", "Kindleheart Demon", "Burningsoul Demon"),
 			List.of(), // Pas de T5
@@ -53,7 +54,7 @@ public enum SlayerType {
 			new ItemStack(Items.BLAZE_POWDER)
 	),
 	VAMPIRE(
-			EntityType.PLAYER,
+			EntityTypes.PLAYER,
 			"Riftstalker Bloodfiend",
 			List.of(),
 			List.of(), // Aucun Miniboss

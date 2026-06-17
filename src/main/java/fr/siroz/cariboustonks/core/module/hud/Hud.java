@@ -82,7 +82,7 @@ public abstract class Hud {
 		return isConfigEnabled()
 				&& enabled.get()
 				&& !CLIENT.getDebugOverlay().showDebugScreen()
-				&& !((PlayerTabOverlayAccessor) CLIENT.gui.getTabList()).isVisible();
+				&& !((PlayerTabOverlayAccessor) CLIENT.gui.hud.getTabList()).isVisible();
 	}
 
 	public boolean isConfigEnabled() {

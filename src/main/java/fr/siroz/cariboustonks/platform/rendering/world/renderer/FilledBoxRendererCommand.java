@@ -1,8 +1,8 @@
 package fr.siroz.cariboustonks.platform.rendering.world.renderer;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import fr.siroz.cariboustonks.platform.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.platform.rendering.world.CaribouWorldRenderer;
 import fr.siroz.cariboustonks.platform.rendering.world.state.FilledBoxRenderState;
@@ -21,7 +21,7 @@ public final class FilledBoxRendererCommand implements RendererCommand<FilledBox
 				// Pipeline de MC est remplacé par une nouvelle.
 				: CaribouRenderPipelines.FILLED; // RenderPipelines.DEBUG_FILLED_BOX;
 
-		BufferBuilder buffer = CaribouWorldRenderer.getBuffer(pipeline);
+		VertexConsumer buffer = CaribouWorldRenderer.getBuffer(pipeline);
 
 		Matrix4f matrix4f = new Matrix4f()
 				.translate((float) -camera.pos.x(), (float) -camera.pos.y(), (float) -camera.pos.z());

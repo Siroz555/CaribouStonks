@@ -18,6 +18,7 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
@@ -127,7 +128,7 @@ public class LotusAtollWormholeFeature extends Feature {
 	private Waypoint createWaypoint() {
 		return Waypoint.builder(builder -> {
 			builder.enabled(false);
-			builder.color(Color.fromFormatting(ChatFormatting.LIGHT_PURPLE));
+			builder.color(Color.fromTextColor(TextColor.LIGHT_PURPLE));
 			builder.type(Waypoint.Type.BEAM);
 			builder.textOption(TextOption.builder()
 					.withText(Component.literal("Wormhole").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD))

@@ -57,7 +57,7 @@ public class StonksScreen extends CaribousStonksScreen {
 		HypixelDataSource hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
 		Optional<SkyBlockItemData> item = hypixelDataSource.getSkyBlockItemOptional(key.hypixelSkyBlockId());
 		if (item.isPresent()) {
-			this.itemName = Component.literal(item.get().name()).withStyle(item.get().tier().getFormatting());
+			this.itemName = Component.literal(item.get().name()).withColor(item.get().tier().getColor());
 			this.icon = hypixelDataSource.getItemStack(item.get().skyBlockId());
 		} else {
 			this.itemName = Component.literal(key.hypixelSkyBlockId() != null ? key.hypixelSkyBlockId() : "? ? ?");

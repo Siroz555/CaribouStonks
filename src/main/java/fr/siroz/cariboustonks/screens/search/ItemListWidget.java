@@ -18,7 +18,6 @@ import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -27,6 +26,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Util;
@@ -75,11 +75,11 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 				List<ItemSummary> itemSummaries = new ArrayList<>(itemList.size());
 				for (SkyBlockItemData item : itemList) {
 					String skyBlockId = item.skyBlockId();
-					ChatFormatting formatting = item.tier().getFormatting();
+					TextColor color = item.tier().getColor();
 					String name = item.name();
 					ItemStack itemStack = hypixelDataSource.getItemStack(skyBlockId);
 
-					ItemSummary summary = new ItemSummary(skyBlockId, formatting, name, itemStack);
+					ItemSummary summary = new ItemSummary(skyBlockId, color, name, itemStack);
 					itemSummaries.add(summary);
 				}
 
@@ -223,7 +223,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 		public void extractContent(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
 			String displayName = item.name();
 			String name = item.hypixelSkyBlockId();
-			Color color = item.color().getColor() == null ? Colors.WHITE : Color.fromFormatting(item.color());
+			Color color = Color.fromTextColor(item.color());
 
 			guiGraphics.text(this.client.font, displayName, this.getContentX() + 32 + 3, this.getContentY() + 1, color.asInt());
 			int x1 = this.getContentX() + 32 + 3;
@@ -306,7 +306,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 
 	private record ItemSummary(
             String hypixelSkyBlockId,
-            ChatFormatting color,
+            TextColor color,
             String name,
             ItemStack icon
 	) implements Comparable<ItemSummary> {

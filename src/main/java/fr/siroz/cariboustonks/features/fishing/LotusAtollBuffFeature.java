@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.sounds.SoundEvents;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -115,7 +116,7 @@ public class LotusAtollBuffFeature extends Feature {
 		if (inGracePeriod && !hasOneBuff()) {
 			return Component.empty()
 					.append(Component.literal("Lotus Atoll Buffs ").withStyle(ChatFormatting.DARK_AQUA))
-					.append(AnimationUtils.applyColorCycle("EXPIRED", 555, ChatFormatting.RED, ChatFormatting.DARK_RED));
+					.append(AnimationUtils.applyColorCycle("EXPIRED", 555, TextColor.RED, TextColor.DARK_RED));
 		}
 
 		int active = countActiveBuffs();

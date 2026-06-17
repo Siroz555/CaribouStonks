@@ -30,6 +30,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -255,7 +256,7 @@ public class ItemValueViewerFeature extends Feature {
 			Pair<String, Rarity> infos = getInfos(petItem.skyBlockId());
 			out.add(Component.empty()
 					.append(Component.literal("Pet Item: ").withStyle(ChatFormatting.GRAY))
-					.append(Component.literal(infos.left()).withStyle(infos.right().getFormatting()))
+					.append(Component.literal(infos.left()).withColor(infos.right().getColor()))
 					.append(priceShortFormat(petItem.price()))
 			);
 		}
@@ -291,16 +292,16 @@ public class ItemValueViewerFeature extends Feature {
 		if (reforge != null) {
 			Pair<String, Rarity> infos = getInfos(reforge.skyBlockId());
 			String displayName = infos.left();
-			ChatFormatting color = infos.right() == Rarity.UNKNOWN ? ChatFormatting.BLUE : infos.right().getFormatting();
+			TextColor color = infos.right() == Rarity.UNKNOWN ? TextColor.BLUE : infos.right().getColor();
 			boolean fromBazaar = true;
 			if (displayName.equals(reforge.skyBlockId())) {
 				displayName = StonksUtils.capitalize(reforge.skyBlockId()) + "*";
-				color = ChatFormatting.BLUE;
+				color = TextColor.BLUE;
 				fromBazaar = false;
 			}
 			out.add(Component.empty()
 					.append(Component.literal("Reforge: ").withStyle(ChatFormatting.GRAY))
-					.append(Component.literal(displayName).withStyle(color))
+					.append(Component.literal(displayName).withColor(color))
 					.append(fromBazaar ? priceShortFormat(reforge.price()) : Component.empty())
 			);
 		}
@@ -431,7 +432,7 @@ public class ItemValueViewerFeature extends Feature {
 			Pair<String, Rarity> infos = getInfos(power.skyBlockId());
 			out.add(formatHaving("Power Scroll", power.price()));
 			out.add(Component.literal(ARROW + " " + infos.left())
-					.withStyle(infos.right() == Rarity.UNKNOWN ? ChatFormatting.DARK_PURPLE : infos.right().getFormatting()));
+					.withColor(infos.right() == Rarity.UNKNOWN ? TextColor.DARK_PURPLE : infos.right().getColor()));
 		}
 	}
 
@@ -568,9 +569,9 @@ public class ItemValueViewerFeature extends Feature {
 			drillParts.forEach(drillPart -> {
 				Pair<String, Rarity> infos = getInfos(drillPart.skyBlockId());
 				String displayName = infos.left();
-				ChatFormatting color = infos.right() == Rarity.UNKNOWN ? ChatFormatting.GREEN : infos.right().getFormatting();
+				TextColor color = infos.right() == Rarity.UNKNOWN ? TextColor.GREEN : infos.right().getColor();
 				out.add(Component.empty()
-						.append(Component.literal(ARROW + " " + displayName).withStyle(color))
+						.append(Component.literal(ARROW + " " + displayName).withColor(color))
 						.append(priceShortFormat(drillPart.price()))
 				);
 			});
@@ -584,9 +585,9 @@ public class ItemValueViewerFeature extends Feature {
 			rodParts.forEach(drillPart -> {
 				Pair<String, Rarity> infos = getInfos(drillPart.skyBlockId());
 				String displayName = infos.left();
-				ChatFormatting color = infos.right() == Rarity.UNKNOWN ? ChatFormatting.AQUA : infos.right().getFormatting();
+				TextColor color = infos.right() == Rarity.UNKNOWN ? TextColor.AQUA : infos.right().getColor();
 				out.add(Component.empty()
-						.append(Component.literal(ARROW + " " + displayName).withStyle(color))
+						.append(Component.literal(ARROW + " " + displayName).withColor(color))
 						.append(priceShortFormat(drillPart.price()))
 				);
 			});

@@ -18,6 +18,14 @@ import org.jspecify.annotations.NonNull;
 public interface WorldRenderer {
 
 	/**
+	 * Submits a {@code Beacon beam} to be rendered.
+	 *
+	 * @param position the position
+	 * @param color    the color
+	 */
+	void submitVanillaBeaconBeam(@NonNull BlockPos position, @NonNull Color color);
+
+	/**
 	 * Submits a {@link Component} to be rendered.
 	 *
 	 * @param text          the text
@@ -152,14 +160,6 @@ public interface WorldRenderer {
 	 * @param throughBlocks if rendering can be done through blocks
 	 */
 	void submitFilled(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, @NonNull Color color, boolean throughBlocks);
-
-	/**
-	 * Submits a {@code Beacon beam} to be rendered.
-	 *
-	 * @param position the position
-	 * @param color    the color
-	 */
-	void submitBeaconBeam(@NonNull BlockPos position, @NonNull Color color);
 
 	/**
 	 * Submits an {@code Outline Box} to be rendered.

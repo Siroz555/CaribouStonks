@@ -40,14 +40,14 @@ public final class WaypointRenderer {
 				: waypoint.getColor().withAlpha(waypoint.getAlpha());
 
 		switch (waypoint.getType()) {
-			case BEAM -> renderer.submitBeaconBeam(pos, color);
+			case BEAM -> renderer.submitVanillaBeaconBeam(pos, color);
 			case WAYPOINT -> {
 				renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
-				renderer.submitBeaconBeam(pos.offset(0, 1, 0), color);
+				renderer.submitVanillaBeaconBeam(pos.offset(0, 1, 0), color);
 			}
 			case OUTLINED_WAYPOINT -> {
 				renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
-				renderer.submitBeaconBeam(pos.offset(0, 1, 0), color);
+				renderer.submitVanillaBeaconBeam(pos.offset(0, 1, 0), color);
 				renderer.submitOutline(waypoint.getBox(), color, waypoint.getBoxLineWidth(), waypoint.isBoxThroughBlocks());
 			}
 			case HIGHLIGHT -> renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());

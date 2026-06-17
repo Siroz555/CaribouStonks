@@ -26,6 +26,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -303,22 +304,22 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 	}
 
 	private enum WaypointColors {
-		RED(Color.fromFormatting(ChatFormatting.RED)),
-		DARK_RED(Color.fromFormatting(ChatFormatting.DARK_RED)),
-		GREEN(Color.fromFormatting(ChatFormatting.GREEN)),
-		DARK_GREEN(Color.fromFormatting(ChatFormatting.DARK_GREEN)),
-		YELLOW(Color.fromFormatting(ChatFormatting.YELLOW)),
-		GOLD(Color.fromFormatting(ChatFormatting.GOLD)),
-		AQUA(Color.fromFormatting(ChatFormatting.AQUA)),
-		DARK_AQUA(Color.fromFormatting(ChatFormatting.DARK_AQUA)),
-		BLUE(Color.fromFormatting(ChatFormatting.BLUE)),
-		DARK_BLUE(Color.fromFormatting(ChatFormatting.DARK_BLUE)),
-		LIGHT_PURPLE(Color.fromFormatting(ChatFormatting.LIGHT_PURPLE)),
-		DARK_PURPLE(Color.fromFormatting(ChatFormatting.DARK_PURPLE)),
-		WHITE(Color.fromFormatting(ChatFormatting.WHITE)),
-		GRAY(Color.fromFormatting(ChatFormatting.GRAY)),
-		DARK_GRAY(Color.fromFormatting(ChatFormatting.DARK_GRAY)),
-		BLACK(Color.fromFormatting(ChatFormatting.BLACK)),
+		RED(Color.fromTextColor(TextColor.RED)),
+		DARK_RED(Color.fromTextColor(TextColor.DARK_RED)),
+		GREEN(Color.fromTextColor(TextColor.GREEN)),
+		DARK_GREEN(Color.fromTextColor(TextColor.DARK_GREEN)),
+		YELLOW(Color.fromTextColor(TextColor.YELLOW)),
+		GOLD(Color.fromTextColor(TextColor.GOLD)),
+		AQUA(Color.fromTextColor(TextColor.AQUA)),
+		DARK_AQUA(Color.fromTextColor(TextColor.DARK_AQUA)),
+		BLUE(Color.fromTextColor(TextColor.BLUE)),
+		DARK_BLUE(Color.fromTextColor(TextColor.DARK_BLUE)),
+		LIGHT_PURPLE(Color.fromTextColor(TextColor.LIGHT_PURPLE)),
+		DARK_PURPLE(Color.fromTextColor(TextColor.DARK_PURPLE)),
+		WHITE(Color.fromTextColor(TextColor.WHITE)),
+		GRAY(Color.fromTextColor(TextColor.GRAY)),
+		DARK_GRAY(Color.fromTextColor(TextColor.DARK_GRAY)),
+		BLACK(Color.fromTextColor(TextColor.BLACK)),
 		;
 
 		final Color color;

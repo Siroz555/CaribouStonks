@@ -47,30 +47,6 @@ repositories {
 		}
 	}
 
-	def shedanielMaven = maven {
-		name = "shedaniel Maven"
-		url = "https://maven.shedaniel.me/"
-	}
-	exclusiveContent {
-		forRepositories(shedanielMaven)
-		filter {
-			includeGroup "me.shedaniel"
-			includeGroup "me.shedaniel.cloth"
-			includeGroup "dev.architectury"
-		}
-	}
-
-	def modrinthMaven = maven {
-		name = "Modrinth Maven"
-		url = "https://api.modrinth.com/maven"
-	}
-	exclusiveContent {
-		forRepositories(modrinthMaven)
-		filter {
-			includeGroup "maven.modrinth"
-		}
-	}
-
 	def djtheredstonerMaven = maven {
 		name = "djtheredstoner Maven"
 		url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1"
@@ -96,14 +72,6 @@ dependencies {
 
 	// ModMenu (https://github.com/TerraformersMC/ModMenu)
 	compileOnly "com.terraformersmc:modmenu:${modmenu_version}"
-
-	// RoughlyEnoughItems (https://github.com/shedaniel/RoughlyEnoughItems)
-//	compileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") {
-//		exclude group: "net.fabricmc.fabric-api"
-//	}
-
-	// JustEnoughItems (https://github.com/mezz/JustEnoughItems)
-	compileOnly "maven.modrinth:jei:${project.jei_version}-fabric"
 
 	// DevAuth - DEV (https://github.com/DJtheRedstoner/DevAuth)
 	runtimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"

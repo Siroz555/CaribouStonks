@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -36,7 +37,7 @@ public class HotspotRadarFeature extends Feature {
 	public HotspotRadarFeature() {
 		this.waypoint = Waypoint.builder(builder -> {
 			builder.enabled(false);
-			builder.color(Color.fromFormatting(ChatFormatting.LIGHT_PURPLE));
+			builder.color(Color.fromTextColor(TextColor.LIGHT_PURPLE));
 			builder.textOption(TextOption.builder()
 					.withText(Component.literal("Guess").withStyle(ChatFormatting.LIGHT_PURPLE))
 					.withDistance(false)

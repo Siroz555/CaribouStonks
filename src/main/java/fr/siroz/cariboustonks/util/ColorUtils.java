@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.util;
 
 import java.awt.Color;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 import org.jspecify.annotations.NonNull;
 
 public final class ColorUtils {
@@ -19,7 +19,7 @@ public final class ColorUtils {
 	 * @return a new color representing the interpolated color
 	 */
 	public static @NonNull Color interpolatedColor(@NonNull Color startColor, @NonNull Color endColor, float factor) {
-		factor = Math.max(0, Math.min(1f, factor)); // 0.0 et 1.0
+		factor = Math.clamp(factor, 0, 1f); // 0.0 et 1.0
 
 		int red = (int) (startColor.getRed() + factor * (endColor.getRed() - startColor.getRed()));
 		int green = (int) (startColor.getGreen() + factor * (endColor.getGreen() - startColor.getGreen()));
@@ -81,12 +81,8 @@ public final class ColorUtils {
 		return Color.getHSBColor(hueComponent, saturationColor, brightnessColor).getRGB();
 	}
 
-	public static Color getAwtColor(@NonNull ChatFormatting formatting) {
-		if (formatting.getColor() == null) {
-			return Color.WHITE;
-		}
-
-		float[] components = getFloatComponents(formatting.getColor());
+	public static Color getAwtColor(@NonNull TextColor color) {
+		float[] components = getFloatComponents(color.getValue());
 		return new Color(components[0], components[1], components[2]);
 	}
 }

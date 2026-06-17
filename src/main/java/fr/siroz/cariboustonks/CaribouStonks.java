@@ -15,9 +15,9 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
@@ -122,7 +122,7 @@ public final class CaribouStonks implements ClientModInitializer {
 	 */
 	public static @NonNull Supplier<MutableComponent> prefix() {
 		return () -> Component.empty()
-				.append(Component.literal("[").withStyle(ChatFormatting.DARK_GRAY))
+				.append(Component.literal("[").withColor(TextColor.DARK_GRAY))
 				.append(Component.literal("C").withColor(0xe13333))
 				.append(Component.literal("a").withColor(0xdc3030))
 				.append(Component.literal("r").withColor(0xd82e2e))
@@ -136,6 +136,6 @@ public final class CaribouStonks implements ClientModInitializer {
 				.append(Component.literal("n").withColor(0xb81e1e))
 				.append(Component.literal("k").withColor(0xb41c1c))
 				.append(Component.literal("s").withColor(0xb01a1a)) // 13
-				.append(Component.literal("] ").withStyle(ChatFormatting.DARK_GRAY));
+				.append(Component.literal("] ").withColor(TextColor.DARK_GRAY));
 	}
 }

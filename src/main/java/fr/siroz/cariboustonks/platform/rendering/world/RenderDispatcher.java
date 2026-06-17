@@ -39,7 +39,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
@@ -84,10 +84,15 @@ final class RenderDispatcher implements WorldRenderer {
 	}
 
 	RenderDispatcher() {
+		// TODO :: 26.2 - Vulkan
+		//  Actuellement aucun problème avec Vulkan avec le dispatcher actuel,
+		//  mais a voir pour mieux utiliser les différents renderer et les mettre en batch?
+
 		this.gpuBackend = GpuBackend.OPENGL;
 //		this.gpuBackend = ((GpuDeviceAccessor) RenderSystem.getDevice()).getBackend() instanceof VulkanDevice
 //				? GpuBackend.VULKAN
 //				: GpuBackend.OPENGL;
+
 		this.textRendererCommand = new TextRendererCommand();
 		this.textureRendererCommand = new TextureRendererCommand();
 		this.circleRendererCommand = new CircleRendererCommand();
@@ -98,6 +103,35 @@ final class RenderDispatcher implements WorldRenderer {
 		this.linesRendererCommand = new LinesRendererCommand();
 		this.cursorLineRendererCommand = new CursorLineRendererCommand();
 		this.cuboidOutlineRendererCommand = new CuboidOutlineRendererCommand();
+	}
+
+	@Override
+	public void submitVanillaBeaconBeam(@NonNull BlockPos position, @NonNull Color color) {
+		if (frozen) return;
+		if (levelRenderState == null) return;
+		if (!RenderUtils.isVisible(frustum, position.getX(), position.getY(), position.getZ(), position.getX() + 1, RenderUtils.MAX_BUILD_HEIGHT, position.getZ() + 1)) return;
+
+		int colorInt;
+		if (color == Colors.RAINBOW) {
+			colorInt = AnimationUtils.getCurrentRainbowColor().withAlpha(1f).asInt();
+		} else {
+			colorInt = color.withAlpha(1f).asInt();
+		}
+
+		float length = (float) RenderUtils.getCamera().position().subtract(Vec3.atCenterOf(position)).horizontalDistance();
+		float animationTime = Math.floorMod(WorldContext.getWorldTime(), 40) + RenderUtils.getTickCounter().getGameTimeDeltaPartialTick(true);
+
+		BeaconRenderState state = new BeaconRenderState();
+		state.blockPos = position;
+		((BlockEntityRenderStateAccessor) state).setBlockState(Blocks.BEACON.defaultBlockState());
+		state.blockEntityType = BlockEntityTypes.BEACON;
+		state.lightCoords = RenderUtils.FULL_BRIGHT;
+		state.breakProgress = null;
+		state.animationTime = animationTime;
+		state.sections.add(new BeaconRenderState.Section(colorInt, RenderUtils.MAX_BUILD_HEIGHT));
+		state.beamRadiusScale = Math.max(1.0F, length / 96.0F);
+		// Vanilla Block Entity States
+		levelRenderState.blockEntityRenderStates.add(state);
 	}
 
 	@Override
@@ -156,35 +190,6 @@ final class RenderDispatcher implements WorldRenderer {
 
 		FilledBoxRenderState state = new FilledBoxRenderState(minX, minY, minZ, maxX, maxY, maxZ, color, throughBlocks);
 		filledBoxRenderStates.add(state);
-	}
-
-	@Override
-	public void submitBeaconBeam(@NonNull BlockPos position, @NonNull Color color) {
-		if (frozen) return;
-		if (levelRenderState == null) return;
-		if (!RenderUtils.isVisible(frustum, position.getX(), position.getY(), position.getZ(), position.getX() + 1, RenderUtils.MAX_BUILD_HEIGHT, position.getZ() + 1)) return;
-
-		int colorInt;
-		if (color == Colors.RAINBOW) {
-			colorInt = AnimationUtils.getCurrentRainbowColor().withAlpha(1f).asInt();
-		} else {
-			colorInt = color.withAlpha(1f).asInt();
-		}
-
-		float length = (float) RenderUtils.getCamera().position().subtract(Vec3.atCenterOf(position)).horizontalDistance();
-		float animationTime = Math.floorMod(WorldContext.getWorldTime(), 40) + RenderUtils.getTickCounter().getGameTimeDeltaPartialTick(true);
-
-		BeaconRenderState state = new BeaconRenderState();
-		state.blockPos = position;
-		((BlockEntityRenderStateAccessor) state).setBlockState(Blocks.BEACON.defaultBlockState());
-		state.blockEntityType = BlockEntityType.BEACON;
-		state.lightCoords = RenderUtils.FULL_BRIGHT;
-		state.breakProgress = null;
-		state.animationTime = animationTime;
-		state.sections.add(new BeaconRenderState.Section(colorInt, RenderUtils.MAX_BUILD_HEIGHT));
-		state.beamRadiusScale = Math.max(1.0F, length / 96.0F);
-		// Vanilla Block Entity States
-		levelRenderState.blockEntityRenderStates.add(state);
 	}
 
 	@Override

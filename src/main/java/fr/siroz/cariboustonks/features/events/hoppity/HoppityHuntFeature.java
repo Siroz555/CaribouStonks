@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.sounds.SoundEvents;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -174,7 +175,7 @@ public class HoppityHuntFeature extends Feature {
 		String title = "Hoppity's Hunt Eggs " + CUTE_RABBIT;
 		boolean showDelta = System.currentTimeMillis() - deltaTimestamp < DELTA_DISPLAY_MS;
 		if (showDelta) {
-			builder.appendTitle(AnimationUtils.applyColorCycle(title, 500, ChatFormatting.LIGHT_PURPLE, ChatFormatting.DARK_PURPLE));
+			builder.appendTitle(AnimationUtils.applyColorCycle(title, 500, TextColor.LIGHT_PURPLE, TextColor.DARK_PURPLE));
 		} else {
 			builder.appendTitle(Component.literal(title).withStyle(ChatFormatting.LIGHT_PURPLE));
 		}

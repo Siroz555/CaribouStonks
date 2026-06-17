@@ -22,24 +22,24 @@ class DebugWorldRenderer {
 				new Vec3(64, 135, 213), 1.3f,
 				true
 		);
-		renderer.submitBeaconBeam(
+		renderer.submitVanillaBeaconBeam(
 				new BlockPos(63, 129, 219),
 				Colors.RED
+		);
+		renderer.submitVanillaBeaconBeam(
+				new BlockPos(65, 129, 219),
+				Colors.RAINBOW
 		);
 		renderer.submitFilled(
 				new BlockPos(57, 129, 218),
 				Colors.RED.withAlpha(0.25f),
 				true
 		);
-		renderer.submitBeaconBeam(
-				new BlockPos(65, 129, 219),
-				Colors.RAINBOW
-		);
 		renderer.submitFilled(
 				new BlockPos(59, 129, 218),
 				Colors.RAINBOW,
 				false
-		); // Le true marche a coup sur, mais 1.21.11 j'utilise ma propre Pipeline pour
+		);
 		renderer.submitOutline(
 				new AABB(new BlockPos(57, 129, 211)),
 				Colors.LIGHT_PURPLE,
@@ -57,11 +57,24 @@ class DebugWorldRenderer {
 				5, 16, .02f,
 				Colors.YELLOW,
 				Direction.Axis.Y,
+				true
+		);
+		renderer.submitCircle(
+				new Vec3(74, 129, 206),
+				3, 16, .02f,
+				Colors.YELLOW.withAlpha(0.5f),
+				Direction.Axis.Y,
 				false
 		);
 		renderer.submitThickCircle(
 				new Vec3(74, 129, 218),
 				5, 2, 64,
+				Colors.AQUA,
+				true
+		);
+		renderer.submitThickCircle(
+				new Vec3(74, 129, 218),
+				3, 2, 64,
 				Colors.AQUA.withAlpha(0.5f),
 				false
 		);
@@ -69,7 +82,15 @@ class DebugWorldRenderer {
 				new Vec3[]{
 						new Vec3(63, 130, 207),
 						new Vec3(66, 135, 210)},
-				Colors.DARK_PURPLE,
+				Colors.DARK_PURPLE.withAlpha(0.75f),
+				1.5f,
+				false
+		);
+		renderer.submitLines(
+				new Vec3[]{
+						new Vec3(63, 130, 210),
+						new Vec3(66, 135, 213)},
+				Colors.LIGHT_PURPLE,
 				1.5f,
 				true
 		);
@@ -79,6 +100,14 @@ class DebugWorldRenderer {
 						new Vec3(61, 135, 225),
 						new Vec3(63, 135, 225)},
 				Colors.YELLOW.withAlpha(0.5f),
+				false
+		);
+		renderer.submitQuad(new Vec3[]{
+						new Vec3(58, 129, 225),
+						new Vec3(56, 129, 225),
+						new Vec3(56, 135, 225),
+						new Vec3(58, 135, 225)},
+				Colors.YELLOW,
 				true
 		);
 

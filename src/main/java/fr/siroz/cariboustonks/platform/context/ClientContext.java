@@ -79,7 +79,7 @@ public final class ClientContext {
 	 * @return the footer of the tab list, or {@code null}
 	 */
 	public static @Nullable String getTabListFooter() {
-		Component footer = ((PlayerTabOverlayAccessor) CLIENT.gui.getTabList()).getFooter();
+		Component footer = ((PlayerTabOverlayAccessor) CLIENT.gui.hud.getTabList()).getFooter();
 		return footer != null ? footer.getString() : null;
 	}
 
@@ -89,7 +89,7 @@ public final class ClientContext {
 	 * @return the current screen
 	 */
 	public static @Nullable Screen getScreen() {
-		return CLIENT.screen;
+		return CLIENT.gui.screen();
 	}
 
 	/**
@@ -98,7 +98,7 @@ public final class ClientContext {
 	 * @param screen the screen, can be null
 	 */
 	public static void setScreen(@Nullable Screen screen) {
-		CLIENT.setScreen(screen);
+		CLIENT.gui.setScreen(screen);
 	}
 
 	/**
@@ -110,7 +110,7 @@ public final class ClientContext {
 	 */
 	public static @NonNull Command<FabricClientCommandSource> openScreen(@NonNull Supplier<Screen> screenSupplier) {
 		return _ -> {
-			CLIENT.schedule(() -> CLIENT.setScreen(screenSupplier.get()));
+			CLIENT.schedule(() -> CLIENT.gui.setScreen(screenSupplier.get()));
 			return Command.SINGLE_SUCCESS;
 		};
 	}
@@ -139,7 +139,7 @@ public final class ClientContext {
 	 * @return the {@code ChatListener}
 	 */
 	public static @NonNull ChatListener getChatListener() {
-		return CLIENT.getChatListener();
+		return CLIENT.gui.chatListener();
 	}
 
 	/**
@@ -148,7 +148,7 @@ public final class ClientContext {
 	 * @return the {@code ChatComponent}
 	 */
 	public static @NonNull ChatComponent getChat() {
-		return CLIENT.gui.getChat();
+		return CLIENT.gui.hud.getChat();
 	}
 
 	/**
@@ -192,7 +192,7 @@ public final class ClientContext {
 	 * @param message the message
 	 */
 	public static void showFatalErrorScreen(@NonNull Component title, @NonNull Component message) {
-		CLIENT.setScreen(new ErrorScreen(title, message));
+		CLIENT.gui.setScreen(new ErrorScreen(title, message));
 	}
 
 	/**

@@ -10,12 +10,12 @@ import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import java.util.Collections;
 import java.util.Set;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
@@ -136,7 +136,7 @@ public class EtherWarpOverlayFeature extends Feature {
 			etherwarpResult = EtherwarpResult.OCCUPIED;
 		} else if (!isEtherwarpPassable(MINECRAFT.level, blockPos.above(2))) {
 			etherwarpResult = EtherwarpResult.OCCUPIED;
-		} else if (startPos.distanceToSqr(accuratePos != null ? accuratePos : blockPos.getCenter()) > range * range) {
+		} else if (startPos.distanceToSqr(accuratePos != null ? accuratePos : Vec3.atCenterOf(blockPos)) > range * range) {
 			etherwarpResult = EtherwarpResult.FAR_AWAY;
 		} else if (isInteractionBlocked(MINECRAFT.level)) { // Vanilla HitResult
 			etherwarpResult = EtherwarpResult.INTERACTION;
@@ -189,10 +189,10 @@ public class EtherWarpOverlayFeature extends Feature {
 	}
 
 	private enum EtherwarpResult {
-		SUCCESS(Color.fromFormatting(ChatFormatting.GREEN), null),
-		INTERACTION(Color.fromFormatting(ChatFormatting.GOLD), Component.literal("!")),
-		FAR_AWAY(Color.fromFormatting(ChatFormatting.DARK_PURPLE), Component.literal("!!")),
-		OCCUPIED(Color.fromFormatting(ChatFormatting.RED), Component.literal("!!!"));
+		SUCCESS(Color.fromTextColor(TextColor.GREEN), null),
+		INTERACTION(Color.fromTextColor(TextColor.GOLD), Component.literal("!")),
+		FAR_AWAY(Color.fromTextColor(TextColor.DARK_PURPLE), Component.literal("!!")),
+		OCCUPIED(Color.fromTextColor(TextColor.RED), Component.literal("!!!"));
 
 		final Color color;
 		final @Nullable MutableComponent subtileText;

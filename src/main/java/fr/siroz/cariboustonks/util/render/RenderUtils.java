@@ -50,7 +50,7 @@ public final class RenderUtils {
 	}
 
 	public static @NonNull Camera getCamera() {
-		return Minecraft.getInstance().gameRenderer.getMainCamera();
+		return Minecraft.getInstance().gameRenderer.mainCamera();
 	}
 
 	/**

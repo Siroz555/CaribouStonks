@@ -4,7 +4,7 @@ import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import fr.siroz.cariboustonks.core.module.hud.HudConfig;
 import fr.siroz.cariboustonks.util.ColorUtils;
 import java.awt.Color;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 
 public class CombatConfig {
 
@@ -210,7 +210,7 @@ public class CombatConfig {
 		public String readyMessage = "§aREADY";
 
 		@SerialEntry
-		public Color timerColor = ColorUtils.getAwtColor(ChatFormatting.YELLOW);
+		public Color timerColor = ColorUtils.getAwtColor(TextColor.YELLOW);
 
 		@SerialEntry
 		public WitherShieldHud hud = new WitherShieldHud();

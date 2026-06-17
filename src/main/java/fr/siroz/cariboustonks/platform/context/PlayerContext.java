@@ -219,9 +219,9 @@ public final class PlayerContext {
 	 */
 	public static void showTitleAndSubtitle(@NonNull Component title, @NonNull Component subtitle, int fadeInTicks, int stayTicks, int fadeOutTicks) {
 		if (isAvailable()) {
-			CLIENT.gui.setTimes(fadeInTicks, stayTicks, fadeOutTicks);
-			CLIENT.gui.setTitle(title);
-			CLIENT.gui.setSubtitle(subtitle);
+			CLIENT.gui.hud.setTimes(fadeInTicks, stayTicks, fadeOutTicks);
+			CLIENT.gui.hud.setTitle(title);
+			CLIENT.gui.hud.setSubtitle(subtitle);
 		}
 	}
 
@@ -232,7 +232,7 @@ public final class PlayerContext {
 	 * @param icon the icon
 	 */
 	public static void showNotification(@NonNull MutableComponent text, @NonNull ItemStack icon) {
-		CLIENT.getToastManager().addToast(new StonksToast(text, icon));
+		CLIENT.gui.toastManager().addToast(new StonksToast(text, icon));
 	}
 
 	/**
@@ -251,8 +251,8 @@ public final class PlayerContext {
 	 * @param description the text description
 	 */
 	public static void showNotificationSystem(@NonNull String title, @NonNull String description) {
-		SystemToast systemToast = SystemToast.multiline(CLIENT, STONKS_SYSTEM, Component.literal(title), Component.literal(description));
-		CLIENT.getToastManager().addToast(systemToast);
+		SystemToast systemToast = new SystemToast(STONKS_SYSTEM, Component.literal(title), Component.literal(description));
+		CLIENT.gui.toastManager().addToast(systemToast);
 	}
 
 	/**
@@ -263,7 +263,7 @@ public final class PlayerContext {
 	public static void showBossBar(@NonNull BossEvent bossBar) {
 		if (isAvailable()) {
 			try {
-				CLIENT.gui.getBossOverlay().update(ClientboundBossEventPacket.createAddPacket(bossBar));
+				CLIENT.gui.hud.getBossOverlay().update(ClientboundBossEventPacket.createAddPacket(bossBar));
 			} catch (Exception ex) {
 				if (DeveloperTools.isInDevelopment()) {
 					CaribouStonks.LOGGER.error("Unable to update bossBar handler (ADD)", ex);
@@ -280,7 +280,7 @@ public final class PlayerContext {
 	public static void removeBossBar(@NonNull BossEvent bossBar) {
 		if (isAvailable()) {
 			try {
-				CLIENT.gui.getBossOverlay().update(ClientboundBossEventPacket.createRemovePacket(bossBar.getId()));
+				CLIENT.gui.hud.getBossOverlay().update(ClientboundBossEventPacket.createRemovePacket(bossBar.getId()));
 			} catch (Exception ex) {
 				if (DeveloperTools.isInDevelopment()) {
 					CaribouStonks.LOGGER.error("Unable to update bossBar handler (REMOVE)", ex);
@@ -322,7 +322,7 @@ public final class PlayerContext {
 			content = StringUtil.trimChatMessage(StringUtils.normalizeSpace(content.trim()));
 
 			if (!hideToClient) {
-				CLIENT.gui.getChat().addRecentChat(content);
+				CLIENT.gui.hud.getChat().addRecentChat(content);
 			}
 
 			if (command) {

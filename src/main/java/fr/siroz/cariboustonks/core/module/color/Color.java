@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.core.module.color;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -67,17 +67,13 @@ public record Color(int r, int g, int b, int a) {
 	}
 
 	/**
-	 * Récupère la couleur d'un {@link ChatFormatting}.
+	 * Récupère la couleur d'un {@link TextColor}.
 	 *
-	 * @param formatting le formatting type
+	 * @param color la color type
 	 * @return la couleur obtenue
 	 */
-	public static Color fromFormatting(@NonNull ChatFormatting formatting) {
-		if (formatting.getColor() == null) {
-			return DEFAULT;
-		}
-
-		return fromInt(formatting.getColor() | 0xFF000000);
+	public static @NonNull Color fromTextColor(@NonNull TextColor color) {
+		return fromInt(color.getValue() | 0xFF000000);
 	}
 
 	/**

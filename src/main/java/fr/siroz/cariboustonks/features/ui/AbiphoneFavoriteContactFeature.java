@@ -107,7 +107,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 	}
 
 	private boolean isContact(ItemStack itemStack) {
-		if (itemStack == null || itemStack.is(Items.BLACK_STAINED_GLASS_PANE)) return false;
+		if (itemStack == null || itemStack.is(Items.STAINED_GLASS_PANE.black())) return false;
 
 		return ItemUtils.getLore(itemStack).stream()
 				.map(Component::getString)

@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
-import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 import org.jspecify.annotations.NonNull;
@@ -114,7 +114,7 @@ public class ColoredEnchantmentFeature extends Feature {
 
 						//noinspection DataFlowIssue
 						if (maxEnchantmentColors.containsKey(enchant)
-								&& currentText.getStyle().getColor().getValue() == ChatFormatting.BLUE.getColor()
+								&& currentText.getStyle().getColor().getValue() == TextColor.BLUE.getValue()
 						) {
 							// Extraire la partie après l'enchantement (virgule, espace)
 							String suffix = fullText.substring(enchant.length());
@@ -135,7 +135,7 @@ public class ColoredEnchantmentFeature extends Feature {
 
 						//noinspection DataFlowIssue
 						if (maxEnchantmentColors.containsKey(enchant)
-								&& currentText.getStyle().getColor().getValue() == ChatFormatting.BLUE.getColor()
+								&& currentText.getStyle().getColor().getValue() == TextColor.BLUE.getValue()
 						) {
 							((MutableComponent) currentText).withColor(maxEnchantmentColors.getInt(enchant));
 							maxEnchantmentColors.removeInt(enchant);
@@ -153,7 +153,7 @@ public class ColoredEnchantmentFeature extends Feature {
 
 					//noinspection DataFlowIssue
 					if (goodEnchantmentColors.containsKey(enchant)
-							&& currentText.getStyle().getColor().getValue() == ChatFormatting.BLUE.getColor()
+							&& currentText.getStyle().getColor().getValue() == TextColor.BLUE.getValue()
 					) {
 						((MutableComponent) currentText).withColor(goodEnchantmentColors.getInt(enchant));
 						goodEnchantmentColors.removeInt(enchant);

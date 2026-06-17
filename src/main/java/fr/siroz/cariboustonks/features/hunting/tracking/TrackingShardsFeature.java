@@ -169,7 +169,7 @@ public class TrackingShardsFeature extends Feature {
 		// 1 type breakdown visible uniquement quand il y a uniquement une type de shards
 		if (stats.shardsByType().size() == 1 && stats.totalShards() > 1) {
 			String type = stats.shardsByType().keySet().iterator().next();
-			builder.appendLine(Component.literal(type).withStyle(resolveShardRarity(type).getFormatting()));
+			builder.appendLine(Component.literal(type).withColor(resolveShardRarity(type).getColor()));
 			builder.appendSpace();
 		}
 
@@ -214,7 +214,7 @@ public class TrackingShardsFeature extends Feature {
 			builder.appendLine(Component.literal("By type:").withStyle(ChatFormatting.DARK_GRAY));
 			builder.appendSpace();
 			for (Map.Entry<String, Integer> entry : stats.shardsByType().entrySet()) {
-				builder.appendLine(Component.literal(" " + entry.getKey() + ": ").withStyle(resolveShardRarity(entry.getKey()).getFormatting())
+				builder.appendLine(Component.literal(" " + entry.getKey() + ": ").withColor(resolveShardRarity(entry.getKey()).getColor())
 						.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(entry.getValue())).withStyle(ChatFormatting.YELLOW))
 				);
 			}

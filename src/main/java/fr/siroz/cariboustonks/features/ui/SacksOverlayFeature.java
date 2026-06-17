@@ -29,6 +29,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jspecify.annotations.NonNull;
@@ -87,8 +88,8 @@ public class SacksOverlayFeature extends Feature {
 			SkyBlockItemData skyBlockItemData = hypixelDataSource.getSkyBlockItem(skyBlockId);
 			// La couleur noire est par défault si jamais l'item de l'API est fail,
 			// ou que l'item n'a pas de tier défini, la couleur de base est keep.
-			if (skyBlockItemData != null && skyBlockItemData.tier().getFormatting() != ChatFormatting.BLACK) {
-				name = Component.literal(name.getString()).withStyle(skyBlockItemData.tier().getFormatting());
+			if (skyBlockItemData != null && skyBlockItemData.tier().getColor() != TextColor.BLACK) {
+				name = Component.literal(name.getString()).withColor(skyBlockItemData.tier().getColor());
 			}
 
 			StoredInfo info = extractStored(itemStack);
@@ -200,7 +201,7 @@ public class SacksOverlayFeature extends Feature {
 		if (name.isBlank()) return true;
 
 		// Les bordures ou les espaces sans items
-		if (itemStack.is(Items.BLACK_STAINED_GLASS_PANE)) return true;
+		if (itemStack.is(Items.STAINED_GLASS_PANE.black())) return true;
 
 		// Les items de navigation et de triage
 		return BLACKLISTED_ITEM_NAMES.contains(name.toLowerCase(Locale.ENGLISH));

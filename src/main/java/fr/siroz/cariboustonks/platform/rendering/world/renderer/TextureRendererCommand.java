@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.platform.rendering.world.renderer;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import fr.siroz.cariboustonks.platform.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.platform.rendering.world.CaribouWorldRenderer;
 import fr.siroz.cariboustonks.platform.rendering.world.state.TextureRenderState;
@@ -23,7 +23,7 @@ public final class TextureRendererCommand implements RendererCommand<TextureRend
 				Minecraft.getInstance().getTextureManager().getTexture(state.texture()).getTextureView(),
 				Minecraft.getInstance().getTextureManager().getTexture(state.texture()).getSampler()
 		);
-		BufferBuilder buffer = CaribouWorldRenderer.getBuffer(pipeline, textureSetup);
+		VertexConsumer buffer = CaribouWorldRenderer.getBuffer(pipeline, textureSetup);
 
 		double dx = state.pos().x() - camera.pos.x();
 		double dy = state.pos().y() - camera.pos.y();
