@@ -208,6 +208,10 @@ Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla 
 
 - Highlight entities (/highlighter)
 - Bestiary Highlight: Highlights entities by middle-clicking on an entity.
+- Raffle Year 500:
+    - Raffle Tasks HUD: Displays a HUD showing all Tasks to be completed
+    - Indicating their progress status.
+    - Indicating the time remaining before the next reset.
 - Hoppity's Hunt:
     - Eggs Finder Guess: Predict the location of Hoppity Eggs.
     - Unclaimed Eggs HUD: Display the status of Hoppity's Eggs.
