@@ -15,6 +15,7 @@ import fr.siroz.cariboustonks.features.dungeon.CroesusMenuFeature;
 import fr.siroz.cariboustonks.features.dungeon.SadanBossFeature;
 import fr.siroz.cariboustonks.features.dungeon.ThornBossFeature;
 import fr.siroz.cariboustonks.features.dungeon.WitherKingDragonFeature;
+import fr.siroz.cariboustonks.features.events.RaffleTaskFeature;
 import fr.siroz.cariboustonks.features.events.hoppity.HoppityEggFinderFeature;
 import fr.siroz.cariboustonks.features.events.hoppity.HoppityHuntFeature;
 import fr.siroz.cariboustonks.features.fishing.BobberTimerFeature;
@@ -110,6 +111,7 @@ public final class FeatureManager {
 		registerFeature(new SadanBossFeature());
 		registerFeature(new WitherKingDragonFeature());
 		// Events
+		registerFeature(new RaffleTaskFeature());
 		registerFeature(new HoppityEggFinderFeature());
 		registerFeature(new HoppityHuntFeature());
 		// Fishing

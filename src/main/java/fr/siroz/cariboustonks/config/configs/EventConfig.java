@@ -6,7 +6,69 @@ import fr.siroz.cariboustonks.core.module.hud.HudConfig;
 public class EventConfig {
 
 	@SerialEntry
+	public Raffle raffle = new Raffle();
+
+	@SerialEntry
 	public HoppityHunt hoppityHunt = new HoppityHunt();
+
+	public static class Raffle {
+
+		@SerialEntry
+		public TaskHud hud = new TaskHud();
+
+		@SerialEntry
+		public boolean onlyShowIncomplete = false;
+
+		public static class TaskHud implements HudConfig {
+
+			@SerialEntry
+			public boolean enabled = false;
+
+			@SerialEntry
+			public int x = 20;
+
+			@SerialEntry
+			public int y = 20;
+
+			@SerialEntry
+			public float scale = 1f;
+
+			@Override
+			public int x() {
+				return this.x;
+			}
+
+			@Override
+			public void setX(int x) {
+				this.x = x;
+			}
+
+			@Override
+			public int y() {
+				return this.y;
+			}
+
+			@Override
+			public void setY(int y) {
+				this.y = y;
+			}
+
+			@Override
+			public float scale() {
+				return this.scale;
+			}
+
+			@Override
+			public void setScale(float scale) {
+				this.scale = scale;
+			}
+
+			@Override
+			public boolean shouldRender() {
+				return this.enabled;
+			}
+		}
+	}
 
 	public static class HoppityHunt {
 
