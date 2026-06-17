@@ -98,7 +98,7 @@ loom {
 	runs {
 		client {
 			if (System.getenv('GITHUB_ACTIONS') != 'true') {
-				property("devauth.configDir", file(".devauth").absolutePath)
+				getSystemProperties().put("devauth.configDir", file(".devauth").absolutePath)
 			}
 		}
 	}
