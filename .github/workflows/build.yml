@@ -22,16 +22,16 @@ jobs:
           cache-disabled: true
           validate-wrappers: true
 
-      - name: Run Checkstyle
-        run: ./gradlew checkstyleMain
-
-      - name: Capture Checkstyle reports
-        uses: actions/upload-artifact@v7
-        if: failure()
-        with:
-          name: checkstyle-reports
-          path: |
-            **/build/reports/checkstyle/
+#      - name: Run Checkstyle
+#        run: ./gradlew checkstyleMain
+#
+#      - name: Capture Checkstyle reports
+#        uses: actions/upload-artifact@v7
+#        if: failure()
+#        with:
+#          name: checkstyle-reports
+#          path: |
+#            **/build/reports/checkstyle/
 
       - name: Gradle Build
         run: ./gradlew build -x test
