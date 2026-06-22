@@ -50,6 +50,7 @@ import org.jspecify.annotations.Nullable;
  */
 final class RenderDispatcher implements WorldRenderer {
 	// Commands
+	private final BeamRendererCommand beamRendererCommand;
 	private final TextRendererCommand textRendererCommand;
 	private final TextureRendererCommand textureRendererCommand;
 	private final CircleRendererCommand circleRendererCommand;
@@ -61,6 +62,7 @@ final class RenderDispatcher implements WorldRenderer {
 	private final CursorLineRendererCommand cursorLineRendererCommand;
 	private final CuboidOutlineRendererCommand cuboidOutlineRendererCommand;
 	// States
+	private final List<BeamRenderState> beamRenderStates = new ArrayList<>();
 	private final List<TextRenderState> textRenderStates = new ArrayList<>();
 	private final List<TextureRenderState> textureRenderStates = new ArrayList<>();
 	private final List<CircleRenderState> circleRenderStates = new ArrayList<>();
@@ -76,18 +78,12 @@ final class RenderDispatcher implements WorldRenderer {
 	private @Nullable Frustum frustum = null;
 	private boolean frozen = false;
 
-	@SuppressWarnings("ALL")
-	private final GpuBackend gpuBackend;
-
-	enum GpuBackend {
-		VULKAN, OPENGL
-	}
+	// TODO :: 26.2 - Vulkan
+	//  Actuellement aucun problème avec Vulkan avec le dispatcher actuel,
+	//  mais a voir pour mieux utiliser les différents renderer et les mettre en batch?
 
 	RenderDispatcher() {
-		this.gpuBackend = GpuBackend.OPENGL;
-//		this.gpuBackend = ((GpuDeviceAccessor) RenderSystem.getDevice()).getBackend() instanceof VulkanDevice
-//				? GpuBackend.VULKAN
-//				: GpuBackend.OPENGL;
+		this.beamRendererCommand = new BeamRendererCommand();
 		this.textRendererCommand = new TextRendererCommand();
 		this.textureRendererCommand = new TextureRendererCommand();
 		this.circleRendererCommand = new CircleRendererCommand();
@@ -98,6 +94,47 @@ final class RenderDispatcher implements WorldRenderer {
 		this.linesRendererCommand = new LinesRendererCommand();
 		this.cursorLineRendererCommand = new CursorLineRendererCommand();
 		this.cuboidOutlineRendererCommand = new CuboidOutlineRendererCommand();
+	}
+
+	@Override
+	public void submitVanillaBeaconBeam(@NonNull BlockPos position, @NonNull Color color) {
+		if (frozen) return;
+		if (levelRenderState == null) return;
+		if (!RenderUtils.isVisible(frustum, position.getX(), position.getY(), position.getZ(), position.getX() + 1, RenderUtils.MAX_BUILD_HEIGHT, position.getZ() + 1)) return;
+
+		int colorInt;
+		if (color == Colors.RAINBOW) {
+			colorInt = AnimationUtils.getCurrentRainbowColor().withAlpha(1f).asInt();
+		} else {
+			colorInt = color.withAlpha(1f).asInt();
+		}
+
+		float length = (float) RenderUtils.getCamera().position().subtract(Vec3.atCenterOf(position)).horizontalDistance();
+		float animationTime = Math.floorMod(WorldContext.getWorldTime(), 40) + RenderUtils.getTickCounter().getGameTimeDeltaPartialTick(true);
+
+		BeaconRenderState state = new BeaconRenderState();
+		state.blockPos = position;
+		((BlockEntityRenderStateAccessor) state).setBlockState(Blocks.BEACON.defaultBlockState());
+		state.blockEntityType = BlockEntityType.BEACON;
+		state.lightCoords = RenderUtils.FULL_BRIGHT;
+		state.breakProgress = null;
+		state.animationTime = animationTime;
+		state.sections.add(new BeaconRenderState.Section(colorInt, RenderUtils.MAX_BUILD_HEIGHT));
+		state.beamRadiusScale = Math.max(1.0F, length / 96.0F);
+		// Vanilla Block Entity States
+		levelRenderState.blockEntityRenderStates.add(state);
+	}
+
+	@Override
+	public void submitBeam(@NonNull Vec3 pos, @NonNull Color color, float height, float widthScale, boolean throughBlocks) {
+		if (frozen) return;
+
+		if (color == Colors.RAINBOW) {
+			color = AnimationUtils.getCurrentRainbowColor();
+		}
+
+		BeamRenderState state = new BeamRenderState(pos, color, height, widthScale, throughBlocks);
+		beamRenderStates.add(state);
 	}
 
 	@Override
@@ -159,35 +196,6 @@ final class RenderDispatcher implements WorldRenderer {
 	}
 
 	@Override
-	public void submitBeaconBeam(@NonNull BlockPos position, @NonNull Color color) {
-		if (frozen) return;
-		if (levelRenderState == null) return;
-		if (!RenderUtils.isVisible(frustum, position.getX(), position.getY(), position.getZ(), position.getX() + 1, RenderUtils.MAX_BUILD_HEIGHT, position.getZ() + 1)) return;
-
-		int colorInt;
-		if (color == Colors.RAINBOW) {
-			colorInt = AnimationUtils.getCurrentRainbowColor().withAlpha(1f).asInt();
-		} else {
-			colorInt = color.withAlpha(1f).asInt();
-		}
-
-		float length = (float) RenderUtils.getCamera().position().subtract(Vec3.atCenterOf(position)).horizontalDistance();
-		float animationTime = Math.floorMod(WorldContext.getWorldTime(), 40) + RenderUtils.getTickCounter().getGameTimeDeltaPartialTick(true);
-
-		BeaconRenderState state = new BeaconRenderState();
-		state.blockPos = position;
-		((BlockEntityRenderStateAccessor) state).setBlockState(Blocks.BEACON.defaultBlockState());
-		state.blockEntityType = BlockEntityType.BEACON;
-		state.lightCoords = RenderUtils.FULL_BRIGHT;
-		state.breakProgress = null;
-		state.animationTime = animationTime;
-		state.sections.add(new BeaconRenderState.Section(colorInt, RenderUtils.MAX_BUILD_HEIGHT));
-		state.beamRadiusScale = Math.max(1.0F, length / 96.0F);
-		// Vanilla Block Entity States
-		levelRenderState.blockEntityRenderStates.add(state);
-	}
-
-	@Override
 	public void submitOutline(@NonNull AABB box, @NonNull Color color, float lineWidth, boolean throughBlocks) {
 		if (frozen) return;
 		if (!RenderUtils.isVisible(frustum, box)) return;
@@ -228,6 +236,7 @@ final class RenderDispatcher implements WorldRenderer {
 		frozen = false;
 		levelRenderState = levelRenderStateContext;
 		frustum = frustumContext;
+		beamRenderStates.clear();
 		textRenderStates.clear();
 		textureRenderStates.clear();
 		circleRenderStates.clear();
@@ -254,6 +263,10 @@ final class RenderDispatcher implements WorldRenderer {
 	 */
 	public void flush(CameraRenderState cameraState) {
 		if (!frozen) return;
+		// Beams
+		for (BeamRenderState state : beamRenderStates) {
+			beamRendererCommand.emit(state, cameraState);
+		}
 		// Circles
 		for (CircleRenderState state : circleRenderStates) {
 			circleRendererCommand.emit(state, cameraState);
