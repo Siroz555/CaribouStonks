@@ -34,7 +34,6 @@ public final class SkyBlockAPI {
 	 * Real-world Unix timestamp (ms) corresponding to the SkyBlock Day 1, Year 1.
 	 */
 	private static final long SKYBLOCK_EPOCH_START_MILLIS = 1_560_275_700_000L;
-	private static final Minecraft CLIENT = Minecraft.getInstance();
 	// Common constants
 	private static final String ITEM_ID = "id";
 	private static final String ITEM_UUID = "uuid";
@@ -47,7 +46,6 @@ public final class SkyBlockAPI {
 	private static String gameType = "";
 	private static final AtomicReference<SkyBlockTime> TIME = new AtomicReference<>(SkyBlockTime.DEFAULT);
 	private static final AtomicReference<SkyBlockSeason> SEASON = new AtomicReference<>(SkyBlockSeason.SPRING);
-	private static final AtomicReference<SkyBlockSeason.Month> MONTH = new AtomicReference<>(SkyBlockSeason.Month.EARLY_SPRING);
 
 	private SkyBlockAPI() {
 		throw new UnsupportedOperationException();
@@ -124,26 +122,6 @@ public final class SkyBlockAPI {
 	}
 
 	/**
-	 * Returns the current {@link SkyBlockSeason.Month}
-	 *
-	 * @return the {@code Month}
-	 */
-	public static SkyBlockSeason.Month getMonth() {
-		return MONTH.get();
-	}
-
-	/**
-	 * Returns whether the given {@link Mayor} is currently the mayor or minister.
-	 *
-	 * @param mayor the {@link Mayor} to check
-	 * @return {@code true} if the given {@code mayor} matches the current mayor or minister
-	 * @see #isMayorOrMinister(Mayor, Perk)
-	 */
-	public static boolean isMayorOrMinister(@NonNull Mayor mayor) {
-		return isMayorOrMinister(mayor, null);
-	}
-
-	/**
 	 * Returns whether the given {@link Mayor} currently holds the mayor or minister role,
 	 * and (optionally) whether the specified {@link Perk} is present for that role.
 	 *
@@ -166,7 +144,6 @@ public final class SkyBlockAPI {
 	 * @param perk  optional {@link Perk} to verify for the given role; if {@code null} only the role is checked
 	 * @return {@code true} if the given {@code mayor} matches the current mayor or minister and,
 	 * when {@code perk} is provided, the requested perk is present for that role
-	 * @see #isMayorOrMinister(Mayor)
 	 */
 	public static boolean isMayorOrMinister(@NonNull Mayor mayor, @Nullable Perk perk) {
 		ElectionResult result = electionSource != null ? electionSource.get() : null;
@@ -262,10 +239,7 @@ public final class SkyBlockAPI {
 	 * @return the PetInfo or {@link PetInfo#EMPTY} if the item is not a pet
 	 */
 	public static @NonNull PetInfo getPetInfo(@Nullable ItemStack stack) {
-		if (!onSkyBlockState || stack == null || stack.isEmpty()) {
-			return PetInfo.EMPTY;
-		}
-
+		if (!onSkyBlockState || stack == null || stack.isEmpty()) return PetInfo.EMPTY;
 		return PetInfo.parse(ItemUtils.getCustomData(stack));
 	}
 
@@ -343,7 +317,7 @@ public final class SkyBlockAPI {
 	}
 
 	static void handleInternalUpdate() {
-		if (CLIENT.level == null || ClientContext.isLocalServer()) {
+		if (Minecraft.getInstance().level == null || ClientContext.isLocalServer()) {
 			if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
 				onSkyBlockState = true;
 			}
@@ -366,11 +340,9 @@ public final class SkyBlockAPI {
 
 	static void handleInternalTimeUpdate(
 			@Nullable SkyBlockTime skyBlockTime,
-			@Nullable SkyBlockSeason skyBlockSeason,
-			SkyBlockSeason.@Nullable Month skyBlockMonth
+			@Nullable SkyBlockSeason skyBlockSeason
 	) {
 		if (skyBlockTime != null) TIME.set(skyBlockTime);
 		if (skyBlockSeason != null) SEASON.set(skyBlockSeason);
-		if (skyBlockMonth != null) MONTH.set(skyBlockMonth);
 	}
 }

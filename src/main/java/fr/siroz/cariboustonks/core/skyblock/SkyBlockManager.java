@@ -170,7 +170,7 @@ public final class SkyBlockManager {
 		SkyBlockSeason.Month nowMonth = SkyBlockSeason.Month.VALUES[nowTime.month()];
 		SkyBlockSeason.Month prevMonth = SkyBlockSeason.Month.VALUES[prevTime.month()];
 		// Update
-		SkyBlockAPI.handleInternalTimeUpdate(nowTime, nowSeason, nowMonth);
+		SkyBlockAPI.handleInternalTimeUpdate(nowTime, nowSeason);
 		// Events
 		if (nowTime.year() != prevTime.year()) SkyBlockEvents.YEAR_CHANGE_EVENT.invoker().onYearChange(nowTime.year());
 		if (nowSeason != prevSeason) SkyBlockEvents.SEASON_CHANGE_EVENT.invoker().onSeasonChange(nowSeason);
