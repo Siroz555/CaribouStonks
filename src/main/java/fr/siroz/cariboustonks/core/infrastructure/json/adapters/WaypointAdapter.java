@@ -57,7 +57,7 @@ public class WaypointAdapter extends TypeAdapter<Waypoint> {
 				case "type" -> type = Waypoint.Type.valueOf(reader.nextString());
 				case "color" -> color = colorAdapter.read(reader);
 				case "text" -> text = GsonProvider.standard().fromJson(reader.nextString(), Component.class);
-				case null, default -> reader.skipValue();
+				case null, default ->  reader.skipValue();
 			}
 		}
 		reader.endObject();
