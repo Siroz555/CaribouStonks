@@ -5,7 +5,6 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.ElectionResult
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Mayor;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Perk;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.PetInfo;
-import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;

@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.skyblock.item.calculator;
 
+import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
-import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.PetInfo;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import it.unimi.dsi.fastutil.ints.IntArrayList;

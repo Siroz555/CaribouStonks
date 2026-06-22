@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.core.skyblock;
 
-import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
