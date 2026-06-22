@@ -1,7 +1,5 @@
 package fr.siroz.cariboustonks.core.module.waypoint;
 
-import fr.siroz.cariboustonks.core.module.color.Color;
-import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.waypoint.options.IconOption;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -22,6 +20,10 @@ import net.minecraft.world.phys.Vec3;
  * @see RenderUtils
  */
 public final class WaypointRenderer {
+	private static final float MIN_BEAM_HEIGHT = 4f;
+	private static final float MAX_BEAM_HEIGHT = 20f;
+	private static final float MIN_BEAM_WIDTH_SCALE = 2f;
+	private static final float MAX_BEAM_WIDTH_SCALE = 5f;
 
 	private final Waypoint waypoint;
 
@@ -35,33 +37,34 @@ public final class WaypointRenderer {
 		if (!waypoint.isEnabled()) return;
 
 		BlockPos pos = waypoint.getPosition().toBlockPos();
-		Color color = waypoint.getColor() == Colors.RAINBOW
-				? waypoint.getColor()
-				: waypoint.getColor().withAlpha(waypoint.getAlpha());
+		Vec3 centerPos = Vec3.atCenterOf(pos);
+		double distance = -1;
 
 		switch (waypoint.getType()) {
-			case BEAM -> renderer.submitVanillaBeaconBeam(pos, color);
+			case BEAM -> {
+				distance = getDistance(centerPos);
+				renderer.submitBeam(centerPos.add(0, -0.5d, 0), waypoint.getColor(), getBeamHeight(distance), getBeamWidthScale(distance), waypoint.isThroughBlocks());
+			}
 			case WAYPOINT -> {
-				renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
-				renderer.submitVanillaBeaconBeam(pos.offset(0, 1, 0), color);
+				renderer.submitFilled(pos, waypoint.getColor(), waypoint.isThroughBlocks());
+				distance = getDistance(centerPos);
+				renderer.submitBeam(centerPos.add(0, 0.5d, 0), waypoint.getColor(), getBeamHeight(distance), getBeamWidthScale(distance), waypoint.isThroughBlocks());
 			}
 			case OUTLINED_WAYPOINT -> {
-				renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
-				renderer.submitVanillaBeaconBeam(pos.offset(0, 1, 0), color);
-				renderer.submitOutline(waypoint.getBox(), color, waypoint.getBoxLineWidth(), waypoint.isBoxThroughBlocks());
+				renderer.submitFilled(pos, waypoint.getColor(), waypoint.isThroughBlocks());
+				distance = getDistance(centerPos);
+				renderer.submitBeam(centerPos.add(0, 0.5d, 0), waypoint.getColor(), getBeamHeight(distance), getBeamWidthScale(distance), waypoint.isThroughBlocks());
+				renderer.submitOutline(waypoint.getBox(), waypoint.getColor(), waypoint.getBoxLineWidth(), waypoint.isThroughBlocks());
 			}
-			case HIGHLIGHT -> renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
+			case HIGHLIGHT -> renderer.submitFilled(pos, waypoint.getColor(), waypoint.isThroughBlocks());
 			case OUTLINED_HIGHLIGHT -> {
-				renderer.submitFilled(pos, color, waypoint.isBoxThroughBlocks());
-				renderer.submitOutline(waypoint.getBox(),color, waypoint.getBoxLineWidth(), waypoint.isBoxThroughBlocks());
+				renderer.submitFilled(pos, waypoint.getColor(), waypoint.isThroughBlocks());
+				renderer.submitOutline(waypoint.getBox(), waypoint.getColor(), waypoint.getBoxLineWidth(), waypoint.isThroughBlocks());
 			}
-			case OUTLINE -> renderer.submitOutline(waypoint.getBox(), color, waypoint.getBoxLineWidth(), waypoint.isBoxThroughBlocks());
+			case OUTLINE -> renderer.submitOutline(waypoint.getBox(), waypoint.getColor(), waypoint.getBoxLineWidth(), waypoint.isThroughBlocks());
 			default -> {
 			}
 		}
-
-		Vec3 centerPos = Vec3.atCenterOf(pos);
-		double distance = -1;
 
 		IconOption iconOption = waypoint.getIconOption();
 		if (iconOption.getIcon().isPresent()) {
@@ -69,7 +72,7 @@ public final class WaypointRenderer {
 			float width = iconOption.getWidth();
 			float height = iconOption.getHeight();
 			if (iconOption.isScaleWithDistance()) {
-				distance = RenderUtils.getCamera().position().distanceTo(centerPos);
+				if (distance == -1) distance = getDistance(centerPos);
 				float scaleIcon = Math.max((float) distance / 10, 1);
 				width = scaleIcon;
 				height = scaleIcon;
@@ -91,9 +94,7 @@ public final class WaypointRenderer {
 		}
 
 		if (textOption.isWithDistance()) {
-			if (distance == -1) {
-				distance = RenderUtils.getCamera().position().distanceTo(centerPos);
-			}
+			if (distance == -1) distance = getDistance(centerPos);
 
 			renderer.submitText(
 					Component.literal(Math.round(distance) + "m").withStyle(ChatFormatting.YELLOW),
@@ -105,9 +106,7 @@ public final class WaypointRenderer {
 		}
 
 		if (textOption.getText().isPresent()) {
-			if (distance == -1) {
-				distance = RenderUtils.getCamera().position().distanceTo(centerPos);
-			}
+			if (distance == -1) distance = getDistance(centerPos);
 
 			renderer.submitText(
 					textOption.getText().get(),
@@ -117,5 +116,17 @@ public final class WaypointRenderer {
 					textOption.isThroughBlocks()
 			);
 		}
+	}
+
+	private double getDistance(Vec3 to) {
+		return RenderUtils.getCamera().position().distanceTo(to);
+	}
+
+	private float getBeamHeight(double distance) {
+		return Math.clamp((float) distance / 2, MIN_BEAM_HEIGHT, MAX_BEAM_HEIGHT);
+	}
+
+	private float getBeamWidthScale(double distance) {
+		return Math.clamp((float) distance * 0.15f, MIN_BEAM_WIDTH_SCALE, MAX_BEAM_WIDTH_SCALE);
 	}
 }

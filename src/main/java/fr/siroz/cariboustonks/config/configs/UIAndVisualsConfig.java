@@ -339,7 +339,7 @@ public class UIAndVisualsConfig {
 		public int showTime = 15;
 
 		@SerialEntry
-		public Waypoint.Type type = Waypoint.Type.OUTLINED_WAYPOINT;
+		public Waypoint.Type type = Waypoint.Type.WAYPOINT;
 
 		@SerialEntry
 		public boolean rainbow = false;

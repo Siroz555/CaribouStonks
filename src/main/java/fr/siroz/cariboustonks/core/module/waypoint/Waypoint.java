@@ -86,10 +86,9 @@ public final class Waypoint {
 	private final boolean resetBetweenWorlds;
 
 	private Color color;
-	private float alpha;
 
 	private final float boxLineWidth;
-	private final boolean boxThroughBlocks;
+	private final boolean throughBlocks;
 
 	private final Consumer<Waypoint> destroyListener;
 
@@ -106,9 +105,8 @@ public final class Waypoint {
 			int timeoutTicks,
 			boolean resetBetweenWorlds,
 			@NonNull Color color,
-			float alpha,
 			float boxLineWidth,
-			boolean boxThroughBlocks,
+			boolean throughBlocks,
 			@Nullable Consumer<Waypoint> destroyListener,
 			@NonNull TextOption textOption,
 			@NonNull IconOption iconOption
@@ -121,9 +119,8 @@ public final class Waypoint {
 		this.timeoutTicks = timeoutTicks;
 		this.resetBetweenWorlds = resetBetweenWorlds;
 		this.color = color;
-		this.alpha = alpha;
 		this.boxLineWidth = boxLineWidth;
-		this.boxThroughBlocks = boxThroughBlocks;
+		this.throughBlocks = throughBlocks;
 		this.destroyListener = destroyListener;
 		this.textOption = textOption;
 		this.iconOption = iconOption;
@@ -267,24 +264,6 @@ public final class Waypoint {
 	}
 
 	/**
-	 * Retrieves the alpha transparency value of the Waypoint.
-	 *
-	 * @return the alpha value as a floating-point number
-	 */
-	public float getAlpha() {
-		return alpha;
-	}
-
-	/**
-	 * Updates the alpha of the Waypoint.
-	 *
-	 * @param alpha the new {@code Alpha} to set for the Waypoint
-	 */
-	public void updateAlpha(float alpha) {
-		this.alpha = alpha;
-	}
-
-	/**
 	 * Retrieves the width of the box line associated with the Waypoint.
 	 *
 	 * @return the line width of the box as a floating-point value
@@ -294,12 +273,12 @@ public final class Waypoint {
 	}
 
 	/**
-	 * Determines whether the box associated with this Waypoint is visible through blocks.
+	 * Determines whether the Waypoint is visible through blocks.
 	 *
-	 * @return {@code true} if the box is visible through blocks, {@code false} otherwise
+	 * @return {@code true} if is visible through blocks, {@code false} otherwise
 	 */
-	public boolean isBoxThroughBlocks() {
-		return boxThroughBlocks;
+	public boolean isThroughBlocks() {
+		return throughBlocks;
 	}
 
 	/**
@@ -360,11 +339,10 @@ public final class Waypoint {
 		private int timeoutTicks = -1;
 		private boolean resetBetweenWorlds = false;
 
-		private float alpha = 0.5f;
 		private Color color = Colors.RED;
 
 		private float boxLineWidth = 1f;
-		private boolean boxThroughBlocks = true;
+		private boolean throughBlocks = true;
 		private Consumer<Waypoint> destroyListener = null;
 
 		private TextOption textOption = new TextOption();
@@ -450,18 +428,6 @@ public final class Waypoint {
 		}
 
 		/**
-		 * Sets the alpha transparency value for the builder.
-		 * The alpha value determines the transparency level, where 0 is fully transparent and 1 is fully opaque.
-		 *
-		 * @param alpha the transparency value to set, ranging from 0.0 to 1.0
-		 * @return the builder instance for method chaining
-		 */
-		public Builder alpha(float alpha) {
-			this.alpha = alpha;
-			return this;
-		}
-
-		/**
 		 * Sets the line width for the outline box to be rendered in this builder.
 		 *
 		 * @param boxLineWidth the width of the box's line; must be a positive floating-point value
@@ -473,13 +439,13 @@ public final class Waypoint {
 		}
 
 		/**
-		 * Sets whether the outline box should render through blocks.
+		 * Sets whether the waypoint should be rendered through blocks.
 		 *
-		 * @param boxThroughBlocks a boolean indicating whether the box should be rendered through blocks
+		 * @param throughBlocks if rendering can be done through blocks
 		 * @return the builder instance for method chaining
 		 */
-		public Builder boxThroughBlocks(boolean boxThroughBlocks) {
-			this.boxThroughBlocks = boxThroughBlocks;
+		public Builder throughBlocks(boolean throughBlocks) {
+			this.throughBlocks = throughBlocks;
 			return this;
 		}
 
@@ -539,9 +505,8 @@ public final class Waypoint {
 					timeoutTicks,
 					resetBetweenWorlds,
 					color,
-					alpha,
 					boxLineWidth,
-					boxThroughBlocks,
+					throughBlocks,
 					destroyListener,
 					textOption,
 					iconOption

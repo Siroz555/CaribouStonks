@@ -33,7 +33,6 @@ public class WaypointAdapter extends TypeAdapter<Waypoint> {
 		positionAdapter.write(writer, waypoint.getPosition());
 		writer.name("enabled").value(waypoint.isEnabled());
 		writer.name("type").value(waypoint.getType().name());
-		writer.name("alpha").value(waypoint.getAlpha());
 		writer.name("color");
 		colorAdapter.write(writer, waypoint.getColor());
 		Optional<Component> text = waypoint.getTextOption().getText();
@@ -48,7 +47,6 @@ public class WaypointAdapter extends TypeAdapter<Waypoint> {
 		Position position = Position.ORIGIN;
 		boolean enabled = false;
 		Waypoint.Type type = Waypoint.Type.WAYPOINT;
-		float alpha = 1f;
 		Color color = Colors.RED;
 		Component text = null;
 		while (reader.hasNext()) {
@@ -57,11 +55,9 @@ public class WaypointAdapter extends TypeAdapter<Waypoint> {
 				case "position" -> position = positionAdapter.read(reader);
 				case "enabled" -> enabled = reader.nextBoolean();
 				case "type" -> type = Waypoint.Type.valueOf(reader.nextString());
-				case "alpha" -> alpha = Float.parseFloat(reader.nextString());
 				case "color" -> color = colorAdapter.read(reader);
 				case "text" -> text = GsonProvider.standard().fromJson(reader.nextString(), Component.class);
-				case null, default -> {
-				}
+				case null, default -> reader.skipValue();
 			}
 		}
 		reader.endObject();
@@ -70,7 +66,6 @@ public class WaypointAdapter extends TypeAdapter<Waypoint> {
 				.uuid(uuid)
 				.enabled(enabled)
 				.type(type)
-				.alpha(alpha)
 				.color(color)
 				.textOption(TextOption.builder().withText(text).build())
 				.build();
