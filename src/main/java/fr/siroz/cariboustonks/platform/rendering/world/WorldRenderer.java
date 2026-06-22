@@ -26,6 +26,32 @@ public interface WorldRenderer {
 	void submitVanillaBeaconBeam(@NonNull BlockPos position, @NonNull Color color);
 
 	/**
+	 * Submits a {@code Beam} to be rendered.
+	 * <p>
+	 * The default {@code height} is set to 2 and the {@code widthScale} is 1.
+	 *
+	 * @param pos           the position
+	 * @param color         the color
+	 * @param throughBlocks if rendering can be done through blocks
+	 * @see #submitBeam(Vec3, Color, float, float, boolean)
+	 */
+	default void submitBeam(Vec3 pos, Color color, boolean throughBlocks) {
+		submitBeam(pos, color, 2f, 1f, throughBlocks);
+	}
+
+	/**
+	 * Submits a {@code Beam} to be rendered.
+	 *
+	 * @param pos           the position
+	 * @param color         the color
+	 * @param height        the height in blocks (default 2)
+	 * @param widthScale    the width scale multiplier (1.0 = default, 0.5 = half, 2.0 = double)
+	 * @param throughBlocks if rendering can be done through blocks
+	 * @see #submitBeam(Vec3, Color, boolean)
+	 */
+	void submitBeam(@NonNull Vec3 pos, @NonNull Color color, float height, float widthScale, boolean throughBlocks);
+
+	/**
 	 * Submits a {@link Component} to be rendered.
 	 *
 	 * @param text          the text

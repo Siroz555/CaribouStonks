@@ -30,6 +30,10 @@ class DebugWorldRenderer {
 				new BlockPos(65, 129, 219),
 				Colors.RAINBOW
 		);
+		renderer.submitBeam(new Vec3(54, 129, 218), Colors.RED, true);
+		renderer.submitBeam(new Vec3(54, 129, 216), Colors.AQUA, 10f, 2f, true);
+		renderer.submitBeam(new Vec3(54, 129, 214), Colors.GOLD, 2f, 1.5f, false);
+		renderer.submitBeam(new Vec3(54, 129, 212), Colors.RAINBOW, 2.5f, 1.25f, false);
 		renderer.submitFilled(
 				new BlockPos(57, 129, 218),
 				Colors.RED.withAlpha(0.25f),

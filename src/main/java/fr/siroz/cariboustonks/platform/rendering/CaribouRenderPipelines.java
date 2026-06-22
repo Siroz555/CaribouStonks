@@ -21,6 +21,26 @@ public final class CaribouRenderPipelines {
 		IrisIntegration.assignPipelines();
 	}
 
+	public static final RenderPipeline BEAM = RenderPipelines.register(
+			RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
+					.withLocation(CaribouStonks.identifier("pipeline/beam"))
+					.withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
+					.withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
+					.withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false))
+					.withCull(false)
+					.build()
+	);
+
+	public static final RenderPipeline BEAM_THROUGH_BLOCKS = RenderPipelines.register(
+			RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
+					.withLocation(CaribouStonks.identifier("pipeline/beam_through_blocks"))
+					.withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
+					.withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
+					.withDepthStencilState(Optional.empty())
+					.withCull(false)
+					.build()
+	);
+
 	public static final RenderPipeline FILLED = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/filled_box"))

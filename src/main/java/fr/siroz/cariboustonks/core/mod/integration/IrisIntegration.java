@@ -36,6 +36,8 @@ public final class IrisIntegration {
 	public static void assignPipelines() {
 		if (IRIS_ENABLED) {
 			// assignPipeline(RenderPipelines.DEBUG_FILLED_BOX, "BASIC");
+			assignPipeline(CaribouRenderPipelines.BEAM, "BASIC");
+			assignPipeline(CaribouRenderPipelines.BEAM_THROUGH_BLOCKS, "BASIC");
 			assignPipeline(CaribouRenderPipelines.FILLED, "BASIC");
 			assignPipeline(CaribouRenderPipelines.FILLED_THROUGH_BLOCKS, "BASIC");
 			assignPipeline(CaribouRenderPipelines.LINE_STRIP, "LINES");

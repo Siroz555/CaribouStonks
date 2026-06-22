@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.platform.context.WorldContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.BlockEntityRenderStateAccessor;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.BeamRendererCommand;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.CircleRendererCommand;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.CuboidOutlineRendererCommand;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.CursorLineRendererCommand;
@@ -14,6 +15,7 @@ import fr.siroz.cariboustonks.platform.rendering.world.renderer.QuadRendererComm
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.TextRendererCommand;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.TextureRendererCommand;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.ThickCircleRendererCommand;
+import fr.siroz.cariboustonks.platform.rendering.world.state.BeamRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.CircleRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.CuboidOutlineRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.CursorLineRenderState;
@@ -50,6 +52,7 @@ import org.jspecify.annotations.Nullable;
  */
 final class RenderDispatcher implements WorldRenderer {
 	// Commands
+	private final BeamRendererCommand beamRendererCommand;
 	private final TextRendererCommand textRendererCommand;
 	private final TextureRendererCommand textureRendererCommand;
 	private final CircleRendererCommand circleRendererCommand;
@@ -61,6 +64,7 @@ final class RenderDispatcher implements WorldRenderer {
 	private final CursorLineRendererCommand cursorLineRendererCommand;
 	private final CuboidOutlineRendererCommand cuboidOutlineRendererCommand;
 	// States
+	private final List<BeamRenderState> beamRenderStates = new ArrayList<>();
 	private final List<TextRenderState> textRenderStates = new ArrayList<>();
 	private final List<TextureRenderState> textureRenderStates = new ArrayList<>();
 	private final List<CircleRenderState> circleRenderStates = new ArrayList<>();
@@ -76,23 +80,12 @@ final class RenderDispatcher implements WorldRenderer {
 	private @Nullable Frustum frustum = null;
 	private boolean frozen = false;
 
-	@SuppressWarnings("ALL")
-	private final GpuBackend gpuBackend;
-
-	enum GpuBackend {
-		VULKAN, OPENGL
-	}
+	// TODO :: 26.2 - Vulkan
+	//  Actuellement aucun problème avec Vulkan avec le dispatcher actuel,
+	//  mais a voir pour mieux utiliser les différents renderer et les mettre en batch?
 
 	RenderDispatcher() {
-		// TODO :: 26.2 - Vulkan
-		//  Actuellement aucun problème avec Vulkan avec le dispatcher actuel,
-		//  mais a voir pour mieux utiliser les différents renderer et les mettre en batch?
-
-		this.gpuBackend = GpuBackend.OPENGL;
-//		this.gpuBackend = ((GpuDeviceAccessor) RenderSystem.getDevice()).getBackend() instanceof VulkanDevice
-//				? GpuBackend.VULKAN
-//				: GpuBackend.OPENGL;
-
+		this.beamRendererCommand = new BeamRendererCommand();
 		this.textRendererCommand = new TextRendererCommand();
 		this.textureRendererCommand = new TextureRendererCommand();
 		this.circleRendererCommand = new CircleRendererCommand();
@@ -132,6 +125,18 @@ final class RenderDispatcher implements WorldRenderer {
 		state.beamRadiusScale = Math.max(1.0F, length / 96.0F);
 		// Vanilla Block Entity States
 		levelRenderState.blockEntityRenderStates.add(state);
+	}
+
+	@Override
+	public void submitBeam(@NonNull Vec3 pos, @NonNull Color color, float height, float widthScale, boolean throughBlocks) {
+		if (frozen) return;
+
+		if (color == Colors.RAINBOW) {
+			color = AnimationUtils.getCurrentRainbowColor();
+		}
+
+		BeamRenderState state = new BeamRenderState(pos, color, height, widthScale, throughBlocks);
+		beamRenderStates.add(state);
 	}
 
 	@Override
@@ -233,6 +238,7 @@ final class RenderDispatcher implements WorldRenderer {
 		frozen = false;
 		levelRenderState = levelRenderStateContext;
 		frustum = frustumContext;
+		beamRenderStates.clear();
 		textRenderStates.clear();
 		textureRenderStates.clear();
 		circleRenderStates.clear();
@@ -259,6 +265,10 @@ final class RenderDispatcher implements WorldRenderer {
 	 */
 	public void flush(CameraRenderState cameraState) {
 		if (!frozen) return;
+		// Beams
+		for (BeamRenderState state : beamRenderStates) {
+			beamRendererCommand.emit(state, cameraState);
+		}
 		// Circles
 		for (CircleRenderState state : circleRenderStates) {
 			circleRendererCommand.emit(state, cameraState);
