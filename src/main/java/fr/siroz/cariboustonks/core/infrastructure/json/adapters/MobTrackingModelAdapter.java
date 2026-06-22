@@ -32,8 +32,7 @@ public class MobTrackingModelAdapter extends TypeAdapter<MobTrackingModel> {
 				case "enabled" -> enabled = reader.nextBoolean();
 				case "notifyOnSpawn" -> notifyOnSpawn = reader.nextBoolean();
 				case "highlightable" -> highlightable = reader.nextBoolean();
-				case null, default -> {
-				}
+				case null, default -> reader.skipValue();
 			}
 		}
 		reader.endObject();

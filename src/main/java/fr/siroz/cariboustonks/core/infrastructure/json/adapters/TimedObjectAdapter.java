@@ -40,8 +40,7 @@ public class TimedObjectAdapter extends TypeAdapter<TimedObjectModel> {
 				case "message" -> message = reader.nextString();
 				case "expirationTime" -> expirationTime = instant.read(reader);
 				case "type" -> type = reader.nextString();
-				case null, default -> {
-				}
+				case null, default -> reader.skipValue();
 			}
 		}
 		reader.endObject();
