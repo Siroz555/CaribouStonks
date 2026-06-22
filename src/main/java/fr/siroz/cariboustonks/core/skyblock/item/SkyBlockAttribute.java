@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.core.skyblock.item;
 
-import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
+import fr.siroz.cariboustonks.core.skyblock.Rarity;
 
 public record SkyBlockAttribute(
 		String name,

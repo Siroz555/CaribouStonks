@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.core.skyblock.data.hypixel.item;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.util.JsonUtils;
 import java.util.ArrayList;
 import java.util.List;

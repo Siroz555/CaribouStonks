@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.skyblock.data.hypixel;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.Rarity;
+import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import java.util.Locale;

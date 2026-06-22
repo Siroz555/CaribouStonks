@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.core.skyblock.data.hypixel.item;
+package fr.siroz.cariboustonks.core.skyblock;
 
 import com.google.common.collect.Streams;
 import java.util.Arrays;
