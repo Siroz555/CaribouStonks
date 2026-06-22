@@ -9,6 +9,7 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.EmptyInput;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.FilteredEditBox;
+import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.Arrays;
 import java.util.List;
@@ -333,8 +334,11 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 				String prefix = (c == current) ? "-> " : "";
 				String name = c.name();
 
-				Component line = Component.literal(prefix)
-						.append(Component.literal(name).withStyle(style -> style.withColor(c.color.asInt())));
+				Component line = Component.literal(prefix).append(Component.literal(name)
+						.withStyle(style -> style.withColor(c.color.asInt())));
+				if (c.color == Colors.RAINBOW) {
+					line = Component.literal(prefix).append(AnimationUtils.applyRainbow(name));
+				}
 
 				if (!result.getString().isEmpty()) {
 					result = result.copy().append(Component.literal("\n")).append(line);
