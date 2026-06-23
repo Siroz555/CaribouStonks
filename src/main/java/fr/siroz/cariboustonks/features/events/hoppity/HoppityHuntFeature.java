@@ -5,7 +5,6 @@ import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockSeason;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockTime;
@@ -56,15 +55,17 @@ public class HoppityHuntFeature extends Feature {
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(CaribouStonks.identifier("hoppity_hunt"))
-				.hud(new MultiElementHud(
+				.hud(new MultiElementHud("hoppity_hunt",
 						() -> this.isEnabled() && this.config().events.hoppityHunt.huntHud.showHud,
-						new HudElementTextBuilder()
-								.append(Component.literal("Hoppity's Hunt Eggs " + CUTE_RABBIT).withStyle(ChatFormatting.LIGHT_PURPLE))
+						preview -> preview
+								.appendTitle(Component.literal("Hoppity's Hunt Eggs " + CUTE_RABBIT).withStyle(ChatFormatting.LIGHT_PURPLE))
 								.appendSpace()
-								.append(Component.literal("§8○ §7?"))
-								.append(Component.literal("§8○ §7?"))
-								.append(Component.literal("§8○ §7?"))
-								.build(),
+								.appendLine(Component.literal("§8○ §7?"))
+								.appendLine(Component.literal("§8○ §7?"))
+								.appendLine(Component.literal("§8○ §7?"))
+								.appendLine(Component.literal("§8○ §7?"))
+								.appendLine(Component.literal("§8○ §7?"))
+								.appendLine(Component.literal("§8○ §7?")),
 						this::getHudLines,
 						this.config().events.hoppityHunt.huntHud,
 						150,

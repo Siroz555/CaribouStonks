@@ -8,7 +8,6 @@ import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -80,14 +79,13 @@ public class RaffleTaskFeature extends Feature {
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(CaribouStonks.identifier("special_raffle_hud"))
-				.hud(new MultiElementHud(
+				.hud(new MultiElementHud("special_raffle_hud",
 						this::isEnabled,
-						new HudElementTextBuilder()
-								.append(Component.literal("§6§lRaffle Tasks §r§7- §e1h 37m 10s"))
-								.append(Component.literal("§c§l✖ §r§7- ?"))
-								.append(Component.literal("§c§l✖ §r§7- ?"))
-								.append(Component.literal("§c§l✖ §r§7- ?"))
-								.build(),
+						preview -> preview
+								.appendLine(Component.literal("§6§lRaffle Tasks §r§7- §e1h 37m 10s"))
+								.appendLine(Component.literal("§c§l✖ §r§7- ?"))
+								.appendLine(Component.literal("§c§l✖ §r§7- ?"))
+								.appendLine(Component.literal("§c§l✖ §r§7- ?")),
 						this::getHudLines,
 						this.config().events.raffle.hud,
 						20,
