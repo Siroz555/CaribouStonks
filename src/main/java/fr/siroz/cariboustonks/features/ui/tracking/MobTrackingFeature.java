@@ -22,13 +22,13 @@ import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.MinecraftUtils;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
@@ -69,7 +69,7 @@ public class MobTrackingFeature extends Feature {
 				false, false, false
 		);
 		this.notified = CacheBuilder.newBuilder()
-				.expireAfterWrite(2, TimeUnit.MINUTES) // 5min ?
+				.expireAfterWrite(Duration.ofMinutes(2)) // 5min ?
 				.build();
 
 		NetworkEvents.ARMORSTAND_UPDATE_PACKET.register(this::onUpdateArmorStand);

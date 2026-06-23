@@ -13,6 +13,7 @@ import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueCalculator;
 import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueResult;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.StonksUtils;
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class ItemValueTooltipFeature extends Feature {
 
 	private final Cache<String, ItemValueResult> cache = CacheBuilder.newBuilder()
 			.maximumSize(555)
-			.expireAfterWrite(2, TimeUnit.MINUTES)
+			.expireAfterWrite(Duration.ofMinutes(2))
 			.build();
 
 	private final BooleanSupplier configUseNetworth =
