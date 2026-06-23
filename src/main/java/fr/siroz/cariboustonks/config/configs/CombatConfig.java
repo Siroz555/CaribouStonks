@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.config.configs;
 
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
+import fr.siroz.cariboustonks.core.module.hud.HudAnchor;
 import fr.siroz.cariboustonks.core.module.hud.HudConfig;
 import fr.siroz.cariboustonks.util.ColorUtils;
 import java.awt.Color;
@@ -81,6 +82,9 @@ public class CombatConfig {
 			@SerialEntry
 			public float scale = 1f;
 
+			@SerialEntry
+			public HudAnchor anchor = HudAnchor.TOP_LEFT;
+
 			@Override
 			public int x() {
 				return this.x;
@@ -109,6 +113,16 @@ public class CombatConfig {
 			@Override
 			public void setScale(float scale) {
 				this.scale = scale;
+			}
+
+			@Override
+			public HudAnchor anchor() {
+				return anchor;
+			}
+
+			@Override
+			public void setAnchor(HudAnchor anchor) {
+				this.anchor = anchor;
 			}
 
 			@Override
@@ -164,6 +178,9 @@ public class CombatConfig {
 			@SerialEntry
 			public float scale = 1f;
 
+			@SerialEntry
+			public HudAnchor anchor = HudAnchor.TOP_LEFT;
+
 			@Override
 			public int x() {
 				return this.x;
@@ -192,6 +209,16 @@ public class CombatConfig {
 			@Override
 			public void setScale(float scale) {
 				this.scale = scale;
+			}
+
+			@Override
+			public HudAnchor anchor() {
+				return anchor;
+			}
+
+			@Override
+			public void setAnchor(HudAnchor anchor) {
+				this.anchor = anchor;
 			}
 
 			@Override
@@ -229,6 +256,9 @@ public class CombatConfig {
 			@SerialEntry
 			public float scale = 1f;
 
+			@SerialEntry
+			public HudAnchor anchor = HudAnchor.TOP_LEFT;
+
 			@Override
 			public int x() {
 				return this.x;
@@ -257,6 +287,16 @@ public class CombatConfig {
 			@Override
 			public void setScale(float scale) {
 				this.scale = scale;
+			}
+
+			@Override
+			public HudAnchor anchor() {
+				return anchor;
+			}
+
+			@Override
+			public void setAnchor(HudAnchor anchor) {
+				this.anchor = anchor;
 			}
 
 			@Override

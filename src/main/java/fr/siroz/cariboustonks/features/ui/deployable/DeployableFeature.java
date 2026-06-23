@@ -5,7 +5,6 @@ import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -21,7 +20,6 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -30,7 +28,6 @@ import org.jspecify.annotations.NonNull;
 
 public class DeployableFeature extends Feature {
 	private static final Pattern DEPLOYABLE_PATTERN = Pattern.compile("^(.+?)\\s+(\\d+)s$");
-	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_deployable");
 
 	private final List<TrackedDeployable> trackedDeployables = new CopyOnWriteArrayList<>(); // SIROZ-NOTE :: non-concurrent
 
@@ -39,12 +36,10 @@ public class DeployableFeature extends Feature {
 		WorldEvents.ARMORSTAND_REMOVE_EVENT.register(this::onRemoveArmorStand);
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
-				.attachAfterStatusEffects(HUD_ID)
-				.hud(new MultiElementHud(
+				.attachAfterStatusEffects(CaribouStonks.identifier("hud_deployable"))
+				.hud(new MultiElementHud("hud_deployable",
 						() -> this.isEnabled() && !this.trackedDeployables.isEmpty() && this.config().uiAndVisuals.deployables.hud.showHud,
-						new HudElementTextBuilder()
-								.append(Component.literal("§d§lPlasmaflux §e15s"))
-								.build(),
+						preview -> preview.appendLine(Component.literal("§d§lPlasmaflux §e15s")),
 						this::getHudLines,
 						this.config().uiAndVisuals.deployables.hud,
 						150,

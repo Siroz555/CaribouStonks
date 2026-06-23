@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
@@ -25,14 +24,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import org.jspecify.annotations.NonNull;
 
 public class SecondLifeFeature extends Feature {
-
-	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_second_life");
-
 	private static final Pattern SPIRIT_MASK_PATTERN = Pattern.compile("Second Wind Activated! Your Spirit Mask saved your life!");
 	private static final Pattern BONZO_MASK_PATTERN = Pattern.compile("Your Bonzo's Mask saved your life!");
 	private static final Pattern PHOENIX_PET_PATTERN = Pattern.compile("Your Phoenix Pet saved you from certain death!");
@@ -47,13 +42,12 @@ public class SecondLifeFeature extends Feature {
 		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
-				.attachAfterStatusEffects(HUD_ID)
-				.hud(new MultiElementHud(
+				.attachAfterStatusEffects(CaribouStonks.identifier("hud_second_life"))
+				.hud(new MultiElementHud("hud_second_life",
 						() -> this.isEnabled() && !activeCooldowns.isEmpty(),
-						new HudElementTextBuilder()
-								.append(Component.literal("Spirit Mask: 42.9s").withStyle(ChatFormatting.DARK_PURPLE))
-								.append(Component.literal("Phoenix: 51.7s").withStyle(ChatFormatting.YELLOW))
-								.build(),
+						preview -> preview
+								.appendLine(Component.literal("Spirit Mask: 42.9s").withStyle(ChatFormatting.DARK_PURPLE))
+								.appendLine(Component.literal("Phoenix: 51.7s").withStyle(ChatFormatting.YELLOW)),
 						this::getHudLines,
 						this.config().combat.secondLife.cooldownHud,
 						150,
@@ -129,6 +123,10 @@ public class SecondLifeFeature extends Feature {
 				PlayerContext.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP, 1f, 1f);
 			}
 		}
+	}
+
+	private void getDefaultHud(HudElementBuilder builder) {
+
 	}
 
 	private void getHudLines(HudElementBuilder builder) {

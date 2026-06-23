@@ -10,7 +10,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
@@ -86,12 +85,11 @@ public class MobTrackingFeature extends Feature {
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(CaribouStonks.identifier("hud_mob_tracking"))
-				.hud(new MultiElementHud(
+				.hud(new MultiElementHud("hud_mob_tracking",
 						() -> this.isEnabled() && !tracked.isEmpty() && this.config().uiAndVisuals.mobTracking.hud.showInHud,
-						new HudElementTextBuilder()
-								.append(Component.literal("§8[§7Lv750§8] §2✿§e✰§d❃ §2Exalted Minos Inquisitor §a45.8M§f/§a50M§c❤"))
-								.append(Component.literal("§e﴾ §8[§7Lv200§8] §8☠§f\uD83E\uDDB4§5♃ §8§lBladesoul§r §a50M§f/§a50M§c❤ §e﴿"))
-								.build(),
+						preview -> preview
+								.appendLine(Component.literal("§8[§7Lv750§8] §2✿§e✰§d❃ §2Exalted Minos Inquisitor §a45.8M§f/§a50M§c❤"))
+								.appendLine(Component.literal("§e﴾ §8[§7Lv200§8] §8☠§f\uD83E\uDDB4§5♃ §8§lBladesoul§r §a50M§f/§a50M§c❤ §e﴿")),
 						this::getHudLines,
 						this.config().uiAndVisuals.mobTracking.hud,
 						125,

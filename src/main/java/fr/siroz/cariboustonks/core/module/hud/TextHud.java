@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.core.module.hud;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import java.util.function.Supplier;
 import net.minecraft.client.DeltaTracker;
@@ -21,10 +20,10 @@ public final class TextHud extends Hud {
 			@NonNull Component defaultText,
 			@NonNull Supplier<Component> textSupplier,
 			@NonNull HudConfig hudConfig,
-			int defaultX,
-			int defaultY
+			int defaultOffsetX,
+			int defaultOffsetY
 	) {
-		super(() -> true, hudConfig, defaultX, defaultY);
+		super(() -> true, hudConfig, defaultOffsetX, defaultOffsetY);
 		this.defaultText = defaultText;
 		this.textSupplier = textSupplier;
 	}
@@ -50,7 +49,7 @@ public final class TextHud extends Hud {
 	public void renderHud(GuiGraphicsExtractor guiGraphics, DeltaTracker tickCounter) {
 		Component text = textSupplier.get();
 		if (shouldRender() && !text.getString().isEmpty()) {
-			render(text, guiGraphics, hudConfig.x(), hudConfig.y(), hudConfig.scale());
+			render(text, guiGraphics, configX(), configY(), hudConfig.scale());
 		}
 	}
 
@@ -61,7 +60,6 @@ public final class TextHud extends Hud {
 		guiGraphics.pose().popMatrix();
 	}
 
-	@Experimental
 	private boolean useShadow() {
 		return ConfigManager.getConfig().uiAndVisuals.shadowTextHud;
 	}

@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.hud.Hud;
+import fr.siroz.cariboustonks.core.module.hud.HudAnchor;
 import fr.siroz.cariboustonks.platform.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.systems.HudSystem;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
@@ -18,16 +19,11 @@ import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public final class HudConfigScreen extends CaribousStonksScreen {
-
-	private static final float SCALE_SIZE_MIN = 0.25f;
-	private static final float SCALE_SIZE_MAX = 5.0f;
-	private static final float SCALE_SIZE_STEP = 0.1f;
+	private static final int ANCHOR_DOT_SIZE = 5;
 
 	private final List<Hud> hudList;
-	@Nullable
-	private final Screen parent;
-	@Nullable
-	private Hud selected = null;
+	private final @Nullable Screen parent;
+	private @Nullable Hud selected = null;
 
 	private HudConfigScreen(@Nullable Screen parent) {
 		super(Component.nullToEmpty("HUD Config Screen"));
@@ -42,28 +38,24 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	@Override
 	public void onRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
 		super.onRender(guiGraphics, mouseX, mouseY, delta);
-		renderInformations(guiGraphics);
+		renderInstructions(guiGraphics);
 		renderElements(guiGraphics);
 	}
 
-	private void renderInformations(@NonNull GuiGraphicsExtractor guiGraphics) {
-		int baseY = font.lineHeight * 8;
-		int lineSpacing = font.lineHeight + 4;
-		int y = baseY;
-		guiGraphics.centeredText(font,
-				"LEFT-CLICK to select an HUD", width >> 1, y, Colors.GRAY_RGB);
-		y += lineSpacing;
-		guiGraphics.centeredText(font,
-				"RIGHT-CLICK to unselect an HUD", width >> 1, y, Colors.GRAY_RGB);
-		y += lineSpacing;
-		guiGraphics.centeredText(font,
-				"Press +/- or Mouse Wheel to scale an HUD", width >> 1, y, Colors.GRAY_RGB);
-		y += lineSpacing;
-		guiGraphics.centeredText(font,
-				"Press R to reset an HUD's position & scale", width >> 1, y, Colors.GRAY_RGB);
-		y += lineSpacing;
-		guiGraphics.centeredText(font,
-				"Press TAB to cycle between HUDs", width >> 1, y, Colors.GRAY_RGB);
+	private void renderInstructions(@NonNull GuiGraphicsExtractor guiGraphics) {
+		int cx = width >> 1;
+		int y = font.lineHeight * 16;
+		int dy = font.lineHeight + 4;
+
+		guiGraphics.centeredText(font, "LEFT-CLICK to select an HUD", cx, y, Colors.GRAY_RGB);
+		y += dy;
+		guiGraphics.centeredText(font, "RIGHT-CLICK to unselect an HUD", cx, y, Colors.GRAY_RGB);
+		y += dy;
+		guiGraphics.centeredText(font, "Mouse Wheel or +/- to scale an HUD", cx, y, Colors.GRAY_RGB);
+		y += dy;
+		guiGraphics.centeredText(font, "Press R to reset position & scale", cx, y, Colors.GRAY_RGB);
+		y += dy;
+		guiGraphics.centeredText(font, "Press TAB to cycle between HUDs", cx, y, Colors.GRAY_RGB);
 	}
 
 	private void renderElements(@NonNull GuiGraphicsExtractor guiGraphics) {
@@ -72,21 +64,38 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			hud.renderScreen(guiGraphics);
 		}
 
-		if (selected != null) {
-			int x = selected.x();
-			int y = selected.y();
-			int width = selected.width();
-			int height = selected.height();
+		renderSelectedOverlay(guiGraphics);
+	}
 
-			int marginTop = 2;
-			int marginLeft = 2;
-			int bX = Math.max(x - marginLeft, 0);
-			int bY = Math.max(y - marginTop, 0);
-			int bWidth = Math.min(x + width + 2, this.width) - bX;
-			int bHeight = Math.min(y + height + 2, this.height) - bY;
+	private void renderSelectedOverlay(@NonNull GuiGraphicsExtractor guiGraphics) {
+		if (selected == null) return;
 
-			GuiRenderer.submitBorder(guiGraphics, bX, bY, bWidth, bHeight, Colors.RED.asInt());
-		}
+		int x = selected.x();
+		int y = selected.y();
+		int w = selected.width();
+		int h = selected.height();
+
+		int margin = 2;
+		int bX = Math.max(x - margin, 0);
+		int bY = Math.max(y - margin, 0);
+		int bWidth = Math.min(x + w + margin, this.width) - bX;
+		int bHeight = Math.min(y + h + margin, this.height) - bY;
+
+		// Selection border
+		GuiRenderer.submitBorder(guiGraphics, bX, bY, bWidth, bHeight, Colors.RED.asInt());
+
+		// Petit carré pour montrer quel corner l'Anchor est
+		HudAnchor anchor = selected.getAnchor();
+		int dotX = (anchor == HudAnchor.TOP_RIGHT || anchor == HudAnchor.BOTTOM_RIGHT) ? bX + bWidth - ANCHOR_DOT_SIZE : bX;
+		int dotY = (anchor == HudAnchor.BOTTOM_LEFT || anchor == HudAnchor.BOTTOM_RIGHT) ? bY + bHeight - ANCHOR_DOT_SIZE : bY;
+		guiGraphics.fill(dotX, dotY, dotX + ANCHOR_DOT_SIZE, dotY + ANCHOR_DOT_SIZE, Colors.GOLD_RGB);
+
+		Component status = Component.literal("Anchor: ").withColor(Colors.WHITE_RGB)
+				.append(Component.literal(anchor.name()).withColor(Colors.GOLD_RGB))
+				.append(Component.literal("  |  "))
+				.append(Component.literal("Scale: ").withColor(Colors.WHITE_RGB))
+				.append(Component.literal(String.format("%.2f", selected.scale())).withColor(Colors.AQUA_RGB));
+		guiGraphics.centeredText(font, status, this.width >> 1, this.height - font.lineHeight - 4, Colors.WHITE_RGB);
 	}
 
 	@Override
@@ -94,14 +103,14 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 		switch (click.button()) {
 			// Select
 			case GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
-				for (Hud element : hudList) {
-					if (!element.isConfigEnabled()) continue;
-					// overlapping behaviour
+				for (Hud hud : hudList) {
+					if (!hud.isConfigEnabled()) continue;
+					// overlapping behavior
 					if (RenderUtils.pointIsInArea(click.x(), click.y(),
-							element.x(), element.y(),
-							element.x() + element.width(), element.y() + element.height()
-					) && selected != element) {
-						selected = element;
+							hud.x(), hud.y(),
+							hud.x() + hud.width(), hud.y() + hud.height()
+					) && selected != hud) {
+						selected = hud;
 						return true;
 					}
 				}
@@ -121,8 +130,10 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	@Override
 	public boolean mouseDragged(@NonNull MouseButtonEvent click, double offsetX, double offsetY) {
 		if (selected != null && click.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-			selected.setX((int) Math.clamp(click.x() - (selected.width() >> 1), 0, this.width - selected.width()));
-			selected.setY((int) Math.clamp(click.y() - (selected.height() >> 1), 0, this.height - selected.height()));
+			// setAbsolutePosition gère le clamp entre les border du screen et l'Anchor
+			int targetX = (int) click.x() - (selected.width()  >> 1);
+			int targetY = (int) click.y() - (selected.height() >> 1);
+			selected.setAbsolutePosition(targetX, targetY);
 		}
 
 		return super.mouseDragged(click, offsetX, offsetY);
@@ -136,7 +147,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			case GLFW.GLFW_KEY_EQUAL, GLFW.GLFW_KEY_KP_ADD -> {
 				// Pour '=' il faut Maj (AZERTY/+, sinon ignore), et pour KP_ADD jamais besoin de shift
 				if (selected != null && (input.input() != GLFW.GLFW_KEY_EQUAL || (input.modifiers() & GLFW.GLFW_MOD_SHIFT) != 0)) {
-					selected.setScale(selected.scale() + SCALE_SIZE_STEP);
+					selected.setScale(selected.scale() + Hud.SCALE_STEP);
 					return true;
 				}
 			}
@@ -144,7 +155,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 			case GLFW.GLFW_KEY_MINUS, GLFW.GLFW_KEY_KP_SUBTRACT -> {
 				// Pour '-' il faut Maj (AZERTY/+, sinon ignore), et pour KP_SUBTRACT jamais besoin de shift
 				if (selected != null && (input.input() != GLFW.GLFW_KEY_MINUS || (input.modifiers() & GLFW.GLFW_MOD_SHIFT) != 0)) {
-					selected.setScale(selected.scale() - SCALE_SIZE_STEP);
+					selected.setScale(selected.scale() - Hud.SCALE_STEP);
 					return true;
 				}
 			}
@@ -180,9 +191,8 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	@Override
 	public boolean mouseScrolled(double x, double y, double scrollX, double scrollY) {
 		if (selected != null) {
-			float newScale = selected.scale() + (float) scrollY * SCALE_SIZE_STEP;
-			newScale = Math.clamp(newScale, SCALE_SIZE_MIN, SCALE_SIZE_MAX);
-			selected.setScale(newScale);
+			// Clamps entre MIN/MAX auto
+			selected.setScale(selected.scale() + (float) scrollY * Hud.SCALE_STEP);
 			return true;
 		}
 		return super.mouseScrolled(x, y, scrollX, scrollY);

@@ -18,5 +18,9 @@ public interface HudConfig {
 
 	void setScale(float scale);
 
+	HudAnchor anchor();
+
+	void setAnchor(HudAnchor anchor);
+
 	boolean shouldRender();
 }

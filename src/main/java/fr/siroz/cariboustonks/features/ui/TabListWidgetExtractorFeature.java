@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabLine;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabWidget;
@@ -45,17 +44,16 @@ public class TabListWidgetExtractorFeature extends Feature {
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(CaribouStonks.identifier("tab_widgets"))
-				.hud(new MultiElementHud(
+				.hud(new MultiElementHud("tab_widgets",
 						() -> SkyBlockAPI.isOnSkyBlock() && !this.currentWidgets.isEmpty(),
-						new HudElementTextBuilder()
-								.append(Component.literal("--- Widgets Extractor ---"))
-								.append(Component.literal("§9§lPickaxe Ability:"))
-								.append(Component.literal(" §fPickobulus: §c14s"))
+						preview -> preview
+								.appendLine(Component.literal("--- Widgets Extractor ---"))
+								.appendLine(Component.literal("§9§lPickaxe Ability:"))
+								.appendLine(Component.literal(" §fPickobulus: §c14s"))
 								.appendSpace()
-								.append(Component.literal("§e§lBestiary:"))
-								.append(Component.literal(" §fGhost 15: §b§lMAX"))
-								.append(Component.literal(" §fLittlefoot 14: §b84/100"))
-								.build(),
+								.appendLine(Component.literal("§e§lBestiary:"))
+								.appendLine(Component.literal(" §fGhost 15: §b§lMAX"))
+								.appendLine(Component.literal(" §fLittlefoot 14: §b84/100")),
 						this::getHudLines,
 						this.config().uiAndVisuals.tabListWidget.hud,
 						10,

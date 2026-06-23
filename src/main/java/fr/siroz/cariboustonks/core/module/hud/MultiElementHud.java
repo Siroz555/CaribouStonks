@@ -2,7 +2,6 @@ package fr.siroz.cariboustonks.core.module.hud;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.core.mod.crash.CrashType;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
@@ -22,65 +21,63 @@ import org.jspecify.annotations.NonNull;
  * A HUD for a list of {@link HudElement}.
  */
 public final class MultiElementHud extends Hud {
-
 	private static final int SPACING = 2;
 
-	private final List<HudTextLine> defaultText;
-	private final Consumer<HudElementBuilder> elementConsumer;
+	private final String name;
+	private final Consumer<HudElementBuilder> preview;
+	private final Consumer<HudElementBuilder> content;
 	private final HudElementBuilder hudBuilder = new HudElementBuilder();
+
+	private int cachedRawWidth;
+	private int cachedRawHeight;
 
 	/**
 	 * Create a new {@link MultiElementHud} instance.
 	 *
+	 * @param name            the unique name (id) if the HUD
 	 * @param enabledSupplier the enabled state supplier
-	 * @param defaultText     the default list of {@link HudTextLine}
-	 * @param elementConsumer the consumer of the element builder
+	 * @param preview         the consumer of the element builder for PREVIEW rendering
+	 * @param content         the consumer of the element builder for CONTENT rendering
 	 * @param hudConfig       the {@link HudConfig} from the config file
-	 * @param defaultX        the default X
-	 * @param defaultY        the default Y
+	 * @param defaultOffsetX  the default X
+	 * @param defaultOffsetY  the default Y
 	 */
 	public MultiElementHud(
+			@NonNull String name,
 			@NonNull Supplier<Boolean> enabledSupplier,
-			@NonNull List<HudTextLine> defaultText,
-			@NonNull Consumer<HudElementBuilder> elementConsumer,
+			@NonNull Consumer<HudElementBuilder> preview,
+			@NonNull Consumer<HudElementBuilder> content,
 			@NonNull HudConfig hudConfig,
-			int defaultX,
-			int defaultY
+			int defaultOffsetX,
+			int defaultOffsetY
 	) {
-		super(enabledSupplier, hudConfig, defaultX, defaultY);
-		if (defaultText.isEmpty()) {
-			throw new IllegalArgumentException("The text list cannot be empty");
-		}
-
-		this.defaultText = defaultText;
-		this.elementConsumer = elementConsumer;
+		super(enabledSupplier, hudConfig, defaultOffsetX, defaultOffsetY);
+		this.name = name;
+		this.preview = preview;
+		this.content = content;
 	}
 
 	@Override
 	public int width() {
-		int maxWidth = defaultText.stream()
-				.mapToInt(line -> CLIENT.font.width(line.text()))
-				.max()
-				.orElse(0);
-		return (int) (maxWidth * scale());
+		return (int) (cachedRawWidth * scale());
 	}
 
 	@Override
 	public int height() {
-		int lineHeight = (int) (CLIENT.font.lineHeight * scale());
-		return defaultText.stream()
-				.mapToInt(t -> lineHeight + (t.spaceAfter() ? SPACING : 0))
-				.sum() - SPACING;
+		return (int) (cachedRawHeight * scale());
 	}
 
 	@Override
-	public void renderScreen(GuiGraphicsExtractor context) {
-		// SIROZ-NOTE: Le check se fait uniquement via l'option de la config,
-		//  pas dans le supplier de chaque hud pour éviter les checks interne aux features.
-		//  A prendre ou a laisser, possible de rajouté une option dans UI & Visuals pour ceux qui veulent.
-		if (hudConfig.shouldRender()) {
-			render(defaultText, context, x(), y(), scale());
-		}
+	public void renderScreen(GuiGraphicsExtractor guiGraphics) {
+		if (!hudConfig.shouldRender()) return;
+
+		hudBuilder.clear();
+		preview.accept(hudBuilder);
+		List<HudElement> elements = hudBuilder.build();
+		if (elements.isEmpty()) return;
+
+		recalcDimensions(elements);
+		render(elements, guiGraphics, x(), y(), scale());
 	}
 
 	@Override
@@ -88,81 +85,126 @@ public final class MultiElementHud extends Hud {
 		if (!shouldRender()) return;
 
 		hudBuilder.clear();
-		elementConsumer.accept(hudBuilder);
+		content.accept(hudBuilder);
+		List<HudElement> elements = hudBuilder.build();
+		if (elements.isEmpty()) return;
+
+		recalcDimensions(elements);
 
 		try {
-			render(hudBuilder.build(), guiGraphics, hudConfig.x(), hudConfig.y(), hudConfig.scale());
+			render(elements, guiGraphics, configX(), configY(), hudConfig.scale());
 		} catch (Throwable throwable) {
-			// SIROZ-NOTE: Mettre la Class<?> feature en param pour les nom au lieu d'avoir MultiElementHud...
-			CaribouStonks.mod().getCrashManager().reportCrash(CrashType.HUD,
-					getClass().getSimpleName(),
-					getClass().getName(),
-					"renderHud", throwable
-			);
+			CaribouStonks.mod().getCrashManager().reportCrash(CrashType.HUD, name, name, "renderHud", throwable);
 		}
 	}
 
+	private void recalcDimensions(@NonNull List<? extends HudElement> elements) {
+
+		int[] colWidths = computeColumnWidths(elements);
+		int lineHeight = CLIENT.font.lineHeight;
+
+		int maxWidth = 0;
+		int totalHeight = 0;
+
+		for (int i = 0; i < elements.size(); i++) {
+			HudElement element = elements.get(i);
+
+			int w = elementRawWidth(element, colWidths);
+			if (w > maxWidth) maxWidth = w;
+
+			totalHeight += (element instanceof HudIconLine) ? 16 : lineHeight;
+			// L'espacement de fin est exclu.
+			if (i < elements.size() - 1 && element.hasSpaceAfter()) {
+				totalHeight += SPACING;
+			}
+		}
+
+		cachedRawWidth = maxWidth;
+		cachedRawHeight = totalHeight;
+	}
+
+	private int[] computeColumnWidths(@NonNull List<? extends HudElement> elements) {
+		int maxCols = 0;
+		for (HudElement element : elements) {
+			if (element instanceof HudTableRow row) {
+				maxCols = Math.max(maxCols, row.getCells().length);
+			}
+		}
+		int[] widths = new int[maxCols];
+		for (HudElement element : elements) {
+			if (element instanceof HudTableRow row) {
+				Component[] cells = row.getCells();
+				for (int i = 0; i < cells.length; i++) {
+					widths[i] = Math.max(widths[i], CLIENT.font.width(cells[i]));
+				}
+			}
+		}
+		return widths;
+	}
+
+	private int elementRawWidth(@NonNull HudElement element, int @NonNull [] colWidths) {
+		// Renvoie la largeur en pixels brute (non mise à l'échelle) d'un élément unique,
+		// en utilisant des largeurs de colonnes pré-calculées pour HudTableRow.
+		switch (element) {
+			case HudTextLine line -> {
+				return CLIENT.font.width(line.text());
+			}
+			case HudTableRow row -> {
+				int w = 0;
+				Component[] cells = row.getCells();
+				for (int i = 0; i < cells.length; i++) {
+					w += colWidths[i];
+					if (i < cells.length - 1) w += SPACING;
+				}
+				return w;
+			}
+			case HudIconLine icon -> {
+				return 16 + 2 + CLIENT.font.width(icon.text()); // icon + gap + text
+			}
+			default -> {
+			}
+		}
+		return 0;
+	}
+
 	private void render(@NonNull List<? extends HudElement> elements, @NonNull GuiGraphicsExtractor guiGraphics, int x, int y, float scale) {
-		if (elements.isEmpty()) return;
+		int[] colWidths = computeColumnWidths(elements);
 
 		guiGraphics.pose().pushMatrix();
 		guiGraphics.pose().scale(scale, scale);
 
-		// Récupère le nombre max de columns uniquement pour les HudTableRow
-		// SIROZ-NOTE: supprimer les cells pour les elements qui en on pas besoin
-		int maxCols = elements.stream()
-				.filter(e -> e instanceof HudTableRow)
-				.mapToInt(r -> r.getCells().length)
-				.max()
-				.orElse(0);
-
-		// Pour chaque colonne, rechercher la largeur max
-		int[] colWidth = new int[maxCols];
-		for (HudElement element : elements) {
-			if (element instanceof HudTableRow row) {
-				Component[] cells = row.getCells();
-				for (int i = 0; i < cells.length; i++) {
-					int w = CLIENT.font.width(cells[i]);
-					if (w > colWidth[i]) {
-						colWidth[i] = w;
-					}
-				}
-			}
-		}
-
-		int baseY = (int) (y / scale);
-		int offset = 0;
-		int cellPadding = (int) (SPACING * scale);
+		int scaledX = (int) (x / scale);
+		int scaledY = (int) (y / scale);
 		int lineHeight = CLIENT.font.lineHeight;
+		boolean shadow = ConfigManager.getConfig().uiAndVisuals.shadowTextHud;
+		int white = Colors.WHITE.asInt();
 
-		for (HudElement element : elements) {
+		int offset = 0;
+		for (int i = 0; i < elements.size(); i++) {
+			HudElement element = elements.get(i);
+			int elementY = scaledY + offset;
+
 			if (element instanceof HudTableRow row) {
-				// Déssine chaque cell a son tab stop
-				int cellX = (int) (x / scale);
+				int cellX = scaledX;
 				Component[] cells = row.getCells();
-				for (int i = 0; i < cells.length; i++) {
-					guiGraphics.text(CLIENT.font, cells[i], cellX, baseY + offset, Colors.WHITE.asInt(), useShadow());
-					cellX += colWidth[i] + cellPadding;
+				for (int c = 0; c < cells.length; c++) {
+					guiGraphics.text(CLIENT.font, cells[c], cellX, elementY, white, shadow);
+					cellX += colWidths[c] + SPACING;
 				}
 			} else if (element instanceof HudTextLine line) {
-				guiGraphics.text(CLIENT.font, line.text(), (int) (x / scale), baseY + offset, Colors.WHITE.asInt(), useShadow());
+				guiGraphics.text(CLIENT.font, line.text(), scaledX, elementY, white, shadow);
 			} else if (element instanceof HudIconLine icon) {
-				guiGraphics.item(icon.stack(), (int) (x / scale), baseY + offset);
-				guiGraphics.text(CLIENT.font, icon.text(), (int) (x / scale) + 18, baseY + offset + 4, Colors.WHITE.asInt(), useShadow());
+				guiGraphics.item(icon.stack(), scaledX, elementY);
+				guiGraphics.text(CLIENT.font, icon.text(), scaledX + 18, elementY + 4, white, shadow);
 			}
 
-			// Avance verticalement : hauteur de ligne + éventuel interligne / Icon
-			offset += (element instanceof HudIconLine ? 16 : lineHeight);
-			if (element.hasSpaceAfter()) {
-				offset += (int) (SPACING * scale);
+			offset += (element instanceof HudIconLine) ? 16 : lineHeight;
+			// Même chose que le recalcDim, l'espacement de fin est exclu.
+			if (i < elements.size() - 1 && element.hasSpaceAfter()) {
+				offset += SPACING;
 			}
 		}
 
 		guiGraphics.pose().popMatrix();
-	}
-
-	@Experimental
-	private boolean useShadow() {
-		return ConfigManager.getConfig().uiAndVisuals.shadowTextHud;
 	}
 }
