@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Mayor;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Perk;
@@ -27,14 +26,11 @@ import java.util.Objects;
 import java.util.OptionalDouble;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 @Experimental
 public class SlayerStatsFeature extends Feature {
-
-	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_slayer");
 	private static final int MAX_RUNS_STORED = 11;
 	private static final String ARROW = "⤷";
 
@@ -55,19 +51,18 @@ public class SlayerStatsFeature extends Feature {
 		SkyBlockEvents.SLAYER_BOSS_END_EVENT.register(this::onBossEnd);
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
-				.attachAfterStatusEffects(HUD_ID)
-				.hud(new MultiElementHud(
+				.attachAfterStatusEffects(CaribouStonks.identifier("hud_slayer"))
+				.hud(new MultiElementHud("hud_slayer",
 						() -> this.isEnabled() && slayerManager.isInQuest(),
-						new HudElementTextBuilder()
-								.append(Component.literal("Revenant Horror").withStyle(ChatFormatting.DARK_PURPLE))
+						preview -> preview
+								.appendTitle(Component.literal("Revenant Horror").withStyle(ChatFormatting.DARK_PURPLE))
 								.appendSpace()
-								.append(Component.literal("§c" + ARROW + " Spawn Avg: §e16.4s"))
-								.append(Component.literal("§c" + ARROW + " Kill Avg: §e0.87s"))
-								.append(Component.literal("§c" + ARROW + " Boss/h: §e211"))
-								.append(Component.literal("§c" + ARROW + " XP/h: §e314K"))
+								.appendLine(Component.literal("§c" + ARROW + " Spawn Avg: §e16.4s"))
+								.appendLine(Component.literal("§c" + ARROW + " Kill Avg: §e0.87s"))
+								.appendLine(Component.literal("§c" + ARROW + " Boss/h: §e211"))
+								.appendLine(Component.literal("§c" + ARROW + " XP/h: §e314K"))
 								.appendSpace()
-								.append(Component.literal("Session Count: 364").withStyle(ChatFormatting.YELLOW))
-								.build(),
+								.appendLine(Component.literal("Session Count: 364").withStyle(ChatFormatting.YELLOW)),
 						this::getHudLines,
 						this.config().slayer.statsHud,
 						250,

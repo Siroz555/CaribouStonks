@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.module.hud.builder.HudElementTextBuilder;
 import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.Rarity;
@@ -64,17 +63,16 @@ public class TrackingShardsFeature extends Feature {
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(CaribouStonks.identifier("shards_hud"))
-				.hud(new MultiElementHud(
+				.hud(new MultiElementHud("shards_hud",
 						() -> this.isEnabled() && this.session.isRunning(),
-						new HudElementTextBuilder()
-								.append(Component.literal("§6§l⚔ Shards Tracker"))
+						preview -> preview
+								.appendTitle(Component.literal("§6§l⚔ Shards Tracker"))
 								.appendSpace()
-								.append(Component.literal("§7Session: §e16h 16min"))
-								.append(Component.literal("§7Total Shards: §a23081"))
-								.append(Component.literal("§7Total Coins: §561,3M"))
-								.append(Component.literal("§7Shards/h: §a1437"))
-								.append(Component.literal("§7Coins/h: §635.8M"))
-								.build(),
+								.appendLine(Component.literal("§7Session: §e16h 16min"))
+								.appendLine(Component.literal("§7Total Shards: §a23081"))
+								.appendLine(Component.literal("§7Total Coins: §561,3M"))
+								.appendLine(Component.literal("§7Shards/h: §a1437"))
+								.appendLine(Component.literal("§7Coins/h: §635.8M")),
 						this::getHudLines,
 						this.config().hunting.trackingShards.hud,
 						100,
