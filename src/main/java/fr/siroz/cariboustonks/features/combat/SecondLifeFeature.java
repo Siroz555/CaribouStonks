@@ -125,10 +125,6 @@ public class SecondLifeFeature extends Feature {
 		}
 	}
 
-	private void getDefaultHud(HudElementBuilder builder) {
-
-	}
-
 	private void getHudLines(HudElementBuilder builder) {
 		if (activeCooldowns.isEmpty()) return;
 
