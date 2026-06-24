@@ -36,6 +36,11 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class RaffleTaskFeature extends Feature {
+
+	// TODO - StonksUtils.stripColor ????????????????????????
+	//  Pourquoi je dois strip Component#getString, Hypixel ?
+	//  Danger pour les autres features, pas test si c'est que la 26.2
+
 	private static final Pattern RAFFLE_GUIS_PATTERN = Pattern.compile("^(Raffle Tasks|Year 500.*Raffle Box)$");
 	private static final Pattern RAFFLE_BOX_PATTERN = Pattern.compile("^Year 500.*Raffle Box$");
 	private static final Pattern CHAT_TASK_COMPLETION_PATTERN = Pattern.compile("^RAFFLE TASK! You completed the (.*) raffle task.*");
@@ -140,7 +145,7 @@ public class RaffleTaskFeature extends Feature {
 		if (tasksInfo == null) return;
 
 		for (Component lineLore : ItemUtils.getLore(tasksInfo)) {
-			String line = lineLore.getString().trim();
+			String line = StonksUtils.stripColor(lineLore.getString().trim());
 			if (line.startsWith("Time until reset:")) {
 				String timeStr = line.substring("Time until reset:".length()).trim();
 				Duration duration = TimeUtils.extractDuration(timeStr);
@@ -157,7 +162,7 @@ public class RaffleTaskFeature extends Feature {
 		Component objective = null;
 		boolean capturingObjective = false;
 		for (Component loreLine : ItemUtils.getLore(itemStack)) {
-			String line = loreLine.getString().trim();
+			String line = StonksUtils.stripColor(loreLine.getString().trim());
 			if (line.equals("COMPLETE")) {
 				completed = true;
 				break;
