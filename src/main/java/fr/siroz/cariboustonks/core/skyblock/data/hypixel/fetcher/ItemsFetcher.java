@@ -121,6 +121,8 @@ public final class ItemsFetcher {
 	 * whether the attempt succeeded or failed (failure triggers retry scheduling).
 	 */
 	private CompletableFuture<Void> triggerFetch(boolean force) {
+		apiFixer.resetTotalBlacklisted();
+
 		if (!force && !fetchInProgress.compareAndSet(false, true)) {
 			CaribouStonks.LOGGER.warn("[ItemsFetcher] Skipping fetch, already in progress");
 			return CompletableFuture.completedFuture(null);
@@ -181,6 +183,7 @@ public final class ItemsFetcher {
 				skyBlockItems.set(Map.copyOf(items));
 				retryAttempts.set(0);
 				lastFetchSuccessful.set(true);
+				items.clear();
 			} else {
 				throw new RuntimeException("Unable to parse SkyBlock Items");
 			}
@@ -198,10 +201,12 @@ public final class ItemsFetcher {
 			JsonObject item = itemsArray.get(i).getAsJsonObject();
 			if (item.has("id")) {
 				String id = item.get("id").getAsString();
-				if (apiFixer.isBlacklisted(id)) continue;
+				if (apiFixer.isBlacklisted(id, null)) continue;
 
 				try {
 					SkyBlockItemData skyBlockItem = SkyBlockItemData.parse(item);
+					if (apiFixer.isBlacklisted(null, skyBlockItem)) continue;
+
 					items.put(id, skyBlockItem);
 				} catch (SkyBlockItemParseException ex) {
 					CaribouStonks.LOGGER.error("[ItemFetcher] Unable to parse SkyBlock Item: {}", id, ex);

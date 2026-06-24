@@ -2,6 +2,7 @@ package fr.siroz.cariboustonks.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import java.time.Instant;
 import java.util.OptionalDouble;
@@ -41,6 +42,29 @@ public final class JsonUtils {
 		if (parent == null) return null;
 		JsonElement element = parent.get(key);
 		return element != null && element.isJsonArray() ? element.getAsJsonArray() : null;
+	}
+
+	/**
+	 * Checks if at least one of the keys exists and is not {@link JsonNull}.
+	 *
+	 * @param parent the parent
+	 * @param keys   the keys
+	 * @return {@code true} if at least one of the keys exists and is not JsonNull.
+	 */
+	public static boolean has(@Nullable JsonObject parent, @NonNull String... keys) {
+		if (parent == null) return false;
+		if (keys.length == 0) return false;
+
+		if (keys.length == 1) {
+			JsonElement element = parent.get(keys[0]);
+			return element != null && !element.isJsonNull();
+		}
+
+		for (String key : keys) {
+			JsonElement element = parent.get(key);
+			if (element != null && !element.isJsonNull()) return true;
+		}
+		return false;
 	}
 
 	/**

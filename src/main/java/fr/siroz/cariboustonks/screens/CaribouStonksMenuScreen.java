@@ -58,7 +58,7 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 
 		// LINE #2
 
-		adder.addChild(Button.builder(Component.literal("Stonks"),
+		adder.addChild(Button.builder(Component.literal("SkyBlock Items"),
 						_ -> this.openScreen(new StonksSearchScreen(this)))
 				.tooltip(Tooltip.create(Component.literal("Search a SkyBlock item to show more informations about.")))
 				.width(HALF_BUTTON_WIDTH)

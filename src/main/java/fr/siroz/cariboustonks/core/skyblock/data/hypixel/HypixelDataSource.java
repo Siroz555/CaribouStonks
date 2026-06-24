@@ -283,57 +283,57 @@ public final class HypixelDataSource {
 
 	@SuppressWarnings("checkstyle:CyclomaticComplexity")
 	public void fixSkyBlockItems() {
-		if (itemsFetcher.isLastFetchSuccessful() && bazaarFetcher.isFirstBazaarUpdated() && !hasCalledFixMissing) {
-			hasCalledFixMissing = true;
+		if (!itemsFetcher.isLastFetchSuccessful() || !bazaarFetcher.isFirstBazaarUpdated() || hasCalledFixMissing) {
+			return;
+		}
 
-			int fixedEnchants = 0;
-			int fixedEssences = 0;
-			int fixedShards = 0;
+		hasCalledFixMissing = true;
 
-			for (String bazaarProductId : bazaarFetcher.getBazaarSnapshot().keySet()) {
-				if (itemsFetcher.getSkyBlockItemsSnapshot().containsKey(bazaarProductId)) {
-					continue;
-				}
-				try {
-					if (apiFixer.isEnchantment(bazaarProductId)) {
-						itemsFetcher.putItem(bazaarProductId, apiFixer.createEnchant(bazaarProductId));
-						fixedEnchants++;
+		int fixedEnchants = 0;
+		int fixedEssences = 0;
+		int fixedShards = 0;
 
-					} else if (apiFixer.isEssence(bazaarProductId)) {
-						itemsFetcher.putItem(bazaarProductId, apiFixer.createEssence(bazaarProductId));
-						fixedEssences++;
+		for (String bazaarProductId : bazaarFetcher.getBazaarSnapshot().keySet()) {
+			if (itemsFetcher.getSkyBlockItemsSnapshot().containsKey(bazaarProductId)) continue;
+			try {
+				if (apiFixer.isEnchantment(bazaarProductId)) {
+					itemsFetcher.putItem(bazaarProductId, apiFixer.createEnchant(bazaarProductId));
+					fixedEnchants++;
 
-					} else if (apiFixer.isShard(bazaarProductId)) {
-						SkyBlockItemData shard = apiFixer.createShard(bazaarProductId);
-						if (shard != null) {
-							itemsFetcher.putItem(bazaarProductId, shard);
-							fixedShards++;
-						} else {
-							if (DeveloperTools.isInDevelopment()) {
-								CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create {} Shard! Not registered in ModDataSource.",
-										bazaarProductId);
-							}
-						}
+				} else if (apiFixer.isEssence(bazaarProductId)) {
+					itemsFetcher.putItem(bazaarProductId, apiFixer.createEssence(bazaarProductId));
+					fixedEssences++;
+
+				} else if (apiFixer.isShard(bazaarProductId)) {
+					SkyBlockItemData shard = apiFixer.createShard(bazaarProductId);
+					if (shard != null) {
+						itemsFetcher.putItem(bazaarProductId, shard);
+						fixedShards++;
 					} else {
 						if (DeveloperTools.isInDevelopment()) {
-							CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to fix {}. Not identified!",
+							CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create {} Shard! Not registered in ModDataSource.",
 									bazaarProductId);
 						}
 					}
-				} catch (Throwable ex) {
+				} else {
 					if (DeveloperTools.isInDevelopment()) {
-						CaribouStonks.LOGGER.error("[HypixelDataSource] Fix for {} failed", bazaarProductId, ex);
+						CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to fix {}. Not identified!",
+								bazaarProductId);
 					}
 				}
+			} catch (Throwable ex) {
+				if (DeveloperTools.isInDevelopment()) {
+					CaribouStonks.LOGGER.error("[HypixelDataSource] Fix for {} failed", bazaarProductId, ex);
+				}
 			}
+		}
 
-			if (DeveloperTools.isInDevelopment()) {
-				debugDeveloperMode(fixedEnchants, fixedEssences, fixedShards);
-			}
+		if (DeveloperTools.isInDevelopment()) {
+			debugDeveloperMode(fixedEnchants, fixedEssences, fixedShards, apiFixer.getTotalBlacklisted());
 		}
 	}
 
-	private void debugDeveloperMode(int fixedEnchants, int fixedEssences, int fixedShards) {
+	private void debugDeveloperMode(int fixedEnchants, int fixedEssences, int fixedShards, int totalBlacklisted) {
 		List<String> hypixelMaterials = itemsFetcher.getSkyBlockItemsSnapshot().values().stream()
 				.map(SkyBlockItemData::material)
 				.filter(Optional::isPresent)
@@ -358,7 +358,7 @@ public final class HypixelDataSource {
 				.toList();
 
 		CaribouStonks.LOGGER.info("[HypixelDataSource] {} item_model is present", itemModels.size());
-
+		CaribouStonks.LOGGER.info("[HypixelDataSource] {} items are blacklisted", totalBlacklisted);
 		CaribouStonks.LOGGER.info("[HypixelDataSource] Fixed {} enchants, {} essences and {} Shards from Bazaar to SkyBlock Items",
 				fixedEnchants, fixedEssences, fixedShards);
 	}

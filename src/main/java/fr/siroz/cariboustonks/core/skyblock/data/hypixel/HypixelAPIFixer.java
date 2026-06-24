@@ -13,41 +13,48 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public final class HypixelAPIFixer {
+	private static final Pattern MINION_PATTERN = Pattern.compile("^[A-Z_]+_GENERATOR_\\d+$");
+	private static final Pattern ENCHANTMENT_PATTERN = Pattern.compile("^ENCHANTMENT_[A-Z_]+_\\d+$");
+	private static final Pattern ESSENCE_PATTERN = Pattern.compile("^ESSENCE_[A-Z]+$");
+	private static final Pattern SHARD_PATTERN = Pattern.compile("^SHARD_[A-Z]+(_[A-Z]+)*$");
 
-	public static final Pattern MINION_PATTERN = Pattern.compile("^[A-Z_]+_GENERATOR_\\d+$");
-	public static final Pattern ENCHANTMENT_PATTERN = Pattern.compile("^ENCHANTMENT_[A-Z_]+_\\d+$");
-	public static final Pattern ESSENCE_PATTERN = Pattern.compile("^ESSENCE_[A-Z]+$");
-	public static final Pattern SHARD_PATTERN = Pattern.compile("^SHARD_[A-Z]+(_[A-Z]+)*$");
+	private int totalBlacklisted = 0;
 
 	HypixelAPIFixer() {
 	}
 
-	public boolean isBlacklisted(@NonNull String inputId) {
+	public boolean isBlacklisted(@Nullable String inputId, @Nullable SkyBlockItemData skyBlockItemData) {
 		boolean blacklisted = false;
 
-		Matcher minionMatcher = MINION_PATTERN.matcher(inputId);
-		if (minionMatcher.matches()) {
-			return true;
+		if (inputId != null) {
+			Matcher minionMatcher = MINION_PATTERN.matcher(inputId);
+			if (minionMatcher.matches()) {
+				totalBlacklisted++;
+				return true;
+			}
 		}
 
-		// Autres
+		if (skyBlockItemData != null) {
+			boolean soulbound = skyBlockItemData.soulbound();
+			if (soulbound) {
+				totalBlacklisted++;
+				return true;
+			}
+		}
 
 		return blacklisted;
 	}
 
 	public boolean isEnchantment(@NonNull String inputId) {
-		Matcher matcher = ENCHANTMENT_PATTERN.matcher(inputId);
-		return matcher.matches();
+		return ENCHANTMENT_PATTERN.matcher(inputId).matches();
 	}
 
 	public boolean isEssence(@NonNull String inputId) {
-		Matcher matcher = ESSENCE_PATTERN.matcher(inputId);
-		return matcher.matches();
+		return ESSENCE_PATTERN.matcher(inputId).matches();
 	}
 
 	public boolean isShard(@NonNull String inputId) {
-		Matcher matcher = SHARD_PATTERN.matcher(inputId);
-		return matcher.matches();
+		return SHARD_PATTERN.matcher(inputId).matches();
 	}
 
 	public @NonNull SkyBlockItemData createEnchant(@NonNull String skyBlockIdEnchantment) {
@@ -56,6 +63,7 @@ public final class HypixelAPIFixer {
 		Rarity tier = skyBlockIdEnchantment.contains("ULTIMATE") ? Rarity.MYTHIC : Rarity.UNCOMMON;
 		return new SkyBlockItemData(
 				skyBlockIdEnchantment,
+				false,
 				Optional.of(material),
 				Optional.empty(),
 				name,
@@ -74,6 +82,7 @@ public final class HypixelAPIFixer {
 		String name = getEssenceName(skyBlockIdEssence);
 		return new SkyBlockItemData(
 				skyBlockIdEssence,
+				false,
 				Optional.of(material),
 				Optional.empty(),
 				name,
@@ -95,6 +104,7 @@ public final class HypixelAPIFixer {
 			Rarity tier = attribute.getRarityFromId();
 			return new SkyBlockItemData(
 					skyBlockIdShard,
+					false,
 					Optional.of(material),
 					Optional.empty(),
 					name,
@@ -162,5 +172,13 @@ public final class HypixelAPIFixer {
 		String essenceName = input.split("_")[1];
 		String prettyName = essenceName.substring(0, 1).toUpperCase(Locale.ENGLISH) + essenceName.substring(1).toLowerCase(Locale.ENGLISH);
 		return prettyName + " Essence";
+	}
+
+	public int getTotalBlacklisted() {
+		return totalBlacklisted;
+	}
+
+	public void resetTotalBlacklisted() {
+		totalBlacklisted = 0;
 	}
 }
