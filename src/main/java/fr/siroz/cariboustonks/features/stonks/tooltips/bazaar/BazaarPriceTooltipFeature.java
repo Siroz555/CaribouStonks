@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
@@ -110,19 +111,22 @@ public class BazaarPriceTooltipFeature extends Feature {
 	}
 
 	private void addBazaarLine(@NonNull List<Component> lines, @NonNull String label, double value, int count) {
+		final double unitValue = value;
+
 		if (value < 0) {
 			lines.add(Component.literal(label).withStyle(ChatFormatting.YELLOW)
 					.append(Component.literal(" No Data").withStyle(ChatFormatting.RED)));
 			return;
 		}
 
+		boolean showTotalWithoutShiftConfig = showTotalInsteadPressingShift.get();
 		TooltipPriceDisplayType displayType = this.config().general.stonks.bazaarTooltipPriceDisplayType;
 		String display;
 		if (value < 100) {
 			display = StonksUtils.FLOAT_NUMBERS.format(value);
 		} else {
 
-			if (count > 1 && (ClientContext.hasShiftDown() || showTotalInsteadPressingShift.get())) {
+			if (count > 1 && (ClientContext.hasShiftDown() || showTotalWithoutShiftConfig)) {
 				value *= count;
 			}
 
@@ -134,9 +138,21 @@ public class BazaarPriceTooltipFeature extends Feature {
 		}
 
 		switch (displayType) {
-			case FULL, SHORT -> lines.add(Component.literal(label).withStyle(ChatFormatting.YELLOW)
-					.append(Component.literal(display + " Coins").withStyle(ChatFormatting.GOLD))
-			);
+			case FULL, SHORT -> {
+				MutableComponent line = Component.literal(label).withStyle(ChatFormatting.YELLOW)
+						.append(Component.literal(display + " Coins").withStyle(ChatFormatting.GOLD));
+
+				if (showTotalWithoutShiftConfig && count > 1) {
+					String unitDisplay = StonksUtils.INTEGER_NUMBERS.format(unitValue);
+					if (unitValue < 100_000) unitDisplay = StonksUtils.FLOAT_NUMBERS.format(unitValue);
+
+					line.append(Component.literal(" (").withStyle(ChatFormatting.DARK_GRAY))
+							.append(Component.literal(unitDisplay + " each").withStyle(ChatFormatting.GRAY))
+							.append(Component.literal(")").withStyle(ChatFormatting.DARK_GRAY));
+				}
+
+				lines.add(line);
+			}
 			case ALL -> lines.add(Component.literal(label).withStyle(ChatFormatting.YELLOW)
 					.append(Component.literal(display + " Coins").withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
