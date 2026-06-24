@@ -27,6 +27,7 @@ import org.jspecify.annotations.Nullable;
  * See {@code ModDataSource#getMinecraftId(String)} for the mapping.
  *
  * @param skyBlockId    the skyBlockId (e.g. "BOOSTER_COOKIE")
+ * @param soulbound     if the item is "Soulbound" (SOLO or COOP)
  * @param material      the material (e.g. "COOKIE")
  * @param itemModel     the Minecraft item_model (e.g. "minecraft:bamboo")
  * @param name          the name (e.g. "Booster Cookie")
@@ -40,6 +41,7 @@ import org.jspecify.annotations.Nullable;
  */
 public record SkyBlockItemData(
 		@NonNull String skyBlockId,
+		boolean soulbound,
 		Optional<String> material,
 		Optional<String> itemModel,
 		@NonNull String name,
@@ -57,6 +59,7 @@ public record SkyBlockItemData(
 	 */
 	public static final SkyBlockItemData EMPTY = new SkyBlockItemData(
 			"",
+			false,
 			Optional.empty(),
 			Optional.empty(),
 			"",
@@ -79,6 +82,7 @@ public record SkyBlockItemData(
 	public static @NonNull SkyBlockItemData parse(@NonNull JsonObject jsonItem) throws SkyBlockItemParseException {
 		try {
 			String id = jsonItem.get("id").getAsString();
+			boolean soulbound = JsonUtils.has(jsonItem, "soulbound");
 			String material = JsonUtils.getString(jsonItem, "material");
 			Optional<String> itemModel = Optional.ofNullable(JsonUtils.getString(jsonItem, "item_model"));
 			String name = jsonItem.get("name").getAsString();
@@ -91,6 +95,7 @@ public record SkyBlockItemData(
 			Optional<PrestigeItem> prestige = Optional.ofNullable(computePrestige(jsonItem));
 			return new SkyBlockItemData(
 					id,
+					soulbound,
 					Optional.ofNullable(material),
 					itemModel,
 					name,
