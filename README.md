@@ -2,7 +2,8 @@
 
 [![modrinth](https://img.shields.io/badge/dynamic/json?color=00AF5C&label=Downloads&prefix=+%20&query=downloads&url=https://api.modrinth.com/v2/project/fraWWQSJ&logo=modrinth)](https://modrinth.com/mod/cariboustonks)
 
-Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla Tweaks, and a ton of QoL features! Lightweight and efficient.
+Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla Tweaks, and a ton of QoL features!
+Lightweight and efficient.
 
 **✅ Supported Minecraft Versions**: **26.2** **26.1.x** and **1.21.11**
 
@@ -106,9 +107,9 @@ Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla 
 - Display a colored border around Tooltip items according to rarity.
 - Overlay
     - Etherwarp:
-      - Coloring the Teleport Target depending on whether it is possible to teleport.
-      - Slight Zoom effect toward the Teleport Target.
-      - Subtitle prevent teleportation.
+        - Coloring the Teleport Target depending on whether it is possible to teleport.
+        - Slight Zoom effect toward the Teleport Target.
+        - Subtitle prevent teleportation.
     - Gyrokinetic Wand radius display.
 - Change the color of Party messages.
 - Change the color of Guild messages.
@@ -165,6 +166,9 @@ Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla 
         - Wormholes Finder: Detect Wormholes from a distance by creating a Waypoint.
         - Lily Pads Highlighter: Colorful Glowing effect that changes depending on the size.
         - Fishing Buffs: Displays a HUD showing the time remaining before they expire.
+
+- Mining
+    - Mineshaft: Corpse Finder
 
 **Slayers**
 
@@ -261,7 +265,8 @@ Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla 
 > **Items**:
 > The Item's data comes from the Hypixel Official API.
 > Information such as the cost of gemstones, the rarity of items, Minecraft materials,
-> and other data is collected and stored internally, to be processed by features or other internal components of the mod.
+> and other data is collected and stored internally, to be processed by features or other internal components of the
+> mod.
 > The data is retrieved only once when the game starts.
 >
 > **Bazaar**:

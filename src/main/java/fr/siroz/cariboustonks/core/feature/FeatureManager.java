@@ -40,6 +40,7 @@ import fr.siroz.cariboustonks.features.hunting.tracking.TrackingShardsFeature;
 import fr.siroz.cariboustonks.features.item.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.features.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.features.keyshortcut.KeyShortcutFeature;
+import fr.siroz.cariboustonks.features.mining.CorpseFinderFeature;
 import fr.siroz.cariboustonks.features.misc.BestiaryHighlightFeature;
 import fr.siroz.cariboustonks.features.misc.DisableAbiphonePlacementFeature;
 import fr.siroz.cariboustonks.features.misc.HexTooltipFeature;
@@ -137,6 +138,8 @@ public final class FeatureManager {
 		registerFeature(new AttributeInfoTooltipFeature(3));
 		registerFeature(new HuntingBoxOverlayFeature());
 		registerFeature(new QuickFusionFeature());
+		// Mining
+		registerFeature(new CorpseFinderFeature());
 		// Item
 		registerFeature(new ColoredEnchantmentFeature());
 		registerFeature(new TooltipDecoratorFeature());
