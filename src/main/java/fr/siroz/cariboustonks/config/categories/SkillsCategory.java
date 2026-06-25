@@ -25,38 +25,38 @@ import net.minecraft.network.chat.Component;
 @SuppressWarnings("checkstyle:linelength")
 public class SkillsCategory extends AbstractCategory {
 
-    public SkillsCategory(Config defaults, Config current) {
-        super(defaults, current);
-    }
+	public SkillsCategory(Config defaults, Config current) {
+		super(defaults, current);
+	}
 
-    @Override
-    public ConfigCategory create() {
-        return ConfigCategory.createBuilder()
-                .name(Component.literal("Skills-related"))
-                .tooltip(Component.literal("Skills-related Settings"))
-                .group(OptionGroup.createBuilder()
-                        .name(Component.literal("Combat").withStyle(ChatFormatting.BOLD))
-                        .description(OptionDescription.of(
-                                Component.literal("Combat-related Settings")))
-                        .collapsed(false)
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Component.literal("Low Health Warning"))
-                                .description(OptionDescription.of(
-                                        Component.literal("Displays red around the screen when life points are low.")))
-                                .binding(defaults.combat.lowHealthWarning.lowHealthWarningEnabled,
-                                        () -> current.combat.lowHealthWarning.lowHealthWarningEnabled,
-                                        newValue -> current.combat.lowHealthWarning.lowHealthWarningEnabled = newValue)
-                                .controller(this::createBooleanController)
-                                .build())
-                        .option(Option.<Integer>createBuilder()
-                                .name(Component.literal("Low Health Warning - Threshold"))
-                                .description(OptionDescription.of(
-                                        Component.literal("If Low Health Warning is enabled, allows you to modify in % when the warning will be triggered.")))
-                                .binding(defaults.combat.lowHealthWarning.lowHealthWarningThreshold,
-                                        () -> current.combat.lowHealthWarning.lowHealthWarningThreshold,
-                                        newValue -> current.combat.lowHealthWarning.lowHealthWarningThreshold = newValue)
-                                .controller(opt -> createIntegerPercentController(opt, 50))
-                                .build())
+	@Override
+	public ConfigCategory create() {
+		return ConfigCategory.createBuilder()
+				.name(Component.literal("Skills-related"))
+				.tooltip(Component.literal("Skills-related Settings"))
+				.group(OptionGroup.createBuilder()
+						.name(Component.literal("Combat").withStyle(ChatFormatting.BOLD))
+						.description(OptionDescription.of(
+								Component.literal("Combat-related Settings")))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Low Health Warning"))
+								.description(OptionDescription.of(
+										Component.literal("Displays red around the screen when life points are low.")))
+								.binding(defaults.combat.lowHealthWarning.lowHealthWarningEnabled,
+										() -> current.combat.lowHealthWarning.lowHealthWarningEnabled,
+										newValue -> current.combat.lowHealthWarning.lowHealthWarningEnabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Integer>createBuilder()
+								.name(Component.literal("Low Health Warning - Threshold"))
+								.description(OptionDescription.of(
+										Component.literal("If Low Health Warning is enabled, allows you to modify in % when the warning will be triggered.")))
+								.binding(defaults.combat.lowHealthWarning.lowHealthWarningThreshold,
+										() -> current.combat.lowHealthWarning.lowHealthWarningThreshold,
+										newValue -> current.combat.lowHealthWarning.lowHealthWarningThreshold = newValue)
+								.controller(opt -> createIntegerPercentController(opt, 50))
+								.build())
 						.option(Option.<Double>createBuilder()
 								.name(Component.literal("Low Health Warning - Red Intensity"))
 								.description(OptionDescription.of(
@@ -297,12 +297,12 @@ public class SkillsCategory extends AbstractCategory {
 										newValue -> current.combat.secondLife.backSound = newValue)
 								.controller(this::createYesNoController)
 								.build())
-                        .build())
-                .group(OptionGroup.createBuilder()
-                        .name(Component.literal("Garden").withStyle(ChatFormatting.BOLD))
-                        .description(OptionDescription.of(
-                                Component.literal("Garden settings")))
-                        .collapsed(false)
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Component.literal("Garden").withStyle(ChatFormatting.BOLD))
+						.description(OptionDescription.of(
+								Component.literal("Garden settings")))
+						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Disable Greenhouse watering can placement"))
 								.description(OptionDescription.of(
@@ -314,35 +314,35 @@ public class SkillsCategory extends AbstractCategory {
 										newValue -> current.farming.garden.disableWateringCanPlacement = newValue)
 								.controller(this::createBooleanController)
 								.build())
-                        .option(ButtonOption.createBuilder()
-                                .name(Component.literal("Garden | Locking the camera during farming"))
+						.option(ButtonOption.createBuilder()
+								.name(Component.literal("Garden | Locking the camera during farming"))
 								.text(Component.literal("/lockMouse"))
-                                .description(OptionDescription.of(
-                                        Component.literal("Allows you to block the movements of the mouse during farming."),
-                                        Component.literal(SPACE + "Use /lockMouse or go to KeyBinds Options.")))
-                                .action((_, _) -> PlayerContext.sendMessageWithPrefix(Component.literal("Use /lockMouse or go to KeyBinds Options.")))
-                                .build())
-                        .option(this::shortcutToKeybindsOptions)
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Component.literal("Garden | Locating Pests"))
-                                .description(OptionDescription.of(
-                                        Component.literal("Locate Pests with your Vacuum, creating a Guess Waypoint. A line from your cursor to the nearest Pest will also be displayed."),
+								.description(OptionDescription.of(
+										Component.literal("Allows you to block the movements of the mouse during farming."),
+										Component.literal(SPACE + "Use /lockMouse or go to KeyBinds Options.")))
+								.action((_, _) -> PlayerContext.sendMessageWithPrefix(Component.literal("Use /lockMouse or go to KeyBinds Options.")))
+								.build())
+						.option(this::shortcutToKeybindsOptions)
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Garden | Locating Pests"))
+								.description(OptionDescription.of(
+										Component.literal("Locate Pests with your Vacuum, creating a Guess Waypoint. A line from your cursor to the nearest Pest will also be displayed."),
 										Component.literal(SPACE + "If you're not in an infested Plot, the Guess Waypoint will always point to the center of the Plot, so you'll have to use the ability again.").withStyle(ChatFormatting.YELLOW)))
-                                .binding(defaults.farming.garden.pestsLocator,
-                                        () -> current.farming.garden.pestsLocator,
-                                        newValue -> current.farming.garden.pestsLocator = newValue)
-                                .controller(this::createBooleanController)
-                                .build())
-                        .option(Option.<Boolean>createBuilder()
-                                .name(Component.literal("Garden | Highlight Infested Plots"))
-                                .description(OptionDescription.of(
-                                        Component.literal("Highlight Plots that are infested by pests with a border delimitations.")))
-                                .binding(defaults.farming.garden.highlightInfestedPlots,
-                                        () -> current.farming.garden.highlightInfestedPlots,
-                                        newValue -> current.farming.garden.highlightInfestedPlots = newValue)
-                                .controller(this::createBooleanController)
-                                .build())
-                        .build())
+								.binding(defaults.farming.garden.pestsLocator,
+										() -> current.farming.garden.pestsLocator,
+										newValue -> current.farming.garden.pestsLocator = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Garden | Highlight Infested Plots"))
+								.description(OptionDescription.of(
+										Component.literal("Highlight Plots that are infested by pests with a border delimitations.")))
+								.binding(defaults.farming.garden.highlightInfestedPlots,
+										() -> current.farming.garden.highlightInfestedPlots,
+										newValue -> current.farming.garden.highlightInfestedPlots = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Foraging").withStyle(ChatFormatting.BOLD))
 						.description(OptionDescription.of(
@@ -505,11 +505,11 @@ public class SkillsCategory extends AbstractCategory {
 										Component.literal("Note: 100 ms between each actions is set.").withStyle(ChatFormatting.GOLD)))
 								.build())
 						.build())
-                .group(OptionGroup.createBuilder()
-                        .name(Component.literal("Fishing").withStyle(ChatFormatting.BOLD))
-                        .collapsed(false)
-                        .description(OptionDescription.of(
-                                Component.literal("Fishing settings.")))
+				.group(OptionGroup.createBuilder()
+						.name(Component.literal("Fishing").withStyle(ChatFormatting.BOLD))
+						.collapsed(false)
+						.description(OptionDescription.of(
+								Component.literal("Fishing settings.")))
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Bobber Timer Display"))
 								.description(OptionDescription.of(
@@ -605,9 +605,24 @@ public class SkillsCategory extends AbstractCategory {
 										newValue -> current.fishing.lotusAtoll.buffExpiredWarn = newValue)
 								.controller(this::createBooleanController)
 								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Component.literal("Mining").withStyle(ChatFormatting.BOLD))
+						.collapsed(false)
+						.description(OptionDescription.of(
+								Component.literal("Mining settings.")))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Mineshaft - Corpse Finder"))
+								.description(OptionDescription.of(
+										Component.literal("")))
+								.binding(defaults.mining.mineshaft.corpseFinder,
+										() -> current.mining.mineshaft.corpseFinder,
+										newValue -> current.mining.mineshaft.corpseFinder = newValue)
+								.controller(this::createBooleanController)
+								.build())
 						.option(LabelOption.create(Component.empty()))
 						.option(LabelOption.create(Component.empty()))
-                        .build())
-                .build();
-    }
+						.build())
+				.build();
+	}
 }
