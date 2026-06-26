@@ -2,7 +2,6 @@ package fr.siroz.cariboustonks.features.dungeon;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonBoss;
@@ -12,6 +11,7 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
+import fr.siroz.cariboustonks.events.WorldEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -19,14 +19,14 @@ import fr.siroz.cariboustonks.util.Ticks;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -36,17 +36,14 @@ import org.jspecify.annotations.Nullable;
  * The same features as in version 1.8, such as the unique DragPrio.
  */
 public class WitherKingDragonFeature extends Feature {
-
 	private static final String PHASE_5_TRIGGER_1 = "[BOSS] Wither King: You... again?";
 	private static final String PHASE_5_TRIGGER_2 = "[BOSS] Wither King: Ohhh?";
 
 	private final DungeonManager dungeonManager;
 
 	private boolean isPhase5 = false;
-	private final List<WitherKingDragon> dragons = new ArrayList<>();
-	private int totalSpawned = 0;
 	@Nullable
-	private WitherKingDragon target = null;
+	private WitherKingDragon targetDragon = null;
 
 	public WitherKingDragonFeature() {
 		this.dungeonManager = CaribouStonks.skyBlock().getDungeonManager();
@@ -56,6 +53,7 @@ public class WitherKingDragonFeature extends Feature {
 		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 		NetworkEvents.PARTICLE_RECEIVED_PACKET.register(this::onParticle);
 		SkyBlockEvents.DUNGEON_START_EVENT.register(this::reset);
+		WorldEvents.BLOCK_STATE_UPDATE_EVENT.register(this::onBlockStateUpdate);
 	}
 
 	@Override
@@ -86,9 +84,8 @@ public class WitherKingDragonFeature extends Feature {
 		if (!isEnabled()) return;
 
 		for (WitherKingDragon dragon : WitherKingDragon.VALUES) {
-			if (dragon.getSpawnTime() >= 0) {
-				dragon.tick();
-			}
+			if (dragon.getTimeToSpawn() > 0) dragon.tick();
+			else if (dragon.getState() == WitherKingDragon.State.SPAWNING) dragon.setAlive();
 		}
 	}
 
@@ -99,23 +96,25 @@ public class WitherKingDragonFeature extends Feature {
 
 		boolean canShowBoundingBox = this.config().instance.theCatacombs.witherKing.showDragBoundingBox;
 		boolean canShowLastBreathTarget = this.config().instance.theCatacombs.witherKing.showLastBreathTarget;
+		boolean canShowTargetLine = this.config().instance.theCatacombs.witherKing.showDragTargetLine;
 		boolean canShowSpawnTime = this.config().instance.theCatacombs.witherKing.showSpawnTime;
+		if (!canShowBoundingBox && !canShowLastBreathTarget && !canShowTargetLine && !canShowSpawnTime) return;
 
 		for (WitherKingDragon dragon : WitherKingDragon.VALUES) {
-			if (canShowBoundingBox) {
+			if (canShowBoundingBox && dragon.getTimeToSpawn() > 0) {
 				renderer.submitOutline(dragon.getBox(), dragon.getColor(), 2f, true);
 			}
 
-			if (canShowLastBreathTarget) {
+			if (canShowLastBreathTarget && dragon.getTimeToSpawn() > 0) {
 				renderer.submitCircle(Vec3.atCenterOf(dragon.getLbPos()), 1.5d, 16, 0.02f, dragon.getColor(), Direction.Axis.Y, false);
 			}
 
-			if (target != null && target.getName().equals(dragon.getName())) { // .equals avec un spawn time different pas confiance
-				renderer.submitLineFromCursor(Vec3.atCenterOf(target.getText()), target.getColor(), 1f);
+			if (canShowTargetLine && targetDragon != null && targetDragon.getName().equals(dragon.getName()) && targetDragon.getTimeToSpawn() > 0) {
+				renderer.submitLineFromCursor(Vec3.atCenterOf(targetDragon.getText()), targetDragon.getColor(), 1f);
 			}
 
-			if (canShowSpawnTime && dragon.getSpawnTime() > 0) {
-				int timeUntilSpawn = dragon.getSpawnTime() * Ticks.MILLISECONDS_PER_TICK;
+			if (canShowSpawnTime && dragon.getTimeToSpawn() > 0) {
+				int timeUntilSpawn = dragon.getTimeToSpawn() * Ticks.MILLISECONDS_PER_TICK;
 				Component spawnText = Component.literal(timeUntilSpawn + " ms").withStyle(colorFor(timeUntilSpawn));
 				renderer.submitText(spawnText, Vec3.atCenterOf(dragon.getText()), 8.5f, true);
 			}
@@ -123,55 +122,70 @@ public class WitherKingDragonFeature extends Feature {
 	}
 
 	@EventHandler(event = "NetworkEvents.PARTICLE_RECEIVED_PACKET")
-	private void onParticle(ClientboundLevelParticlesPacket packet) {
+	private void onParticle(ClientboundLevelParticlesPacket particle) {
 		if (!isPhase5) return;
 		if (!isEnabled()) return;
-		if (!packet.getParticle().getType().equals(ParticleTypes.ENCHANT)) return;
-
-		for (WitherKingDragon dragon : WitherKingDragon.VALUES) {
-			// Les box sont alignés au niveau du sol des chests, le Y est ajusté pour detect qu'en hauteur.
-			// Réduit la box si les positions correspondent au Purple.
-			// Cette approche est différentes des versions classiques de la 1.8, car il faut gérer les state.
-			AABB box = AABB.encapsulatingFullBlocks(dragon.getPos1().offset(0, 14, 0), dragon.getPos2());
-			box.deflate(dragon.getPos1().getX() == 41 ? 11 : 0, 0, dragon.getPos1().getZ() == 112 ? 0 : 11);
-			// Si dans le box
-			if (box.contains(packet.getX(), packet.getY(), packet.getZ())) {
-				if (dragon.getSpawnTime() <= 0 && !dragon.isSpawned()) {
-					dragon.spawn();
-					onDragonSpawn(dragon);
-				}
-			}
-		}
-	}
-
-	private void onDragonSpawn(WitherKingDragon dragon) {
-		if (!this.config().instance.theCatacombs.witherKing.dragPrio) {
+		if (!particle.getParticle().getType().equals(ParticleTypes.FLAME)
+				|| particle.getCount() != 20 || particle.getMaxSpeed() != 0f
+				|| particle.getY() != 19.0
+				|| particle.getXDist() != 2f || particle.getYDist() != 3f || particle.getZDist() != 2f
+				|| particle.getX() % 1 != 0.0 || particle.getZ() % 1 != 0.0
+		) {
 			return;
 		}
 
 		try {
-			totalSpawned++;
-			if (totalSpawned <= 2) {
-				dragons.add(dragon);
-				if (totalSpawned == 2 && dragons.size() == 2) {
-					WitherKingDragon targetDragon = getTargetPriority(dragons.getFirst(), dragons.getLast());
-					announceSpawn(targetDragon, true);
+			int spawned = 0;
+			List<WitherKingDragon> dragons = new ArrayList<>();
+
+			for (WitherKingDragon dragon : WitherKingDragon.VALUES) {
+				spawned += dragon.getTimesSpawned();
+
+				if (dragon.getState() == WitherKingDragon.State.SPAWNING) {
+					if (!dragons.contains(dragon)) dragons.add(dragon);
+					continue;
 				}
-			} else {
+
+				if (!dragon.isInXRange(particle.getX()) || !dragon.isInZRange(particle.getZ())) {
+					continue;
+				}
+
 				announceSpawn(dragon, false);
+
+				dragon.setState(WitherKingDragon.State.SPAWNING);
+				dragon.setTimeToSpawn(WitherKingDragon.SPAWN_COOLDOWN_TICKS);
+				dragons.add(dragon);
 			}
-		} catch (Exception _) { // Tellement useless mais si c'est le crash :/
+
+			if (!dragons.isEmpty() && (dragons.size() == 2 || spawned >= 2) && targetDragon == null) {
+				targetDragon = getTargetPriority(dragons.getFirst(), dragons.getLast());
+				announceSpawn(targetDragon, true);
+			}
+		} catch (Exception _) {
+		}
+	}
+
+	@EventHandler(event = "WorldEvents.BLOCK_STATE_UPDATE_EVENT")
+	private void onBlockStateUpdate(@NonNull BlockPos pos, @Nullable BlockState oldState, @NonNull BlockState newState) {
+		if (!isEnabled()) return;
+		if (!isPhase5) return;
+		if (!newState.isAir()) return;
+
+		for (WitherKingDragon dragon : WitherKingDragon.VALUES) {
+			if (dragon.getStatuePos().equals(pos)) {
+				dragon.setState(WitherKingDragon.State.DEAD);
+				if (targetDragon != null && targetDragon.getName().equals(dragon.getName())) {
+					targetDragon = null;
+				}
+			}
 		}
 	}
 
 	private void announceSpawn(@NonNull WitherKingDragon dragon, boolean split) {
+		if (!this.config().instance.theCatacombs.witherKing.dragPrio) return;
+
 		String dragonName = dragon.getName().toUpperCase(Locale.ENGLISH);
 		int color = dragon.getColor().asInt();
-
-		if (this.config().instance.theCatacombs.witherKing.showDragTargetLine) {
-			target = dragon;
-			TickScheduler.getInstance().runLater(() -> target = null, 3, TimeUnit.SECONDS);
-		}
 
 		if (this.config().instance.theCatacombs.witherKing.dragPrioTitle) {
 			PlayerContext.showTitleAndSubtitle(
@@ -212,9 +226,7 @@ public class WitherKingDragonFeature extends Feature {
 
 	private void reset() {
 		isPhase5 = false;
-		dragons.clear();
-		totalSpawned = 0;
-		target = null;
+		targetDragon = null;
 		WitherKingDragon.resetAll();
 	}
 }
