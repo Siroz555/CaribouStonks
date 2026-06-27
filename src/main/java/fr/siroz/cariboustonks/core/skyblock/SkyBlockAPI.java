@@ -266,7 +266,6 @@ public final class SkyBlockAPI {
 					return "ENCHANTMENT_" + enchant.toUpperCase(Locale.ENGLISH) + "_" + enchants.getIntOr(enchant, 0);
 				}
 			}
-
 			case "POTION" -> {
 				String enhanced = customData.contains("enhanced") ? "_ENHANCED" : "";
 				String extended = customData.contains("extended") ? "_EXTENDED" : "";
@@ -277,7 +276,6 @@ public final class SkyBlockAPI {
 							+ enhanced + extended + splash).toUpperCase(Locale.ENGLISH);
 				}
 			}
-
 			case "RUNE" -> {
 				if (customData.contains("runes")) {
 					CompoundTag runes = customData.getCompoundOrEmpty("runes");
@@ -285,7 +283,6 @@ public final class SkyBlockAPI {
 					return rune.toUpperCase(Locale.ENGLISH) + "_RUNE_" + runes.getIntOr(rune, 0);
 				}
 			}
-
 			case "ATTRIBUTE_SHARD" -> {
 				String name = itemStack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
 				SkyBlockAttribute attribute = attributeLookup != null ? attributeLookup.apply(name) : null;
@@ -293,18 +290,31 @@ public final class SkyBlockAPI {
 					return attribute.skyBlockApiId();
 				}
 			}
-
 			case "PET" -> {
 				if (customData.contains("petInfo")) {
 					PetInfo petInfo = PetInfo.parse(customData);
 					return "LVL_1_" + petInfo.rarity() + "_" + petInfo.type();
 				}
 			}
-
 			case "NEW_YEAR_CAKE" -> {
 				return id + "_" + customData.getIntOr("new_years_cake", 0);
 			}
-
+			case "PARTY_HAT_CRAB", "PARTY_HAT_CRAB_ANIMATED", "BALLOON_HAT_2024", "BALLOON_HAT_2025", "CAKE_HAT_2026" -> {
+				return id + "_" + customData.getStringOr("party_hat_color", "").toUpperCase(Locale.ENGLISH);
+			}
+			case "PARTY_HAT_SLOTH" -> {
+				return id + "_" + customData.getStringOr("party_hat_emoji", "").toUpperCase(Locale.ENGLISH);
+			}
+			case "MIDAS_SWORD" -> {
+				if (customData.getIntOr("winning_bid", 0) >= 50_000_000) {
+					return id + "_50M";
+				}
+			}
+			case "MIDAS_STAFF" -> {
+				if (customData.getIntOr("winning_bid", 0) >= 100_000_000) {
+					return id + "_100M";
+				}
+			}
 			default -> {
 			}
 		}
