@@ -156,7 +156,6 @@ public class ItemValueViewerFeature extends Feature {
 
 		out.add(item.getHoverName());
 
-		boolean hasBase = true;
 		if (result.base() > 0) {
 			out.add(Component.empty()
 					.append(Component.literal("Base: ").withStyle(ChatFormatting.GREEN))
@@ -164,10 +163,16 @@ public class ItemValueViewerFeature extends Feature {
 					.append(priceShortFormat(result.base()))
 			);
 		} else {
-			hasBase = false;
 			out.add(Component.empty()
 					.append(Component.literal("Base: ").withStyle(ChatFormatting.RED))
 					.append(Component.literal("No data available at this time").withStyle(ChatFormatting.RED))
+			);
+		}
+		if (!result.calculations().isEmpty()) {
+			out.add(Component.empty()
+					.append(Component.literal("Est. Total: ").withStyle(ChatFormatting.GREEN))
+					.append(priceFormat(result.price()))
+					.append(priceShortFormat(result.price()))
 			);
 		}
 		out.add(Component.literal(" "));
@@ -204,20 +209,6 @@ public class ItemValueViewerFeature extends Feature {
 		addRodParts(result, out);
 		addBoosters(result, out);
 		addOverclockers(result, out);
-
-		if (!result.calculations().isEmpty()) {
-			out.add(Component.literal(" "));
-			out.add(Component.empty()
-					.append(Component.literal("Est. Total: ").withStyle(ChatFormatting.GREEN))
-					.append(priceFormat(result.price()))
-					.append(priceShortFormat(result.price()))
-			);
-			if (!hasBase) {
-				out.add(Component.empty()
-						.append(Component.literal("Missing base item value!").withStyle(ChatFormatting.RED))
-				);
-			}
-		}
 
 		return out;
 	}
