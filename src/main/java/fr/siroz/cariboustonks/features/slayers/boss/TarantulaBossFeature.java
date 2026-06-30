@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.features.slayer.boss;
+package fr.siroz.cariboustonks.features.slayers.boss;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.EntityGlowComponent;

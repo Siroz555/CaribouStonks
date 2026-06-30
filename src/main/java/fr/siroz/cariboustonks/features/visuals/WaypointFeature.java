@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.features.waypoints;
+package fr.siroz.cariboustonks.features.visuals;
 
 import com.google.common.reflect.TypeToken;
 import fr.siroz.cariboustonks.CaribouStonks;

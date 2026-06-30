@@ -37,8 +37,6 @@ import fr.siroz.cariboustonks.features.hunting.AttributeInfoTooltipFeature;
 import fr.siroz.cariboustonks.features.hunting.HuntingBoxOverlayFeature;
 import fr.siroz.cariboustonks.features.hunting.QuickFusionFeature;
 import fr.siroz.cariboustonks.features.hunting.tracking.TrackingShardsFeature;
-import fr.siroz.cariboustonks.features.item.ColoredEnchantmentFeature;
-import fr.siroz.cariboustonks.features.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.features.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.features.mining.CorpseFinderFeature;
 import fr.siroz.cariboustonks.features.misc.BestiaryHighlightFeature;
@@ -54,10 +52,10 @@ import fr.siroz.cariboustonks.features.reminders.EnchantedCloakReminderFeature;
 import fr.siroz.cariboustonks.features.reminders.ForgeReminderFeature;
 import fr.siroz.cariboustonks.features.reminders.StonksAuctionReminderFeature;
 import fr.siroz.cariboustonks.features.reminders.UbikCubeReminderFeature;
-import fr.siroz.cariboustonks.features.slayer.HighlightSlayerMobFeature;
-import fr.siroz.cariboustonks.features.slayer.SlayerCocoonedWarningFeature;
-import fr.siroz.cariboustonks.features.slayer.SlayerStatsFeature;
-import fr.siroz.cariboustonks.features.slayer.boss.TarantulaBossFeature;
+import fr.siroz.cariboustonks.features.slayers.HighlightSlayerMobFeature;
+import fr.siroz.cariboustonks.features.slayers.SlayerCocoonedWarningFeature;
+import fr.siroz.cariboustonks.features.slayers.SlayerStatsFeature;
+import fr.siroz.cariboustonks.features.slayers.boss.TarantulaBossFeature;
 import fr.siroz.cariboustonks.features.stonks.ItemValueViewerFeature;
 import fr.siroz.cariboustonks.features.stonks.StonksCommandFeature;
 import fr.siroz.cariboustonks.features.stonks.StonksFeature;
@@ -66,7 +64,6 @@ import fr.siroz.cariboustonks.features.stonks.tooltips.NpcSellPriceTooltipFeatur
 import fr.siroz.cariboustonks.features.stonks.tooltips.auction.AuctionLowestBinTooltipFeature;
 import fr.siroz.cariboustonks.features.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
 import fr.siroz.cariboustonks.features.ui.AbiphoneFavoriteContactFeature;
-import fr.siroz.cariboustonks.features.ui.RareDropVisualEffectFeature;
 import fr.siroz.cariboustonks.features.ui.SacksOverlayFeature;
 import fr.siroz.cariboustonks.features.ui.SelectedPetHighlightFeature;
 import fr.siroz.cariboustonks.features.ui.TabListWidgetExtractorFeature;
@@ -75,14 +72,17 @@ import fr.siroz.cariboustonks.features.ui.hud.DayHud;
 import fr.siroz.cariboustonks.features.ui.hud.FpsHud;
 import fr.siroz.cariboustonks.features.ui.hud.PingHud;
 import fr.siroz.cariboustonks.features.ui.hud.TpsHud;
-import fr.siroz.cariboustonks.features.ui.overlay.EtherWarpOverlayFeature;
-import fr.siroz.cariboustonks.features.ui.overlay.GyrokineticOverlayFeature;
+import fr.siroz.cariboustonks.features.ui.item.ColoredEnchantmentFeature;
+import fr.siroz.cariboustonks.features.ui.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.features.ui.tracking.MobTrackingFeature;
 import fr.siroz.cariboustonks.features.vanilla.HideStatusEffectsFeature;
 import fr.siroz.cariboustonks.features.vanilla.MuteVanillaSoundFeature;
 import fr.siroz.cariboustonks.features.vanilla.ScrollableTooltipFeature;
 import fr.siroz.cariboustonks.features.vanilla.ZoomFeature;
-import fr.siroz.cariboustonks.features.waypoints.WaypointFeature;
+import fr.siroz.cariboustonks.features.visuals.RareDropVisualEffectFeature;
+import fr.siroz.cariboustonks.features.visuals.WaypointFeature;
+import fr.siroz.cariboustonks.features.visuals.overlay.EtherWarpOverlayFeature;
+import fr.siroz.cariboustonks.features.visuals.overlay.GyrokineticOverlayFeature;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -152,11 +152,11 @@ public final class FeatureManager {
 		registerFeature(new ForgeReminderFeature());
 		registerFeature(new StonksAuctionReminderFeature());
 		registerFeature(new UbikCubeReminderFeature());
-		// Slayer
+		// Slayers
 		registerFeature(new HighlightSlayerMobFeature());
 		registerFeature(new SlayerCocoonedWarningFeature());
 		registerFeature(new SlayerStatsFeature());
-		// Slayer - Boss
+		// Slayers - Bosses
 		registerFeature(new TarantulaBossFeature());
 		// Stonks
 		registerFeature(new ItemValueViewerFeature());
@@ -170,7 +170,6 @@ public final class FeatureManager {
 		registerFeature(new DeployableFeature());
 		registerFeature(new MobTrackingFeature());
 		registerFeature(new AbiphoneFavoriteContactFeature(0));
-		registerFeature(new RareDropVisualEffectFeature());
 		registerFeature(new SacksOverlayFeature());
 		registerFeature(new SelectedPetHighlightFeature());
 		registerFeature(new TabListWidgetExtractorFeature());
@@ -179,11 +178,6 @@ public final class FeatureManager {
 		registerFeature(new PingHud());
 		registerFeature(new TpsHud());
 		registerFeature(new DayHud());
-		// UI - Overlays
-		registerFeature(new EtherWarpOverlayFeature());
-		registerFeature(new GyrokineticOverlayFeature());
-		// Waypoint
-		registerFeature(new WaypointFeature());
 		// Misc
 		registerFeature(new BestiaryHighlightFeature());
 		registerFeature(new DisableAbiphonePlacementFeature());
@@ -192,6 +186,11 @@ public final class FeatureManager {
 		registerFeature(new HighlightMobFeature());
 		registerFeature(new PartyCommandFeature());
 		registerFeature(new SearchBarCalculatorFeature());
+		// Visuals
+		registerFeature(new WaypointFeature());
+		registerFeature(new RareDropVisualEffectFeature());
+		registerFeature(new EtherWarpOverlayFeature());
+		registerFeature(new GyrokineticOverlayFeature());
 		// Vanilla
 		registerFeature(new HideStatusEffectsFeature());
 		registerFeature(new MuteVanillaSoundFeature());

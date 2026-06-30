@@ -2,8 +2,8 @@ package fr.siroz.cariboustonks.platform.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.features.ui.overlay.EtherWarpOverlayFeature;
 import fr.siroz.cariboustonks.features.vanilla.ZoomFeature;
+import fr.siroz.cariboustonks.features.visuals.overlay.EtherWarpOverlayFeature;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Final;

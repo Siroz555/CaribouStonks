@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.features.slayer;
+package fr.siroz.cariboustonks.features.slayers;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.annotation.Experimental;

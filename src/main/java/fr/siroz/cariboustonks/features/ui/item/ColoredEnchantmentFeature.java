@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.features.item;
+package fr.siroz.cariboustonks.features.ui.item;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
