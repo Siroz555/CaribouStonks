@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.features.item;
+package fr.siroz.cariboustonks.features.ui.item;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.Rarity;

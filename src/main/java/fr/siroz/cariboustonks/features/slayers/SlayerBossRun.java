@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.features.slayer;
+package fr.siroz.cariboustonks.features.slayers;
 
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerTier;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerType;

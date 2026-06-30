@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.features.ui.overlay;
+package fr.siroz.cariboustonks.features.visuals.overlay;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
