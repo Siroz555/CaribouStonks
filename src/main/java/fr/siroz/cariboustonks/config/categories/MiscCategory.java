@@ -2,10 +2,12 @@ package fr.siroz.cariboustonks.config.categories;
 
 import dev.isxander.yacl3.api.ButtonOption;
 import dev.isxander.yacl3.api.ConfigCategory;
+import dev.isxander.yacl3.api.LabelOption;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
+import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.awt.Color;
@@ -58,6 +60,32 @@ public class MiscCategory extends AbstractCategory {
 								newValue -> current.misc.highlighterColor = newValue)
 						.controller(ColorControllerBuilder::create)
 						.build())
+				.option(LabelOption.create(Component.literal("Bestiary Tracker").withStyle(ChatFormatting.BOLD)))
+				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Enable Bestiary Tracker"))
+						.description(OptionDescription.of(
+								Component.literal("Displays a HUD that tracks your Bestiary kill progress, showing:"),
+								Component.literal("- Kills/h").withStyle(ChatFormatting.RED),
+								Component.literal("- ETA to the next tier").withStyle(ChatFormatting.YELLOW),
+								Component.literal(SPACE + "A minimum number of kills is required before the HUD is displayed. Maxed Bestiary is ignored.").withStyle(ChatFormatting.GOLD),
+								Component.literal(SPACE + "Important: It is essential that the Hypixel “Bestiary” Widget in your TabList be enabled. (/widgets > Bestiary)").withStyle(ChatFormatting.RED)))
+						.binding(defaults.misc.bestiaryTracker.trackerHud.enabled,
+								() -> current.misc.bestiaryTracker.trackerHud.enabled,
+								newValue -> current.misc.bestiaryTracker.trackerHud.enabled = newValue)
+						.controller(this::createBooleanController)
+						.build())
+				.option(Option.<Integer>createBuilder()
+						.name(Component.literal("Bestiary Tracker - Max Displayed Entries"))
+						.description(OptionDescription.of(
+								Component.literal("If Bestiary Tracker is enabled, allows you to control the number of bestiary entries displayed in the HUD")))
+						.binding(defaults.misc.bestiaryTracker.maxDisplayedEntries,
+								() -> current.misc.bestiaryTracker.maxDisplayedEntries,
+								newValue -> current.misc.bestiaryTracker.maxDisplayedEntries = newValue)
+						.controller(opt -> IntegerSliderControllerBuilder.create(opt)
+								.range(1, 20)
+								.step(1))
+						.build())
+				.option(LabelOption.create(Component.empty()))
 				.option(Option.<Boolean>createBuilder()
 						.name(Component.literal("Show Hex Color on Items"))
 						.description(OptionDescription.of(

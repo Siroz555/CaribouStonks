@@ -212,6 +212,10 @@ Lightweight and efficient.
 
 - Highlight entities (/highlighter)
 - Bestiary Highlight: Highlights entities by middle-clicking on an entity.
+- Bestiary Tracker:
+    - Displays a HUD that tracks your Bestiary kill progress.
+    - Kills/h.
+    - ETA to the next tier.
 - Raffle Year 500:
     - Raffle Tasks HUD: Displays a HUD showing all Tasks to be completed
     - Indicating their progress status.
