@@ -12,7 +12,6 @@ import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -82,15 +81,6 @@ public class HighlightMobFeature extends Feature {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
 				&& currentEntityTypeGlow != null;
-	}
-
-	@Override
-	protected void onClientJoinServer() {
-		if (currentEntityTypeGlow != null) {
-			PlayerContext.sendMessageWithPrefix(Component.literal("Glowing entities are no longer displayed due to a server change.").withStyle(ChatFormatting.RED));
-		}
-
-		currentEntityTypeGlow = null;
 	}
 
 	private static final class EntityIdArgumentType implements ArgumentType<String> {

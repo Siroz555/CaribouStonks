@@ -5,7 +5,6 @@ import fr.siroz.cariboustonks.core.component.CommandComponent;
 import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -25,7 +24,7 @@ import net.minecraft.world.phys.HitResult;
 
 public class BestiaryHighlightFeature extends Feature {
 
-	private static final Cooldown COOLDOWN = Cooldown.of(1500, TimeUnit.MILLISECONDS);
+	private static final Cooldown COOLDOWN = Cooldown.of(1, TimeUnit.SECONDS);
 
 	private final Set<String> entityNames = new HashSet<>();
 	private final List<String> blacklist = List.of("dinnerbone", "armorstand");
@@ -68,10 +67,7 @@ public class BestiaryHighlightFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
-				&& SkyBlockAPI.getIsland() != IslandType.KUUDRA_HOLLOW
-				&& this.config().misc.bestiaryHighlight;
+		return SkyBlockAPI.isOnSkyBlock() && this.config().misc.bestiaryHighlight;
 	}
 
 	@EventHandler(event = "ClientEvents.MIDDLE_CLICK_AIR_EVENT")
