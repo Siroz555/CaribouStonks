@@ -1,8 +1,5 @@
 package fr.siroz.cariboustonks.platform.rendering.gui;
 
-import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.ScissorState;
 import fr.siroz.cariboustonks.platform.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.Point;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.Quad;
@@ -11,7 +8,6 @@ import fr.siroz.cariboustonks.platform.rendering.gui.state.QuadGuiElementRenderS
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -22,7 +18,6 @@ import org.jspecify.annotations.NonNull;
 public final class GuiRenderer {
 
 	private static final List<Quad> BATCH_QUADS = new ArrayList<>();
-	private static final ScissorState BLUR_SCISSOR_STATE = new ScissorState();
 
 	private GuiRenderer() {
 	}
@@ -143,28 +138,5 @@ public final class GuiRenderer {
 				graphics.scissorStack.peek()
 		);
 		graphics.guiRenderState.addGuiElement(renderState);
-	}
-
-	public static void enableBlurScissor(int x, int y, int width, int height) {
-		BLUR_SCISSOR_STATE.enable(x, y, width, height);
-	}
-
-	public static void disableBlurScissor() {
-		BLUR_SCISSOR_STATE.disable();
-	}
-
-	public static void applyBlurScissorToRenderPass(RenderPass renderPass) {
-		if (BLUR_SCISSOR_STATE.enabled()) {
-			Window window = Minecraft.getInstance().getWindow();
-			int framebufferHeight = window.getHeight();
-			double scaleFactor = window.getGuiScale();
-
-			double x = BLUR_SCISSOR_STATE.x() * scaleFactor;
-			double y = framebufferHeight - (BLUR_SCISSOR_STATE.y() + BLUR_SCISSOR_STATE.height()) * scaleFactor;
-			double width = BLUR_SCISSOR_STATE.width() * scaleFactor;
-			double height = BLUR_SCISSOR_STATE.height() * scaleFactor;
-
-			renderPass.enableScissor((int) x, (int) y, Math.max(0, (int) width), Math.max(0, (int) height));
-		}
 	}
 }

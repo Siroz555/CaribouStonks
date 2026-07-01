@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.VanillaConfig;
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.platform.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.DoubleSliderWidget;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -161,11 +160,13 @@ public final class HeldItemViewConfigScreen extends CaribousStonksScreen {
 	public void extractBackground(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float deltaTicks) {
 		ScreenRectangle dimensions = getEffectiveDimensions(this.width, this.height);
 
-		guiGraphics.enableScissor(dimensions.left(), dimensions.top(), dimensions.right(), dimensions.bottom());
-		GuiRenderer.enableBlurScissor(dimensions.left(), dimensions.top(), dimensions.width(), dimensions.height());
-		this.extractBlurredBackground(guiGraphics);
-		this.extractMenuBackground(guiGraphics);
-		guiGraphics.disableScissor();
+		// SIROZ-NOTE: Je me suis pas apercu que ça crash en 26.1+ -_-
+		//  je pense retiré complètement le blur enfaite, a voir
+//		guiGraphics.enableScissor(dimensions.left(), dimensions.top(), dimensions.right(), dimensions.bottom());
+//		GuiRenderer.enableBlurScissor(dimensions.left(), dimensions.top(), dimensions.width(), dimensions.height());
+//		this.extractBlurredBackground(guiGraphics);
+//		this.extractMenuBackground(guiGraphics);
+//		guiGraphics.disableScissor();
 
 		guiGraphics.verticalLine(
 				isMainHand() ? dimensions.right() : dimensions.left(),

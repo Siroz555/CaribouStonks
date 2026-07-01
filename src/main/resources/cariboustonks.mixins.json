@@ -31,7 +31,6 @@
     "MultiPlayerGameModeMixin",
     "PauseScreenMixin",
     "PingDebugMonitorMixin",
-    "PostPassMixin",
     "RenderPipelinesMixin",
     "ScreenEffectRendererMixin",
     "ScreenMixin",
