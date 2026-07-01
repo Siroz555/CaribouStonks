@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.util.ColorUtils;
 import fr.siroz.cariboustonks.util.DeveloperTools;
+import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -20,9 +21,9 @@ import net.minecraft.util.Util;
 import org.jspecify.annotations.NonNull;
 
 public class LowHealthWarningFeature extends Feature {
-
 	private static final Pattern HEALTH_ACTION_BAR_PATTERN = Pattern.compile(
-			"§[6c](?<health>[\\d,]+)/(?<max>[\\d,]+)❤ *(?<healing>\\+§c([\\d,]+). *)?");
+			"(?<health>[\\d,]+)/(?<max>[\\d,]+)[❤\uE010](?<healing>\\+([\\d,]+). *)?"
+	);
 
 	private static final float SPEED = 2f;
 	private static final int MAX_ALPHA = 200;
@@ -54,7 +55,7 @@ public class LowHealthWarningFeature extends Feature {
 	@EventHandler(event = "ClientReceiveMessageEvents.ALLOW_GAME")
 	private boolean allowActionBar(Component text, boolean overlay) {
 		if (overlay && isEnabled()) {
-			Matcher healthActionBarMatcher = HEALTH_ACTION_BAR_PATTERN.matcher(text.getString());
+			Matcher healthActionBarMatcher = HEALTH_ACTION_BAR_PATTERN.matcher(StonksUtils.stripColor(text.getString()));
 			if (healthActionBarMatcher.find()) {
 				updateHealth(healthActionBarMatcher);
 			}
@@ -77,7 +78,7 @@ public class LowHealthWarningFeature extends Feature {
 		int height = guiGraphics.guiHeight();
 
 		int thickness = (int) (MAX_THICKNESS * configIntensity.get());
-		thickness = Math.max(8, Math.min(thickness, Math.min(width, height) / 2));
+		thickness = Math.clamp(thickness, 8, Math.min(width, height) / 2);
 
 		double currentTime = Util.getMillis() / 1000.0D;
 		float lerpedAmount = Math.abs(Mth.sin((float) (currentTime * SPEED)));
