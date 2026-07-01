@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.platform.mixin;
 
-import fr.siroz.cariboustonks.platform.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.platform.rendering.world.CaribouWorldRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,10 +13,5 @@ public abstract class GameRendererMixin {
 	@Inject(method = "close", at = @At("TAIL"))
 	private void cariboustonks$onGameRendererClose(CallbackInfo ci) {
 		CaribouWorldRenderer.close();
-	}
-
-	@Inject(method = "processBlurEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/PostChain;process(Lcom/mojang/blaze3d/pipeline/RenderTarget;Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;)V", shift = At.Shift.AFTER))
-	private void cariboustonks$onBlurRendered(CallbackInfo ci) {
-		GuiRenderer.disableBlurScissor();
 	}
 }
