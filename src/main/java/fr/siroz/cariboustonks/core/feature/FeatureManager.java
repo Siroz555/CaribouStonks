@@ -46,6 +46,7 @@ import fr.siroz.cariboustonks.features.misc.HighlightMobFeature;
 import fr.siroz.cariboustonks.features.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.features.misc.SearchBarCalculatorFeature;
 import fr.siroz.cariboustonks.features.misc.ServerTrackerFeature;
+import fr.siroz.cariboustonks.features.misc.bestiary.BestiaryTrackerFeature;
 import fr.siroz.cariboustonks.features.reminders.BoosterCookieReminderFeature;
 import fr.siroz.cariboustonks.features.reminders.ChocolateLimitReminderFeature;
 import fr.siroz.cariboustonks.features.reminders.EnchantedCloakReminderFeature;
@@ -179,6 +180,7 @@ public final class FeatureManager {
 		registerFeature(new TpsHud());
 		registerFeature(new DayHud());
 		// Misc
+		registerFeature(new BestiaryTrackerFeature());
 		registerFeature(new BestiaryHighlightFeature());
 		registerFeature(new DisableAbiphonePlacementFeature());
 		registerFeature(new HexTooltipFeature(5));
