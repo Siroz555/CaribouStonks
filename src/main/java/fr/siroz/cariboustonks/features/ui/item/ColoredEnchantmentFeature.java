@@ -67,9 +67,7 @@ public class ColoredEnchantmentFeature extends Feature {
 		if (!configShowMaxEnchants.getAsBoolean() && !configShowGoodEnchants.getAsBoolean()) return null;
 
 		CompoundTag enchantments = ItemUtils.getCustomData(itemStack).getCompoundOrEmpty("enchantments");
-		if (enchantments.isEmpty()) {
-			return null;
-		}
+		if (enchantments.isEmpty()) return null;
 
 		Object2IntMap<String> maxEnchantmentColors = new Object2IntOpenHashMap<>();
 		Object2IntMap<String> goodEnchantmentColors = new Object2IntOpenHashMap<>();
@@ -98,15 +96,23 @@ public class ColoredEnchantmentFeature extends Feature {
 		boolean applied = false;
 		List<Component> lines = loreComponent.lines().stream()
 				.map(this::recursiveCopy)
-				.collect(Collectors.toList());
+				.collect(Collectors.toCollection(ArrayList::new));
 
-		for (Component line : lines) {
+		for (int i = 0; i < lines.size(); i++) {
+			Component line = lines.get(i);
 
 			if (configShowMaxEnchants.getAsBoolean() && !maxEnchantmentColors.isEmpty()
 					&& maxEnchantmentColors.keySet().stream().anyMatch(line.getString()::contains)
 			) {
+				List<Component> lineComponents;
+				if (line.getSiblings().isEmpty()) {
+					lineComponents = lines.subList(i, i + 1);
+				} else {
+					lineComponents = line.getSiblings();
+				}
+
 				if (this.config().uiAndVisuals.coloredEnchantment.maxEnchantsRainbow) {
-					ListIterator<Component> iterator = line.getSiblings().listIterator();
+					ListIterator<Component> iterator = lineComponents.listIterator();
 					while (iterator.hasNext()) {
 						Component currentText = iterator.next();
 						String fullText = currentText.getString();
@@ -130,7 +136,7 @@ public class ColoredEnchantmentFeature extends Feature {
 						}
 					}
 				} else {
-					for (Component currentText : line.getSiblings()) {
+					for (Component currentText : lineComponents) {
 						String enchant = trimEnchantName(currentText.getString());
 
 						//noinspection DataFlowIssue
@@ -148,7 +154,14 @@ public class ColoredEnchantmentFeature extends Feature {
 			if (configShowGoodEnchants.getAsBoolean() && !goodEnchantmentColors.isEmpty()
 					&& goodEnchantmentColors.keySet().stream().anyMatch(line.getString()::contains)
 			) {
-				for (Component currentText : line.getSiblings()) {
+				List<Component> lineComponents;
+				if (line.getSiblings().isEmpty()) {
+					lineComponents = lines.subList(i, i + 1);
+				} else {
+					lineComponents = line.getSiblings();
+				}
+
+				for (Component currentText : lineComponents) {
 					String enchant = trimEnchantName(currentText.getString());
 
 					//noinspection DataFlowIssue
