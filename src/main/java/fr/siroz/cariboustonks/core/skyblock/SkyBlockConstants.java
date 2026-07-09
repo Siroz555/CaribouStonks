@@ -20,6 +20,18 @@ import java.util.Set;
  * SkyBlock Constants.
  */
 public interface SkyBlockConstants {
+	/**
+	 * Real-world Unix timestamp (ms) corresponding to the SkyBlock Day 1, Year 1.
+	 */
+	long SKYBLOCK_EPOCH_START_MILLIS = 1_560_275_700_000L;
+	/**
+	 * Scoreboard Area Icon
+	 */
+	String SCOREBOARD_AREA_ICON = "\uE067";
+	/**
+	 * Scoreboard Rift Area Icon
+	 */
+	String SCOREBOARD_RIFT_AREA_ICON = "\uE020";
 
 	/**
 	 * Enchantment Upgrades.
