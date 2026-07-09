@@ -27,7 +27,6 @@ import fr.siroz.cariboustonks.features.fishing.LotusAtollWormholeFeature;
 import fr.siroz.cariboustonks.features.fishing.RareSeaCreatureFeature;
 import fr.siroz.cariboustonks.features.foraging.BreakTreeAnimationFeature;
 import fr.siroz.cariboustonks.features.foraging.TreeOverlayFeature;
-import fr.siroz.cariboustonks.features.garden.DisableWateringCanPlacementFeature;
 import fr.siroz.cariboustonks.features.garden.GreenhouseGrowthStageFeature;
 import fr.siroz.cariboustonks.features.garden.MouseLockFeature;
 import fr.siroz.cariboustonks.features.garden.pest.PestFinderFeature;
@@ -39,7 +38,6 @@ import fr.siroz.cariboustonks.features.hunting.tracking.TrackingShardsFeature;
 import fr.siroz.cariboustonks.features.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.features.mining.CorpseFinderFeature;
 import fr.siroz.cariboustonks.features.misc.BestiaryHighlightFeature;
-import fr.siroz.cariboustonks.features.misc.DisableAbiphonePlacementFeature;
 import fr.siroz.cariboustonks.features.misc.HexTooltipFeature;
 import fr.siroz.cariboustonks.features.misc.HighlightMobFeature;
 import fr.siroz.cariboustonks.features.misc.PartyCommandFeature;
@@ -64,6 +62,7 @@ import fr.siroz.cariboustonks.features.stonks.tooltips.NpcSellPriceTooltipFeatur
 import fr.siroz.cariboustonks.features.stonks.tooltips.auction.AuctionLowestBinTooltipFeature;
 import fr.siroz.cariboustonks.features.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
 import fr.siroz.cariboustonks.features.ui.AbiphoneFavoriteContactFeature;
+import fr.siroz.cariboustonks.features.ui.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.features.ui.SacksOverlayFeature;
 import fr.siroz.cariboustonks.features.ui.SelectedPetHighlightFeature;
 import fr.siroz.cariboustonks.features.ui.TabListWidgetExtractorFeature;
@@ -72,8 +71,6 @@ import fr.siroz.cariboustonks.features.ui.hud.DayHud;
 import fr.siroz.cariboustonks.features.ui.hud.FpsHud;
 import fr.siroz.cariboustonks.features.ui.hud.PingHud;
 import fr.siroz.cariboustonks.features.ui.hud.TpsHud;
-import fr.siroz.cariboustonks.features.ui.item.ColoredEnchantmentFeature;
-import fr.siroz.cariboustonks.features.ui.item.TooltipDecoratorFeature;
 import fr.siroz.cariboustonks.features.ui.tracking.MobTrackingFeature;
 import fr.siroz.cariboustonks.features.vanilla.HideStatusEffectsFeature;
 import fr.siroz.cariboustonks.features.vanilla.MuteVanillaSoundFeature;
@@ -129,7 +126,6 @@ public final class FeatureManager {
 		// Garden
 		registerFeature(new PestFinderFeature());
 		registerFeature(new PlotInfestedFeature());
-		registerFeature(new DisableWateringCanPlacementFeature());
 		registerFeature(new GreenhouseGrowthStageFeature());
 		registerFeature(new MouseLockFeature());
 		// Hunting
@@ -141,7 +137,6 @@ public final class FeatureManager {
 		registerFeature(new CorpseFinderFeature());
 		// Item
 		registerFeature(new ColoredEnchantmentFeature());
-		registerFeature(new TooltipDecoratorFeature());
 		// KeyShortcut
 		registerFeature(new KeyShortcutFeature());
 		// Reminders
@@ -180,7 +175,6 @@ public final class FeatureManager {
 		// Misc
 		registerFeature(new BestiaryTrackerFeature());
 		registerFeature(new BestiaryHighlightFeature());
-		registerFeature(new DisableAbiphonePlacementFeature());
 		registerFeature(new HexTooltipFeature(5));
 		registerFeature(new ServerTrackerFeature());
 		registerFeature(new HighlightMobFeature());
