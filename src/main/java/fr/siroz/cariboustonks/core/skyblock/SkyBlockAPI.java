@@ -30,10 +30,6 @@ import org.jspecify.annotations.Nullable;
  * The {@code SkyBlockAPI} class provides a utility layer to interact with SkyBlock-related states and contents.
  */
 public final class SkyBlockAPI {
-	/**
-	 * Real-world Unix timestamp (ms) corresponding to the SkyBlock Day 1, Year 1.
-	 */
-	private static final long SKYBLOCK_EPOCH_START_MILLIS = 1_560_275_700_000L;
 	// Common constants
 	private static final String ITEM_ID = "id";
 	private static final String ITEM_UUID = "uuid";
@@ -65,7 +61,7 @@ public final class SkyBlockAPI {
 	 * @return the current SkyBlock Time in milliseconds
 	 */
 	public static long getSkyBlockMillis() {
-		return System.currentTimeMillis() - SKYBLOCK_EPOCH_START_MILLIS;
+		return System.currentTimeMillis() - SkyBlockConstants.SKYBLOCK_EPOCH_START_MILLIS;
 	}
 
 	/**
@@ -173,7 +169,7 @@ public final class SkyBlockAPI {
 	 */
 	public static @NonNull Optional<String> getArea() {
 		for (String line : ClientContext.getScoreboard()) {
-			if (line.contains("⏣") || line.contains("ф")) {
+			if (line.contains(SkyBlockConstants.SCOREBOARD_AREA_ICON) || line.contains(SkyBlockConstants.SCOREBOARD_RIFT_AREA_ICON)) {
 				return Optional.of(line.strip());
 			}
 		}
