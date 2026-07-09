@@ -137,7 +137,6 @@ Lightweight and efficient.
 
 - Farming | Garden
     - Greenhouse: Growth Stage Reminder & Pre-Reminder.
-    - Greenhouse: Disable Watering Can placement.
     - KeyBind / Command to lock the camera during farming sessions.
     - Guess Pests and display a cursor line in the direction of the Pests.
     - Highlight Plots that are infested by pests with a border delimitation.
@@ -216,17 +215,12 @@ Lightweight and efficient.
     - Displays a HUD that tracks your Bestiary kill progress.
     - Kills/h.
     - ETA to the next tier.
-- Raffle Year 500:
-    - Raffle Tasks HUD: Displays a HUD showing all Tasks to be completed
-    - Indicating their progress status.
-    - Indicating the time remaining before the next reset.
 - Hoppity's Hunt:
     - Eggs Finder Guess: Predict the location of Hoppity Eggs.
     - Unclaimed Eggs HUD: Display the status of Hoppity's Eggs.
     - Warn When Unclaimed: Warn when all 6 Eggs are ready to be found.
 - Show Hex Color on Dyed Items.
 - Server Visit History: Display a message indicating when you were last on the server.
-- Disable Abiphone placement: Disables the placement of all Abiphone on the ground.
 - Party Commands (!warp, !coords, !dice, ..)
 - Search Bar Calculator from:
     - RoughlyEnoughItems (REI)
