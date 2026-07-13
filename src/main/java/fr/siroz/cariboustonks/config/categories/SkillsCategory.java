@@ -349,6 +349,15 @@ public class SkillsCategory extends AbstractCategory {
 								Component.literal("Foraging-related Settings")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Torrhus Canyon Safari - Floor Drops"))
+								.description(OptionDescription.of(
+										Component.literal("Displays a colored Beam at the locations of the Floor Drops")))
+								.binding(defaults.foraging.safari.floorDrops,
+										() -> current.foraging.safari.floorDrops,
+										newValue -> current.foraging.safari.floorDrops = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Galatea - Show Tree Overlay"))
 								.description(OptionDescription.of(
 										Component.literal("Show Tree progression as Overlay.")))

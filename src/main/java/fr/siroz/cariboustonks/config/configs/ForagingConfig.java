@@ -9,4 +9,13 @@ public class ForagingConfig {
 
 	@SerialEntry
 	public boolean hideTreeBreakAnimation = false;
+
+	@SerialEntry
+	public Safari safari = new Safari();
+
+	public static class Safari {
+
+		@SerialEntry
+		public boolean floorDrops = true;
+	}
 }

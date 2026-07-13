@@ -26,6 +26,7 @@ import fr.siroz.cariboustonks.features.fishing.LotusAtollLilyPadFeature;
 import fr.siroz.cariboustonks.features.fishing.LotusAtollWormholeFeature;
 import fr.siroz.cariboustonks.features.fishing.RareSeaCreatureFeature;
 import fr.siroz.cariboustonks.features.foraging.BreakTreeAnimationFeature;
+import fr.siroz.cariboustonks.features.foraging.SafariFloorDropFeature;
 import fr.siroz.cariboustonks.features.foraging.TreeOverlayFeature;
 import fr.siroz.cariboustonks.features.garden.GreenhouseGrowthStageFeature;
 import fr.siroz.cariboustonks.features.garden.MouseLockFeature;
@@ -121,6 +122,7 @@ public final class FeatureManager {
 		registerFeature(new LotusAtollWormholeFeature());
 		// Foraging
 		registerFeature(new BreakTreeAnimationFeature());
+		registerFeature(new SafariFloorDropFeature());
 		registerFeature(new TreeOverlayFeature());
 		// Garden
 		registerFeature(new PestFinderFeature());
