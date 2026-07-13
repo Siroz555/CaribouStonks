@@ -45,7 +45,6 @@ import fr.siroz.cariboustonks.features.misc.SearchBarCalculatorFeature;
 import fr.siroz.cariboustonks.features.misc.ServerTrackerFeature;
 import fr.siroz.cariboustonks.features.misc.bestiary.BestiaryTrackerFeature;
 import fr.siroz.cariboustonks.features.reminders.BoosterCookieReminderFeature;
-import fr.siroz.cariboustonks.features.reminders.ChocolateLimitReminderFeature;
 import fr.siroz.cariboustonks.features.reminders.EnchantedCloakReminderFeature;
 import fr.siroz.cariboustonks.features.reminders.ForgeReminderFeature;
 import fr.siroz.cariboustonks.features.reminders.StonksAuctionReminderFeature;
@@ -141,7 +140,6 @@ public final class FeatureManager {
 		registerFeature(new KeyShortcutFeature());
 		// Reminders
 		registerFeature(new BoosterCookieReminderFeature());
-		registerFeature(new ChocolateLimitReminderFeature());
 		registerFeature(new EnchantedCloakReminderFeature());
 		registerFeature(new ForgeReminderFeature());
 		registerFeature(new StonksAuctionReminderFeature());

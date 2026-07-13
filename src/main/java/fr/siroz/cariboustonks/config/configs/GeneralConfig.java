@@ -91,9 +91,6 @@ public class GeneralConfig {
 		public boolean boosterCookie = true;
 
 		@SerialEntry
-		public boolean chocolateFactoryMaxChocolates = true;
-
-		@SerialEntry
 		public boolean ubikCube = true;
 
 		@SerialEntry
