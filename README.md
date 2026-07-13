@@ -37,7 +37,6 @@ Lightweight and efficient.
 - Reminders
     - Booster Cookie: Buff Status & Buff Inactive Reminder.
     - Greenhouse: Growth Stage Reminder & Pre-Reminder.
-    - Chocolate Factory: Reminders when the number of chocolates reaches the limit.
     - Split or Steal: Reminder when the Ubik's Cube is ready.
     - Stonks Auction: Reminder when the Diaz Stonks Auction is ready to bid or recovered.
     - Forge: Reminder when a forge item is completed.
@@ -142,6 +141,7 @@ Lightweight and efficient.
     - Highlight Plots that are infested by pests with a border delimitation.
 
 - Foraging
+    - Torrhus Canyon Safari: Displays a Beam at the locations of the Floor Drops.
     - Show Tree progression as Overlay.
     - Hide the entities forming the Tree Break Animation.
 
