@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.features.foraging;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
@@ -27,7 +26,8 @@ public class TreeOverlayFeature extends Feature {
 			"JUNGLE_AXE",
 			"TREECAPITATOR_AXE",
 			"FIG_AXE",
-			"FIGSTONE_AXE"
+			"FIGSTONE_AXE",
+			"HELIX_CHOPPER"
 	);
 
 	private ArmorStand currentTreeInfo = null;
@@ -40,7 +40,7 @@ public class TreeOverlayFeature extends Feature {
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() == IslandType.GALATEA
+				&& SkyBlockAPI.getIsland().isForagingIsland()
 				&& this.config().foraging.showTreeOverlayInfo;
 	}
 
