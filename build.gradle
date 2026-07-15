@@ -25,6 +25,17 @@ repositories {
 		}
 	}
 
+	def modrinthMaven = maven {
+		name = "Modrinth Maven"
+		url = "https://api.modrinth.com/maven"
+	}
+	exclusiveContent {
+		forRepositories(modrinthMaven)
+		filter {
+			includeGroup "maven.modrinth"
+		}
+	}
+
 	def azureAaronMaven = maven {
 		name = "AzureAaron Maven"
 		url = "https://maven.azureaaron.net/releases"
@@ -71,7 +82,7 @@ dependencies {
 	include implementation("net.azureaaron:hm-api:${project.hypixel_mod_api_version}")
 
 	// ModMenu (https://github.com/TerraformersMC/ModMenu)
-	compileOnly "com.terraformersmc:modmenu:${modmenu_version}"
+	compileOnly "maven.modrinth:modmenu:${modmenu_version}"
 
 	// DevAuth - DEV (https://github.com/DJtheRedstoner/DevAuth)
 	runtimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
