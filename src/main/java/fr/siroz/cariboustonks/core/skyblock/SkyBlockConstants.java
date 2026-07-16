@@ -32,6 +32,14 @@ public interface SkyBlockConstants {
 	 * Scoreboard Rift Area Icon
 	 */
 	String SCOREBOARD_RIFT_AREA_ICON = "\uE020";
+	/**
+	 * Garden Pest Icon Legacy
+	 */
+	String GARDEN_PEST_ICON_LEGACY = "ൠ";
+	/**
+	 * Garden Pest Icon
+	 */
+	String GARDEN_PEST_ICON = "\uE018";
 
 	/**
 	 * Enchantment Upgrades.
