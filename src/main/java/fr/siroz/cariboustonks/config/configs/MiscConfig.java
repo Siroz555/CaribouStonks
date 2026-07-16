@@ -28,6 +28,7 @@ public class MiscConfig {
 	@SerialEntry
 	public boolean serverTracker = false;
 
+	@Deprecated
 	@SerialEntry
 	public boolean disableAbiphonePlacement = false;
 

@@ -36,7 +36,7 @@ public class CombatConfig {
 		public boolean cocoonedWarningTitle = true;
 
 		@SerialEntry
-		public boolean cocoonedWarningSound = true;
+		public boolean cocoonedWarningSound = false;
 
 		@SerialEntry
 		public boolean cocoonedWarningTime = true;
@@ -48,7 +48,7 @@ public class CombatConfig {
 	public static class LowHealthWarning {
 
 		@SerialEntry
-		public boolean lowHealthWarningEnabled = true;
+		public boolean lowHealthWarningEnabled = false;
 
 		@SerialEntry
 		public int lowHealthWarningThreshold = 15;

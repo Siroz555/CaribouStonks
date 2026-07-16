@@ -46,7 +46,7 @@ public class GeneralConfig {
 		public TooltipPriceDisplayType auctionTooltipPriceDisplayType = TooltipPriceDisplayType.FULL;
 
 		@SerialEntry
-		public boolean npcTooltipPrice = false;
+		public boolean npcTooltipPrice = true;
 
 		@SerialEntry
 		public boolean showTotalTooltipPriceInsteadShift = false;
@@ -88,7 +88,7 @@ public class GeneralConfig {
 		public boolean playSound = true;
 
 		@SerialEntry
-		public boolean boosterCookie = true;
+		public boolean boosterCookie = false;
 
 		@SerialEntry
 		public boolean ubikCube = true;
