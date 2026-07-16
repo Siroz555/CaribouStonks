@@ -9,6 +9,7 @@ import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.InteractionEvents;
 import fr.siroz.cariboustonks.events.NetworkEvents;
@@ -28,8 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
 public final class PestFinderFeature extends Feature {
-
-	private static final String PEST_PREFIX = "ൠ";
 	private static final String VACUUM_ID_PREFIX = "VACUUM";
 
 	private final Waypoint waypoint;
@@ -113,7 +112,10 @@ public final class PestFinderFeature extends Feature {
 
 		for (Entity entity : WorldContext.getEntities()) {
 			if (!(entity instanceof ArmorStand as)) continue;
-			if (!as.hasCustomName() || !as.getName().getString().startsWith(PEST_PREFIX)) continue;
+			if (!as.hasCustomName()) continue;
+
+			String name = as.getName().getString();
+			if (!name.startsWith(SkyBlockConstants.GARDEN_PEST_ICON_LEGACY) || !name.startsWith(SkyBlockConstants.GARDEN_PEST_ICON)) continue;
 
 			renderer.submitLineFromCursor(as.getEyePosition(), Colors.GREEN, 1f);
 		}
