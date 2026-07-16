@@ -47,9 +47,6 @@ public class UIAndVisualsConfig {
 	public SharedPositionWaypoint sharedPositionWaypoint = new SharedPositionWaypoint();
 
 	@SerialEntry
-	public ToolTipDecorator toolTipDecorator = new ToolTipDecorator();
-
-	@SerialEntry
 	public Overlay overlay = new Overlay();
 
 	@SerialEntry
@@ -373,7 +370,7 @@ public class UIAndVisualsConfig {
 	public static class SharedPositionWaypoint {
 
 		@SerialEntry
-		public boolean enabled = true;
+		public boolean enabled = false;
 
 		@SerialEntry
 		public int showTime = 15;
@@ -389,12 +386,6 @@ public class UIAndVisualsConfig {
 
 		@SerialEntry
 		public boolean shareWithArea = false;
-	}
-
-	public static class ToolTipDecorator {
-
-		@SerialEntry
-		public boolean enabled = false;
 	}
 
 	public static class PingHud implements HudConfig {

@@ -15,19 +15,19 @@ public class SlayerConfig {
 	public boolean slayerBossCocoonedWarning = false;
 
 	@SerialEntry
-	public boolean bossSpawnAlert = true;
+	public boolean bossSpawnAlert = false;
 
 	@SerialEntry
-	public boolean minibossSpawnAlert = true;
+	public boolean minibossSpawnAlert = false;
 
 	@SerialEntry
-	public boolean highlightBoss = true;
+	public boolean highlightBoss = false;
 
 	@SerialEntry
 	public Color highlightBossColor = Colors.RED.toAwtColor();
 
 	@SerialEntry
-	public boolean highlightMiniboss = true;
+	public boolean highlightMiniboss = false;
 
 	@SerialEntry
 	public Color highlightMinibossColor = Colors.RED.toAwtColor();

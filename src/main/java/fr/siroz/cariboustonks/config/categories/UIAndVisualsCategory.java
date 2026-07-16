@@ -431,21 +431,6 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
-						.name(Component.literal("Coloring Tooltip Borders on Items").withStyle(ChatFormatting.BOLD))
-						.description(OptionDescription.of(
-								Component.literal("Control the coloring of tooltip borders on items, according to their rarity.")))
-						.collapsed(false)
-						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Enable item border coloring"))
-								.description(OptionDescription.of(
-										Component.literal("Display colored borders on items, according to their rarity.")))
-								.binding(defaults.uiAndVisuals.toolTipDecorator.enabled,
-										() -> current.uiAndVisuals.toolTipDecorator.enabled,
-										newValue -> current.uiAndVisuals.toolTipDecorator.enabled = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.build())
-				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Waypoints shared between players").withStyle(ChatFormatting.BOLD))
 						.description(OptionDescription.of(
 								Component.literal("Control Waypoint display when players share their position in Chat"),

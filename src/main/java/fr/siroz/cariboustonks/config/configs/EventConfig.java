@@ -6,20 +6,25 @@ import fr.siroz.cariboustonks.core.module.hud.HudConfig;
 
 public class EventConfig {
 
+	@Deprecated
 	@SerialEntry
 	public Raffle raffle = new Raffle();
 
 	@SerialEntry
 	public HoppityHunt hoppityHunt = new HoppityHunt();
 
+	@Deprecated
 	public static class Raffle {
 
+		@Deprecated
 		@SerialEntry
 		public TaskHud hud = new TaskHud();
 
+		@Deprecated
 		@SerialEntry
 		public boolean onlyShowIncomplete = false;
 
+		@Deprecated
 		public static class TaskHud implements HudConfig {
 
 			@SerialEntry
