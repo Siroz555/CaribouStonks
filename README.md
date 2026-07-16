@@ -5,7 +5,7 @@
 Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla Tweaks, and a ton of QoL features!
 Lightweight and efficient.
 
-**✅ Supported Minecraft Versions**: **26.2** **26.1.x** and **1.21.11**
+**✅ Supported Minecraft Versions**: **26.2**, **26.1.x** and **1.21.11**
 
 ## Installation
 
@@ -103,7 +103,6 @@ Lightweight and efficient.
 - Colored Enchantments
     - Change the color of enchantments according to their levels.
     - Single color or with animated rainbow effect.
-- Display a colored border around Tooltip items according to rarity.
 - Overlay
     - Etherwarp:
         - Coloring the Teleport Target depending on whether it is possible to teleport.
