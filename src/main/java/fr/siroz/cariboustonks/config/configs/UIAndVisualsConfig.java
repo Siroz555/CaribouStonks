@@ -370,7 +370,7 @@ public class UIAndVisualsConfig {
 	public static class SharedPositionWaypoint {
 
 		@SerialEntry
-		public boolean enabled = false;
+		public boolean enabled = true;
 
 		@SerialEntry
 		public int showTime = 15;
