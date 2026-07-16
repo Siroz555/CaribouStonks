@@ -3,8 +3,8 @@ package fr.siroz.cariboustonks.core.module.cooldown;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import org.jspecify.annotations.NonNull;
 
 final class CooldownMapImpl<T> implements CooldownMap<T> {
@@ -15,7 +15,7 @@ final class CooldownMapImpl<T> implements CooldownMap<T> {
 	CooldownMapImpl(@NonNull Cooldown base) {
 		this.base = base;
 		this.cache = CacheBuilder.newBuilder()
-				.expireAfterAccess(base.getTimeout() + 10000L, TimeUnit.MILLISECONDS) // 10s after
+				.expireAfterAccess(Duration.ofMillis(base.getTimeout() + 10000L)) // 10s after
 				.build(new CacheLoader<>() {
 					@Override
 					public @NonNull Cooldown load(@NonNull T key) {
