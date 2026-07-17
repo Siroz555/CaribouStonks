@@ -7,6 +7,7 @@ import fr.siroz.cariboustonks.core.module.hud.TextHud;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.Modifiers;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.events.NetworkEvents;
 import java.text.DecimalFormat;
 import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
@@ -25,22 +26,21 @@ import net.minecraft.world.level.Level;
 import org.jspecify.annotations.NonNull;
 
 public class WitherShieldFeature extends Feature {
-
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_shield");
-
-	private static final long ABSORPTION_COOLDOWN = 5_000L;
-	private static final long READY_DISPLAY = 2_000L;
+	private static final int ABSORPTION_COOLDOWN_TICKS = 5 * 20 + 2; // 5s - +2, car il y a un petit jeu entre les 2 états.
+	private static final int READY_DISPLAY_TICKS = 2 * 20; // 2s
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.0");
 
 	private final BooleanSupplier configOnlyShowTimer =
 			() -> this.config().combat.witherShield.onlyShowTimer;
 
-	private long abilityEnd = -1L; // not active
-	private long cooldownEnd = -1L; // no cooldown
-	private long readyUntil = -1L; // not showing READY
+	private int abilityTicksRemaining = -1; // -1 = not active
+	private int cooldownTicksRemaining = -1; // -1 = no cooldown
+	private int readyTicksRemaining = -1; // -1 = not showing READY
 
 	public WitherShieldFeature() {
 		UseItemCallback.EVENT.register(this::onUseItem);
+		NetworkEvents.SERVER_TICK.register(this::onServerTick);
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(HUD_ID)
@@ -61,66 +61,72 @@ public class WitherShieldFeature extends Feature {
 
 	@Override
 	protected void onClientJoinServer() {
-		abilityEnd = -1;
-		cooldownEnd = -1;
-		readyUntil = -1;
+		abilityTicksRemaining = -1;
+		cooldownTicksRemaining = -1;
+		readyTicksRemaining = -1;
 	}
 
 	@EventHandler(event = "UseItemCallback.EVENT")
 	private InteractionResult onUseItem(Player player, Level _level, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
-		if (isEnabled() && !stack.isEmpty() && stack.is(Items.IRON_SWORD) && hasWitherShieldScroll(stack)) {
-			long now = System.currentTimeMillis();
-			if (now >= cooldownEnd) {
-				abilityEnd = now + ABSORPTION_COOLDOWN;
-				cooldownEnd = now + ABSORPTION_COOLDOWN;
-				readyUntil = -1L;
+		if (isEnabled() && !stack.isEmpty() && hasWitherShieldScroll(stack)) {
+			if (cooldownTicksRemaining <= 0) {
+				abilityTicksRemaining = ABSORPTION_COOLDOWN_TICKS;
+				cooldownTicksRemaining = ABSORPTION_COOLDOWN_TICKS;
+				readyTicksRemaining = -1;
 			}
 		}
 		return InteractionResult.PASS;
 	}
 
+	@EventHandler(event = "NetworkEvents.SERVER_TICK")
+	private void onServerTick() {
+		if (!isEnabled()) return;
+		if (abilityTicksRemaining <= 0 && cooldownTicksRemaining <= 0 && readyTicksRemaining <= 0) return;
+
+		if (abilityTicksRemaining > 0) {
+			abilityTicksRemaining--;
+			// L'ability vient d'expirer -> affichage READY
+			if (abilityTicksRemaining == 0) readyTicksRemaining = READY_DISPLAY_TICKS;
+		}
+
+		if (cooldownTicksRemaining > 0) cooldownTicksRemaining--;
+		if (readyTicksRemaining > 0) readyTicksRemaining--;
+	}
+
 	private Component getText() {
-		if (abilityEnd == -1L && cooldownEnd == -1L && readyUntil == -1L) {
+		if (abilityTicksRemaining == -1L && cooldownTicksRemaining == -1L && readyTicksRemaining == -1L) {
 			return Component.empty();
 		}
 
-		long now = System.currentTimeMillis();
-		// Si ability est active
-		if (abilityEnd > now) {
-			double timeRemaining = (abilityEnd - now) / 1000.0d;
+		if (abilityTicksRemaining > 0) {
+			double timeRemaining = abilityTicksRemaining / 20.0;
 			Component timer = Component.literal(DECIMAL_FORMAT.format(timeRemaining) + "s")
 					.withColor(this.config().combat.witherShield.timerColor.getRGB());
 
 			return configOnlyShowTimer.getAsBoolean()
 					? Component.empty().append(timer)
 					: Component.empty()
-					.append(Component.literal("Wither Shield: ").withStyle(ChatFormatting.DARK_PURPLE))
-					.append(timer);
+					  .append(Component.literal("Wither Shield: ").withStyle(ChatFormatting.DARK_PURPLE))
+					  .append(timer);
 		}
 
-		// Si abilityEnd était défini mais est maintenant expiré -> READY
-		if (abilityEnd != -1L && readyUntil == -1L) {
-			// ability vient tout juste d'expirer (transition)
-			readyUntil = now + READY_DISPLAY;
-		}
-		// Clear abilityEnd pour marquer que ability n'est plus active
-		abilityEnd = -1L;
-		// Afficher READY si dans la fenêtre readyUntil
-		if (readyUntil > now) {
+		if (readyTicksRemaining > 0) {
 			Component ready = Component.literal(this.config().combat.witherShield.readyMessage);
 
 			return configOnlyShowTimer.getAsBoolean()
 					? Component.empty().append(ready)
 					: Component.empty()
-					.append(Component.literal("Wither Shield: ").withStyle(ChatFormatting.DARK_PURPLE))
-					.append(ready);
+					  .append(Component.literal("Wither Shield: ").withStyle(ChatFormatting.DARK_PURPLE))
+					  .append(ready);
 		}
 
 		return Component.empty();
 	}
 
 	private boolean hasWitherShieldScroll(@NonNull ItemStack stack) {
+		if (!stack.is(Items.IRON_SWORD)) return false;
+
 		CompoundTag customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		if (customData.isEmpty()) return false;
 
