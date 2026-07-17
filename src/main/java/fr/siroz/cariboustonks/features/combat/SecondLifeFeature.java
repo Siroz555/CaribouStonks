@@ -4,21 +4,21 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,11 +35,12 @@ public class SecondLifeFeature extends Feature {
 	private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("");
 	private static final DecimalFormat TIME_FORMAT = new DecimalFormat("#0.0");
 
-	private final Map<SecondLife, Long> activeCooldowns = new HashMap<>();
+	private final Map<SecondLife, Integer> activeCooldowns = new HashMap<>();
 	private boolean serverHasChanged = false;
 
 	public SecondLifeFeature() {
 		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
+		NetworkEvents.SERVER_TICK.register(this::onServerTick);
 
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(CaribouStonks.identifier("hud_second_life"))
@@ -89,6 +90,23 @@ public class SecondLifeFeature extends Feature {
 		}
 	}
 
+	@EventHandler(event = "NetworkEvents.SERVER_TICK")
+	private void onServerTick() {
+		if (!isEnabled() || activeCooldowns.isEmpty()) return;
+
+		Iterator<Map.Entry<SecondLife, Integer>> iterator = activeCooldowns.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map.Entry<SecondLife, Integer> entry = iterator.next();
+			int remainingTicks = entry.getValue() - 1;
+			if (remainingTicks <= 0) {
+				iterator.remove();
+				onSecondLifeBack(entry.getKey());
+			} else {
+				entry.setValue(remainingTicks);
+			}
+		}
+	}
+
 	private void onSecondLife(@NonNull SecondLife secondLife) {
 		// Ce "state" permet d'éviter que le runLater run après un changement de serveur.
 		// Il est reset ici pour permettre de trigger à nouveau, tant qu'il n'y a pas de changement de serveur.
@@ -100,15 +118,10 @@ public class SecondLifeFeature extends Feature {
 					0, 25, 0);
 		}
 
-		long cooldownEndTime = System.currentTimeMillis() + (secondLife.getCooldown() * 1000L);
-		activeCooldowns.put(secondLife, cooldownEndTime);
-
-		TickScheduler.getInstance().runLater(
-				() -> onSecondLifeBack(secondLife), secondLife.getCooldown(), TimeUnit.SECONDS);
+		activeCooldowns.put(secondLife, secondLife.getCooldown() * 20);
 	}
 
 	private void onSecondLifeBack(@NonNull SecondLife secondLife) {
-		activeCooldowns.remove(secondLife);
 		// Pas de notification si le serveur a changé
 		if (!serverHasChanged && secondLife.isBackConfigEnabled()) {
 			if (this.config().combat.secondLife.backMessage) {
@@ -129,16 +142,13 @@ public class SecondLifeFeature extends Feature {
 		if (activeCooldowns.isEmpty()) return;
 
 		try {
-			long currentTime = System.currentTimeMillis();
-			activeCooldowns.entrySet().removeIf(entry -> entry.getValue() <= currentTime);
-
 			// liste triée des cooldowns par temps restant
-			List<Map.Entry<SecondLife, Long>> sortedCooldowns = activeCooldowns.entrySet().stream()
+			List<Map.Entry<SecondLife, Integer>> sortedCooldowns = activeCooldowns.entrySet().stream()
 					.sorted(Map.Entry.comparingByValue())
 					.toList();
 
-			for (Map.Entry<SecondLife, Long> entry : sortedCooldowns) {
-				double timeRemaining = (entry.getValue() - currentTime) / 1000.0;
+			for (Map.Entry<SecondLife, Integer> entry : sortedCooldowns) {
+				double timeRemaining = entry.getValue() / 20.0;
 				if (timeRemaining > 0) {
 					SecondLife secondLife = entry.getKey();
 					String formattedTime = TIME_FORMAT.format(timeRemaining);
