@@ -18,7 +18,7 @@ Lightweight and efficient.
 >
 > **Contact**:
 > _In-game_: `Siroz555`
-> _Discord_: `#siroz (Siroz#0086)`
+> _Discord_: 🇫🇷 / 🇺🇸 `#siroz (Siroz#0086)`
 
 ## Features
 
