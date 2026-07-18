@@ -97,18 +97,21 @@ class MobTrackingListWidget extends ContainerObjectSelectionList<MobTrackingList
 					.tooltip(Tooltip.create(Component.literal("Click to toggle this Mob Tracking")))
 					.onValueChange((_, checked) -> entry.model().setEnabled(checked))
 					.build();
+			this.enabledWidget.setTooltip(Tooltip.create(Component.literal("Click to toggle this Mob Tracking")));
 
 			this.notifyOnSpawnWidget = Checkbox.builder(Component.literal(""), minecraft.font)
 					.selected(entry.model().isNotifyOnSpawn())
 					.tooltip(Tooltip.create(Component.literal("Click to enable notification when the mob is detected")))
 					.onValueChange((_, checked) -> entry.model().setNotifyOnSpawn(checked))
 					.build();
+			this.notifyOnSpawnWidget.setTooltip(Tooltip.create(Component.literal("Click to enable notification when the mob is detected")));
 
 			this.highlightableWidget = Checkbox.builder(Component.literal(""), minecraft.font)
 					.selected(entry.model().isHighlightable())
 					.tooltip(Tooltip.create(Component.literal("Click to enable the Glowing effect on this entity")))
 					.onValueChange((_, checked) -> entry.model().setHighlightable(checked))
 					.build();
+			this.highlightableWidget.setTooltip(Tooltip.create(Component.literal("Click to enable the Glowing effect on this entity")));
 
 			this.children = List.of(this.enabledWidget, this.notifyOnSpawnWidget, this.highlightableWidget);
 		}

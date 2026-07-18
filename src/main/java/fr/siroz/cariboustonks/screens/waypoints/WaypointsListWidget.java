@@ -131,6 +131,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 					.tooltip(Tooltip.create(Component.literal("Click to toggle the waypoint's visibility")))
 					.onValueChange((_, checked) -> waypoint.setEnabled(checked))
 					.build();
+			this.enabledWidget.setTooltip(Tooltip.create(Component.literal("Click to toggle the waypoint's visibility")));
 
 			this.nameWidget = new EditBox(minecraft.font, 65, 20, Component.literal("Name"));
 			this.nameWidget.setValue(waypoint.getTextOption().getText().orElse(Component.literal("")).getString());
