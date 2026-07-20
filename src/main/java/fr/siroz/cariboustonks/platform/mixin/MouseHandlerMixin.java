@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.platform.mixin;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.events.ClientEvents;
@@ -70,7 +71,7 @@ public abstract class MouseHandlerMixin {
 
 	@Inject(method = "onButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/KeyMapping;set(Lcom/mojang/blaze3d/platform/InputConstants$Key;Z)V"))
 	private void cariboustonks$onMiddleClickEvent(long handle, MouseButtonInfo rawButtonInfo, int action, CallbackInfo ci) {
-		if (rawButtonInfo.button() == 2) {
+		if (rawButtonInfo.button() == InputConstants.MOUSE_BUTTON_MIDDLE) {
 			ClientEvents.MIDDLE_CLICK_AIR_EVENT.invoker().onMiddleClickAir();
 		}
 	}
