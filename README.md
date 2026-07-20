@@ -163,7 +163,6 @@ Lightweight and efficient.
     - Lotus Atoll:
         - Wormholes Finder: Detect Wormholes from a distance by creating a Waypoint.
         - Lily Pads Highlighter: Colorful Glowing effect that changes depending on the size.
-        - Fishing Buffs: Displays a HUD showing the time remaining before they expire.
 
 - Mining
     - Mineshaft: Corpse Finder
