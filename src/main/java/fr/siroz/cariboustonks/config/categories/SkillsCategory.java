@@ -596,24 +596,6 @@ public class SkillsCategory extends AbstractCategory {
 										newValue -> current.fishing.lotusAtoll.lilyPadHighlighter = newValue)
 								.controller(this::createBooleanController)
 								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Lotus Atoll - Buffs HUD"))
-								.description(OptionDescription.of(
-										Component.literal("Displays a HUD in the Lotus Atoll Island showing the current number of Fishing Buffs and the time remaining before they expire.")))
-								.binding(defaults.fishing.lotusAtoll.buffHud.enabled,
-										() -> current.fishing.lotusAtoll.buffHud.enabled,
-										newValue -> current.fishing.lotusAtoll.buffHud.enabled = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Lotus Atoll - Buffs Expired Warning"))
-								.description(OptionDescription.of(
-										Component.literal("Receive a notification in the Lotus Atoll Island when Fishing Buffs have expired.")))
-								.binding(defaults.fishing.lotusAtoll.buffExpiredWarn,
-										() -> current.fishing.lotusAtoll.buffExpiredWarn,
-										newValue -> current.fishing.lotusAtoll.buffExpiredWarn = newValue)
-								.controller(this::createBooleanController)
-								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Mining").withStyle(ChatFormatting.BOLD))
