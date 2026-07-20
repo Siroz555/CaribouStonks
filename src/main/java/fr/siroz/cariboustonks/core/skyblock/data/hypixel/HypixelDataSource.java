@@ -3,6 +3,8 @@ package fr.siroz.cariboustonks.core.skyblock.data.hypixel;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.mod.ModDataSource;
+import fr.siroz.cariboustonks.core.module.color.Colors;
+import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.ElectionResult;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher.BazaarFetcher;
@@ -10,6 +12,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher.ElectionFetcher
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher.ItemsFetcher;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.events.EventHandler;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.core.component.DataComponents;
@@ -55,6 +59,8 @@ import org.jspecify.annotations.Nullable;
  */
 public final class HypixelDataSource {
 
+	private static final Cooldown RELOAD_COOLDOWN = Cooldown.of(30, TimeUnit.SECONDS);
+
 	private final HypixelAPIFixer apiFixer = new HypixelAPIFixer();
 	private final ModDataSource modDataSource;
 
@@ -79,6 +85,21 @@ public final class HypixelDataSource {
 		itemsFetcher.start();
 		bazaarFetcher.start();
 		electionFetcher.start();
+	}
+
+	public void reload() {
+		if (RELOAD_COOLDOWN.test()) {
+			PlayerContext.sendMessageWithPrefix(Component.literal("Reloading SkyBlock Data..").withColor(Colors.YELLOW.asInt()));
+			itemsFetcher.reload(() -> {
+				if (!itemsFetcher.isLastFetchSuccessful()) {
+					PlayerContext.sendMessageWithPrefix(Component.literal("Reloading SkyBlock data failed! Try again later.").withColor(Colors.RED.asInt()));
+				} else {
+					PlayerContext.sendMessageWithPrefix(Component.literal("SkyBlock Data reloaded! (" + getSkyBlockItemCounts() + " Items loaded)").withColor(Colors.GREEN.asInt()));
+				}
+			});
+		} else {
+			PlayerContext.sendMessageWithPrefix(Component.literal("Reloading SkyBlock Data on cooldown! Try again in few seconds.").withColor(Colors.RED.asInt()));
+		}
 	}
 
 	/**

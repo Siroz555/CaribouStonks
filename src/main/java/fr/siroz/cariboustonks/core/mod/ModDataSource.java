@@ -7,10 +7,13 @@ import com.google.gson.JsonParser;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.AsyncScheduler;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.core.module.color.Colors;
+import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
 import fr.siroz.cariboustonks.core.module.http.Http;
 import fr.siroz.cariboustonks.core.module.http.HttpResponse;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockEnchantment;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.io.BufferedReader;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -43,10 +47,12 @@ public final class ModDataSource {
 	// Hypixel SkyBlock Attributes
 	private static final String ATTRIBUTES_JSON_URL = "https://raw.githubusercontent.com/Siroz555/Caribou-REPO/refs/heads/main/data/attributes.json";
 	private static final Duration FIRST_RETRY_DELAY = Duration.ofMinutes(1);
+	private static final Cooldown RELOAD_COOLDOWN = Cooldown.of(10, TimeUnit.SECONDS);
 	private static final int MAX_RETRIES = 10;
 	private volatile List<SkyBlockAttribute> skyBlockAttributes = Collections.emptyList();
 	private final AtomicBoolean attributesFetchInProgress = new AtomicBoolean(false);
 	private final AtomicInteger attributesRetryAttempts = new AtomicInteger(0);
+	private volatile boolean attributesFetchError = false;
 
 	private boolean itemsMappingError = false;
 	private boolean enchantmentsError = false;
@@ -54,6 +60,21 @@ public final class ModDataSource {
 	public ModDataSource() {
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> loadModData(client).thenRun(this::checkInternalDataResults));
 		this.triggerSkyBlockAttributesFetch(false).thenRun(checkExternalDataResults());
+	}
+
+	public void reload() {
+		if (RELOAD_COOLDOWN.test()) {
+			PlayerContext.sendMessageWithPrefix(Component.literal("Reloading attributes..").withColor(Colors.YELLOW.asInt()));
+			triggerSkyBlockAttributesFetch(false).thenRun(() -> {
+				if (attributesFetchError) {
+					PlayerContext.sendMessageWithPrefix(Component.literal("Reloading attributes failed! Try again later.").withColor(Colors.RED.asInt()));
+				} else {
+					PlayerContext.sendMessageWithPrefix(Component.literal("Attributes reloaded! (" + skyBlockAttributes.size() + " loaded)").withColor(Colors.GREEN.asInt()));
+				}
+			});
+		} else {
+			PlayerContext.sendMessageWithPrefix(Component.literal("Reloading attributes on cooldown! Try again in few seconds.").withColor(Colors.RED.asInt()));
+		}
 	}
 
 	public @Nullable String getMinecraftId(@NonNull String hypixelMaterial) {
@@ -168,6 +189,7 @@ public final class ModDataSource {
 		promise = promise.exceptionallyCompose(throwable -> {
 			Throwable cause = throwable instanceof CompletionException ? throwable.getCause() : throwable;
 			CaribouStonks.LOGGER.error("[ModDataSource] Fetch attributes failed (attempt {}). Cause: {}", attributesRetryAttempts.get(), cause);
+			attributesFetchError = true;
 
 			int attemptsSoFar = attributesRetryAttempts.getAndIncrement();
 			if (attemptsSoFar >= MAX_RETRIES) {
@@ -207,6 +229,7 @@ public final class ModDataSource {
 
 			skyBlockAttributes = List.copyOf(attributes);
 			attributesRetryAttempts.set(0);
+			attributesFetchError = false;
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}

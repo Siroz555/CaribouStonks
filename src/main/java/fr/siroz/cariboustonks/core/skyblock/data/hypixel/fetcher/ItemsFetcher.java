@@ -76,6 +76,10 @@ public final class ItemsFetcher {
 		triggerFetch(false).thenRun(afterFetch());
 	}
 
+	public void reload(Runnable reloadAction) {
+		triggerFetch(false).thenRun(afterFetch()).thenRun(reloadAction);
+	}
+
 	/**
 	 * Return an immutable snapshot of the latest parsed SkyBlock items.
 	 *

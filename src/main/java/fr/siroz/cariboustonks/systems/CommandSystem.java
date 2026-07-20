@@ -38,6 +38,9 @@ public final class CommandSystem implements System {
 	}
 
 	private void registerModCommand(@NonNull CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext registryAccess) {
+
+		// SIROZ-NOTE: Move from system to ?
+
 		LiteralArgumentBuilder<FabricClientCommandSource> builder = ClientCommands.literal(CaribouStonks.NAMESPACE)
 				.executes(ClientContext.openScreen(CaribouStonksMenuScreen::new))
 				.then(ClientCommands.literal("config")
@@ -52,7 +55,20 @@ public final class CommandSystem implements System {
 						.then(ClientCommands.literal("mainHand")
 								.executes(ClientContext.openScreen(() -> HeldItemViewConfigScreen.create(null, InteractionHand.MAIN_HAND))))
 						.then(ClientCommands.literal("offHand")
-								.executes(ClientContext.openScreen(() -> HeldItemViewConfigScreen.create(null, InteractionHand.OFF_HAND)))));
+								.executes(ClientContext.openScreen(() -> HeldItemViewConfigScreen.create(null, InteractionHand.OFF_HAND)))))
+				.then(ClientCommands.literal("reload")
+						.executes(context -> {
+							context.getSource().sendError(Component.literal("Use /cariboustonks reload <items/attributes>"));
+							return 1;
+						})
+						.then(ClientCommands.literal("items").executes(_ -> {
+							CaribouStonks.skyBlock().getHypixelDataSource().reload();
+							return 1;
+						}))
+						.then(ClientCommands.literal("attributes").executes(_ -> {
+							CaribouStonks.mod().getModDataSource().reload();
+							return 1;
+						})));
 
 		LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(builder);
 		//dispatcher.register(ClientCommandManager.literal("caribou").redirect(node));
