@@ -13,6 +13,7 @@ import fr.siroz.cariboustonks.core.module.http.Http;
 import fr.siroz.cariboustonks.core.module.http.HttpResponse;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockEnchantment;
+import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.io.BufferedReader;
 import java.time.Duration;
@@ -58,8 +59,15 @@ public final class ModDataSource {
 	private boolean enchantmentsError = false;
 
 	public ModDataSource() {
-		ClientLifecycleEvents.CLIENT_STARTED.register(client -> loadModData(client).thenRun(this::checkInternalDataResults));
+		ClientLifecycleEvents.CLIENT_STARTED.register(client -> this.loadModData(client).thenRun(this::checkInternalDataResults));
 		this.triggerSkyBlockAttributesFetch(false).thenRun(checkExternalDataResults());
+
+		SkyBlockEvents.JOIN_EVENT.register(_ -> {
+			if (!attributesFetchError) return;
+			TickScheduler.getInstance().runLater(() -> PlayerContext.sendMessageWithPrefix(
+					Component.literal("Attributes fetch failed. Use /cariboustonks reload").withColor(Colors.RED_RGB)
+			), 80);
+		});
 	}
 
 	public void reload() {
