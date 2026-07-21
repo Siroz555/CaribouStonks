@@ -227,6 +227,7 @@ Lightweight and efficient.
 **Commands**
 
 - /cariboustonks (Main mod Screen)
+- /cariboustonks reload <attributes|items>: Reload internal SkyBlock Data.
 - /sendCoords > Share your current position.
 - /highlighter > Highlight a specific entity in the world.
 - /bestiaryHighlight > Control custom Bestiary highlight in the world.
