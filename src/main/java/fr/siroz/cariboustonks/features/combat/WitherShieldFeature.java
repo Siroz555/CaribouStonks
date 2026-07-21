@@ -20,7 +20,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import org.jspecify.annotations.NonNull;
@@ -125,8 +124,6 @@ public class WitherShieldFeature extends Feature {
 	}
 
 	private boolean hasWitherShieldScroll(@NonNull ItemStack stack) {
-		if (!stack.is(Items.IRON_SWORD)) return false;
-
 		CompoundTag customData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		if (customData.isEmpty()) return false;
 
