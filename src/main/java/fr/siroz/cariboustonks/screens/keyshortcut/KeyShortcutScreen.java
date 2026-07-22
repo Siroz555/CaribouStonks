@@ -22,12 +22,7 @@ import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyShortcutScreen extends CaribousStonksScreen {
-
-	// NOTE-ME : Avoir une confirmation lors de la fermeture du screen, sauf pour le bouton Done, même
-	// chose à faire pour les Waypoints -_-
-
-	@Nullable
-	private final Screen parent;
+	private final @Nullable Screen parent;
 	private final KeyShortcutFeature keyShortcutFeature;
 	protected Map<String, KeyShortcut> shortcuts;
 	private KeyShortcutListWidget listWidget;
