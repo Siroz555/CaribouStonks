@@ -66,31 +66,34 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 
 		adder.addChild(Button.builder(Component.literal("Waypoints"),
 						_ -> this.openScreen(WaypointScreen.create(this)))
+				.tooltip(Tooltip.create(Component.literal("Configure and create Waypoints.")))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
 		// LINE #3
 
-		adder.addChild(Button.builder(Component.literal("Mob Tracking"),
-						_ -> this.openScreen(MobTrackingScreen.create(this)))
-				.tooltip(Tooltip.create(Component.literal("Configure all Mob Tracking")))
+		Button stonks = Button.builder(Component.literal("Stonks"),
+						_ -> {
+						})
+				.tooltip(Tooltip.create(Component.literal("Bazaar Tracker & more.. Soon!")))
 				.width(HALF_BUTTON_WIDTH)
-				.build());
+				.build();
+		stonks.active = false;
+		adder.addChild(stonks);
 
 		adder.addChild(Button.builder(Component.literal("Reminders"),
 						_ -> this.openScreen(ReminderScreen.create(this)))
+				.tooltip(Tooltip.create(Component.literal("Checks all current active reminders.")))
 				.width(HALF_BUTTON_WIDTH)
 				.build());
 
 		// LINE #4
 
-		Button surprise = Button.builder(Component.literal("?"), _ -> {
-				})
-				.tooltip(Tooltip.create(Component.literal("Available on 26.1+ Soon")))
+		adder.addChild(Button.builder(Component.literal("Mob Tracking"),
+						_ -> this.openScreen(MobTrackingScreen.create(this)))
+				.tooltip(Tooltip.create(Component.literal("Configure all Mob Tracking.")))
 				.width(HALF_BUTTON_WIDTH)
-				.build();
-		surprise.active = false;
-		adder.addChild(surprise);
+				.build());
 
 		adder.addChild(Button.builder(Component.literal("Key Shortcuts"),
 						_ -> openScreen(KeyShortcutScreen.create(this)))
