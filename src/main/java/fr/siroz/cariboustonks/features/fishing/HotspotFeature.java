@@ -5,6 +5,7 @@ import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
@@ -56,7 +57,7 @@ public class HotspotFeature extends Feature {
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& this.config().fishing.hotspotHighlight
-				&& SkyBlockAPI.getIsland().hasHotspotFishing();
+				&& SkyBlockAPI.getIsland().hasTrait(IslandType.Trait.HOTSPOT_FISHING);
 	}
 
 	@Override

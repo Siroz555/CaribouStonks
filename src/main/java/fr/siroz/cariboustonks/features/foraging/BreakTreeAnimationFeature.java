@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.features.foraging;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
+import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.RenderEvents;
@@ -29,7 +30,7 @@ public class BreakTreeAnimationFeature extends Feature {
 	@Override
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland().isForagingIsland()
+				&& SkyBlockAPI.getIsland().hasTrait(IslandType.Trait.FORAGING)
 				&& this.config().foraging.hideTreeBreakAnimation;
 	}
 

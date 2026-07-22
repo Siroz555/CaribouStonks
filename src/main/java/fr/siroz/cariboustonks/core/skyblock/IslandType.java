@@ -1,6 +1,11 @@
 package fr.siroz.cariboustonks.core.skyblock;
 
 import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -17,139 +22,153 @@ public enum IslandType {
 	/**
 	 * Any
 	 */
-	ANY("#any#", "Any", false, false),
+	ANY("#any#", "Any"),
 
 	/**
 	 * Private Island - Personal Island & Guest
 	 */
-	PRIVATE_ISLAND("dynamic", "Private Island", false, false),
+	PRIVATE_ISLAND("dynamic", "Private Island"),
 
 	/**
 	 * Hub
 	 */
-	HUB("hub", "Hub", true, false),
+	HUB("hub", "Hub", Trait.HOTSPOT_FISHING),
 
 	/**
 	 * The Farming Islands
 	 */
-	THE_FARMING_ISLAND("farming_1", "The Farming Islands", false, false),
+	THE_FARMING_ISLAND("farming_1", "The Farming Islands"),
 
 	/**
 	 * Garden
 	 */
-	GARDEN("garden", "Garden", false, false),
+	GARDEN("garden", "Garden"),
 
 	/**
 	 * Gold Mine
 	 */
-	GOLD_MINE("mining_1", "Gold Mine", false, false),
+	GOLD_MINE("mining_1", "Gold Mine"),
 
 	/**
 	 * Deep Caverns
 	 */
-	DEEP_CAVERNS("mining_2", "Deep Caverns", false, false),
+	DEEP_CAVERNS("mining_2", "Deep Caverns"),
 
 	/**
 	 * Dwarven Mines
 	 */
-	DWARVEN_MINES("mining_3", "Dwarven Mines", false, false),
+	DWARVEN_MINES("mining_3", "Dwarven Mines"),
 
 	/**
 	 * Crystal Hollows
 	 */
-	CRYSTAL_HOLLOWS("crystal_hollows", "Crystal Hollows", false, false),
+	CRYSTAL_HOLLOWS("crystal_hollows", "Crystal Hollows"),
 
 	/**
 	 * Mineshaft
 	 */
-	GLACITE_MINESHAFT("mineshaft", "Mineshaft", false, false), // need to check
+	GLACITE_MINESHAFT("mineshaft", "Mineshaft"), // need to check
 
 	/**
 	 * Spider's Den
 	 */
-	SPIDER_DEN("combat_1", "Spider's Den", true, false),
+	SPIDER_DEN("combat_1", "Spider's Den", Trait.HOTSPOT_FISHING),
 
 	/**
 	 * Nether
 	 */
 	@Deprecated
-	BLAZING_FORTRESS("combat_2", "Nether", false, false),
+	BLAZING_FORTRESS("combat_2", "Nether"),
 
 	/**
 	 * The End
 	 */
-	THE_END("combat_3", "The End", false, false),
+	THE_END("combat_3", "The End"),
 
 	/**
 	 * Crimson Isle
 	 */
-	CRIMSON_ISLE("crimson_isle", "Crimson Isle", true, false),
+	CRIMSON_ISLE("crimson_isle", "Crimson Isle", Trait.HOTSPOT_FISHING),
 
 	/**
 	 * Kuudra's Hollow
 	 */
-	KUUDRA_HOLLOW("kuudra", "Kuudra's Hollow", false, false),
+	KUUDRA_HOLLOW("kuudra", "Kuudra's Hollow"),
 
 	/**
 	 * Dungeon Hub
 	 */
-	DUNGEON_HUB("dungeon_hub", "Dungeon Hub", false, false),
+	DUNGEON_HUB("dungeon_hub", "Dungeon Hub"),
 
 	/**
 	 * Dungeon
 	 */
-	DUNGEON("dungeon", "Dungeons", false, false), // -_-
+	DUNGEON("dungeon", "Dungeons"), // -_-
 
 	/**
 	 * The Park
 	 */
-	THE_PARK("foraging_1", "The Park", true, true),
+	THE_PARK("foraging_1", "The Park", Trait.HOTSPOT_FISHING, Trait.FORAGING),
 
 	/**
 	 * Galatea
 	 */
-	GALATEA("foraging_2", "Galatea", false, true),
+	GALATEA("foraging_2", "Galatea", Trait.FORAGING),
 
 	/**
 	 * Torrhus Canyon
 	 */
-	TORRHUS_CANYON("foraging_3", "Torrhus Canyon", true, true),
+	TORRHUS_CANYON("foraging_3", "Torrhus Canyon", Trait.HOTSPOT_FISHING, Trait.FORAGING),
 
 	/**
 	 * Torrhus Canyon - Safari instance
 	 */
-	SAFARI("safari", "Safari", false, false), // Hunting, pas foraging
+	SAFARI("safari", "Safari"), // Hunting, pas foraging
 
 	/**
 	 * Backwater Bayou
 	 */
-	BACKWATER_BAYOU("fishing_1", "Backwater Bayou", true, false),
+	BACKWATER_BAYOU("fishing_1", "Backwater Bayou", Trait.HOTSPOT_FISHING),
 
 	/**
 	 * Lotus Atoll
 	 */
-	LOTUS_ATOLL("lotus_atoll", "Lotus Atoll", true, false),
+	LOTUS_ATOLL("lotus_atoll", "Lotus Atoll", Trait.HOTSPOT_FISHING),
 
 	/**
 	 * Jerry's Workshop
 	 */
-	JERRY_WORKSHOP("winter", "Jerry's Workshop", true, false),
+	JERRY_WORKSHOP("winter", "Jerry's Workshop", Trait.HOTSPOT_FISHING),
 
 	/**
 	 * Dark Auction
 	 */
-	DARK_AUCTION("dark_auction", "Dark Auction", false, false),
+	DARK_AUCTION("dark_auction", "Dark Auction"),
 
 	/**
 	 * The Rift
 	 */
-	THE_RIFT("rift", "The Rift", false, false),
+	THE_RIFT("rift", "The Rift"),
 
 	/**
 	 * Unknown
 	 */
-	UNKNOWN("unknown", "Unknown", false, false),
+	UNKNOWN("unknown", "Unknown"),
 	;
+
+	/**
+	 * Island's Trait
+	 */
+	public enum Trait {
+		/**
+		 * The Island has Hotspots Fishing
+		 */
+		HOTSPOT_FISHING,
+		/**
+		 * The Island is a Foraging Type Island
+		 */
+		FORAGING,
+	}
 
 	/**
 	 * Represents an array of all possible {@link IslandType} constants.
@@ -159,17 +178,17 @@ public enum IslandType {
 	 * <b>Important:</b> {@code @Deprecated} constants are ignored.
 	 */
 	public static final IslandType[] VALUES;
+	private static final Map<String, IslandType> BY_ID = Arrays.stream(values())
+			.collect(Collectors.toMap(IslandType::getId, Function.identity()));
 
 	private final String id;
-	private final String name;
-	private final boolean hasHotspotFishing;
-	private final boolean isForagingIsland;
+	private final String displayName;
+	private final Set<Trait> traits;
 
-	IslandType(String id, String name, boolean hasHotspotFishing, boolean isForagingIsland) {
+	IslandType(String id, String displayName, Trait... traits) {
 		this.id = id;
-		this.name = name;
-		this.hasHotspotFishing = hasHotspotFishing;
-		this.isForagingIsland = isForagingIsland;
+		this.displayName = displayName;
+		this.traits = traits.length == 0 ? EnumSet.noneOf(Trait.class) : EnumSet.copyOf(Arrays.asList(traits));
 	}
 
 	/**
@@ -182,30 +201,22 @@ public enum IslandType {
 	}
 
 	/**
-	 * Returns the "display name"
+	 * Returns the display name of the Island
 	 *
 	 * @return the display name
 	 */
-	public String getName() {
-		return name;
+	public String getDisplayName() {
+		return displayName;
 	}
 
 	/**
-	 * Checks if the Island has Hotspot for Fishing
+	 * Checks if the Island has a specific {@link Trait}
 	 *
-	 * @return {@code true if the Island is an Fishing Island or with Hotspot}
+	 * @param trait the trait
+	 * @return {@code true} if the Island has the trait
 	 */
-	public boolean hasHotspotFishing() {
-		return hasHotspotFishing;
-	}
-
-	/**
-	 * Checks if the Island is a Foraging type Island
-	 *
-	 * @return {@code true} if the Island is a Foraging Island
-	 */
-	public boolean isForagingIsland() {
-		return isForagingIsland;
+	public boolean hasTrait(@NonNull Trait trait) {
+		return traits.contains(trait);
 	}
 
 	/**
@@ -217,7 +228,7 @@ public enum IslandType {
 	 */
 	@Override
 	public String toString() {
-		return name;
+		return displayName;
 	}
 
 	/**
@@ -227,12 +238,8 @@ public enum IslandType {
 	 * @return the Island or {@link IslandType#UNKNOWN} if not found
 	 */
 	public static @NonNull IslandType getById(@Nullable String id) {
-		if (id == null || id.isEmpty()) return UNKNOWN;
-
-		return Arrays.stream(IslandType.values())
-				.filter(is -> id.equals(is.getId()))
-				.findFirst()
-				.orElse(UNKNOWN);
+		if (id == null) return UNKNOWN;
+		return BY_ID.getOrDefault(id, UNKNOWN);
 	}
 
 	static {
