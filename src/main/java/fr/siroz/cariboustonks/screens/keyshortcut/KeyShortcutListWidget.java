@@ -25,12 +25,12 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 	private final KeyShortcutScreen parent;
 
 	KeyShortcutListWidget(
-            Minecraft client,
-            @NonNull KeyShortcutScreen parent,
-            int width,
-            int height,
-            int y,
-            int itemHeight
+			Minecraft client,
+			@NonNull KeyShortcutScreen parent,
+			int width,
+			int height,
+			int y,
+			int itemHeight
 	) {
 		super(client, width, height, y, itemHeight);
 		this.parent = parent;
@@ -68,22 +68,21 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 	}
 
 	protected class KeyShortcutEntry extends ContainerObjectSelectionList.Entry<KeyShortcutEntry> {
-
 		protected KeyShortcut keyShortcut;
+		private boolean waitingForKey = false;
 
 		private final List<AbstractWidget> children;
 		private final EditBox commandWidget;
 		private final Button keyBindWidget;
 
-		private boolean waitingForKey = false;
-
 		public KeyShortcutEntry(@NonNull KeyShortcut keyShortcut) {
 			this.keyShortcut = keyShortcut;
 
 			this.commandWidget = new EditBox(minecraft.font, width / 2 - 160, 5, 150, 20, Component.literal("Command"));
-			this.commandWidget.setTooltip(Tooltip.create(Component.literal("Example: 'equipment' or '/equipment'")));
+			this.commandWidget.setTooltip(Tooltip.create(Component.literal("Example: 'stats' or '/stats'")));
 			this.commandWidget.setValue(keyShortcut.command());
-			this.commandWidget.setMaxLength(48);
+			this.commandWidget.setMaxLength(96);
+			this.commandWidget.setResponder(this::onCommandChanged);
 
 			this.keyBindWidget = Button.builder(Component.literal("" + keyShortcut.keyCode()), _ -> {
 				parent.setCurrentEntry(this);
@@ -94,9 +93,23 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 		}
 
 		public void setKeyCode(int code) {
-			KeyShortcut shortcut = new KeyShortcut(commandWidget.getValue(), code);
-			parent.shortcuts.put(shortcut.command(), shortcut);
+			applyChange(keyShortcut.command(), code);
 			waitingForKey = false;
+		}
+
+		private void onCommandChanged(String newCommand) {
+			applyChange(newCommand, keyShortcut.keyCode());
+		}
+
+		private void applyChange(String command, int keyCode) {
+			parent.shortcuts.remove(keyShortcut.command());
+
+			KeyShortcut updated = new KeyShortcut(command, keyCode);
+			this.keyShortcut = updated;
+
+			if (!command.isBlank()) {
+				parent.shortcuts.put(command, updated);
+			}
 		}
 
 		@Override
@@ -125,11 +138,7 @@ class KeyShortcutListWidget extends ContainerObjectSelectionList<KeyShortcutList
 			keyBindWidget.setPosition(width / 2 + 44, this.getY());
 			keyBindWidget.active = !waitingForKey;
 
-			int keyCode = parent.shortcuts.values().stream()
-					.filter(shortcut -> shortcut.command().equals(commandWidget.getValue()))
-					.map(KeyShortcut::keyCode)
-					.findFirst()
-					.orElse(-1);
+			int keyCode = keyShortcut.keyCode();
 
 			String label;
 			if (waitingForKey) {
