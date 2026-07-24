@@ -24,12 +24,14 @@ import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 
 public class AttributeInfoTooltipFeature extends Feature {
-
 	private static final Pattern NAME_AND_LEVEL_PATTERN = Pattern.compile(".*? ([IVX]+) \\(.*\\)");
 	private static final Pattern OWNED_PATTERN = Pattern.compile("Owned: ([\\d,]+) Shards?");
-	private static final Pattern LEVEL_PATTERN = Pattern.compile("Level: (\\d+)");
-	private static final Pattern SYPHON_COUNT_PATTERN = Pattern.compile("Syphon (\\d+) more to level up!");
 	private static final Pattern RARITY_PATTERN = Pattern.compile("Rarity: (COMMON|UNCOMMON|RARE|EPIC|LEGENDARY)");
+	private static final Pattern HUNTING_BOX_SYPHON_PATTERN = Pattern.compile("Syphon (\\d+) more to level up!");
+	// Attribute Menu: "Attribute Level: 8" ou "Attribute Level: 10 (MAX!)"
+	private static final Pattern ATTRIBUTE_LEVEL_PATTERN = Pattern.compile("Attribute Level: (\\d+)(?: \\(MAX!\\))?");
+	// Attribute Menu: "Syphon 1 shard to level up!" (différent du texte de la Hunting Box)
+	private static final Pattern ATTRIBUTE_SYPHON_PATTERN = Pattern.compile("Syphon (\\d+) shards? to level up!");
 	private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("");
 
 	private final HypixelDataSource hypixelDataSource;
@@ -48,12 +50,8 @@ public class AttributeInfoTooltipFeature extends Feature {
 					if (StonksUtils.isEdgeSlot(focusedSlot.index, 6)) return;
 
 					String title = currentScreen.getTitle().getString();
-					switch (title) {
-						case AttributeAPI.HUNTING_BOX -> handleHuntingBox(lines);
-						case AttributeAPI.ATTRIBUTE_MENU -> handleAttributeMenu(lines);
-						default -> {
-						}
-					}
+					if (title.contains(AttributeAPI.HUNTING_BOX)) handleHuntingBox(lines);
+					else if (title.contains(AttributeAPI.ATTRIBUTE_MENU)) handleAttributeMenu(lines);
 				})
 				.build());
 	}
@@ -85,7 +83,7 @@ public class AttributeInfoTooltipFeature extends Feature {
 				// 1, 22
 				ownedStr = matcher.group(1).replace(",", "");
 
-			} else if (syphonCountStr == null && matcher.usePattern(SYPHON_COUNT_PATTERN).matches()) {
+			} else if (syphonCountStr == null && matcher.usePattern(HUNTING_BOX_SYPHON_PATTERN).matches()) {
 				// 10, 15 | X Maxed
 				syphonCountStr = matcher.group(1);
 
@@ -107,7 +105,7 @@ public class AttributeInfoTooltipFeature extends Feature {
 		int owned = StonksUtils.toInt(ownedStr, -1);
 		if (owned < 0) return;
 
-		Rarity itemRarity = Rarity.valueOf(rarityStr.toUpperCase(Locale.ROOT));
+		Rarity itemRarity = Rarity.valueOf(rarityStr.toUpperCase(Locale.ENGLISH));
 		int shardsUntilMax = AttributeAPI.getShardsUntilMax(itemRarity, level + 1);
 		if (shardsUntilMax < 0 || syphonCountStr == null) return;
 
@@ -138,11 +136,11 @@ public class AttributeInfoTooltipFeature extends Feature {
 			} else if (rarityStr == null && matcher.usePattern(RARITY_PATTERN).matches()) {
 				rarityStr = matcher.group(1);
 
-			} else if (levelStr == null && matcher.usePattern(LEVEL_PATTERN).matches()) {
+			} else if (levelStr == null && matcher.usePattern(ATTRIBUTE_LEVEL_PATTERN).matches()) {
 				// 10, 15 | X Maxed
 				levelStr = matcher.group(1);
 
-			} else if (matcher.usePattern(SYPHON_COUNT_PATTERN).matches()) {
+			} else if (matcher.usePattern(ATTRIBUTE_SYPHON_PATTERN).matches()) {
 				// 6, 8 | X Maxed
 				syphonCountStr = matcher.group(1);
 				break;
@@ -159,10 +157,9 @@ public class AttributeInfoTooltipFeature extends Feature {
 		int syphonCount = StonksUtils.toInt(syphonCountStr, -1);
 		if (syphonCount < 0) return;
 
-		Rarity itemRarity = Rarity.valueOf(rarityStr.toUpperCase(Locale.ROOT));
+		Rarity itemRarity = Rarity.valueOf(rarityStr.toUpperCase(Locale.ENGLISH));
 		int shardsUntilMax = AttributeAPI.getShardsUntilMax(itemRarity, level + 1);
 		if (shardsUntilMax < 0) return;
-
 
 		int required = shardsUntilMax + syphonCount;
 		// HuntingBox != AttributeMenu
