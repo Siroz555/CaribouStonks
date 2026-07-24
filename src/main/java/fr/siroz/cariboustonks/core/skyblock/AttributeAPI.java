@@ -15,7 +15,6 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public final class AttributeAPI {
-
 	public static final int MAX_LEVEL = 10;
 	public static final String HUNTING_BOX = "Hunting Box";
 	public static final String ATTRIBUTE_MENU = "Attribute Menu";
@@ -60,29 +59,31 @@ public final class AttributeAPI {
 		if (!fallback.isEmpty() || currentScreen == null) return fallback;
 
 		String title = currentScreen.getTitle().getString();
-		switch (title) {
-			case HUNTING_BOX -> {
-				String name = item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
-				SkyBlockAttribute attribute = byName != null ? byName.apply(name) : null;
-				return attribute != null ? attribute.skyBlockApiId() : fallback;
-			}
-			case ATTRIBUTE_MENU -> {
-				String id = null;
-				for (Component line : lines) {
-					String lineText = line.getString();
-					if (lineText.isEmpty()) {
-						continue;
-					}
 
-					Matcher attributeIdMatcher = SOURCE_PATTERN.matcher(lineText);
-					if (attributeIdMatcher.matches()) {
-						id = attributeIdMatcher.group("id");
-						break;
-					}
+		// Hunting Box
+		if (title.contains(HUNTING_BOX)) {
+			String name = item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
+			SkyBlockAttribute attribute = byName != null ? byName.apply(name) : null;
+			return attribute != null ? attribute.skyBlockApiId() : fallback;
+		}
+
+		// Attribute Menu
+		if (title.contains(ATTRIBUTE_MENU)) {
+			String id = null;
+			for (Component line : lines) {
+				String lineText = line.getString();
+				if (lineText.isEmpty()) continue;
+
+				Matcher attributeIdMatcher = SOURCE_PATTERN.matcher(lineText);
+				if (attributeIdMatcher.matches()) {
+					id = attributeIdMatcher.group("id");
+					break;
 				}
-
-				return getAttributeId(id, fallback);
 			}
+			return getAttributeId(id, fallback);
+		}
+
+		switch (title) {
 			case FUSION_BOX, SHARD_FUSION, CONFIRM_FUSION -> {
 				String id = null;
 				for (Component line : lines) {
