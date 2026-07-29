@@ -63,6 +63,8 @@ public interface SkyBlockConstants {
 		map.put("BANE_OF_ARTHROPODS", Map.of(7, "ENSNARED_SNAIL"));
 		map.put("VENOMOUS", Map.of(7, "FATEFUL_STINGER"));
 		map.put("THORNS", Map.of(4, "PRICKLY_CREEPER"));
+		map.put("FOREST_PLEDGE", Map.of(6, "WATER_HYACINTH"));
+		map.put("KARMA", Map.of(6, "DISTANT_ECHO")); // TODO - 5 max? -> 6 upgrade
 	}));
 
 	/**
@@ -185,6 +187,9 @@ public interface SkyBlockConstants {
 		map.put("erudite", "DAEDALUS_NOTES");
 		// Froggles
 		map.put("geometric", "GEOMETRIC_ODDITY");
+		// Fishing Nets
+		map.put("sticky", "EXTREMELY_MILD_ADHESIVE");
+		// TODO - Safari Belt
 	}));
 
 	List<String> MASTER_STARS = List.of(
