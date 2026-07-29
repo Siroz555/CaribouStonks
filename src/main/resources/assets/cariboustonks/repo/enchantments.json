@@ -285,6 +285,12 @@
     "goodLevel": 6
   },
   {
+    "id": "karma",
+    "name": "Karma",
+    "maxLevel": 6,
+    "goodLevel": 5
+  },
+  {
     "id": "knockback",
     "name": "Knockback",
     "maxLevel": 2
@@ -359,6 +365,11 @@
   {
     "id": "paleontologist",
     "name": "Paleontologist",
+    "maxLevel": 5
+  },
+  {
+    "id": "petalfall",
+    "name": "Petalfall",
     "maxLevel": 5
   },
   {
