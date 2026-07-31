@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.core.skyblock.item.calculator;
 
+import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.ItemMetadata;
@@ -871,8 +872,13 @@ public final class ItemValueCalculator {
 	private @NonNull PriceComponent boosters() {
 		return (ctx, acc) -> {
 			if (ctx.metadata().modifiers().boosters().isPresent()) {
-				for (String booster : ctx.metadata().modifiers().boosters().get()) {
-					String apiId = booster.toUpperCase(Locale.ENGLISH) + "_BOOSTER";
+				for (Object2IntMap.Entry<String> booster : Object2IntMaps.fastIterable(ctx.metadata().modifiers().boosters().get())) {
+					String apiId = booster.getKey().toUpperCase(Locale.ENGLISH) + "_BOOSTER";
+					int boosterTier = booster.getIntValue();
+					if (boosterTier > 1) {
+						Rarity rarity = Rarity.fromPower(boosterTier);
+						if (rarity != Rarity.UNKNOWN) apiId = apiId + "_" + rarity.name();
+					}
 					Calculation calc = Calculation.of(
 							Calculation.Type.BOOSTERS,
 							apiId,

@@ -211,7 +211,8 @@
   {
     "id": "forest_pledge",
     "name": "Forest Pledge",
-    "maxLevel": 5
+    "maxLevel": 6,
+    "goodLevel": 5
   },
   {
     "id": "fortune",
