@@ -1,5 +1,7 @@
 package fr.siroz.cariboustonks.core.skyblock.item.metadata;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -39,7 +41,7 @@ public record Modifiers(
 		Optional<List<String>> abilityScrolls,
 		OptionalInt dungeonItemTier,
 		OptionalInt dungeonItemLevel,
-		Optional<List<String>> boosters,
+		Optional<Object2IntMap<String>> boosters,
 		OptionalInt overclockers
 ) {
 
@@ -101,12 +103,14 @@ public record Modifiers(
 			OptionalInt dungeonItemLevelData = customData.getInt("dungeon_item_level")
 					.map(OptionalInt::of)
 					.orElse(OptionalInt.empty());
-			Optional<List<String>> boostersData = customData.getList("boosters")
-					.map(list -> list.stream()
-							.map(Tag::asString)
-							.flatMap(Optional::stream)
-							.toList())
-					.filter(list -> !list.isEmpty());
+			Optional<Object2IntMap<String>> boostersData = Optional.of(customData.getCompoundOrEmpty("booster_tiers"))
+					.filter(tag -> !tag.isEmpty())
+					.map(tag -> {
+						Object2IntMap<String> map = new Object2IntOpenHashMap<>();
+						tag.keySet().forEach(id -> map.put(id, tag.getIntOr(id, 0)));
+						return map;
+					});
+
 			OptionalInt overclockData = customData.getInt("levelable_overclocks")
 					.map(OptionalInt::of)
 					.orElse(OptionalInt.empty());

@@ -63,6 +63,16 @@ public enum Rarity {
 		return UNKNOWN;
 	}
 
+	public static Rarity fromPower(int power) {
+		for (Rarity rarity : VALUES) {
+			if (rarity.getPower() == power) {
+				return rarity;
+			}
+		}
+
+		return UNKNOWN;
+	}
+
 	public static @NonNull Optional<Rarity> containsName(@NonNull String name) {
 		return Streams.findLast(Arrays.stream(VALUES).filter(rarity -> name.contains(rarity.name())));
 	}
