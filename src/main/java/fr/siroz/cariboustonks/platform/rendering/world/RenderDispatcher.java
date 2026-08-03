@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.platform.context.WorldContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.BlockEntityRenderStateAccessor;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.BeamRendererCommand;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.CircleRendererCommand;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.CuboidOutlineRendererCommand;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.CursorLineRendererCommand;
@@ -14,6 +15,7 @@ import fr.siroz.cariboustonks.platform.rendering.world.renderer.QuadRendererComm
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.TextRendererCommand;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.TextureRendererCommand;
 import fr.siroz.cariboustonks.platform.rendering.world.renderer.ThickCircleRendererCommand;
+import fr.siroz.cariboustonks.platform.rendering.world.state.BeamRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.CircleRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.CuboidOutlineRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.CursorLineRenderState;

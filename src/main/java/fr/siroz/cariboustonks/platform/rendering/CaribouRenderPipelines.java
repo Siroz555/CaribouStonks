@@ -23,8 +23,7 @@ public final class CaribouRenderPipelines {
 	public static final RenderPipeline BEAM = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/beam"))
-					.withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
-					.withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
+					.withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLES)
 					.withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false))
 					.withCull(false)
 					.build()
@@ -33,8 +32,7 @@ public final class CaribouRenderPipelines {
 	public static final RenderPipeline BEAM_THROUGH_BLOCKS = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/beam_through_blocks"))
-					.withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
-					.withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
+					.withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLES)
 					.withDepthStencilState(Optional.empty())
 					.withCull(false)
 					.build()
