@@ -156,7 +156,7 @@ public class CocoonedWarningFeature extends Feature {
 		if (!cocoonPositions.isEmpty()) {
 			for (BlockPos pos : cocoonPositions) {
 				final BlockPos finalPos = pos.immutable().offset(0, -4, 0);
-				renderer.submitBeaconBeam(finalPos, Colors.RED);
+				renderer.submitVanillaBeaconBeam(finalPos, Colors.RED);
 			}
 		}
 
