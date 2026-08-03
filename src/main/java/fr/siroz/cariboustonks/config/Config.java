@@ -10,6 +10,7 @@ import fr.siroz.cariboustonks.config.configs.ForagingConfig;
 import fr.siroz.cariboustonks.config.configs.GeneralConfig;
 import fr.siroz.cariboustonks.config.configs.HuntingConfig;
 import fr.siroz.cariboustonks.config.configs.InstanceConfig;
+import fr.siroz.cariboustonks.config.configs.MiningConfig;
 import fr.siroz.cariboustonks.config.configs.MiscConfig;
 import fr.siroz.cariboustonks.config.configs.SlayerConfig;
 import fr.siroz.cariboustonks.config.configs.UIAndVisualsConfig;
@@ -49,6 +50,9 @@ public class Config {
 
     @SerialEntry
     public FishingConfig fishing = new FishingConfig();
+
+	@SerialEntry
+	public MiningConfig mining = new MiningConfig();
 
     @SerialEntry
     public MiscConfig misc = new MiscConfig();

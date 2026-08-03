@@ -617,9 +617,24 @@ public class SkillsCategory extends AbstractCategory {
 										newValue -> current.fishing.lotusAtoll.buffExpiredWarn = newValue)
 								.controller(this::createBooleanController)
 								.build())
-						.option(LabelOption.create(Component.empty()))
-						.option(LabelOption.create(Component.empty()))
                         .build())
+				.group(OptionGroup.createBuilder()
+						.name(Component.literal("Mining").withStyle(ChatFormatting.BOLD))
+						.collapsed(false)
+						.description(OptionDescription.of(
+								Component.literal("Mining settings.")))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Mineshaft - Corpse Finder"))
+								.description(OptionDescription.of(
+										Component.literal("")))
+								.binding(defaults.mining.mineshaft.corpseFinder,
+										() -> current.mining.mineshaft.corpseFinder,
+										newValue -> current.mining.mineshaft.corpseFinder = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(LabelOption.create(Component.empty()))
+						.option(LabelOption.create(Component.empty()))
+						.build())
                 .build();
     }
 }

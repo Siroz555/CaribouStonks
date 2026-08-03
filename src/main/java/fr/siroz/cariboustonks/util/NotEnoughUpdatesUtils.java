@@ -51,7 +51,7 @@ public final class NotEnoughUpdatesUtils {
 
 			case "ATTRIBUTE_SHARD" -> ""; // The Foraging Update 0.23 - "New Shard API"
 
-			case "PARTY_HAT_CRAB", "BALLOON_HAT_2024" -> id
+			case "PARTY_HAT_CRAB", "BALLOON_HAT_2024", "BALLOON_HAT_2025", "CAKE_HAT_2026" -> id
 					+ "_"
 					+ customData.getStringOr("party_hat_color", "").toUpperCase(Locale.ENGLISH);
 

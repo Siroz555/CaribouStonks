@@ -49,6 +49,10 @@ public final class SkyBlockManager {
 			this.updateTimeSystem();
 		}, 1, TimeUnit.SECONDS);
 
+		var modDataSource = CaribouStonks.mod().getModDataSource();
+		// Bootstrap AttributeAPI dependencies
+		AttributeAPI.bootstrap(modDataSource::getAttributeByShardName, modDataSource::getAttributeById);
+
 		// Event listeners
 		ClientPlayConnectionEvents.DISCONNECT.register((_handler, _client) -> this.onDisconnect());
 

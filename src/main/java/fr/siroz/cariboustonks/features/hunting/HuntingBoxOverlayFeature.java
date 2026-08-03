@@ -32,7 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
 
 public class HuntingBoxOverlayFeature extends Feature {
-	private static final Pattern TITLE_PATTERN = Pattern.compile("^Hunting Box.*");
+	private static final Pattern TITLE_PATTERN = Pattern.compile("^(?:\\(\\d+/\\d+\\) )?Hunting Box.*");
 	private static final Pattern OWNED_PATTERN = Pattern.compile("Owned: ([\\d,]+) Shards?");
 	private static final int PADDING_LEFT = 20;
 	private static final int LEFT_TO_RIGHT = 18;

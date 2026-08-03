@@ -211,7 +211,8 @@
   {
     "id": "forest_pledge",
     "name": "Forest Pledge",
-    "maxLevel": 5
+    "maxLevel": 6,
+    "goodLevel": 5
   },
   {
     "id": "fortune",
@@ -283,6 +284,12 @@
     "name": "Infinite Quiver",
     "maxLevel": 10,
     "goodLevel": 6
+  },
+  {
+    "id": "karma",
+    "name": "Karma",
+    "maxLevel": 6,
+    "goodLevel": 5
   },
   {
     "id": "knockback",
@@ -359,6 +366,11 @@
   {
     "id": "paleontologist",
     "name": "Paleontologist",
+    "maxLevel": 5
+  },
+  {
+    "id": "petalfall",
+    "name": "Petalfall",
     "maxLevel": 5
   },
   {

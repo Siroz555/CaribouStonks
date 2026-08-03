@@ -90,6 +90,7 @@ public class TrackingShardsFeature extends Feature {
 	public boolean isEnabled() {
 		return SkyBlockAPI.isOnSkyBlock()
 				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
+				&& SkyBlockAPI.getIsland() != IslandType.SAFARI
 				&& this.config().hunting.trackingShards.hud.enabled;
 	}
 

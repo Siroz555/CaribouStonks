@@ -337,6 +337,22 @@ public final class SkyBlockAPI {
 			case "NEW_YEAR_CAKE" -> {
 				return id + "_" + customData.getIntOr("new_years_cake", 0);
 			}
+			case "PARTY_HAT_CRAB", "PARTY_HAT_CRAB_ANIMATED", "BALLOON_HAT_2024", "BALLOON_HAT_2025", "CAKE_HAT_2026" -> {
+				return id + "_" + customData.getStringOr("party_hat_color", "").toUpperCase(Locale.ENGLISH);
+			}
+			case "PARTY_HAT_SLOTH" -> {
+				return id + "_" + customData.getStringOr("party_hat_emoji", "").toUpperCase(Locale.ENGLISH);
+			}
+			case "MIDAS_SWORD" -> {
+				if (customData.getIntOr("winning_bid", 0) >= 50_000_000) {
+					return id + "_50M";
+				}
+			}
+			case "MIDAS_STAFF" -> {
+				if (customData.getIntOr("winning_bid", 0) >= 100_000_000) {
+					return id + "_100M";
+				}
+			}
 
 			default -> {
 			}

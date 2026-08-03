@@ -308,15 +308,6 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Chocolate Factory | Max Chocolates"))
-								.description(OptionDescription.of(
-										Component.literal("Activate reminders when chocolate production is nearing its limit.")))
-								.binding(defaults.general.reminders.chocolateFactoryMaxChocolates,
-										() -> current.general.reminders.chocolateFactoryMaxChocolates,
-										newValue -> current.general.reminders.chocolateFactoryMaxChocolates = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Rift | Ubik's Cube"))
 								.description(OptionDescription.of(
 										Component.literal("Activate a reminder when your Ubik's Cube is ready for use.")))

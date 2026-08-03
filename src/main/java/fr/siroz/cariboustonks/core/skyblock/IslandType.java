@@ -111,6 +111,16 @@ public enum IslandType {
 	GALATEA("foraging_2", "Galatea"),
 
 	/**
+	 * Torrhus Canyon
+	 */
+	TORRHUS_CANYON("foraging_3", "Torrhus Canyon", true),
+
+	/**
+	 * Torrhus Canyon - Safari instance
+	 */
+	SAFARI("safari", "Safari"),
+
+	/**
 	 * Backwater Bayou
 	 */
 	BACKWATER_BAYOU("fishing_1", "Backwater Bayou", true),

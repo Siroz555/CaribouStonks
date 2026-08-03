@@ -55,7 +55,16 @@ public final class CommandSystem implements System {
 						.then(ClientCommandManager.literal("mainHand")
 								.executes(Client.openScreen(() -> HeldItemViewConfigScreen.create(null, InteractionHand.MAIN_HAND))))
 						.then(ClientCommandManager.literal("offHand")
-								.executes(Client.openScreen(() -> HeldItemViewConfigScreen.create(null, InteractionHand.OFF_HAND)))));
+								.executes(Client.openScreen(() -> HeldItemViewConfigScreen.create(null, InteractionHand.OFF_HAND)))))
+				.then(ClientCommandManager.literal("reload")
+						.executes(context -> {
+							context.getSource().sendError(Component.literal("Use /cariboustonks reload <items/attributes>"));
+							return 1;
+						})
+						.then(ClientCommandManager.literal("attributes").executes(_c -> {
+							CaribouStonks.mod().getModDataSource().reload();
+							return 1;
+						})));
 
 		LiteralCommandNode<FabricClientCommandSource> node = dispatcher.register(builder);
 		//dispatcher.register(ClientCommandManager.literal("caribou").redirect(node));
