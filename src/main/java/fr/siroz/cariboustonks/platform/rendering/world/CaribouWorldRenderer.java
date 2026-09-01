@@ -27,6 +27,17 @@ import org.joml.Vector4f;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+// SIROZ-NOTE: 26.2 - Vulkan Graphic API - Crash SIGSEGV natif
+//
+// executeDraws() > compilée en C2 > _thread_in_Java = pas un crash driver GPU, ni un crash Java.
+//
+// Aucun problème pendant 7h en jeu, nmethod > en interprété/C1 depuis 7h de session,
+// et elle crash quasi immédiatement après son premier passage en C2
+//
+// Bug JIT C2 | JDK 25.0.1 (Microsoft-12574222) (--sun-misc-unsafe-memory-access=allow)
+//
+// Conclusion, je ne sais pas, je suis nul coté rendering interne MC, microslop...
+
 public final class CaribouWorldRenderer {
 	private static final StagedVertexBuffer VERTEX_BUFFER = new StagedVertexBuffer(
 			() -> "CaribouStonks WorldRenderer Vertex Buffer",
