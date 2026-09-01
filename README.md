@@ -33,6 +33,7 @@ Lightweight and efficient.
     - Search engine for all SkyBlock items.
     - KeyBind to find an item.
     - Bazaar: Press ENTER to validate the last input.
+    - Auction House: Auto Copy Lowest BIN Price -1
 
 - Reminders
     - Booster Cookie: Buff Status & Buff Inactive Reminder.

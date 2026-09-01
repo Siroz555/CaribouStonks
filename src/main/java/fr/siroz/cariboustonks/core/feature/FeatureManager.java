@@ -53,6 +53,7 @@ import fr.siroz.cariboustonks.features.slayers.HighlightSlayerMobFeature;
 import fr.siroz.cariboustonks.features.slayers.SlayerCocoonedWarningFeature;
 import fr.siroz.cariboustonks.features.slayers.SlayerStatsFeature;
 import fr.siroz.cariboustonks.features.slayers.boss.TarantulaBossFeature;
+import fr.siroz.cariboustonks.features.stonks.CopyLowestBinFeature;
 import fr.siroz.cariboustonks.features.stonks.ItemValueViewerFeature;
 import fr.siroz.cariboustonks.features.stonks.StonksCommandFeature;
 import fr.siroz.cariboustonks.features.stonks.StonksFeature;
@@ -158,6 +159,7 @@ public final class FeatureManager {
 		registerFeature(new BazaarPriceTooltipFeature(1));
 		registerFeature(new AuctionLowestBinTooltipFeature(2));
 		registerFeature(new ItemValueTooltipFeature(4));
+		registerFeature(new CopyLowestBinFeature());
 		// UI
 		registerFeature(new DeployableFeature());
 		registerFeature(new MobTrackingFeature());

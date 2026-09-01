@@ -254,6 +254,17 @@ public class GeneralCategory extends AbstractCategory {
 										newValue -> current.general.stonks.bazaarSignEditEnterValidation = newValue)
 								.controller(this::createBooleanController)
 								.build())
+						// Auction House
+						.option(LabelOption.create(Component.literal("| Auction House").withStyle(ChatFormatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Auction House - Auto Copy Lowest BIN Price -1"))
+								.description(OptionDescription.of(
+										Component.literal("When you create an Auction, this automatically copies the Lowest BIN Price (minus 1) to your clipboard.")))
+								.binding(defaults.general.stonks.autoCopyLowestBinPrice,
+										() -> current.general.stonks.autoCopyLowestBinPrice,
+										newValue -> current.general.stonks.autoCopyLowestBinPrice = newValue)
+								.controller(this::createBooleanController)
+								.build())
 						.option(LabelOption.create(Component.literal("| Stonks Screen & Commands").withStyle(ChatFormatting.BOLD)))
 						.option(ButtonOption.createBuilder()
 								.name(Component.literal("/stonks Command"))
