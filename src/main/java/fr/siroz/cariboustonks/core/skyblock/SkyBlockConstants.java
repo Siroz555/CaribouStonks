@@ -39,7 +39,7 @@ public interface SkyBlockConstants {
 	/**
 	 * Garden Pest Icon
 	 */
-	String GARDEN_PEST_ICON = "\uE018";
+	String GARDEN_PEST_ICON = "\uE07F";
 
 	/**
 	 * Enchantment Upgrades.

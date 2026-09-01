@@ -115,7 +115,7 @@ public final class PestFinderFeature extends Feature {
 			if (!as.hasCustomName()) continue;
 
 			String name = as.getName().getString();
-			if (!name.contains(SkyBlockConstants.GARDEN_PEST_ICON_LEGACY) || !name.contains(SkyBlockConstants.GARDEN_PEST_ICON)) continue;
+			if (!name.startsWith(SkyBlockConstants.GARDEN_PEST_ICON_LEGACY) && !name.startsWith(SkyBlockConstants.GARDEN_PEST_ICON)) continue;
 
 			renderer.submitLineFromCursor(as.getEyePosition(), Colors.GREEN, 1f);
 		}
