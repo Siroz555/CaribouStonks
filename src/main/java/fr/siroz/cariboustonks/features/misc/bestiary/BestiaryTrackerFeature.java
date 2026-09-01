@@ -21,9 +21,9 @@ import org.jspecify.annotations.Nullable;
 
 public class BestiaryTrackerFeature extends Feature {
 	private static final String BESTIARY_TAB_LIST_NAME = "Bestiary";
+
 	private final Map<String, BestiaryMobStats> trackedMobs = new LinkedHashMap<>();
-	@Nullable
-	private List<BestiaryMobStats> active;
+	private @Nullable List<BestiaryMobStats> active;
 
 	public BestiaryTrackerFeature() {
 		this.addComponent(HudComponent.class, HudComponent.builder()

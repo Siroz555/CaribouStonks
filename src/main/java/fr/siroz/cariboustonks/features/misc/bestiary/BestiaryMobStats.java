@@ -24,16 +24,16 @@ import org.jspecify.annotations.NonNull;
 final class BestiaryMobStats {
 	private static final Duration INACTIVITY_TIMEOUT = Duration.ofMinutes(2);
 	private static final Duration RATE_WINDOW = Duration.ofMinutes(5);
-	private static final long MIN_KILLS = 10; // 5 // trop faible, mais en fishing c'est horrible, enfin...
-	private static final long MIN_KILLS_FOR_STATS = 15; // 20 // 5 de +/- est largement mieux coté visibilité dans le HUD
-
-	private final Deque<KillEvent> recentKills = new ArrayDeque<>();
+	private static final long MIN_KILLS = 5; // 5 // trop faible, mais en fishing c'est horrible, enfin...
+	private static final long MIN_KILLS_FOR_STATS = 10; // 20 // 5 de +/- est largement mieux coté visibilité dans le HUD
 
 	private int tier;
 	private long current;
 	private long max;
 	private Instant lastProgressTime;
 	private Component lineComponent;
+
+	private final Deque<KillEvent> recentKills = new ArrayDeque<>();
 
 	private record KillEvent(Instant timestamp, long amount) {
 	}
