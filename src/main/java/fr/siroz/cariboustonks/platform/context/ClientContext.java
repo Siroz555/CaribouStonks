@@ -52,7 +52,7 @@ public final class ClientContext {
 	 * Init
 	 */
 	public static void bootstrap() {
-		TickScheduler.getInstance().runRepeating(ClientContext::updateScoreboard, 1, TimeUnit.SECONDS);
+		TickScheduler.getInstance().runRepeating(ClientContext::contextUpdate, 1, TimeUnit.SECONDS);
 	}
 
 	/**
@@ -235,7 +235,7 @@ public final class ClientContext {
 		return InputConstants.isKeyDown(CLIENT.getWindow(), 340) || InputConstants.isKeyDown(CLIENT.getWindow(), 344);
 	}
 
-	private static void updateScoreboard() {
+	private static void contextUpdate() {
 		try {
 			// Toujours clear, toujours
 			STRING_SCOREBOARD.clear();
