@@ -1,11 +1,17 @@
 package fr.siroz.cariboustonks.platform.context;
 
+import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import org.jspecify.annotations.NonNull;
@@ -20,6 +26,8 @@ import org.jspecify.annotations.Nullable;
 public final class WorldContext {
 	private static final Minecraft CLIENT = Minecraft.getInstance();
 
+	private static @Nullable Holder<Biome> biome = null;
+
 	private WorldContext() {
 	}
 
@@ -27,6 +35,7 @@ public final class WorldContext {
 	 * Init
 	 */
 	public static void bootstrap() {
+		TickScheduler.getInstance().runRepeating(WorldContext::contextUpdate, 1, TimeUnit.SECONDS);
 	}
 
 	/**
@@ -153,5 +162,28 @@ public final class WorldContext {
 				.filter(filterPredicate)
 				.min(Comparator.comparingDouble(as -> as.distanceToSqr(CLIENT.player)))
 				.orElse(null);
+	}
+
+	/**
+	 * Checks if the player is in the given biome
+	 *
+	 * @param targetBiome the target biome
+	 * @return {@code true} if the player is in the biome
+	 */
+	public static boolean isInBiome(@NonNull Identifier targetBiome) {
+		return biome != null && biome.is(targetBiome);
+	}
+
+	private static void contextUpdate() {
+		if (CLIENT.player == null) return;
+		if (CLIENT.level == null) return;
+
+		BlockPos feetPos = CLIENT.player.blockPosition();
+		if (CLIENT.level.isInsideBuildHeight(feetPos)) {
+			biome = CLIENT.level.getBiome(feetPos);
+			return;
+		}
+
+		biome = null;
 	}
 }
