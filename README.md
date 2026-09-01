@@ -5,7 +5,7 @@
 Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla Tweaks, and a ton of QoL features!
 Lightweight and efficient.
 
-**✅ Supported Minecraft Versions**: **26.2**, **26.1.x** and **1.21.11**
+**✅ Supported Minecraft Versions**: **26.2** & **26.1.x**
 
 ## Installation
 
@@ -303,14 +303,14 @@ _TODO :: more..._
 
 ## Minecraft Versions History
 
-| Version             |                   Status | Notes                               |
-|---------------------|-------------------------:|-------------------------------------|
-| **26.2**            |            ✅ **Current** | Latest                              |
-| **26.1.x**          |            ✅ **Current** | Maintained                          |
-| **1.21.11**         |    ⚠️ **End of Support** | Maintained (Hypixel Version Policy) |
-| **1.21.10**         | ⚠️ **No Longer Updated** | Latest Mod Version: 1.0.0           |
-| **1.21.7 / 1.21.8** | ⚠️ **No Longer Updated** | Latest Mod Version: 0.10.1          |
-| **1.21.5**          | ⚠️ **No Longer Updated** | Latest Mod Version: 0.8.0           |
+| Version             |                   Status | Notes                      |
+|---------------------|-------------------------:|----------------------------|
+| **26.2**            |           ✅ **Current** | Latest                     |
+| **26.1.x**          |           ✅ **Current** | Maintained                 |
+| **1.21.11**         | ⚠️ **No Longer Updated** | Latest Mod Version: 1.2.0  |
+| **1.21.10**         | ⚠️ **No Longer Updated** | Latest Mod Version: 1.0.0  |
+| **1.21.7 / 1.21.8** | ⚠️ **No Longer Updated** | Latest Mod Version: 0.10.1 |
+| **1.21.5**          | ⚠️ **No Longer Updated** | Latest Mod Version: 0.8.0  |
 
 ---
 
