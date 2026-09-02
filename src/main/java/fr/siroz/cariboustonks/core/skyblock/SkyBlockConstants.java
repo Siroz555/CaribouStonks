@@ -25,6 +25,14 @@ public interface SkyBlockConstants {
 	 */
 	long SKYBLOCK_EPOCH_START_MILLIS = 1_560_275_700_000L;
 	/**
+	 * Magic Find Icon
+	 */
+	char MAGIC_FIND_ICON = '\uE01A';
+	/**
+	 * Magic Find Icon Legacy
+	 */
+	char MAGIC_FIND_ICON_LEGACY = '✯';
+	/**
 	 * Scoreboard Area Icon
 	 */
 	String SCOREBOARD_AREA_ICON = "\uE067";
