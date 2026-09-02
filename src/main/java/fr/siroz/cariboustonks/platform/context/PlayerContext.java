@@ -278,13 +278,11 @@ public final class PlayerContext {
 	 * @param bossBar the bossBar to remove
 	 */
 	public static void removeBossBar(@NonNull BossEvent bossBar) {
-		if (isAvailable()) {
-			try {
-				CLIENT.gui.hud.getBossOverlay().update(ClientboundBossEventPacket.createRemovePacket(bossBar.getId()));
-			} catch (Exception ex) {
-				if (DeveloperTools.isInDevelopment()) {
-					CaribouStonks.LOGGER.error("Unable to update bossBar handler (REMOVE)", ex);
-				}
+		try {
+			CLIENT.gui.hud.getBossOverlay().update(ClientboundBossEventPacket.createRemovePacket(bossBar.getId()));
+		} catch (Exception ex) {
+			if (DeveloperTools.isInDevelopment()) {
+				CaribouStonks.LOGGER.error("Unable to update bossBar handler (REMOVE)", ex);
 			}
 		}
 	}
