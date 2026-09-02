@@ -39,7 +39,11 @@ public enum RareSeaCreature {
 	// Water - Lotus Atoll
 	FROG_PRINCE("Frog Prince", "Bow down before the Frog Prince... or pay the hefty price!", ChatFormatting.LIGHT_PURPLE, false),
 	PUDDLE_JUMPER("Puddle Jumper", "A Puddle Jumper is preparing for liftoff-cast your rod into it and hold on tight!", ChatFormatting.GOLD, false),
+	// Water - Torrhus Canyon
+	SILKBREEZE("Silkbreeze", "Something zips through the air - it’s a Silkbreeze!", ChatFormatting.GOLD, true, IslandType.TORRHUS_CANYON),
+	GIANT_ISOPOD("Giant Isopod", "A Giant Isopod was dredged up from the depths!", ChatFormatting.LIGHT_PURPLE, false, IslandType.TORRHUS_CANYON),
 	// Lava - Crimson Isle
+	MAGMA_PILLAR("Magma Pillar", "A Magma Pillar rises from the lava.", ChatFormatting.DARK_PURPLE, false, IslandType.CRIMSON_ISLE),
 	FIERY_SCUTTLER("Fiery Scuttler", "A Fiery Scuttler inconspicuously waddles up to you, friends in tow.", ChatFormatting.GOLD, false, IslandType.CRIMSON_ISLE),
 	THUNDER("Thunder", "You hear a massive rumble as Thunder emerges.", ChatFormatting.AQUA, true, IslandType.CRIMSON_ISLE),
 	LORD_JAWBUS("Lord Jawbus", "You have angered a legendary creature... Lord Jawbus has arrived.", ChatFormatting.RED, true, IslandType.CRIMSON_ISLE),
