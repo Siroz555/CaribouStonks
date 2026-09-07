@@ -311,6 +311,9 @@ public final class SkyBlockAPI {
 					return id + "_100M";
 				}
 			}
+			case "FACTION_RABBIT" -> {
+				return id + "_" + customData.getStringOr("faction_rabbit_id", "").toUpperCase(Locale.ENGLISH);
+			}
 			default -> {
 			}
 		}
