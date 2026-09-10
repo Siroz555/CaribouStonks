@@ -1,53 +1,33 @@
 package fr.siroz.cariboustonks.platform.rendering.world;
 
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import fr.siroz.cariboustonks.events.RenderEvents;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.OptionalDouble;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.BeamFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.CircleFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.CuboidOutlineFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.CursorLineFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.FilledBoxFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.LinesFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.OutlineBoxFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.QuadFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.TextFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.TextureFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.ThickCircleFeatureRenderer;
+import net.fabricmc.fabric.api.client.rendering.v1.FeatureRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelTerrainRenderContext;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.renderer.StagedVertexBuffer;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
-import org.joml.Matrix4fStack;
-import org.joml.Vector4f;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-// SIROZ-NOTE: 26.2 - Vulkan Graphic API - Crash SIGSEGV natif
-//
-// executeDraws() > compilée en C2 > _thread_in_Java = pas un crash driver GPU, ni un crash Java.
-//
-// Aucun problème pendant 7h en jeu, nmethod > en interprété/C1 depuis 7h de session,
-// et elle crash quasi immédiatement après son premier passage en C2
-//
-// Bug JIT C2 | JDK 25.0.1 (Microsoft-12574222) (--sun-misc-unsafe-memory-access=allow)
-//
-// Conclusion, je ne sais pas, je suis nul coté rendering interne MC, microslop...
-
+/**
+ * Point d'entrée unique pour gérer les rendu du Mod, sous facade static.
+ * Permettant le câblage des hooks Fabric/Mixin et de "gérer" le coté worker stateful du dispatcher.
+ * <p>
+ * L'Event Fabric LevelRenderEvents.COLLECT_SUBMITS est utilisé pour dispatch les
+ * FeatureRenderer du Mod, pas d'utilisation de LevelExtractionEvents pour éviter
+ * une surcouche de listeners qui ne sert à rien, tant que le Mixin suit entre version de MC.
+ */
 public final class CaribouWorldRenderer {
-	private static final StagedVertexBuffer VERTEX_BUFFER = new StagedVertexBuffer(
-			() -> "CaribouStonks WorldRenderer Vertex Buffer",
-			RenderType.SMALL_BUFFER_SIZE
-	);
-	private static final List<Draw> DRAWS = new ArrayList<>();
-	private static StagedVertexBuffer.@Nullable Draw lastDraw = null;
-	private static @Nullable RenderPipeline lastPipeline = null;
-	private static @Nullable TextureSetup lastTextureSetup = null;
-
 	private static @Nullable RenderDispatcher renderDispatcher = null;
 
 	private CaribouWorldRenderer() {
@@ -58,39 +38,20 @@ public final class CaribouWorldRenderer {
 	 */
 	public static void bootstrap() {
 		renderDispatcher = new RenderDispatcher();
-		LevelRenderEvents.START_MAIN.register(CaribouWorldRenderer::begin);
-		LevelRenderEvents.END_MAIN.register(CaribouWorldRenderer::executeDraws);
-	}
 
-	/**
-	 * Returns the {@link BufferBuilder} for the given {@link RenderPipeline}
-	 *
-	 * @param pipeline the pipeline
-	 * @return the VertexBuilder
-	 * @see #getBuffer(RenderPipeline, TextureSetup)
-	 */
-	public static @NonNull VertexConsumer getBuffer(@NonNull RenderPipeline pipeline) {
-		return getBuffer(pipeline, TextureSetup.noTexture());
-	}
+		LevelRenderEvents.COLLECT_SUBMITS.register(CaribouWorldRenderer::dispatchSubmits);
 
-	/**
-	 * Returns the {@link BufferBuilder} for the given {@link RenderPipeline} with {@link TextureSetup}
-	 *
-	 * @param pipeline     the pipeline
-	 * @param textureSetup the textureSetup
-	 * @return the VertexBuilder
-	 * @see #getBuffer(RenderPipeline)
-	 */
-	public static @NonNull VertexConsumer getBuffer(RenderPipeline pipeline, TextureSetup textureSetup) {
-		if (lastDraw == null || pipeline != lastPipeline || !textureSetup.equals(lastTextureSetup)) {
-			lastDraw = VERTEX_BUFFER.appendDraw(
-					Objects.requireNonNull(pipeline.getVertexFormatBinding(0)),
-					pipeline.getPrimitiveTopology()
-			);
-			DRAWS.add(new Draw(lastDraw, pipeline, textureSetup));
-		}
-
-		return VERTEX_BUFFER.getVertexBuilder(Objects.requireNonNull(lastDraw));
+		FeatureRendererRegistry.register(BeamFeatureRenderer.TYPE, BeamFeatureRenderer::new);
+		FeatureRendererRegistry.register(CircleFeatureRenderer.TYPE, CircleFeatureRenderer::new);
+		FeatureRendererRegistry.register(CuboidOutlineFeatureRenderer.TYPE, CuboidOutlineFeatureRenderer::new);
+		FeatureRendererRegistry.register(CursorLineFeatureRenderer.TYPE, CursorLineFeatureRenderer::new);
+		FeatureRendererRegistry.register(FilledBoxFeatureRenderer.TYPE, FilledBoxFeatureRenderer::new);
+		FeatureRendererRegistry.register(LinesFeatureRenderer.TYPE, LinesFeatureRenderer::new);
+		FeatureRendererRegistry.register(OutlineBoxFeatureRenderer.TYPE, OutlineBoxFeatureRenderer::new);
+		FeatureRendererRegistry.register(QuadFeatureRenderer.TYPE, QuadFeatureRenderer::new);
+		FeatureRendererRegistry.register(TextFeatureRenderer.TYPE, TextFeatureRenderer::new);
+		FeatureRendererRegistry.register(TextureFeatureRenderer.TYPE, TextureFeatureRenderer::new);
+		FeatureRendererRegistry.register(ThickCircleFeatureRenderer.TYPE, ThickCircleFeatureRenderer::new);
 	}
 
 	/**
@@ -107,105 +68,9 @@ public final class CaribouWorldRenderer {
 		renderDispatcher.end();
 	}
 
-	/**
-	 * >>> <b>MIXIN</b> <<<
-	 */
-	public static void close() {
-		VERTEX_BUFFER.close();
-	}
-
-	private static void begin(LevelTerrainRenderContext context) {
-		lastDraw = null;
-		lastPipeline = null;
-		lastTextureSetup = null;
-	}
-
-	private static void executeDraws(LevelRenderContext context) {
+	private static void dispatchSubmits(LevelRenderContext context) {
 		if (renderDispatcher == null) return;
-		// Emit all states to Vertex
-		renderDispatcher.flush(context.levelState().cameraRenderState);
-		// Upload Vertex Buffer
-		VERTEX_BUFFER.upload();
-		// Dispatch
-		dispatchDraws();
-		// Cleanup
-		VERTEX_BUFFER.endDraw();
-		VERTEX_BUFFER.endFrame();
-		DRAWS.clear();
-	}
 
-	private static void dispatchDraws() {
-		applyViewOffsetZLayering();
-
-		RenderTarget mainRenderTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
-		try (RenderPass renderPass = RenderSystem.getDevice()
-				.createCommandEncoder()
-				.createRenderPass(
-						() -> "CaribouStonks World Rendering",
-						Objects.requireNonNull(mainRenderTarget.getColorTextureView()),
-						Optional.empty(),
-						mainRenderTarget.useDepth ? mainRenderTarget.getDepthTextureView() : null,
-						OptionalDouble.empty()
-				)
-		) {
-			RenderSystem.bindDefaultUniforms(renderPass);
-
-			for (Draw draw : DRAWS) {
-				draw(draw, renderPass);
-			}
-		}
-
-		unapplyViewOffsetZLayering();
-	}
-
-	private static void draw(@NonNull Draw draw, @NonNull RenderPass renderPass) {
-		StagedVertexBuffer.ExecuteInfo executeInfo = VERTEX_BUFFER.getExecuteInfo(draw.draw());
-		if (executeInfo == null) return;
-
-		renderPass.setPipeline(draw.pipeline());
-		renderPass.setUniform("DynamicTransforms", setupDynamicTransforms());
-
-		if (draw.textureSetup().texure0() != null) {
-			// Sampler0 is used for normal texture inputs in shaders
-			renderPass.bindTexture("Sampler0", draw.textureSetup().texure0(), draw.textureSetup().sampler0());
-		}
-
-		if (draw.textureSetup().texure1() != null) {
-			// Sampler1 is used for alternate texture inputs in shaders
-			renderPass.bindTexture("Sampler1", draw.textureSetup().texure1(), draw.textureSetup().sampler1());
-		}
-
-		if (draw.textureSetup().texure2() != null) {
-			// Sampler2 is used for lightmap texture inputs in shaders
-			renderPass.bindTexture("Sampler2", draw.textureSetup().texure2(), draw.textureSetup().sampler2());
-		}
-
-		renderPass.setVertexBuffer(0, executeInfo.vertexBuffer().slice());
-		renderPass.setIndexBuffer(executeInfo.indexBuffer(), executeInfo.indexType());
-		renderPass.drawIndexed(executeInfo.indexCount(), 1, executeInfo.firstIndex(), executeInfo.baseVertex(), 0);
-	}
-
-	private static @NonNull GpuBufferSlice setupDynamicTransforms() {
-		return RenderSystem.getDynamicUniforms().writeTransform(
-				RenderSystem.getModelViewMatrixCopy(),
-				new Vector4f(1f, 1f, 1f, 1f) // w: alpha
-		);
-	}
-
-	private static void applyViewOffsetZLayering() {
-		Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
-		modelViewStack.pushMatrix();
-		RenderSystem.getProjectionType().applyLayeringTransform(modelViewStack, 1f);
-	}
-
-	private static void unapplyViewOffsetZLayering() {
-		RenderSystem.getModelViewStack().popMatrix();
-	}
-
-	private record Draw(
-			StagedVertexBuffer.Draw draw,
-			RenderPipeline pipeline,
-			TextureSetup textureSetup
-	) {
+		renderDispatcher.dispatch(context.levelState().cameraRenderState, context.submitNodeCollector());
 	}
 }

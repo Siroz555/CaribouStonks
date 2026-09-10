@@ -22,6 +22,16 @@ public final class RenderUtils {
 	private RenderUtils() {
 	}
 
+	/**
+	 * Checks if the game is currently with the Graphics API set to Vulkan.
+	 *
+	 * @return {@code true} if Vulkan backend is set
+	 */
+	@Deprecated
+	public static boolean isVulkanBackend() {
+		return false;
+	}
+
 	public static boolean isVisible(@Nullable Frustum frustum, AABB box) {
 		if (frustum == null) return false;
 		return frustum.isVisible(box);

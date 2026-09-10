@@ -16,7 +16,6 @@
     "ClientPacketListenerMixin",
     "EntityRenderDispatcherMixin",
     "EntityRendererMixin",
-    "GameRendererMixin",
     "GuiGraphicsExtractorMixin",
     "HudMixin",
     "InventoryScreenMixin",

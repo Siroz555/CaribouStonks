@@ -4,17 +4,17 @@ import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.platform.context.WorldContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.BlockEntityRenderStateAccessor;
-import fr.siroz.cariboustonks.platform.rendering.world.renderer.BeamRendererCommand;
-import fr.siroz.cariboustonks.platform.rendering.world.renderer.CircleRendererCommand;
-import fr.siroz.cariboustonks.platform.rendering.world.renderer.CuboidOutlineRendererCommand;
-import fr.siroz.cariboustonks.platform.rendering.world.renderer.CursorLineRendererCommand;
-import fr.siroz.cariboustonks.platform.rendering.world.renderer.FilledBoxRendererCommand;
-import fr.siroz.cariboustonks.platform.rendering.world.renderer.LinesRendererCommand;
-import fr.siroz.cariboustonks.platform.rendering.world.renderer.OutlineBoxRendererCommand;
-import fr.siroz.cariboustonks.platform.rendering.world.renderer.QuadRendererCommand;
-import fr.siroz.cariboustonks.platform.rendering.world.renderer.TextRendererCommand;
-import fr.siroz.cariboustonks.platform.rendering.world.renderer.TextureRendererCommand;
-import fr.siroz.cariboustonks.platform.rendering.world.renderer.ThickCircleRendererCommand;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.BeamFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.CircleFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.CuboidOutlineFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.CursorLineFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.FilledBoxFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.LinesFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.OutlineBoxFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.QuadFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.TextFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.TextureFeatureRenderer;
+import fr.siroz.cariboustonks.platform.rendering.world.renderer.ThickCircleFeatureRenderer;
 import fr.siroz.cariboustonks.platform.rendering.world.state.BeamRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.CircleRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.CuboidOutlineRenderState;
@@ -30,10 +30,14 @@ import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
 import java.util.ArrayList;
 import java.util.List;
+import net.fabricmc.fabric.api.client.rendering.v1.SubmitRenderPhase;
+import net.fabricmc.fabric.api.client.rendering.v1.SubmitRenderPhases;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BeaconRenderState;
 import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.feature.submit.SubmitNode;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.core.BlockPos;
@@ -51,52 +55,21 @@ import org.jspecify.annotations.Nullable;
  * Implementation of {@link WorldRenderer}.
  */
 final class RenderDispatcher implements WorldRenderer {
-	// Commands
-	private final BeamRendererCommand beamRendererCommand;
-	private final TextRendererCommand textRendererCommand;
-	private final TextureRendererCommand textureRendererCommand;
-	private final CircleRendererCommand circleRendererCommand;
-	private final ThickCircleRendererCommand thickCircleRendererCommand;
-	private final QuadRendererCommand quadRendererCommand;
-	private final FilledBoxRendererCommand filledBoxRendererCommand;
-	private final OutlineBoxRendererCommand outlineBoxRendererCommand;
-	private final LinesRendererCommand linesRendererCommand;
-	private final CursorLineRendererCommand cursorLineRendererCommand;
-	private final CuboidOutlineRendererCommand cuboidOutlineRendererCommand;
-	// States
-	private final List<BeamRenderState> beamRenderStates = new ArrayList<>();
-	private final List<TextRenderState> textRenderStates = new ArrayList<>();
-	private final List<TextureRenderState> textureRenderStates = new ArrayList<>();
-	private final List<CircleRenderState> circleRenderStates = new ArrayList<>();
-	private final List<ThickCircleRenderState> thickCircleRenderStates = new ArrayList<>();
-	private final List<QuadRenderState> quadRenderStates = new ArrayList<>();
-	private final List<FilledBoxRenderState> filledBoxRenderStates = new ArrayList<>();
-	private final List<OutlineBoxRenderState> outlineBoxRenderStates = new ArrayList<>();
-	private final List<LinesRenderState> linesRenderStates = new ArrayList<>();
-	private final List<CursorLineRenderState> cursorLineRenderStates = new ArrayList<>();
-	private final List<CuboidOutlineRenderState> cuboidOutlineRenderStates = new ArrayList<>();
+	private final RenderBucket<BeamRenderState> beamStates = new RenderBucket<>();
+	private final RenderBucket<TextRenderState> textStates = new RenderBucket<>();
+	private final RenderBucket<TextureRenderState> textureStates = new RenderBucket<>();
+	private final RenderBucket<CircleRenderState> circleStates = new RenderBucket<>();
+	private final RenderBucket<ThickCircleRenderState> thickCircleStates = new RenderBucket<>();
+	private final RenderBucket<QuadRenderState> quadStates = new RenderBucket<>();
+	private final RenderBucket<FilledBoxRenderState> filledBoxStates = new RenderBucket<>();
+	private final RenderBucket<OutlineBoxRenderState> outlineBoxStates = new RenderBucket<>();
+	private final RenderBucket<LinesRenderState> linesStates = new RenderBucket<>();
+	private final List<CursorLineRenderState> cursorLineStates = new ArrayList<>();
+	private final List<CuboidOutlineRenderState> cuboidOutlineStates = new ArrayList<>();
 
 	private @Nullable LevelRenderState levelRenderState = null;
 	private @Nullable Frustum frustum = null;
 	private boolean frozen = false;
-
-	// TODO :: 26.2 - Vulkan
-	//  Actuellement aucun problème avec Vulkan avec le dispatcher actuel,
-	//  mais a voir pour mieux utiliser les différents renderer et les mettre en batch?
-
-	RenderDispatcher() {
-		this.beamRendererCommand = new BeamRendererCommand();
-		this.textRendererCommand = new TextRendererCommand();
-		this.textureRendererCommand = new TextureRendererCommand();
-		this.circleRendererCommand = new CircleRendererCommand();
-		this.thickCircleRendererCommand = new ThickCircleRendererCommand();
-		this.quadRendererCommand = new QuadRendererCommand();
-		this.filledBoxRendererCommand = new FilledBoxRendererCommand();
-		this.outlineBoxRendererCommand = new OutlineBoxRendererCommand();
-		this.linesRendererCommand = new LinesRendererCommand();
-		this.cursorLineRendererCommand = new CursorLineRendererCommand();
-		this.cuboidOutlineRendererCommand = new CuboidOutlineRendererCommand();
-	}
 
 	@Override
 	public void submitVanillaBeaconBeam(@NonNull BlockPos position, @NonNull Color color) {
@@ -136,7 +109,7 @@ final class RenderDispatcher implements WorldRenderer {
 		}
 
 		BeamRenderState state = new BeamRenderState(pos, color, height, widthScale, throughBlocks);
-		beamRenderStates.add(state);
+		beamStates.add(state, throughBlocks);
 	}
 
 	@Override
@@ -148,7 +121,7 @@ final class RenderDispatcher implements WorldRenderer {
 		Font.PreparedText preparedText = textRenderer.prepareText(text, offsetX, offsetY, 0xFFFFFFFF, false, false, 0);
 
 		TextRenderState state = new TextRenderState(preparedText, position, scale * 0.025f, offsetY, throughBlocks);
-		textRenderStates.add(state);
+		textStates.add(state, throughBlocks);
 	}
 
 	@Override
@@ -156,7 +129,7 @@ final class RenderDispatcher implements WorldRenderer {
 		if (frozen) return;
 
 		TextureRenderState state = new TextureRenderState(position, width, height, u, v, textureWidth, textureHeight, renderOffset, texture, color, alpha, throughBlocks);
-		textureRenderStates.add(state);
+		textureStates.add(state, throughBlocks);
 	}
 
 	@Override
@@ -164,7 +137,7 @@ final class RenderDispatcher implements WorldRenderer {
 		if (frozen) return;
 
 		CircleRenderState state = new CircleRenderState(center, radius, segments, thicknessPercent, color, axis, throughBlocks);
-		circleRenderStates.add(state);
+		circleStates.add(state, throughBlocks);
 	}
 
 	@Override
@@ -172,7 +145,7 @@ final class RenderDispatcher implements WorldRenderer {
 		if (frozen) return;
 
 		ThickCircleRenderState state = new ThickCircleRenderState(center, radius, thickness, segments, color, throughBlocks);
-		thickCircleRenderStates.add(state);
+		thickCircleStates.add(state, throughBlocks);
 	}
 
 	@Override
@@ -180,7 +153,7 @@ final class RenderDispatcher implements WorldRenderer {
 		if (frozen) return;
 
 		QuadRenderState state = new QuadRenderState(points, color, throughBlocks);
-		quadRenderStates.add(state);
+		quadStates.add(state, throughBlocks);
 	}
 
 	@Override
@@ -194,7 +167,7 @@ final class RenderDispatcher implements WorldRenderer {
 		}
 
 		FilledBoxRenderState state = new FilledBoxRenderState(minX, minY, minZ, maxX, maxY, maxZ, color, throughBlocks);
-		filledBoxRenderStates.add(state);
+		filledBoxStates.add(state, throughBlocks);
 	}
 
 	@Override
@@ -203,7 +176,7 @@ final class RenderDispatcher implements WorldRenderer {
 		if (!RenderUtils.isVisible(frustum, box)) return;
 
 		OutlineBoxRenderState state = new OutlineBoxRenderState(box, color, lineWidth, throughBlocks);
-		outlineBoxRenderStates.add(state);
+		outlineBoxStates.add(state, throughBlocks);
 	}
 
 	@Override
@@ -212,7 +185,7 @@ final class RenderDispatcher implements WorldRenderer {
 		if (points.length < 2) return;
 
 		LinesRenderState state = new LinesRenderState(points, color, lineWidth, throughBlocks);
-		linesRenderStates.add(state);
+		linesStates.add(state, throughBlocks);
 	}
 
 	@Override
@@ -220,7 +193,7 @@ final class RenderDispatcher implements WorldRenderer {
 		if (frozen) return;
 
 		CursorLineRenderState state = new CursorLineRenderState(point, color, lineWidth);
-		cursorLineRenderStates.add(state);
+		cursorLineStates.add(state);
 	}
 
 	@Override
@@ -228,7 +201,7 @@ final class RenderDispatcher implements WorldRenderer {
 		if (frozen) return;
 
 		CuboidOutlineRenderState state = new CuboidOutlineRenderState(center, depth, size, minY, maxY, lineWidth, mainColor, secondColor);
-		cuboidOutlineRenderStates.add(state);
+		cuboidOutlineStates.add(state);
 	}
 
 	/**
@@ -238,17 +211,18 @@ final class RenderDispatcher implements WorldRenderer {
 		frozen = false;
 		levelRenderState = levelRenderStateContext;
 		frustum = frustumContext;
-		beamRenderStates.clear();
-		textRenderStates.clear();
-		textureRenderStates.clear();
-		circleRenderStates.clear();
-		thickCircleRenderStates.clear();
-		quadRenderStates.clear();
-		filledBoxRenderStates.clear();
-		outlineBoxRenderStates.clear();
-		linesRenderStates.clear();
-		cursorLineRenderStates.clear();
-		cuboidOutlineRenderStates.clear();
+
+		beamStates.clear();
+		circleStates.clear();
+		cuboidOutlineStates.clear();
+		cursorLineStates.clear();
+		filledBoxStates.clear();
+		linesStates.clear();
+		outlineBoxStates.clear();
+		quadStates.clear();
+		textStates.clear();
+		textureStates.clear();
+		thickCircleStates.clear();
 	}
 
 	/**
@@ -259,55 +233,74 @@ final class RenderDispatcher implements WorldRenderer {
 	}
 
 	/**
-	 * Flush all renderer commands.
+	 * Dispatch all submits.
 	 *
-	 * @param cameraState the camera state
+	 * @param camera    the camera state
+	 * @param collector the submitNoteCollector
 	 */
-	public void flush(CameraRenderState cameraState) {
+	public void dispatch(CameraRenderState camera, SubmitNodeCollector collector) {
 		if (!frozen) return;
-		// Beams
-		for (BeamRenderState state : beamRenderStates) {
-			beamRendererCommand.emit(state, cameraState);
+
+		// States avec 2 flags (normal && throughBlocks)
+
+		submitPair(collector, beamStates, camera, SubmitRenderPhases.AFTER_TERRAIN, BeamFeatureRenderer.Submit::new);
+		submitPair(collector, circleStates, camera, SubmitRenderPhases.AFTER_TERRAIN, CircleFeatureRenderer.Submit::new);
+		submitPair(collector, thickCircleStates, camera, SubmitRenderPhases.AFTER_TERRAIN, ThickCircleFeatureRenderer.Submit::new);
+		submitPair(collector, quadStates, camera, SubmitRenderPhases.AFTER_TERRAIN, QuadFeatureRenderer.Submit::new);
+		submitPair(collector, filledBoxStates, camera, SubmitRenderPhases.AFTER_TERRAIN, FilledBoxFeatureRenderer.Submit::new);
+		submitPair(collector, outlineBoxStates, camera, SubmitRenderPhases.AFTER_TERRAIN, OutlineBoxFeatureRenderer.Submit::new);
+		submitPair(collector, linesStates, camera, SubmitRenderPhases.AFTER_TERRAIN, LinesFeatureRenderer.Submit::new);
+		submitPair(collector, textStates, camera, SubmitRenderPhases.TEXTS, TextFeatureRenderer.Submit::new);
+		submitPair(collector, textureStates, camera, SubmitRenderPhases.AFTER_TERRAIN, TextureFeatureRenderer.Submit::new);
+
+		// States avec 1 flag (normal || throughBlocks)
+
+		if (!cursorLineStates.isEmpty()) {
+			collector.submitCustom(
+					SubmitRenderPhases.ALWAYS_ON_TOP,
+					new CursorLineFeatureRenderer.Submit(cursorLineStates, camera)
+			);
 		}
-		// Circles
-		for (CircleRenderState state : circleRenderStates) {
-			circleRendererCommand.emit(state, cameraState);
+		if (!cuboidOutlineStates.isEmpty()) {
+			collector.submitCustom(
+					SubmitRenderPhases.AFTER_TERRAIN,
+					new CuboidOutlineFeatureRenderer.Submit(cuboidOutlineStates, camera)
+			);
 		}
-		// Thick circles
-		for (ThickCircleRenderState state : thickCircleRenderStates) {
-			thickCircleRendererCommand.emit(state, cameraState);
+	}
+
+	private <S> void submitPair(
+			@NonNull SubmitNodeCollector collector,
+			@NonNull RenderBucket<S> bucket,
+			@NonNull CameraRenderState cameraState,
+			@NonNull SubmitRenderPhase<SubmitNode> normalPhase,
+			@NonNull SubmitFactory<S> factory
+	) {
+		if (!bucket.normal.isEmpty()) {
+			collector.submitCustom(normalPhase, factory.create(bucket.normal, cameraState, false));
 		}
-		// Quads
-		for (QuadRenderState state : quadRenderStates) {
-			quadRendererCommand.emit(state, cameraState);
+		if (!bucket.throughBlocks.isEmpty()) {
+			collector.submitCustom(SubmitRenderPhases.ALWAYS_ON_TOP, factory.create(bucket.throughBlocks, cameraState, true));
 		}
-		// Filled
-		for (FilledBoxRenderState state : filledBoxRenderStates) {
-			filledBoxRendererCommand.emit(state, cameraState);
+	}
+
+	/**
+	 * Represents a Bucket of normal/throughBlocks render States
+	 *
+	 * @param <S> the rendering state type
+	 */
+	private static final class RenderBucket<S> {
+		final List<S> normal = new ArrayList<>();
+		final List<S> throughBlocks = new ArrayList<>();
+
+		void add(@NonNull S state, boolean throughBlocksFlag) {
+			if (throughBlocksFlag) throughBlocks.add(state);
+			else normal.add(state);
 		}
-		// Outline boxes
-		for (OutlineBoxRenderState state : outlineBoxRenderStates) {
-			outlineBoxRendererCommand.emit(state, cameraState);
-		}
-		// Lines
-		for (LinesRenderState state : linesRenderStates) {
-			linesRendererCommand.emit(state, cameraState);
-		}
-		// Cursor lines
-		for (CursorLineRenderState state : cursorLineRenderStates) {
-			cursorLineRendererCommand.emit(state, cameraState);
-		}
-		// Text
-		for (TextRenderState state : textRenderStates) {
-			textRendererCommand.emit(state, cameraState);
-		}
-		// Textures
-		for (TextureRenderState state : textureRenderStates) {
-			textureRendererCommand.emit(state, cameraState);
-		}
-		// Cuboid Outline
-		for (CuboidOutlineRenderState state : cuboidOutlineRenderStates) {
-			cuboidOutlineRendererCommand.emit(state, cameraState);
+
+		void clear() {
+			normal.clear();
+			throughBlocks.clear();
 		}
 	}
 }
