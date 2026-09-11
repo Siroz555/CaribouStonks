@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.features.keyshortcut;
 
 import com.google.common.reflect.TypeToken;
-import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.CommandComponent;
@@ -26,7 +25,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import org.jspecify.annotations.NonNull;
-import org.lwjgl.glfw.GLFW;
 
 public class KeyShortcutFeature extends Feature {
 
@@ -101,8 +99,7 @@ public class KeyShortcutFeature extends Feature {
 			boolean pressed;
 			if (shortcut.keyCode() <= -2000) {
 				int mouseButton = -2000 - shortcut.keyCode();
-				// TODO - 26.3
-				pressed = GLFW.glfwGetMouseButton(client.getWindow().handle(), mouseButton) == InputConstants.PRESS;
+				pressed = ClientContext.isMouseButtonPressed(mouseButton);
 			} else {
 				pressed = ClientContext.isKeyPressed(shortcut.keyCode());
 			}

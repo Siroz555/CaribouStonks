@@ -7,12 +7,10 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.features.garden.MouseLockFeature;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.player.LocalPlayer;
-import org.lwjgl.glfw.GLFW;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -58,9 +56,7 @@ public abstract class MouseHandlerMixin {
 		if (ConfigManager.getConfig().vanilla.stopCursorResetPosition && ClientContext.getScreen() instanceof ContainerScreen) {
 			this.xpos = this.guiX;
 			this.ypos = this.guiY;
-			GLFW.glfwSetCursorPos(Minecraft.getInstance().getWindow().handle(), this.xpos, this.ypos);
-			// TODO - 26.3
-			//InputConstants.grabOrReleaseMouse(Minecraft.getInstance().getWindow(), 0, this.xpos, this.ypos);
+			ClientContext.setCursorPos(this.xpos, this.ypos);
 		}
 	}
 

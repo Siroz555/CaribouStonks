@@ -33,6 +33,7 @@ import net.minecraft.world.scores.ScoreHolder;
 import net.minecraft.world.scores.Scoreboard;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * Provides a view of the client's state.
@@ -216,13 +217,37 @@ public final class ClientContext {
 	/**
 	 * Determines if the given {@code keyCode} is pressed.
 	 * <p>
-	 * See {@code GLFW}
+	 * See {@link InputConstants}
 	 *
 	 * @param keyCode the keyCode to check
 	 * @return {@code true} if the keyCode is pressed
 	 */
 	public static boolean isKeyPressed(int keyCode) {
 		return InputConstants.isKeyDown(CLIENT.getWindow(), keyCode);
+	}
+
+	/**
+	 * Determines if the given mouse button is pressed.
+	 *
+	 * @param mouseButton the mouse button (<= 26.2 = 0, 1, 2, ... || >= 26.3 = 1, 2, 3, ...)
+	 * @return {@code true} if the mouse button is pressed
+	 */
+	public static boolean isMouseButtonPressed(int mouseButton) {
+		return GLFW.glfwGetMouseButton(CLIENT.getWindow().handle(), mouseButton) == InputConstants.PRESS;
+		// TODO - 26.3
+		//return (SDLMouse.SDL_GetMouseState(null, null) & SDLMouse.SDL_BUTTON_MASK(mouseButton)) != 0;
+	}
+
+	/**
+	 * Set the cursor to the given position
+	 *
+	 * @param xPos the X pos
+	 * @param yPos the Y pos
+	 */
+	public static void setCursorPos(double xPos, double yPos) {
+		GLFW.glfwSetCursorPos(CLIENT.getWindow().handle(), xPos, yPos);
+		// TODO - 26.3 :: remove? useless normalement
+		//  car il y aura InputConstants.releaseMouse utilisé dans le grabOrReleaseMouse
 	}
 
 	/**
