@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.screens;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.module.color.Colors;
@@ -16,7 +17,6 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 public final class HudConfigScreen extends CaribousStonksScreen {
 	private static final int ANCHOR_DOT_SIZE = 5;
@@ -102,7 +102,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	public boolean onMouseClicked(MouseButtonEvent click, boolean doubled) {
 		switch (click.button()) {
 			// Select
-			case GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
+			case InputConstants.MOUSE_BUTTON_LEFT -> {
 				for (Hud hud : hudList) {
 					if (!hud.isConfigEnabled()) continue;
 					// overlapping behavior
@@ -116,7 +116,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 				}
 			}
 			// Unselect
-			case GLFW.GLFW_MOUSE_BUTTON_RIGHT -> {
+			case InputConstants.MOUSE_BUTTON_RIGHT -> {
 				selected = null;
 				return true;
 			}
@@ -129,7 +129,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 
 	@Override
 	public boolean mouseDragged(@NonNull MouseButtonEvent click, double offsetX, double offsetY) {
-		if (selected != null && click.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+		if (selected != null && click.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 			// setAbsolutePosition gère le clamp entre les border du screen et l'Anchor
 			int targetX = (int) click.x() - (selected.width()  >> 1);
 			int targetY = (int) click.y() - (selected.height() >> 1);
@@ -144,30 +144,30 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 	public boolean keyPressed(KeyEvent input) {
 		switch (input.input()) {
 			// Scale up
-			case GLFW.GLFW_KEY_EQUAL, GLFW.GLFW_KEY_KP_ADD -> {
+			case InputConstants.KEY_EQUALS, InputConstants.KEY_ADD -> {
 				// Pour '=' il faut Maj (AZERTY/+, sinon ignore), et pour KP_ADD jamais besoin de shift
-				if (selected != null && (input.input() != GLFW.GLFW_KEY_EQUAL || (input.modifiers() & GLFW.GLFW_MOD_SHIFT) != 0)) {
+				if (selected != null && (input.input() != InputConstants.KEY_EQUALS || (input.modifiers() & InputConstants.MOD_SHIFT) != 0)) {
 					selected.setScale(selected.scale() + Hud.SCALE_STEP);
 					return true;
 				}
 			}
 			// Scale down
-			case GLFW.GLFW_KEY_MINUS, GLFW.GLFW_KEY_KP_SUBTRACT -> {
+			case InputConstants.KEY_MINUS, 333 -> { // GLFW.GLFW_KEY_KP_SUBTRACT (333)
 				// Pour '-' il faut Maj (AZERTY/+, sinon ignore), et pour KP_SUBTRACT jamais besoin de shift
-				if (selected != null && (input.input() != GLFW.GLFW_KEY_MINUS || (input.modifiers() & GLFW.GLFW_MOD_SHIFT) != 0)) {
+				if (selected != null && (input.input() != InputConstants.KEY_MINUS || (input.modifiers() & InputConstants.MOD_SHIFT) != 0)) {
 					selected.setScale(selected.scale() - Hud.SCALE_STEP);
 					return true;
 				}
 			}
 			// Reset position & scaling
-			case GLFW.GLFW_KEY_R -> {
+			case InputConstants.KEY_R -> {
 				if (selected != null) {
 					selected.reset();
 					return true;
 				}
 			}
 			// Tab navigation
-			case GLFW.GLFW_KEY_TAB -> {
+			case InputConstants.KEY_TAB -> {
 				List<Hud> enabled = hudList.stream().filter(Hud::isConfigEnabled).toList();
 				if (!enabled.isEmpty()) {
 					if (selected == null) {

@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.features.garden;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.core.component.CommandComponent;
 import fr.siroz.cariboustonks.core.component.KeybindComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -11,7 +12,6 @@ import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public final class MouseLockFeature extends Feature {
 
@@ -27,7 +27,7 @@ public final class MouseLockFeature extends Feature {
 				.build());
 
 		this.addComponent(KeybindComponent.class, KeybindComponent.builder()
-				.add(new KeyBind("Garden Lock Mouse", GLFW.GLFW_KEY_MINUS, true, this::updateLockState))
+				.add(new KeyBind("Garden Lock Mouse", InputConstants.KEY_MINUS, true, this::updateLockState))
 				.build());
 	}
 

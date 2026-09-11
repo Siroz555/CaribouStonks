@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.features.keyshortcut;
 
 import com.google.common.reflect.TypeToken;
+import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.CommandComponent;
@@ -100,7 +101,8 @@ public class KeyShortcutFeature extends Feature {
 			boolean pressed;
 			if (shortcut.keyCode() <= -2000) {
 				int mouseButton = -2000 - shortcut.keyCode();
-				pressed = GLFW.glfwGetMouseButton(client.getWindow().handle(), mouseButton) == GLFW.GLFW_PRESS;
+				// TODO - 26.3
+				pressed = GLFW.glfwGetMouseButton(client.getWindow().handle(), mouseButton) == InputConstants.PRESS;
 			} else {
 				pressed = ClientContext.isKeyPressed(shortcut.keyCode());
 			}

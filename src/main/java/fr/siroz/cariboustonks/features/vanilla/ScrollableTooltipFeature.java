@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.features.vanilla;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
@@ -19,7 +20,6 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.FormattedCharSink;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 public class ScrollableTooltipFeature extends Feature {
 
@@ -80,7 +80,7 @@ public class ScrollableTooltipFeature extends Feature {
 			return allowScroll;
 		}
 
-		if (ClientContext.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+		if (ClientContext.isKeyPressed(InputConstants.KEY_LSHIFT)) {
 			if (vertical > 0) {
 				scrollLeft();
 			} else if (vertical < 0) {

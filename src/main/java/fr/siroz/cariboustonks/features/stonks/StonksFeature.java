@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.features.stonks;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.KeybindComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
@@ -17,13 +18,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
-import org.lwjgl.glfw.GLFW;
 
 public class StonksFeature extends Feature {
 
 	public StonksFeature() {
 		this.addComponent(KeybindComponent.class, KeybindComponent.builder()
-				.add(new KeyBind("Stonks Item", GLFW.GLFW_KEY_K, this::onKeyPressed))
+				.add(new KeyBind("Stonks Item", InputConstants.KEY_K, this::onKeyPressed))
 				.build());
 	}
 

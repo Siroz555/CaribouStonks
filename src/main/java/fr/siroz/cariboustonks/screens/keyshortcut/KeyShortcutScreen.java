@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.screens.keyshortcut;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.features.keyshortcut.KeyShortcut;
@@ -19,7 +20,6 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 public class KeyShortcutScreen extends CaribousStonksScreen {
 	private final @Nullable Screen parent;
@@ -88,7 +88,7 @@ public class KeyShortcutScreen extends CaribousStonksScreen {
 	@Override
 	public boolean keyPressed(@NonNull KeyEvent input) {
 		if (currentEntry != null) {
-			int code = (input.input() == GLFW.GLFW_KEY_ESCAPE || input.input() == GLFW.GLFW_KEY_DELETE) ? -1 : input.input();
+			int code = (input.input() == InputConstants.KEY_ESCAPE || input.input() == InputConstants.KEY_DELETE) ? -1 : input.input();
 			currentEntry.setKeyCode(code);
 			currentEntry = null;
 			setFocused(null);

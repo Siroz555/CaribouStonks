@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.features.hunting;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.core.component.KeybindComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
@@ -10,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
-import org.lwjgl.glfw.GLFW;
 
 public class QuickFusionFeature extends Feature {
 
@@ -18,8 +18,8 @@ public class QuickFusionFeature extends Feature {
 
 	public QuickFusionFeature() {
 		this.addComponent(KeybindComponent.class, KeybindComponent.builder()
-				.add(new KeyBind("Quick Fusion - Repeat", GLFW.GLFW_KEY_UNKNOWN, this::onFusionKey))
-				.add(new KeyBind("Quick Fusion - Confirm", GLFW.GLFW_KEY_UNKNOWN, this::onConfirmKey))
+				.add(new KeyBind("Quick Fusion - Repeat", InputConstants.UNKNOWN.getValue(), this::onFusionKey))
+				.add(new KeyBind("Quick Fusion - Confirm", InputConstants.UNKNOWN.getValue(), this::onConfirmKey))
 				.build());
 	}
 

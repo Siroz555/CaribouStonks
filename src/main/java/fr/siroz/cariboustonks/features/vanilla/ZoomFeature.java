@@ -1,11 +1,11 @@
 package fr.siroz.cariboustonks.features.vanilla;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.core.component.KeybindComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.input.KeyBind;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * Provides zoom functionality triggered by a user-defined keybind.
@@ -13,7 +13,6 @@ import org.lwjgl.glfw.GLFW;
  * This feature allows users to temporarily zoom the view while the designated key is pressed.
  * <p>
  * <b>Note:</b> The main logic for visual transformation may be handled in
- * {@code Mixin >} {@link fr.siroz.cariboustonks.platform.mixin.GameRendererMixin}
  */
 public final class ZoomFeature extends Feature {
 
@@ -26,7 +25,7 @@ public final class ZoomFeature extends Feature {
     private double currentZoomMultiplier;
 
     public ZoomFeature() {
-        this.zoomKeyBind = new KeyBind("Zoom", GLFW.GLFW_KEY_C, true);
+        this.zoomKeyBind = new KeyBind("Zoom", InputConstants.KEY_C, true);
         this.currentZoomMultiplier = ZOOM_MULTIPLIER;
 
 		ClientEvents.ALLOW_MOUSE_SCROLL_EVENT.register(this::allowMouseScroll);

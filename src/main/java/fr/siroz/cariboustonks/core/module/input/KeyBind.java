@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.core.module.input;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.core.component.KeybindComponent;
 import fr.siroz.cariboustonks.systems.KeyBindSystem;
 import net.minecraft.client.KeyMapping;
@@ -31,7 +32,7 @@ public class KeyBind {
 	 * Creates a new {@link KeyBind}.
 	 *
 	 * @param name       the name of the KeyBind, which will be displayed in the game's Control Menu
-	 * @param keyCode    the keyCode of the KeyBind ({@link org.lwjgl.glfw.GLFW})
+	 * @param keyCode    the keyCode of the KeyBind ({@link InputConstants})
 	 * @param firstPress whether {@code onPress} should be executed only once
 	 *                   (prevents detecting a hold and ensures a single click is registered)
 	 */
@@ -43,7 +44,7 @@ public class KeyBind {
 	 * Creates a new {@link KeyBind}.
 	 *
 	 * @param name       the name of the KeyBind, which will be displayed in the game's Control Menu
-	 * @param keyCode    the keyCode of the KeyBind ({@link org.lwjgl.glfw.GLFW})
+	 * @param keyCode    the keyCode of the KeyBind ({@link InputConstants})
 	 * @param firstPress whether {@code onPress} should be executed only once
 	 *                   (prevents detecting a hold and ensures a single click is registered)
 	 * @param onPress    the code to execute when the key is pressed, or null
@@ -56,7 +57,7 @@ public class KeyBind {
 	 * Creates a new {@link KeyBind}, dedicated exclusively to {@link Screen}s.
 	 *
 	 * @param name          the name of the KeyBind, which will be displayed in the game's Control Menu
-	 * @param keyCode       the keyCode of the KeyBind ({@link org.lwjgl.glfw.GLFW})
+	 * @param keyCode       the keyCode of the KeyBind ({@link InputConstants})
 	 * @param onScreenPress the handler that will be executed when the key is pressed on a screen, or null
 	 */
 	public KeyBind(@NonNull String name, int keyCode, @Nullable SlotKeyHandler onScreenPress) {

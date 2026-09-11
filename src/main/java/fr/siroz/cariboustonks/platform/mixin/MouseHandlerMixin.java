@@ -59,6 +59,8 @@ public abstract class MouseHandlerMixin {
 			this.xpos = this.guiX;
 			this.ypos = this.guiY;
 			GLFW.glfwSetCursorPos(Minecraft.getInstance().getWindow().handle(), this.xpos, this.ypos);
+			// TODO - 26.3
+			//InputConstants.grabOrReleaseMouse(Minecraft.getInstance().getWindow(), 0, this.xpos, this.ypos);
 		}
 	}
 

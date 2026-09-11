@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.features.chat;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -19,7 +20,6 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.multiplayer.chat.GuiMessage;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
-import org.lwjgl.glfw.GLFW;
 
 public class CopyChatMessageFeature extends Feature {
 
@@ -39,7 +39,7 @@ public class CopyChatMessageFeature extends Feature {
 	@EventHandler(event = "ScreenMouseEvents.afterMouseClick")
 	private boolean onMouseClick(Screen screen, MouseButtonEvent event, boolean consumed) {
 		if (!isEnabled()) return false;
-		if (!ClientContext.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL)) return false;
+		if (!ClientContext.isKeyPressed(InputConstants.KEY_LCONTROL)) return false;
 
 		try {
 			ChatComponentAccessor chatAccessor = ((ChatComponentAccessor) ClientContext.getChat());
