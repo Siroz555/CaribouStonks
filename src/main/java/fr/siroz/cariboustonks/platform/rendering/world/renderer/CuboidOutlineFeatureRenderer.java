@@ -25,11 +25,11 @@ public final class CuboidOutlineFeatureRenderer extends AbstractFeatureRenderer<
 	@Override
 	protected void buildGroup(FeatureFrameContext context, List<Submit> submits) {
 		for (Submit submit : submits) {
-			Matrix4f positionMatrix = new Matrix4f()
-					.translate((float) -submit.camera().pos.x, (float) -submit.camera().pos.y, (float) -submit.camera().pos.z);
-
 			for (CuboidOutlineRenderState state : submit.states()) {
 				VertexConsumer builder = this.getVertexBuilder(CaribouRenderPipelines.LINE_STRIP);
+
+				Matrix4f positionMatrix = new Matrix4f()
+						.translate((float) -submit.camera().pos.x, (float) -submit.camera().pos.y, (float) -submit.camera().pos.z);
 
 				PoseStack matrices = RenderUtils.matrixToStack(positionMatrix);
 				PoseStack.Pose entry = matrices.last();
