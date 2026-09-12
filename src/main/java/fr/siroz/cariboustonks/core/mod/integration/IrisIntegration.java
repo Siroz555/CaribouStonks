@@ -19,7 +19,6 @@ import org.jspecify.annotations.Nullable;
  * @author MicrocontrollersDev (<a href="https://github.com/MicrocontrollersDev">MicrocontrollersDev GitHub</a>)
  */
 public final class IrisIntegration {
-
 	private static final boolean IRIS_ENABLED = FabricLoader.getInstance().isModLoaded("iris");
 	private static final String IRIS_API_CLASS = "net.irisshaders.iris.api.v0.IrisApi";
 	private static final String IRIS_PROGRAM_CLASS = "net.irisshaders.iris.api.v0.IrisProgram";

@@ -17,7 +17,6 @@ public final class CaribouRenderPipelines {
 	}
 
 	public static void bootstrap() {
-		// Enregistre les pipelines pour Iris
 		IrisIntegration.assignPipelines();
 	}
 
