@@ -79,7 +79,7 @@ dependencies {
 	include implementation("dev.isxander:yet-another-config-lib:${project.yacl_version}")
 
 	// Hypixel Mod API (https://github.com/HypixelDev/ModAPI)
-	include implementation("net.azureaaron:hm-api:${project.hypixel_mod_api_version}")
+	//include implementation("net.azureaaron:hm-api:${project.hypixel_mod_api_version}")
 
 	// ModMenu (https://github.com/TerraformersMC/ModMenu)
 	compileOnly "maven.modrinth:modmenu:${modmenu_version}"
