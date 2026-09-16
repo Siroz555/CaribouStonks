@@ -1,11 +1,11 @@
 package fr.siroz.cariboustonks.platform.rendering.world.renderer;
 
-import com.mojang.blaze3d.buffers.GpuBufferSlice;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
+import com.mojang.renderpearl.api.commands.RenderPass;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.StagedVertexBuffer;
 import net.minecraft.client.renderer.feature.FeatureFrameContext;
 import net.minecraft.client.renderer.feature.FeatureRenderer;
 import net.minecraft.client.renderer.feature.submit.SubmitNode;
+import net.minecraft.client.renderer.oit.OitStage;
 import org.joml.Matrix4fStack;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -53,7 +54,7 @@ public abstract class AbstractFeatureRenderer<Submit extends SubmitNode> impleme
 	}
 
 	@Override
-	public final void executeGroup(@NonNull FeatureFrameContext context, int groupIndex, @NonNull List<Submit> submits, boolean strictlyOrdered) {
+	public void executeGroup(@NonNull FeatureFrameContext context, @Nullable OitStage stage, @NonNull RenderPass rp, int groupIndex, @NonNull List<Submit> submits, boolean strictlyOrdered) {
 		Group group = groups.get(groupIndex);
 
 		applyViewOffsetZLayering();
@@ -61,11 +62,12 @@ public abstract class AbstractFeatureRenderer<Submit extends SubmitNode> impleme
 		RenderTarget mainTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
 		GpuBufferSlice dynamicTransforms = RenderSystem.getDynamicUniforms().writeTransform(RenderSystem.getModelViewMatrixCopy());
 
+		// TODO
 		try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
 				() -> "CaribouStonks World Rendering",
 				Objects.requireNonNull(mainTarget.getColorTextureView()),
 				Optional.empty(),
-				mainTarget.useDepth ? mainTarget.getDepthTextureView() : null,
+				mainTarget.hasDepth() ? mainTarget.getDepthTextureView() : null,
 				OptionalDouble.empty()
 		)) {
 			RenderSystem.bindDefaultUniforms(renderPass);
@@ -90,21 +92,21 @@ public abstract class AbstractFeatureRenderer<Submit extends SubmitNode> impleme
 	}
 
 	private static void executeDraw(RenderPass renderPass, PreparedDraw draw, StagedVertexBuffer.ExecuteInfo info) {
-		renderPass.setPipeline(draw.pipeline());
+		renderPass.setPipeline(RenderSystem.getCompiledPipeline(draw.pipeline()));
 
 		if (draw.textureSetup().texure0() != null) {
 			// Sampler0 is used for normal texture inputs in shaders
-			renderPass.bindTexture("Sampler0", draw.textureSetup().texure0(), draw.textureSetup().sampler0());
+			renderPass.setUniform("Sampler0", draw.textureSetup().texure0(), draw.textureSetup().sampler0());
 		}
 
 		if (draw.textureSetup().texure1() != null) {
 			// Sampler1 is used for alternate texture inputs in shaders
-			renderPass.bindTexture("Sampler1", draw.textureSetup().texure1(), draw.textureSetup().sampler1());
+			renderPass.setUniform("Sampler1", draw.textureSetup().texure1(), draw.textureSetup().sampler1());
 		}
 
 		if (draw.textureSetup().texure2() != null) {
 			// Sampler2 is used for lightmap texture inputs in shaders
-			renderPass.bindTexture("Sampler2", draw.textureSetup().texure2(), draw.textureSetup().sampler2());
+			renderPass.setUniform("Sampler2", draw.textureSetup().texure2(), draw.textureSetup().sampler2());
 		}
 
 		renderPass.setVertexBuffer(0, info.vertexBuffer().slice());

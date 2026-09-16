@@ -71,12 +71,12 @@ public class LotusAtollWormholeFeature extends Feature {
 	private void onParticleReceived(ClientboundLevelParticlesPacket packet) {
 		if (!isEnabled()) return;
 
-		boolean isBlackHoleParticle = ParticleTypes.PORTAL.equals(packet.getParticle().getType())
-				&& packet.getCount() == 5
-				&& packet.getMaxSpeed() == 0.25f;
+		boolean isBlackHoleParticle = ParticleTypes.PORTAL.equals(packet.particle().getType())
+				&& packet.count() == 5
+				&& packet.xMaxSpeed() == 0.25f;
 		if (isBlackHoleParticle) {
 			try {
-				handleParticle(packet.getX(), packet.getY(), packet.getZ());
+				handleParticle(packet.x(), packet.y(), packet.z());
 			} catch (Exception _) {
 			}
 		}

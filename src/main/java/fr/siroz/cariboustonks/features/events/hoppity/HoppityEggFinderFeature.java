@@ -90,16 +90,11 @@ public class HoppityEggFinderFeature extends Feature {
 	}
 
 	@EventHandler(event = "NetworkEvents.PARTICLE_RECEIVED_PACKET")
-	private void onParticleReceived(ClientboundLevelParticlesPacket particle) {
+	private void onParticleReceived(ClientboundLevelParticlesPacket packet) {
 		if (!isEnabled()) return;
 		if (!tracker.isTracking()) return;
 
-		tracker.handleParticle(new ParticleData(
-				new Vec3(particle.getX(), particle.getY(), particle.getZ()),
-				particle.getParticle().getType(),
-				particle.getCount(),
-				particle.getMaxSpeed()
-		));
+		tracker.handleParticle(ParticleData.of(packet));
 	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")

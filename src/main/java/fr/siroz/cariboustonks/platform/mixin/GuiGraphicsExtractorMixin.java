@@ -20,6 +20,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Vector2ic;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -48,15 +49,15 @@ public abstract class GuiGraphicsExtractorMixin {
 	@Expression("? = ?.x()")
 	@Group(name = "storeLocals", min = 1, max = 1)
 	@Inject(method = "tooltip", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
-	private void cariboustonks$onDrawTooltipEventAndStoreLocals(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, Identifier style, CallbackInfo info, int tooltipWidth, int tooltipHeight, int tooltipWidth2, int tooltipHeight2, Vector2ic postPos) {
+	private void cariboustonks$onDrawTooltipEventAndStoreLocals(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, @Nullable Identifier style, boolean extraSpaceAfterFirstLine, CallbackInfo ci, int textWidth, int tempHeight, int w, int h, Vector2ic positionedTooltip, int x) {
 		GuiEvents.TOOLTIP_TRACKER_EVENT.invoker().onTooltipTracker(lines);
-		storedTooltipWidth = tooltipWidth2;
-		storedTooltipHeight = tooltipHeight2;
-		storedPos = postPos;
+		storedTooltipWidth = w;
+		storedTooltipHeight = h;
+		storedPos = positionedTooltip;
 	}
 
 	@Inject(method = "tooltip", at = @At(value = "TAIL"))
-	private void cariboustonks$onDrawTooltipInternalEvent(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, Identifier style, CallbackInfo ci) {
+	private void cariboustonks$onDrawTooltipInternalEvent(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, @Nullable Identifier style, boolean extraSpaceAfterFirstLine, CallbackInfo ci) {
 		ItemStack stack = ItemStack.EMPTY;
 
 		Screen currentScreen = ClientContext.getScreen();
@@ -82,7 +83,7 @@ public abstract class GuiGraphicsExtractorMixin {
 	}
 
 	@Inject(method = "tooltip", at = @At(value = "INVOKE", target = "Lorg/joml/Matrix3x2fStack;pushMatrix()Lorg/joml/Matrix3x2fStack;"))
-	private void cariboustonks$scrollableTooltipXYAxis(Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner positioner, Identifier texture, CallbackInfo info, @Local(name = "x") LocalIntRef refX, @Local(name = "y") LocalIntRef refY) {
+	private void cariboustonks$scrollableTooltipXYAxis(Font font, List<ClientTooltipComponent> lines, int xo, int yo, ClientTooltipPositioner positioner, @Nullable Identifier style, boolean extraSpaceAfterFirstLine, CallbackInfo ci,  @Local(name = "x") LocalIntRef refX, @Local(name = "y") LocalIntRef refY) {
 		refX.set(refX.get() + getXOffset());
 		refY.set(refY.get() + getYOffset());
 

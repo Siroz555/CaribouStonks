@@ -173,7 +173,7 @@ public final class MinecraftUtils {
 				PlayerContext.showTitle(title, 0, 60, 20);
 			}
 
-			MINECRAFT.gameRenderer.displayItemActivation(item);
+			MINECRAFT.player.displayItemActivation(item);
 
 			if (particle != null) {
 				MINECRAFT.particleEngine.createTrackingEmitter(MINECRAFT.player, particle, particleAge);

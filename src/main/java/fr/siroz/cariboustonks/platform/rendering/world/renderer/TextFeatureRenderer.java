@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.platform.rendering.world.renderer;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.FilterMode;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
+import com.mojang.renderpearl.api.textures.FilterMode;
 import fr.siroz.cariboustonks.platform.rendering.world.state.TextRenderState;
 import java.util.List;
 import net.minecraft.client.gui.Font;

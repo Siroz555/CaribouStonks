@@ -25,7 +25,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 public class HotspotRadarFeature extends Feature {
 
@@ -96,16 +95,11 @@ public class HotspotRadarFeature extends Feature {
 	}
 
 	@EventHandler(event = "NetworkEvents.PARTICLE_RECEIVED_PACKET")
-	private void onParticleReceived(ClientboundLevelParticlesPacket particle) {
+	private void onParticleReceived(ClientboundLevelParticlesPacket packet) {
 		if (!isEnabled()) return;
 		if (!tracker.isTracking()) return;
 
-		tracker.handleParticle(new ParticleData(
-				new Vec3(particle.getX(), particle.getY(), particle.getZ()),
-				particle.getParticle().getType(),
-				particle.getCount(),
-				particle.getMaxSpeed()
-		));
+		tracker.handleParticle(ParticleData.of(packet));
 	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")

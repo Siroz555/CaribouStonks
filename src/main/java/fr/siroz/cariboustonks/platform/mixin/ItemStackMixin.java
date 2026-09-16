@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.platform.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.GuiEvents;
@@ -13,14 +14,16 @@ import net.minecraft.world.item.component.TooltipProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = ItemStack.class, priority = 1111)
 public abstract class ItemStackMixin {
 
-	@ModifyVariable(method = "addToTooltip", at = @At("STORE"), name = "component")
+	@ModifyExpressionValue(
+			method = "addToTooltip(Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/component/TooltipProvider$Getter;Lnet/minecraft/world/item/Item$TooltipContext;Lnet/minecraft/world/item/component/TooltipDisplay;Ljava/util/function/Consumer;Lnet/minecraft/world/item/TooltipFlag;)V",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/component/TooltipProvider$Getter;get(Ljava/lang/Object;)Lnet/minecraft/world/item/component/TooltipProvider;")
+	)
 	private TooltipProvider cariboustonks$appendTooltipEvent(TooltipProvider component) {
 		if (component instanceof ItemLore loreComponent) {
 			ItemLore lore = GuiEvents.TOOLTIP_APPENDER_EVENT.invoker().lines((ItemStack) (Object) this, loreComponent);

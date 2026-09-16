@@ -61,9 +61,9 @@ public class SafariFloorDropFeature extends Feature {
 	@EventHandler(event = "NetworkEvents.PARTICLE_RECEIVED_PACKET")
 	private void onParticleReceived(ClientboundLevelParticlesPacket packet) {
 		if (!isEnabled()) return;
-		if (!ParticleTypes.HAPPY_VILLAGER.getType().equals(packet.getParticle().getType())) return;
+		if (!ParticleTypes.HAPPY_VILLAGER.getType().equals(packet.particle().getType())) return;
 
-		BlockPos pos = BlockPos.containing(packet.getX(), packet.getY() - 1, packet.getZ());
+		BlockPos pos = BlockPos.containing(packet.x(), packet.y() - 1, packet.z());
 		if (floorDrops.contains(pos)) return;
 
 		long stringItemCount = countStringItemDisplays(pos);

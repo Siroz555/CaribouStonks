@@ -130,18 +130,18 @@ public class HotspotFeature extends Feature {
 			return;
 		}
 
-		ParticleOptions params = particle.getParticle();
+		ParticleOptions params = particle.particle();
 		ParticleType<?> type = params.getType();
 		// Future: (Predicate<ParticleS2CPacket>, Consumer<ParticleS2CPacket>)
 		// pour itérer dessus pour rendre l'ajout de nouveaux handlers trivial.
 
 		if (ParticleTypes.SMOKE.equals(type) && matchesSmoke(particle)) {
-			handleParticle(new Vec3(particle.getX(), particle.getY(), particle.getZ()), ParticleTypes.SMOKE);
+			handleParticle(new Vec3(particle.x(), particle.y(), particle.z()), ParticleTypes.SMOKE);
 			return;
 		}
 
 		if (ParticleTypes.DUST.equals(type) && matchesDust(particle, params)) {
-			handleParticle(new Vec3(particle.getX(), particle.getY(), particle.getZ()), ParticleTypes.DUST);
+			handleParticle(new Vec3(particle.x(), particle.y(), particle.z()), ParticleTypes.DUST);
 		}
 	}
 
@@ -149,14 +149,14 @@ public class HotspotFeature extends Feature {
 	 * [STDOUT]: particle: smoke count: 5 speed: 0.0
 	 */
 	private boolean matchesSmoke(@NonNull ClientboundLevelParticlesPacket p) {
-		return p.getCount() == 5 && p.getMaxSpeed() == 0f;
+		return p.count() == 5 && p.xMaxSpeed() == 0f;
 	}
 
 	/**
 	 * [STDOUT]: DUST:: color: -38476 scale:1.0 count: 0 speed: 1.0
 	 */
 	private boolean matchesDust(@NonNull ClientboundLevelParticlesPacket p, ParticleOptions params) {
-		if (p.getCount() != 0 || p.getMaxSpeed() != 1f) return false;
+		if (p.count() != 0 || p.xMaxSpeed() != 1f) return false;
 		if (!(params instanceof DustParticleOptions effect)) return false;
 
 		int color = ((DustParticleOptionsAccessor) effect).getColor();

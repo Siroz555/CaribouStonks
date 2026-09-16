@@ -1,10 +1,10 @@
 package fr.siroz.cariboustonks.platform.rendering;
 
-import com.mojang.blaze3d.PrimitiveTopology;
-import com.mojang.blaze3d.pipeline.DepthStencilState;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.renderpearl.api.pipeline.CompareOp;
+import com.mojang.renderpearl.api.pipeline.DepthStencilState;
+import com.mojang.renderpearl.api.pipeline.PrimitiveTopology;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.mod.integration.IrisIntegration;
 import java.util.Optional;
@@ -59,7 +59,13 @@ public final class CaribouRenderPipelines {
 
 	public static final RenderPipeline LINE_STRIP = RenderPipelines.register(
 			RenderPipeline.builder()
-					.withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
+					//.withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
+					.withBindGroupLayout(BindGroupLayouts.PROJECTION)
+					.withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
+//					.withBindGroupLayout(BindGroupLayout.builder()
+//							.withUniform("DynamicTransforms", UniformType.UNIFORM_BUFFER)
+//							.withUniform("Projection", UniformType.UNIFORM_BUFFER)
+//							.build()) // TODO
 					.withLocation(CaribouStonks.identifier("pipeline/line_strip"))
 					// SIROZ-NOTE: 26.1 : LESS_THAN_OR_EQUAL | 26.2 GREATER_THAN_OR_EQUAL | pourquoi ?
 					.withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false))

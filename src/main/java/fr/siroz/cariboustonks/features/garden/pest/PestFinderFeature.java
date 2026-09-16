@@ -26,7 +26,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 
 public final class PestFinderFeature extends Feature {
 	private static final String VACUUM_ID_PREFIX = "VACUUM";
@@ -93,12 +92,7 @@ public final class PestFinderFeature extends Feature {
 		if (!isEnabled()) return;
 		if (!tracker.isTracking()) return;
 
-		tracker.handleParticle(new ParticleData(
-				new Vec3(packet.getX(), packet.getY(), packet.getZ()),
-				packet.getParticle().getType(),
-				packet.getCount(),
-				packet.getMaxSpeed()
-		));
+		tracker.handleParticle(ParticleData.of(packet));
 	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")

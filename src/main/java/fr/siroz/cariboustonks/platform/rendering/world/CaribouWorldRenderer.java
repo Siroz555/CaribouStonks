@@ -73,7 +73,8 @@ public final class CaribouWorldRenderer {
 	 * Init
 	 */
 	public static void bootstrap() {
-		LevelRenderEvents.COLLECT_SUBMITS.register(CaribouWorldRenderer::dispatchSubmits);
+		// TODO
+		//LevelRenderEvents.COLLECT_SUBMITS.register(CaribouWorldRenderer::dispatchSubmits);
 
 		FeatureRendererRegistry.register(BeamFeatureRenderer.TYPE, BeamFeatureRenderer::new);
 		FeatureRendererRegistry.register(CircleFeatureRenderer.TYPE, CircleFeatureRenderer::new);

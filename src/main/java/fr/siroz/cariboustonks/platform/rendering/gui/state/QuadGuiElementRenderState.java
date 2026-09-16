@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.platform.rendering.gui.state;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.Quad;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import java.util.List;

@@ -19,7 +19,7 @@ public abstract class LevelExtractorMixin {
 	private LevelRenderState levelRenderState;
 
 	@Inject(method = "extract", at = @At("RETURN"))
-	private void cariboustonks$afterExtractLevel(DeltaTracker deltaTracker, Camera camera, float deltaPartialTick, CallbackInfo ci) {
+	private void cariboustonks$afterExtractLevel(DeltaTracker deltaTracker, Camera camera, float worldPartialTicks, CallbackInfo ci) {
 		// Fabric >>> LevelExtractorEvents.END_EXTRACTION
 		CaribouWorldRenderer.extract(this.levelRenderState, this.levelRenderState.cameraRenderState.cullFrustum);
 	}

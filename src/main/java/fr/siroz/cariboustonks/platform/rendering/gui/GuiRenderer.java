@@ -59,6 +59,7 @@ public final class GuiRenderer {
 	 * @param startColor the start color of the gradient
 	 * @param endColor   the end color of the gradient
 	 */
+	@Deprecated
 	public static void submitGradientRect(@NonNull GuiGraphicsExtractor graphics, int depth, int left, int top, int right, int bottom, int startColor, int endColor) {
 		GradientRectGuiElementRenderState renderState = new GradientRectGuiElementRenderState(
 				CaribouRenderPipelines.GUI_QUADS, //RenderPipelines.GUI,

@@ -18,14 +18,14 @@ public abstract class LivingEntityMixin extends Entity {
 		super(type, world);
 	}
 
-	@ModifyExpressionValue(method = "getCurrentSwingDuration", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/component/SwingAnimation;duration()I"))
+	@ModifyExpressionValue(method = "getModifiedSwingDuration", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/component/SwingAnimation;duration()I"))
 	private int cariboustonks$editSwingDuration(int original) {
 		return shouldEnableSwingModifications()
 				? ConfigManager.getConfig().vanilla.itemModelCustomization.swingDuration
 				: original;
 	}
 
-	@ModifyExpressionValue(method = "getCurrentSwingDuration", at = {
+	@ModifyExpressionValue(method = "getModifiedSwingDuration", at = {
 			@At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffectUtil;hasDigSpeed(Lnet/minecraft/world/entity/LivingEntity;)Z"),
 			@At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z")
 	}, require = 2)

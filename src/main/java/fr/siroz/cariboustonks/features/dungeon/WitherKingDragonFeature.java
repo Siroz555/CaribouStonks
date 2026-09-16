@@ -125,11 +125,11 @@ public class WitherKingDragonFeature extends Feature {
 	private void onParticle(ClientboundLevelParticlesPacket particle) {
 		if (!isPhase5) return;
 		if (!isEnabled()) return;
-		if (!particle.getParticle().getType().equals(ParticleTypes.FLAME)
-				|| particle.getCount() != 20 || particle.getMaxSpeed() != 0f
-				|| particle.getY() != 19.0
-				|| particle.getXDist() != 2f || particle.getYDist() != 3f || particle.getZDist() != 2f
-				|| particle.getX() % 1 != 0.0 || particle.getZ() % 1 != 0.0
+		if (!particle.particle().getType().equals(ParticleTypes.FLAME)
+				|| particle.count() != 20 || particle.xMaxSpeed() != 0f
+				|| particle.y() != 19.0
+				|| particle.xDist() != 2f || particle.yDist() != 3f || particle.zDist() != 2f
+				|| particle.x() % 1 != 0.0 || particle.z() % 1 != 0.0
 		) {
 			return;
 		}
@@ -146,7 +146,7 @@ public class WitherKingDragonFeature extends Feature {
 					continue;
 				}
 
-				if (!dragon.isInXRange(particle.getX()) || !dragon.isInZRange(particle.getZ())) {
+				if (!dragon.isInXRange(particle.x()) || !dragon.isInZRange(particle.z())) {
 					continue;
 				}
 

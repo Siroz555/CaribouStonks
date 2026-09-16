@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.util.render;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import fr.siroz.cariboustonks.platform.mixin.accessors.FrustumAccessor;
 import net.minecraft.client.Camera;
@@ -27,9 +28,8 @@ public final class RenderUtils {
 	 *
 	 * @return {@code true} if Vulkan backend is set
 	 */
-	@Deprecated
 	public static boolean isVulkanBackend() {
-		return false;
+		return RenderSystem.getDevice().getDeviceInfo().backendName().equals("Vulkan");
 	}
 
 	public static boolean isVisible(@Nullable Frustum frustum, AABB box) {

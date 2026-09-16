@@ -51,11 +51,11 @@ public abstract class MouseHandlerMixin {
 		this.guiY = this.ypos;
 	}
 
-	@Inject(method = "releaseMouse", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/InputConstants;grabOrReleaseMouse(Lcom/mojang/blaze3d/platform/Window;IDD)V", shift = At.Shift.AFTER))
+	@Inject(method = "releaseMouse", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/InputConstants;releaseMouse(Lcom/mojang/blaze3d/platform/Window;DD)V", shift = At.Shift.AFTER))
 	private void cariboustonks$unlockCursorPosition(CallbackInfo ci) {
 		if (ConfigManager.getConfig().vanilla.stopCursorResetPosition && ClientContext.getScreen() instanceof ContainerScreen) {
 			this.xpos = this.guiX;
-			this.ypos = this.guiY;
+			this.ypos = this.guiY; // TODO
 			ClientContext.setCursorPos(this.xpos, this.ypos);
 		}
 	}

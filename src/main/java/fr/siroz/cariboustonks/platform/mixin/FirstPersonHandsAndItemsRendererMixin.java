@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.platform.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
@@ -11,7 +10,7 @@ import fr.siroz.cariboustonks.config.configs.VanillaConfig;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.screens.HeldItemViewConfigScreen;
 import fr.siroz.cariboustonks.util.render.RenderUtils;
-import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,10 +18,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ItemInHandRenderer.class) // HeldItemRenderer
-public abstract class ItemInHandRendererMixin {
+@Mixin(FirstPersonHandsAndItemsRenderer.class)
+public abstract class FirstPersonHandsAndItemsRendererMixin {
 
-	@Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;I)V"))
+	@Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer;renderPlayerArm(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;IFFLnet/minecraft/world/entity/HumanoidArm;Lnet/minecraft/client/renderer/state/level/PlayerRenderState;)V"))
 	private void cariboustonks$renderCustomHeldItem(CallbackInfo ci, @Local(argsOnly = true, name = "hand") InteractionHand hand, @Local(argsOnly = true, name = "poseStack") PoseStack poseStack) {
 		if (ConfigManager.getConfig().vanilla.itemModelCustomization.enabled) {
 
@@ -48,10 +47,11 @@ public abstract class ItemInHandRendererMixin {
 		}
 	}
 
-	@ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemSwapScale(F)F"))
-	private float cariboustonks$changeAnimationProgress(float original) {
-		return ConfigManager.getConfig().vanilla.itemModelCustomization.enabled ? 1f : original;
-	}
+	// TODO
+//	@ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemSwapScale(F)F"))
+//	private float cariboustonks$changeAnimationProgress(float original) {
+//		return ConfigManager.getConfig().vanilla.itemModelCustomization.enabled ? 1f : original;
+//	}
 
 	@Inject(method = "submitArmWithItem", at = @At("HEAD"))
 	private void cariboustonks$changeHeldItemForConfigScreen(CallbackInfo ci, @Local(argsOnly = true, name = "hand") LocalRef<InteractionHand> hand, @Local(argsOnly = true, name = "attack") LocalFloatRef swingProgress, @Local(argsOnly = true, name = "itemStack") LocalRef<ItemStack> stack, @Local(argsOnly = true, name = "inverseArmHeight") LocalFloatRef equipProgress, @Local(argsOnly = true, name = "lightCoords") LocalIntRef light) {

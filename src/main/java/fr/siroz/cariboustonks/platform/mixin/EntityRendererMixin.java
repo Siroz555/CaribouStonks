@@ -18,13 +18,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = EntityRenderer.class, priority = 1001)
-public abstract class EntityRendererMixin {
+public abstract class EntityRendererMixin<T extends Entity> {
 
 	@Unique
 	private final GlowingSystem glowingSystem = CaribouStonks.systems().getSystem(GlowingSystem.class);
 
 	@Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
-	private void cariboustonks$shouldRenderEntity(Entity entity, Frustum culler, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir) {
+	private void cariboustonks$shouldRenderEntity(T entity, Frustum culler, double camX, double camY, double camZ, float partialTicks, CallbackInfoReturnable<Boolean> cir) {
 		if (SkyBlockAPI.isOnSkyBlock()) {
 			if (!RenderEvents.ALLOW_RENDER_ENTITY_EVENT.invoker().allowRenderEntity(entity)) {
 				cir.setReturnValue(false);

@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.screens.reminders.ReminderScreen;
 import fr.siroz.cariboustonks.screens.search.StonksSearchScreen;
 import fr.siroz.cariboustonks.screens.waypoints.WaypointScreen;
+import java.net.URI;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -115,11 +116,11 @@ public class CaribouStonksMenuScreen extends CaribousStonksScreen {
 		GridLayout.RowHelper footerAdder = footerGridWidget.createRowHelper(2);
 
 		footerAdder.addChild(Button.builder(Component.literal("Modrinth"),
-						ConfirmLinkScreen.confirmLink(this, "https://modrinth.com/mod/cariboustonks"))
+						ConfirmLinkScreen.confirmLink(this, URI.create("https://modrinth.com/mod/cariboustonks")))
 				.build());
 
 		footerAdder.addChild(Button.builder(Component.literal("GitHub"),
-						ConfirmLinkScreen.confirmLink(this, "https://github.com/Siroz555/CaribouStonks"))
+						ConfirmLinkScreen.confirmLink(this, URI.create("https://github.com/Siroz555/CaribouStonks")))
 				.build());
 
 		Component version = Component.literal(" Version: " + CaribouStonks.VERSION.getFriendlyString());

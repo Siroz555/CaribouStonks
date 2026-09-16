@@ -9,7 +9,7 @@ import net.minecraft.data.registries.VanillaRegistries;
 public final class DeveloperTools {
 
 	private static final boolean SYSTEM_DEBUG = Boolean.parseBoolean(System.getProperty("stonks.debug", "false"));
-	private static final HolderLookup.Provider LOOKUP = VanillaRegistries.createLookup();
+	private static final HolderLookup.Provider LOOKUP = VanillaRegistries.createWorldLookup();
 
 	private DeveloperTools() {
 		throw new UnsupportedOperationException();
