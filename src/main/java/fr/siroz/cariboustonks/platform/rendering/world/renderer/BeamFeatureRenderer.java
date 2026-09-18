@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.platform.rendering.world.state.BeamRenderState;
 import java.util.List;
 import net.minecraft.client.renderer.feature.FeatureFrameContext;
 import net.minecraft.client.renderer.feature.FeatureRendererType;
-import net.minecraft.client.renderer.feature.submit.SubmitNode;
+import net.minecraft.client.renderer.feature.submit.TranslucentSubmit;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import org.joml.Matrix4f;
 import org.jspecify.annotations.NonNull;
@@ -88,9 +88,15 @@ public final class BeamFeatureRenderer extends AbstractFeatureRenderer<BeamFeatu
 		builder.addVertex(matrix, (float) tlX, (float) tlY, (float) tlZ).setColor(r, g, b, 0.0f);
 	}
 
-	public record Submit(List<BeamRenderState> states, CameraRenderState camera, boolean throughBlocks) implements SubmitNode {
+	public record Submit(List<BeamRenderState> states, CameraRenderState camera, boolean throughBlocks) implements TranslucentSubmit {
 		@Override
-		public @NonNull FeatureRendererType<? extends SubmitNode> featureType() {
+		public float distanceToCameraSq() {
+			if (states.isEmpty()) return 0.0F;
+			return (float) states.getFirst().pos().distanceToSqr(camera.pos);
+		}
+
+		@Override
+		public @NonNull FeatureRendererType<? extends TranslucentSubmit> featureType() {
 			return TYPE;
 		}
 	}

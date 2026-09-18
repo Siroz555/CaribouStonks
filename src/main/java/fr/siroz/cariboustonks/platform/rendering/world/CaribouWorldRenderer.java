@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import net.fabricmc.fabric.api.client.rendering.v1.FeatureRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.SubmitRenderPhase;
-import net.fabricmc.fabric.api.client.rendering.v1.SubmitRenderPhases;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
@@ -42,6 +41,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BeaconRenderState;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.feature.submit.SubmitNode;
+import net.minecraft.client.renderer.feature.submit.TranslucentSubmit;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.core.BlockPos;
@@ -66,6 +66,15 @@ import org.jspecify.annotations.Nullable;
 public final class CaribouWorldRenderer {
 	private static final WorldRendererImpl worldRenderer = new WorldRendererImpl();
 
+	private static final SubmitRenderPhase<SubmitNode> NORMAL_PHASE
+			= new SubmitRenderPhase<>(x -> x.afterTerrain);
+
+	private static final SubmitRenderPhase<TranslucentSubmit> SEE_THROUGH_PHASE
+			= new SubmitRenderPhase<>(x -> x.seeThrough);
+
+	private static final SubmitRenderPhase<SubmitNode> TEXTS_PHASE
+			= new SubmitRenderPhase<>(x -> x.texts);
+
 	private CaribouWorldRenderer() {
 	}
 
@@ -73,8 +82,7 @@ public final class CaribouWorldRenderer {
 	 * Init
 	 */
 	public static void bootstrap() {
-		// TODO
-		//LevelRenderEvents.COLLECT_SUBMITS.register(CaribouWorldRenderer::dispatchSubmits);
+		LevelRenderEvents.COLLECT_SUBMITS.register(CaribouWorldRenderer::dispatchSubmits);
 
 		FeatureRendererRegistry.register(BeamFeatureRenderer.TYPE, BeamFeatureRenderer::new);
 		FeatureRendererRegistry.register(CircleFeatureRenderer.TYPE, CircleFeatureRenderer::new);
@@ -297,44 +305,38 @@ public final class CaribouWorldRenderer {
 
 			// States avec 2 flags (normal && throughBlocks)
 
-			submitPair(collector, beamStates, camera, SubmitRenderPhases.AFTER_TERRAIN, BeamFeatureRenderer.Submit::new);
-			submitPair(collector, circleStates, camera, SubmitRenderPhases.AFTER_TERRAIN, CircleFeatureRenderer.Submit::new);
-			submitPair(collector, thickCircleStates, camera, SubmitRenderPhases.AFTER_TERRAIN, ThickCircleFeatureRenderer.Submit::new);
-			submitPair(collector, quadStates, camera, SubmitRenderPhases.AFTER_TERRAIN, QuadFeatureRenderer.Submit::new);
-			submitPair(collector, filledBoxStates, camera, SubmitRenderPhases.AFTER_TERRAIN, FilledBoxFeatureRenderer.Submit::new);
-			submitPair(collector, outlineBoxStates, camera, SubmitRenderPhases.AFTER_TERRAIN, OutlineBoxFeatureRenderer.Submit::new);
-			submitPair(collector, linesStates, camera, SubmitRenderPhases.AFTER_TERRAIN, LinesFeatureRenderer.Submit::new);
-			submitPair(collector, textStates, camera, SubmitRenderPhases.TEXTS, TextFeatureRenderer.Submit::new);
-			submitPair(collector, textureStates, camera, SubmitRenderPhases.AFTER_TERRAIN, TextureFeatureRenderer.Submit::new);
+			submitPair(collector, beamStates, camera, NORMAL_PHASE, BeamFeatureRenderer.Submit::new);
+			submitPair(collector, circleStates, camera, NORMAL_PHASE, CircleFeatureRenderer.Submit::new);
+			submitPair(collector, thickCircleStates, camera, NORMAL_PHASE, ThickCircleFeatureRenderer.Submit::new);
+			submitPair(collector, quadStates, camera, NORMAL_PHASE, QuadFeatureRenderer.Submit::new);
+			submitPair(collector, filledBoxStates, camera, NORMAL_PHASE, FilledBoxFeatureRenderer.Submit::new);
+			submitPair(collector, outlineBoxStates, camera, NORMAL_PHASE, OutlineBoxFeatureRenderer.Submit::new);
+			submitPair(collector, linesStates, camera, NORMAL_PHASE, LinesFeatureRenderer.Submit::new);
+			submitPair(collector, textStates, camera, TEXTS_PHASE, TextFeatureRenderer.Submit::new);
+			submitPair(collector, textureStates, camera, NORMAL_PHASE, TextureFeatureRenderer.Submit::new);
 
 			// States avec 1 flag (normal || throughBlocks)
 
 			if (!cursorLineStates.isEmpty()) {
-				collector.submitCustom(
-						SubmitRenderPhases.ALWAYS_ON_TOP,
-						new CursorLineFeatureRenderer.Submit(cursorLineStates, camera)
-				);
+				collector.submitCustom(SEE_THROUGH_PHASE, new CursorLineFeatureRenderer.Submit(cursorLineStates, camera));
 			}
 			if (!cuboidOutlineStates.isEmpty()) {
-				collector.submitCustom(
-						SubmitRenderPhases.AFTER_TERRAIN,
-						new CuboidOutlineFeatureRenderer.Submit(cuboidOutlineStates, camera)
-				);
+				collector.submitCustom(NORMAL_PHASE, new CuboidOutlineFeatureRenderer.Submit(cuboidOutlineStates, camera));
 			}
 		}
 
-		private <S> void submitPair(
+		private <S, T extends TranslucentSubmit> void submitPair(
 				@NonNull SubmitNodeCollector collector,
 				@NonNull RenderBucket<S> bucket,
 				@NonNull CameraRenderState cameraState,
-				@NonNull SubmitRenderPhase<SubmitNode> normalPhase,
-				@NonNull SubmitFactory<S> factory
+				@NonNull SubmitRenderPhase<? super T> normalPhase,
+				@NonNull SubmitFactory<S, T> factory
 		) {
 			if (!bucket.normal.isEmpty()) {
 				collector.submitCustom(normalPhase, factory.create(bucket.normal, cameraState, false));
 			}
 			if (!bucket.throughBlocks.isEmpty()) {
-				collector.submitCustom(SubmitRenderPhases.ALWAYS_ON_TOP, factory.create(bucket.throughBlocks, cameraState, true));
+				collector.submitCustom(SEE_THROUGH_PHASE, factory.create(bucket.throughBlocks, cameraState, true));
 			}
 		}
 

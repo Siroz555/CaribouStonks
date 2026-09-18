@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.platform.rendering.world.state.CursorLineRenderSta
 import java.util.List;
 import net.minecraft.client.renderer.feature.FeatureFrameContext;
 import net.minecraft.client.renderer.feature.FeatureRendererType;
-import net.minecraft.client.renderer.feature.submit.SubmitNode;
+import net.minecraft.client.renderer.feature.submit.TranslucentSubmit;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
@@ -42,9 +42,14 @@ public final class CursorLineFeatureRenderer extends AbstractFeatureRenderer<Cur
 		}
 	}
 
-	public record Submit(List<CursorLineRenderState> states, CameraRenderState camera) implements SubmitNode {
+	public record Submit(List<CursorLineRenderState> states, CameraRenderState camera) implements TranslucentSubmit {
 		@Override
-		public @NonNull FeatureRendererType<? extends SubmitNode> featureType() {
+		public float distanceToCameraSq() {
+			return 0;
+		}
+
+		@Override
+		public @NonNull FeatureRendererType<? extends TranslucentSubmit> featureType() {
 			return TYPE;
 		}
 	}

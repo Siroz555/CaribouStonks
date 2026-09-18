@@ -12,7 +12,7 @@ import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.feature.FeatureFrameContext;
 import net.minecraft.client.renderer.feature.FeatureRendererType;
-import net.minecraft.client.renderer.feature.submit.SubmitNode;
+import net.minecraft.client.renderer.feature.submit.TranslucentSubmit;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.util.LightCoordsUtil;
 import org.joml.Matrix4f;
@@ -55,9 +55,14 @@ public final class TextFeatureRenderer extends AbstractFeatureRenderer<TextFeatu
 		else return greyscale ? RenderPipelines.TEXT_GRAYSCALE : RenderPipelines.TEXT;
 	}
 
-	public record Submit(List<TextRenderState> states, CameraRenderState camera, boolean throughBlocks) implements SubmitNode {
+	public record Submit(List<TextRenderState> states, CameraRenderState camera, boolean throughBlocks) implements TranslucentSubmit {
 		@Override
-		public @NonNull FeatureRendererType<? extends SubmitNode> featureType() {
+		public float distanceToCameraSq() {
+			return 0;
+		}
+
+		@Override
+		public @NonNull FeatureRendererType<? extends TranslucentSubmit> featureType() {
 			return TYPE;
 		}
 	}

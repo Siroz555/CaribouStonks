@@ -14,9 +14,15 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 // 		SubmitFactory.resolve(FilledBoxInstancedRendererCommand.Submit::new, FilledBoxRendererCommand.Submit::new);
 // .
 
+/**
+ * Factory of {@link SubmitNode}
+ *
+ * @param <S> the type of render states
+ * @param <N> the type of submit node
+ */
 @FunctionalInterface
-public interface SubmitFactory<S> {
-	SubmitNode create(List<S> states, CameraRenderState cameraState, boolean throughBlocks);
+public interface SubmitFactory<S, N extends SubmitNode> {
+	N create(List<S> states, CameraRenderState cameraState, boolean throughBlocks);
 
 	/**
 	 * Resolve the correct SubmitFactory Node depending on the Graphics API Backend.
@@ -24,10 +30,11 @@ public interface SubmitFactory<S> {
 	 * @param vulkanFactory the Vulkan Submit implementation
 	 * @param openGlFactory the OpenGL Submit implementation
 	 * @param <S>           the type of render States
+	 * @param <N>           the type of SubmitNode
 	 * @return the SubmitFactory Node instance
 	 */
 	@Deprecated
-	static <S> SubmitFactory<S> resolve(SubmitFactory<S> vulkanFactory, SubmitFactory<S> openGlFactory) {
+	static <S, N extends SubmitNode> SubmitFactory<S, N> resolve(SubmitFactory<S, N> vulkanFactory, SubmitFactory<S, N> openGlFactory) {
 		return RenderUtils.isVulkanBackend() ? vulkanFactory : openGlFactory;
 	}
 }

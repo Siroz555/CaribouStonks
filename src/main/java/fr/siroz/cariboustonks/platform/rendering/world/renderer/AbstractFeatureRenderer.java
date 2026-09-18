@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.platform.rendering.world.renderer;
 
-import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
@@ -9,9 +8,6 @@ import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.OptionalDouble;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.StagedVertexBuffer;
 import net.minecraft.client.renderer.feature.FeatureFrameContext;
@@ -41,10 +37,6 @@ public abstract class AbstractFeatureRenderer<Submit extends SubmitNode> impleme
 		return currentGroup().getVertexBuilder(pipeline, textureSetup);
 	}
 
-	private Group currentGroup() {
-		return Objects.requireNonNull(currentGroup, "Not preparing group");
-	}
-
 	@Override
 	public final void prepareGroup(@NonNull FeatureFrameContext context, @NonNull List<Submit> submits, boolean strictlyOrdered) {
 		currentGroup = new Group(context.stagedVertexBuffer(), !strictlyOrdered);
@@ -54,32 +46,30 @@ public abstract class AbstractFeatureRenderer<Submit extends SubmitNode> impleme
 	}
 
 	@Override
-	public void executeGroup(@NonNull FeatureFrameContext context, @Nullable OitStage stage, @NonNull RenderPass rp, int groupIndex, @NonNull List<Submit> submits, boolean strictlyOrdered) {
+	public void executeGroup(@NonNull FeatureFrameContext context, @Nullable OitStage stage, @NonNull RenderPass renderPass, int groupIndex, @NonNull List<Submit> submits, boolean strictlyOrdered) {
 		Group group = groups.get(groupIndex);
+
+//		System.out.println(
+//				"EXEC Beam? renderer=" + getClass().getSimpleName()
+//						+ " groupIndex=" + groupIndex
+//						+ " submits=" + submits.size()
+//						+ " strict=" + strictlyOrdered
+//						+ " stage=" + stage
+//		);
 
 		applyViewOffsetZLayering();
 
-		RenderTarget mainTarget = Minecraft.getInstance().gameRenderer.mainRenderTarget();
 		GpuBufferSlice dynamicTransforms = RenderSystem.getDynamicUniforms().writeTransform(RenderSystem.getModelViewMatrixCopy());
 
-		// TODO
-		try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
-				() -> "CaribouStonks World Rendering",
-				Objects.requireNonNull(mainTarget.getColorTextureView()),
-				Optional.empty(),
-				mainTarget.hasDepth() ? mainTarget.getDepthTextureView() : null,
-				OptionalDouble.empty()
-		)) {
-			RenderSystem.bindDefaultUniforms(renderPass);
-			renderPass.setUniform("DynamicTransforms", dynamicTransforms);
+		RenderSystem.bindDefaultUniforms(renderPass);
+		renderPass.setUniform("DynamicTransforms", dynamicTransforms);
 
-			for (int i = 0; i < group.draws.size(); i++) {
-				PreparedDraw draw = group.preparedDraws.get(i);
-				StagedVertexBuffer.ExecuteInfo info = context.stagedVertexBuffer().getExecuteInfo(group.draws.get(i));
+		for (int i = 0; i < group.draws.size(); i++) {
+			PreparedDraw draw = group.preparedDraws.get(i);
+			StagedVertexBuffer.ExecuteInfo info = context.stagedVertexBuffer().getExecuteInfo(group.draws.get(i));
 
-				if (info != null) {
-					executeDraw(renderPass, draw, info);
-				}
+			if (info != null) {
+				executeDraw(renderPass, draw, info);
 			}
 		}
 
@@ -89,6 +79,10 @@ public abstract class AbstractFeatureRenderer<Submit extends SubmitNode> impleme
 	@Override
 	public final void finishExecute(@NonNull FeatureFrameContext context) {
 		groups.clear();
+	}
+
+	private Group currentGroup() {
+		return Objects.requireNonNull(currentGroup, "Not preparing group");
 	}
 
 	private static void executeDraw(RenderPass renderPass, PreparedDraw draw, StagedVertexBuffer.ExecuteInfo info) {

@@ -7,7 +7,7 @@ import java.util.List;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.feature.FeatureFrameContext;
 import net.minecraft.client.renderer.feature.FeatureRendererType;
-import net.minecraft.client.renderer.feature.submit.SubmitNode;
+import net.minecraft.client.renderer.feature.submit.TranslucentSubmit;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import org.joml.Matrix4f;
 import org.jspecify.annotations.NonNull;
@@ -68,9 +68,14 @@ public final class OutlineBoxFeatureRenderer extends AbstractFeatureRenderer<Out
 		}
 	}
 
-	public record Submit(List<OutlineBoxRenderState> states, CameraRenderState camera, boolean throughBlocks) implements SubmitNode {
+	public record Submit(List<OutlineBoxRenderState> states, CameraRenderState camera, boolean throughBlocks) implements TranslucentSubmit {
 		@Override
-		public @NonNull FeatureRendererType<? extends SubmitNode> featureType() {
+		public float distanceToCameraSq() {
+			return 0;
+		}
+
+		@Override
+		public @NonNull FeatureRendererType<? extends TranslucentSubmit> featureType() {
 			return TYPE;
 		}
 	}

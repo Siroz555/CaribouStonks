@@ -1,6 +1,8 @@
 package fr.siroz.cariboustonks.platform.rendering;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.renderpearl.api.pipeline.BlendFunction;
+import com.mojang.renderpearl.api.pipeline.ColorTargetState;
 import com.mojang.renderpearl.api.pipeline.CompareOp;
 import com.mojang.renderpearl.api.pipeline.DepthStencilState;
 import com.mojang.renderpearl.api.pipeline.PrimitiveTopology;
@@ -59,15 +61,10 @@ public final class CaribouRenderPipelines {
 
 	public static final RenderPipeline LINE_STRIP = RenderPipelines.register(
 			RenderPipeline.builder()
-					//.withBindGroupLayout(BindGroupLayouts.MATRICES_PROJECTION)
 					.withBindGroupLayout(BindGroupLayouts.PROJECTION)
 					.withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
-//					.withBindGroupLayout(BindGroupLayout.builder()
-//							.withUniform("DynamicTransforms", UniformType.UNIFORM_BUFFER)
-//							.withUniform("Projection", UniformType.UNIFORM_BUFFER)
-//							.build()) // TODO
 					.withLocation(CaribouStonks.identifier("pipeline/line_strip"))
-					// SIROZ-NOTE: 26.1 : LESS_THAN_OR_EQUAL | 26.2 GREATER_THAN_OR_EQUAL | pourquoi ?
+					.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
 					.withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false))
 					.withVertexShader("core/position_color")
 					.withFragmentShader("core/position_color")
@@ -80,6 +77,7 @@ public final class CaribouRenderPipelines {
 	public static final RenderPipeline LINES_THROUGH_BLOCKS = RenderPipelines.register(
 			RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
 					.withLocation(CaribouStonks.identifier("pipeline/lines_through_blocks"))
+					.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
 					.withDepthStencilState(Optional.empty())
 					.build()
 	);
