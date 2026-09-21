@@ -244,10 +244,7 @@ public final class ClientContext {
 	 * @param yPos the Y pos
 	 */
 	public static void setCursorPos(double xPos, double yPos) {
-		//GLFW.glfwSetCursorPos(CLIENT.getWindow().handle(), xPos, yPos);
-		// TODO - 26.3 :: remove? useless normalement
-		//  car il y aura InputConstants.releaseMouse utilisé dans le grabOrReleaseMouse
-		//InputConstants.releaseMouse(CLIENT.getWindow(), xPos, yPos);
+		SDLMouse.SDL_WarpMouseInWindow(CLIENT.getWindow().handle(), (float) xPos, (float) yPos);
 	}
 
 	/**

@@ -276,8 +276,6 @@ public final class CaribouWorldRenderer {
 
 			beamStates.clear();
 			circleStates.clear();
-			cuboidOutlineStates.clear();
-			cursorLineStates.clear();
 			filledBoxStates.clear();
 			linesStates.clear();
 			outlineBoxStates.clear();
@@ -285,6 +283,8 @@ public final class CaribouWorldRenderer {
 			textStates.clear();
 			textureStates.clear();
 			thickCircleStates.clear();
+			cursorLineStates.clear();
+			cuboidOutlineStates.clear();
 		}
 
 		/**

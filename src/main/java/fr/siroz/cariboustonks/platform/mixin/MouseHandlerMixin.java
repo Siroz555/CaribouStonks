@@ -55,7 +55,7 @@ public abstract class MouseHandlerMixin {
 	private void cariboustonks$unlockCursorPosition(CallbackInfo ci) {
 		if (ConfigManager.getConfig().vanilla.stopCursorResetPosition && ClientContext.getScreen() instanceof ContainerScreen) {
 			this.xpos = this.guiX;
-			this.ypos = this.guiY; // TODO
+			this.ypos = this.guiY;
 			ClientContext.setCursorPos(this.xpos, this.ypos);
 		}
 	}

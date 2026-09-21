@@ -49,14 +49,6 @@ public abstract class AbstractFeatureRenderer<Submit extends SubmitNode> impleme
 	public void executeGroup(@NonNull FeatureFrameContext context, @Nullable OitStage stage, @NonNull RenderPass renderPass, int groupIndex, @NonNull List<Submit> submits, boolean strictlyOrdered) {
 		Group group = groups.get(groupIndex);
 
-//		System.out.println(
-//				"EXEC Beam? renderer=" + getClass().getSimpleName()
-//						+ " groupIndex=" + groupIndex
-//						+ " submits=" + submits.size()
-//						+ " strict=" + strictlyOrdered
-//						+ " stage=" + stage
-//		);
-
 		applyViewOffsetZLayering();
 
 		GpuBufferSlice dynamicTransforms = RenderSystem.getDynamicUniforms().writeTransform(RenderSystem.getModelViewMatrixCopy());

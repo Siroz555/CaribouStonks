@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(FirstPersonHandsAndItemsRenderer.class)
 public abstract class FirstPersonHandsAndItemsRendererMixin {
 
-	@Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer;renderPlayerArm(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;IFFLnet/minecraft/world/entity/HumanoidArm;Lnet/minecraft/client/renderer/state/level/PlayerRenderState;)V"))
+	@Inject(method = "submitArmWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/item/ItemStackRenderState;submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;III)V"))
 	private void cariboustonks$renderCustomHeldItem(CallbackInfo ci, @Local(argsOnly = true, name = "hand") InteractionHand hand, @Local(argsOnly = true, name = "poseStack") PoseStack poseStack) {
 		if (ConfigManager.getConfig().vanilla.itemModelCustomization.enabled) {
 
