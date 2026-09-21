@@ -17,7 +17,7 @@ public class MiscConfig {
 	public Color highlighterColor = ColorUtils.getAwtColor(TextColor.AQUA);
 
 	@SerialEntry
-	public boolean bestiaryHighlight = true;
+	public boolean highlighterMiddleClick = true;
 
 	@SerialEntry
 	public BestiaryTracker bestiaryTracker = new BestiaryTracker();
