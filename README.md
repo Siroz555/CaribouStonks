@@ -5,7 +5,7 @@
 Hypixel SkyBlock Mod • Bazaar & Auction prices, Price history charts, Vanilla Tweaks, and a ton of QoL features!
 Lightweight and efficient.
 
-**✅ Supported Minecraft Versions**: **26.2**, **26.2** & **26.1.x**
+**✅ Supported Minecraft Versions**: **26.3**, **26.2** & **26.1.x**
 
 ## Installation
 
