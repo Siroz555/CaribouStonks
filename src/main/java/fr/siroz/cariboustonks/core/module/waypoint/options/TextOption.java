@@ -7,17 +7,19 @@ import org.jspecify.annotations.Nullable;
 
 public final class TextOption {
     private Component text;
+	private String rawText;
 	private final float scaleAdjustment;
     private final boolean withDistance;
     private final int offsetY;
     private final boolean throughBlocks;
 
     public TextOption() {
-        this(null, 10, false, -1, true);
+        this(null, null, 10, false, -1, true);
     }
 
-    private TextOption(Component text, float scaleAdjustment, boolean withDistance, int offsetY, boolean throughBlocks) {
+    private TextOption(Component text, String rawText, float scaleAdjustment, boolean withDistance, int offsetY, boolean throughBlocks) {
         this.text = text;
+		this.rawText = rawText;
 		this.scaleAdjustment = scaleAdjustment;
         this.withDistance = withDistance;
         this.offsetY = offsetY;
@@ -33,7 +35,11 @@ public final class TextOption {
         return Optional.ofNullable(text);
     }
 
-    /**
+	public @Nullable String getRawText() {
+		return rawText;
+	}
+
+	/**
      * Changer le {@link Component} du Waypoint.
      *
      * @param text le {@link Component} ou {@code null} pour retirer le Text actuel
@@ -41,6 +47,10 @@ public final class TextOption {
     public void updateText(@Nullable Component text) {
         this.text = text;
     }
+
+	public void updateRawText(@Nullable String rawText) {
+		this.rawText = rawText;
+	}
 
 	public float getScaleAdjustment() {
 		return scaleAdjustment;
@@ -64,6 +74,7 @@ public final class TextOption {
 
     public static class Builder {
         protected Component text = null;
+        protected String rawText = null;
 		protected float scaleAdjustment = 10;
         protected boolean withDistance = false;
         protected int offsetY = -1;
@@ -73,6 +84,11 @@ public final class TextOption {
             this.text = text;
             return this;
         }
+
+		public TextOption.Builder withRawText(@Nullable String text) {
+			this.rawText = rawText;
+			return this;
+		}
 
 		public TextOption.Builder scaleAdjustment(float scaleAdjustment) {
 			this.scaleAdjustment = scaleAdjustment;
@@ -95,7 +111,7 @@ public final class TextOption {
         }
 
         public TextOption build() {
-            return new TextOption(text, scaleAdjustment, withDistance, offsetY, throughBlocks);
+            return new TextOption(text, rawText, scaleAdjustment, withDistance, offsetY, throughBlocks);
         }
     }
 }

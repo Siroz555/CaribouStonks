@@ -9,10 +9,12 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.EmptyInput;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.FilteredEditBox;
+import fr.siroz.cariboustonks.util.MinecraftUtils;
 import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -27,6 +29,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import org.jspecify.annotations.NonNull;
 
@@ -41,12 +44,12 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 	private List<Waypoint> waypoints;
 
 	WaypointsListWidget(
-            Minecraft client,
-            @NonNull WaypointScreen screen,
-            int width,
-            int height,
-            int y,
-            int itemHeight
+			Minecraft client,
+			@NonNull WaypointScreen screen,
+			int width,
+			int height,
+			int y,
+			int itemHeight
 	) {
 		super(client, width, height, y, itemHeight);
 		this.waypointScreen = screen;
@@ -134,7 +137,8 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 			this.enabledWidget.setTooltip(Tooltip.create(Component.literal("Click to toggle the waypoint's visibility")));
 
 			this.nameWidget = new EditBox(minecraft.font, 65, 20, Component.literal("Name"));
-			this.nameWidget.setValue(waypoint.getTextOption().getText().orElse(Component.literal("")).getString());
+			this.nameWidget.addFormatter(this.textFormatter(this.nameWidget::getValue));
+			this.nameWidget.setValue(waypoint.getTextOption().getRawText() != null ? waypoint.getTextOption().getRawText() : "");
 			this.nameWidget.setTooltip(Tooltip.create(Component.literal("Click to edit the waypoint's name.")));
 			this.nameWidget.setResponder(this::updateName);
 
@@ -228,8 +232,8 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 		}
 
 		private void updateName(String name) {
-			// FUTURE UPDATE -> Waypoint Settings Screen with color codes, etc.
-			waypoint.getTextOption().updateText(Component.literal(name));
+			waypoint.getTextOption().updateText(MinecraftUtils.formatTextFromLegacy(name));
+			waypoint.getTextOption().updateRawText(name);
 		}
 
 		private void updateX(String xString) {
@@ -302,6 +306,29 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 
 		private int parseInt(@NonNull String value) throws NumberFormatException {
 			return value.isEmpty() || value.equals("-") ? 0 : Integer.parseInt(value);
+		}
+
+		private EditBox.TextFormatter textFormatter(Supplier<String> fullTextSupplier) {
+			return (s, start) -> visitor -> {
+				String fullText = fullTextSupplier.get();
+				char prefix = fullText.contains("§") ? '§' : '&';
+				Style style = Style.EMPTY;
+				for (int i = 0; i < fullText.length(); i++) {
+					if (fullText.charAt(i) == prefix) {
+						if (i + 1 < fullText.length()) {
+							ChatFormatting formatting = ChatFormatting.getByCode(fullText.charAt(i + 1));
+							if (formatting != null) {
+								style = formatting == ChatFormatting.RESET ? Style.EMPTY : style.applyLegacyFormat(formatting);
+							}
+						}
+					}
+					int codePoint = fullText.codePointAt(i);
+					if (i >= start && i < start + s.length()) {
+						visitor.accept(i, style, codePoint);
+					}
+				}
+				return true;
+			};
 		}
 	}
 
