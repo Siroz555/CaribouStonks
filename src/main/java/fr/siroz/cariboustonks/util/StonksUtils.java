@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.util;
 
 import fr.siroz.cariboustonks.util.render.AnimationUtils;
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
 import java.text.NumberFormat;
@@ -59,6 +60,9 @@ public final class StonksUtils {
 
 	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.00");
 
+	public static final String ALPHANUMERIC = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	public static final SecureRandom RANDOM = new SecureRandom();
+
 	private StonksUtils() {
 	}
 
@@ -90,6 +94,12 @@ public final class StonksUtils {
 
 		String digits = multiplier != 1 ? value.substring(0, value.length() - 1) : value;
 		return (long) (Double.parseDouble(digits) * multiplier);
+	}
+
+	public static @NonNull String generateRandomId() {
+		StringBuilder id = new StringBuilder(10);
+		for (int i = 0; i < 10; i++) id.append(ALPHANUMERIC.charAt(RANDOM.nextInt(ALPHANUMERIC.length())));
+		return id.toString();
 	}
 
 	/**
@@ -264,8 +274,8 @@ public final class StonksUtils {
 			int fractionDigits = maxFractionDigits == 0
 					? 0
 					: divided < 10 ? maxFractionDigits
-					  : divided < 100 ? Math.min(1, maxFractionDigits)
-						: 0;
+					: divided < 100 ? Math.min(1, maxFractionDigits)
+					: 0;
 
 			NumberFormat nf = make(BASE, f -> {
 				f.setMinimumFractionDigits(fractionDigits);
