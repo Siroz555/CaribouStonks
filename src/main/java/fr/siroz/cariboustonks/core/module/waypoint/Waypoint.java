@@ -84,6 +84,7 @@ public final class Waypoint {
 	private final UUID uuid;
 	private int timeoutTicks;
 	private final boolean resetBetweenWorlds;
+	private final boolean proximityReset;
 
 	private Color color;
 
@@ -104,6 +105,7 @@ public final class Waypoint {
 			@NonNull UUID uuid,
 			int timeoutTicks,
 			boolean resetBetweenWorlds,
+			boolean proximityReset,
 			@NonNull Color color,
 			float boxLineWidth,
 			boolean throughBlocks,
@@ -118,6 +120,7 @@ public final class Waypoint {
 		this.uuid = uuid;
 		this.timeoutTicks = timeoutTicks;
 		this.resetBetweenWorlds = resetBetweenWorlds;
+		this.proximityReset = proximityReset;
 		this.color = color;
 		this.boxLineWidth = boxLineWidth;
 		this.throughBlocks = throughBlocks;
@@ -244,6 +247,10 @@ public final class Waypoint {
 		return resetBetweenWorlds;
 	}
 
+	public boolean isProximityReset() {
+		return proximityReset;
+	}
+
 	/**
 	 * Returns the color associated with this Waypoint.
 	 *
@@ -338,6 +345,7 @@ public final class Waypoint {
 		private UUID uuid = UUID.randomUUID();
 		private int timeoutTicks = -1;
 		private boolean resetBetweenWorlds = false;
+		private boolean proximityReset = false;
 
 		private Color color = Colors.RED;
 
@@ -413,6 +421,11 @@ public final class Waypoint {
 
 		public Builder resetBetweenWorlds(boolean resetBetweenWorlds) {
 			this.resetBetweenWorlds = resetBetweenWorlds;
+			return this;
+		}
+
+		public Builder proximityReset(boolean proximityReset) {
+			this.proximityReset = proximityReset;
 			return this;
 		}
 
@@ -504,6 +517,7 @@ public final class Waypoint {
 					uuid,
 					timeoutTicks,
 					resetBetweenWorlds,
+					proximityReset,
 					color,
 					boxLineWidth,
 					throughBlocks,

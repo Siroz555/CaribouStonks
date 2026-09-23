@@ -130,6 +130,7 @@ public class ChatPositionFeature extends Feature {
 					.color(config.rainbow ? Colors.RAINBOW : Color.fromInt(config.color.getRGB()))
 					.timeout(config.showTime, TimeUnit.SECONDS)
 					.resetBetweenWorlds(true)
+					.proximityReset(true)
 					.textOption(TextOption.builder()
 							.withText(waypointName)
 							.scaleAdjustment(5)
