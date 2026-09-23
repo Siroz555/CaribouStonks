@@ -207,6 +207,12 @@ public final class MinecraftUtils {
 		}
 	}
 
+	public static @NonNull Style findStyle(@NonNull Component component) {
+		return component.getSiblings().isEmpty()
+				? component.getStyle()
+				: component.getSiblings().getLast().getStyle();
+	}
+
 	public static MutableComponent formatTextFromLegacy(@NonNull String legacy) {
 		if (legacy.contains("§")) return formatTextFromLegacy(legacy, '§');
 		if (legacy.contains("&")) return formatTextFromLegacy(legacy, '&');

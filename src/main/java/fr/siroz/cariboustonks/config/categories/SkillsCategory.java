@@ -520,7 +520,7 @@ public class SkillsCategory extends AbstractCategory {
 								.build())
 						.option(LabelOption.create(Component.literal("| Hotspots").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Locating Hotspots"))
+								.name(Component.literal("Hotspot - Locator"))
 								.description(OptionDescription.of(
 										Component.literal("Locates Hotspots when using the Hotspot Radar.")))
 								.binding(defaults.fishing.hotspotRadarGuess,
@@ -529,13 +529,33 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Highlighting Hotspots"))
+								.name(Component.literal("Hotspot - Highlighter"))
 								.description(OptionDescription.of(
 										Component.literal("A colored circle appears if your bobber is within the hotspot radius.")))
 								.binding(defaults.fishing.hotspotHighlight,
 										() -> current.fishing.hotspotHighlight,
 										newValue -> current.fishing.hotspotHighlight = newValue)
 								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Hotspot - Highlighter - Found Announcer"))
+								.description(OptionDescription.of(
+										Component.literal("Shows a message when you Found a Hotspot"),
+										Component.literal(SPACE + "Require to enable Hotspot - Highlighter").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.fishing.hotspotHighlightFoundAnnouncer,
+										() -> current.fishing.hotspotHighlightFoundAnnouncer,
+										newValue -> current.fishing.hotspotHighlightFoundAnnouncer = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Hotspot - Highlighter - Gone Announcer"))
+								.description(OptionDescription.of(
+										Component.literal("Shows a message when the closest Hotspot are gone"),
+										Component.literal(SPACE + "Require to enable Hotspot - Highlighter").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.fishing.hotspotHighlightGoneAnnouncer,
+										() -> current.fishing.hotspotHighlightGoneAnnouncer,
+										newValue -> current.fishing.hotspotHighlightGoneAnnouncer = newValue)
+								.controller(this::createYesNoController)
 								.build())
 						.option(LabelOption.create(Component.literal("| Lotus Atoll").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
