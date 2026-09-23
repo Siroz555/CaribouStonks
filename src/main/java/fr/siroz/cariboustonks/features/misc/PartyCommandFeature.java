@@ -21,7 +21,6 @@ import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 
 public class PartyCommandFeature extends Feature {
-
 	private static final List<String> MAGIC_8BALL_ANSWERS = new ArrayList<>();
 	private static final long COOLDOWN_MS = 750L;
 
@@ -42,7 +41,6 @@ public class PartyCommandFeature extends Feature {
 
 		String input = StonksUtils.stripColor(text.getString());
 		if (!input.startsWith("Party >")) return;
-		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
 
 		for (PartyCommand command : PartyCommand.values()) {
 			if (command.getConfig().test(this.config().misc.partyCommands)) {
@@ -62,10 +60,11 @@ public class PartyCommandFeature extends Feature {
 	}
 
 	private void sendCommand(PartyCommand command, Matcher matcher) {
+		if (!SkyBlockAPI.isInParty()) return;
+
 		try {
 			command.getAction().accept(matcher);
-		} catch (Exception ex) {
-			CaribouStonks.LOGGER.warn("{} Unable to handle {}", getShortName(), command.name(), ex);
+		} catch (Exception _) {
 		}
 	}
 
@@ -75,7 +74,9 @@ public class PartyCommandFeature extends Feature {
 			PlayerContext.sendCommandToServer("/pc " + position.asChatCoordinates(), true);
 		}),
 		WARP(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !warp"), cmd -> cmd.warp, _ -> {
-			PlayerContext.sendCommandToServer("/p warp", true); // -_-
+			if (SkyBlockAPI.isMePartyLeader()) {
+				PlayerContext.sendCommandToServer("/p warp", true);
+			}
 		}),
 		DICE(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !dice"), cmd -> cmd.diceGame, matcher -> {
 			int roll = (int) (1 + Math.floor(Math.random() * 6));
