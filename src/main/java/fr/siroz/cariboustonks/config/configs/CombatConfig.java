@@ -138,6 +138,9 @@ public class CombatConfig {
 		public CooldownHud cooldownHud = new CooldownHud();
 
 		@SerialEntry
+		public boolean used = true;
+
+		@SerialEntry
 		public boolean backMessage = false;
 
 		@SerialEntry
@@ -147,22 +150,7 @@ public class CombatConfig {
 		public boolean backSound = true;
 
 		@SerialEntry
-		public boolean spiritMaskUsed = true;
-
-		@SerialEntry
-		public boolean spiritMaskBack = true;
-
-		@SerialEntry
-		public boolean bonzoMaskUsed = false;
-
-		@SerialEntry
-		public boolean bonzoMaskBack = false;
-
-		@SerialEntry
-		public boolean phoenixUsed = false;
-
-		@SerialEntry
-		public boolean phoenixBack = false;
+		public boolean sendPartyInfo = false;
 
 		public static class CooldownHud implements HudConfig {
 
