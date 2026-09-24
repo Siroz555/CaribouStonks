@@ -88,7 +88,7 @@ public class DungeonsCategory extends AbstractCategory {
 								.build())
 						.option(LabelOption.create(Component.literal("| Dragon Helpers").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show Spawn Time"))
+								.name(Component.literal("Dragon Spawn Time"))
 								.description(OptionDescription.of(
 										Component.literal("Displays timers to warn of a Dragon spawn."),
 										Component.literal(SPACE + "Adapted according to the server's TPS.").withStyle(ChatFormatting.AQUA)))
@@ -98,7 +98,7 @@ public class DungeonsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show Bounding Boxes"))
+								.name(Component.literal("Dragon Area Bounding Boxes"))
 								.description(OptionDescription.of(
 										Component.literal("Displays the Dragons' colored boxes")))
 								.binding(defaults.instance.theCatacombs.witherKing.showDragBoundingBox,
@@ -107,7 +107,7 @@ public class DungeonsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show Target Line"))
+								.name(Component.literal("Dragon Target Line"))
 								.description(OptionDescription.of(
 										Component.literal("Displays a line from your cursor to the dragon that will spawn.")))
 								.binding(defaults.instance.theCatacombs.witherKing.showDragTargetLine,
@@ -116,7 +116,7 @@ public class DungeonsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show Last Breath Target"))
+								.name(Component.literal("Dragon Last Breath Target"))
 								.description(OptionDescription.of(
 										Component.literal("Displays a circle that allows you to aim at the dragon that will spawn, having a Last Breath."),
 										Component.literal(SPACE + "Considering that you are focused on the Obsidian block.").withStyle(ChatFormatting.ITALIC)))
@@ -132,7 +132,7 @@ public class DungeonsCategory extends AbstractCategory {
 								Component.literal("Croesus Helpers")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Highlight Opened Chests"))
+								.name(Component.literal("Croesus - Highlight Opened Chests"))
 								.description(OptionDescription.of(
 										Component.literal("Highlights the chests you opened in the Croesus.")))
 								.binding(defaults.instance.croesus.mainMenuOpenedChest,
@@ -141,7 +141,7 @@ public class DungeonsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Color>createBuilder()
-								.name(Component.literal("Highlight Opened Chests - color"))
+								.name(Component.literal("Croesus - Highlight Opened Chests - color"))
 								.description(OptionDescription.of(
 										Component.literal("Change the highlight color of the chests you opened in the Croesus.")))
 								.binding(defaults.instance.croesus.mainMenuOpenedChestColor,
@@ -150,7 +150,7 @@ public class DungeonsCategory extends AbstractCategory {
 								.controller(ColorControllerBuilder::create)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Highlight Kismet Feather Available"))
+								.name(Component.literal("Croesus - Highlight Kismet Feather Available"))
 								.description(OptionDescription.of(
 										Component.literal("Highlight where Kismet Feathers can be used in Croesus."),
 										Component.literal(SPACE + "If “Opened Chest” is enabled, Kismet Feathers will have priority.").withStyle(ChatFormatting.YELLOW)))
@@ -160,7 +160,7 @@ public class DungeonsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Color>createBuilder()
-								.name(Component.literal("Highlight Kismet Feather Available - color"))
+								.name(Component.literal("Croesus - Highlight Kismet Feather Available - color"))
 								.description(OptionDescription.of(
 										Component.literal("Change the highlight color of where Kismet Feathers can be used in Croesus.")))
 								.binding(defaults.instance.croesus.mainMenuKismetAvailableColor,
@@ -169,7 +169,7 @@ public class DungeonsCategory extends AbstractCategory {
 								.controller(ColorControllerBuilder::create)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Highlight No more Chests"))
+								.name(Component.literal("Croesus - Highlight No more Chests"))
 								.description(OptionDescription.of(
 										Component.literal("Highlights the chests you opened in the Croesus.")))
 								.binding(defaults.instance.croesus.mainMenuNoMoreChest,
@@ -178,7 +178,7 @@ public class DungeonsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Color>createBuilder()
-								.name(Component.literal("Highlight No more Chests - color"))
+								.name(Component.literal("Croesus - Highlight No more Chests - color"))
 								.description(OptionDescription.of(
 										Component.literal("Change the highlight color of the chests you opened in the Croesus.")))
 								.binding(defaults.instance.croesus.mainMenuNoMoreChestColor,

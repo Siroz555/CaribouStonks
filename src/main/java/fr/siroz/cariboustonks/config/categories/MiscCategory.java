@@ -79,7 +79,7 @@ public class MiscCategory extends AbstractCategory {
 						.build())
 				.option(LabelOption.create(Component.empty()))
 				.option(Option.<Boolean>createBuilder()
-						.name(Component.literal("Show Hex Color on Items"))
+						.name(Component.literal("Tooltip - Show Hex Color on Items"))
 						.description(OptionDescription.of(
 								Component.literal("Add the #HEX on TOP of all Dyed Item tooltip everywhere.")))
 						.binding(defaults.misc.showHexOnDyedItemEverywhere,

@@ -16,9 +16,6 @@ public class FarmingConfig {
 		public boolean highlightInfestedPlots = false;
 
 		@SerialEntry
-		public boolean disableWateringCanPlacement = false;
-
-		@SerialEntry
 		public boolean greenhouseGrowthStageReminder = true;
 	}
 }
