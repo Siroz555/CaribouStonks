@@ -206,10 +206,6 @@ public final class HypixelDataSource {
 			if (!hasItemModelApplied && hypixelMaterial.isPresent()) {
 				String minecraftId = modDataSource.getMinecraftId(hypixelMaterial.get());
 
-				if (minecraftId != null) {
-					System.out.println(">>>>> " + minecraftId);
-				}
-
 				if (minecraftId == null || minecraftId.equals("NO_MATCH")) return fallback;
 
 				Optional<Item> item = ItemUtils.getItemById(minecraftId);
