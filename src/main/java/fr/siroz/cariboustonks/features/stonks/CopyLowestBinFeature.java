@@ -37,9 +37,9 @@ public class CopyLowestBinFeature extends Feature {
 		if (itemStack == null || itemStack.isEmpty() || itemStack.is(Items.STONE_BUTTON)) return null;
 
 		ItemLookupKey key = ItemLookupKey.ofNeuId(SkyBlockItems.getNeuId(itemStack));
-		if (!this.skyBlock().getGenericDataSource().hasLowestBin(key)) return null;
+		if (!this.skyBlock().getExternalDataSource().hasLowestBin(key)) return null;
 
-		Optional<Double> lowestBin = this.skyBlock().getGenericDataSource().getLowestBin(key);
+		Optional<Double> lowestBin = this.skyBlock().getExternalDataSource().getLowestBin(key);
 		if (lowestBin.isEmpty() || lowestBin.get() <= 1) return null;
 
 		int price = (int) (lowestBin.get() - 1);

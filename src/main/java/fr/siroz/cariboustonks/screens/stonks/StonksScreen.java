@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.screens.stonks;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.core.skyblock.data.generic.GraphParseResult;
+import fr.siroz.cariboustonks.core.skyblock.data.external.GraphParseResult;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
@@ -222,7 +222,7 @@ public class StonksScreen extends CaribousStonksScreen {
 	}
 
 	private @NonNull CompletableFuture<Void> fetchItemData(@NonNull ItemLookupKey key) {
-		CompletableFuture<Void> priceHistory = CaribouStonks.skyBlock().getGenericDataSource()
+		CompletableFuture<Void> priceHistory = CaribouStonks.skyBlock().getExternalDataSource()
 				.loadGraphData(key)
 				.thenAccept(data -> {
 					if (data == null || data.prices().isEmpty()) notFound = true;

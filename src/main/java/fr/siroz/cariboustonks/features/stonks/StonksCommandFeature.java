@@ -61,7 +61,7 @@ public class StonksCommandFeature extends Feature {
 		int result = 1;
 
 		Optional<BazaarProduct> bazaarOpt = this.skyBlock().getHypixelDataSource().getBazaarItem(item);
-		Optional<Double> auctionOpt = this.skyBlock().getGenericDataSource().getLowestBin(ItemLookupKey.ofNeuId(item));
+		Optional<Double> auctionOpt = this.skyBlock().getExternalDataSource().getLowestBin(ItemLookupKey.ofNeuId(item));
 
 		if (bazaarOpt.isPresent()) {
 			lastItem = item;
