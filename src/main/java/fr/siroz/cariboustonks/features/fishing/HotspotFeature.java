@@ -11,7 +11,6 @@ import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
@@ -78,9 +77,8 @@ public class HotspotFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& this.config().fishing.hotspotHighlight
-				&& SkyBlockAPI.getIsland().hasTrait(IslandType.Trait.HOTSPOT_FISHING);
+		return this.skyBlock().location().island().hasTrait(IslandType.Trait.HOTSPOT_FISHING)
+				&& this.config().fishing.hotspotHighlight;
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.features.foraging;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
@@ -13,7 +13,6 @@ import java.util.Set;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
 
 public class TreeOverlayFeature extends Feature {
@@ -40,8 +39,7 @@ public class TreeOverlayFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland().hasTrait(IslandType.Trait.FORAGING)
+		return this.skyBlock().location().island().hasTrait(IslandType.Trait.FORAGING)
 				&& this.config().foraging.showTreeOverlayInfo;
 	}
 
@@ -54,12 +52,7 @@ public class TreeOverlayFeature extends Feature {
 	protected void onSecondPassed() {
 		if (MINECRAFT.player == null || MINECRAFT.level == null) return;
 		if (!isEnabled()) return;
-
-		ItemStack heldItem = PlayerContext.getMainHandItem();
-		if (heldItem == null) return;
-
-		String itemId = SkyBlockAPI.getSkyBlockItemId(heldItem);
-		if (!AXES.contains(itemId)) return;
+		if (!SkyBlockItems.isHolding(AXES)) return;
 
 		if (currentTreeInfo == null) {
 			currentTreeInfo = findClosestTreeInfoInRange().orElse(null);

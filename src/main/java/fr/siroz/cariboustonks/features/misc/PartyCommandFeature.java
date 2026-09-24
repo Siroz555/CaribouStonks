@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.configs.MiscConfig;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.position.Position;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
@@ -32,7 +31,7 @@ public class PartyCommandFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().misc.partyCommands.enabled;
+		return this.skyBlock().location().onSkyBlock() && this.config().misc.partyCommands.enabled;
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
@@ -60,7 +59,7 @@ public class PartyCommandFeature extends Feature {
 	}
 
 	private void sendCommand(PartyCommand command, Matcher matcher) {
-		if (!SkyBlockAPI.isInParty()) return;
+		if (!this.skyBlock().getPartyManager().isInParty()) return;
 
 		try {
 			command.getAction().accept(matcher);
@@ -74,7 +73,7 @@ public class PartyCommandFeature extends Feature {
 			PlayerContext.sendCommandToServer("/pc " + position.asChatCoordinates(), true);
 		}),
 		WARP(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !warp"), cmd -> cmd.warp, _ -> {
-			if (SkyBlockAPI.isMePartyLeader()) {
+			if (CaribouStonks.skyBlock().getPartyManager().isMePartyLeader()) {
 				PlayerContext.sendCommandToServer("/p warp", true);
 			}
 		}),

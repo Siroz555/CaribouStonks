@@ -2,7 +2,6 @@ package fr.siroz.cariboustonks.features.dungeon;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonBoss;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -44,8 +43,8 @@ public class SadanBossFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() == IslandType.DUNGEON
+		return this.skyBlock().location().onSkyBlock()
+				&& this.skyBlock().location().island() == IslandType.DUNGEON
 				&& this.config().instance.theCatacombs.bossSadanTerracottaTimers;
 	}
 

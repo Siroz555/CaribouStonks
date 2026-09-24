@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -61,7 +60,7 @@ public class SecondLifeFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock();
+		return this.skyBlock().location().onSkyBlock();
 	}
 
 	@Override
@@ -87,7 +86,7 @@ public class SecondLifeFeature extends Feature {
 			return;
 		}
 
-		if (SkyBlockAPI.getIsland() == IslandType.DUNGEON && matcher.usePattern(BONZO_MASK_PATTERN).matches()) {
+		if (this.skyBlock().location().island() == IslandType.DUNGEON && matcher.usePattern(BONZO_MASK_PATTERN).matches()) {
 			onSecondLife(SecondLife.BONZO_MASK);
 		}
 	}
@@ -122,7 +121,7 @@ public class SecondLifeFeature extends Feature {
 
 		activeCooldowns.put(secondLife, secondLife.getCooldown() * 20);
 
-		if (SkyBlockAPI.isInParty() && this.config().combat.secondLife.sendPartyInfo) {
+		if (this.skyBlock().getPartyManager().isInParty() && this.config().combat.secondLife.sendPartyInfo) {
 			String display = secondLife.getName() + " Used! (" + activeCooldowns.size() + TOTAL_SECOND_LIFE_ABILITY + ")";
 			PlayerContext.sendCommandToServer("/pc " + display, true);
 		}

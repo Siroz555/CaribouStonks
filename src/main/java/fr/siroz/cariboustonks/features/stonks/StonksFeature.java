@@ -5,13 +5,12 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.KeybindComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.input.KeyBind;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -29,14 +28,14 @@ public class StonksFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock();
+		return this.skyBlock().location().onSkyBlock();
 	}
 
 	public void stonksItem(@NonNull ItemStack stack) {
 		PlayerContext.sendMessageWithPrefix(stack.getHoverName().copy().append(Component.literal(" ..")));
 
-		String neuId = NotEnoughUpdatesUtils.getNeuId(stack);
-		String hypixelSkyBlockId = SkyBlockAPI.getSkyBlockApiId(stack);
+		String neuId = SkyBlockItems.getNeuId(stack);
+		String hypixelSkyBlockId = SkyBlockItems.getSkyBlockApiId(stack);
 
 		if (neuId.isEmpty() || hypixelSkyBlockId.isEmpty()) {
 

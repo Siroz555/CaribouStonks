@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.skyblock.tablist;
 
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockManager;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,12 +38,16 @@ public final class TabListManager {
 			.thenComparing(p -> p.getTeam() != null ? p.getTeam().getName() : "")
 			.thenComparing(p -> p.getProfile().name(), String.CASE_INSENSITIVE_ORDER);
 
+	private final SkyBlockManager skyBlockManager;
+
 	private final List<String> stringTab = new ArrayList<>();
 	private final List<TabWidget> widgets = new ArrayList<>();
 
 	private long lastWorldChange = 0;
 
-	public TabListManager() {
+	public TabListManager(SkyBlockManager skyBlockManager) {
+		this.skyBlockManager = skyBlockManager;
+
 		ClientPlayConnectionEvents.JOIN.register((_, _, _) -> this.lastWorldChange = System.currentTimeMillis());
 		TickScheduler.getInstance().runRepeating(this::updateTabList, 1, TimeUnit.SECONDS);
 	}
@@ -112,7 +116,7 @@ public final class TabListManager {
 			//if (CLIENT.getConnection().getOnlinePlayers().size() < 80) return;
 			// Cooldown de 3s entre chaque swap pour éviter les lags entre les transferts server
 			if (System.currentTimeMillis() - lastWorldChange < WORLD_CHANGE_THRESHOLD_MS) return;
-			if (!SkyBlockAPI.isOnSkyBlock()) return;
+			if (!skyBlockManager.location().onSkyBlock()) return;
 
 			List<String> stringLines = new ArrayList<>();
 			List<TabLine> tabLines = new ArrayList<>();

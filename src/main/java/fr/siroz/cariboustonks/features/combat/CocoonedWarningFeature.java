@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerType;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -70,7 +69,7 @@ public class CocoonedWarningFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
+		return this.skyBlock().location().onSkyBlock()
 				&& canBeTriggered
 				&& !CaribouStonks.skyBlock().getSlayerManager().isInQuestWithBoss(SlayerType.SPIDER)
 				&& this.config().combat.cocoonedMob.warning;

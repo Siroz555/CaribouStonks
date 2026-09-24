@@ -2,7 +2,6 @@ package fr.siroz.cariboustonks.features.vanilla;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.WorldEvents;
 import java.util.List;
@@ -33,7 +32,7 @@ public class MuteVanillaSoundFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock();
+		return this.skyBlock().location().onSkyBlock();
 	}
 
 	@EventHandler(event = "WorldEvents.ALLOW_SOUND_EVENT")

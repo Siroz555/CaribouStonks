@@ -12,7 +12,6 @@ import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
@@ -74,8 +73,8 @@ public class HighlighterFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
+		return this.skyBlock().location().onSkyBlock()
+				&& this.skyBlock().location().island() != IslandType.DUNGEON
 				&& (!entityNames.isEmpty() || !entityTypes.isEmpty());
 	}
 

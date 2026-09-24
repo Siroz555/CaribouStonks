@@ -1,5 +1,7 @@
 package fr.siroz.cariboustonks.core.skyblock;
 
+import org.jspecify.annotations.NonNull;
+
 /**
  * Represents a point in time within SkyBlock's custom calendar system.
  */
@@ -18,13 +20,21 @@ public record SkyBlockTime(
 	public static final long SEASON_MILLIS = MONTH_MILLIS * 3;
 	public static final long YEAR_MILLIS = SEASON_MILLIS * 4;
 
-	public static SkyBlockTime of(long millis) {
+	public static@ NonNull SkyBlockTime of(long millis) {
 		return new SkyBlockTime(
 				(int) (millis / YEAR_MILLIS + 1), // 1-based
 				(int) (millis / MONTH_MILLIS % 12), // 0-based
 				(int) (millis / DAY_MILLIS % 31 + 1), // 1-based
 				(int) (millis / HOUR_MILLIS % 24)  // 0-based
 		);
+	}
+
+	public static long currentMillis() {
+		return System.currentTimeMillis() - SkyBlockConstants.SKYBLOCK_EPOCH_START_MILLIS;
+	}
+
+	public static @NonNull SkyBlockTime now() {
+		return of(currentMillis());
 	}
 
 	@Override

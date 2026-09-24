@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabLine;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabWidget;
 import fr.siroz.cariboustonks.util.TimeUtils;
@@ -44,7 +43,7 @@ public class BestiaryTrackerFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().misc.bestiaryTracker.trackerHud.enabled;
+		return this.skyBlock().location().onSkyBlock() && this.config().misc.bestiaryTracker.trackerHud.enabled;
 	}
 
 	@Override
@@ -54,8 +53,7 @@ public class BestiaryTrackerFeature extends Feature {
 			return;
 		}
 
-		CaribouStonks.skyBlock()
-				.getTabListManager()
+		this.skyBlock().getTabListManager()
 				.get(BESTIARY_TAB_LIST_NAME)
 				.ifPresentOrElse(this::processWidget, this::reset);
 	}

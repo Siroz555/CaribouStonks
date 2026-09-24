@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
@@ -45,7 +44,7 @@ public final class BoosterCookieReminderFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().general.reminders.boosterCookie;
+		return this.skyBlock().location().onSkyBlock() && this.config().general.reminders.boosterCookie;
 	}
 
 	private void updateBoosterCookieStatus() {
@@ -54,8 +53,7 @@ public final class BoosterCookieReminderFeature extends Feature {
 
 		// --- TabList ---
 		// Widget "Effects" -> Cookie Buff
-		Optional<String> cookieBuffOpt = CaribouStonks.skyBlock()
-				.getTabListManager()
+		Optional<String> cookieBuffOpt = this.skyBlock().getTabListManager()
 				.findLine("Active Effects", "Cookie Buff:");
 
 		if (cookieBuffOpt.isPresent()) {

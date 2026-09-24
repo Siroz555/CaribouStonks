@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.features.slayers;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 
 public class HighlightSlayerMobFeature extends Feature {
@@ -27,7 +26,7 @@ public class HighlightSlayerMobFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
+		return this.skyBlock().location().onSkyBlock()
 				&& slayerManager.isInQuest()
 				&& (this.config().slayer.highlightBoss || this.config().slayer.highlightMiniboss);
 	}

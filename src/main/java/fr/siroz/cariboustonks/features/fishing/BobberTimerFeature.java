@@ -2,7 +2,6 @@ package fr.siroz.cariboustonks.features.fishing;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.feature.FeatureManager;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
@@ -28,7 +27,7 @@ public class BobberTimerFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().fishing.bobberTimerDisplay;
+		return this.skyBlock().location().onSkyBlock() && this.config().fishing.bobberTimerDisplay;
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigValue;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.util.ColorUtils;
 import fr.siroz.cariboustonks.util.DeveloperTools;
@@ -47,8 +46,8 @@ public class LowHealthWarningFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() != IslandType.THE_RIFT
+		return this.skyBlock().location().onSkyBlock()
+				&& this.skyBlock().location().island() != IslandType.THE_RIFT
 				&& this.config().combat.lowHealthWarning.lowHealthWarningEnabled;
 	}
 

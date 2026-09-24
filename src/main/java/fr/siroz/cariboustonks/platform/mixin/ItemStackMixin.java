@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.platform.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.events.GuiEvents;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import java.util.function.Consumer;
@@ -41,7 +41,7 @@ public abstract class ItemStackMixin {
 	)
 	private void cariboustonks$addSkyBlockIdInDevelopment(CallbackInfo ci, @Local(name = "builder", argsOnly = true) Consumer<Component> builder) {
 		if (DeveloperTools.isInDevelopment()) {
-			String skyblockId = SkyBlockAPI.getSkyBlockItemId((ItemStack) (Object) this);
+			String skyblockId = SkyBlockItems.getSkyBlockItemId((ItemStack) (Object) this);
 			if (!skyblockId.isEmpty()) {
 				builder.accept(Component.literal("SkyBlockId:" + skyblockId).withStyle(ChatFormatting.DARK_GRAY));
 			}

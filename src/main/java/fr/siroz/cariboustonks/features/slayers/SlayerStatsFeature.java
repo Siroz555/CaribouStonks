@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Mayor;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Perk;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
@@ -74,7 +73,7 @@ public class SlayerStatsFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock();
+		return this.skyBlock().location().onSkyBlock();
 	}
 
 	@EventHandler(event = "SkyBlockEvents.SLAYER_BOSS_SPAWN_EVENT")
@@ -170,7 +169,7 @@ public class SlayerStatsFeature extends Feature {
 		// Simply add this run to the list
 		runs.addLast(run);
 		// Update if the Aatrox XP Buff is present
-		xpBuffActive = SkyBlockAPI.isMayorOrMinister(Mayor.AATROX, Perk.SLAYER_XP_BUFF);
+		xpBuffActive = this.skyBlock().isMayorOrMinister(Mayor.AATROX, Perk.SLAYER_XP_BUFF);
 	}
 
 	private void showBreakdown(@NonNull SlayerBossRun currentRun) {

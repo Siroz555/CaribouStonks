@@ -14,7 +14,6 @@ import fr.siroz.cariboustonks.util.ItemLookupKey;
 import fr.siroz.cariboustonks.util.JsonUtils;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +45,6 @@ public final class GenericDataSource {
 	// Price History Mapping (Elite's History API)
 	private static final String PRICE_HISTORY_BASE_URL = "https://api.eliteskyblock.com/resources/";
 	private final Map<String, GraphCacheEntry> graphCache = new HashMap<>();
-	public static final Duration CACHE_EXPIRATION_PRICE_HISTORY = Duration.ofMinutes(15);
 
 	// Liste des items à l'Auction (Elite's LBIN API)
 	private static final String LOWEST_BIN_AUCTION_URL = "https://api.eliteskyblock.com/resources/auctions/neu";

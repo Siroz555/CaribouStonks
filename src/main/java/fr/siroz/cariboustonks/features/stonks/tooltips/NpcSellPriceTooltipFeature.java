@@ -1,12 +1,10 @@
 package fr.siroz.cariboustonks.features.stonks.tooltips;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.List;
 import java.util.OptionalDouble;
@@ -20,11 +18,7 @@ import org.jspecify.annotations.Nullable;
 
 public class NpcSellPriceTooltipFeature extends Feature {
 
-	private final HypixelDataSource hypixelDataSource;
-
 	public NpcSellPriceTooltipFeature(int priority) {
-		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
-
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
 				.trait(MatcherTrait.empty())
@@ -34,12 +28,12 @@ public class NpcSellPriceTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.npcTooltipPrice;
+		return this.skyBlock().location().onSkyBlock() && this.config().general.stonks.npcTooltipPrice;
 	}
 
 	private void appendToTooltip(@Nullable Slot focusedSlot, @NonNull ItemStack item, @NonNull List<Component> lines) {
-		String skyBlockItemId = SkyBlockAPI.getSkyBlockItemId(item);
-		SkyBlockItemData skyBlockItemData = hypixelDataSource.getSkyBlockItem(skyBlockItemId);
+		String skyBlockItemId = SkyBlockItems.getSkyBlockItemId(item);
+		SkyBlockItemData skyBlockItemData = this.skyBlock().getHypixelDataSource().getSkyBlockItem(skyBlockItemId);
 		if (skyBlockItemData == null) return;
 
 		OptionalDouble npcSellPrice = skyBlockItemData.npcSellPrice();

@@ -5,7 +5,6 @@ import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.mod.crash.CrashType;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.system.System;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.mixin.accessors.AbstractContainerScreenAccessor;
@@ -52,7 +51,7 @@ public final class ContainerOverlaySystem implements System {
 
 	@EventHandler(event = "ScreenEvents.BEFORE_INIT")
 	private void onScreenBeforeInit(Minecraft _client, Screen screen, int _scaledWidth, int _scaledHeight) {
-		if (SkyBlockAPI.isOnSkyBlock() && screen instanceof ContainerScreen containerScreen) {
+		if (CaribouStonks.skyBlock().location().onSkyBlock() && screen instanceof ContainerScreen containerScreen) {
 			ScreenEvents.remove(screen).register(_ -> clearScreen());
 			onScreen(containerScreen);
 		} else {

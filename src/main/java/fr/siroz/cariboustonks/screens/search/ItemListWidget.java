@@ -6,10 +6,10 @@ import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataException;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.screens.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -267,7 +267,7 @@ class ItemListWidget extends ObjectSelectionList<ItemListWidget.Entry> {
 
 			if (client.player != null) {
 				ClientContext.setScreen(StonksScreen.create(ItemLookupKey.of(
-						NotEnoughUpdatesUtils.getNeuIdFromSkyBlockId(item.hypixelSkyBlockId()),
+						SkyBlockItems.getNeuIdFromSkyBlockId(item.hypixelSkyBlockId()),
 						item.hypixelSkyBlockId()
 				)));
 			}

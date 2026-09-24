@@ -1,14 +1,5 @@
-package fr.siroz.cariboustonks.core.skyblock.item;
+package fr.siroz.cariboustonks.core.skyblock.item.metadata;
 
-import fr.siroz.cariboustonks.core.skyblock.item.metadata.Books;
-import fr.siroz.cariboustonks.core.skyblock.item.metadata.CosmeticInfo;
-import fr.siroz.cariboustonks.core.skyblock.item.metadata.DrillInfo;
-import fr.siroz.cariboustonks.core.skyblock.item.metadata.Enchantments;
-import fr.siroz.cariboustonks.core.skyblock.item.metadata.Gemstones;
-import fr.siroz.cariboustonks.core.skyblock.item.metadata.Modifiers;
-import fr.siroz.cariboustonks.core.skyblock.item.metadata.PetInfo;
-import fr.siroz.cariboustonks.core.skyblock.item.metadata.RodInfo;
-import fr.siroz.cariboustonks.core.skyblock.item.metadata.SpecialAuctionInfo;
 import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
 import org.jspecify.annotations.NonNull;

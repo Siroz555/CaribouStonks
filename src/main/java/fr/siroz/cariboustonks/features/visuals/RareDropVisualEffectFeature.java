@@ -2,7 +2,6 @@ package fr.siroz.cariboustonks.features.visuals;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
 import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
 import fr.siroz.cariboustonks.events.ChatEvents;
@@ -35,7 +34,7 @@ public class RareDropVisualEffectFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.rareDropVisualEffect;
+		return this.skyBlock().location().onSkyBlock() && this.config().uiAndVisuals.rareDropVisualEffect;
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")

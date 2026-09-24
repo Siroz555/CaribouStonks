@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -29,7 +28,7 @@ public class SelectedPetHighlightFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.highlightSelectedPet;
+		return this.skyBlock().location().onSkyBlock() && this.config().uiAndVisuals.highlightSelectedPet;
 	}
 
 	private boolean isSelected(ItemStack itemStack) {

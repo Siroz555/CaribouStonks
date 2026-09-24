@@ -5,7 +5,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class CroesusMenuFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
+		return this.skyBlock().location().onSkyBlock()
 				&& (configOpenedChest.getAsBoolean() || configNoMoreChest.getAsBoolean() || configKismetAvailable.getAsBoolean());
 	}
 

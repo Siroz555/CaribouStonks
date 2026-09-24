@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.features.visuals.overlay;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
@@ -22,7 +22,7 @@ public class GyrokineticOverlayFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.overlay.gyrokineticWand;
+		return this.skyBlock().location().onSkyBlock() && this.config().uiAndVisuals.overlay.gyrokineticWand;
 	}
 
 	@EventHandler(event = "RenderEvents.WORLD_RENDER_EVENT")
@@ -30,7 +30,7 @@ public class GyrokineticOverlayFeature extends Feature {
 		if (MINECRAFT.player == null || MINECRAFT.level == null || MINECRAFT.getCameraEntity() == null) return;
 		if (!isEnabled()) return;
 
-		String skyBlockId = SkyBlockAPI.getSkyBlockItemId(MINECRAFT.player.getMainHandItem());
+		String skyBlockId = SkyBlockItems.getSkyBlockItemId(MINECRAFT.player.getMainHandItem());
 		if (!GYROKINETIC_ITEM_ID.equals(skyBlockId)) return;
 
 		HitResult hitResult = MINECRAFT.getCameraEntity().pick(REACH, 1.0F, false);

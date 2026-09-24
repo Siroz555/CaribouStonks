@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.core.skyblock.item.calculator;
 import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
-import fr.siroz.cariboustonks.core.skyblock.item.ItemMetadata;
+import fr.siroz.cariboustonks.core.skyblock.item.metadata.ItemMetadata;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyblockItemStack;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.Books;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.CosmeticInfo;

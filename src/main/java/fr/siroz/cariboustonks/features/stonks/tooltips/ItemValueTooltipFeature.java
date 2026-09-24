@@ -7,8 +7,7 @@ import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.core.skyblock.item.SkyblockItemStack;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueCalculator;
 import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueResult;
 import fr.siroz.cariboustonks.util.DeveloperTools;
@@ -50,11 +49,11 @@ public class ItemValueTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.itemValueTooltip;
+		return this.skyBlock().location().onSkyBlock() && this.config().general.stonks.itemValueTooltip;
 	}
 
 	private void appendToTooltip(@Nullable Slot focusedSlot, @NonNull ItemStack item, @NonNull List<Component> lines) {
-		String uuid = SkyBlockAPI.getSkyBlockItemUuid(item);
+		String uuid = SkyBlockItems.getSkyBlockItemUuid(item);
 		if (uuid.isEmpty()) return;
 
 		try {
@@ -68,7 +67,10 @@ public class ItemValueTooltipFeature extends Feature {
 				return;
 			}
 
-			ItemValueResult result = ItemValueCalculator.getInstance().calculateValue(SkyblockItemStack.of(item), configUseNetworth.getAsBoolean());
+			ItemValueResult result = ItemValueCalculator.getInstance().calculateValue(
+					SkyBlockItems.createSkyBlockItemStack(item),
+					configUseNetworth.getAsBoolean()
+			);
 			if (result.state() == ItemValueResult.State.SUCCESS) {
 				cache.put(uuid, result);
 				displayItemValue(lines, result);

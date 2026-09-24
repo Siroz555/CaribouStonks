@@ -29,6 +29,9 @@ public class FishingConfig {
 	public boolean rareSeaCreatureSound = false;
 
 	@SerialEntry
+	public boolean rareSeaCreaturePartyAnnouncer = false;
+
+	@SerialEntry
 	public LotusAtoll lotusAtoll = new LotusAtoll();
 
 	public static class LotusAtoll {

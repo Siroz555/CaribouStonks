@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabLine;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabWidget;
 import java.util.Arrays;
@@ -45,7 +44,7 @@ public class TabListWidgetExtractorFeature extends Feature {
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(CaribouStonks.identifier("tab_widgets"))
 				.hud(new MultiElementHud("tab_widgets",
-						() -> SkyBlockAPI.isOnSkyBlock() && !this.currentWidgets.isEmpty(),
+						() -> this.skyBlock().location().onSkyBlock() && !this.currentWidgets.isEmpty(),
 						preview -> preview
 								.appendLine(Component.literal("--- Widgets Extractor ---"))
 								.appendLine(Component.literal("§9§lPickaxe Ability:"))
@@ -65,7 +64,7 @@ public class TabListWidgetExtractorFeature extends Feature {
 	@Override
 	public boolean isEnabled() {
 		// Pas dans le Supplier du HudConfig car dupe, juste utilisé pour les updates
-		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.tabListWidget.hud.enabled;
+		return this.skyBlock().location().onSkyBlock() && this.config().uiAndVisuals.tabListWidget.hud.enabled;
 	}
 
 	@Override
@@ -82,8 +81,7 @@ public class TabListWidgetExtractorFeature extends Feature {
 		for (WidgetEntry entry : widgetEntries) {
 			String widgetName = entry.name();
 			if (entry.enabled().getAsBoolean()) {
-				CaribouStonks.skyBlock()
-						.getTabListManager()
+				this.skyBlock().getTabListManager()
 						.get(widgetName)
 						.ifPresent(widget -> currentWidgets.put(widgetName, widget));
 			} else {
@@ -98,8 +96,7 @@ public class TabListWidgetExtractorFeature extends Feature {
 
 		if (!customNames.isEmpty()) {
 			for (String name : customNames) {
-				CaribouStonks.skyBlock()
-						.getTabListManager()
+				this.skyBlock().getTabListManager()
 						.get(name)
 						.ifPresent(widget -> currentWidgets.put(name, widget));
 				// SIROZ-NOTE: ifPresentOrElse, a voir pour le delete ?

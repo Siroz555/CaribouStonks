@@ -8,7 +8,6 @@ import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
 import fr.siroz.cariboustonks.util.ItemUtils;
@@ -51,7 +50,7 @@ public final class ForgeReminderFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().general.reminders.forge;
+		return this.skyBlock().location().onSkyBlock() && this.config().general.reminders.forge;
 	}
 
 	private @NonNull ReminderDisplay getReminderDisplay() {

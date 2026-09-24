@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.core.skyblock.data.generic;
 
+import java.time.Duration;
 import java.time.Instant;
 
 public record GraphCacheEntry(
@@ -8,6 +9,6 @@ public record GraphCacheEntry(
 ) {
 
     public boolean isValid() {
-        return Instant.now().isBefore(timestamp.plus(GenericDataSource.CACHE_EXPIRATION_PRICE_HISTORY));
+        return Instant.now().isBefore(timestamp.plus(Duration.ofMinutes(15)));
     }
 }

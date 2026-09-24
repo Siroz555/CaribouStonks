@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.platform.context;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.Command;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.platform.mixin.accessors.PlayerTabOverlayAccessor;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -289,9 +288,7 @@ public final class ClientContext {
 			}
 
 			STRING_SCOREBOARD.addAll(stringLines);
-			if (SkyBlockAPI.isOnSkyBlock()) {
-				ClientEvents.SCOREBOARD_UPDATE_EVENT.invoker().onUpdate(STRING_SCOREBOARD);
-			}
+			ClientEvents.SCOREBOARD_UPDATE_EVENT.invoker().onUpdate(STRING_SCOREBOARD);
 		} catch (Exception _) {
 		}
 	}

@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.features.visuals.WaypointFeature;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.DropdownWidget;
 import fr.siroz.cariboustonks.screens.CaribousStonksScreen;
@@ -37,7 +36,7 @@ public class WaypointScreen extends CaribousStonksScreen {
 	private WaypointScreen(@Nullable Screen parent) {
 		super(Component.literal("Waypoints").withStyle(ChatFormatting.BOLD));
 		this.parent = parent;
-		this.currentIslandType = SkyBlockAPI.getIsland();
+		this.currentIslandType = CaribouStonks.skyBlock().location().island();
 		this.waypointFeature = CaribouStonks.features().getFeature(WaypointFeature.class);
 		this.waypoints = this.waypointFeature.getWaypointsSnapshot();
 	}

@@ -6,13 +6,12 @@ import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.Rarity;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarItemAnalytics;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarPriceType;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
@@ -83,9 +82,8 @@ public class TrackingShardsFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
-				&& SkyBlockAPI.getIsland() != IslandType.SAFARI
+		return this.skyBlock().location().onSkyBlock()
+				&& !this.skyBlock().location().isOn(IslandType.DUNGEON, IslandType.SAFARI)
 				&& this.config().hunting.trackingShards.hud.enabled;
 	}
 
@@ -237,7 +235,7 @@ public class TrackingShardsFeature extends Feature {
 
 	private Optional<SkyBlockAttribute> resolveAttribute(String shardType) {
 		return attributeCache.computeIfAbsent(shardType,
-				k -> Optional.ofNullable(AttributeAPI.getAttributeByName(k)));
+				k -> Optional.ofNullable(SkyBlockItemRegistry.getAttributeByShardName(k)));
 	}
 
 	private Double resolveShardValue(String shardType) {
@@ -245,8 +243,7 @@ public class TrackingShardsFeature extends Feature {
 		boolean useBuyPrice = this.config().hunting.trackingShards.priceType == BazaarPriceType.BUY;
 
 		return resolveAttribute(shardType)
-				.map(attribute -> CaribouStonks.skyBlock()
-						.getHypixelDataSource()
+				.map(attribute -> this.skyBlock().getHypixelDataSource()
 						.getBazaarItem(attribute.skyBlockApiId())
 						.map(useBuyPrice ? BazaarItemAnalytics.BUY : BazaarItemAnalytics.SELL)
 						.orElse(0.0))

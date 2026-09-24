@@ -1,10 +1,11 @@
-package fr.siroz.cariboustonks.core.skyblock.network;
+package fr.siroz.cariboustonks.core.skyblock.data.hypixel;
 
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public final class NetworkPartyManager {
+public final class HypixelPartyManager {
 	private static final Pattern YOU_JOINED_PATTERN = Pattern.compile("You have joined (?<name>.*)'s? party!");
 	private static final Pattern OTHERS_JOINED_PATTERN = Pattern.compile("(?<name>[^:]+) joined the party\\.");
 	private static final Pattern OTHERS_IN_PATTERN = Pattern.compile("You'll be partying with: (?<names>.*)");
@@ -45,16 +46,35 @@ public final class NetworkPartyManager {
 	private @Nullable String leader = null;
 	private @Nullable String lastLeader = null;
 
-	public NetworkPartyManager() {
+	public HypixelPartyManager() {
 		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::handleChatMessageListener);
 	}
 
+	/**
+	 * Checks if the player has a Party
+	 *
+	 * @return {@code true} if the player has a Party
+	 */
 	public boolean isInParty() {
 		return !members.isEmpty();
 	}
 
+	/**
+	 * Returns the current Party Leader if present
+	 *
+	 * @return the party leader name or null
+	 */
 	public @Nullable String getLeader() {
 		return leader;
+	}
+
+	/**
+	 * Checks if the player is the Party Leader
+	 *
+	 * @return {@code true} if the player has a party and the Leader
+	 */
+	public boolean isMePartyLeader() {
+		return isInParty() && Objects.equals(getLeader(), ClientContext.getPlayerName());
 	}
 
 	private void handleChatMessageListener(@NonNull Component component) {

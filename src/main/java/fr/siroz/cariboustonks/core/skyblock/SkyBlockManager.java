@@ -4,23 +4,28 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.data.generic.GenericDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
-import fr.siroz.cariboustonks.core.skyblock.network.NetworkPartyManager;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelPartyManager;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.ElectionResult;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Mayor;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Perk;
 import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonManager;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabListManager;
-import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
+import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import net.azureaaron.hmapi.events.HypixelPacketEvents;
 import net.azureaaron.hmapi.network.HypixelNetworking;
 import net.azureaaron.hmapi.network.packet.s2c.ErrorS2CPacket;
-import net.azureaaron.hmapi.network.packet.s2c.HelloS2CPacket;
 import net.azureaaron.hmapi.network.packet.s2c.HypixelS2CPacket;
 import net.azureaaron.hmapi.network.packet.v1.s2c.LocationUpdateS2CPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The {@code SkyBlockManager} class serves as the core manager for all SkyBlock related-content.
@@ -28,50 +33,27 @@ import org.jspecify.annotations.NonNull;
 public final class SkyBlockManager {
 
 	private final HypixelDataSource hypixelDataSource;
+	private final HypixelPartyManager hypixelPartyManager;
 	private final GenericDataSource genericDataSource;
 
-	private final NetworkPartyManager networkPartyManager;
 	private final DungeonManager dungeonManager;
 	private final SlayerManager slayerManager;
 	private final TabListManager tabListManager;
 
+	private volatile SkyBlockLocation currentLocation = SkyBlockLocation.NONE;
+	private volatile SkyBlockTime currentTime = SkyBlockTime.DEFAULT;
+
 	public SkyBlockManager() {
-		// Data Sources
 		this.hypixelDataSource = new HypixelDataSource();
+		this.hypixelPartyManager = new HypixelPartyManager();
 		this.genericDataSource = new GenericDataSource();
-		// SkyBlock Managers
-		this.networkPartyManager = new NetworkPartyManager();
-		this.dungeonManager = new DungeonManager();
-		this.slayerManager = new SlayerManager();
-		this.tabListManager = new TabListManager();
-		// Init
-		this.initialize();
-	}
+		this.dungeonManager = new DungeonManager(this);
+		this.slayerManager = new SlayerManager(this);
+		this.tabListManager = new TabListManager(this);
 
-	public void initialize() {
-		var modDataSource = CaribouStonks.mod().getModDataSource();
-
-		// Bootstrap SkyBlockAPI dependencies
-		SkyBlockAPI.bootstrap(
-				hypixelDataSource::getElection,
-				modDataSource::getAttributeByShardName,
-				networkPartyManager::isInParty,
-				networkPartyManager::getLeader
-		);
-
-		// Bootstrap AttributeAPI dependencies
-		AttributeAPI.bootstrap(modDataSource::getAttributeByShardName, modDataSource::getAttributeById);
-
-		// General Tick Scheduler for the SkyBlock Manager/API
-		TickScheduler.getInstance().runRepeating(() -> {
-			SkyBlockAPI.handleInternalUpdate(); // Pour avoir onSkyBlockState en local
-			this.updateTimeSystem();
-		}, 1, TimeUnit.SECONDS);
-
-		// Event listeners
+		TickScheduler.getInstance().runRepeating(this::onSecond, 1, TimeUnit.SECONDS);
 		ClientPlayConnectionEvents.DISCONNECT.register((_, _) -> this.onDisconnect());
 
-		// Hypixel Mod API
 		try {
 			HypixelNetworking.registerToEvents(StonksUtils.make(new Object2IntOpenHashMap<>(),
 					map -> map.put(LocationUpdateS2CPacket.ID, 1)));
@@ -80,6 +62,61 @@ public final class SkyBlockManager {
 		} catch (Exception ex) {
 			CaribouStonks.LOGGER.error("[HypixelModAPI] Unable to register Hypixel Mod API", ex);
 		}
+	}
+
+	/**
+	 * Returns the current {@link SkyBlockLocation}
+	 *
+	 * @return the {@code SkyBlockLocation}
+	 */
+	public SkyBlockLocation location() {
+		return currentLocation;
+	}
+
+	/**
+	 * Returns the current {@link SkyBlockTime}
+	 *
+	 * @return the {@code SkyBlockTime}
+	 */
+	public SkyBlockTime time() {
+		return currentTime;
+	}
+
+	/**
+	 * Returns the current {@link SkyBlockSeason}
+	 *
+	 * @return the {@code SkyBlockSeason}
+	 */
+	public SkyBlockSeason season() {
+		return seasonOf(currentTime);
+	}
+
+	/**
+	 * Returns whether the given {@link Mayor} currently holds the mayor or minister role,
+	 * and (optionally) whether the specified {@link Perk} is present for that role.
+	 *
+	 * @param mayor the {@link Mayor} to check
+	 * @param perk  optional {@link Perk} to verify for the given role; if {@code null} only the role is checked
+	 * @return {@code true} if the given {@code mayor} matches the current mayor or minister and,
+	 * when {@code perk} is provided, the requested perk is present for that role
+	 */
+	public boolean isMayorOrMinister(@NonNull Mayor mayor, @Nullable Perk perk) {
+		ElectionResult result = hypixelDataSource.getElection();
+		return result != null && result.hasMayorOrMinister(mayor, perk);
+	}
+
+	/**
+	 * Retrieves the current SkyBlock Area where the player is from the Scoreboard.
+	 *
+	 * @return an {@link Optional} containing the area name
+	 */
+	public @NonNull Optional<String> getArea() {
+		for (String line : ClientContext.getScoreboard()) {
+			if (line.contains(SkyBlockConstants.SCOREBOARD_AREA_ICON) || line.contains(SkyBlockConstants.SCOREBOARD_RIFT_AREA_ICON)) {
+				return Optional.of(line.strip());
+			}
+		}
+		return Optional.empty();
 	}
 
 	/**
@@ -127,63 +164,81 @@ public final class SkyBlockManager {
 		return tabListManager;
 	}
 
-	@EventHandler(event = "ClientPlayConnectionEvents.DISCONNECT")
-	private void onDisconnect() {
-		if (SkyBlockAPI.isOnSkyBlock()) {
-			SkyBlockEvents.LEAVE_EVENT.invoker().onLeave();
-		}
+	/**
+	 * Retrieves the {@link HypixelPartyManager} instance.
+	 *
+	 * @return {@link HypixelPartyManager} instance
+	 */
+	public HypixelPartyManager getPartyManager() {
+		return hypixelPartyManager;
+	}
 
-		SkyBlockAPI.handleInternalLocationUpdate(false, "", IslandType.UNKNOWN);
+	private void onDisconnect() {
+		resetLocation();
+	}
+
+	private void onSecond() {
+		updateTime();
+		// Development
+		if (DeveloperTools.isInDevelopment() && ClientContext.isLocalServer()) forceOnSkyBlock();
 	}
 
 	private void handlePacket(@NonNull HypixelS2CPacket packet) {
 		switch (packet) {
-
-			case HelloS2CPacket(var ignored) -> SkyBlockAPI.handleInternalLocationUpdate(null, null, null);
-
 			case LocationUpdateS2CPacket(var serverName, var serverType, var ignored, var mode, var ignored1) -> {
-				String previousServerType = SkyBlockAPI.getGameType();
-				String gameType = serverType.orElse("");
-				IslandType islandType = IslandType.getById(mode.orElse(""));
-
-				SkyBlockAPI.handleInternalLocationUpdate(null, gameType, islandType);
-				SkyBlockEvents.ISLAND_CHANGE_EVENT.invoker().onIslandChange(islandType, serverName);
-
-				if (gameType.equals("SKYBLOCK")) {
-					SkyBlockAPI.handleInternalLocationUpdate(true, null, null);
-					if (!previousServerType.equals("SKYBLOCK")) {
-						SkyBlockEvents.JOIN_EVENT.invoker().onJoin(serverName);
-					}
-				} else if (previousServerType.equals("SKYBLOCK")) {
-					SkyBlockAPI.handleInternalLocationUpdate(false, null, null);
-					SkyBlockEvents.LEAVE_EVENT.invoker().onLeave();
-				}
+				SkyBlockLocation location = SkyBlockLocation.of(serverType.orElse(""), IslandType.getById(mode.orElse("")));
+				updateLocation(serverName, location);
+				if (DeveloperTools.isInDevelopment()) CaribouStonks.LOGGER.info("[HypixelModAPI] Location: {}", location);
 			}
-
 			case ErrorS2CPacket(var id, var error) when id.equals(LocationUpdateS2CPacket.ID) -> {
-				SkyBlockAPI.handleInternalLocationUpdate(null, "", IslandType.UNKNOWN);
-				CaribouStonks.LOGGER.error("[HypixelModAPI] Failed to update Hypixel location! Error: {}", error);
+				resetLocation();
+				if (DeveloperTools.isInDevelopment()) CaribouStonks.LOGGER.error("[HypixelModAPI] Failed to update Hypixel location! Error: {}", error);
 			}
-
 			default -> {
 			}
 		}
 	}
 
-	private void updateTimeSystem() {
-		SkyBlockTime prevTime = SkyBlockAPI.getTime();
-		SkyBlockTime nowTime = SkyBlockTime.of(SkyBlockAPI.getSkyBlockMillis());
-		SkyBlockSeason nowSeason = SkyBlockSeason.VALUES[nowTime.month() / 3];
-		SkyBlockSeason prevSeason = SkyBlockSeason.VALUES[prevTime.month() / 3];
-		SkyBlockSeason.Month nowMonth = SkyBlockSeason.Month.VALUES[nowTime.month()];
-		SkyBlockSeason.Month prevMonth = SkyBlockSeason.Month.VALUES[prevTime.month()];
-		// Update
-		SkyBlockAPI.handleInternalTimeUpdate(nowTime, nowSeason);
-		// Events
-		if (nowTime.year() != prevTime.year()) SkyBlockEvents.YEAR_CHANGE_EVENT.invoker().onYearChange(nowTime.year());
-		if (nowSeason != prevSeason) SkyBlockEvents.SEASON_CHANGE_EVENT.invoker().onSeasonChange(nowSeason);
-		if (nowMonth != prevMonth) SkyBlockEvents.MONTH_CHANGE_EVENT.invoker().onMonthChange(nowMonth);
-		if (nowTime.day() != prevTime.day()) SkyBlockEvents.DAY_CHANGE_EVENT.invoker().onDayChange(nowTime.day());
-		if (nowTime.hour() != prevTime.hour()) SkyBlockEvents.HOUR_CHANGE_EVENT.invoker().onHourChange(nowTime.hour());
+	private void updateTime() {
+		SkyBlockTime previous = currentTime;
+		SkyBlockTime now = SkyBlockTime.now();
+		currentTime = now;
+
+		if (now.year() != previous.year()) SkyBlockEvents.YEAR_CHANGE_EVENT.invoker().onYearChange(now.year());
+		if (seasonOf(now) != seasonOf(previous)) SkyBlockEvents.SEASON_CHANGE_EVENT.invoker().onSeasonChange(seasonOf(now));
+		if (now.month() != previous.month()) SkyBlockEvents.MONTH_CHANGE_EVENT.invoker().onMonthChange(SkyBlockSeason.Month.VALUES[now.month()]);
+		if (now.day() != previous.day()) SkyBlockEvents.DAY_CHANGE_EVENT.invoker().onDayChange(now.day());
+		if (now.hour() != previous.hour()) SkyBlockEvents.HOUR_CHANGE_EVENT.invoker().onHourChange(now.hour());
+	}
+
+	private SkyBlockSeason seasonOf(@NonNull SkyBlockTime time) {
+		return SkyBlockSeason.VALUES[time.month() / 3];
+	}
+
+	private void updateLocation(String serverName, @NonNull SkyBlockLocation next) {
+		SkyBlockLocation previous = currentLocation;
+		currentLocation = next;
+
+		SkyBlockEvents.ISLAND_CHANGE_EVENT.invoker().onIslandChange(next.island(), serverName);
+		if (!previous.onSkyBlock() && next.onSkyBlock()) {
+			SkyBlockEvents.JOIN_EVENT.invoker().onJoin(serverName);
+		} else if (previous.onSkyBlock() && !next.onSkyBlock()) {
+			SkyBlockEvents.LEAVE_EVENT.invoker().onLeave();
+		}
+	}
+
+	private void resetLocation() {
+		boolean wasOnSkyBlock = currentLocation.onSkyBlock();
+		currentLocation = SkyBlockLocation.NONE;
+		if (wasOnSkyBlock) {
+			SkyBlockEvents.LEAVE_EVENT.invoker().onLeave();
+		}
+	}
+
+	private void forceOnSkyBlock() {
+		SkyBlockLocation location = currentLocation;
+		if (!location.onSkyBlock()) {
+			currentLocation = new SkyBlockLocation(true, location.gameType(), location.island());
+		}
 	}
 }

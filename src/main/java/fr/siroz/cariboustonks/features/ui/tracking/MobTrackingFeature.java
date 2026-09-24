@@ -11,7 +11,6 @@ import fr.siroz.cariboustonks.core.feature.FeatureManager;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
@@ -111,9 +110,8 @@ public class MobTrackingFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() != IslandType.DUNGEON
-				&& SkyBlockAPI.getIsland() != IslandType.KUUDRA_HOLLOW
+		return this.skyBlock().location().onSkyBlock()
+				&& !this.skyBlock().location().isOn(IslandType.DUNGEON, IslandType.KUUDRA_HOLLOW)
 				&& this.config().uiAndVisuals.mobTracking.tracking;
 	}
 
@@ -182,7 +180,7 @@ public class MobTrackingFeature extends Feature {
 			MobTrackingRegistry.MobTrackingEntry mobEntry = registry.findMob(
 					armorStandName,
 					CONTAINS,
-					SkyBlockAPI.getIsland()
+					this.skyBlock().location().island()
 			);
 			if (mobEntry != null) {
 				addTrackedEntity(new TrackedEntity(armorStand, mobEntry.priority()));
@@ -215,7 +213,7 @@ public class MobTrackingFeature extends Feature {
 		MobTrackingRegistry.MobTrackingEntry mobEntry = registry.findMob(
 				entity.getName().getString(),
 				EQUALS,
-				SkyBlockAPI.getIsland()
+				this.skyBlock().location().island()
 		);
 		if (mobEntry != null) {
 			trackedHighlight.put(entity.getId(), mobEntry.model().isHighlightable());

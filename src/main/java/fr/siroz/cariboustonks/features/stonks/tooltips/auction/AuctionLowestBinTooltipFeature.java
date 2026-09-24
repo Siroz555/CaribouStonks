@@ -1,15 +1,12 @@
 package fr.siroz.cariboustonks.features.stonks.tooltips.auction;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.core.skyblock.data.generic.GenericDataSource;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.features.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.List;
 import java.util.Optional;
@@ -22,11 +19,7 @@ import org.jspecify.annotations.Nullable;
 
 public class AuctionLowestBinTooltipFeature extends Feature {
 
-	private final GenericDataSource genericDataSource;
-
 	public AuctionLowestBinTooltipFeature(int priority) {
-		this.genericDataSource = CaribouStonks.skyBlock().getGenericDataSource();
-
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
 				.trait(MatcherTrait.empty())
@@ -36,17 +29,17 @@ public class AuctionLowestBinTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.auctionTooltipPrice;
+		return this.skyBlock().location().onSkyBlock() && this.config().general.stonks.auctionTooltipPrice;
 	}
 
 	private void appendToTooltip(@Nullable Slot focusedSlot, @NonNull ItemStack item, @NonNull List<Component> lines) {
-		String neuId = NotEnoughUpdatesUtils.getNeuId(item);
+		String neuId = SkyBlockItems.getNeuId(item);
 		ItemLookupKey key = ItemLookupKey.ofNeuId(neuId);
-		if (!genericDataSource.hasLowestBin(key)) {
+		if (!this.skyBlock().getGenericDataSource().hasLowestBin(key)) {
 			return;
 		}
 
-		Optional<Double> lowestBin = genericDataSource.getLowestBin(key);
+		Optional<Double> lowestBin = this.skyBlock().getGenericDataSource().getLowestBin(key);
 		if (lowestBin.isEmpty() || lowestBin.get() <= 0) {
 			lines.add(Component.literal("Auction API error.").withStyle(ChatFormatting.RED));
 			return;

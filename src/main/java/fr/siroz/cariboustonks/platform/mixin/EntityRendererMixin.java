@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.platform.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.systems.GlowingSystem;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -25,11 +24,7 @@ public abstract class EntityRendererMixin<T extends Entity> {
 
 	@Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
 	private void cariboustonks$shouldRenderEntity(T entity, Frustum culler, double camX, double camY, double camZ, float partialTicks, CallbackInfoReturnable<Boolean> cir) {
-		if (SkyBlockAPI.isOnSkyBlock()) {
-			if (!RenderEvents.ALLOW_RENDER_ENTITY_EVENT.invoker().allowRenderEntity(entity)) {
-				cir.setReturnValue(false);
-			}
-		}
+		if (!RenderEvents.ALLOW_RENDER_ENTITY_EVENT.invoker().allowRenderEntity(entity)) cir.setReturnValue(false);
 	}
 
 	@Inject(method = "extractRenderState", at = @At("TAIL"))

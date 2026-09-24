@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
@@ -77,7 +76,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.abiphoneFavoriteContacts;
+		return this.skyBlock().location().onSkyBlock() && this.config().uiAndVisuals.abiphoneFavoriteContacts;
 	}
 
 	@EventHandler(event = "GuiEvents.SCREEN_KEY_PRESS_EVENT")

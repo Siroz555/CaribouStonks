@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.platform.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.WorldEvents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -22,18 +21,12 @@ public abstract class ClientLevelMixin implements BlockGetter {
 
 	@Inject(method = "playSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZJ)V", at = @At("HEAD"), cancellable = true)
 	private void cariboustonks$cancelSoundEvents(CallbackInfo ci, @Local(argsOnly = true, name = "sound") SoundEvent sound) {
-		if (SkyBlockAPI.isOnSkyBlock()) {
-			if (!WorldEvents.ALLOW_SOUND_EVENT.invoker().allowSound(sound)) {
-				ci.cancel();
-			}
-		}
+		if (!WorldEvents.ALLOW_SOUND_EVENT.invoker().allowSound(sound)) ci.cancel();
 	}
 
 	@Inject(method = "removeEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onClientRemoval()V"))
 	private void cariboustonks$onRemoveEntityEvent(int id, Entity.RemovalReason reason, CallbackInfo ci, @Local(name = "entity") Entity entity) {
-		if (SkyBlockAPI.isOnSkyBlock() && entity instanceof ArmorStand armorStand) {
-			WorldEvents.ARMORSTAND_REMOVE_EVENT.invoker().onRemove(armorStand);
-		}
+		if (entity instanceof ArmorStand armorStand) WorldEvents.ARMORSTAND_REMOVE_EVENT.invoker().onRemove(armorStand);
 	}
 
 	@Inject(method = "setServerVerifiedBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z"))
