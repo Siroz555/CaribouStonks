@@ -174,10 +174,6 @@ public final class HypixelDataSource {
 		ItemStack fallback = new ItemStack(Items.BARRIER, 1);
 		fallback.set(DataComponents.CUSTOM_NAME, Component.nullToEmpty(skyBlockItemId));
 
-		if (modDataSource.isItemsMappingError()) {
-			return fallback;
-		}
-
 		try {
 			SkyBlockItemData skyBlockItem = itemsFetcher.getSkyBlockItemsSnapshot().get(skyBlockItemId);
 			if (skyBlockItem == null) {
@@ -209,6 +205,11 @@ public final class HypixelDataSource {
 			Optional<String> hypixelMaterial = skyBlockItem.material();
 			if (!hasItemModelApplied && hypixelMaterial.isPresent()) {
 				String minecraftId = modDataSource.getMinecraftId(hypixelMaterial.get());
+
+				if (minecraftId != null) {
+					System.out.println(">>>>> " + minecraftId);
+				}
+
 				if (minecraftId == null || minecraftId.equals("NO_MATCH")) return fallback;
 
 				Optional<Item> item = ItemUtils.getItemById(minecraftId);

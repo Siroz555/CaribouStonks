@@ -2,7 +2,6 @@ package fr.siroz.cariboustonks.features.fishing;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
@@ -17,7 +16,6 @@ import net.minecraft.world.item.Items;
 import org.jspecify.annotations.NonNull;
 
 public class RareSeaCreatureFeature extends Feature {
-
 	private static final Pattern DOUBLE_HOOK_PATTERN = Pattern.compile("Double Hook!(?: Woot woot!)?");
 
 	private boolean foundCreature = false;
@@ -29,7 +27,7 @@ public class RareSeaCreatureFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().fishing.rareSeaCreatureWarning;
+		return this.skyBlock().location().onSkyBlock() && this.config().fishing.rareSeaCreatureWarning;
 	}
 
 	@Override
@@ -84,6 +82,13 @@ public class RareSeaCreatureFeature extends Feature {
 			} else {
 				PlayerContext.playSound(SoundEvents.ARMOR_EQUIP_NETHERITE.value(), 2.5f, 1f);
 			}
+		}
+
+		if (this.skyBlock().getPartyManager().isInParty() && this.config().fishing.rareSeaCreaturePartyAnnouncer) {
+			String message = doubleHook
+					? ">>> DOUBLE HOOK! Two " + seaCreature.getName() + "s spawned! <<<"
+					: ">>> " + seaCreature.getName() + " spawned! <<<";
+			PlayerContext.sendCommandToServer("/pc " + message, true);
 		}
 	}
 

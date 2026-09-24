@@ -5,7 +5,6 @@ import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockSeason;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockTime;
 import fr.siroz.cariboustonks.events.ChatEvents;
@@ -76,7 +75,7 @@ public class HoppityHuntFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && SkyBlockAPI.getSeason() == SkyBlockSeason.SPRING;
+		return this.skyBlock().location().onSkyBlock() && this.skyBlock().season() == SkyBlockSeason.SPRING;
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
@@ -106,7 +105,7 @@ public class HoppityHuntFeature extends Feature {
 	private void onSkyBlockHourChange(int hour) {
 		if (!isEnabled()) return;
 
-		boolean isAlternateDay = (SkyBlockAPI.getTime().day() % 2 == 0);
+		boolean isAlternateDay = (this.skyBlock().time().day() % 2 == 0);
 
 		eggGroupsByHour.getOrDefault(hour, List.of())
 				.stream()
@@ -204,7 +203,7 @@ public class HoppityHuntFeature extends Feature {
 	}
 
 	private Instant computeNextSpawn(@NonNull EggType egg) {
-		long currentSkyBlockMillis = SkyBlockAPI.getSkyBlockMillis();
+		long currentSkyBlockMillis = SkyBlockTime.currentMillis();
 		long posInDay = currentSkyBlockMillis % SkyBlockTime.DAY_MILLIS;
 		long spawnInDay = egg.getResetDay() * SkyBlockTime.HOUR_MILLIS;
 		long dayIndex = currentSkyBlockMillis / SkyBlockTime.DAY_MILLIS;

@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.core.component.CommandComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.infrastructure.json.JsonFileService;
 import fr.siroz.cariboustonks.core.infrastructure.json.JsonProcessingException;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
@@ -47,7 +46,7 @@ public class KeyShortcutFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && !shortcuts.isEmpty();
+		return this.skyBlock().location().onSkyBlock() && !shortcuts.isEmpty();
 	}
 
 	public Map<String, KeyShortcut> getShortcutsSnapshot() {

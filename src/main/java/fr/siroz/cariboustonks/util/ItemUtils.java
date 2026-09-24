@@ -39,11 +39,23 @@ public final class ItemUtils {
 	/**
 	 * Gets the {@link CompoundTag} in the custom data component of the ItemStack.
 	 *
-	 * @return The {@link DataComponents#CUSTOM_DATA custom data} of the ItemStack,
+	 * @param stack the ItemStack
+	 * @return The {@link DataComponents#CUSTOM_DATA} of the ItemStack,
 	 * or an empty {@link CompoundTag} if the ItemStack is missing a custom data component
 	 */
 	public static @NonNull CompoundTag getCustomData(@NonNull DataComponentHolder stack) {
 		return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+	}
+
+	/**
+	 * Returns the {@code name} of the ItemStack
+	 *
+	 * @param stack the ItemStack
+	 * @return The {@link DataComponents#CUSTOM_NAME} of the ItemStack,
+	 * or an empty String if the ItemStack is missing the custom name component
+	 */
+	public static @NonNull String getItemName(@NonNull DataComponentHolder stack) {
+		return stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
 	}
 
 	/**

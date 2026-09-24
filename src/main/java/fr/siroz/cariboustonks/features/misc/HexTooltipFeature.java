@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.features.misc;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -32,6 +31,6 @@ public class HexTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().misc.showHexOnDyedItemEverywhere;
+		return this.skyBlock().location().onSkyBlock() && this.config().misc.showHexOnDyedItemEverywhere;
 	}
 }

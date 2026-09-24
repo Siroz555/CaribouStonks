@@ -8,8 +8,8 @@ import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.InteractionEvents;
 import fr.siroz.cariboustonks.events.NetworkEvents;
@@ -64,8 +64,7 @@ public final class PestFinderFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() == IslandType.GARDEN
+		return this.skyBlock().location().island() == IslandType.GARDEN
 				&& this.config().farming.garden.pestsLocator;
 	}
 
@@ -83,7 +82,7 @@ public final class PestFinderFeature extends Feature {
 	@EventHandler(event = "InteractionEvents.LEFT_CLICK_AIR_EVENT")
 	private void onLeftClickAir(Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
-		if (isEnabled() && !stack.isEmpty() && SkyBlockAPI.getSkyBlockItemId(stack).contains(VACUUM_ID_PREFIX)) {
+		if (isEnabled() && !stack.isEmpty() && SkyBlockItems.getSkyBlockItemId(stack).contains(VACUUM_ID_PREFIX)) {
 			tracker.startTracking();
 		}
 	}

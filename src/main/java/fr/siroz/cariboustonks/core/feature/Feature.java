@@ -1,8 +1,10 @@
 package fr.siroz.cariboustonks.core.feature;
 
+import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.Component;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -89,6 +91,15 @@ public abstract class Feature {
 	 */
 	protected final Config config() {
 		return ConfigManager.getConfig();
+	}
+
+	/**
+	 * Returns the {@link SkyBlockManager} instance
+	 *
+	 * @return the SkyBlockLocation instance
+	 */
+	protected final @NonNull SkyBlockManager skyBlock() {
+		return CaribouStonks.skyBlock();
 	}
 
 	/**

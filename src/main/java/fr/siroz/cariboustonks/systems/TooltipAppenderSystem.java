@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.mod.crash.CrashType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.system.System;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
@@ -74,7 +73,7 @@ public final class TooltipAppenderSystem implements System {
 	}
 
 	private void appendToTooltip(Slot focusedSlot, ItemStack stack, List<Component> lines) {
-		if (!SkyBlockAPI.isOnSkyBlock()) return;
+		if (!CaribouStonks.skyBlock().location().onSkyBlock()) return;
 		if (currentComponents.isEmpty()) return;
 
 		for (TooltipAppenderComponent component : currentComponents) {

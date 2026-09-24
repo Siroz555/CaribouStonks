@@ -1,20 +1,16 @@
 package fr.siroz.cariboustonks.features.stonks;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.CommandComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.core.skyblock.data.generic.GenericDataSource;
-import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.util.NotEnoughUpdatesUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
@@ -30,28 +26,22 @@ import org.jspecify.annotations.NonNull;
 public class StonksCommandFeature extends Feature {
 	private static final String SEPARATOR = "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
 
-	private final HypixelDataSource hypixelDataSource;
-	private final GenericDataSource genericDataSource;
-
 	private String lastItem = "";
 
 	public StonksCommandFeature() {
-		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
-		this.genericDataSource = CaribouStonks.skyBlock().getGenericDataSource();
-
 		this.addComponent(CommandComponent.class, CommandComponent.builder()
 				.standalone("stonks", builder -> {
 					builder.executes(_ -> {
 						if (lastItem != null && !lastItem.isBlank()) {
 							ClientContext.setScreen(StonksScreen.create(ItemLookupKey.of(
-									NotEnoughUpdatesUtils.getNeuIdFromSkyBlockId(lastItem),
+									SkyBlockItems.getNeuIdFromSkyBlockId(lastItem),
 									lastItem
 							)));
 						}
 						return 1;
 					});
 					builder.then(ClientCommands.argument("item", StringArgumentType.greedyString())
-							.suggests((_, suggestionsBuilder) -> SharedSuggestionProvider.suggest(hypixelDataSource.getSkyBlockItemsIds(), suggestionsBuilder))
+							.suggests((_, suggestionsBuilder) -> SharedSuggestionProvider.suggest(this.skyBlock().getHypixelDataSource().getSkyBlockItemsIds(), suggestionsBuilder))
 							.executes(context -> handle(context.getSource(), StringArgumentType.getString(context, "item"))));
 				})
 				.build());
@@ -59,7 +49,7 @@ public class StonksCommandFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock();
+		return this.skyBlock().location().onSkyBlock();
 	}
 
 	@Override
@@ -70,8 +60,8 @@ public class StonksCommandFeature extends Feature {
 	private int handle(FabricClientCommandSource source, String item) {
 		int result = 1;
 
-		Optional<BazaarProduct> bazaarOpt = hypixelDataSource.getBazaarItem(item);
-		Optional<Double> auctionOpt = genericDataSource.getLowestBin(ItemLookupKey.ofNeuId(item));
+		Optional<BazaarProduct> bazaarOpt = this.skyBlock().getHypixelDataSource().getBazaarItem(item);
+		Optional<Double> auctionOpt = this.skyBlock().getGenericDataSource().getLowestBin(ItemLookupKey.ofNeuId(item));
 
 		if (bazaarOpt.isPresent()) {
 			lastItem = item;
@@ -94,7 +84,7 @@ public class StonksCommandFeature extends Feature {
 
 		source.sendFeedback(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));
 
-		SkyBlockItemData skyBlockItem = hypixelDataSource.getSkyBlockItem(item);
+		SkyBlockItemData skyBlockItem = this.skyBlock().getHypixelDataSource().getSkyBlockItem(item);
 		if (skyBlockItem == null) {
 			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.GOLD_RGB))
 					.append(" " + Component.literal(bazaarProduct.skyBlockId() + " :").withStyle(ChatFormatting.GOLD)));
@@ -231,7 +221,7 @@ public class StonksCommandFeature extends Feature {
 
 		source.sendFeedback(Component.literal(SEPARATOR).withStyle(ChatFormatting.RED));
 
-		SkyBlockItemData skyBlockItem = hypixelDataSource.getSkyBlockItem(item);
+		SkyBlockItemData skyBlockItem = this.skyBlock().getHypixelDataSource().getSkyBlockItem(item);
 		if (skyBlockItem == null) {
 			source.sendFeedback(Component.empty().append(Component.literal("⭐").withColor(Colors.GOLD_RGB))
 					.append(" " + Component.literal(item + " :").withStyle(ChatFormatting.GOLD)));

@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerTier;
@@ -51,7 +50,7 @@ public class TarantulaBossFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
+		return this.skyBlock().location().onSkyBlock()
 				&& this.config().slayer.tarantulaBoss.highlightBossEggs
 				&& slayerManager.isInQuestWithBoss(SlayerType.SPIDER)
 				&& slayerManager.isSlayerTier(SlayerTier.V);

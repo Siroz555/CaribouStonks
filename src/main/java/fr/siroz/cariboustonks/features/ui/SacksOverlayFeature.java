@@ -1,17 +1,15 @@
 package fr.siroz.cariboustonks.features.ui;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarItemAnalytics;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarPriceType;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -56,12 +54,9 @@ public class SacksOverlayFeature extends Feature {
 	private static final int ICON_SIZE = 16;
 	private static final int ICON_GAP = 4;
 
-	private final HypixelDataSource hypixelDataSource;
 	private final List<Line> lines = new ArrayList<>();
 
 	public SacksOverlayFeature() {
-		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
-
 		this.addComponent(ContainerOverlayComponent.class, ContainerOverlayComponent.builder()
 				.trait(MatcherTrait.pattern(TITLE_PATTERN))
 				.content(this::contentAnalyzer)
@@ -72,7 +67,7 @@ public class SacksOverlayFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.sacksOverlay.enabled;
+		return this.skyBlock().location().onSkyBlock() && this.config().uiAndVisuals.sacksOverlay.enabled;
 	}
 
 	private @NonNull List<ColorHighlight> contentAnalyzer(@NonNull Int2ObjectMap<ItemStack> slots) {
@@ -82,10 +77,10 @@ public class SacksOverlayFeature extends Feature {
 			Component name = itemStack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty());
 			if (isBlacklisted(itemStack, name)) continue;
 
-			String skyBlockId = SkyBlockAPI.getSkyBlockApiId(itemStack);
+			String skyBlockId = SkyBlockItems.getSkyBlockApiId(itemStack);
 			if (skyBlockId.isEmpty()) continue;
 
-			SkyBlockItemData skyBlockItemData = hypixelDataSource.getSkyBlockItem(skyBlockId);
+			SkyBlockItemData skyBlockItemData = this.skyBlock().getHypixelDataSource().getSkyBlockItem(skyBlockId);
 			// La couleur noire est par défault si jamais l'item de l'API est fail,
 			// ou que l'item n'a pas de tier défini, la couleur de base est keep.
 			if (skyBlockItemData != null && skyBlockItemData.tier().getColor() != TextColor.BLACK) {
@@ -209,7 +204,7 @@ public class SacksOverlayFeature extends Feature {
 
 	private double getBazaarPrice(@NonNull String skyBlockId) {
 		boolean useBuyPrice = this.config().uiAndVisuals.sacksOverlay.priceType == BazaarPriceType.BUY;
-		return hypixelDataSource.getBazaarItem(skyBlockId)
+		return this.skyBlock().getHypixelDataSource().getBazaarItem(skyBlockId)
 				.map(useBuyPrice ? BazaarItemAnalytics.BUY : BazaarItemAnalytics.SELL)
 				.orElse(0.0);
 	}

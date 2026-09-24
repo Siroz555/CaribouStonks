@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -51,8 +50,7 @@ public final class UbikCubeReminderFeature extends Feature {
 
     @Override
     public boolean isEnabled() {
-        return SkyBlockAPI.isOnSkyBlock()
-                && SkyBlockAPI.getIsland() == IslandType.THE_RIFT
+        return this.skyBlock().location().island() == IslandType.THE_RIFT
                 && this.config().general.reminders.ubikCube;
     }
 

@@ -506,7 +506,17 @@ public class SkillsCategory extends AbstractCategory {
 								.binding(defaults.fishing.rareSeaCreatureSound,
 										() -> current.fishing.rareSeaCreatureSound,
 										newValue -> current.fishing.rareSeaCreatureSound = newValue)
-								.controller(this::createBooleanController)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Rare Sea Creature Party Announcer"))
+								.description(OptionDescription.of(
+										Component.literal("If Rare Sea Creature Warning is enabled, announce to the Party when you catch a Rare Sea Creature."),
+										Component.literal("(Also detected Double Hooks)")))
+								.binding(defaults.fishing.rareSeaCreaturePartyAnnouncer,
+										() -> current.fishing.rareSeaCreaturePartyAnnouncer,
+										newValue -> current.fishing.rareSeaCreaturePartyAnnouncer = newValue)
+								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Fish Caught Warning"))

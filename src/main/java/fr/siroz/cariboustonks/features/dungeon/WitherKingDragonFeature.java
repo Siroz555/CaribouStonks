@@ -1,11 +1,8 @@
 package fr.siroz.cariboustonks.features.dungeon;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonBoss;
-import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonManager;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
@@ -39,15 +36,11 @@ public class WitherKingDragonFeature extends Feature {
 	private static final String PHASE_5_TRIGGER_1 = "[BOSS] Wither King: You... again?";
 	private static final String PHASE_5_TRIGGER_2 = "[BOSS] Wither King: Ohhh?";
 
-	private final DungeonManager dungeonManager;
-
 	private boolean isPhase5 = false;
 	@Nullable
 	private WitherKingDragon targetDragon = null;
 
 	public WitherKingDragonFeature() {
-		this.dungeonManager = CaribouStonks.skyBlock().getDungeonManager();
-
 		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onMessage);
 		NetworkEvents.SERVER_TICK.register(this::onServerTick);
 		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
@@ -58,9 +51,8 @@ public class WitherKingDragonFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() == IslandType.DUNGEON
-				&& dungeonManager.getBoss() == DungeonBoss.NECRON;
+		return this.skyBlock().location().island() == IslandType.DUNGEON
+				&& this.skyBlock().getDungeonManager().getBoss() == DungeonBoss.NECRON;
 	}
 
 	@Override
@@ -211,7 +203,7 @@ public class WitherKingDragonFeature extends Feature {
 	}
 
 	private boolean isArcherTeam() {
-		return switch (dungeonManager.getDungeonClass()) {
+		return switch (this.skyBlock().getDungeonManager().getDungeonClass()) {
 			case ARCHER, TANK -> true;
 			default -> false;
 		};

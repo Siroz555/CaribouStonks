@@ -6,7 +6,7 @@ import com.mojang.serialization.JsonOps;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.infrastructure.json.GsonProvider;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabLine;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabWidget;
 import fr.siroz.cariboustonks.events.EventHandler;
@@ -132,9 +132,9 @@ public final class DeveloperManager {
 				MutableComponent message = Component.empty();
 				message.append(item.getHoverName()).append(" :")
 						.append("\n")
-						.append(" - SkyBlockItemId: " + SkyBlockAPI.getSkyBlockItemId(item)).withStyle(ChatFormatting.GRAY)
+						.append(" - SkyBlockItemId: " + SkyBlockItems.getSkyBlockItemId(item)).withStyle(ChatFormatting.GRAY)
 						.append("\n")
-						.append(" - SkyBlockApiId: " + SkyBlockAPI.getSkyBlockApiId(item)).withStyle(ChatFormatting.GRAY);
+						.append(" - SkyBlockApiId: " + SkyBlockItems.getSkyBlockApiId(item)).withStyle(ChatFormatting.GRAY);
 
 				ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(message));
 			}

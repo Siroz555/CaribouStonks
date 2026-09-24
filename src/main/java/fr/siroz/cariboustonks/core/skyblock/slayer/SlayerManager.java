@@ -1,8 +1,9 @@
 package fr.siroz.cariboustonks.core.skyblock.slayer;
 
+import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockManager;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Mayor;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Perk;
 import fr.siroz.cariboustonks.events.ChatEvents;
@@ -51,10 +52,14 @@ public final class SlayerManager {
 	private static final String QUEST_COMPLETE = "SLAYER QUEST COMPLETE!";
 	private static final String SCOREBOARD_BOSS_SPAWNED = "Slay the boss!";
 
+	private final SkyBlockManager skyBlockManager;
+
 	private SlayerBossFight bossFight;
 	private SlayerQuest quest;
 
-	public SlayerManager() {
+	public SlayerManager(SkyBlockManager skyBlockManager) {
+		this.skyBlockManager = skyBlockManager;
+
 		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onMessage);
 		SkyBlockEvents.ISLAND_CHANGE_EVENT.register(this::onIslandChangeHandler);
 		ClientEvents.SCOREBOARD_UPDATE_EVENT.register(this::onScoreboardUpdate);
@@ -150,7 +155,7 @@ public final class SlayerManager {
 	 */
 	public double getXpReward(@NonNull SlayerType type, @NonNull SlayerTier tier) {
 		double xp = type.getExpPerTier()[tier.ordinal() - 1]; // -1 car UNKNOWN est en premier
-		if (SkyBlockAPI.isMayorOrMinister(Mayor.AATROX, Perk.SLAYER_XP_BUFF)) {
+		if (CaribouStonks.skyBlock().isMayorOrMinister(Mayor.AATROX, Perk.SLAYER_XP_BUFF)) {
 			xp *= 1.25f;
 		}
 
@@ -162,7 +167,7 @@ public final class SlayerManager {
 	 */
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onMessage(@NonNull Component text) {
-		if (!SkyBlockAPI.isOnSkyBlock()) return;
+		if (!CaribouStonks.skyBlock().location().onSkyBlock()) return;
 
 		String message = text.getString();
 		message = message.replaceFirst("^\\s+", "");
@@ -230,7 +235,7 @@ public final class SlayerManager {
 	 */
 	@EventHandler(event = "NetworkEvents.ARMORSTAND_UPDATE_PACKET")
 	private void onArmorStandUpdate(@NonNull ArmorStand armorStand, boolean equipment) {
-		if (!SkyBlockAPI.isOnSkyBlock() || equipment) return;
+		if (!skyBlockManager.location().onSkyBlock() || equipment) return;
 		if (quest == null || !armorStand.hasCustomName() || (isBossSpawned() && bossFight.getBossEntity() != null)) return;
 
 		if (armorStand.getName().getString().contains(CLIENT.getUser().getName())) {

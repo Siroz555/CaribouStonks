@@ -8,7 +8,7 @@ import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
@@ -66,9 +66,9 @@ public class HotspotRadarFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& this.config().fishing.hotspotRadarGuess
-				&& SkyBlockAPI.isOnIslands(IslandType.CRIMSON_ISLE, IslandType.BACKWATER_BAYOU);
+		return this.skyBlock().location().onSkyBlock()
+				&& this.skyBlock().location().isOn(IslandType.CRIMSON_ISLE, IslandType.BACKWATER_BAYOU)
+				&& this.config().fishing.hotspotRadarGuess;
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class HotspotRadarFeature extends Feature {
 	@EventHandler(event = "UseItemCallback.EVENT")
 	private InteractionResult onUseItem(Player player, Level _world, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
-		if (isEnabled() && !stack.isEmpty() && HOTSPOT_RADAR_ITEM_ID.equals(SkyBlockAPI.getSkyBlockItemId(stack))) {
+		if (isEnabled() && !stack.isEmpty() && HOTSPOT_RADAR_ITEM_ID.equals(SkyBlockItems.getSkyBlockItemId(stack))) {
 			tracker.startTracking();
 		}
 		return InteractionResult.PASS;

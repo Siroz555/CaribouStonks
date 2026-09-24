@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.features.foraging;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
@@ -37,8 +36,7 @@ public class SafariFloorDropFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() == IslandType.SAFARI
+		return this.skyBlock().location().island() == IslandType.SAFARI
 				&& this.config().foraging.safari.floorDrops;
 	}
 

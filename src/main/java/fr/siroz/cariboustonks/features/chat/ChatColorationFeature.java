@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.features.chat;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
@@ -24,7 +23,7 @@ public class ChatColorationFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock(); // en vrai de partout ?
+		return this.skyBlock().location().onSkyBlock();
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")

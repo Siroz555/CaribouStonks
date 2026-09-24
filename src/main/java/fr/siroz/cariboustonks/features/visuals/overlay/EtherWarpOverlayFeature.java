@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.features.visuals.overlay;
 
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Color;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
@@ -72,7 +72,7 @@ public class EtherWarpOverlayFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.overlay.etherWarp;
+		return this.skyBlock().location().onSkyBlock() && this.config().uiAndVisuals.overlay.etherWarp;
 	}
 
 	public boolean canZoom() {
@@ -102,7 +102,7 @@ public class EtherWarpOverlayFeature extends Feature {
 			return;
 		}
 
-		String skyBlockItemId = SkyBlockAPI.getSkyBlockItemId(heldItem);
+		String skyBlockItemId = SkyBlockItems.getSkyBlockItemId(heldItem);
 		if (!ETHER_WARP_ITEMS.contains(skyBlockItemId)) {
 			resetTarget();
 			return;

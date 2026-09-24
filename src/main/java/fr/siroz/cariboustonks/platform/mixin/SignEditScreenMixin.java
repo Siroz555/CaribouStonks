@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.platform.mixin;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen;
 import net.minecraft.client.input.KeyEvent;
@@ -25,7 +24,7 @@ public abstract class SignEditScreenMixin extends Screen {
 	@Inject(method = "keyPressed", at = @At("HEAD"))
 	private void cariboustonks$onKeyPressedEvent(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
 		if (event.input() != 257) return;
-		if (!SkyBlockAPI.isOnSkyBlock() || !ConfigManager.getConfig().general.stonks.bazaarSignEditEnterValidation) return;
+		if (!ConfigManager.getConfig().general.stonks.bazaarSignEditEnterValidation) return;
 		this.onClose();
 	}
 }

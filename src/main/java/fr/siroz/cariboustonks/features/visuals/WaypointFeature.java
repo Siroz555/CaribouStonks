@@ -8,7 +8,6 @@ import fr.siroz.cariboustonks.core.infrastructure.json.JsonFileService;
 import fr.siroz.cariboustonks.core.infrastructure.json.JsonProcessingException;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
@@ -57,7 +56,7 @@ public final class WaypointFeature extends Feature {
 
     @Override
     public boolean isEnabled() {
-        return SkyBlockAPI.isOnSkyBlock() && !waypoints.isEmpty();
+        return this.skyBlock().location().onSkyBlock() && !waypoints.isEmpty();
     }
 
     public @NonNull Map<IslandType, List<Waypoint>> getWaypointsSnapshot() {
@@ -99,7 +98,7 @@ public final class WaypointFeature extends Feature {
 		if (!isEnabled()) return;
 
 		// SIROZ-NOTE: au lieu de créer des ArrayList a chaque frame, juste clear et addAll
-		List<Waypoint> currentWaypoints = new ArrayList<>(waypoints.get(SkyBlockAPI.getIsland()));
+		List<Waypoint> currentWaypoints = new ArrayList<>(waypoints.get(this.skyBlock().location().island()));
 		currentWaypoints.addAll(new ArrayList<>(waypoints.get(IslandType.ANY)));
 		if (currentWaypoints.isEmpty()) {
 			return;

@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.core.component.EntityGlowComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.platform.mixin.accessors.DisplayEntityDataScaleAccessor;
 import fr.siroz.cariboustonks.util.ColorUtils;
 import fr.siroz.cariboustonks.util.math.MathUtils;
@@ -36,8 +35,7 @@ public class LotusAtollLilyPadFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() == IslandType.LOTUS_ATOLL
+		return this.skyBlock().location().island() == IslandType.LOTUS_ATOLL
 				&& this.config().fishing.lotusAtoll.lilyPadHighlighter;
 	}
 

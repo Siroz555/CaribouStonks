@@ -3,7 +3,6 @@ package fr.siroz.cariboustonks.features.vanilla;
 import com.mojang.blaze3d.platform.InputConstants;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
@@ -47,7 +46,7 @@ public class ScrollableTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().vanilla.scrollableTooltip.enabled;
+		return this.skyBlock().location().onSkyBlock() && this.config().vanilla.scrollableTooltip.enabled;
 	}
 
 	public int getXOffset() {

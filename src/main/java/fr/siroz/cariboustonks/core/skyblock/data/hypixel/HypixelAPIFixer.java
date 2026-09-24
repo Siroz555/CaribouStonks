@@ -1,9 +1,9 @@
 package fr.siroz.cariboustonks.core.skyblock.data.hypixel;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -97,7 +97,7 @@ public final class HypixelAPIFixer {
 	}
 
 	public @Nullable SkyBlockItemData createShard(@NonNull String skyBlockIdShard) {
-		SkyBlockAttribute attribute = CaribouStonks.mod().getModDataSource().getAttributeBySkyBlockId(skyBlockIdShard);
+		SkyBlockAttribute attribute = SkyBlockItemRegistry.getAttributeBySkyBlockApiId(skyBlockIdShard);
 		if (attribute != null) {
 			String material = "PRISMARINE_SHARD";
 			String name = attribute.name() + " (" + attribute.id() + ")";

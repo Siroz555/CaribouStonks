@@ -4,11 +4,11 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.Rarity;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockEnchantment;
-import fr.siroz.cariboustonks.core.skyblock.item.SkyblockItemStack;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.core.skyblock.item.calculator.Calculation;
 import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueCalculator;
 import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueResult;
@@ -66,7 +66,7 @@ public class ItemValueViewerFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.itemValueViewer.enabled;
+		return this.skyBlock().location().onSkyBlock() && this.config().general.stonks.itemValueViewer.enabled;
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class ItemValueViewerFeature extends Feature {
 
 	@EventHandler(event = "GuiEvents.POST_TOOLTIP_EVENT")
 	private void onPostTooltip(ItemStack itemStack) {
-		if (itemStack == null || itemStack.isEmpty() || SkyBlockAPI.getSkyBlockItemUuid(itemStack).isEmpty()) {
+		if (itemStack == null || itemStack.isEmpty() || SkyBlockItems.getSkyBlockItemUuid(itemStack).isEmpty()) {
 			reset(true);
 			return;
 		}
@@ -113,7 +113,7 @@ public class ItemValueViewerFeature extends Feature {
 	private void updateForItem(@NonNull ItemStack item) {
 		try {
 			ItemValueResult result = ItemValueCalculator.getInstance().calculateValue(
-					SkyblockItemStack.of(item),
+					SkyBlockItems.createSkyBlockItemStack(item),
 					this.config().general.stonks.useNetworthItemValue
 			);
 
@@ -609,7 +609,7 @@ public class ItemValueViewerFeature extends Feature {
 		if (itemData != null) {
 			return Pair.of(itemData.name(), itemData.tier());
 		} else {
-			SkyBlockEnchantment enchantment = CaribouStonks.mod().getModDataSource().getSkyBlockEnchantment(skyBlockId);
+			SkyBlockEnchantment enchantment = SkyBlockItemRegistry.getEnchantmentById(skyBlockId);
 			if (enchantment != null) {
 				return Pair.of(enchantment.name(), Rarity.UNKNOWN);
 			} else {

@@ -8,7 +8,7 @@ import fr.siroz.cariboustonks.core.module.particle.ParticleTracker;
 import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
@@ -67,7 +67,7 @@ public class HoppityEggFinderFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().events.hoppityHunt.eggFinderGuess;
+		return this.skyBlock().location().onSkyBlock() && this.config().events.hoppityHunt.eggFinderGuess;
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class HoppityEggFinderFeature extends Feature {
 	@EventHandler(event = "UseItemCallback.EVENT")
 	private InteractionResult onUseItem(Player player, Level _level, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
-		if (isEnabled() && !stack.isEmpty() && EGG_LOCATOR_ITEM_ID.equals(SkyBlockAPI.getSkyBlockItemId(stack))) {
+		if (isEnabled() && !stack.isEmpty() && EGG_LOCATOR_ITEM_ID.equals(SkyBlockItems.getSkyBlockItemId(stack))) {
 			tracker.startTracking();
 		}
 		return InteractionResult.PASS;

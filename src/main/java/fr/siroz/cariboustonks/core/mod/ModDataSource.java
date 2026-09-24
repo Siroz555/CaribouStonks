@@ -13,12 +13,12 @@ import fr.siroz.cariboustonks.core.module.http.Http;
 import fr.siroz.cariboustonks.core.module.http.HttpResponse;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockEnchantment;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import java.io.BufferedReader;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,20 +43,18 @@ public final class ModDataSource {
 
 	// Hypixel SkyBlock Wiki - Enchantments
 	private static final Identifier ENCHANTMENTS_JSON = CaribouStonks.identifier("repo/enchantments.json");
-	private final Map<String, SkyBlockEnchantment> skyBlockEnchants = new HashMap<>();
 
 	// Hypixel SkyBlock Attributes
 	private static final String ATTRIBUTES_JSON_URL = "https://raw.githubusercontent.com/Siroz555/Caribou-REPO/refs/heads/main/data/attributes.json";
 	private static final Duration FIRST_RETRY_DELAY = Duration.ofMinutes(1);
 	private static final Cooldown RELOAD_COOLDOWN = Cooldown.of(10, TimeUnit.SECONDS);
 	private static final int MAX_RETRIES = 10;
-	private volatile List<SkyBlockAttribute> skyBlockAttributes = Collections.emptyList();
 	private final AtomicBoolean attributesFetchInProgress = new AtomicBoolean(false);
 	private final AtomicInteger attributesRetryAttempts = new AtomicInteger(0);
-	private volatile boolean attributesFetchError = false;
 
-	private boolean itemsMappingError = false;
-	private boolean enchantmentsError = false;
+	private volatile boolean attributesFetchError = false;
+	private volatile boolean itemsMappingError = false;
+	private volatile boolean enchantmentsError = false;
 
 	public ModDataSource() {
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> this.loadModData(client).thenRun(this::checkInternalDataResults));
@@ -77,7 +75,7 @@ public final class ModDataSource {
 				if (attributesFetchError) {
 					PlayerContext.sendMessageWithPrefix(Component.literal("Reloading attributes failed! Try again later.").withColor(Colors.RED.asInt()));
 				} else {
-					PlayerContext.sendMessageWithPrefix(Component.literal("Attributes reloaded! (" + skyBlockAttributes.size() + " loaded)").withColor(Colors.GREEN.asInt()));
+					PlayerContext.sendMessageWithPrefix(Component.literal("Attributes reloaded! (" + SkyBlockItemRegistry.sizeOfAttributes() + " loaded)").withColor(Colors.GREEN.asInt()));
 				}
 			});
 		} else {
@@ -100,57 +98,6 @@ public final class ModDataSource {
 		return itemsMappingError;
 	}
 
-	public @Nullable SkyBlockEnchantment getSkyBlockEnchantment(@NonNull String id) {
-		if (skyBlockEnchants.isEmpty()) return null;
-		return skyBlockEnchants.get(id);
-	}
-
-	public @Nullable SkyBlockAttribute getAttributeBySkyBlockId(@Nullable String skyBlockId) {
-		if (skyBlockId == null || skyBlockId.isEmpty()) return null;
-
-		List<SkyBlockAttribute> attributes = skyBlockAttributes;
-		for (SkyBlockAttribute attribute : attributes) {
-			if (attribute.skyBlockApiId().equals(skyBlockId)) {
-				return attribute;
-			}
-		}
-
-		return null;
-	}
-
-	public @Nullable SkyBlockAttribute getAttributeById(@Nullable String id) {
-		if (id == null || id.isEmpty()) return null;
-
-		List<SkyBlockAttribute> attributes = skyBlockAttributes;
-		for (SkyBlockAttribute attribute : attributes) {
-			if (attribute.id().equals(id)) {
-				return attribute;
-			}
-		}
-
-		return null;
-	}
-
-	public @Nullable SkyBlockAttribute getAttributeByShardName(@Nullable String name) {
-		if (name == null || name.isEmpty()) return null;
-
-		// Support SkyBlock 0.23.3 | "Shard" a été rajouté après le nom de la shard
-		// Si je rajoute "Shard" dans chaque nom dans le fichier attributes.json, l'Hunting Box bug
-		// et il faut re-check le container pour double check bref...
-		int index = name.indexOf("Shard");
-		if (index > -1) name = name.substring(0, index - 1);
-		name = name.replace("BUY ", "").replace("SELL ", "");
-
-		List<SkyBlockAttribute> attributes = skyBlockAttributes;
-		for (SkyBlockAttribute attribute : attributes) {
-			if (attribute.shardName().equals(name)) {
-				return attribute;
-			}
-		}
-
-		return null;
-	}
-
 	private @NonNull CompletableFuture<Void> loadModData(Minecraft client) {
 		CompletableFuture<Void> itemsMappingFuture = CompletableFuture.runAsync(() -> {
 			try (BufferedReader reader = client.getResourceManager().openAsReader(ITEMS_MAPPING_JSON)) {
@@ -167,13 +114,11 @@ public final class ModDataSource {
 
 		CompletableFuture<Void> enchantmentsFuture = CompletableFuture.runAsync(() -> {
 			try (BufferedReader reader = client.getResourceManager().openAsReader(ENCHANTMENTS_JSON)) {
-
-				JsonArray jsonArray = JsonParser.parseReader(reader).getAsJsonArray();
-				for (JsonElement element : jsonArray) {
-					JsonObject jsonEnchantment = element.getAsJsonObject();
-					SkyBlockEnchantment enchantment = getSkyBlockEnchantment(jsonEnchantment);
-					skyBlockEnchants.put(enchantment.id(), enchantment);
+				List<SkyBlockEnchantment> enchantments = new ArrayList<>();
+				for (JsonElement element : JsonParser.parseReader(reader).getAsJsonArray()) {
+					enchantments.add(parseSkyBlockEnchantment(element.getAsJsonObject()));
 				}
+				SkyBlockItemRegistry.loadEnchantments(enchantments);
 			} catch (Throwable throwable) {
 				enchantmentsError = true;
 				CaribouStonks.LOGGER.error("[ModDataSource] There was an error while loading enchantments", throwable);
@@ -227,15 +172,12 @@ public final class ModDataSource {
 			}
 
 			JsonArray jsonArray = JsonParser.parseString(body).getAsJsonArray();
-
 			List<SkyBlockAttribute> attributes = new ArrayList<>(jsonArray.size());
 			for (JsonElement element : jsonArray) {
-				JsonObject jsonAttribute = element.getAsJsonObject();
-				SkyBlockAttribute attribute = getSkyBlockAttribute(jsonAttribute);
-				attributes.add(attribute);
+				attributes.add(parseSkyBlockAttribute(element.getAsJsonObject()));
 			}
 
-			skyBlockAttributes = List.copyOf(attributes);
+			SkyBlockItemRegistry.loadAttributes(attributes);
 			attributesRetryAttempts.set(0);
 			attributesFetchError = false;
 		} catch (Exception ex) {
@@ -248,22 +190,22 @@ public final class ModDataSource {
 			CaribouStonks.LOGGER.info("[ModDataSource] Loaded {} items in the items mapping", minecraftIdsMapping.size());
 		}
 
-		if (!enchantmentsError && !skyBlockEnchants.isEmpty()) {
-			CaribouStonks.LOGGER.info("[ModDataSource] Loaded {} enchantments", skyBlockEnchants.size());
+		if (!enchantmentsError && SkyBlockItemRegistry.sizeOfEnchantments() > 0) {
+			CaribouStonks.LOGGER.info("[ModDataSource] Loaded {} enchantments", SkyBlockItemRegistry.sizeOfEnchantments());
 		}
 	}
 
 	private @NonNull Runnable checkExternalDataResults() {
 		return () -> {
-			if (skyBlockAttributes.isEmpty()) {
+			if (SkyBlockItemRegistry.sizeOfAttributes() < 1) {
 				CaribouStonks.LOGGER.warn("[ModDataSource] No attributes loaded yet");
 			} else {
-				CaribouStonks.LOGGER.info("[ModDataSource] Loaded {} attributes (external source)", skyBlockAttributes.size());
+				CaribouStonks.LOGGER.info("[ModDataSource] Loaded {} attributes (external source)", SkyBlockItemRegistry.sizeOfAttributes());
 			}
 		};
 	}
 
-	private @NonNull SkyBlockEnchantment getSkyBlockEnchantment(@NonNull JsonObject jsonEnchantment) {
+	private @NonNull SkyBlockEnchantment parseSkyBlockEnchantment(@NonNull JsonObject jsonEnchantment) {
 		return new SkyBlockEnchantment(
 				jsonEnchantment.get("id").getAsString(),
 				jsonEnchantment.get("name").getAsString(),
@@ -273,7 +215,7 @@ public final class ModDataSource {
 		);
 	}
 
-	private @NonNull SkyBlockAttribute getSkyBlockAttribute(@NonNull JsonObject jsonAttribute) {
+	private @NonNull SkyBlockAttribute parseSkyBlockAttribute(@NonNull JsonObject jsonAttribute) {
 		return new SkyBlockAttribute(
 				jsonAttribute.get("name").getAsString(),
 				jsonAttribute.get("shardName").getAsString(),

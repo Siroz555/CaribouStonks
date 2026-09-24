@@ -25,6 +25,10 @@ public interface SkyBlockConstants {
 	 */
 	long SKYBLOCK_EPOCH_START_MILLIS = 1_560_275_700_000L;
 	/**
+	 * The maximum level of an Attribute Shard
+	 */
+	int ATTRIBUTE_SHARD_MAX_LEVEL = 10;
+	/**
 	 * Magic Find Icon
 	 */
 	char MAGIC_FIND_ICON = '\uE01A';

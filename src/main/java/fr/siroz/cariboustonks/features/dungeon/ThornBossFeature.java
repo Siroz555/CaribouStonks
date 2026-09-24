@@ -1,11 +1,8 @@
 package fr.siroz.cariboustonks.features.dungeon;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonBoss;
-import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonManager;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
@@ -27,14 +24,11 @@ public class ThornBossFeature extends Feature {
 	private static final int MAX_KILLS = 30;
 	private static final int SPIRIT_BEAR_SPAWN_DELAY = 69; // 68-70
 
-	private final DungeonManager dungeonManager;
-
 	private final Set<BlockPos> blockPositions = new HashSet<>();
 	private int spawnTicks = -1;
 	private int kills = 0;
 
 	public ThornBossFeature() {
-		this.dungeonManager = CaribouStonks.skyBlock().getDungeonManager();
 		this.createBlockPositions();
 
 		WorldEvents.BLOCK_STATE_UPDATE_EVENT.register(this::onBlockUpdate);
@@ -43,9 +37,8 @@ public class ThornBossFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() == IslandType.DUNGEON
-				&& dungeonManager.getBoss() == DungeonBoss.THORN
+		return this.skyBlock().location().island() == IslandType.DUNGEON
+				&& this.skyBlock().getDungeonManager().getBoss() == DungeonBoss.THORN
 				&& this.config().instance.theCatacombs.bossThornSpiritBearTimers;
 	}
 

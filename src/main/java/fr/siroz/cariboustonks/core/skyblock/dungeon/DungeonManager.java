@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.core.skyblock.dungeon;
 
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockManager;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
@@ -13,10 +13,14 @@ import org.jspecify.annotations.NonNull;
 
 public final class DungeonManager {
 
+	private final SkyBlockManager skyBlockManager;
+
 	private DungeonBoss boss = DungeonBoss.UNKNOWN;
 	private DungeonClass dungeonClass = DungeonClass.UNKNOWN;
 
-	public DungeonManager() {
+	public DungeonManager(SkyBlockManager skyBlockManager) {
+		this.skyBlockManager = skyBlockManager;
+
 		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onMessage);
 		ClientPlayConnectionEvents.JOIN.register((_, _, _) -> this.reset());
 	}
@@ -35,8 +39,8 @@ public final class DungeonManager {
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
 	private void onMessage(@NonNull Component text) {
-		if (!SkyBlockAPI.isOnSkyBlock()) return;
-		if (SkyBlockAPI.getIsland() != IslandType.DUNGEON) return;
+		if (!skyBlockManager.location().onSkyBlock()) return;
+		if (skyBlockManager.location().island() != IslandType.DUNGEON) return;
 
 		String message = StonksUtils.stripColor(text.getString());
 		//if (message.equals("[NPC] Mort: You should find it useful if you get lost.")) {

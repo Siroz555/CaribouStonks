@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
@@ -31,8 +31,7 @@ public class CorpseFinderFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock()
-				&& SkyBlockAPI.getIsland() == IslandType.GLACITE_MINESHAFT
+		return this.skyBlock().location().island() == IslandType.GLACITE_MINESHAFT
 				&& this.config().mining.mineshaft.corpseFinder;
 	}
 
@@ -55,7 +54,7 @@ public class CorpseFinderFeature extends Feature {
 		if (as.hasCustomName()) return;
 		if (corpses.containsKey(as.getId())) return;
 
-		String skyBlockItemId = SkyBlockAPI.getSkyBlockItemId(as.getItemBySlot(EquipmentSlot.HEAD));
+		String skyBlockItemId = SkyBlockItems.getSkyBlockItemId(as.getItemBySlot(EquipmentSlot.HEAD));
 		CorpseType corpseType = CorpseType.from(skyBlockItemId);
 		if (corpseType != CorpseType.UNKNOWN) {
 			corpses.put(as.getId(), new Corpse(as.position(), corpseType, false));

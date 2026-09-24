@@ -1,21 +1,21 @@
 package fr.siroz.cariboustonks.features.hunting;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
 import fr.siroz.cariboustonks.core.skyblock.Rarity;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.RomanNumeralUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -33,32 +33,31 @@ public class AttributeInfoTooltipFeature extends Feature {
 	// Attribute Menu: "Syphon 1 shard to level up!" (différent du texte de la Hunting Box)
 	private static final Pattern ATTRIBUTE_SYPHON_PATTERN = Pattern.compile("Syphon (\\d+) shards? to level up!");
 	private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("");
-
-	private final HypixelDataSource hypixelDataSource;
+	// Gui
+	private static final String HUNTING_BOX = "Hunting Box";
+	private static final String ATTRIBUTE_MENU = "Attribute Menu";
 
 	public AttributeInfoTooltipFeature(int priority) {
-		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
-
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
 				.trait(MatcherTrait.empty())
 				.appender((focusedSlot, _, lines) -> {
-					if (hypixelDataSource.isBazaarInUpdate()) return;
+					if (this.skyBlock().getHypixelDataSource().isBazaarInUpdate()) return;
 
 					Screen currentScreen = ClientContext.getScreen();
 					if (focusedSlot == null || currentScreen == null || lines.isEmpty()) return;
 					if (StonksUtils.isEdgeSlot(focusedSlot.index, 6)) return;
 
 					String title = currentScreen.getTitle().getString();
-					if (title.contains(AttributeAPI.HUNTING_BOX)) handleHuntingBox(lines);
-					else if (title.contains(AttributeAPI.ATTRIBUTE_MENU)) handleAttributeMenu(lines);
+					if (title.contains(HUNTING_BOX)) handleHuntingBox(lines);
+					else if (title.contains(ATTRIBUTE_MENU)) handleAttributeMenu(lines);
 				})
 				.build());
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().hunting.attributeInfos;
+		return this.skyBlock().location().onSkyBlock() && this.config().hunting.attributeInfos;
 	}
 
 	private void handleHuntingBox(@NonNull List<Component> lines) {
@@ -87,7 +86,7 @@ public class AttributeInfoTooltipFeature extends Feature {
 				// 10, 15 | X Maxed
 				syphonCountStr = matcher.group(1);
 
-			} else if (matcher.usePattern(AttributeAPI.RARITY_AND_ID_PATTERN).matches()) {
+			} else if (matcher.usePattern(SkyBlockItems.SHARD_RARITY_AND_ID_PATTERN).matches()) {
 				rarityStr = matcher.group(1);
 				// (ID: 22)
 				id = matcher.group(2);
@@ -100,19 +99,19 @@ public class AttributeInfoTooltipFeature extends Feature {
 		}
 
 		int level = RomanNumeralUtils.parse(levelStr);
-		if (level < 0 || level > AttributeAPI.MAX_LEVEL) return;
+		if (level < 0 || level > SkyBlockConstants.ATTRIBUTE_SHARD_MAX_LEVEL) return;
 
 		int owned = StonksUtils.toInt(ownedStr, -1);
 		if (owned < 0) return;
 
 		Rarity itemRarity = Rarity.valueOf(rarityStr.toUpperCase(Locale.ENGLISH));
-		int shardsUntilMax = AttributeAPI.getShardsUntilMax(itemRarity, level + 1);
-		if (shardsUntilMax < 0 || syphonCountStr == null) return;
+		OptionalInt shardsUntilMax = SkyBlockItems.getAttributeShardsUntilMax(itemRarity, level + 1);
+		if (shardsUntilMax.isEmpty() || syphonCountStr == null) return;
 
 		int syphonCount = StonksUtils.toInt(syphonCountStr, -1);
 		if (syphonCount < 0) return;
 
-		int required = shardsUntilMax + syphonCount;
+		int required = shardsUntilMax.getAsInt() + syphonCount;
 		appendTooltip(lines, id, required, owned);
 	}
 
@@ -129,7 +128,7 @@ public class AttributeInfoTooltipFeature extends Feature {
 
 			matcher.reset(lineText);
 
-			if (id == null && matcher.usePattern(AttributeAPI.SOURCE_PATTERN).matches()) {
+			if (id == null && matcher.usePattern(SkyBlockItems.SHARD_SOURCE_PATTERN).matches()) {
 				// (ID:: 22)
 				id = matcher.group("id");
 
@@ -158,10 +157,10 @@ public class AttributeInfoTooltipFeature extends Feature {
 		if (syphonCount < 0) return;
 
 		Rarity itemRarity = Rarity.valueOf(rarityStr.toUpperCase(Locale.ENGLISH));
-		int shardsUntilMax = AttributeAPI.getShardsUntilMax(itemRarity, level + 1);
-		if (shardsUntilMax < 0) return;
+		OptionalInt shardsUntilMax = SkyBlockItems.getAttributeShardsUntilMax(itemRarity, level + 1);
+		if (shardsUntilMax.isEmpty()) return;
 
-		int required = shardsUntilMax + syphonCount;
+		int required = shardsUntilMax.getAsInt() + syphonCount;
 		// HuntingBox != AttributeMenu
 		appendTooltip(lines, id, required, 0);
 	}
@@ -171,15 +170,15 @@ public class AttributeInfoTooltipFeature extends Feature {
 				.append(Component.literal("Shards Until Maxed: ").withStyle(ChatFormatting.GREEN))
 				.append(Component.literal(String.valueOf(required)).withStyle(ChatFormatting.AQUA)));
 
-		SkyBlockAttribute attribute = AttributeAPI.getAttributeById(id);
+		SkyBlockAttribute attribute = SkyBlockItemRegistry.getAttributeById(id);
 		if (attribute != null) {
 			addTotalCost(lines, required - owned, attribute.skyBlockApiId());
 		}
 	}
 
 	private void addTotalCost(List<Component> lines, int required, String skyBlockApiId) {
-		if (required > 0 && hypixelDataSource.hasBazaarItem(skyBlockApiId)) {
-			Optional<BazaarProduct> product = hypixelDataSource.getBazaarItem(skyBlockApiId);
+		if (required > 0 && this.skyBlock().getHypixelDataSource().hasBazaarItem(skyBlockApiId)) {
+			Optional<BazaarProduct> product = this.skyBlock().getHypixelDataSource().getBazaarItem(skyBlockApiId);
 			if (product.isEmpty()) {
 				lines.add(Component.literal("Bazaar item error.").withStyle(ChatFormatting.RED));
 				return;

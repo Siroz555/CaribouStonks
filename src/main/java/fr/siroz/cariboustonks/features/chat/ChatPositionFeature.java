@@ -10,7 +10,6 @@ import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
 import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
@@ -58,7 +57,7 @@ public class ChatPositionFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().uiAndVisuals.sharedPositionWaypoint.enabled;
+		return this.skyBlock().location().onSkyBlock() && this.config().uiAndVisuals.sharedPositionWaypoint.enabled;
 	}
 
 	@EventHandler(event = "ChatEvents.MESSAGE_RECEIVE_EVENT")
@@ -94,7 +93,7 @@ public class ChatPositionFeature extends Feature {
 			Position position = Position.of(source.getPosition());
 			String area = "";
 			if (this.config().uiAndVisuals.sharedPositionWaypoint.shareWithArea) {
-				area = " | " + SkyBlockAPI.getArea().orElse("");
+				area = " | " + this.skyBlock().getArea().orElse("");
 			}
 			String message = position.asChatCoordinates() + area;
 			PlayerContext.sendChatToServer(message, false);

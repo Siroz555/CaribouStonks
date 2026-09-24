@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.config.ConfigValue;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.TextHud;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
@@ -56,7 +56,7 @@ public class RagnarockAxeFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().combat.ragAxe.enabled;
+		return this.skyBlock().location().onSkyBlock() && this.config().combat.ragAxe.enabled;
 	}
 
 	@EventHandler(event = "NetworkEvents.PLAY_SOUND_PACKET")
@@ -68,7 +68,7 @@ public class RagnarockAxeFeature extends Feature {
 		ItemStack held = PlayerContext.getHeldItem();
 		if (held == null || held.isEmpty()) return;
 
-		if (SkyBlockAPI.getSkyBlockItemId(held).equals(RAGNAROCK_AXE_ITEM_ID)) {
+		if (SkyBlockItems.getSkyBlockItemId(held).equals(RAGNAROCK_AXE_ITEM_ID)) {
 			double strength = getStrength(held);
 			// Après avoir récupéré la Strength sur l'axe,
 			// il faut s'assurer que celle-ci est bien un nombre valide,

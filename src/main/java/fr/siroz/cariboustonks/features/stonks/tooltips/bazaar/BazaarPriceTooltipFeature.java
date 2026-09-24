@@ -1,15 +1,12 @@
 package fr.siroz.cariboustonks.features.stonks.tooltips.bazaar;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigValue;
 import fr.siroz.cariboustonks.core.component.TooltipAppenderComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.core.skyblock.AttributeAPI;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.features.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.StonksUtils;
@@ -28,11 +25,8 @@ public class BazaarPriceTooltipFeature extends Feature {
 	private final ConfigValue<Boolean> showTotalInsteadPressingShift = ConfigValue.of(
 			() -> this.config().general.stonks.showTotalTooltipPriceInsteadShift
 	);
-	private final HypixelDataSource hypixelDataSource;
 
 	public BazaarPriceTooltipFeature(int priority) {
-		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
-
 		this.addComponent(TooltipAppenderComponent.class, TooltipAppenderComponent.builder()
 				.priority(priority)
 				.trait(MatcherTrait.empty())
@@ -42,25 +36,25 @@ public class BazaarPriceTooltipFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().general.stonks.bazaarTooltipPrice;
+		return this.skyBlock().location().onSkyBlock() && this.config().general.stonks.bazaarTooltipPrice;
 	}
 
 	private void appendToTooltip(@Nullable Slot focusedSlot, @NonNull ItemStack item, @NonNull List<Component> lines) {
-		String skyBlockApiId = SkyBlockAPI.getSkyBlockApiId(item);
+		String skyBlockApiId = SkyBlockItems.getSkyBlockApiId(item);
 		// Fix - The Foraging Update 0.23 - HuntingBox, Attribute Menu & Fusion Machine - Shard API ID Hypixel wtf
-		skyBlockApiId = AttributeAPI.getSkyBlockApiIdFromNewShard(skyBlockApiId, item, lines);
+		skyBlockApiId = SkyBlockItems.resolveAttributeApiId(skyBlockApiId, item, lines);
 		// Fix - end
 
-		if (!hypixelDataSource.hasBazaarItem(skyBlockApiId)) {
+		if (!this.skyBlock().getHypixelDataSource().hasBazaarItem(skyBlockApiId)) {
 			return;
 		}
 
-		if (hypixelDataSource.isBazaarInUpdate()) {
+		if (this.skyBlock().getHypixelDataSource().isBazaarInUpdate()) {
 			lines.add(Component.literal("Bazaar is currently updating...").withStyle(ChatFormatting.RED));
 			return;
 		}
 
-		Optional<BazaarProduct> product = hypixelDataSource.getBazaarItem(skyBlockApiId);
+		Optional<BazaarProduct> product = this.skyBlock().getHypixelDataSource().getBazaarItem(skyBlockApiId);
 		if (product.isEmpty()) {
 			lines.add(Component.literal("Bazaar item error.").withStyle(ChatFormatting.RED));
 			return;

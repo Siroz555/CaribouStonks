@@ -1,10 +1,8 @@
 package fr.siroz.cariboustonks.features.ui;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.core.mod.ModDataSource;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockEnchantment;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
 import fr.siroz.cariboustonks.util.ItemUtils;
@@ -39,8 +37,6 @@ import org.jspecify.annotations.Nullable;
  */
 public class ColoredEnchantmentFeature extends Feature {
 
-	private final ModDataSource modDataSource;
-
 	private final BooleanSupplier configShowMaxEnchants =
 			() -> this.config().uiAndVisuals.coloredEnchantment.showMaxEnchants;
 
@@ -48,13 +44,12 @@ public class ColoredEnchantmentFeature extends Feature {
 			() -> this.config().uiAndVisuals.coloredEnchantment.showGoodEnchants;
 
 	public ColoredEnchantmentFeature() {
-		this.modDataSource = CaribouStonks.mod().getModDataSource();
 		GuiEvents.TOOLTIP_APPENDER_EVENT.register(this::onTooltipLine);
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && (configShowMaxEnchants.getAsBoolean() || configShowGoodEnchants.getAsBoolean());
+		return this.skyBlock().location().onSkyBlock() && (configShowMaxEnchants.getAsBoolean() || configShowGoodEnchants.getAsBoolean());
 	}
 
 	@Nullable
@@ -73,7 +68,7 @@ public class ColoredEnchantmentFeature extends Feature {
 		Object2IntMap<String> goodEnchantmentColors = new Object2IntOpenHashMap<>();
 		for (String id : enchantments.keySet()) {
 
-			SkyBlockEnchantment enchantment = modDataSource.getSkyBlockEnchantment(id);
+			SkyBlockEnchantment enchantment = SkyBlockItemRegistry.getEnchantmentById(id);
 			int level = enchantments.getIntOr(id, 0);
 			if (enchantment != null && enchantment.isGoodOrMaxLevel(level) && level > 0) {
 

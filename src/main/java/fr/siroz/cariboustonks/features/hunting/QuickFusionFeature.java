@@ -5,7 +5,6 @@ import fr.siroz.cariboustonks.core.component.KeybindComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
 import fr.siroz.cariboustonks.core.module.input.KeyBind;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.client.gui.screens.Screen;
@@ -25,7 +24,7 @@ public class QuickFusionFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock();
+		return this.skyBlock().location().onSkyBlock();
 	}
 
 	private void onFusionKey(Screen screen, Slot slot) {

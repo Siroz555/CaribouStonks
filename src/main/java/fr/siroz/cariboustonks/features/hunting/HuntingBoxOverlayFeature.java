@@ -1,17 +1,14 @@
 package fr.siroz.cariboustonks.features.hunting;
 
-import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
-import fr.siroz.cariboustonks.core.mod.ModDataSource;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
-import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarItemAnalytics;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarPriceType;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.ItemUtils;
@@ -40,15 +37,9 @@ public class HuntingBoxOverlayFeature extends Feature {
 	private static final int START_Y = 20;
 	private static final int LINE_HEIGHT = 16; // 12
 
-	private final ModDataSource modDataSource;
-	private final HypixelDataSource hypixelDataSource;
-
 	private final List<Line> lines = new ArrayList<>();
 
 	public HuntingBoxOverlayFeature() {
-		this.hypixelDataSource = CaribouStonks.skyBlock().getHypixelDataSource();
-		this.modDataSource = CaribouStonks.mod().getModDataSource();
-
 		ScreenEvents.AFTER_INIT.register((_, screen, _, _) -> {
 			ScreenEvents.afterExtract(screen).register(this::render);
 			ScreenEvents.remove(screen).register(_ -> this.lines.clear());
@@ -62,7 +53,7 @@ public class HuntingBoxOverlayFeature extends Feature {
 
 	@Override
 	public boolean isEnabled() {
-		return SkyBlockAPI.isOnSkyBlock() && this.config().hunting.huntingBoxOverlay.enabled;
+		return this.skyBlock().location().onSkyBlock() && this.config().hunting.huntingBoxOverlay.enabled;
 	}
 
 	@EventHandler(event = "ScreenEvents.afterRender")
@@ -97,7 +88,7 @@ public class HuntingBoxOverlayFeature extends Feature {
 			if (StonksUtils.isEdgeSlot(entry.getIntKey(), 6)) continue;
 
 			Component name = itemStack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty());
-			SkyBlockAttribute attribute = modDataSource.getAttributeByShardName(name.getString());
+			SkyBlockAttribute attribute = SkyBlockItemRegistry.getAttributeByShardName(name.getString());
 			// Non connu par le mod
 			if (attribute != null) {
 				// Connu par le mod, handle les infos
@@ -167,7 +158,7 @@ public class HuntingBoxOverlayFeature extends Feature {
 
 	private double getBazaarPrice(@NonNull String skyBlockId) {
 		boolean useBuyPrice = this.config().hunting.huntingBoxOverlay.priceType == BazaarPriceType.BUY;
-		return hypixelDataSource.getBazaarItem(skyBlockId)
+		return this.skyBlock().getHypixelDataSource().getBazaarItem(skyBlockId)
 				.map(useBuyPrice ? BazaarItemAnalytics.BUY : BazaarItemAnalytics.SELL)
 				.orElse(0.0);
 	}
