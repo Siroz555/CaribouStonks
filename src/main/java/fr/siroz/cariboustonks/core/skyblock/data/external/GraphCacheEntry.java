@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.core.skyblock.data.generic;
+package fr.siroz.cariboustonks.core.skyblock.data.external;
 
 import java.time.Duration;
 import java.time.Instant;

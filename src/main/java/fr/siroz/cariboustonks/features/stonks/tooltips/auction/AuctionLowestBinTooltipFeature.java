@@ -35,11 +35,11 @@ public class AuctionLowestBinTooltipFeature extends Feature {
 	private void appendToTooltip(@Nullable Slot focusedSlot, @NonNull ItemStack item, @NonNull List<Component> lines) {
 		String neuId = SkyBlockItems.getNeuId(item);
 		ItemLookupKey key = ItemLookupKey.ofNeuId(neuId);
-		if (!this.skyBlock().getGenericDataSource().hasLowestBin(key)) {
+		if (!this.skyBlock().getExternalDataSource().hasLowestBin(key)) {
 			return;
 		}
 
-		Optional<Double> lowestBin = this.skyBlock().getGenericDataSource().getLowestBin(key);
+		Optional<Double> lowestBin = this.skyBlock().getExternalDataSource().getLowestBin(key);
 		if (lowestBin.isEmpty() || lowestBin.get() <= 0) {
 			lines.add(Component.literal("Auction API error.").withStyle(ChatFormatting.RED));
 			return;

@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.screens.stonks;
 
 import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.module.color.Colors;
-import fr.siroz.cariboustonks.core.skyblock.data.generic.AuctionStatistics;
+import fr.siroz.cariboustonks.core.skyblock.data.external.AuctionStatistics;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import net.minecraft.ChatFormatting;

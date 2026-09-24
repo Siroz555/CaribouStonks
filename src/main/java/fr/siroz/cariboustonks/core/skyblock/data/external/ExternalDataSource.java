@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.core.skyblock.data.generic;
+package fr.siroz.cariboustonks.core.skyblock.data.external;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -30,7 +30,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
- * GenericDataSource
+ * ExternalDataSource
  * <p>
  * <h3>Auction House Data</h3>
  * Moulberry (NEU) > Elite's API Endpoints.
@@ -40,7 +40,7 @@ import org.jspecify.annotations.Nullable;
  * <a href="https://api.eliteskyblock.com/">Elite API</a>
  * Credits to {@code ptlthg} for the API backend/access
  */
-public final class GenericDataSource {
+public final class ExternalDataSource {
 
 	// Price History Mapping (Elite's History API)
 	private static final String PRICE_HISTORY_BASE_URL = "https://api.eliteskyblock.com/resources/";
@@ -52,7 +52,7 @@ public final class GenericDataSource {
 
 	private boolean lowestBinsError = false;
 
-	public GenericDataSource() {
+	public ExternalDataSource() {
 		ClientLifecycleEvents.CLIENT_STARTED.register(_ -> TickScheduler.getInstance().runRepeating(() -> {
 			if (ConfigManager.getConfig().general.internal.fetchAuctionData) {
 				this.updateLowestBins().thenRun(() -> {

@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.core.skyblock;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.skyblock.data.generic.GenericDataSource;
+import fr.siroz.cariboustonks.core.skyblock.data.external.ExternalDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelPartyManager;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.ElectionResult;
@@ -34,7 +34,7 @@ public final class SkyBlockManager {
 
 	private final HypixelDataSource hypixelDataSource;
 	private final HypixelPartyManager hypixelPartyManager;
-	private final GenericDataSource genericDataSource;
+	private final ExternalDataSource externalDataSource;
 
 	private final DungeonManager dungeonManager;
 	private final SlayerManager slayerManager;
@@ -46,7 +46,7 @@ public final class SkyBlockManager {
 	public SkyBlockManager() {
 		this.hypixelDataSource = new HypixelDataSource();
 		this.hypixelPartyManager = new HypixelPartyManager();
-		this.genericDataSource = new GenericDataSource();
+		this.externalDataSource = new ExternalDataSource();
 		this.dungeonManager = new DungeonManager(this);
 		this.slayerManager = new SlayerManager(this);
 		this.tabListManager = new TabListManager(this);
@@ -129,12 +129,12 @@ public final class SkyBlockManager {
 	}
 
 	/**
-	 * Retrieves the {@link GenericDataSource} instance.
+	 * Retrieves the {@link ExternalDataSource} instance.
 	 *
-	 * @return the {@link GenericDataSource} instance
+	 * @return the {@link ExternalDataSource} instance
 	 */
-	public GenericDataSource getGenericDataSource() {
-		return genericDataSource;
+	public ExternalDataSource getExternalDataSource() {
+		return externalDataSource;
 	}
 
 	/**

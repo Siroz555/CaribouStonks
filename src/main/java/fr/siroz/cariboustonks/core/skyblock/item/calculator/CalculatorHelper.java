@@ -86,7 +86,7 @@ final class CalculatorHelper {
 				.getBazaarItem(skyBlockId)
 				.map(BazaarProduct::buyPrice)
 				.filter(d -> d > 0)
-				.orElseGet(() -> CaribouStonks.skyBlock().getGenericDataSource()
+				.orElseGet(() -> CaribouStonks.skyBlock().getExternalDataSource()
 						.getLowestBin(ItemLookupKey.ofNeuId(skyBlockId.replace(":", "-")))
 						.filter(d -> d > 0)
 						.orElse(0.0D)
