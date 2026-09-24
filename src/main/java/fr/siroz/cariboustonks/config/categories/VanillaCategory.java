@@ -75,7 +75,7 @@ public class VanillaCategory extends AbstractCategory {
 								Component.literal("In-game Zoom Options")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Zoom"))
+								.name(Component.literal("Enable Zoom"))
 								.description(OptionDescription.of(
 										Component.literal("If enabled, hold a key to toggle the zoom in-game. (Default to 'C')"),
 										Component.literal(SPACE + "You can change the Key Bind in the Minecraft Options.").withStyle(ChatFormatting.ITALIC)))

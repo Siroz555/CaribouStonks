@@ -114,7 +114,7 @@ public class SlayerCategory extends AbstractCategory {
 						.description(OptionDescription.of(
 								Component.literal("Control different statistics during Quest/Boss Fight")))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Slayer | Show Statistics Breakdown"))
+								.name(Component.literal("Slayer - Show Statistics Breakdown"))
 								.description(OptionDescription.of(
 										Component.literal("When you kill your Boss, show a message with statistics:"),
 										Component.literal(SPACE),
@@ -127,7 +127,7 @@ public class SlayerCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Slayer | Show Statistics Average").append(BETA))
+								.name(Component.literal("Slayer - Show Statistics Average").append(BETA))
 								.description(OptionDescription.of(
 										Component.literal("When you kill your Boss, show a message with average statistics:"),
 										Component.literal(SPACE),
