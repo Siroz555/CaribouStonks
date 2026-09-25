@@ -3,6 +3,7 @@ package fr.siroz.cariboustonks.core.skyblock.item.calculator;
 import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.ItemMetadata;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyblockItemStack;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.Books;
@@ -221,7 +222,7 @@ public final class ItemValueCalculator {
 		return (ctx, acc) -> {
 			if (ctx.metadata().reforge().isPresent()) {
 				String reforge = ctx.metadata().reforge().get();
-				String apiId = SkyBlockConstants.REFORGES.getOrDefault(reforge, "");
+				String apiId = SkyBlockItemRegistry.getReforgeIdOrDefault(reforge, "");
 				// Ça évite de recup le prix d'une reforge de base (non présente au Bazaar).
 				double price = apiId.isEmpty()
 						? 0 :

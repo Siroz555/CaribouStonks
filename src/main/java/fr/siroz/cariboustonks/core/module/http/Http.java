@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
@@ -26,6 +27,7 @@ public final class Http {
 
 	private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder()
 			.connectTimeout(Duration.ofSeconds(10))
+			.followRedirects(HttpClient.Redirect.NORMAL)
 			.build();
 
 	private Http() {
@@ -52,11 +54,12 @@ public final class Http {
 					.header("User-Agent", USER_AGENT)
 					.version(HttpClient.Version.HTTP_2)
 					.uri(URI.create(url))
+					.timeout(Duration.ofSeconds(15))
 					.build();
 
 			java.net.http.HttpResponse<InputStream> response = HTTP_CLIENT.send(request, BodyHandlers.ofInputStream());
 			InputStream decodedInputStream = getDecodedInputStream(response);
-			String body = new String(decodedInputStream.readAllBytes());
+			String body = new String(decodedInputStream.readAllBytes(), StandardCharsets.UTF_8);
 
 			return new HttpResponse(response.statusCode(), body);
 		} catch (Exception exception) {
@@ -90,6 +93,7 @@ public final class Http {
 					.header("User-Agent", USER_AGENT)
 					.version(HttpClient.Version.HTTP_2)
 					.uri(URI.create(url))
+					.timeout(Duration.ofSeconds(15))
 					.build();
 
 			java.net.http.HttpResponse<InputStream> response = HTTP_CLIENT.send(request, BodyHandlers.ofInputStream());

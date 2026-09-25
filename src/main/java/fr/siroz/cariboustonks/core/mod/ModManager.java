@@ -27,12 +27,10 @@ import org.jspecify.annotations.NonNull;
 public final class ModManager {
 
 	private final CrashManager crashManager;
-	private final ModDataSource modDataSource;
 	private final SecretModFeatures secretModFeatures;
 
 	public ModManager() {
 		this.crashManager = new CrashManager();
-		this.modDataSource = new ModDataSource();
 		this.secretModFeatures = new SecretModFeatures();
 
 		new UpdateChecker();
@@ -55,15 +53,6 @@ public final class ModManager {
 	 */
 	public @NonNull CrashManager getCrashManager() {
 		return crashManager;
-	}
-
-	/**
-	 * Retrieves the {@link ModDataSource} instance.
-	 *
-	 * @return the {@link ModDataSource} instance
-	 */
-	public @NonNull ModDataSource getModDataSource() {
-		return modDataSource;
 	}
 
 	/**
@@ -93,15 +82,15 @@ public final class ModManager {
 								.executes(ClientContext.openScreen(() -> HeldItemViewConfigScreen.create(null, InteractionHand.OFF_HAND)))))
 				.then(ClientCommands.literal("reload")
 						.executes(context -> {
-							context.getSource().sendError(Component.literal("Use /cariboustonks reload <items/attributes>"));
+							context.getSource().sendError(Component.literal("Use /cariboustonks reload <items/repository>"));
 							return 1;
 						})
 						.then(ClientCommands.literal("items").executes(_ -> {
 							CaribouStonks.skyBlock().getHypixelDataSource().reload();
 							return 1;
 						}))
-						.then(ClientCommands.literal("attributes").executes(_ -> {
-							modDataSource.reload();
+						.then(ClientCommands.literal("repository").executes(_ -> {
+							CaribouStonks.skyBlock().getRepositoryDataSource().reload();
 							return 1;
 						})));
 

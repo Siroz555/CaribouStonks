@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
+import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -17,6 +18,7 @@ public final class HypixelAPIFixer {
 	private static final Pattern ENCHANTMENT_PATTERN = Pattern.compile("^ENCHANTMENT_[A-Z_]+_\\d+$");
 	private static final Pattern ESSENCE_PATTERN = Pattern.compile("^ESSENCE_[A-Z]+$");
 	private static final Pattern SHARD_PATTERN = Pattern.compile("^SHARD_[A-Z]+(_[A-Z]+)*$");
+	private static final Pattern FACTION_RABBIT_PATTERN = Pattern.compile("^FACTION_RABBIT_[A-Z]+$");
 
 	private int totalBlacklisted = 0;
 
@@ -55,6 +57,10 @@ public final class HypixelAPIFixer {
 
 	public boolean isShard(@NonNull String inputId) {
 		return SHARD_PATTERN.matcher(inputId).matches();
+	}
+
+	public boolean isFactionRabbit(@NonNull String inputId) {
+		return FACTION_RABBIT_PATTERN.matcher(inputId).matches();
 	}
 
 	public @NonNull SkyBlockItemData createEnchant(@NonNull String skyBlockIdEnchantment) {
@@ -119,6 +125,25 @@ public final class HypixelAPIFixer {
 		}
 
 		return null;
+	}
+
+	public @NonNull SkyBlockItemData createFactionRabbit(@NonNull String skyBlockIdFactionRabbit) {
+		String material = "RABBIT_HIDE";
+		String name = StonksUtils.capitalize(skyBlockIdFactionRabbit);
+		return new SkyBlockItemData(
+				skyBlockIdFactionRabbit,
+				false,
+				Optional.of(material),
+				Optional.empty(),
+				name,
+				Rarity.SPECIAL,
+				Optional.empty(),
+				Optional.empty(),
+				OptionalDouble.empty(),
+				Optional.empty(),
+				Optional.empty(),
+				Optional.empty()
+		);
 	}
 
 	/**

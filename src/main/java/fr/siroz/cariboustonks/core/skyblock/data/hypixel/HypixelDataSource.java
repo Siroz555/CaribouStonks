@@ -2,7 +2,6 @@ package fr.siroz.cariboustonks.core.skyblock.data.hypixel;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.config.ConfigManager;
-import fr.siroz.cariboustonks.core.mod.ModDataSource;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
@@ -11,6 +10,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher.BazaarFetcher;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher.ElectionFetcher;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.fetcher.ItemsFetcher;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
@@ -62,7 +62,6 @@ public final class HypixelDataSource {
 	private static final Cooldown RELOAD_COOLDOWN = Cooldown.of(30, TimeUnit.SECONDS);
 
 	private final HypixelAPIFixer apiFixer = new HypixelAPIFixer();
-	private final ModDataSource modDataSource;
 
 	private final ItemsFetcher itemsFetcher;
 	private final BazaarFetcher bazaarFetcher;
@@ -71,9 +70,7 @@ public final class HypixelDataSource {
 	private boolean hasCalledFixMissing = false;
 
 	public HypixelDataSource() {
-		this.modDataSource = CaribouStonks.mod().getModDataSource();
-		// Fetchers
-		this.itemsFetcher = new ItemsFetcher(this, modDataSource, apiFixer);
+		this.itemsFetcher = new ItemsFetcher(this, apiFixer);
 		this.bazaarFetcher = new BazaarFetcher(this, 5, () -> ConfigManager.getConfig().general.internal.fetchBazaarData);
 		this.electionFetcher = new ElectionFetcher();
 		// Event listener
@@ -204,7 +201,7 @@ public final class HypixelDataSource {
 			// ------------------------------------------------------
 			Optional<String> hypixelMaterial = skyBlockItem.material();
 			if (!hasItemModelApplied && hypixelMaterial.isPresent()) {
-				String minecraftId = modDataSource.getMinecraftId(hypixelMaterial.get());
+				String minecraftId = SkyBlockItemRegistry.getMinecraftIdFromHypixelMaterial(hypixelMaterial.get());
 
 				if (minecraftId == null || minecraftId.equals("NO_MATCH")) return fallback;
 
@@ -271,10 +268,6 @@ public final class HypixelDataSource {
 	 */
 	@NonNull
 	public List<SkyBlockItemData> getSkyBlockItems() throws HypixelDataException {
-		if (modDataSource.isItemsMappingError()) {
-			throw new HypixelDataException(Component.nullToEmpty("Unable to map SkyBlock Items into Minecraft."));
-		}
-
 		if (!itemsFetcher.isLastFetchSuccessful()) {
 			throw new HypixelDataException(Component.nullToEmpty("Unable to fetch SkyBlock Items from Hypixel API."));
 		}
@@ -310,6 +303,7 @@ public final class HypixelDataSource {
 		int fixedEnchants = 0;
 		int fixedEssences = 0;
 		int fixedShards = 0;
+		int fixedFactionRabbit = 0;
 
 		for (String bazaarProductId : bazaarFetcher.getBazaarSnapshot().keySet()) {
 			if (itemsFetcher.getSkyBlockItemsSnapshot().containsKey(bazaarProductId)) continue;
@@ -329,14 +323,15 @@ public final class HypixelDataSource {
 						fixedShards++;
 					} else {
 						if (DeveloperTools.isInDevelopment()) {
-							CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create {} Shard! Not registered in ModDataSource.",
-									bazaarProductId);
+							CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to create {} Shard! Not registered.", bazaarProductId);
 						}
 					}
+				} else if (apiFixer.isFactionRabbit(bazaarProductId)) {
+					itemsFetcher.putItem(bazaarProductId, apiFixer.createFactionRabbit(bazaarProductId));
+					fixedFactionRabbit++;
 				} else {
 					if (DeveloperTools.isInDevelopment()) {
-						CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to fix {}. Not identified!",
-								bazaarProductId);
+						CaribouStonks.LOGGER.warn("[HypixelDataSource] Unable to fix {}. Not identified!", bazaarProductId);
 					}
 				}
 			} catch (Throwable ex) {
@@ -347,26 +342,11 @@ public final class HypixelDataSource {
 		}
 
 		if (DeveloperTools.isInDevelopment()) {
-			debugDeveloperMode(fixedEnchants, fixedEssences, fixedShards, apiFixer.getTotalBlacklisted());
+			debugDeveloperMode(fixedEnchants, fixedEssences, fixedShards, fixedFactionRabbit, apiFixer.getTotalBlacklisted());
 		}
 	}
 
-	private void debugDeveloperMode(int fixedEnchants, int fixedEssences, int fixedShards, int totalBlacklisted) {
-		List<String> hypixelMaterials = itemsFetcher.getSkyBlockItemsSnapshot().values().stream()
-				.map(SkyBlockItemData::material)
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.collect(Collectors.toSet())
-				.stream()
-				.toList();
-
-		for (String material : hypixelMaterials) {
-			if (!modDataSource.containsItem(material)) {
-				CaribouStonks.LOGGER.warn(
-						"[HypixelDataSource] (Minecraft Ids Mapping) -> {} is not registered!", material);
-			}
-		}
-
+	private void debugDeveloperMode(int fixedEnchants, int fixedEssences, int fixedShards, int fixedFactionRabbit, int totalBlacklisted) {
 		List<String> itemModels = itemsFetcher.getSkyBlockItemsSnapshot().values().stream()
 				.map(SkyBlockItemData::itemModel)
 				.filter(Optional::isPresent)
@@ -377,7 +357,7 @@ public final class HypixelDataSource {
 
 		CaribouStonks.LOGGER.info("[HypixelDataSource] {} item_model is present", itemModels.size());
 		CaribouStonks.LOGGER.info("[HypixelDataSource] {} items are blacklisted", totalBlacklisted);
-		CaribouStonks.LOGGER.info("[HypixelDataSource] Fixed {} enchants, {} essences and {} Shards from Bazaar to SkyBlock Items",
-				fixedEnchants, fixedEssences, fixedShards);
+		CaribouStonks.LOGGER.info("[HypixelDataSource] Fixed {} enchants, {} essences, {} Shards and {} Faction Rabbit from Bazaar to SkyBlock Items",
+				fixedEnchants, fixedEssences, fixedShards, fixedFactionRabbit);
 	}
 }

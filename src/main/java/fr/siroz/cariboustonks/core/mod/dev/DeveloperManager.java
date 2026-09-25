@@ -6,6 +6,8 @@ import com.mojang.serialization.JsonOps;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.infrastructure.json.GsonProvider;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
+import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
+import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabLine;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabWidget;
@@ -25,6 +27,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -72,7 +76,8 @@ public final class DeveloperManager {
 						.then(dumpTabListCommand())
 						.then(dumpHeldItemSimpleCommand())
 						.then(dumpHeldItemCommand())
-						.then(dumpArmorStandHeadTextures()))
+						.then(dumpArmorStandHeadTextures())
+						.then(dumpLegacyHypixelMaterial()))
 		));
 	}
 
@@ -210,6 +215,25 @@ public final class DeveloperManager {
 				}
 			}
 			ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("--")));
+			return Command.SINGLE_SUCCESS;
+		});
+	}
+
+	private LiteralArgumentBuilder<FabricClientCommandSource> dumpLegacyHypixelMaterial() {
+		return ClientCommands.literal("dumpHypixelMaterial").executes(ctx -> {
+			List<String> hypixelMaterials = CaribouStonks.skyBlock().getHypixelDataSource().getSkyBlockItems().stream()
+					.map(SkyBlockItemData::material)
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.collect(Collectors.toSet())
+					.stream()
+					.toList();
+
+			for (String material : hypixelMaterials) {
+				if (SkyBlockItemRegistry.getMinecraftIdFromHypixelMaterial(material) == null) {
+					ctx.getSource().sendFeedback(Component.literal("[Minecraft Ids Mapping] " + material + " is not registered!"));
+				}
+			}
 			return Command.SINGLE_SUCCESS;
 		});
 	}
