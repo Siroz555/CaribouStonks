@@ -58,6 +58,9 @@ public class GeneralConfig {
 		public boolean useNetworthItemValue = true;
 
 		@SerialEntry
+		public boolean autoCopyLowestBinPrice = false;
+
+		@SerialEntry
 		public ItemValueViewer itemValueViewer = new ItemValueViewer();
 
 		@SerialEntry

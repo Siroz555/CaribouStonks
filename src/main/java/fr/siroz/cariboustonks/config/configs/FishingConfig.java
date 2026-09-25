@@ -17,10 +17,19 @@ public class FishingConfig {
 	public boolean hotspotHighlight = false;
 
 	@SerialEntry
+	public boolean hotspotHighlightFoundAnnouncer = false;
+
+	@SerialEntry
+	public boolean hotspotHighlightGoneAnnouncer = false;
+
+	@SerialEntry
 	public boolean rareSeaCreatureWarning = false;
 
 	@SerialEntry
 	public boolean rareSeaCreatureSound = false;
+
+	@SerialEntry
+	public boolean rareSeaCreaturePartyAnnouncer = false;
 
 	@SerialEntry
 	public LotusAtoll lotusAtoll = new LotusAtoll();

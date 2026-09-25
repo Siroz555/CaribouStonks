@@ -35,8 +35,8 @@ public final class HypixelAPIFixer {
 		}
 
 		if (skyBlockItemData != null) {
-			boolean soulbound = skyBlockItemData.soulbound();
-			if (soulbound) {
+			// Ignore les items soulbound qui n'ont pas de NPC Price ou juste soulbound
+			if (skyBlockItemData.soulbound() && skyBlockItemData.npcSellPrice().isEmpty()) {
 				totalBlacklisted++;
 				return true;
 			}

@@ -4,6 +4,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.skyblock.data.generic.GenericDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
+import fr.siroz.cariboustonks.core.skyblock.network.NetworkPartyManager;
 import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonManager;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabListManager;
@@ -29,6 +30,7 @@ public final class SkyBlockManager {
 	private final HypixelDataSource hypixelDataSource;
 	private final GenericDataSource genericDataSource;
 
+	private final NetworkPartyManager networkPartyManager;
 	private final DungeonManager dungeonManager;
 	private final SlayerManager slayerManager;
 	private final TabListManager tabListManager;
@@ -38,6 +40,7 @@ public final class SkyBlockManager {
 		this.hypixelDataSource = new HypixelDataSource();
 		this.genericDataSource = new GenericDataSource();
 		// SkyBlock Managers
+		this.networkPartyManager = new NetworkPartyManager();
 		this.dungeonManager = new DungeonManager();
 		this.slayerManager = new SlayerManager();
 		this.tabListManager = new TabListManager();
@@ -49,7 +52,12 @@ public final class SkyBlockManager {
 		var modDataSource = CaribouStonks.mod().getModDataSource();
 
 		// Bootstrap SkyBlockAPI dependencies
-		SkyBlockAPI.bootstrap(hypixelDataSource::getElection, modDataSource::getAttributeByShardName);
+		SkyBlockAPI.bootstrap(
+				hypixelDataSource::getElection,
+				modDataSource::getAttributeByShardName,
+				networkPartyManager::isInParty,
+				networkPartyManager::getLeader
+		);
 
 		// Bootstrap AttributeAPI dependencies
 		AttributeAPI.bootstrap(modDataSource::getAttributeByShardName, modDataSource::getAttributeById);

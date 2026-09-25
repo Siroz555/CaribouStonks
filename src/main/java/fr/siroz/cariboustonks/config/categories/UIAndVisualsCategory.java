@@ -99,7 +99,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Deployable HUD"))
+								.name(Component.literal("Deployable - HUD"))
 								.description(OptionDescription.of(
 										Component.literal("If Deployable is enabled, this allows you to view all active deployable close to you along with their respective timer."),
 										Component.literal(SPACE + "Only one type of deployable can be displayed at a time. However, multiple types may still appear, such as a Black Hole with a Plasmaflux Power Orb.").withStyle(ChatFormatting.YELLOW)))
@@ -109,7 +109,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Detect > Power Orbs Deployable"))
+								.name(Component.literal("Deployable - Detect > Power Orbs"))
 								.description(OptionDescription.of(
 										Component.literal("If Deployable is enabled, this allows you to detect Power Orbs:"),
 										Component.literal(SPACE),
@@ -126,7 +126,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Detect > Flares Deployable").append(BETA))
+								.name(Component.literal("Deployable - Detect > Flares").append(BETA))
 								.description(OptionDescription.of(
 										Component.literal("If Deployable is enabled, this allows you to detect Flares:"),
 										Component.literal(SPACE),
@@ -139,7 +139,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Detect > Personal Deployable"))
+								.name(Component.literal("Deployable - Detect > Personal"))
 								.description(OptionDescription.of(
 										Component.literal("If Deployable is enabled, this allows you to detect Personal Deployable:"),
 										Component.literal(SPACE),
@@ -169,7 +169,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Mob Tracking Boss Bar"))
+								.name(Component.literal("Mob Tracking - Boss Bar"))
 								.description(OptionDescription.of(
 										Component.literal("If Mob Tracking is enabled, this allows you to view the highest Mob Tracking in a custom Boss Bar.")))
 								.binding(defaults.uiAndVisuals.mobTracking.showInBossBar,
@@ -178,7 +178,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Mob Tracking HUD"))
+								.name(Component.literal("Mob Tracking - HUD"))
 								.description(OptionDescription.of(
 										Component.literal("If Mob Tracking is enabled, this allows you to view all Mob Tracking in a HUD.")))
 								.binding(defaults.uiAndVisuals.mobTracking.hud.showInHud,
@@ -226,7 +226,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(ButtonOption.createBuilder()
-								.name(Component.literal("Configure each tracked mob"))
+								.name(Component.literal("Mob Tracking - Configure each tracked mob"))
 								.text(Component.literal("Open"))
 								.action((screen, _) -> this.openScreen(MobTrackingScreen.create(screen)))
 								.build())
@@ -382,7 +382,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								Component.literal("Colored enchantments in the item tooltips.")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show max Enchantments"))
+								.name(Component.literal("Colored Enchantments - Show max"))
 								.description(OptionDescription.of(
 										Component.literal("Show max Enchantments with a color.")))
 								.binding(defaults.uiAndVisuals.coloredEnchantment.showMaxEnchants,
@@ -391,7 +391,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show max Enchantments in Rainbow"))
+								.name(Component.literal("Colored Enchantments - Show max in Rainbow"))
 								.description(OptionDescription.of(
 										Component.literal("Change the color of maxed enchantments to an" + SPACE),
 										AnimationUtils.applyRainbow("animated Rainbow gradient o/"),
@@ -402,7 +402,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Color>createBuilder()
-								.name(Component.literal("Max Enchantments Color"))
+								.name(Component.literal("Colored Enchantments - Max Color"))
 								.description(OptionDescription.of(
 										Component.literal("Change the color for the max Enchantments."),
 										Component.literal(SPACE + "Warning: If the Rainbow is activated, the color will not be applied.").withStyle(ChatFormatting.YELLOW)))
@@ -412,7 +412,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(ColorControllerBuilder::create)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Show good Enchantments"))
+								.name(Component.literal("Colored Enchantments - Show good"))
 								.description(OptionDescription.of(
 										Component.literal("Show good Enchantments with a color.")))
 								.binding(defaults.uiAndVisuals.coloredEnchantment.showGoodEnchants,
@@ -421,7 +421,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Color>createBuilder()
-								.name(Component.literal("Good Enchantments Color"))
+								.name(Component.literal("Colored Enchantments - Good Color"))
 								.description(OptionDescription.of(
 										Component.literal("Change the color for the good Enchantments.")))
 								.binding(defaults.uiAndVisuals.coloredEnchantment.goodEnchantsColor,

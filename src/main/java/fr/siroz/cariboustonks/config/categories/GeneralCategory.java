@@ -49,7 +49,7 @@ public class GeneralCategory extends AbstractCategory {
 						// Tooltips
 						.option(LabelOption.create(Component.literal("| Tooltips").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Bazaar Price"))
+								.name(Component.literal("Tooltip - Bazaar Price"))
 								.description(OptionDescription.of(
 										Component.literal("Displays item prices in its Tooltip. For the Bazaar, Buy-Order & Sell-Order will be added."),
 										Component.literal(SPACE + "§c§lNote: §fThe prices displayed can be interpreted both as Insta-Buy/Sell prices, or as the prices of the best orders when you create a Buy/Sell order."),
@@ -66,7 +66,7 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<BazaarTooltipPriceType>createBuilder()
-								.name(Component.literal("Bazaar Price - Type"))
+								.name(Component.literal("Tooltip - Bazaar Price - Type"))
 								.description(OptionDescription.of(
 										Component.literal("Select the display type."),
 										Component.literal(SPACE + "NORMAL :").withStyle(ChatFormatting.UNDERLINE),
@@ -81,7 +81,7 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createEnumCyclingController)
 								.build())
 						.option(Option.<TooltipPriceDisplayType>createBuilder()
-								.name(Component.literal("Bazaar Price - Format"))
+								.name(Component.literal("Tooltip - Bazaar Price - Format"))
 								.description(OptionDescription.of(
 										Component.literal("Select the format displayed for Bazaar prices."),
 										Component.empty()
@@ -102,7 +102,7 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createEnumCyclingController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Bazaar Price - Stats"))
+								.name(Component.literal("Tooltip - Bazaar Price - Stats"))
 								.description(OptionDescription.of(
 										Component.literal("Allows you to display advanced statistics on Bazaar product tooltips."),
 										Component.literal(SPACE + "Statistics displayed:").withStyle(ChatFormatting.UNDERLINE),
@@ -114,7 +114,7 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Bazaar Price - Show the total instead of pressing Shift"))
+								.name(Component.literal("Tooltip - Bazaar Price - Show the total instead of pressing Shift"))
 								.description(OptionDescription.of(
 										Component.literal("If this option is enabled, it allows you to view the total price directly, instead of pressing Shift.")))
 								.binding(defaults.general.stonks.showTotalTooltipPriceInsteadShift,
@@ -124,7 +124,7 @@ public class GeneralCategory extends AbstractCategory {
 								.build())
 						.option(LabelOption.create(Component.literal("")))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Auction Price"))
+								.name(Component.literal("Tooltip - Auction Price"))
 								.description(OptionDescription.of(
 										Component.literal("Displays the price of an item in its Tooltip.")))
 								.binding(defaults.general.stonks.auctionTooltipPrice,
@@ -140,7 +140,7 @@ public class GeneralCategory extends AbstractCategory {
 								.build())
 						.option(Option.<AuctionTooltipPriceType>createBuilder()
 								.available(false)
-								.name(Component.literal("Auction Price - Type"))
+								.name(Component.literal("Tooltip - Auction Price - Type"))
 								.description(OptionDescription.of(
 										Component.literal("Select the display type."),
 										Component.literal(SPACE + "LOWEST_BIN :").withStyle(ChatFormatting.UNDERLINE),
@@ -155,7 +155,7 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createEnumCyclingController)
 								.build())
 						.option(Option.<TooltipPriceDisplayType>createBuilder()
-								.name(Component.literal("Auction Price - Format"))
+								.name(Component.literal("Tooltip - Auction Price - Format"))
 								.description(OptionDescription.of(
 										Component.literal("Select the format displayed for Auction prices."),
 										Component.empty()
@@ -177,7 +177,7 @@ public class GeneralCategory extends AbstractCategory {
 								.build())
 						.option(LabelOption.create(Component.literal("")))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("NPC Sell Price"))
+								.name(Component.literal("Tooltip - NPC Sell Price"))
 								.description(OptionDescription.of(
 										Component.literal("Displays the NPC Sell Price of an item in its Tooltip.")))
 								.binding(defaults.general.stonks.npcTooltipPrice,
@@ -188,7 +188,7 @@ public class GeneralCategory extends AbstractCategory {
 						// Item Value
 						.option(LabelOption.create(Component.literal("| Item Value").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Estimated Item Value Tooltip"))
+								.name(Component.literal("Tooltip - Estimated Item Value"))
 								.description(OptionDescription.of(
 										Component.literal("Displays the Estimated Value of an item in its Tooltip.")))
 								.binding(defaults.general.stonks.itemValueTooltip,
@@ -245,13 +245,24 @@ public class GeneralCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Press ENTER to validate orders"))
+								.name(Component.literal("Bazaar - Press ENTER to validate orders"))
 								.description(OptionDescription.of(
 										Component.literal("Validate Buy/Sell orders by pressing"),
 										Component.literal("ENTER").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD)))
 								.binding(defaults.general.stonks.bazaarSignEditEnterValidation,
 										() -> current.general.stonks.bazaarSignEditEnterValidation,
 										newValue -> current.general.stonks.bazaarSignEditEnterValidation = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						// Auction House
+						.option(LabelOption.create(Component.literal("| Auction House").withStyle(ChatFormatting.BOLD)))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Auction House - Auto Copy Lowest BIN Price -1"))
+								.description(OptionDescription.of(
+										Component.literal("When you create an Auction, this automatically copies the Lowest BIN Price (minus 1) to your clipboard.")))
+								.binding(defaults.general.stonks.autoCopyLowestBinPrice,
+										() -> current.general.stonks.autoCopyLowestBinPrice,
+										newValue -> current.general.stonks.autoCopyLowestBinPrice = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(LabelOption.create(Component.literal("| Stonks Screen & Commands").withStyle(ChatFormatting.BOLD)))

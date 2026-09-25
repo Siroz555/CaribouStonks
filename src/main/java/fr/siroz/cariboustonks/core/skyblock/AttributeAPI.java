@@ -83,37 +83,52 @@ public final class AttributeAPI {
 			return getAttributeId(id, fallback);
 		}
 
-		switch (title) {
-			case FUSION_BOX, SHARD_FUSION, CONFIRM_FUSION -> {
-				String id = null;
-				for (Component line : lines) {
-					String lineText = line.getString();
-					if (lineText.isEmpty()) {
-						continue;
-					}
-
-					Matcher attributeRarityAndIdMatcher = RARITY_AND_ID_PATTERN.matcher(lineText);
-					if (attributeRarityAndIdMatcher.matches()) {
-						id = attributeRarityAndIdMatcher.group(2);
-						break;
-					}
+		if (title.contains(FUSION_BOX) || title.contains(SHARD_FUSION)) {
+			String id = null;
+			for (Component line : lines) {
+				String lineText = line.getString();
+				if (lineText.isEmpty()) {
+					continue;
 				}
 
-				return getAttributeId(id, fallback);
+				Matcher attributeRarityAndIdMatcher = RARITY_AND_ID_PATTERN.matcher(lineText);
+				if (attributeRarityAndIdMatcher.matches()) {
+					id = attributeRarityAndIdMatcher.group(2);
+					break;
+				}
 			}
-			default -> {
-				// Les rewards chest de Dungeon & Kuudra
-				if (SkyBlockConstants.DUNGEON_CHESTS.contains(title) || SkyBlockConstants.KUUDRA_CHESTS.contains(title)) {
-					String name = item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
-					Matcher matcher = SHARD_WITH_QUANTITY_PATTERN.matcher(name);
-					if (name.contains("Shard") && matcher.matches()) {
-						SkyBlockAttribute attribute = byName != null ? byName.apply(name) : null;
-						return attribute != null ? attribute.skyBlockApiId() : fallback;
-					}
+
+			return getAttributeId(id, fallback);
+		}
+
+		if (title.equals(CONFIRM_FUSION)) {
+			String id = null;
+			for (Component line : lines) {
+				String lineText = line.getString();
+				if (lineText.isEmpty()) {
+					continue;
 				}
-				return fallback;
+
+				Matcher attributeRarityAndIdMatcher = RARITY_AND_ID_PATTERN.matcher(lineText);
+				if (attributeRarityAndIdMatcher.matches()) {
+					id = attributeRarityAndIdMatcher.group(2);
+					break;
+				}
+			}
+
+			return getAttributeId(id, fallback);
+		}
+
+		// Les rewards chest de Dungeon & Kuudra
+		if (SkyBlockConstants.DUNGEON_CHESTS.contains(title) || SkyBlockConstants.KUUDRA_CHESTS.contains(title)) {
+			String name = item.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
+			Matcher matcher = SHARD_WITH_QUANTITY_PATTERN.matcher(name);
+			if (name.contains("Shard") && matcher.matches()) {
+				SkyBlockAttribute attribute = byName != null ? byName.apply(name) : null;
+				return attribute != null ? attribute.skyBlockApiId() : fallback;
 			}
 		}
+		return fallback;
 	}
 
 	public static @Nullable SkyBlockAttribute getAttributeByName(@Nullable String name) {

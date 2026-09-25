@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.core.module.cooldown.Cooldown;
 import fr.siroz.cariboustonks.core.module.input.KeyBind;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -40,7 +39,7 @@ public class QuickFusionFeature extends Feature {
 	private void handle(Screen screen, String expectedTitle, int slotIndex) {
 		if (!isEnabled()) return;
 		if (!(screen instanceof AbstractContainerScreen<?> container)) return;
-		if (!Objects.equals(container.getTitle().getString(), expectedTitle)) return;
+		if (!container.getTitle().getString().contains(expectedTitle)) return;
 
 		if (COOLDOWN.test()) {
 			ClientContext.handleMouseClick(container.getMenu().containerId, slotIndex);

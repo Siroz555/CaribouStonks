@@ -201,64 +201,43 @@ public class SkillsCategory extends AbstractCategory {
 								.build())
 						.option(LabelOption.create(Component.literal("| Second Life").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Spirit Mask - Used"))
+								.name(Component.literal("Second Life - Spirit/Bonzo/Phoenix - Used"))
 								.description(OptionDescription.of(
-										Component.literal("Shows a Title when the Spirit Mask is used.")))
-								.binding(defaults.combat.secondLife.spiritMaskUsed,
-										() -> current.combat.secondLife.spiritMaskUsed,
-										newValue -> current.combat.secondLife.spiritMaskUsed = newValue)
+										Component.literal("Shows a Title when a Second Life Ability is used.")))
+								.binding(defaults.combat.secondLife.used,
+										() -> current.combat.secondLife.used,
+										newValue -> current.combat.secondLife.used = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Spirit Mask - Back"))
+								.name(Component.literal("Second Life - Spirit/Bonzo/Phoenix - Back Title"))
 								.description(OptionDescription.of(
-										Component.literal("Shows a Title/Message when the Spirit Mask is ready."),
-										Component.literal(SPACE + "See “Show Back Title” or “Show Back Message” settings.")))
-								.binding(defaults.combat.secondLife.spiritMaskBack,
-										() -> current.combat.secondLife.spiritMaskBack,
-										newValue -> current.combat.secondLife.spiritMaskBack = newValue)
+										Component.literal("Shows a Title when any second life is ready.")))
+								.binding(defaults.combat.secondLife.backTitle,
+										() -> current.combat.secondLife.backTitle,
+										newValue -> current.combat.secondLife.backTitle = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Bonzo Mask - Used"))
+								.name(Component.literal("Second Life - Spirit/Bonzo/Phoenix - Back Message"))
 								.description(OptionDescription.of(
-										Component.literal("Shows a Title when the Bonzo Mask is used.")))
-								.binding(defaults.combat.secondLife.bonzoMaskUsed,
-										() -> current.combat.secondLife.bonzoMaskUsed,
-										newValue -> current.combat.secondLife.bonzoMaskUsed = newValue)
+										Component.literal("Shows a Message when any second life is ready.")))
+								.binding(defaults.combat.secondLife.backMessage,
+										() -> current.combat.secondLife.backMessage,
+										newValue -> current.combat.secondLife.backMessage = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Bonzo Mask - Back"))
+								.name(Component.literal("Second Life - Spirit/Bonzo/Phoenix - Back Sound"))
 								.description(OptionDescription.of(
-										Component.literal("Shows a Title/Message when the Bonzo Mask is ready."),
-										Component.literal(SPACE + "See “Show Back Title” or “Show Back Message” settings.")))
-								.binding(defaults.combat.secondLife.bonzoMaskBack,
-										() -> current.combat.secondLife.bonzoMaskBack,
-										newValue -> current.combat.secondLife.bonzoMaskBack = newValue)
+										Component.literal("Plays a Sound when any second life is ready.")))
+								.binding(defaults.combat.secondLife.backSound,
+										() -> current.combat.secondLife.backSound,
+										newValue -> current.combat.secondLife.backSound = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Phoenix Pet - Used"))
-								.description(OptionDescription.of(
-										Component.literal("Shows a Title when the Phoenix Pet is used.")))
-								.binding(defaults.combat.secondLife.phoenixUsed,
-										() -> current.combat.secondLife.phoenixUsed,
-										newValue -> current.combat.secondLife.phoenixUsed = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Phoenix Pet - Back"))
-								.description(OptionDescription.of(
-										Component.literal("Shows a Title/Message when the Phoenix Pet is ready."),
-										Component.literal(SPACE + "See “Show Back Title” or “Show Back Message” settings.")))
-								.binding(defaults.combat.secondLife.phoenixBack,
-										() -> current.combat.secondLife.phoenixBack,
-										newValue -> current.combat.secondLife.phoenixBack = newValue)
-								.controller(this::createBooleanController)
-								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Cooldowns HUD"))
+								.name(Component.literal("Second Life - Spirit/Bonzo/Phoenix - Cooldowns HUD"))
 								.description(OptionDescription.of(
 										Component.literal("Displays a HUD that shows the cooldowns for Second Life abilities. Multiple cooldowns can be displayed, sorted and colored according to the time remaining."),
 										Component.literal(SPACE + "- §5Spirit Mask"),
@@ -268,34 +247,16 @@ public class SkillsCategory extends AbstractCategory {
 								.binding(defaults.combat.secondLife.cooldownHud.enabled,
 										() -> current.combat.secondLife.cooldownHud.enabled,
 										newValue -> current.combat.secondLife.cooldownHud.enabled = newValue)
-								.controller(this::createYesNoController)
+								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Back - Show Title"))
+								.name(Component.literal("Second Life - Spirit/Bonzo/Phoenix - Party Announcer"))
 								.description(OptionDescription.of(
-										Component.literal("Shows a Title when any second life is ready.")))
-								.binding(defaults.combat.secondLife.backTitle,
-										() -> current.combat.secondLife.backTitle,
-										newValue -> current.combat.secondLife.backTitle = newValue)
-								.controller(this::createYesNoController)
-								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Back - Show Message"))
-								.description(OptionDescription.of(
-										Component.literal("Shows a Message when any second life is ready.")))
-								.binding(defaults.combat.secondLife.backMessage,
-										() -> current.combat.secondLife.backMessage,
-										newValue -> current.combat.secondLife.backMessage = newValue)
-								.controller(this::createYesNoController)
-								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Back - Play Sound"))
-								.description(OptionDescription.of(
-										Component.literal("Plays a Sound when any second life is ready.")))
-								.binding(defaults.combat.secondLife.backSound,
-										() -> current.combat.secondLife.backSound,
-										newValue -> current.combat.secondLife.backSound = newValue)
-								.controller(this::createYesNoController)
+										Component.literal("Notify your Party when an Ability has been used, along with the number remaining.")))
+								.binding(defaults.combat.secondLife.sendPartyInfo,
+										() -> current.combat.secondLife.sendPartyInfo,
+										newValue -> current.combat.secondLife.sendPartyInfo = newValue)
+								.controller(this::createBooleanController)
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()
@@ -303,19 +264,8 @@ public class SkillsCategory extends AbstractCategory {
 						.description(OptionDescription.of(
 								Component.literal("Garden settings")))
 						.collapsed(false)
-						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Disable Greenhouse watering can placement"))
-								.description(OptionDescription.of(
-										Component.literal("If enabled, disables the placement of watering cans in the Greenhouse."),
-										Component.literal(SPACE + "- HydroCan X").withStyle(ChatFormatting.AQUA),
-										Component.literal("- AquaMaster X").withStyle(ChatFormatting.RED)))
-								.binding(defaults.farming.garden.disableWateringCanPlacement,
-										() -> current.farming.garden.disableWateringCanPlacement,
-										newValue -> current.farming.garden.disableWateringCanPlacement = newValue)
-								.controller(this::createBooleanController)
-								.build())
 						.option(ButtonOption.createBuilder()
-								.name(Component.literal("Garden | Locking the camera during farming"))
+								.name(Component.literal("Garden - Locking the camera during farming"))
 								.text(Component.literal("/lockMouse"))
 								.description(OptionDescription.of(
 										Component.literal("Allows you to block the movements of the mouse during farming."),
@@ -324,7 +274,7 @@ public class SkillsCategory extends AbstractCategory {
 								.build())
 						.option(this::shortcutToKeybindsOptions)
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Garden | Locating Pests"))
+								.name(Component.literal("Garden - Locating Pests"))
 								.description(OptionDescription.of(
 										Component.literal("Locate Pests with your Vacuum, creating a Guess Waypoint. A line from your cursor to the nearest Pest will also be displayed."),
 										Component.literal(SPACE + "If you're not in an infested Plot, the Guess Waypoint will always point to the center of the Plot, so you'll have to use the ability again.").withStyle(ChatFormatting.YELLOW)))
@@ -334,7 +284,7 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Garden | Highlight Infested Plots"))
+								.name(Component.literal("Garden - Highlight Infested Plots"))
 								.description(OptionDescription.of(
 										Component.literal("Highlight Plots that are infested by pests with a border delimitations.")))
 								.binding(defaults.farming.garden.highlightInfestedPlots,
@@ -349,7 +299,7 @@ public class SkillsCategory extends AbstractCategory {
 								Component.literal("Foraging-related Settings")))
 						.collapsed(false)
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Torrhus Canyon Safari - Floor Drops"))
+								.name(Component.literal("Foraging - Safari Floor Drops"))
 								.description(OptionDescription.of(
 										Component.literal("Displays a colored Beam at the locations of the Floor Drops")))
 								.binding(defaults.foraging.safari.floorDrops,
@@ -358,7 +308,7 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Galatea - Show Tree Overlay"))
+								.name(Component.literal("Foraging - Show Tree Overlay"))
 								.description(OptionDescription.of(
 										Component.literal("Show Tree progression as Overlay.")))
 								.binding(defaults.foraging.showTreeOverlayInfo,
@@ -367,7 +317,7 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Galatea - Hide Tree Break Animation"))
+								.name(Component.literal("Foraging - Hide Tree Break Animation"))
 								.description(OptionDescription.of(
 										Component.literal("Hide the entities forming the Tree Break Animation.")))
 								.binding(defaults.foraging.hideTreeBreakAnimation,
@@ -404,7 +354,7 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Integer>createBuilder()
-								.name(Component.literal("Minimum Start Catches"))
+								.name(Component.literal("Shards Tracker - Minimum Start Catches"))
 								.description(OptionDescription.of(
 										Component.literal("Sets the minimum number of Shard catches required before the Tracker starts and begins the Hunting Session."),
 										Component.literal(SPACE + "Note: If the value is below 5, the tracker starts, for example, when you retrieve your Traps, or when you're Fishing.").withStyle(ChatFormatting.YELLOW)))
@@ -416,7 +366,7 @@ public class SkillsCategory extends AbstractCategory {
 										.step(1))
 								.build())
 						.option(Option.<Long>createBuilder()
-								.name(Component.literal("Session Timeout"))
+								.name(Component.literal("Shards Tracker - Session Timeout"))
 								.description(OptionDescription.of(
 										Component.literal("Time without catching a shard before the current session is automatically reset."),
 										Component.literal("Increase this value if you take frequent breaks between catches. (Touch the grass?)")))
@@ -429,7 +379,7 @@ public class SkillsCategory extends AbstractCategory {
 										.formatValue(i -> i > 1 ? Component.nullToEmpty(i + " minutes") : Component.nullToEmpty(i + " minute")))
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Include Loot Share"))
+								.name(Component.literal("Shards Tracker - Include Loot Share"))
 								.description(OptionDescription.of(
 										Component.literal("If enabled, this option allows you to include Loot Shares in the overall tracker and adds the number of Shards obtained through Loot Shares.")))
 								.binding(defaults.hunting.trackingShards.includeLootShare,
@@ -438,7 +388,7 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<BazaarPriceType>createBuilder()
-								.name(Component.literal("Bazaar Price Type"))
+								.name(Component.literal("Shards Tracker - Bazaar Price Type"))
 								.description(OptionDescription.of(
 										Component.literal("Select the type of price from the Bazaar"),
 										Component.literal(SPACE + "BUY :").withStyle(ChatFormatting.UNDERLINE),
@@ -545,7 +495,17 @@ public class SkillsCategory extends AbstractCategory {
 								.binding(defaults.fishing.rareSeaCreatureSound,
 										() -> current.fishing.rareSeaCreatureSound,
 										newValue -> current.fishing.rareSeaCreatureSound = newValue)
-								.controller(this::createBooleanController)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Rare Sea Creature Party Announcer"))
+								.description(OptionDescription.of(
+										Component.literal("If Rare Sea Creature Warning is enabled, announce to the Party when you catch a Rare Sea Creature."),
+										Component.literal("(Also detected Double Hooks)")))
+								.binding(defaults.fishing.rareSeaCreaturePartyAnnouncer,
+										() -> current.fishing.rareSeaCreaturePartyAnnouncer,
+										newValue -> current.fishing.rareSeaCreaturePartyAnnouncer = newValue)
+								.controller(this::createYesNoController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
 								.name(Component.literal("Fish Caught Warning"))
@@ -559,7 +519,7 @@ public class SkillsCategory extends AbstractCategory {
 								.build())
 						.option(LabelOption.create(Component.literal("| Hotspots").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Locating Hotspots"))
+								.name(Component.literal("Hotspot - Locator"))
 								.description(OptionDescription.of(
 										Component.literal("Locates Hotspots when using the Hotspot Radar.")))
 								.binding(defaults.fishing.hotspotRadarGuess,
@@ -568,13 +528,33 @@ public class SkillsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Highlighting Hotspots"))
+								.name(Component.literal("Hotspot - Highlighter"))
 								.description(OptionDescription.of(
 										Component.literal("A colored circle appears if your bobber is within the hotspot radius.")))
 								.binding(defaults.fishing.hotspotHighlight,
 										() -> current.fishing.hotspotHighlight,
 										newValue -> current.fishing.hotspotHighlight = newValue)
 								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Hotspot - Highlighter - Found Announcer"))
+								.description(OptionDescription.of(
+										Component.literal("Shows a message when you Found a Hotspot"),
+										Component.literal(SPACE + "Require to enable Hotspot - Highlighter").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.fishing.hotspotHighlightFoundAnnouncer,
+										() -> current.fishing.hotspotHighlightFoundAnnouncer,
+										newValue -> current.fishing.hotspotHighlightFoundAnnouncer = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Hotspot - Highlighter - Gone Announcer"))
+								.description(OptionDescription.of(
+										Component.literal("Shows a message when the closest Hotspot are gone"),
+										Component.literal(SPACE + "Require to enable Hotspot - Highlighter").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.fishing.hotspotHighlightGoneAnnouncer,
+										() -> current.fishing.hotspotHighlightGoneAnnouncer,
+										newValue -> current.fishing.hotspotHighlightGoneAnnouncer = newValue)
+								.controller(this::createYesNoController)
 								.build())
 						.option(LabelOption.create(Component.literal("| Lotus Atoll").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()

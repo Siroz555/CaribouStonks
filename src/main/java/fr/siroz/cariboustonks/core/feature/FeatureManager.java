@@ -37,9 +37,8 @@ import fr.siroz.cariboustonks.features.hunting.QuickFusionFeature;
 import fr.siroz.cariboustonks.features.hunting.tracking.TrackingShardsFeature;
 import fr.siroz.cariboustonks.features.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.features.mining.CorpseFinderFeature;
-import fr.siroz.cariboustonks.features.misc.BestiaryHighlightFeature;
 import fr.siroz.cariboustonks.features.misc.HexTooltipFeature;
-import fr.siroz.cariboustonks.features.misc.HighlightMobFeature;
+import fr.siroz.cariboustonks.features.misc.HighlighterFeature;
 import fr.siroz.cariboustonks.features.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.features.misc.SearchBarCalculatorFeature;
 import fr.siroz.cariboustonks.features.misc.ServerTrackerFeature;
@@ -53,6 +52,7 @@ import fr.siroz.cariboustonks.features.slayers.HighlightSlayerMobFeature;
 import fr.siroz.cariboustonks.features.slayers.SlayerCocoonedWarningFeature;
 import fr.siroz.cariboustonks.features.slayers.SlayerStatsFeature;
 import fr.siroz.cariboustonks.features.slayers.boss.TarantulaBossFeature;
+import fr.siroz.cariboustonks.features.stonks.CopyLowestBinFeature;
 import fr.siroz.cariboustonks.features.stonks.ItemValueViewerFeature;
 import fr.siroz.cariboustonks.features.stonks.StonksCommandFeature;
 import fr.siroz.cariboustonks.features.stonks.StonksFeature;
@@ -158,6 +158,7 @@ public final class FeatureManager {
 		registerFeature(new BazaarPriceTooltipFeature(1));
 		registerFeature(new AuctionLowestBinTooltipFeature(2));
 		registerFeature(new ItemValueTooltipFeature(4));
+		registerFeature(new CopyLowestBinFeature());
 		// UI
 		registerFeature(new DeployableFeature());
 		registerFeature(new MobTrackingFeature());
@@ -172,10 +173,9 @@ public final class FeatureManager {
 		registerFeature(new DayHud());
 		// Misc
 		registerFeature(new BestiaryTrackerFeature());
-		registerFeature(new BestiaryHighlightFeature());
 		registerFeature(new HexTooltipFeature(5));
 		registerFeature(new ServerTrackerFeature());
-		registerFeature(new HighlightMobFeature());
+		registerFeature(new HighlighterFeature());
 		registerFeature(new PartyCommandFeature());
 		registerFeature(new SearchBarCalculatorFeature());
 		// Visuals

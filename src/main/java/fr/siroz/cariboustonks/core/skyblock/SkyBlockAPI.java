@@ -11,9 +11,11 @@ import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtils;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.fabricmc.loader.api.FabricLoader;
@@ -36,6 +38,8 @@ public final class SkyBlockAPI {
 	// Factory dependencies
 	private static Supplier<ElectionResult> electionSource;
 	private static Function<String, SkyBlockAttribute> attributeLookup;
+	private static BooleanSupplier inParty;
+	private static Supplier<String> partyLeader;
 	// General states
 	private static boolean onSkyBlockState = false;
 	private static IslandType islandType = IslandType.UNKNOWN;
@@ -49,10 +53,14 @@ public final class SkyBlockAPI {
 
 	static void bootstrap(
 			@NonNull Supplier<ElectionResult> electionSourceFactory,
-			@NonNull Function<String, SkyBlockAttribute> attributeLookupFactory
+			@NonNull Function<String, SkyBlockAttribute> attributeLookupFactory,
+			@NonNull BooleanSupplier inPartyFactory,
+			@NonNull Supplier<String> partyLeaderFactory
 	) {
 		electionSource = electionSourceFactory;
 		attributeLookup = attributeLookupFactory;
+		inParty = inPartyFactory;
+		partyLeader = partyLeaderFactory;
 	}
 
 	/**
@@ -240,6 +248,33 @@ public final class SkyBlockAPI {
 	}
 
 	/**
+	 * Checks if the player has a Party
+	 *
+	 * @return {@code true} if the player has a Party
+	 */
+	public static boolean isInParty() {
+		return inParty != null && inParty.getAsBoolean();
+	}
+
+	/**
+	 * Returns the current Party Leader if present
+	 *
+	 * @return the party leader name or null
+	 */
+	public static @Nullable String getPartyLeader() {
+		return partyLeader != null ? partyLeader.get() : null;
+	}
+
+	/**
+	 * Checks if the player is the Party Leader
+	 *
+	 * @return {@code true} if the player has a party and the Leader
+	 */
+	public static boolean isMePartyLeader() {
+		return isInParty() && Objects.equals(getPartyLeader(), ClientContext.getPlayerName());
+	}
+
+	/**
 	 * Gets the {@code SkyBlock API ID} of the ItemStack.
 	 *
 	 * @return the SkyBlock API ID or an empty String
@@ -310,6 +345,9 @@ public final class SkyBlockAPI {
 				if (customData.getIntOr("winning_bid", 0) >= 100_000_000) {
 					return id + "_100M";
 				}
+			}
+			case "FACTION_RABBIT" -> {
+				return id + "_" + customData.getStringOr("faction_rabbit_id", "").toUpperCase(Locale.ENGLISH);
 			}
 			default -> {
 			}

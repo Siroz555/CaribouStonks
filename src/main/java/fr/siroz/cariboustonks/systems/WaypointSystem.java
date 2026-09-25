@@ -1,13 +1,16 @@
 package fr.siroz.cariboustonks.systems;
 
+import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.module.waypoint.Waypoint;
 import fr.siroz.cariboustonks.core.system.System;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.RenderEvents;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
@@ -37,6 +40,7 @@ import org.jspecify.annotations.NonNull;
  */
 public final class WaypointSystem implements System {
 	private static final Minecraft MINECRAFT = Minecraft.getInstance();
+	private static final double PROXIMITY_THRESHOLD = 10 * 10;
 
 	private final Map<UUID, Waypoint> waypoints = new ConcurrentHashMap<>();
 
@@ -44,6 +48,7 @@ public final class WaypointSystem implements System {
 		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((_, _) -> this.resetWaypoints());
 		RenderEvents.WORLD_RENDER_EVENT.register(this::render);
 		ClientTickEvents.END_CLIENT_TICK.register(_ -> this.onTick());
+		TickScheduler.getInstance().runRepeating(this::proximityCheck, 500, TimeUnit.MILLISECONDS);
 	}
 
 	/**
@@ -84,6 +89,19 @@ public final class WaypointSystem implements System {
 			waypoint.getValue().decreaseTimeout();
 			if (waypoint.getValue().getTimeoutTicks() == 0) {
 				waypoint.getValue().destroy();
+			}
+		}
+	}
+
+	private void proximityCheck() {
+		if (waypoints.isEmpty()) return;
+
+		for (Map.Entry<UUID, Waypoint> waypoint : waypoints.entrySet()) {
+			if (waypoint.getValue().isProximityReset()) {
+				double distSq = PlayerContext.position().distanceToSqr(waypoint.getValue().getPosition().toVec3d());
+				if (distSq <= PROXIMITY_THRESHOLD) {
+					waypoint.getValue().destroy();
+				}
 			}
 		}
 	}

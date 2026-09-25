@@ -63,6 +63,8 @@ public final class NotEnoughUpdatesUtils {
 					+ "_"
 					+ customData.getStringOr("party_hat_emoji", "").toUpperCase(Locale.ENGLISH);
 
+			case "FACTION_RABBIT" -> id + "_" + customData.getStringOr("faction_rabbit_id", "").toUpperCase(Locale.ENGLISH);
+
 			default -> id.replace(":", "-");
 		};
 	}

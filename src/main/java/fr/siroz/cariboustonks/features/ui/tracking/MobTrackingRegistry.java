@@ -44,9 +44,11 @@ public final class MobTrackingRegistry {
 		register("Ashfang", 5, NotifyConditions.ONCE, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Ashfang").withStyle(ChatFormatting.GRAY), false, false, IslandType.CRIMSON_ISLE);
 		register("Mage Outlaw", 5, NotifyConditions.ONCE, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Mage Outlaw").withStyle(ChatFormatting.DARK_PURPLE), false, false, IslandType.CRIMSON_ISLE);
 		register("Barbarian Duke X", 5, NotifyConditions.ONCE, MobCategory.CRIMSON_ISLE_MINIBOSS, Component.literal("Barbarian Duke X").withStyle(ChatFormatting.GRAY), false, false, IslandType.CRIMSON_ISLE);
-		// Crimson Isle - Special
+		// Special
+		register("SPARKLING", 1, NotifyConditions.ALWAYS, MobCategory.SPECIAL, Component.literal("Sparkling").withStyle(ChatFormatting.GOLD), true, true, IslandType.SAFARI);
 		register("Vanquisher", 1, NotifyConditions.maxTimes(2), MobCategory.SPECIAL, Component.literal("Vanquisher").withStyle(ChatFormatting.DARK_PURPLE), true, true, IslandType.CRIMSON_ISLE);
 		// Mythological Ritual
+		register("Sphinx", 50, NotifyConditions.ONCE, MobCategory.MYTHOLOGICAL, Component.literal("Sphinx").withStyle(ChatFormatting.LIGHT_PURPLE), false, false, IslandType.HUB);
 		register("Manticore", 50, NotifyConditions.ONCE, MobCategory.MYTHOLOGICAL, Component.literal("Manticore").withStyle(ChatFormatting.DARK_GREEN), false, false, IslandType.HUB);
 		register("Minos Inquisitor", 50, NotifyConditions.ONCE, MobCategory.MYTHOLOGICAL, Component.literal("Minos Inquisitor").withStyle(ChatFormatting.LIGHT_PURPLE), false, false, IslandType.HUB);
 		register("King Minos", 55, NotifyConditions.ONCE, MobCategory.MYTHOLOGICAL, Component.literal("King Minos").withStyle(ChatFormatting.RED), false, false, IslandType.HUB);

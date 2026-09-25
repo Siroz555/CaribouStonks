@@ -85,6 +85,13 @@ public class RareSeaCreatureFeature extends Feature {
 				PlayerContext.playSound(SoundEvents.ARMOR_EQUIP_NETHERITE.value(), 2.5f, 1f);
 			}
 		}
+
+		if (SkyBlockAPI.isInParty() && this.config().fishing.rareSeaCreaturePartyAnnouncer) {
+			String message = doubleHook
+					? ">>> DOUBLE HOOK! Two " + seaCreature.getName() + "s spawned! <<<"
+					: ">>> " + seaCreature.getName() + " spawned! <<<";
+			PlayerContext.sendCommandToServer("/pc " + message, true);
+		}
 	}
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")

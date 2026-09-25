@@ -1,33 +1,35 @@
 package fr.siroz.cariboustonks.features.combat;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockAPI;
+import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
+import fr.siroz.cariboustonks.util.ItemUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStackTemplate;
 import org.jspecify.annotations.NonNull;
 
 public class SecondLifeFeature extends Feature {
+	private static final int TOTAL_SECOND_LIFE_ABILITY = 3;
 	private static final Pattern SPIRIT_MASK_PATTERN = Pattern.compile("Second Wind Activated! Your Spirit Mask saved your life!");
 	private static final Pattern BONZO_MASK_PATTERN = Pattern.compile("Your Bonzo's Mask saved your life!");
 	private static final Pattern PHOENIX_PET_PATTERN = Pattern.compile("Your Phoenix Pet saved you from certain death!");
@@ -112,18 +114,23 @@ public class SecondLifeFeature extends Feature {
 		// Il est reset ici pour permettre de trigger à nouveau, tant qu'il n'y a pas de changement de serveur.
 		serverHasChanged = false;
 
-		if (secondLife.isUseConfig()) {
+		if (this.config().combat.secondLife.used) {
 			PlayerContext.showTitleAndSubtitle(Component.literal(secondLife.getName()).withStyle(secondLife.getColor()),
 					Component.literal("Used!").withStyle(ChatFormatting.RED),
 					0, 25, 0);
 		}
 
 		activeCooldowns.put(secondLife, secondLife.getCooldown() * 20);
+
+		if (SkyBlockAPI.isInParty() && this.config().combat.secondLife.sendPartyInfo) {
+			String display = secondLife.getName() + " Used! (" + activeCooldowns.size() + TOTAL_SECOND_LIFE_ABILITY + ")";
+			PlayerContext.sendCommandToServer("/pc " + display, true);
+		}
 	}
 
 	private void onSecondLifeBack(@NonNull SecondLife secondLife) {
 		// Pas de notification si le serveur a changé
-		if (!serverHasChanged && secondLife.isBackConfigEnabled()) {
+		if (!serverHasChanged) {
 			if (this.config().combat.secondLife.backMessage) {
 				PlayerContext.sendMessageWithPrefix(Component.literal(secondLife.getName() + " is back!").withStyle(ChatFormatting.GREEN));
 			}
@@ -152,7 +159,7 @@ public class SecondLifeFeature extends Feature {
 				if (timeRemaining > 0) {
 					SecondLife secondLife = entry.getKey();
 					String formattedTime = TIME_FORMAT.format(timeRemaining);
-					builder.appendLine(Component.empty()
+					builder.appendIconLine(entry.getKey().getTexture().create(), Component.empty()
 							.append(Component.literal(secondLife.getName()).withStyle(secondLife.getColor()))
 							.append(Component.literal(": ").withStyle(ChatFormatting.WHITE))
 							.append(Component.literal(formattedTime + "s").withStyle(getColor(timeRemaining)))
@@ -177,29 +184,20 @@ public class SecondLifeFeature extends Feature {
 	}
 
 	private enum SecondLife {
-		SPIRIT_MASK(30, "Spirit Mask", ChatFormatting.DARK_PURPLE,
-				() -> ConfigManager.getConfig().combat.secondLife.spiritMaskUsed,
-				() -> ConfigManager.getConfig().combat.secondLife.spiritMaskBack),
-		BONZO_MASK(180, "Bonzo Mask", ChatFormatting.RED,
-				() -> ConfigManager.getConfig().combat.secondLife.bonzoMaskUsed,
-				() -> ConfigManager.getConfig().combat.secondLife.bonzoMaskBack),
-		PHOENIX_PET(60, "Phoenix Pet", ChatFormatting.YELLOW,
-				() -> ConfigManager.getConfig().combat.secondLife.phoenixUsed,
-				() -> ConfigManager.getConfig().combat.secondLife.phoenixBack),
-		;
+		SPIRIT_MASK(30, "Spirit Mask", ChatFormatting.DARK_PURPLE, ItemUtils.createVirtualSkull(HeadTextures.SPIRIT_MASK)),
+		BONZO_MASK(180, "Bonzo Mask", ChatFormatting.RED, ItemUtils.createVirtualSkull(HeadTextures.BONZO_MASK)),
+		PHOENIX_PET(60, "Phoenix Pet", ChatFormatting.YELLOW, ItemUtils.createVirtualSkull(HeadTextures.PHOENIX_PET)),;
 
 		private final int cooldown;
 		private final String name;
 		private final ChatFormatting color;
-		private final BooleanSupplier useConfig;
-		private final BooleanSupplier backConfig;
+		private final ItemStackTemplate texture;
 
-		SecondLife(int cooldown, String name, ChatFormatting color, BooleanSupplier useConfig, BooleanSupplier backConfig) {
+		SecondLife(int cooldown, String name, ChatFormatting color, ItemStackTemplate texture) {
 			this.cooldown = cooldown;
 			this.name = name;
 			this.color = color;
-			this.useConfig = useConfig;
-			this.backConfig = backConfig;
+			this.texture = texture;
 		}
 
 		public int getCooldown() {
@@ -214,12 +212,8 @@ public class SecondLifeFeature extends Feature {
 			return color;
 		}
 
-		public boolean isUseConfig() {
-			return useConfig.getAsBoolean();
-		}
-
-		public boolean isBackConfigEnabled() {
-			return backConfig.getAsBoolean();
+		public ItemStackTemplate getTexture() {
+			return texture;
 		}
 	}
 }

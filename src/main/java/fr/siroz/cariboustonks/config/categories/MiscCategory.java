@@ -27,38 +27,30 @@ public class MiscCategory extends AbstractCategory {
                 .name(Component.literal("Misc"))
                 .tooltip(Component.literal("Miscellaneous Settings"))
 				.option(ButtonOption.createBuilder()
-						.name(Component.literal("Highlighter Mob"))
-						.text(Component.literal("/highlighter <mob>"))
+						.name(Component.literal("Highlighter"))
+						.text(Component.literal("/highlighter <addEntity|addName>"))
 						.action((screen, _) -> {
-							PlayerContext.sendMessageWithPrefix(Component.literal("Use /highlighter <mob>").withStyle(ChatFormatting.GREEN));
+							PlayerContext.sendMessageWithPrefix(Component.literal("Use /highlighter <addEntity|addName> <?>").withStyle(ChatFormatting.GREEN));
 							screen.onClose();
 						})
-						.build())
-				.option(ButtonOption.createBuilder()
-						.name(Component.literal("Bestiary Highlight"))
-						.text(Component.literal("/bestiaryHighlight add <name>"))
-						.action((screen, _) -> {
-							PlayerContext.sendMessageWithPrefix(Component.literal("Use /bestiaryHighlight <add|clear> <name>").withStyle(ChatFormatting.GREEN));
-							screen.onClose();
-						})
-						.build())
-				.option(Option.<Boolean>createBuilder()
-						.name(Component.literal("Bestiary Highlight Middle Click"))
-						.description(OptionDescription.of(
-								Component.literal("Highlights entities with the same name by middle-clicking on an entity.")))
-						.binding(defaults.misc.bestiaryHighlight,
-								() -> current.misc.bestiaryHighlight,
-								newValue -> current.misc.bestiaryHighlight = newValue)
-						.controller(this::createBooleanController)
 						.build())
 				.option(Option.<Color>createBuilder()
-						.name(Component.literal("Highlighter Mob color"))
+						.name(Component.literal("Highlighter - Mob color"))
 						.description(OptionDescription.of(
-								Component.literal("Change the color of the highlighter mob command (/highlighter <mob>).")))
+								Component.literal("Change the color of the highlighter mob command (/highlighter <addEntity|addName>).")))
 						.binding(defaults.misc.highlighterColor,
 								() -> current.misc.highlighterColor,
 								newValue -> current.misc.highlighterColor = newValue)
 						.controller(ColorControllerBuilder::create)
+						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Highlighter - Middle Click"))
+						.description(OptionDescription.of(
+								Component.literal("Highlights entities with the same name by middle-clicking on an entity.")))
+						.binding(defaults.misc.highlighterMiddleClick,
+								() -> current.misc.highlighterMiddleClick,
+								newValue -> current.misc.highlighterMiddleClick = newValue)
+						.controller(this::createBooleanController)
 						.build())
 				.option(LabelOption.create(Component.literal("Bestiary Tracker").withStyle(ChatFormatting.BOLD)))
 				.option(Option.<Boolean>createBuilder()
@@ -87,7 +79,7 @@ public class MiscCategory extends AbstractCategory {
 						.build())
 				.option(LabelOption.create(Component.empty()))
 				.option(Option.<Boolean>createBuilder()
-						.name(Component.literal("Show Hex Color on Items"))
+						.name(Component.literal("Tooltip - Show Hex Color on Items"))
 						.description(OptionDescription.of(
 								Component.literal("Add the #HEX on TOP of all Dyed Item tooltip everywhere.")))
 						.binding(defaults.misc.showHexOnDyedItemEverywhere,

@@ -3,15 +3,19 @@ package fr.siroz.cariboustonks.util;
 import com.mojang.serialization.Codec;
 import fr.siroz.cariboustonks.core.infrastructure.json.GsonProvider;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
+import it.unimi.dsi.fastutil.chars.CharList;
 import java.awt.Color;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
@@ -27,7 +31,7 @@ import org.jspecify.annotations.Nullable;
 
 public final class MinecraftUtils {
 	private static final Minecraft MINECRAFT = Minecraft.getInstance();
-
+	private static final CharList FORMAT_CODES = CharList.of('4', 'c', '6', 'e', '2', 'a', 'b', '3', '1', '9', 'd', '5', 'f', '7', '8', '0', 'r', 'k', 'l', 'm', 'n', 'o');
 	public static final Codec<Color> COLOR_CODEC = Codec.INT.xmap(argb -> new Color(argb, true), Color::getRGB);
 
 	private MinecraftUtils() {
@@ -201,5 +205,81 @@ public final class MinecraftUtils {
 		} catch (Exception _) {
 			return Optional.empty();
 		}
+	}
+
+	public static @NonNull Style findStyle(@NonNull Component component) {
+		return component.getSiblings().isEmpty()
+				? component.getStyle()
+				: component.getSiblings().getLast().getStyle();
+	}
+
+	public static MutableComponent formatTextFromLegacy(@NonNull String legacy) {
+		if (legacy.contains("§")) return formatTextFromLegacy(legacy, '§');
+		if (legacy.contains("&")) return formatTextFromLegacy(legacy, '&');
+		return Component.literal(legacy);
+	}
+
+	private static @NonNull MutableComponent formatTextFromLegacy(@NonNull String legacy, char legacyPrefix) {
+		MutableComponent newText = Component.empty();
+		StringBuilder builder = new StringBuilder();
+		ChatFormatting formatting = null;
+		Boolean bold = null;
+		Boolean italic = null;
+		Boolean underline = null;
+		Boolean strikethrough = null;
+		Boolean obfuscated = null;
+
+		for (int i = 0; i < legacy.length(); i++) {
+			if (i != 0 && legacy.charAt(i - 1) == legacyPrefix
+					&& FORMAT_CODES.contains(Character.toLowerCase(legacy.charAt(i))) && !builder.isEmpty()
+			) {
+				newText.append(Component.literal(builder.toString())
+						.setStyle(Style.EMPTY
+								.withColor(formatting)
+								.withBold(bold)
+								.withItalic(italic)
+								.withUnderlined(underline)
+								.withStrikethrough(strikethrough)
+								.withObfuscated(obfuscated)));
+
+				builder.delete(0, builder.length());
+				formatting = null;
+				bold = null;
+				italic = null;
+				underline = null;
+				strikethrough = null;
+				obfuscated = null;
+			}
+
+			if (i != 0 && legacy.charAt(i - 1) == legacyPrefix) {
+				ChatFormatting byCode = ChatFormatting.getByCode(legacy.charAt(i));
+				switch (byCode) {
+					case BOLD -> bold = true;
+					case ITALIC -> italic = true;
+					case UNDERLINE -> underline = true;
+					case STRIKETHROUGH -> strikethrough = true;
+					case OBFUSCATED -> obfuscated = true;
+
+					case null, default -> formatting = byCode;
+				}
+				continue;
+			}
+
+			if (legacy.charAt(i) != legacyPrefix && (i == 0 || legacy.charAt(i - 1) != legacyPrefix)) {
+				builder.append(legacy.charAt(i));
+			}
+
+			if (i == legacy.length() - 1) {
+				newText.append(Component.literal(builder.toString())
+						.setStyle(Style.EMPTY
+								.withColor(formatting)
+								.withBold(bold)
+								.withItalic(italic)
+								.withUnderlined(underline)
+								.withStrikethrough(strikethrough)
+								.withObfuscated(obfuscated)));
+			}
+		}
+		return newText;
 	}
 }
