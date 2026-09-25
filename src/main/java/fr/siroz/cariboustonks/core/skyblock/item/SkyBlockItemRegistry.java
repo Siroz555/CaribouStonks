@@ -47,8 +47,30 @@ public final class SkyBlockItemRegistry {
 		}
 	}
 
+	private record ReforgeSnapshot(
+			Map<String, String> byName
+	) {
+		static final ReforgeSnapshot EMPTY = new ReforgeSnapshot(Collections.emptyMap());
+
+		static @NonNull ReforgeSnapshot of(@NonNull Map<String, String> reforges) {
+			return new ReforgeSnapshot(reforges);
+		}
+	}
+
+	private record LegacyHypixelMaterialSnapshot(
+			Map<String, String> byId
+	) {
+		static final LegacyHypixelMaterialSnapshot EMPTY = new LegacyHypixelMaterialSnapshot(Collections.emptyMap());
+
+		static @NonNull LegacyHypixelMaterialSnapshot of(@NonNull Map<String, String> legacyHypixelMaterials) {
+			return new LegacyHypixelMaterialSnapshot(legacyHypixelMaterials);
+		}
+	}
+
 	private static volatile AttributeSnapshot attributeSnapshot = AttributeSnapshot.EMPTY;
 	private static volatile EnchantmentSnapshot enchantmentSnapshot = EnchantmentSnapshot.EMPTY;
+	private static volatile ReforgeSnapshot reforgeSnapshot = ReforgeSnapshot.EMPTY;
+	private static volatile LegacyHypixelMaterialSnapshot legacyHypixelMaterialSnapshot = LegacyHypixelMaterialSnapshot.EMPTY;
 
 	private SkyBlockItemRegistry() {
 	}
@@ -59,6 +81,14 @@ public final class SkyBlockItemRegistry {
 
 	public static void loadEnchantments(@NonNull Collection<SkyBlockEnchantment> enchantments) {
 		enchantmentSnapshot = EnchantmentSnapshot.of(enchantments);
+	}
+
+	public static void loadReforges(@NonNull Map<String, String> reforges) {
+		reforgeSnapshot = ReforgeSnapshot.of(reforges);
+	}
+
+	public static void loadLegacyHypixelMaterial(@NonNull Map<String, String> legacyHypixelMaterials) {
+		legacyHypixelMaterialSnapshot = LegacyHypixelMaterialSnapshot.of(legacyHypixelMaterials);
 	}
 
 	public static @Nullable SkyBlockAttribute getAttributeByShardName(@Nullable String name) {
@@ -81,12 +111,30 @@ public final class SkyBlockItemRegistry {
 		return enchantmentSnapshot.byId().get(id);
 	}
 
+	public static @NonNull String getReforgeIdOrDefault(@Nullable String reforgeName, @NonNull String defaultValue) {
+		if (reforgeName == null) return defaultValue;
+		return reforgeSnapshot.byName().getOrDefault(reforgeName, defaultValue);
+	}
+
+	public static @Nullable String getMinecraftIdFromHypixelMaterial(@Nullable String hypixelMaterial) {
+		if (hypixelMaterial == null) return null;
+		return legacyHypixelMaterialSnapshot.byId().get(hypixelMaterial);
+	}
+
 	public static int sizeOfAttributes() {
 		return attributeSnapshot.byId().size();
 	}
 
 	public static int sizeOfEnchantments() {
 		return enchantmentSnapshot.byId().size();
+	}
+
+	public static int sizeOfReforges() {
+		return reforgeSnapshot.byName().size();
+	}
+
+	public static int sizeOfLegacyHypixelMaterial() {
+		return legacyHypixelMaterialSnapshot.byId().size();
 	}
 
 	private static @NonNull String normalizeShardName(@NonNull String name) {

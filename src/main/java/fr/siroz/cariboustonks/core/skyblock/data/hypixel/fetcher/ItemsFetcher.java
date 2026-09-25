@@ -6,7 +6,6 @@ import com.google.gson.JsonParser;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.AsyncScheduler;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.mod.ModDataSource;
 import fr.siroz.cariboustonks.core.module.http.Http;
 import fr.siroz.cariboustonks.core.module.http.HttpResponse;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelAPIFixer;
@@ -17,16 +16,13 @@ import fr.siroz.cariboustonks.util.JsonUtils;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -46,7 +42,6 @@ public final class ItemsFetcher {
 	private static final int MAX_RETRIES = 5;
 
 	private final HypixelDataSource hypixelDataSource;
-	private final ModDataSource modDataSource;
 	private final HypixelAPIFixer apiFixer;
 
 	private final AtomicBoolean fetchInProgress;
@@ -55,13 +50,8 @@ public final class ItemsFetcher {
 
 	private final AtomicReference<Map<String, SkyBlockItemData>> skyBlockItems;
 
-	public ItemsFetcher(
-			HypixelDataSource hypixelDataSource,
-			ModDataSource modDataSource,
-			HypixelAPIFixer apiFixer
-	) {
+	public ItemsFetcher(HypixelDataSource hypixelDataSource, HypixelAPIFixer apiFixer) {
 		this.hypixelDataSource = hypixelDataSource;
-		this.modDataSource = modDataSource;
 		this.apiFixer = apiFixer;
 		this.fetchInProgress = new AtomicBoolean(false);
 		this.retryAttempts = new AtomicInteger(0);
@@ -229,24 +219,6 @@ public final class ItemsFetcher {
 			if (lastFetchSuccessful.get()) {
 				CaribouStonks.LOGGER.info("[ItemsFetcher] Loaded {} SkyBlock Items", skyBlockItems.get().size());
 				hypixelDataSource.fixSkyBlockItems();
-			}
-
-			if (lastFetchSuccessful.get() && !modDataSource.isItemsMappingError()) {
-				List<String> hypixelMaterials = skyBlockItems.get().values().stream()
-						.map(SkyBlockItemData::material)
-						.filter(Optional::isPresent)
-						.map(Optional::get)
-						.collect(Collectors.toSet())
-						.stream()
-						.toList();
-
-				for (String material : hypixelMaterials) {
-					if (!modDataSource.containsItem(material)) {
-						CaribouStonks.LOGGER.warn("[ItemsFetcher] (Minecraft Ids Mapping) -> {} is not registered!", material);
-					}
-				}
-			} else {
-				CaribouStonks.LOGGER.error("[ItemsFetcher] (Minecraft Ids Mapping) SkyBlock Items error or mapping error");
 			}
 		};
 	}

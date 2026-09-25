@@ -8,6 +8,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelPartyManager;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.ElectionResult;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Mayor;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.election.Perk;
+import fr.siroz.cariboustonks.core.skyblock.data.repository.RepositoryDataSource;
 import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonManager;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabListManager;
@@ -32,24 +33,28 @@ import org.jspecify.annotations.Nullable;
  */
 public final class SkyBlockManager {
 
+	private final RepositoryDataSource repositoryDataSource;
 	private final HypixelDataSource hypixelDataSource;
-	private final HypixelPartyManager hypixelPartyManager;
 	private final ExternalDataSource externalDataSource;
 
 	private final DungeonManager dungeonManager;
 	private final SlayerManager slayerManager;
 	private final TabListManager tabListManager;
+	private final HypixelPartyManager partyManager;
 
 	private volatile SkyBlockLocation currentLocation = SkyBlockLocation.NONE;
 	private volatile SkyBlockTime currentTime = SkyBlockTime.DEFAULT;
 
 	public SkyBlockManager() {
+		// Data Sources
+		this.repositoryDataSource = new RepositoryDataSource();
 		this.hypixelDataSource = new HypixelDataSource();
-		this.hypixelPartyManager = new HypixelPartyManager();
 		this.externalDataSource = new ExternalDataSource();
+		// SkyBlock Managers
 		this.dungeonManager = new DungeonManager(this);
 		this.slayerManager = new SlayerManager(this);
 		this.tabListManager = new TabListManager(this);
+		this.partyManager = new HypixelPartyManager();
 
 		TickScheduler.getInstance().runRepeating(this::onSecond, 1, TimeUnit.SECONDS);
 		ClientPlayConnectionEvents.DISCONNECT.register((_, _) -> this.onDisconnect());
@@ -138,6 +143,15 @@ public final class SkyBlockManager {
 	}
 
 	/**
+	 * Retrieves the {@link RepositoryDataSource} instance.
+	 *
+	 * @return the {@link RepositoryDataSource} instance
+	 */
+	public RepositoryDataSource getRepositoryDataSource() {
+		return repositoryDataSource;
+	}
+
+	/**
 	 * Retrieves the {@link DungeonManager} instance.
 	 *
 	 * @return the {@link DungeonManager} instance
@@ -170,7 +184,7 @@ public final class SkyBlockManager {
 	 * @return {@link HypixelPartyManager} instance
 	 */
 	public HypixelPartyManager getPartyManager() {
-		return hypixelPartyManager;
+		return partyManager;
 	}
 
 	private void onDisconnect() {

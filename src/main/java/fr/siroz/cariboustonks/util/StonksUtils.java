@@ -1,6 +1,10 @@
 package fr.siroz.cariboustonks.util;
 
 import fr.siroz.cariboustonks.util.render.AnimationUtils;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
@@ -14,6 +18,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -100,6 +105,33 @@ public final class StonksUtils {
 		StringBuilder id = new StringBuilder(10);
 		for (int i = 0; i < 10; i++) id.append(ALPHANUMERIC.charAt(RANDOM.nextInt(ALPHANUMERIC.length())));
 		return id.toString();
+	}
+
+	/**
+	 * Calculate the SHA-256 Digest of the given {@code file}
+	 *
+	 * @param filePath the file path
+	 * @return the hexadecimal String of the SHA-256 Digest
+	 * @throws IOException if an I/O error occurs
+	 */
+	public static @NonNull String calculateSHA256(@NonNull Path filePath) throws IOException {
+		try (InputStream is = Files.newInputStream(filePath)) {
+			return DigestUtils.sha256Hex(is);
+		}
+	}
+
+	/**
+	 * Split a list into sublists of a maximum size with the {@code maxSize}
+	 *
+	 * @param list    the list
+	 * @param maxSize the max size
+	 * @param <T>     the list type instance
+	 * @return a list of sublists
+	 */
+	public static <T> @NonNull List<List<T>> partitionList(@NonNull List<T> list, int maxSize) {
+		List<List<T>> partitions = new ArrayList<>();
+		for (int i = 0; i < list.size(); i += maxSize) partitions.add(list.subList(i, Math.min(i + maxSize, list.size())));
+		return partitions;
 	}
 
 	/**
