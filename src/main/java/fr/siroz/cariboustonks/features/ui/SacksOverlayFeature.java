@@ -11,6 +11,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarPriceType;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtils;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.ArrayList;
@@ -230,7 +231,7 @@ public class SacksOverlayFeature extends Feature {
 		if (MINECRAFT.font.width(name) <= MAX_NAME_WIDTH) return name;
 
 		String text = name.getString();
-		Style style = findStyle(name);
+		Style style = MinecraftUtils.findStyle(name);
 
 		// Réduit caractère par caractère jusqu'à rentrer avec "..."
 		while (!text.isEmpty() && MINECRAFT.font.width(text + "…") > MAX_NAME_WIDTH) {
@@ -245,16 +246,10 @@ public class SacksOverlayFeature extends Feature {
 		for (Map.Entry<String, String> entry : NAME_SHORTCUTS.entrySet()) {
 			if (text.startsWith(entry.getKey())) {
 				return Component.literal(entry.getValue() + text.substring(entry.getKey().length()))
-						.withStyle(findStyle(name));
+						.withStyle(MinecraftUtils.findStyle(name));
 			}
 		}
 		return name;
-	}
-
-	private @NonNull Style findStyle(@NonNull Component component) {
-		return component.getSiblings().isEmpty()
-				? component.getStyle()
-				: component.getSiblings().getLast().getStyle();
 	}
 
 	private record Line(
