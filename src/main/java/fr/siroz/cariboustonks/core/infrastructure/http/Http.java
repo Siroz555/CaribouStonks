@@ -1,4 +1,4 @@
-package fr.siroz.cariboustonks.core.module.http;
+package fr.siroz.cariboustonks.core.infrastructure.http;
 
 import fr.siroz.cariboustonks.CaribouStonks;
 import java.io.IOException;
