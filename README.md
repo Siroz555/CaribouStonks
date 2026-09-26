@@ -334,17 +334,13 @@ The structure and organization still need a few tweaks before it's "officially o
 
 ---
 
-## Minecraft Versions History
+## Minecraft Versions
 
 | Version             |                   Status | Notes                      |
 |---------------------|-------------------------:|----------------------------|
 | **26.3**            |           ✅ **Current** | Latest                     |
 | **26.2**            |           ✅ **Current** | Maintained                 |
 | **26.1.x**          |        ⚠️ **Deprecated** | Maintained                 |
-| **1.21.11**         | ⚠️ **No Longer Updated** | Latest Mod Version: 1.2.0  |
-| **1.21.10**         | ⚠️ **No Longer Updated** | Latest Mod Version: 1.0.0  |
-| **1.21.7 / 1.21.8** | ⚠️ **No Longer Updated** | Latest Mod Version: 0.10.1 |
-| **1.21.5**          | ⚠️ **No Longer Updated** | Latest Mod Version: 0.8.0  |
 
 ---
 
