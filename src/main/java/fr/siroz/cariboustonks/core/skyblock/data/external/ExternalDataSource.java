@@ -63,6 +63,7 @@ public final class ExternalDataSource {
 		}, 5, TimeUnit.MINUTES));
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean hasLowestBin(@NonNull ItemLookupKey key) {
 		if (key.isNull() || key.neuId() == null || lowestBinsPrices.isEmpty()) return false;
 		return lowestBinsPrices.containsKey(key.neuId());

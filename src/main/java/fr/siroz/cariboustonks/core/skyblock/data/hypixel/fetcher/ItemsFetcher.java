@@ -84,6 +84,7 @@ public final class ItemsFetcher {
 	 *
 	 * @return {@code true} if the last fetch was successful
 	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean isLastFetchSuccessful() {
 		return lastFetchSuccessful.get();
 	}
