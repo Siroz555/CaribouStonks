@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.TextHud;
-import fr.siroz.cariboustonks.systems.NetworkSystem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.NonNull;
@@ -13,11 +12,7 @@ public class PingHud extends Feature {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_ping");
 
-	private final NetworkSystem networkSystem;
-
 	public PingHud() {
-		this.networkSystem = CaribouStonks.systems().getSystem(NetworkSystem.class);
-
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(HUD_ID)
 				.hud(new TextHud(
@@ -36,7 +31,7 @@ public class PingHud extends Feature {
 	}
 
 	private @NonNull Component getText() {
-		long currentPing = networkSystem.getPing();
+		long currentPing = CaribouStonks.mod().getNetworkManager().getPing();
 		String pingStr = currentPing + " ms";
 
 		int step = Math.min((int) currentPing / 150, 3); // // 0, 150, 300, 450

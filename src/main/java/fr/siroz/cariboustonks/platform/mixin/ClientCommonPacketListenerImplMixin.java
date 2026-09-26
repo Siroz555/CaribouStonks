@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.platform.mixin;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.systems.NetworkSystem;
+import fr.siroz.cariboustonks.core.mod.NetworkManager;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.network.protocol.common.ClientboundPingPacket;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ClientCommonPacketListenerImplMixin {
 
 	@Unique
-	private final NetworkSystem networkSystem = CaribouStonks.systems().getSystem(NetworkSystem.class);
+	private final NetworkManager networkManager = CaribouStonks.mod().getNetworkManager();
 
 	@Inject(method = "handlePing", at = @At("RETURN"))
 	private void cariboustonks$onServerTick(ClientboundPingPacket packet, CallbackInfo ci) {
-		networkSystem.onServerTick(packet);
+		networkManager.onServerTick(packet);
 	}
 }

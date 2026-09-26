@@ -7,7 +7,6 @@ import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
-import fr.siroz.cariboustonks.systems.NetworkSystem;
 import fr.siroz.cariboustonks.util.StonksUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +95,7 @@ public class PartyCommandFeature extends Feature {
 			}
 		}),
 		TPS(Pattern.compile("Party > (\\[.+])? ?(.+) ?[ቾ⚒]?: !tps"), cmd -> cmd.tps, _ -> {
-			float tps = CaribouStonks.systems().getSystem(NetworkSystem.class).getTickRate();
+			float tps = CaribouStonks.mod().getNetworkManager().getTickRate();
 			String message = String.format("TPS: %.1f", tps);
 			PlayerContext.sendCommandToServer("/pc " + message, true);
 		}),

@@ -6,7 +6,6 @@ import fr.siroz.cariboustonks.systems.ContainerOverlaySystem;
 import fr.siroz.cariboustonks.systems.GlowingSystem;
 import fr.siroz.cariboustonks.systems.HudSystem;
 import fr.siroz.cariboustonks.systems.KeyBindSystem;
-import fr.siroz.cariboustonks.systems.NetworkSystem;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
 import fr.siroz.cariboustonks.systems.TooltipAppenderSystem;
 import fr.siroz.cariboustonks.systems.WaypointSystem;
@@ -28,7 +27,6 @@ public final class SystemManager {
         register(new KeyBindSystem());
         register(new WaypointSystem());
         register(new ReminderSystem());
-        register(new NetworkSystem());
         register(new ContainerOverlaySystem());
         register(new TooltipAppenderSystem());
         register(new HudSystem());

@@ -4,7 +4,6 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.component.HudComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.hud.TextHud;
-import fr.siroz.cariboustonks.systems.NetworkSystem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.NonNull;
@@ -13,14 +12,10 @@ public class TpsHud extends Feature {
 
 	private static final Identifier HUD_ID = CaribouStonks.identifier("hud_tps");
 
-	private final NetworkSystem networkSystem;
-
 	private int lastTruncatedTps = -1;
 	private String cachedText = null;
 
 	public TpsHud() {
-		this.networkSystem = CaribouStonks.systems().getSystem(NetworkSystem.class);
-
 		this.addComponent(HudComponent.class, HudComponent.builder()
 				.attachAfterStatusEffects(HUD_ID)
 				.hud(new TextHud(
@@ -39,7 +34,7 @@ public class TpsHud extends Feature {
 	}
 
 	private @NonNull Component getText() {
-		float tps = networkSystem.getTickRate();
+		float tps = CaribouStonks.mod().getNetworkManager().getTickRate();
 
 		// Troncature à une décimale (sans arrondi)
 		int truncatedTps = (int) (tps * 10);

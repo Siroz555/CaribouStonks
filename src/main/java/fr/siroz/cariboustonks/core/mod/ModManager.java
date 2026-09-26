@@ -28,10 +28,12 @@ public final class ModManager {
 
 	private final CrashManager crashManager;
 	private final SecretModFeatures secretModFeatures;
+	private final NetworkManager networkManager;
 
 	public ModManager() {
 		this.crashManager = new CrashManager();
 		this.secretModFeatures = new SecretModFeatures();
+		this.networkManager = new NetworkManager();
 
 		new UpdateChecker();
 		new ChangelogManager();
@@ -62,6 +64,15 @@ public final class ModManager {
 	 */
 	public SecretModFeatures getSecretModFeatures() {
 		return secretModFeatures;
+	}
+
+	/**
+	 * Retrieves the {@link NetworkManager} instance.
+	 *
+	 * @return the {@link NetworkManager} instance
+	 */
+	public NetworkManager getNetworkManager() {
+		return networkManager;
 	}
 
 	private void registerModCommand(@NonNull CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext ra) {

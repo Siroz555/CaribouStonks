@@ -1,20 +1,19 @@
-package fr.siroz.cariboustonks.systems;
+package fr.siroz.cariboustonks.core.mod;
 
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
-import fr.siroz.cariboustonks.core.system.System;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
+import fr.siroz.cariboustonks.platform.context.PlayerContext;
+import fr.siroz.cariboustonks.platform.context.WorldContext;
 import fr.siroz.cariboustonks.util.math.MathUtils;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.ClientboundPingPacket;
 import net.minecraft.network.protocol.ping.ServerboundPingRequestPacket;
 import net.minecraft.util.Util;
 
-public final class NetworkSystem implements System {
-	private static final Minecraft MINECRAFT = Minecraft.getInstance();
+public final class NetworkManager {
 
 	private int lastParameterS2CPing;
 
@@ -27,7 +26,7 @@ public final class NetworkSystem implements System {
 	private long timeLastTimeUpdate = -1;
 	private long timeGameJoined = 0;
 
-	public NetworkSystem() {
+	public NetworkManager() {
 		NetworkEvents.PING_RESULT.register(ping -> this.lastPingResult = ping);
 		NetworkEvents.WORLD_TIME_UPDATE_PACKET.register(this::onWorldTimeUpdatePacket);
 		NetworkEvents.GAME_JOIN_PACKET.register(this::onGameJoinPacket);
@@ -35,7 +34,7 @@ public final class NetworkSystem implements System {
 	}
 
 	public long getPing() {
-		long currentTime = java.lang.System.currentTimeMillis();
+		long currentTime = System.currentTimeMillis();
 
 		if (currentTime - lastUpdateTime >= 1500) {
 			currentPingResult = lastPingResult;
@@ -46,8 +45,8 @@ public final class NetworkSystem implements System {
 	}
 
 	public float getTickRate() {
-		if (MINECRAFT.level == null || MINECRAFT.player == null) return 0;
-		if (java.lang.System.currentTimeMillis() - timeGameJoined < 4000) return 20;
+		if (!PlayerContext.isAvailable() || !WorldContext.isAvailable()) return 0;
+		if (System.currentTimeMillis() - timeGameJoined < 4000) return 20;
 
 		int numTicks = 0;
 		float sumTickRates = 0.0F;
@@ -70,7 +69,7 @@ public final class NetworkSystem implements System {
 
 	@EventHandler(event = "NetworkEvents.WORLD_TIME_UPDATE_PACKET")
 	private void onWorldTimeUpdatePacket() {
-		long now = java.lang.System.currentTimeMillis();
+		long now = System.currentTimeMillis();
 		float timeElapsed = (now - timeLastTimeUpdate) / 1000.0F;
 		tickRates[nextIndex] = MathUtils.clamp(20.0F / timeElapsed, 0.0F, 20.0F);
 		nextIndex = (nextIndex + 1) % tickRates.length;
@@ -81,7 +80,7 @@ public final class NetworkSystem implements System {
 	private void onGameJoinPacket() {
 		Arrays.fill(tickRates, 0);
 		nextIndex = 0;
-		timeGameJoined = timeLastTimeUpdate = java.lang.System.currentTimeMillis();
+		timeGameJoined = timeLastTimeUpdate = System.currentTimeMillis();
 	}
 
 	private void sendPingPacket() {
