@@ -94,13 +94,13 @@ public final class ExternalDataSource {
 		return CompletableFuture.supplyAsync(() -> {
 			try (HttpResponse response = Http.request(strategy.url())) {
 				if (!response.success()) {
-					CaribouStonks.LOGGER.warn("[GenericDataSource] Price History API returned error {} for {}", response.statusCode(), key.hypixelSkyBlockId());
+					CaribouStonks.LOGGER.warn("[ExternalDataSource] Price History API returned error {} for {}", response.statusCode(), key.hypixelSkyBlockId());
 					return null;
 				}
 
 				JsonObject json = GsonProvider.prettyPrinting().fromJson(response.content(), JsonObject.class);
 				if (json == null) {
-					CaribouStonks.LOGGER.warn("[GenericDataSource] Json is null or empty for {}", key.hypixelSkyBlockId());
+					CaribouStonks.LOGGER.warn("[ExternalDataSource] Json is null or empty for {}", key.hypixelSkyBlockId());
 					return null;
 				}
 
@@ -111,7 +111,7 @@ public final class ExternalDataSource {
 
 				return result;
 			} catch (Exception ex) {
-				CaribouStonks.LOGGER.error("[GenericDataSource] Failed to fetch price history for {}", key.hypixelSkyBlockId(), ex);
+				CaribouStonks.LOGGER.error("[ExternalDataSource] Failed to fetch price history for {}", key.hypixelSkyBlockId(), ex);
 				return null;
 			}
 		}, AsyncScheduler.getInstance().blockingExecutor());
@@ -210,13 +210,13 @@ public final class ExternalDataSource {
 						result.put(element.getKey(), element.getValue().getAsDouble());
 					} catch (Exception ex) {
 						CaribouStonks.LOGGER.error(
-								"[GenericDataSource] Failed to parse lowest bin {}", element.getKey(), ex);
+								"[ExternalDataSource] Failed to parse lowest bin {}", element.getKey(), ex);
 					}
 				}
 
 				return result;
 			} catch (Exception ex) {
-				CaribouStonks.LOGGER.error("[GenericDataSource] Failed to fetch Auction lowest bins", ex);
+				CaribouStonks.LOGGER.error("[ExternalDataSource] Failed to fetch Auction lowest bins", ex);
 				return null;
 			}
 		}, AsyncScheduler.getInstance().blockingExecutor());
@@ -224,9 +224,9 @@ public final class ExternalDataSource {
 
 	private void checkLowestBinsResult() {
 		if (!lowestBinsError) {
-			CaribouStonks.LOGGER.info("[GenericDataSource] Updated {} lowest bins", lowestBinsPrices.size());
+			CaribouStonks.LOGGER.info("[ExternalDataSource] Updated {} lowest bins", lowestBinsPrices.size());
 		} else {
-			CaribouStonks.LOGGER.warn("[GenericDataSource] Unable to update lowest bins");
+			CaribouStonks.LOGGER.warn("[ExternalDataSource] Unable to update lowest bins");
 		}
 	}
 
