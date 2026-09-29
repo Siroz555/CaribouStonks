@@ -9,7 +9,7 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.config.configs.VanillaConfig;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.screens.HeldItemViewConfigScreen;
-import fr.siroz.cariboustonks.util.render.RenderUtils;
+import fr.siroz.cariboustonks.util.render.RenderUtil;
 import net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
@@ -60,7 +60,7 @@ public abstract class FirstPersonHandsAndItemsRendererMixin {
 			swingProgress.set(0f);
 			stack.set(heldItemViewConfigScreen.getPreviewItem());
 			equipProgress.set(0f);
-			light.set(RenderUtils.FULL_BRIGHT);
+			light.set(RenderUtil.FULL_BRIGHT);
 		}
 	}
 }

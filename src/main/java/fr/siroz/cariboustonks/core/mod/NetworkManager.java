@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.context.WorldContext;
-import fr.siroz.cariboustonks.util.math.MathUtils;
+import fr.siroz.cariboustonks.util.math.MathUtil;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.network.protocol.common.ClientboundPingPacket;
@@ -71,7 +71,7 @@ public final class NetworkManager {
 	private void onWorldTimeUpdatePacket() {
 		long now = System.currentTimeMillis();
 		float timeElapsed = (now - timeLastTimeUpdate) / 1000.0F;
-		tickRates[nextIndex] = MathUtils.clamp(20.0F / timeElapsed, 0.0F, 20.0F);
+		tickRates[nextIndex] = MathUtil.clamp(20.0F / timeElapsed, 0.0F, 20.0F);
 		nextIndex = (nextIndex + 1) % tickRates.length;
 		timeLastTimeUpdate = now;
 	}

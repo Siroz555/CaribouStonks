@@ -16,8 +16,9 @@ import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.StonksUtils;
-import fr.siroz.cariboustonks.util.TimeUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
+import fr.siroz.cariboustonks.util.StonksUtil;
+import fr.siroz.cariboustonks.util.TimeUtil;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -92,7 +93,7 @@ public class TrackingShardsFeature extends Feature {
 		if (!isEnabled()) return;
 
 		// Il faut strip, ty Hypixel -_-
-		String message = StonksUtils.stripColor(component.getString());
+		String message = MinecraftUtil.stripColor(component.getString());
 
 		Matcher shardCaughtMatcher = SHARD_CAUGHT_PATTERN.matcher(message);
 		if (shardCaughtMatcher.find()) {
@@ -108,7 +109,7 @@ public class TrackingShardsFeature extends Feature {
 
 	private void handleCatchParsing(Matcher matcher, String debugMessage, boolean isLootShare) {
 		try {
-			int quantity = StonksUtils.toInt(matcher.group(1), 1);
+			int quantity = StonksUtil.toInt(matcher.group(1), 1);
 			String shardType = matcher.group(2).trim();
 			if (!shardType.isEmpty()) {
 				handleCatch(quantity, shardType, isLootShare);
@@ -171,20 +172,20 @@ public class TrackingShardsFeature extends Feature {
 		}
 
 		builder.appendLine(Component.literal("Session: ").withStyle(ChatFormatting.GRAY).append(
-				Component.literal(TimeUtils.getDurationFormatted(Instant.ofEpochMilli(session.getSessionStartMs()), Instant.now(), false)).withStyle(ChatFormatting.YELLOW))
+				Component.literal(TimeUtil.getDurationFormatted(Instant.ofEpochMilli(session.getSessionStartMs()), Instant.now(), false)).withStyle(ChatFormatting.YELLOW))
 		);
 		builder.appendSpace();
 
 		MutableComponent shardsLine = Component.literal("Total Shards: ").withStyle(ChatFormatting.GRAY).append(
-				Component.literal(StonksUtils.INTEGER_NUMBERS.format(stats.totalShards())).withStyle(ChatFormatting.GREEN));
+				Component.literal(StonksUtil.INTEGER_NUMBERS.format(stats.totalShards())).withStyle(ChatFormatting.GREEN));
 		if (showDelta && lastShardDelta > 0) {
 			shardsLine.append(Component.literal(" (+" + lastShardDelta + ")").withStyle(ChatFormatting.DARK_GREEN));
 		}
 
 		MutableComponent coinsLine = Component.literal("Total Coins: ").withStyle(ChatFormatting.GRAY).append(
-				Component.literal(StonksUtils.INTEGER_NUMBERS.format(stats.totalCoins())).withStyle(ChatFormatting.GOLD));
+				Component.literal(StonksUtil.INTEGER_NUMBERS.format(stats.totalCoins())).withStyle(ChatFormatting.GOLD));
 		if (showDelta && lastCoinDelta > 0) {
-			coinsLine.append(Component.literal(" (+" + StonksUtils.SHORT_FLOAT_NUMBERS.format(lastCoinDelta) + ")").withStyle(ChatFormatting.YELLOW));
+			coinsLine.append(Component.literal(" (+" + StonksUtil.SHORT_FLOAT_NUMBERS.format(lastCoinDelta) + ")").withStyle(ChatFormatting.YELLOW));
 		}
 
 		builder.appendLine(shardsLine);
@@ -192,16 +193,16 @@ public class TrackingShardsFeature extends Feature {
 		builder.appendSpace();
 
 		builder.appendLine(Component.literal("Shards/h: ").withStyle(ChatFormatting.GRAY).append(
-				Component.literal(StonksUtils.INTEGER_NUMBERS.format(stats.shardsPerHour())).withStyle(ChatFormatting.GREEN))
+				Component.literal(StonksUtil.INTEGER_NUMBERS.format(stats.shardsPerHour())).withStyle(ChatFormatting.GREEN))
 		);
 		builder.appendLine(Component.literal("Coins/h: ").withStyle(ChatFormatting.GRAY).append(
-				Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(stats.coinsPerHour())).withStyle(ChatFormatting.GOLD))
+				Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(stats.coinsPerHour())).withStyle(ChatFormatting.GOLD))
 		);
 
 		if (stats.lootShareCount() > 0) {
 			builder.appendSpace();
 			builder.appendLine(Component.literal("Loot Share: ").withStyle(ChatFormatting.YELLOW).append(
-					Component.literal(StonksUtils.INTEGER_NUMBERS.format(stats.lootShareCount())).withStyle(ChatFormatting.AQUA))
+					Component.literal(StonksUtil.INTEGER_NUMBERS.format(stats.lootShareCount())).withStyle(ChatFormatting.AQUA))
 			);
 		}
 
@@ -212,7 +213,7 @@ public class TrackingShardsFeature extends Feature {
 			builder.appendSpace();
 			for (Map.Entry<String, Integer> entry : stats.shardsByType().entrySet()) {
 				builder.appendLine(Component.literal(" " + entry.getKey() + ": ").withColor(resolveShardRarity(entry.getKey()).getColor())
-						.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(entry.getValue())).withStyle(ChatFormatting.YELLOW))
+						.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(entry.getValue())).withStyle(ChatFormatting.YELLOW))
 				);
 			}
 		}

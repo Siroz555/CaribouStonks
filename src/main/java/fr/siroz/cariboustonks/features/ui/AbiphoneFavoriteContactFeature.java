@@ -11,8 +11,8 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
-import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +45,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 				.trait(this.trait)
 				.appender((_, item, lines) -> {
 					if (isContact(item)) {
-						String name = StonksUtils.stripColor(item.getHoverName().getString());
+						String name = MinecraftUtil.stripColor(item.getHoverName().getString());
 						if (this.config().uiAndVisuals.favoriteAbiphoneContacts.contains(name)) {
 							lines.add(Component.literal("SHIFT").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD)
 									.append(Component.literal(" To remove from favourite contacts").withStyle(ChatFormatting.YELLOW)));
@@ -63,7 +63,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 					List<ColorHighlight> highlights = new ArrayList<>();
 					slots.forEach((slotIndex, itemStack) -> {
 						if (isContact(itemStack)) {
-							String name = StonksUtils.stripColor(itemStack.getHoverName().getString());
+							String name = MinecraftUtil.stripColor(itemStack.getHoverName().getString());
 							if (this.config().uiAndVisuals.favoriteAbiphoneContacts.contains(name)) {
 								highlights.add(ColorHighlight.yellow(slotIndex, 0.35f));
 							}
@@ -87,7 +87,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 		if (ClientContext.hasShiftDown() && COOLDOWN.test()) {
 			ItemStack itemStack = slot.getItem();
 			if (isContact(itemStack)) {
-				String name = StonksUtils.stripColor(itemStack.getHoverName().getString());
+				String name = MinecraftUtil.stripColor(itemStack.getHoverName().getString());
 				toggleFavouriteContact(itemStack.getHoverName(), name);
 			}
 		}
@@ -108,7 +108,7 @@ public class AbiphoneFavoriteContactFeature extends Feature {
 	private boolean isContact(ItemStack itemStack) {
 		if (itemStack == null || itemStack.is(Items.STAINED_GLASS_PANE.black())) return false;
 
-		return ItemUtils.getLore(itemStack).stream()
+		return ItemUtil.getLore(itemStack).stream()
 				.map(Component::getString)
 				.anyMatch(s -> s.equals("Left-click to call!") || s.equals("Click to call!"));
 	}

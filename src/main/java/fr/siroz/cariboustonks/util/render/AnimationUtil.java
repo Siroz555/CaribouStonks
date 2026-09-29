@@ -1,24 +1,18 @@
 package fr.siroz.cariboustonks.util.render;
 
 import fr.siroz.cariboustonks.core.module.color.Color;
-import fr.siroz.cariboustonks.util.math.MathUtils;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.Minecraft;
+import fr.siroz.cariboustonks.util.math.MathUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.util.Util;
 import org.jspecify.annotations.NonNull;
 
-public final class AnimationUtils {
+public final class AnimationUtil {
 	private static final int RAINBOW_CHANGE_RATE = 10;
 	private static Color currentRainbowColor = new Color(255, 0, 0, 255);
 
-	private AnimationUtils() {
-	}
-
-	public static void init() {
-		ClientTickEvents.END_CLIENT_TICK.register(AnimationUtils::onTick);
+	private AnimationUtil() {
 	}
 
 	/**
@@ -65,7 +59,7 @@ public final class AnimationUtils {
 		return currentRainbowColor;
 	}
 
-	private static void onTick(Minecraft _client) {
+	public static void onTick() {
 		int r = currentRainbowColor.r();
 		int g = currentRainbowColor.g();
 		int b = currentRainbowColor.b();
@@ -83,9 +77,9 @@ public final class AnimationUtils {
 			b -= RAINBOW_CHANGE_RATE;
 		}
 
-		r = MathUtils.clamp(r, 0, 255);
-		g = MathUtils.clamp(g, 0, 255);
-		b = MathUtils.clamp(b, 0, 255);
+		r = MathUtil.clamp(r, 0, 255);
+		g = MathUtil.clamp(g, 0, 255);
+		b = MathUtil.clamp(b, 0, 255);
 
 		currentRainbowColor = new Color(r, g, b, 255);
 	}

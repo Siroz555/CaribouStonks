@@ -11,7 +11,7 @@ import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.time.Instant;
 import java.util.List;
@@ -55,7 +55,7 @@ public class GreenhouseGrowthStageFeature extends Feature {
 
 	@NonNull
 	private List<ColorHighlight> contentAnalyzer(@NonNull Int2ObjectMap<ItemStack> slots) {
-		String growthStage = ItemUtils.getConcatenatedLore(slots.get(GROWTH_STAGE_SLOT));
+		String growthStage = ItemUtil.getConcatenatedLore(slots.get(GROWTH_STAGE_SLOT));
 		Matcher growthStageMatcher = GROWTH_STAGE_PATTERN.matcher(growthStage);
 		if (growthStageMatcher.find()) {
 			String hoursStr = growthStageMatcher.group(1);

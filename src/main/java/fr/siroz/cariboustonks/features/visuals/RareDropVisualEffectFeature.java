@@ -6,8 +6,8 @@ import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
 import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -57,7 +57,7 @@ public class RareDropVisualEffectFeature extends Feature {
 
 		ItemStack itemStack = parseItemStack(item);
 		if (itemStack != null && !itemStack.isEmpty() && !itemStack.is(Items.BARRIER)) {
-			MinecraftUtils.showSpecialEffect(itemStack, ParticleTypes.TRIAL_SPAWNER_DETECTED_PLAYER_OMINOUS, 10, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
+			MinecraftUtil.showSpecialEffect(itemStack, ParticleTypes.TRIAL_SPAWNER_DETECTED_PLAYER_OMINOUS, 10, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
 		}
 	}
 
@@ -66,9 +66,9 @@ public class RareDropVisualEffectFeature extends Feature {
 		if (skyBlockItemId == null) return null;
 
 		return switch (skyBlockItemId) {
-			case "SHARD_PARAGON" -> ItemUtils.createSkull(HeadTextures.SHARD_PARAGON);
-			case "SHARD_PRIMORDIAL" -> ItemUtils.createSkull(HeadTextures.SHARD_PRIMORDIAL);
-			case "HIGH_CLASS_ARCHFIEND_DICE" -> ItemUtils.createSkull(HeadTextures.HIGH_CLASS_ARCHFIEND_DICE);
+			case "SHARD_PARAGON" -> ItemUtil.createSkull(HeadTextures.SHARD_PARAGON);
+			case "SHARD_PRIMORDIAL" -> ItemUtil.createSkull(HeadTextures.SHARD_PRIMORDIAL);
+			case "HIGH_CLASS_ARCHFIEND_DICE" -> ItemUtil.createSkull(HeadTextures.HIGH_CLASS_ARCHFIEND_DICE);
 			default -> CaribouStonks.skyBlock().getHypixelDataSource().getItemStack(skyBlockItemId);
 		};
 	}

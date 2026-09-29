@@ -2,7 +2,7 @@ package fr.siroz.cariboustonks.core.skyblock.data.hypixel;
 
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -78,7 +78,7 @@ public final class HypixelPartyManager {
 	}
 
 	private void handleChatMessageListener(@NonNull Component component) {
-		String message = StonksUtils.stripColor(component.getString());
+		String message = MinecraftUtil.stripColor(component.getString());
 
 		if (handleJoin(message) || handleLeave(message) || handleTransfer(message)) return;
 		handlePartyLeft(message);

@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.platform.rendering.gui.state;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.Quad;
-import fr.siroz.cariboustonks.util.math.MathUtils;
+import fr.siroz.cariboustonks.util.math.MathUtil;
 import java.util.List;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
@@ -69,6 +69,6 @@ public record QuadGuiElementRenderState(
 			maxY = Math.max(maxY, quad.y4());
 		}
 
-		return new ScreenRectangle(MathUtils.floor(minX), MathUtils.floor(minY), MathUtils.ceil(maxX - minX), MathUtils.ceil(maxY - minY));
+		return new ScreenRectangle(MathUtil.floor(minX), MathUtil.floor(minY), MathUtil.ceil(maxX - minX), MathUtil.ceil(maxY - minY));
 	}
 }

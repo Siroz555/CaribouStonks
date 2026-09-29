@@ -14,7 +14,7 @@ import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerType;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayDeque;
@@ -209,7 +209,7 @@ public class SlayerStatsFeature extends Feature {
 		stats.spawnAverage = avgSpawn.isPresent() ? formatDurationSeconds(Math.round(avgSpawn.getAsDouble())) : "N/A";
 		stats.killAverage = avgKill.isPresent() ? formatDurationSeconds(Math.round(avgKill.getAsDouble())) : "N/A";
 		stats.bossPerHour = bph.isPresent() ? String.format("%.2f", bph.getAsDouble()) : "N/A";
-		stats.xpPerHour = xph.isPresent() ? StonksUtils.SHORT_FLOAT_NUMBERS.format(xph.getAsDouble()) : "N/A";
+		stats.xpPerHour = xph.isPresent() ? StonksUtil.SHORT_FLOAT_NUMBERS.format(xph.getAsDouble()) : "N/A";
 	}
 
 	public OptionalDouble averageSecondsToSpawn() {

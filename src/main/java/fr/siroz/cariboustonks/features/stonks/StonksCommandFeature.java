@@ -11,7 +11,7 @@ import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.stonks.StonksScreen;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -101,20 +101,20 @@ public class StonksCommandFeature extends Feature {
 		double buyVelocity = bazaarProduct.buyVelocity();
 		double standardDeviationBuy = bazaarProduct.buyPriceStdDev();
 		source.sendFeedback(Component.literal("Buy: ").withStyle(ChatFormatting.YELLOW)
-				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(buyPrice) + " Coins").withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(buyPrice) + " Coins").withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(buyPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 				.append(Component.literal(" (Hover)").withStyle(ChatFormatting.AQUA))
 				.withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(
 						Component.literal("Buy-Avg: ").withStyle(ChatFormatting.YELLOW)
-								.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(buyAvgPrice) + " Coins").withStyle(ChatFormatting.GOLD))
+								.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(buyAvgPrice) + " Coins").withStyle(ChatFormatting.GOLD))
 								.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-								.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyAvgPrice)).withStyle(ChatFormatting.GOLD))
+								.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(buyAvgPrice)).withStyle(ChatFormatting.GOLD))
 								.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 								.append(Component.literal("\n\n"))
 								.append(Component.literal("Velocity: ").withStyle(ChatFormatting.DARK_AQUA))
-								.append(Component.literal(StonksUtils.FLOAT_NUMBERS.format(buyVelocity)).withStyle(ChatFormatting.AQUA))
+								.append(Component.literal(StonksUtil.FLOAT_NUMBERS.format(buyVelocity)).withStyle(ChatFormatting.AQUA))
 								.append(Component.literal("\n"))
 								.append(Component.literal("(Compares current volume to the daily average from the past week)").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
 								.append(Component.literal("\n"))
@@ -127,7 +127,7 @@ public class StonksCommandFeature extends Feature {
 								.append(Component.literal("- > 3      = Peak activity (event, speculation)").withStyle(ChatFormatting.GRAY))
 								.append(Component.literal("\n\n"))
 								.append(Component.literal("*Standard Deviation: ").withStyle(ChatFormatting.DARK_GREEN))
-								.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationBuy)).withStyle(ChatFormatting.GREEN))
+								.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(standardDeviationBuy)).withStyle(ChatFormatting.GREEN))
 								.append(Component.literal("\n"))
 								.append(Component.literal("(This measures price volatility. Higher values indicate stronger fluctuations)").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
 								.append(Component.literal("\n\n"))
@@ -137,10 +137,10 @@ public class StonksCommandFeature extends Feature {
 		long buyVolume = bazaarProduct.buyVolume();
 		long buyOrders = bazaarProduct.buyOrders();
 		long buyMovingWeek = bazaarProduct.buyMovingWeek();
-		source.sendFeedback(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyVolume)).withStyle(ChatFormatting.DARK_GRAY)
-				.append(" in " + StonksUtils.SHORT_FLOAT_NUMBERS.format(buyOrders) + " orders")
+		source.sendFeedback(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(buyVolume)).withStyle(ChatFormatting.DARK_GRAY)
+				.append(" in " + StonksUtil.SHORT_FLOAT_NUMBERS.format(buyOrders) + " orders")
 				.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
-				.append(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyMovingWeek)).withStyle(ChatFormatting.DARK_GRAY)
+				.append(StonksUtil.SHORT_FLOAT_NUMBERS.format(buyMovingWeek)).withStyle(ChatFormatting.DARK_GRAY)
 				.append(Component.literal(" insta-buys in 7d").withStyle(ChatFormatting.DARK_GRAY))
 		);
 
@@ -151,20 +151,20 @@ public class StonksCommandFeature extends Feature {
 		double sellVelocity = bazaarProduct.sellVelocity();
 		double standardDeviationSell = bazaarProduct.sellPriceStdDev();
 		source.sendFeedback(Component.literal("Sell: ").withStyle(ChatFormatting.YELLOW)
-				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(sellPrice) + " Coins").withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(sellPrice) + " Coins").withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(sellPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 				.append(Component.literal(" (Hover)").withStyle(ChatFormatting.AQUA))
 				.withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(
 						Component.literal("Sell-Avg: ").withStyle(ChatFormatting.YELLOW)
-								.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(sellAvgPrice) + " Coins").withStyle(ChatFormatting.GOLD))
+								.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(sellAvgPrice) + " Coins").withStyle(ChatFormatting.GOLD))
 								.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-								.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellAvgPrice)).withStyle(ChatFormatting.GOLD))
+								.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(sellAvgPrice)).withStyle(ChatFormatting.GOLD))
 								.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 								.append(Component.literal("\n\n"))
 								.append(Component.literal("Velocity: ").withStyle(ChatFormatting.DARK_AQUA))
-								.append(Component.literal(StonksUtils.FLOAT_NUMBERS.format(sellVelocity)).withStyle(ChatFormatting.AQUA))
+								.append(Component.literal(StonksUtil.FLOAT_NUMBERS.format(sellVelocity)).withStyle(ChatFormatting.AQUA))
 								.append(Component.literal("\n"))
 								.append(Component.literal("(Compares current volume to the daily average from the past week)").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
 								.append(Component.literal("\n"))
@@ -177,7 +177,7 @@ public class StonksCommandFeature extends Feature {
 								.append(Component.literal("- > 3      = Peak activity (event, speculation)").withStyle(ChatFormatting.GRAY))
 								.append(Component.literal("\n\n"))
 								.append(Component.literal("*Standard Deviation: ").withStyle(ChatFormatting.DARK_GREEN))
-								.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(standardDeviationSell)).withStyle(ChatFormatting.GREEN))
+								.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(standardDeviationSell)).withStyle(ChatFormatting.GREEN))
 								.append(Component.literal("\n"))
 								.append(Component.literal("(This measures price volatility. Higher values indicate stronger fluctuations)").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
 								.append(Component.literal("\n\n"))
@@ -188,10 +188,10 @@ public class StonksCommandFeature extends Feature {
 		long sellVolume = bazaarProduct.sellVolume();
 		long sellOrders = bazaarProduct.sellOrders();
 		long sellMovingWeek = bazaarProduct.sellMovingWeek();
-		source.sendFeedback(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellVolume)).withStyle(ChatFormatting.DARK_GRAY)
-				.append(" in " + StonksUtils.SHORT_FLOAT_NUMBERS.format(sellOrders) + " orders")
+		source.sendFeedback(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(sellVolume)).withStyle(ChatFormatting.DARK_GRAY)
+				.append(" in " + StonksUtil.SHORT_FLOAT_NUMBERS.format(sellOrders) + " orders")
 				.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
-				.append(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellMovingWeek)).withStyle(ChatFormatting.DARK_GRAY)
+				.append(StonksUtil.SHORT_FLOAT_NUMBERS.format(sellMovingWeek)).withStyle(ChatFormatting.DARK_GRAY)
 				.append(Component.literal(" insta-sells in 7d").withStyle(ChatFormatting.DARK_GRAY))
 		);
 
@@ -200,11 +200,11 @@ public class StonksCommandFeature extends Feature {
 		double spread = bazaarProduct.spread();
 		double spreadPercentage = bazaarProduct.spreadPercentage();
 		source.sendFeedback(Component.literal("Spreed: ").withStyle(ChatFormatting.RED)
-				.append(Component.literal(StonksUtils.FLOAT_NUMBERS.format(spreadPercentage) + "%").withColor(Colors.RED.asInt()))
+				.append(Component.literal(StonksUtil.FLOAT_NUMBERS.format(spreadPercentage) + "%").withColor(Colors.RED.asInt()))
 				.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(spread)).withColor(Colors.RED.asInt()))
+				.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(spread)).withColor(Colors.RED.asInt()))
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(spread)).withColor(Colors.RED.asInt()))
+				.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(spread)).withColor(Colors.RED.asInt()))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 		);
 		source.sendFeedback(Component.empty());
@@ -232,8 +232,8 @@ public class StonksCommandFeature extends Feature {
 		}
 		source.sendFeedback(Component.empty());
 
-		String lowestBinPriceDisplay = StonksUtils.INTEGER_NUMBERS.format(lowestBin);
-		String lowestBinPriceShortDisplay = StonksUtils.SHORT_FLOAT_NUMBERS.format(lowestBin);
+		String lowestBinPriceDisplay = StonksUtil.INTEGER_NUMBERS.format(lowestBin);
+		String lowestBinPriceShortDisplay = StonksUtil.SHORT_FLOAT_NUMBERS.format(lowestBin);
 		source.sendFeedback(Component.literal("Auction Lowest BIN: ").withStyle(ChatFormatting.YELLOW)
 				.append(Component.literal(lowestBinPriceDisplay + " Coins").withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))

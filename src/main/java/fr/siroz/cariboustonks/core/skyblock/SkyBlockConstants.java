@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.core.skyblock;
 
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
@@ -62,7 +62,7 @@ public interface SkyBlockConstants {
 	 * <p>
 	 * <a href="https://wiki.hypixel.net/Enchantments">Hypixel Wiki Enchantments</a>
 	 */
-	Object2ObjectMap<String, Map<Integer, String>> ENCHANTMENT_UPGRADES = Object2ObjectMaps.unmodifiable(StonksUtils.make(new Object2ObjectOpenHashMap<>(), map -> {
+	Object2ObjectMap<String, Map<Integer, String>> ENCHANTMENT_UPGRADES = Object2ObjectMaps.unmodifiable(StonksUtil.make(new Object2ObjectOpenHashMap<>(), map -> {
 		map.put("SCAVENGER", Map.of(6, "GOLDEN_BOUNTY"));
 		map.put("PESTERMINATOR", Map.of(6, "PESTHUNTING_GUIDE"));
 		map.put("LUCK_OF_THE_SEA", Map.of(7, "GOLD_BOTTLE_CAP"));
@@ -86,7 +86,7 @@ public interface SkyBlockConstants {
 	 * <p>
 	 * Example: {@code TURBO_} -> {@code (Level 6/7) TURBO_GOURD/ENCHANTED_TURBO_GOURD}
 	 */
-	Object2ObjectMap<String, Map<Integer, String>> ENCHANTMENT_PREFIX_UPGRADES = Object2ObjectMaps.unmodifiable(StonksUtils.make(new Object2ObjectOpenHashMap<>(), map -> {
+	Object2ObjectMap<String, Map<Integer, String>> ENCHANTMENT_PREFIX_UPGRADES = Object2ObjectMaps.unmodifiable(StonksUtil.make(new Object2ObjectOpenHashMap<>(), map -> {
 		map.put("TURBO_", Map.of(6, "TURBO_GOURD", 7, "ENCHANTED_TURBO_GOURD"));
 	}));
 
@@ -113,7 +113,7 @@ public interface SkyBlockConstants {
 			"TOXOPHILITE"
 	);
 
-	Object2ObjectMap<String, Pair<Long, String>> MIDAS_WEAPONS = Object2ObjectMaps.unmodifiable(StonksUtils.make(new Object2ObjectOpenHashMap<>(), map -> {
+	Object2ObjectMap<String, Pair<Long, String>> MIDAS_WEAPONS = Object2ObjectMaps.unmodifiable(StonksUtil.make(new Object2ObjectOpenHashMap<>(), map -> {
 		map.put("MIDAS_SWORD", Pair.of(50_000_000L, "MIDAS_SWORD_50M"));
 		map.put("STARRED_MIDAS_SWORD", Pair.of(250_000_000L, "STARRED_MIDAS_SWORD_250M"));
 		map.put("MIDAS_STAFF", Pair.of(100_000_000L, "MIDAS_STAFF_100M"));
@@ -148,7 +148,7 @@ public interface SkyBlockConstants {
 			"Paid Chest", "Paid Chest Chest"
 	);
 
-	Object2IntMap<String> PET_SPECIALS = Object2IntMaps.unmodifiable(StonksUtils.make(new Object2IntOpenHashMap<>(), map -> {
+	Object2IntMap<String> PET_SPECIALS = Object2IntMaps.unmodifiable(StonksUtil.make(new Object2IntOpenHashMap<>(), map -> {
 		map.put("GOLDEN_DRAGON", 200);
 		map.put("JADE_DRAGON", 200);
 		map.put("ROSE_DRAGON", 200);
@@ -161,8 +161,8 @@ public interface SkyBlockConstants {
 	 * <p>
 	 * Example: {@code LEGENDARY} -> {@code 10:24}
 	 */
-	Map<Rarity, Int2IntMap> ATTRIBUTE_LEVELS = Collections.unmodifiableMap(StonksUtils.make(new EnumMap<>(Rarity.class), map -> {
-		map.put(Rarity.COMMON, StonksUtils.make(new Int2IntArrayMap(), common -> {
+	Map<Rarity, Int2IntMap> ATTRIBUTE_LEVELS = Collections.unmodifiableMap(StonksUtil.make(new EnumMap<>(Rarity.class), map -> {
+		map.put(Rarity.COMMON, StonksUtil.make(new Int2IntArrayMap(), common -> {
 			common.put(1, 1);
 			common.put(2, 4);
 			common.put(3, 9);
@@ -174,7 +174,7 @@ public interface SkyBlockConstants {
 			common.put(9, 72);
 			common.put(10, 96);
 		}));
-		map.put(Rarity.UNCOMMON, StonksUtils.make(new Int2IntArrayMap(), uncommon -> {
+		map.put(Rarity.UNCOMMON, StonksUtil.make(new Int2IntArrayMap(), uncommon -> {
 			uncommon.put(1, 1);
 			uncommon.put(2, 3);
 			uncommon.put(3, 6);
@@ -186,7 +186,7 @@ public interface SkyBlockConstants {
 			uncommon.put(9, 48);
 			uncommon.put(10, 64);
 		}));
-		map.put(Rarity.RARE, StonksUtils.make(new Int2IntArrayMap(), rare -> {
+		map.put(Rarity.RARE, StonksUtil.make(new Int2IntArrayMap(), rare -> {
 			rare.put(1, 1);
 			rare.put(2, 3);
 			rare.put(3, 6);
@@ -198,7 +198,7 @@ public interface SkyBlockConstants {
 			rare.put(9, 39);
 			rare.put(10, 48);
 		}));
-		map.put(Rarity.EPIC, StonksUtils.make(new Int2IntArrayMap(), epic -> {
+		map.put(Rarity.EPIC, StonksUtil.make(new Int2IntArrayMap(), epic -> {
 			epic.put(1, 1);
 			epic.put(2, 2);
 			epic.put(3, 4);
@@ -210,7 +210,7 @@ public interface SkyBlockConstants {
 			epic.put(9, 25);
 			epic.put(10, 32);
 		}));
-		map.put(Rarity.LEGENDARY, StonksUtils.make(new Int2IntArrayMap(), legendary -> {
+		map.put(Rarity.LEGENDARY, StonksUtil.make(new Int2IntArrayMap(), legendary -> {
 			legendary.put(1, 1);
 			legendary.put(2, 2);
 			legendary.put(3, 3);
@@ -227,7 +227,7 @@ public interface SkyBlockConstants {
 	/**
 	 * Represents all prestiges on Kuudra Armors.
 	 */
-	Object2ObjectMap<String, Set<String>> PRESTIGES = Object2ObjectMaps.unmodifiable(StonksUtils.make(new Object2ObjectOpenHashMap<>(), map -> {
+	Object2ObjectMap<String, Set<String>> PRESTIGES = Object2ObjectMaps.unmodifiable(StonksUtil.make(new Object2ObjectOpenHashMap<>(), map -> {
 		// Crimson
 		map.put("HOT_CRIMSON_HELMET", Set.of("CRIMSON_HELMET"));
 		map.put("HOT_CRIMSON_CHESTPLATE", Set.of("CRIMSON_CHESTPLATE"));

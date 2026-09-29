@@ -4,9 +4,9 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.skyblock.data.external.ItemPrice;
 import fr.siroz.cariboustonks.platform.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.Point;
-import fr.siroz.cariboustonks.util.ColorUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
-import fr.siroz.cariboustonks.util.TimeUtils;
+import fr.siroz.cariboustonks.util.ColorUtil;
+import fr.siroz.cariboustonks.util.StonksUtil;
+import fr.siroz.cariboustonks.util.TimeUtil;
 import java.awt.Color;
 import java.time.Duration;
 import java.time.Instant;
@@ -229,7 +229,7 @@ class GraphWidget extends AbstractStonksWidget {
 			// Calcul de la position en Y sur le graphique
 			int labelY = (int) (y2 - i * (y2 - y1) / (double) priceSteps);
 
-			String priceLabel = StonksUtils.SHORT_FLOAT_NUMBERS.format(currentPrice);
+			String priceLabel = StonksUtil.SHORT_FLOAT_NUMBERS.format(currentPrice);
 
 			context.text(textRenderer, Component.literal(priceLabel).withStyle(ChatFormatting.GOLD),
 					x2 + 10, labelY, Color.WHITE.getRGB());
@@ -262,21 +262,21 @@ class GraphWidget extends AbstractStonksWidget {
 			if (closestPoint != null) {
 				ItemPrice item = graphData.get(closestPoint);
 
-				Component dateText = Component.literal(TimeUtils.formatInstant(item.time(), TimeUtils.DATE_TIME_FULL))
+				Component dateText = Component.literal(TimeUtil.formatInstant(item.time(), TimeUtil.DATE_TIME_FULL))
 						.withStyle(ChatFormatting.AQUA);
 
 				Component priceText;
 				Component secondPriceText = null;
 				if (type == Type.BAZAAR) {
 					priceText = Component.literal("Bazaar Buy: ").withStyle(ChatFormatting.YELLOW)
-							.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(item.buyPrice()))
+							.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(item.buyPrice()))
 									.withStyle(ChatFormatting.GOLD));
 					secondPriceText = Component.literal("Bazaar Sell: ").withStyle(ChatFormatting.YELLOW)
-							.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(item.sellPrice()))
+							.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(item.sellPrice()))
 									.withStyle(ChatFormatting.GOLD));
 				} else {
 					priceText = Component.literal("Price: ").withStyle(ChatFormatting.YELLOW)
-							.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(item.buyPrice()))
+							.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(item.buyPrice()))
 									.withStyle(ChatFormatting.GOLD));
 				}
 
@@ -332,7 +332,7 @@ class GraphWidget extends AbstractStonksWidget {
 	) {
 		List<Point> gradientPoints = new ArrayList<>(pointsToRender);
 		if (this.granularity == GraphDataFilter.Granularity.DAY) {
-			gradientPoints = StonksUtils.reduceListToApproxSize(gradientPoints, 300);
+			gradientPoints = StonksUtil.reduceListToApproxSize(gradientPoints, 300);
 		}
 
 		renderGradient(guiGraphics, gradientPoints, startColor, endColor, y2 + 10, withSellerPrice);
@@ -369,7 +369,7 @@ class GraphWidget extends AbstractStonksWidget {
 					factor = 1;
 				}*/
 
-				Color color = ColorUtils.interpolatedColor(new Color(colorStart), new Color(colorEnd), factor);
+				Color color = ColorUtil.interpolatedColor(new Color(colorStart), new Color(colorEnd), factor);
 
 				int startX = point.x();
 				int startY = point.y();

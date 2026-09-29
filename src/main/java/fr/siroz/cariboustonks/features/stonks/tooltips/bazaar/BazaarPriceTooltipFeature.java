@@ -9,7 +9,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.features.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -94,11 +94,11 @@ public class BazaarPriceTooltipFeature extends Feature {
 			double spreadPercentage = product.get().spreadPercentage();
 			Component spread = Component.empty()
 					.append(Component.literal(" | Spreed: ").withStyle(ChatFormatting.RED))
-					.append(Component.literal(StonksUtils.FLOAT_NUMBERS.format(spreadPercentage) + "%").withColor(Colors.RED.asInt()))
+					.append(Component.literal(StonksUtil.FLOAT_NUMBERS.format(spreadPercentage) + "%").withColor(Colors.RED.asInt()))
 					.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
-					.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(absoluteSpread)).withColor(Colors.RED.asInt()))
+					.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(absoluteSpread)).withColor(Colors.RED.asInt()))
 					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-					.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(absoluteSpread)).withColor(Colors.RED.asInt()))
+					.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(absoluteSpread)).withColor(Colors.RED.asInt()))
 					.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 			lines.add(spread);
 		}
@@ -117,7 +117,7 @@ public class BazaarPriceTooltipFeature extends Feature {
 		TooltipPriceDisplayType displayType = this.config().general.stonks.bazaarTooltipPriceDisplayType;
 		String display;
 		if (value < 100) {
-			display = StonksUtils.FLOAT_NUMBERS.format(value);
+			display = StonksUtil.FLOAT_NUMBERS.format(value);
 		} else {
 
 			if (count > 1 && (ClientContext.hasShiftDown() || showTotalWithoutShiftConfig)) {
@@ -125,9 +125,9 @@ public class BazaarPriceTooltipFeature extends Feature {
 			}
 
 			if (displayType == TooltipPriceDisplayType.SHORT) {
-				display = StonksUtils.SHORT_FLOAT_NUMBERS.format(value);
+				display = StonksUtil.SHORT_FLOAT_NUMBERS.format(value);
 			} else {
-				display = StonksUtils.INTEGER_NUMBERS.format(value);
+				display = StonksUtil.INTEGER_NUMBERS.format(value);
 			}
 		}
 
@@ -137,8 +137,8 @@ public class BazaarPriceTooltipFeature extends Feature {
 						.append(Component.literal(display + " Coins").withStyle(ChatFormatting.GOLD));
 
 				if (showTotalWithoutShiftConfig && count > 1) {
-					String unitDisplay = StonksUtils.INTEGER_NUMBERS.format(unitValue);
-					if (unitValue < 100_000) unitDisplay = StonksUtils.FLOAT_NUMBERS.format(unitValue);
+					String unitDisplay = StonksUtil.INTEGER_NUMBERS.format(unitValue);
+					if (unitValue < 100_000) unitDisplay = StonksUtil.FLOAT_NUMBERS.format(unitValue);
 
 					line.append(Component.literal(" (").withStyle(ChatFormatting.DARK_GRAY))
 							.append(Component.literal(unitDisplay + " each").withStyle(ChatFormatting.GRAY))
@@ -150,7 +150,7 @@ public class BazaarPriceTooltipFeature extends Feature {
 			case ALL -> lines.add(Component.literal(label).withStyle(ChatFormatting.YELLOW)
 					.append(Component.literal(display + " Coins").withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-					.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(value)).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(value)).withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 			);
 			case null, default -> {

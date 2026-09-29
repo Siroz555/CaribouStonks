@@ -13,9 +13,11 @@ import fr.siroz.cariboustonks.screens.CaribouStonksMenuScreen;
 import fr.siroz.cariboustonks.screens.HeldItemViewConfigScreen;
 import fr.siroz.cariboustonks.screens.HudConfigScreen;
 import fr.siroz.cariboustonks.util.DeveloperTools;
+import fr.siroz.cariboustonks.util.render.AnimationUtil;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -46,6 +48,9 @@ public final class ModManager {
 
 		// Commands
 		ClientCommandRegistrationCallback.EVENT.register(this::registerModCommand);
+
+		// Listeners (cas en peu particulier de gérer ça ici et surtout que ce util a un "state" -_-)
+		ClientTickEvents.END_CLIENT_TICK.register(_ -> AnimationUtil.onTick());
 	}
 
 	/**

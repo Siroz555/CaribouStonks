@@ -8,7 +8,7 @@ import fr.siroz.cariboustonks.core.module.hud.Hud;
 import fr.siroz.cariboustonks.core.module.hud.HudAnchor;
 import fr.siroz.cariboustonks.platform.rendering.gui.GuiRenderer;
 import fr.siroz.cariboustonks.systems.HudSystem;
-import fr.siroz.cariboustonks.util.render.RenderUtils;
+import fr.siroz.cariboustonks.util.render.RenderUtil;
 import java.util.List;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -106,7 +106,7 @@ public final class HudConfigScreen extends CaribousStonksScreen {
 				for (Hud hud : hudList) {
 					if (!hud.isConfigEnabled()) continue;
 					// overlapping behavior
-					if (RenderUtils.pointIsInArea(click.x(), click.y(),
+					if (RenderUtil.pointIsInArea(click.x(), click.y(),
 							hud.x(), hud.y(),
 							hud.x() + hud.width(), hud.y() + hud.height()
 					) && selected != hud) {

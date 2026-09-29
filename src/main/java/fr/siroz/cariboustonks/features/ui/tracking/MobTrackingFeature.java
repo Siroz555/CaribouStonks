@@ -20,7 +20,7 @@ import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -208,7 +208,7 @@ public class MobTrackingFeature extends Feature {
 		if (!isEnabled()) return;
 		if (entity instanceof ArmorStand) return;
 		// MobTracking Patch - Évite les joueurs avec un nom de mobs -_-
-		if (MinecraftUtils.isPlayer(entity)) return;
+		if (MinecraftUtil.isPlayer(entity)) return;
 
 		MobTrackingRegistry.MobTrackingEntry mobEntry = registry.findMob(
 				entity.getName().getString(),

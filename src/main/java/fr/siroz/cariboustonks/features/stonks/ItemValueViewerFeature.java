@@ -17,8 +17,8 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.RomanNumeralUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
+import fr.siroz.cariboustonks.util.StringUtil;
 import it.unimi.dsi.fastutil.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -224,7 +224,7 @@ public class ItemValueViewerFeature extends Feature {
 			);
 		}
 		if (skin != null) {
-			String displayName = StonksUtils.capitalize(skin.skyBlockId());
+			String displayName = StringUtil.capitalize(skin.skyBlockId(), '_');
 			out.add(Component.empty()
 					.append(Component.literal(ARROW + " Skin: ").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
 					.append(Component.literal(displayName).withStyle(ChatFormatting.LIGHT_PURPLE))
@@ -232,7 +232,7 @@ public class ItemValueViewerFeature extends Feature {
 			);
 		}
 		if (dye != null) {
-			String displayName = StonksUtils.capitalize(dye.skyBlockId());
+			String displayName = StringUtil.capitalize(dye.skyBlockId(), '_');
 			out.add(Component.empty()
 					.append(Component.literal(ARROW + " Dye: ").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC))
 					.append(Component.literal(displayName).withStyle(ChatFormatting.LIGHT_PURPLE))
@@ -270,8 +270,8 @@ public class ItemValueViewerFeature extends Feature {
 	private void addUltimateEnchantedBook(@NonNull ItemValueResult result, List<Component> out) {
 		Calculation ultimate = result.get(Calculation.Type.ULTIMATE_ENCHANTED_BOOK);
 		if (ultimate != null) {
-			String level = ultimate.count() > 0 ? " " + RomanNumeralUtils.generate(ultimate.count()) : " " + ultimate.count();
-			String ultimateName = StonksUtils.capitalize(ultimate.skyBlockId()) + level;
+			String level = ultimate.count() > 0 ? " " + StringUtil.generateRomanNumeral(ultimate.count()) : " " + ultimate.count();
+			String ultimateName = StringUtil.capitalize(ultimate.skyBlockId(), '_') + level;
 			out.add(Component.empty()
 					.append(Component.literal(" " + ultimateName).withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD))
 					.append(priceShortFormat(ultimate.price())));
@@ -286,7 +286,7 @@ public class ItemValueViewerFeature extends Feature {
 			TextColor color = infos.right() == Rarity.UNKNOWN ? TextColor.BLUE : infos.right().getColor();
 			boolean fromBazaar = true;
 			if (displayName.equals(reforge.skyBlockId())) {
-				displayName = StonksUtils.capitalize(reforge.skyBlockId()) + "*";
+				displayName = StringUtil.capitalize(reforge.skyBlockId(), '_') + "*";
 				color = TextColor.BLUE;
 				fromBazaar = false;
 			}
@@ -501,8 +501,8 @@ public class ItemValueViewerFeature extends Feature {
 			// Ultimate enchantment en priorité
 			if (ultimate != null) {
 				int base = SkyBlockConstants.ULTIMATE_BASE_LEVELS.getOrDefault(ultimate.skyBlockId(), 1);
-				String level = RomanNumeralUtils.generate(base);
-				String ultimateName = StonksUtils.capitalize(ultimate.skyBlockId()) + " " + level;
+				String level = StringUtil.generateRomanNumeral(base);
+				String ultimateName = StringUtil.capitalize(ultimate.skyBlockId(), '_') + " " + level;
 				// Pourquoi j'ai fait comme ça ? je ne sais pas, mais avoir une map dédié serait pas mal, je pense.
 				if (ultimateName.contains("Ultimate Wise")) {
 					ultimateName = "Ultimate Wise I";
@@ -635,13 +635,13 @@ public class ItemValueViewerFeature extends Feature {
 	}
 
 	private @NonNull Component priceFormat(double value) {
-		return Component.literal(StonksUtils.INTEGER_NUMBERS.format(value)).withStyle(ChatFormatting.GOLD);
+		return Component.literal(StonksUtil.INTEGER_NUMBERS.format(value)).withStyle(ChatFormatting.GOLD);
 	}
 
 	private @NonNull Component priceShortFormat(double value) {
 		return Component.empty()
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(value)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(value)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 	}
 

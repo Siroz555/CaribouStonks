@@ -14,7 +14,7 @@ import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -145,7 +145,7 @@ public class ChatPositionFeature extends Feature {
 		for (var playerInfo : ClientContext.getOnlinePlayers()) {
 			String profileName = playerInfo.getProfile().name();
 			if (profileName != null && profileName.equals(playerName)) {
-				return MinecraftUtils.getNameForDisplay(playerInfo, profileName);
+				return MinecraftUtil.getNameForDisplay(playerInfo, profileName);
 			}
 		}
 		return null;

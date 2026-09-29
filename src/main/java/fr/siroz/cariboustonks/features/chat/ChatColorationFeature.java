@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.ChatListenerAccessor;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.time.Instant;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,7 +30,7 @@ public class ChatColorationFeature extends Feature {
 	private void onMessage(Component message) {
 		if (!isEnabled()) return;
 
-		String plain = StonksUtils.stripColor(message.getString());
+		String plain = MinecraftUtil.stripColor(message.getString());
 		if (plain.startsWith("Party >")) { // Party
 			if (this.config().chat.chatParty.chatPartyColored) {
 				queueMessage(message, this.config().chat.chatParty.chatPartyColor.getRGB());

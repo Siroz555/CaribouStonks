@@ -11,7 +11,7 @@ import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.core.infrastructure.http.Http;
 import fr.siroz.cariboustonks.core.infrastructure.http.HttpResponse;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.util.JsonUtils;
+import fr.siroz.cariboustonks.util.JsonUtil;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.time.Instant;
@@ -133,16 +133,16 @@ public final class ExternalDataSource {
 
 	@Nullable
 	private List<ItemPrice> parseBazaarGraph(@NonNull JsonObject json) {
-		JsonArray historyArray = JsonUtils.getArray(json, "history");
+		JsonArray historyArray = JsonUtil.getArray(json, "history");
 		if (historyArray == null) return null;
 
 		List<ItemPrice> result = new ArrayList<>();
 		for (JsonElement element : historyArray) {
 			if (element.isJsonObject()) {
 				JsonObject history = element.getAsJsonObject();
-				Instant timestamp = JsonUtils.getInstant(history, "timestamp");
-				OptionalDouble buyPrice = JsonUtils.getOptionalDouble(history, "instaBuyPrice");
-				OptionalDouble sellPrice = JsonUtils.getOptionalDouble(history, "instaSellPrice");
+				Instant timestamp = JsonUtil.getInstant(history, "timestamp");
+				OptionalDouble buyPrice = JsonUtil.getOptionalDouble(history, "instaBuyPrice");
+				OptionalDouble sellPrice = JsonUtil.getOptionalDouble(history, "instaSellPrice");
 				if (timestamp != null && buyPrice.isPresent() && sellPrice.isPresent()) {
 					result.add(new ItemPrice(timestamp, buyPrice.getAsDouble(), sellPrice.getAsDouble()));
 				}
@@ -154,7 +154,7 @@ public final class ExternalDataSource {
 
 	@Nullable
 	private GraphParseResult parseAuctionHouseGraph(@NonNull JsonObject json) {
-		JsonArray historyArray = JsonUtils.getArray(json, "history");
+		JsonArray historyArray = JsonUtil.getArray(json, "history");
 		if (historyArray == null) return null;
 
 		List<ItemPrice> itemPrices = new ArrayList<>();
@@ -163,9 +163,9 @@ public final class ExternalDataSource {
 		for (JsonElement element : historyArray) {
 			if (element.isJsonObject()) {
 				JsonObject history = element.getAsJsonObject();
-				Instant timestamp = JsonUtils.getInstant(history, "timestamp");
-				OptionalDouble price = JsonUtils.getOptionalDouble(history, "lowestBinPrice");
-				OptionalInt itemsSold    = JsonUtils.getOptionalInt(history, "itemsSold");
+				Instant timestamp = JsonUtil.getInstant(history, "timestamp");
+				OptionalDouble price = JsonUtil.getOptionalDouble(history, "lowestBinPrice");
+				OptionalInt itemsSold    = JsonUtil.getOptionalInt(history, "itemsSold");
 				// Skip dans tout les cas si null
 				if (timestamp == null) continue;
 				// Prix -> Graphique

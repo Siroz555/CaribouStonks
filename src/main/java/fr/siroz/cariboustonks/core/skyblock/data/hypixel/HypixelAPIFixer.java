@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StringUtil;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -129,7 +129,7 @@ public final class HypixelAPIFixer {
 
 	public @NonNull SkyBlockItemData createFactionRabbit(@NonNull String skyBlockIdFactionRabbit) {
 		String material = "RABBIT_HIDE";
-		String name = StonksUtils.capitalize(skyBlockIdFactionRabbit);
+		String name = StringUtil.capitalize(skyBlockIdFactionRabbit, '_');
 		return new SkyBlockItemData(
 				skyBlockIdFactionRabbit,
 				false,

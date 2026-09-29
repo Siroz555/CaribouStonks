@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jspecify.annotations.NonNull;
 
-public final class TimeUtils {
+public final class TimeUtil {
 
 	private static final Locale LOCALE = Locale.getDefault();
 	private static final ZoneId ZONE_ID = ZoneId.systemDefault();
@@ -62,11 +62,11 @@ public final class TimeUtils {
 	public static final DateTimeFormatter DATE_TIME_FULL = DateTimeFormatter
 			.ofLocalizedDateTime(FormatStyle.FULL, FormatStyle.MEDIUM).withLocale(LOCALE);
 
-	private TimeUtils() {
+	private TimeUtil() {
 	}
 
 	/**
-	 * Extracts the {@link Duration} from the given input ({@link TimeUtils#TIME_PATTERN})
+	 * Extracts the {@link Duration} from the given input ({@link TimeUtil#TIME_PATTERN})
 	 * <p>
 	 * Input: 4d 16h 50m 10s => Duration: 4d 16h 50m 10s
 	 *

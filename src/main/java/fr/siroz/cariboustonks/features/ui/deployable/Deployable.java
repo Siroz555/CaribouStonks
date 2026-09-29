@@ -1,7 +1,7 @@
 package fr.siroz.cariboustonks.features.ui.deployable;
 
 import fr.siroz.cariboustonks.core.skyblock.item.HeadTextures;
-import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -14,21 +14,21 @@ enum Deployable {
 			1,
 			18,
 			null,
-			ItemUtils.createSkull(HeadTextures.MANA_FLUX)
+			ItemUtil.createSkull(HeadTextures.MANA_FLUX)
 	),
 	OVERFLUX_POWER_ORB("Overflux",
 			Type.COMBAT,
 			2,
 			18,
 			null,
-			ItemUtils.createSkull(HeadTextures.OVERFLUX)
+			ItemUtil.createSkull(HeadTextures.OVERFLUX)
 	),
 	PLASMAFLUX_POWER_ORB("Plasmaflux",
 			Type.COMBAT,
 			3,
 			20,
 			null,
-			ItemUtils.createSkull(HeadTextures.PLASMAFLUX)
+			ItemUtil.createSkull(HeadTextures.PLASMAFLUX)
 	),
 	ALERT_FLARE("Alert Flare",
 			Type.FLARE,
@@ -49,35 +49,35 @@ enum Deployable {
 			1,
 			30,
 			null,
-			ItemUtils.createSkull(HeadTextures.UMBERELLA)
+			ItemUtil.createSkull(HeadTextures.UMBERELLA)
 	),
 	BLACK_HOLE("Black Hole",
 			Type.PERSONAL,
 			1,
 			50,
 			null,
-			ItemUtils.createSkull(HeadTextures.BLACK_HOLE)
+			ItemUtil.createSkull(HeadTextures.BLACK_HOLE)
 	),
 	TITANIUM_LANTERN("Titanium Lantern",
 			Type.MINING,
 			1,
 			30,
 			null,
-			ItemUtils.createSkull(HeadTextures.TITANIUM_LANTERN)
+			ItemUtil.createSkull(HeadTextures.TITANIUM_LANTERN)
 	),
 	GLACITE_LANTERN("Glacite Lantern",
 			Type.MINING,
 			2,
 			30,
 			null,
-			ItemUtils.createSkull(HeadTextures.GLACITE_LANTERN)
+			ItemUtil.createSkull(HeadTextures.GLACITE_LANTERN)
 	),
 	WILL_O_WISP("Will-o'-wisp",
 			Type.MINING,
 			3,
 			30,
 			null,
-			ItemUtils.createSkull(HeadTextures.WILL_O_WISP)
+			ItemUtil.createSkull(HeadTextures.WILL_O_WISP)
 	),
 	;
 

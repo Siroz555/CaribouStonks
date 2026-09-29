@@ -12,7 +12,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelAPIFixer;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.HypixelDataSource;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemParseException;
-import fr.siroz.cariboustonks.util.JsonUtils;
+import fr.siroz.cariboustonks.util.JsonUtil;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
@@ -171,7 +171,7 @@ public final class ItemsFetcher {
 				throw new RuntimeException("SkyBlock API Items Resource failed. Cause: " + cause);
 			}
 
-			JsonArray itemsArray = JsonUtils.getArray(root, "items");
+			JsonArray itemsArray = JsonUtil.getArray(root, "items");
 
 			Map<String, SkyBlockItemData> items = parseItems(itemsArray);
 			if (items != null && !items.isEmpty()) {

@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.Calculator;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -79,7 +79,7 @@ public class SearchBarCalculatorFeature extends Feature {
 			lastSearchBarInput = searchInput;
 			try {
 				double result = Calculator.calculate(searchInput);
-				lastCalculatorResult = StonksUtils.DOUBLE_NUMBERS.format(result);
+				lastCalculatorResult = StonksUtil.DOUBLE_NUMBERS.format(result);
 			} catch (Throwable _) {
 				lastCalculatorResult = null;
 			}

@@ -10,8 +10,8 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -117,7 +117,7 @@ public class DeployableFeature extends Feature {
 
 		// SIROZ-NOTE: Experimental, le check est trop lourd puis
 
-		String headTexture = ItemUtils.getHeadTexture(armorStand.getItemBySlot(EquipmentSlot.HEAD));
+		String headTexture = ItemUtil.getHeadTexture(armorStand.getItemBySlot(EquipmentSlot.HEAD));
 		if (headTexture.isBlank()) return;
 
 		// SIROZ-NOTE: revoir le check entre les Flares qui n'est pas propre
@@ -163,7 +163,7 @@ public class DeployableFeature extends Feature {
 			if (!matcher.matches()) return false;
 
 			String name = matcher.group(1);
-			int seconds = StonksUtils.toInt(matcher.group(2), 0);
+			int seconds = StonksUtil.toInt(matcher.group(2), 0);
 			if (name == null || name.isBlank() || seconds <= 0) return false;
 
 			for (Deployable deployable : Deployable.VALUES) {
@@ -235,7 +235,7 @@ public class DeployableFeature extends Feature {
 		if (armorStand == null || armorStand.getCustomName() == null) return 0;
 
 		Matcher matcher = DEPLOYABLE_PATTERN.matcher(armorStand.getCustomName().getString());
-		return matcher.matches() ? StonksUtils.toInt(matcher.group(2), 0) : 0;
+		return matcher.matches() ? StonksUtil.toInt(matcher.group(2), 0) : 0;
 	}
 
 	private void getHudLines(HudElementBuilder builder) {

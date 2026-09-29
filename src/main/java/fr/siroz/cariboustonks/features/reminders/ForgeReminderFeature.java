@@ -10,9 +10,9 @@ import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
-import fr.siroz.cariboustonks.util.TimeUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
+import fr.siroz.cariboustonks.util.TimeUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.time.Duration;
 import java.time.Instant;
@@ -62,7 +62,7 @@ public final class ForgeReminderFeature extends Feature {
 	}
 
 	private void onReminderExpire(@NonNull TimedObjectModel timedObject) {
-		Component text = MinecraftUtils.jsonToText(timedObject.message()).orElse(Component.literal(timedObject.message()));
+		Component text = MinecraftUtil.jsonToText(timedObject.message()).orElse(Component.literal(timedObject.message()));
 		MutableComponent message = Component.empty()
 				.append(Component.literal("[Forge] ").withStyle(ChatFormatting.GOLD))
 				.append(text)
@@ -92,13 +92,13 @@ public final class ForgeReminderFeature extends Feature {
 			if (itemStack.is(Items.FURNACE)) {
 				highlights.add(ColorHighlight.green(entry.getIntKey(), 0.5f));
 			} else {
-				String lore = ItemUtils.getLoreLineIf(itemStack, s -> s.contains("Time"));
+				String lore = ItemUtil.getLoreLineIf(itemStack, s -> s.contains("Time"));
 				if (lore == null) continue;
 
-				Duration duration = TimeUtils.extractDuration(lore.replace("Time Remaining: ", ""));
+				Duration duration = TimeUtil.extractDuration(lore.replace("Time Remaining: ", ""));
 				if (duration.isZero()) continue;
 
-				String text = MinecraftUtils.textToJson(itemStack.getHoverName())
+				String text = MinecraftUtil.textToJson(itemStack.getHoverName())
 						.orElse(itemStack.getHoverName().getString());
 
 				TimedObjectModel timedObject = new TimedObjectModel(

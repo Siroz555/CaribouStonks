@@ -11,8 +11,8 @@ import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
-import fr.siroz.cariboustonks.util.TimeUtils;
-import fr.siroz.cariboustonks.util.render.AnimationUtils;
+import fr.siroz.cariboustonks.util.TimeUtil;
+import fr.siroz.cariboustonks.util.render.AnimationUtil;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -175,7 +175,7 @@ public class HoppityHuntFeature extends Feature {
 		String title = "Hoppity's Hunt Eggs " + CUTE_RABBIT;
 		boolean showDelta = System.currentTimeMillis() - deltaTimestamp < DELTA_DISPLAY_MS;
 		if (showDelta) {
-			builder.appendTitle(AnimationUtils.applyColorCycle(title, 500, TextColor.LIGHT_PURPLE, TextColor.DARK_PURPLE));
+			builder.appendTitle(AnimationUtil.applyColorCycle(title, 500, TextColor.LIGHT_PURPLE, TextColor.DARK_PURPLE));
 		} else {
 			builder.appendTitle(Component.literal(title).withStyle(ChatFormatting.LIGHT_PURPLE));
 		}
@@ -184,7 +184,7 @@ public class HoppityHuntFeature extends Feature {
 			EggStatus status = eggStates.getOrDefault(egg, EggStatus.WAITING);
 
 			Instant nextSpawn = computeNextSpawn(egg);
-			String countdown = TimeUtils.getDurationFormatted(Instant.now(), nextSpawn, false);
+			String countdown = TimeUtil.getDurationFormatted(Instant.now(), nextSpawn, false);
 			Component timeLeft = Component.literal(" " + countdown).withStyle(ChatFormatting.YELLOW);
 
 			builder.appendTableRow(

@@ -11,7 +11,7 @@ import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import fr.siroz.cariboustonks.util.Ticks;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +64,7 @@ public class WitherKingDragonFeature extends Feature {
 	private void onMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 
-		String message = StonksUtils.stripColor(text.getString());
+		String message = MinecraftUtil.stripColor(text.getString());
 		if (message.equals(PHASE_5_TRIGGER_1) || message.equals(PHASE_5_TRIGGER_2)) {
 			isPhase5 = true;
 		}

@@ -5,7 +5,7 @@ import com.mojang.brigadier.Command;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.platform.mixin.accessors.PlayerTabOverlayAccessor;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -275,7 +275,7 @@ public final class ClientContext {
 						String strLine = team.getPlayerPrefix().getString() + team.getPlayerSuffix().getString();
 
 						if (!strLine.trim().isEmpty()) {
-							String formatted = StonksUtils.stripColor(strLine);
+							String formatted = MinecraftUtil.stripColor(strLine);
 							stringLines.add(formatted);
 						}
 					}

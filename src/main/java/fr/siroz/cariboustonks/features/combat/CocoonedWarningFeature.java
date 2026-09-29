@@ -17,8 +17,8 @@ import fr.siroz.cariboustonks.events.WorldEvents;
 import fr.siroz.cariboustonks.features.slayers.SlayerCocoonedWarningFeature;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import fr.siroz.cariboustonks.util.Ticks;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -166,7 +166,7 @@ public class CocoonedWarningFeature extends Feature {
 				if (finalTimeTick <= 0) continue;
 
 				Component message = Component.literal(
-						StonksUtils.DECIMAL_FORMAT.format(finalTimeTick / 20f) + "s"
+						StonksUtil.DECIMAL_FORMAT.format(finalTimeTick / 20f) + "s"
 				).withStyle(getColorFromTicks(finalTimeTick));
 
 				Vec3 position = Vec3.atCenterOf(entry.getKey()).add(0, 2.1D, 0);
@@ -228,7 +228,7 @@ public class CocoonedWarningFeature extends Feature {
 		if (MINECRAFT.player == null) return false;
 		if (as.isCustomNameVisible() || !as.hasItemInSlot(EquipmentSlot.HEAD)) return false;
 		// Récupère la texture si présente
-		String headTexture = ItemUtils.getHeadTexture(as.getItemBySlot(EquipmentSlot.HEAD));
+		String headTexture = ItemUtil.getHeadTexture(as.getItemBySlot(EquipmentSlot.HEAD));
 		if (headTexture.isBlank()) return false;
 		// Check de la distance minimale
 		if (MINECRAFT.player.position().distanceToSqr(as.position()) > MAX_PLAYER_COCOON_DISTANCE_SQ) return false;

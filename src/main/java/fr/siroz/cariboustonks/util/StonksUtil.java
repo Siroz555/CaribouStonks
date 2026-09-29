@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.util;
 
-import fr.siroz.cariboustonks.util.render.AnimationUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -11,13 +10,9 @@ import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import net.minecraft.client.Minecraft;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -25,14 +20,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * Stonks utilities
  */
-public final class StonksUtils {
-
-	private static final Minecraft CLIENT = Minecraft.getInstance();
-
-	/**
-	 * {@code §[0-9a-fklmnor]}
-	 */
-	private static final Pattern COLOR_CODE_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]");
+public final class StonksUtil {
 
 	/**
 	 * => {@code 100,000,000}
@@ -42,20 +30,21 @@ public final class StonksUtils {
 	/**
 	 * => {@code 100,000.15}
 	 */
-	public static final NumberFormat DOUBLE_NUMBERS = StonksUtils.make(
+	public static final NumberFormat DOUBLE_NUMBERS = StonksUtil.make(
 			NumberFormat.getInstance(Locale.US),
 			nf -> nf.setMaximumFractionDigits(2));
 
 	/**
 	 * => {@code 100,000.1}
 	 */
-	public static final NumberFormat FLOAT_NUMBERS = StonksUtils.make(
+	public static final NumberFormat FLOAT_NUMBERS = StonksUtil.make(
 			NumberFormat.getInstance(Locale.US),
 			nf -> nf.setMaximumFractionDigits(1));
 
 	/**
 	 * => {@code 10B} / {@code 10M} / {@code 5k}
 	 */
+	@SuppressWarnings("unused")
 	public static final NumberFormat SHORT_INTEGER_NUMBERS = new CompactSuffixFormat(0);
 
 	/**
@@ -65,23 +54,9 @@ public final class StonksUtils {
 
 	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.00");
 
-	public static final String ALPHANUMERIC = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public static final SecureRandom RANDOM = new SecureRandom();
 
-	private StonksUtils() {
-	}
-
-	/**
-	 * Init utilities
-	 */
-	public static void initUtilities() {
-		AnimationUtils.init();
-	}
-
-	public static @NonNull String stripColor(@Nullable String input) {
-		if (input == null || input.isEmpty()) return "";
-
-		return COLOR_CODE_PATTERN.matcher(input).replaceAll("");
+	private StonksUtil() {
 	}
 
 	public static long parseAmount(@Nullable String value) {
@@ -99,12 +74,6 @@ public final class StonksUtils {
 
 		String digits = multiplier != 1 ? value.substring(0, value.length() - 1) : value;
 		return (long) (Double.parseDouble(digits) * multiplier);
-	}
-
-	public static @NonNull String generateRandomId() {
-		StringBuilder id = new StringBuilder(10);
-		for (int i = 0; i < 10; i++) id.append(ALPHANUMERIC.charAt(RANDOM.nextInt(ALPHANUMERIC.length())));
-		return id.toString();
 	}
 
 	/**
@@ -132,26 +101,6 @@ public final class StonksUtils {
 		List<List<T>> partitions = new ArrayList<>();
 		for (int i = 0; i < list.size(); i += maxSize) partitions.add(list.subList(i, Math.min(i + maxSize, list.size())));
 		return partitions;
-	}
-
-	/**
-	 * Vérifie si le client est connecté à Hypixel.
-	 *
-	 * @return {@code true}/ {@code false}
-	 */
-	public static boolean isConnectedToHypixel() {
-		String serverAddress = CLIENT.getCurrentServer() != null
-				? CLIENT.getCurrentServer().ip.toLowerCase(Locale.ENGLISH)
-				: "";
-		String serverBrand = CLIENT.player != null && CLIENT.player.connection.serverBrand() != null
-				? CLIENT.player.connection.serverBrand()
-				: "";
-
-		if (serverBrand == null) {
-			return false;
-		}
-
-		return serverAddress.contains("hypixel.net") || serverBrand.contains("Hypixel BungeeCord");
 	}
 
 	public static <T> T make(@NonNull T object, @NonNull Consumer<? super T> initializer) {
@@ -196,34 +145,6 @@ public final class StonksUtils {
 	}
 
 	/**
-	 * Checks if a given slot in an inventory is located at the edge.
-	 *
-	 * @param slotId the slot ID to check, where the slots are numbered sequentially from 0
-	 * @param rows   the total number of rows in the inventory
-	 * @return {@code true} if the slot is on the edge of the inventory (first or last column, or first or last row)
-	 */
-	public static boolean isEdgeSlot(int slotId, int rows) {
-		if (slotId < 0 || slotId >= rows * 9) return false;
-		int row = slotId / 9;
-		int col = slotId % 9;
-		return col == 0 || col == 8 || row == 0 || row == rows - 1;
-	}
-
-	/**
-	 * Converts a hotbar index into the corresponding slot index in the player's inventory.
-	 *
-	 * @param hotbarIndex the index of the hotbar (0-8 inclusive)
-	 * @return the slot index in the player's inventory corresponding to the given hotbar index,
-	 * or {@code -1} if the provided hotbar index is out of the valid range
-	 */
-	@SuppressWarnings("unused")
-	public static int convertHotbarToSlotIndex(int hotbarIndex) {
-		if (hotbarIndex < 0 || hotbarIndex > 8) return -1;
-
-		return 36 + hotbarIndex;
-	}
-
-	/**
 	 * Réduit la taille de la liste fournie pour qu'elle atteigne approximativement la taille cible spécifiée.
 	 * Si la liste contient un nombre d'éléments inférieur ou égal à la taille cible, la liste est retournée inchangée.
 	 * Si la taille de la liste est supérieure à la taille cible, les éléments sont sélectionnés à des intervalles
@@ -249,30 +170,6 @@ public final class StonksUtils {
 		}
 
 		return result;
-	}
-
-	/**
-	 * Capitalize the given input String.
-	 *
-	 * <li>blessed -> Blessed</li>
-	 * <li>BLESSED -> Blessed</li>
-	 * <li>blood_soaked -> Blood Soaked</li>
-	 * <li>BLOOD_SOAKED -> Blood Soaked</li>
-	 *
-	 * @param s the input String
-	 * @return the capitalized input String
-	 */
-	public static String capitalize(@NonNull String s) {
-		if (s.isEmpty()) return s;
-
-		String normalized = s.replace('_', ' ');
-		return Arrays.stream(normalized.split("\\s+"))
-				.filter(token -> !token.isEmpty())
-				.map(token -> {
-					String lower = token.toLowerCase(Locale.ENGLISH);
-					return lower.substring(0, 1).toUpperCase(Locale.ENGLISH) + lower.substring(1);
-				})
-				.collect(Collectors.joining(" "));
 	}
 
 	private static final class CompactSuffixFormat extends NumberFormat {

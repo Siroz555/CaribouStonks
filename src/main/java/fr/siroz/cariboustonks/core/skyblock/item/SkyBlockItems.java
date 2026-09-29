@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.PetInfo;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.ItemMetadata;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
-import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import java.util.Collection;
 import java.util.List;
@@ -40,7 +40,7 @@ public final class SkyBlockItems {
 	 * @return the SkyBlock Item ID or an empty string
 	 */
 	public static @NonNull String getSkyBlockItemId(@NonNull DataComponentHolder stack) {
-		return ItemUtils.getCustomData(stack).getStringOr(ITEM_ID, "");
+		return ItemUtil.getCustomData(stack).getStringOr(ITEM_ID, "");
 	}
 
 	/**
@@ -50,7 +50,7 @@ public final class SkyBlockItems {
 	 * @return the UUID or an empty string
 	 */
 	public static @NonNull String getSkyBlockItemUuid(@NonNull DataComponentHolder stack) {
-		return ItemUtils.getCustomData(stack).getStringOr(ITEM_UUID, "");
+		return ItemUtil.getCustomData(stack).getStringOr(ITEM_UUID, "");
 	}
 
 	/**
@@ -60,7 +60,7 @@ public final class SkyBlockItems {
 	 * @return the {@code SkyblockItemStack} parsed from the given {@code ItemStack}
 	 */
 	public static @NonNull SkyblockItemStack createSkyBlockItemStack(@NonNull ItemStack itemStack) {
-		CompoundTag customData = ItemUtils.getCustomData(itemStack);
+		CompoundTag customData = ItemUtil.getCustomData(itemStack);
 		String skyBlockId = customData.getStringOr("id", "");
 		return new SkyblockItemStack(skyBlockId, itemStack.getCount(), ItemMetadata.ofNbt(customData));
 	}
@@ -107,7 +107,7 @@ public final class SkyBlockItems {
 			return getPetInfo(stack).rarity();
 		}
 
-		return ItemUtils.getLore(stack).reversed().stream()
+		return ItemUtil.getLore(stack).reversed().stream()
 				.map(Component::getString)
 				.map(Rarity::containsName)
 				.flatMap(Optional::stream)
@@ -123,7 +123,7 @@ public final class SkyBlockItems {
 	 */
 	public static @NonNull PetInfo getPetInfo(@Nullable ItemStack stack) {
 		if (stack == null || stack.isEmpty()) return PetInfo.EMPTY;
-		return PetInfo.parse(ItemUtils.getCustomData(stack));
+		return PetInfo.parse(ItemUtil.getCustomData(stack));
 	}
 
 	public static OptionalInt getAttributeShardsUntilMax(Rarity rarity, int level) {
@@ -144,7 +144,7 @@ public final class SkyBlockItems {
 	 */
 	@SuppressWarnings("checkstyle:CyclomaticComplexity")
 	public static @NonNull String getSkyBlockApiId(@NonNull DataComponentHolder itemStack) {
-		CompoundTag customData = ItemUtils.getCustomData(itemStack);
+		CompoundTag customData = ItemUtil.getCustomData(itemStack);
 		String id = customData.getStringOr(ITEM_ID, "");
 
 		if (customData.contains("is_shiny")) {
@@ -178,7 +178,7 @@ public final class SkyBlockItems {
 				}
 			}
 			case "ATTRIBUTE_SHARD" -> {
-				String name = ItemUtils.getItemName(itemStack);
+				String name = ItemUtil.getItemName(itemStack);
 				SkyBlockAttribute attribute = SkyBlockItemRegistry.getAttributeByShardName(name);
 				if (attribute != null) {
 					return attribute.skyBlockApiId();
@@ -223,7 +223,7 @@ public final class SkyBlockItems {
 		if (stack == null) return "";
 
 		String id = getSkyBlockItemId(stack);
-		CompoundTag customData = ItemUtils.getCustomData(stack);
+		CompoundTag customData = ItemUtil.getCustomData(stack);
 
 		return switch (id) {
 			case "ENCHANTED_BOOK" -> {
@@ -299,7 +299,7 @@ public final class SkyBlockItems {
 		String title = currentScreen.getTitle().getString();
 
 		if (title.contains("Hunting Box")) {
-			String name = ItemUtils.getItemName(item);
+			String name = ItemUtil.getItemName(item);
 			SkyBlockAttribute attribute = SkyBlockItemRegistry.getAttributeByShardName(name);
 			return attribute != null ? attribute.skyBlockApiId() : fallback;
 		}
@@ -348,7 +348,7 @@ public final class SkyBlockItems {
 		}
 
 		if (SkyBlockConstants.DUNGEON_CHESTS.contains(title) || SkyBlockConstants.KUUDRA_CHESTS.contains(title)) {
-			String name = ItemUtils.getItemName(item);
+			String name = ItemUtil.getItemName(item);
 			Matcher matcher = SHARD_WITH_QUANTITY_PATTERN.matcher(name);
 			if (name.contains("Shard") && matcher.matches()) {
 				SkyBlockAttribute attribute = SkyBlockItemRegistry.getAttributeByShardName(name);

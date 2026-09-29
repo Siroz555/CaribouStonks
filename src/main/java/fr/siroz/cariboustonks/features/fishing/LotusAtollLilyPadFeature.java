@@ -5,8 +5,8 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.platform.mixin.accessors.DisplayEntityDataScaleAccessor;
-import fr.siroz.cariboustonks.util.ColorUtils;
-import fr.siroz.cariboustonks.util.math.MathUtils;
+import fr.siroz.cariboustonks.util.ColorUtil;
+import fr.siroz.cariboustonks.util.math.MathUtil;
 import java.util.function.Predicate;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.item.Items;
@@ -49,11 +49,11 @@ public class LotusAtollLilyPadFeature extends Feature {
 	}
 
 	private int scaleToColor(float scale) {
-		final float t = MathUtils.clamp((scale - MIN_SCALE) / (MAX_SCALE - MIN_SCALE), 0f, 1f);
+		final float t = MathUtil.clamp((scale - MIN_SCALE) / (MAX_SCALE - MIN_SCALE), 0f, 1f);
 		int rgb = t < 0.5f
-				? ColorUtils.lerpRGB(GREEN, YELLOW, t * 2f)
-				: ColorUtils.lerpRGB(YELLOW, RED, (t - 0.5f) * 2f);
+				? ColorUtil.lerpRGB(GREEN, YELLOW, t * 2f)
+				: ColorUtil.lerpRGB(YELLOW, RED, (t - 0.5f) * 2f);
 
-		return ColorUtils.changeAlpha(rgb, 255);
+		return ColorUtil.changeAlpha(rgb, 255);
 	}
 }

@@ -5,9 +5,9 @@ import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockEnchantment;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
-import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.RomanNumeralUtils;
-import fr.siroz.cariboustonks.util.render.AnimationUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
+import fr.siroz.cariboustonks.util.StringUtil;
+import fr.siroz.cariboustonks.util.render.AnimationUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class ColoredEnchantmentFeature extends Feature {
 		if (!isEnabled()) return null;
 		if (!configShowMaxEnchants.getAsBoolean() && !configShowGoodEnchants.getAsBoolean()) return null;
 
-		CompoundTag enchantments = ItemUtils.getCustomData(itemStack).getCompoundOrEmpty("enchantments");
+		CompoundTag enchantments = ItemUtil.getCustomData(itemStack).getCompoundOrEmpty("enchantments");
 		if (enchantments.isEmpty()) return null;
 
 		Object2IntMap<String> maxEnchantmentColors = new Object2IntOpenHashMap<>();
@@ -72,7 +72,7 @@ public class ColoredEnchantmentFeature extends Feature {
 			int level = enchantments.getIntOr(id, 0);
 			if (enchantment != null && enchantment.isGoodOrMaxLevel(level) && level > 0) {
 
-				String name = enchantment.name() + " " + RomanNumeralUtils.generate(level);
+				String name = enchantment.name() + " " + StringUtil.generateRomanNumeral(level);
 				if (enchantment.isMaxLevel(level)) {
 					maxEnchantmentColors.put(name,
 							this.config().uiAndVisuals.coloredEnchantment.maxEnchantsColor.getRGB());
@@ -120,7 +120,7 @@ public class ColoredEnchantmentFeature extends Feature {
 							// Extraire la partie après l'enchantement (virgule, espace)
 							String suffix = fullText.substring(enchant.length());
 							// Créer le nouveau component avec rainbow + le suffixe original
-							MutableComponent newComponent = (MutableComponent) AnimationUtils.applyRainbow(enchant);
+							MutableComponent newComponent = (MutableComponent) AnimationUtil.applyRainbow(enchant);
 							if (!suffix.isEmpty()) {
 								newComponent.append(Component.literal(suffix).withStyle(currentText.getStyle()));
 							}

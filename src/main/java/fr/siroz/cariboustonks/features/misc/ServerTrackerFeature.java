@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
-import fr.siroz.cariboustonks.util.TimeUtils;
+import fr.siroz.cariboustonks.util.TimeUtil;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class ServerTrackerFeature extends Feature {
 		Instant now = Instant.now();
 		Instant lastVisit = serverVisitHistory.get(serverId);
 		if (lastVisit != null) {
-			String elapsed = TimeUtils.getDurationFormatted(lastVisit, now, false);
+			String elapsed = TimeUtil.getDurationFormatted(lastVisit, now, false);
 			PlayerContext.sendMessageWithPrefix(Component.empty()
 					.append(Component.literal(serverId).withStyle(ChatFormatting.DARK_GRAY))
 					.append(Component.literal(" viewed ").withStyle(ChatFormatting.DARK_AQUA))

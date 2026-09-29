@@ -15,7 +15,7 @@ import fr.siroz.cariboustonks.core.skyblock.tablist.TabListManager;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -60,7 +60,7 @@ public final class SkyBlockManager {
 		ClientPlayConnectionEvents.DISCONNECT.register((_, _) -> this.onDisconnect());
 
 		try {
-			HypixelNetworking.registerToEvents(StonksUtils.make(new Object2IntOpenHashMap<>(),
+			HypixelNetworking.registerToEvents(StonksUtil.make(new Object2IntOpenHashMap<>(),
 					map -> map.put(LocationUpdateS2CPacket.ID, 1)));
 			HypixelPacketEvents.HELLO.register(this::handlePacket);
 			HypixelPacketEvents.LOCATION_UPDATE.register(this::handlePacket);

@@ -14,7 +14,7 @@ import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -102,7 +102,7 @@ public class TarantulaBossFeature extends Feature {
 	private boolean isTarantulaBossEgg(@NonNull ArmorStand as) {
 		if (as.isCustomNameVisible() || !as.hasItemInSlot(EquipmentSlot.HEAD)) return false;
 
-		String headTexture = ItemUtils.getHeadTexture(as.getItemBySlot(EquipmentSlot.HEAD));
+		String headTexture = ItemUtil.getHeadTexture(as.getItemBySlot(EquipmentSlot.HEAD));
 		if (headTexture.isBlank()) return false;
 
 		return headTexture.equals(HeadTextures.COCOON);

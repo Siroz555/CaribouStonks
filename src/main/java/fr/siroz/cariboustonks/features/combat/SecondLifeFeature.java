@@ -12,8 +12,8 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -73,7 +73,7 @@ public class SecondLifeFeature extends Feature {
 	private void onChatMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 
-		String message = StonksUtils.stripColor(text.getString());
+		String message = MinecraftUtil.stripColor(text.getString());
 		Matcher matcher = PLACEHOLDER_PATTERN.matcher(message);
 
 		if (matcher.usePattern(SPIRIT_MASK_PATTERN).matches()) {
@@ -183,9 +183,9 @@ public class SecondLifeFeature extends Feature {
 	}
 
 	private enum SecondLife {
-		SPIRIT_MASK(30, "Spirit Mask", ChatFormatting.DARK_PURPLE, ItemUtils.createVirtualSkull(HeadTextures.SPIRIT_MASK)),
-		BONZO_MASK(180, "Bonzo Mask", ChatFormatting.RED, ItemUtils.createVirtualSkull(HeadTextures.BONZO_MASK)),
-		PHOENIX_PET(60, "Phoenix Pet", ChatFormatting.YELLOW, ItemUtils.createVirtualSkull(HeadTextures.PHOENIX_PET)),;
+		SPIRIT_MASK(30, "Spirit Mask", ChatFormatting.DARK_PURPLE, ItemUtil.createVirtualSkull(HeadTextures.SPIRIT_MASK)),
+		BONZO_MASK(180, "Bonzo Mask", ChatFormatting.RED, ItemUtil.createVirtualSkull(HeadTextures.BONZO_MASK)),
+		PHOENIX_PET(60, "Phoenix Pet", ChatFormatting.YELLOW, ItemUtil.createVirtualSkull(HeadTextures.PHOENIX_PET)),;
 
 		private final int cooldown;
 		private final String name;

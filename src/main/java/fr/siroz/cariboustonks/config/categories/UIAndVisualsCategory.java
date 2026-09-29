@@ -15,7 +15,7 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarPriceType;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.screens.HudConfigScreen;
 import fr.siroz.cariboustonks.screens.mobtracking.MobTrackingScreen;
-import fr.siroz.cariboustonks.util.render.AnimationUtils;
+import fr.siroz.cariboustonks.util.render.AnimationUtil;
 import java.awt.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -394,7 +394,7 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								.name(Component.literal("Colored Enchantments - Show max in Rainbow"))
 								.description(OptionDescription.of(
 										Component.literal("Change the color of maxed enchantments to an" + SPACE),
-										AnimationUtils.applyRainbow("animated Rainbow gradient o/"),
+										AnimationUtil.applyRainbow("animated Rainbow gradient o/"),
 										Component.literal("(As an example)").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC)))
 								.binding(defaults.uiAndVisuals.coloredEnchantment.maxEnchantsRainbow,
 										() -> current.uiAndVisuals.coloredEnchantment.maxEnchantsRainbow,

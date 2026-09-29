@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.skyblock.data.external.AuctionStatistics;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
@@ -35,23 +35,23 @@ class InformationWidget extends AbstractStonksWidget {
 
 		double buyPrice = bazaarItem.buyPrice();
 		Component textBuy = Component.literal("Buy Price: ").withStyle(ChatFormatting.YELLOW)
-				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(buyPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(buyPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(buyPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(buyPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 		guiGraphics.text(textRenderer, textBuy, x + 20, y + 20, Colors.WHITE.asInt());
 
 		Component textAvgBuy = Component.literal("Avg. Price: ").withStyle(ChatFormatting.YELLOW)
-				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.weightedAverageBuyPrice())).withStyle(ChatFormatting.GOLD));
+				.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(bazaarItem.weightedAverageBuyPrice())).withStyle(ChatFormatting.GOLD));
 		guiGraphics.text(textRenderer, textAvgBuy, x + 20, y + 30, Colors.WHITE.asInt());
 
 		// Buy - Infos
 
-		Component textBuyOrderInfos = Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.buyVolume())).withStyle(ChatFormatting.DARK_GRAY)
-				.append(" in " + StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.buyOrders()) + " orders");
+		Component textBuyOrderInfos = Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(bazaarItem.buyVolume())).withStyle(ChatFormatting.DARK_GRAY)
+				.append(" in " + StonksUtil.SHORT_FLOAT_NUMBERS.format(bazaarItem.buyOrders()) + " orders");
 		guiGraphics.text(textRenderer, textBuyOrderInfos, x + 20, y + 45, Colors.WHITE.asInt());
 
-		Component textBuyMoving = Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.buyMovingWeek())).withStyle(ChatFormatting.DARK_GRAY)
+		Component textBuyMoving = Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(bazaarItem.buyMovingWeek())).withStyle(ChatFormatting.DARK_GRAY)
 				.append(Component.literal(" insta-buys in 7d"));
 		guiGraphics.text(textRenderer, textBuyMoving, x + 20, y + 55, Colors.WHITE.asInt());
 
@@ -59,23 +59,23 @@ class InformationWidget extends AbstractStonksWidget {
 
 		double sellPrice = bazaarItem.sellPrice();
 		Component textSell = Component.literal("Sell Price: ").withStyle(ChatFormatting.YELLOW)
-				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(sellPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(sellPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(sellPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(sellPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 
 		guiGraphics.text(textRenderer, textSell, x + 20, y + 80, Colors.WHITE.asInt());
 
 		Component textAvgSell = Component.literal("Avg. Price: ").withStyle(ChatFormatting.YELLOW)
-				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.weightedAverageSellPrice())).withStyle(ChatFormatting.GOLD));
+				.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(bazaarItem.weightedAverageSellPrice())).withStyle(ChatFormatting.GOLD));
 		guiGraphics.text(textRenderer, textAvgSell, x + 20, y + 90, Colors.WHITE.asInt());
 		// Sell - Infos
 
-		Component textSellOrderInfos = Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.sellVolume())).withStyle(ChatFormatting.DARK_GRAY)
-				.append(" in " + StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.sellOrders()) + " orders");
+		Component textSellOrderInfos = Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(bazaarItem.sellVolume())).withStyle(ChatFormatting.DARK_GRAY)
+				.append(" in " + StonksUtil.SHORT_FLOAT_NUMBERS.format(bazaarItem.sellOrders()) + " orders");
 		guiGraphics.text(textRenderer, textSellOrderInfos, x + 20, y + 105, Colors.WHITE.asInt());
 
-		Component textSellMoving = Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.sellMovingWeek())).withStyle(ChatFormatting.DARK_GRAY)
+		Component textSellMoving = Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(bazaarItem.sellMovingWeek())).withStyle(ChatFormatting.DARK_GRAY)
 				.append(Component.literal(" insta-sells in 7d"));
 		guiGraphics.text(textRenderer, textSellMoving, x + 20, y + 115, Colors.WHITE.asInt());
 
@@ -84,11 +84,11 @@ class InformationWidget extends AbstractStonksWidget {
 		// Spread & %
 
 		Component textSpread = Component.literal("Spreed: ").withStyle(ChatFormatting.RED)
-				.append(Component.literal(StonksUtils.FLOAT_NUMBERS.format(bazaarItem.spreadPercentage()) + "%").withColor(Colors.RED.asInt()))
+				.append(Component.literal(StonksUtil.FLOAT_NUMBERS.format(bazaarItem.spreadPercentage()) + "%").withColor(Colors.RED.asInt()))
 				.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(bazaarItem.spread())).withColor(Colors.RED.asInt()))
+				.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(bazaarItem.spread())).withColor(Colors.RED.asInt()))
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.spread())).withColor(Colors.RED.asInt()))
+				.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(bazaarItem.spread())).withColor(Colors.RED.asInt()))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 		guiGraphics.text(textRenderer, textSpread, x + 20, y + 145, Colors.WHITE.asInt());
 
@@ -99,10 +99,10 @@ class InformationWidget extends AbstractStonksWidget {
 
 		Component textVelocityValues = Component.empty()
 				.append(Component.literal("Buy: ").withStyle(ChatFormatting.DARK_AQUA))
-				.append(Component.literal(StonksUtils.FLOAT_NUMBERS.format(bazaarItem.buyVelocity())).withStyle(ChatFormatting.AQUA))
+				.append(Component.literal(StonksUtil.FLOAT_NUMBERS.format(bazaarItem.buyVelocity())).withStyle(ChatFormatting.AQUA))
 				.append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
 				.append(Component.literal("Sell: ").withStyle(ChatFormatting.DARK_AQUA))
-				.append(Component.literal(StonksUtils.FLOAT_NUMBERS.format(bazaarItem.sellVelocity())).withStyle(ChatFormatting.AQUA));
+				.append(Component.literal(StonksUtil.FLOAT_NUMBERS.format(bazaarItem.sellVelocity())).withStyle(ChatFormatting.AQUA));
 		guiGraphics.text(textRenderer, textVelocityValues, x + 20, y + 170, Colors.WHITE.asInt());
 
 		if (ConfigManager.getConfig().general.stonks.showAllDataInInfoScreen) {
@@ -113,8 +113,8 @@ class InformationWidget extends AbstractStonksWidget {
 			guiGraphics.text(textRenderer, textStandardDeviation, x + 20, y + 195, Colors.WHITE.asInt());
 
 			Component textStandardDeviationValues = Component.literal(
-							"Buy: " + StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.buyPriceStdDev()) +
-									" | Sell: " + StonksUtils.SHORT_FLOAT_NUMBERS.format(bazaarItem.sellPriceStdDev()))
+							"Buy: " + StonksUtil.SHORT_FLOAT_NUMBERS.format(bazaarItem.buyPriceStdDev()) +
+									" | Sell: " + StonksUtil.SHORT_FLOAT_NUMBERS.format(bazaarItem.sellPriceStdDev()))
 					.withStyle(ChatFormatting.GREEN);
 			guiGraphics.text(textRenderer, textStandardDeviationValues, x + 20, y + 205, Colors.WHITE.asInt());
 
@@ -133,16 +133,16 @@ class InformationWidget extends AbstractStonksWidget {
 			guiGraphics.text(textRenderer, soldToday, x + 20, y + 20, Colors.WHITE.asInt());
 
 			Component minPriceToday = Component.literal("Lowest BIN (Today): ").withStyle(ChatFormatting.YELLOW)
-					.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(today.minPrice())).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(today.minPrice())).withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-					.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(today.minPrice())).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(today.minPrice())).withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 			guiGraphics.text(textRenderer, minPriceToday, x + 20, y + 30, Colors.WHITE.asInt());
 
 			Component avgPriceToday = Component.literal("Avg price (Today): ").withStyle(ChatFormatting.YELLOW)
-					.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(today.avgPrice())).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(today.avgPrice())).withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-					.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(today.avgPrice())).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(today.avgPrice())).withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 			guiGraphics.text(textRenderer, avgPriceToday, x + 20, y + 40, Colors.WHITE.asInt());
 		} else {
@@ -159,9 +159,9 @@ class InformationWidget extends AbstractStonksWidget {
 
 		if (week.hasPriceData()) {
 			Component avgPrice7d = Component.literal("Avg price (7d): ").withStyle(ChatFormatting.YELLOW)
-					.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(week.avgPrice())).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(week.avgPrice())).withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-					.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(week.avgPrice())).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(week.avgPrice())).withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 			guiGraphics.text(textRenderer, avgPrice7d, x + 20, y + 70, Colors.WHITE.asInt());
 		} else {
@@ -177,9 +177,9 @@ class InformationWidget extends AbstractStonksWidget {
 
 		if (month.hasPriceData()) {
 			Component avgPrice30d = Component.literal("Avg price (30d): ").withStyle(ChatFormatting.YELLOW)
-					.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(month.avgPrice())).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(month.avgPrice())).withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-					.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(month.avgPrice())).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(month.avgPrice())).withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
 			guiGraphics.text(textRenderer, avgPrice30d, x + 20, y + 100, Colors.WHITE.asInt());
 		} else {

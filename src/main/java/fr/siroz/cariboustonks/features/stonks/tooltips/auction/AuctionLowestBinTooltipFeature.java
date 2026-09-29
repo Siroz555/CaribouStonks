@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.features.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -52,8 +52,8 @@ public class AuctionLowestBinTooltipFeature extends Feature {
 		TooltipPriceDisplayType displayType = this.config().general.stonks.auctionTooltipPriceDisplayType;
 		switch (displayType) {
 			case ALL -> {
-				String lowestBinPriceDisplay = StonksUtils.INTEGER_NUMBERS.format(price);
-				String lowestBinPriceShortDisplay = StonksUtils.SHORT_FLOAT_NUMBERS.format(price);
+				String lowestBinPriceDisplay = StonksUtil.INTEGER_NUMBERS.format(price);
+				String lowestBinPriceShortDisplay = StonksUtil.SHORT_FLOAT_NUMBERS.format(price);
 				lines.add(Component.literal("Auction Lowest BIN: ").withStyle(ChatFormatting.YELLOW)
 						.append(Component.literal(lowestBinPriceDisplay + " Coins").withStyle(ChatFormatting.GOLD))
 						.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
@@ -61,12 +61,12 @@ public class AuctionLowestBinTooltipFeature extends Feature {
 						.append(Component.literal(")").withStyle(ChatFormatting.GRAY)));
 			}
 			case SHORT -> {
-				String lowestBinPriceShortDisplay = StonksUtils.SHORT_FLOAT_NUMBERS.format(price);
+				String lowestBinPriceShortDisplay = StonksUtil.SHORT_FLOAT_NUMBERS.format(price);
 				lines.add(Component.literal("Auction Lowest BIN: ").withStyle(ChatFormatting.YELLOW)
 						.append(Component.literal(lowestBinPriceShortDisplay + " Coins").withStyle(ChatFormatting.GOLD)));
 			}
 			case FULL -> {
-				String lowestBinPriceDisplay = StonksUtils.INTEGER_NUMBERS.format(price);
+				String lowestBinPriceDisplay = StonksUtil.INTEGER_NUMBERS.format(price);
 				lines.add(Component.literal("Auction Lowest BIN: ").withStyle(ChatFormatting.YELLOW)
 						.append(Component.literal(lowestBinPriceDisplay + " Coins").withStyle(ChatFormatting.GOLD)));
 			}

@@ -11,7 +11,7 @@ import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.time.Instant;
 import java.util.List;
@@ -56,7 +56,7 @@ public final class StonksAuctionReminderFeature extends Feature {
 	}
 
 	private @NonNull List<ColorHighlight> contentAnalyzer(@NonNull Int2ObjectMap<ItemStack> slots) {
-		String bidItem = ItemUtils.getConcatenatedLore(slots.get(BID_SLOT));
+		String bidItem = ItemUtil.getConcatenatedLore(slots.get(BID_SLOT));
 		Matcher bidItemMatcher = NEXT_AUCTION_PATTERN.matcher(bidItem);
 		if (bidItemMatcher.find()) {
 			String hoursStr = bidItemMatcher.group(1);

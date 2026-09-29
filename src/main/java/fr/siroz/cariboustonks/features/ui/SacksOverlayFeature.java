@@ -10,9 +10,9 @@ import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarItemAnalyt
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarPriceType;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
-import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -171,9 +171,9 @@ public class SacksOverlayFeature extends Feature {
 		lines.add(new Line(Component.empty()));
 		lines.add(new Line(Component.empty()
 				.append(Component.literal("└ Value: ").withStyle(ChatFormatting.YELLOW))
-				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 		));
 		lines.add(new Line(Component.empty()));
@@ -184,7 +184,7 @@ public class SacksOverlayFeature extends Feature {
 				Component.empty()
 						.append(Component.literal(item.info().storedValue()).withStyle(ChatFormatting.YELLOW))
 						.append(Component.literal("/" + item.info().totalValue()).withStyle(ChatFormatting.GRAY)),
-				Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(item.value())).withStyle(ChatFormatting.GOLD)
+				Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(item.value())).withStyle(ChatFormatting.GOLD)
 		)));
 
 		if (items.size() > maxLines) {
@@ -211,15 +211,15 @@ public class SacksOverlayFeature extends Feature {
 	}
 
 	private @Nullable StoredInfo extractStored(ItemStack itemStack) {
-		Matcher storedMatcher = ItemUtils.getLoreLineIfMatch(itemStack, STORED_PATTERN);
+		Matcher storedMatcher = ItemUtil.getLoreLineIfMatch(itemStack, STORED_PATTERN);
 		if (storedMatcher == null) return null;
 
 		try {
 			String storedValue = storedMatcher.group("stored");
-			long storedAmount = StonksUtils.parseAmount(storedValue);
+			long storedAmount = StonksUtil.parseAmount(storedValue);
 
 			String totalValue = storedMatcher.group("total");
-			long totalAmount = StonksUtils.parseAmount(totalValue);
+			long totalAmount = StonksUtil.parseAmount(totalValue);
 
 			return new StoredInfo(storedValue, storedAmount, totalValue, totalAmount);
 		} catch (Exception _) {
@@ -231,7 +231,7 @@ public class SacksOverlayFeature extends Feature {
 		if (MINECRAFT.font.width(name) <= MAX_NAME_WIDTH) return name;
 
 		String text = name.getString();
-		Style style = MinecraftUtils.findStyle(name);
+		Style style = MinecraftUtil.findStyle(name);
 
 		// Réduit caractère par caractère jusqu'à rentrer avec "..."
 		while (!text.isEmpty() && MINECRAFT.font.width(text + "…") > MAX_NAME_WIDTH) {
@@ -246,7 +246,7 @@ public class SacksOverlayFeature extends Feature {
 		for (Map.Entry<String, String> entry : NAME_SHORTCUTS.entrySet()) {
 			if (text.startsWith(entry.getKey())) {
 				return Component.literal(entry.getValue() + text.substring(entry.getKey().length()))
-						.withStyle(MinecraftUtils.findStyle(name));
+						.withStyle(MinecraftUtil.findStyle(name));
 			}
 		}
 		return name;

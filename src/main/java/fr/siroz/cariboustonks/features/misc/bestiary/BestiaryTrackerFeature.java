@@ -8,7 +8,7 @@ import fr.siroz.cariboustonks.core.module.hud.MultiElementHud;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabLine;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabWidget;
-import fr.siroz.cariboustonks.util.TimeUtils;
+import fr.siroz.cariboustonks.util.TimeUtil;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -124,7 +124,7 @@ public class BestiaryTrackerFeature extends Feature {
 		}
 
 		return stats.getEtaInstant(now)
-				.map(TimeUtils::getDurationFormatted)
+				.map(TimeUtil::getDurationFormatted)
 				.map(formatted -> Component.literal(formatted).withColor(Colors.YELLOW_RGB))
 				.orElse(Component.literal("--").withColor(Colors.GRAY_RGB));
 	}

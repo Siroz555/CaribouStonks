@@ -10,7 +10,7 @@ import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
@@ -95,7 +95,7 @@ public final class EnchantedCloakReminderFeature extends Feature {
 			BoostType boostType = BoostType.getById(type);
 			if (boostType != null) {
 
-				String message = MinecraftUtils.textToJson(boostType.name).orElse(boostType.name.getString());
+				String message = MinecraftUtil.textToJson(boostType.name).orElse(boostType.name.getString());
 
 				TimedObjectModel timedObject = new TimedObjectModel(
 						"cloak::" + boostType.name(),

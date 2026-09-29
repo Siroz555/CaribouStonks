@@ -11,7 +11,7 @@ import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -59,7 +59,7 @@ public class LotusAtollWormholeFeature extends Feature {
 
 		for (WormholeCluster cluster : clusters) {
 			if (cluster.waypoint.isEnabled()) {
-				double distance = MinecraftUtils.squaredDistanceToIgnoringY(cluster.getExactCenter(), PlayerContext.position());
+				double distance = MinecraftUtil.squaredDistanceToIgnoringY(cluster.getExactCenter(), PlayerContext.position());
 				cluster.canBeRender = distance > VANISH_CLUSTER_THRESHOLD_SQ;
 			}
 		}

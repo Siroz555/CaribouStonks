@@ -11,8 +11,9 @@ import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
-import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,7 +86,7 @@ public class HuntingBoxOverlayFeature extends Feature {
 		for (Int2ObjectMap.Entry<ItemStack> entry : slots.int2ObjectEntrySet()) {
 			ItemStack itemStack = entry.getValue();
 			// Évite-les borders vu que c'est au centre du menu
-			if (StonksUtils.isEdgeSlot(entry.getIntKey(), 6)) continue;
+			if (MinecraftUtil.isEdgeSlot(entry.getIntKey(), 6)) continue;
 
 			Component name = itemStack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty());
 			SkyBlockAttribute attribute = SkyBlockItemRegistry.getAttributeByShardName(name.getString());
@@ -130,7 +131,7 @@ public class HuntingBoxOverlayFeature extends Feature {
 				text = Component.empty()
 						.append(attribute.name())
 						.append(Component.literal(" x" + attribute.owned() + " ").withStyle(ChatFormatting.DARK_GRAY))
-						.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(attribute.price())).withStyle(ChatFormatting.GOLD));
+						.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(attribute.price())).withStyle(ChatFormatting.GOLD));
 			}
 			lines.add(new Line(attribute.itemStack(), text));
 		});
@@ -146,9 +147,9 @@ public class HuntingBoxOverlayFeature extends Feature {
 		lines.add(new Line(null, Component.empty()));
 		lines.add(new Line(null, Component.empty()
 				.append(Component.literal("Total Page Value: ").withStyle(ChatFormatting.YELLOW))
-				.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-				.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
+				.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(totalPrice)).withStyle(ChatFormatting.GOLD))
 				.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 		));
 		if (failed > 0) {
@@ -164,8 +165,8 @@ public class HuntingBoxOverlayFeature extends Feature {
 	}
 
 	private int extractOwned(@NonNull ItemStack itemStack) {
-		Matcher ownedMatcher = ItemUtils.getLoreLineIfMatch(itemStack, OWNED_PATTERN);
-		return ownedMatcher != null ? StonksUtils.toInt(ownedMatcher.group(1).replace(",", ""), 1) : 1;
+		Matcher ownedMatcher = ItemUtil.getLoreLineIfMatch(itemStack, OWNED_PATTERN);
+		return ownedMatcher != null ? StonksUtil.toInt(ownedMatcher.group(1).replace(",", ""), 1) : 1;
 	}
 
 	private record Attribute(ItemStack itemStack, Component name, double price, int owned, boolean unknown) {

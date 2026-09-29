@@ -7,7 +7,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.registries.VanillaRegistries;
 
 public final class DeveloperTools {
-
 	private static final boolean SYSTEM_DEBUG = Boolean.parseBoolean(System.getProperty("stonks.debug", "false"));
 	private static final HolderLookup.Provider LOOKUP = VanillaRegistries.createWorldLookup();
 
@@ -26,9 +25,8 @@ public final class DeveloperTools {
 	}
 
 	public static HolderLookup.Provider getRegistryLookup() {
-		Minecraft client = Minecraft.getInstance();
-		return client != null && client.getConnection() != null && client.getConnection().registryAccess() != null
-				? client.getConnection().registryAccess()
+		return Minecraft.getInstance().getConnection() != null
+				? Minecraft.getInstance().getConnection().registryAccess()
 				: LOOKUP;
 	}
 }

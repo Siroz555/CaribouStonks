@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.core.component.ContainerOverlayComponent;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
 import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -34,10 +34,10 @@ public class SelectedPetHighlightFeature extends Feature {
 	private boolean isSelected(ItemStack itemStack) {
 		if (itemStack == null || !itemStack.is(Items.PLAYER_HEAD)) return false;
 
-		List<Component> lore = ItemUtils.getLore(itemStack);
+		List<Component> lore = ItemUtil.getLore(itemStack);
 		if (lore.isEmpty()) return false;
 
-		String concatenateLore = ItemUtils.concatenateLore(lore);
+		String concatenateLore = ItemUtil.concatenateLore(lore);
 		return SELECTED_PATTERN.matcher(concatenateLore).find();
 	}
 }

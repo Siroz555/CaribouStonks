@@ -4,8 +4,8 @@ import fr.siroz.cariboustonks.core.component.ReminderComponent;
 import fr.siroz.cariboustonks.core.model.TimedObjectModel;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
-import fr.siroz.cariboustonks.util.TimeUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
+import fr.siroz.cariboustonks.util.TimeUtil;
 import it.unimi.dsi.fastutil.Pair;
 import java.time.Instant;
 import net.minecraft.ChatFormatting;
@@ -97,8 +97,8 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 			this.name = reminder.left().getDisplay().title();
 
 			Instant expiration = reminder.right().expirationTime();
-			String time = TimeUtils.formatInstant(expiration, TimeUtils.DATE_FULL);
-			String relative = TimeUtils.getDurationFormatted(expiration);
+			String time = TimeUtil.formatInstant(expiration, TimeUtil.DATE_FULL);
+			String relative = TimeUtil.getDurationFormatted(expiration);
 
 			this.expireTime = Component.literal("> ").withStyle(ChatFormatting.WHITE)
 					.append(Component.literal(time).withStyle(ChatFormatting.AQUA))
@@ -106,7 +106,7 @@ class ReminderListWidget extends ObjectSelectionList<ReminderListWidget.Entry> {
 
 			this.description = reminder.left().getDisplay().description() != null
 					? reminder.left().getDisplay().description()
-					: MinecraftUtils.jsonToText(reminder.right().message()).orElse(Component.literal(reminder.right().message()));
+					: MinecraftUtil.jsonToText(reminder.right().message()).orElse(Component.literal(reminder.right().message()));
 
 			this.icon = reminder.left().getDisplay().icon().create();
 		}

@@ -8,7 +8,7 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.GuiEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.ClientTextTooltipAccessor;
-import fr.siroz.cariboustonks.util.math.MathUtils;
+import fr.siroz.cariboustonks.util.math.MathUtil;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
@@ -50,11 +50,11 @@ public class ScrollableTooltipFeature extends Feature {
 	}
 
 	public int getXOffset() {
-		return isEnabled() ? MathUtils.floor(currentXOffset) : 0;
+		return isEnabled() ? MathUtil.floor(currentXOffset) : 0;
 	}
 
 	public int getYOffset() {
-		return isEnabled() ? MathUtils.floor(currentYOffset) : 0;
+		return isEnabled() ? MathUtil.floor(currentYOffset) : 0;
 	}
 
 	public void initOffsetY(int offsetY) {

@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import java.util.List;
 import java.util.OptionalDouble;
 import net.minecraft.ChatFormatting;
@@ -45,11 +45,11 @@ public class NpcSellPriceTooltipFeature extends Feature {
 	private void addNpcLine(@NonNull List<Component> lines, double unitValue, int count) {
 		double totalValue = unitValue * count;
 
-		String totalDisplay = StonksUtils.INTEGER_NUMBERS.format(totalValue);
-		String unitDisplay = StonksUtils.INTEGER_NUMBERS.format(unitValue);
+		String totalDisplay = StonksUtil.INTEGER_NUMBERS.format(totalValue);
+		String unitDisplay = StonksUtil.INTEGER_NUMBERS.format(unitValue);
 		if (totalValue < 100_000) {
-			totalDisplay = StonksUtils.FLOAT_NUMBERS.format(totalValue);
-			unitDisplay = StonksUtils.FLOAT_NUMBERS.format(unitValue);
+			totalDisplay = StonksUtil.FLOAT_NUMBERS.format(totalValue);
+			unitDisplay = StonksUtil.FLOAT_NUMBERS.format(unitValue);
 		}
 
 		MutableComponent line = Component.literal("NPC Price: ").withStyle(ChatFormatting.YELLOW)

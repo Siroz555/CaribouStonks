@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.core.skyblock.data.external;
 
-import fr.siroz.cariboustonks.util.TimeUtils;
+import fr.siroz.cariboustonks.util.TimeUtil;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -106,11 +106,11 @@ public final class AuctionStatistics {
 			return new AuctionStatistics(PeriodStats.EMPTY, PeriodStats.EMPTY, PeriodStats.EMPTY);
 		}
 
-		LocalDate now = LocalDate.now(TimeUtils.UTC);
+		LocalDate now = LocalDate.now(TimeUtil.UTC);
 		// Regroupement par jour
 		Map<LocalDate, DailyAggregate> dailies = rawPoints.stream()
 				.collect(Collectors.groupingBy(
-						p -> p.timestamp().atZone(TimeUtils.UTC).toLocalDate()
+						p -> p.timestamp().atZone(TimeUtil.UTC).toLocalDate()
 				))
 				.entrySet().stream()
 				.collect(Collectors.toMap(

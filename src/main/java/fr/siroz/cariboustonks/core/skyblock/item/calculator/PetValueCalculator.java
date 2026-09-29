@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.core.skyblock.item.calculator;
 import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.core.skyblock.SkyBlockConstants;
 import fr.siroz.cariboustonks.core.skyblock.item.metadata.PetInfo;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -110,7 +110,7 @@ final class PetValueCalculator {
 				"MYTHIC"
 		);
 
-		PET_RARITY_OFFSETS = Object2IntMaps.unmodifiable(StonksUtils.make(new Object2IntOpenHashMap<>(), map -> {
+		PET_RARITY_OFFSETS = Object2IntMaps.unmodifiable(StonksUtil.make(new Object2IntOpenHashMap<>(), map -> {
 			map.put("COMMON", 0);
 			map.put("UNCOMMON", 6);
 			map.put("RARE", 11);

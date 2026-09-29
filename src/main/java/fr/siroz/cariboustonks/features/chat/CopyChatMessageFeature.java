@@ -6,8 +6,8 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.ChatComponentAccessor;
-import fr.siroz.cariboustonks.util.StonksUtils;
-import fr.siroz.cariboustonks.util.math.MathUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
+import fr.siroz.cariboustonks.util.math.MathUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +50,7 @@ public class CopyChatMessageFeature extends Feature {
 			List<GuiMessage> messages = chatAccessor.getMessages();
 			if (messageIndex > -1 && messageIndex < messages.size()) {
 				Component message = messages.get(messageIndex).content();
-				String toClipboard = StonksUtils.stripColor(message.getString());
+				String toClipboard = MinecraftUtil.stripColor(message.getString());
 				ClientContext.setToClipboard(toClipboard);
 				return true;
 			}
@@ -79,7 +79,7 @@ public class CopyChatMessageFeature extends Feature {
 			return -1;
 		}
 
-		double maxWidth = MathUtils.floor(chatAccessor.invokeGetWidth() / chatAccessor.invokeGetScale());
+		double maxWidth = MathUtil.floor(chatAccessor.invokeGetWidth() / chatAccessor.invokeGetScale());
 		if (chatLineX < -4.0 || chatLineX > maxWidth) {
 			return -1;
 		}
@@ -92,7 +92,7 @@ public class CopyChatMessageFeature extends Feature {
 			return -1;
 		}
 		// Index de ligne
-		int lineIndex = MathUtils.floor(chatLineY + chatAccessor.getChatScrollbarPos());
+		int lineIndex = MathUtil.floor(chatLineY + chatAccessor.getChatScrollbarPos());
 		if (lineIndex < 0 || lineIndex >= visible.size()) {
 			return -1;
 		}
@@ -135,13 +135,13 @@ public class CopyChatMessageFeature extends Feature {
 				return true;
 			});
 		}
-		return StringUtils.deleteWhitespace(StonksUtils.stripColor(sb.toString()));
+		return StringUtils.deleteWhitespace(MinecraftUtil.stripColor(sb.toString()));
 	}
 
 	private int findMessageIndex(List<GuiMessage> messages, String normalizedContent) {
 		Map<String, Integer> normToIndex = new HashMap<>((int) (messages.size() / 0.75f) + 1);
 		for (int i = 0; i < messages.size(); i++) {
-			String stipped = StonksUtils.stripColor(messages.get(i).content().getString());
+			String stipped = MinecraftUtil.stripColor(messages.get(i).content().getString());
 			String normalized = StringUtils.deleteWhitespace(stipped);
 			normToIndex.putIfAbsent(normalized, i); // conserve le premier index
 		}

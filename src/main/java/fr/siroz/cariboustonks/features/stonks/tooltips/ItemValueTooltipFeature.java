@@ -11,7 +11,7 @@ import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueCalculator;
 import fr.siroz.cariboustonks.core.skyblock.item.calculator.ItemValueResult;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.List;
@@ -94,9 +94,9 @@ public class ItemValueTooltipFeature extends Feature {
 		double price = result.price();
 		if (price > 0) {
 			lines.add(Component.literal("Est. Item Value: ").withStyle(ChatFormatting.YELLOW)
-					.append(Component.literal(StonksUtils.INTEGER_NUMBERS.format(price)).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(StonksUtil.INTEGER_NUMBERS.format(price)).withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-					.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(price)).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(price)).withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 			);
 		}

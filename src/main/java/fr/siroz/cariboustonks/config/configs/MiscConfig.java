@@ -3,7 +3,7 @@ package fr.siroz.cariboustonks.config.configs;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import fr.siroz.cariboustonks.core.module.hud.HudAnchor;
 import fr.siroz.cariboustonks.core.module.hud.HudConfig;
-import fr.siroz.cariboustonks.util.ColorUtils;
+import fr.siroz.cariboustonks.util.ColorUtil;
 import java.awt.Color;
 import net.minecraft.network.chat.TextColor;
 
@@ -14,7 +14,7 @@ public class MiscConfig {
 	public boolean hoppityEggFinderGuess = false; // Event Config -> hoppityHunt -> eggFinderGuess
 
 	@SerialEntry
-	public Color highlighterColor = ColorUtils.getAwtColor(TextColor.AQUA);
+	public Color highlighterColor = ColorUtil.getAwtColor(TextColor.AQUA);
 
 	@SerialEntry
 	public boolean highlighterMiddleClick = true;

@@ -27,8 +27,8 @@ import fr.siroz.cariboustonks.platform.rendering.world.state.QuadRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.TextRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.TextureRenderState;
 import fr.siroz.cariboustonks.platform.rendering.world.state.ThickCircleRenderState;
-import fr.siroz.cariboustonks.util.render.AnimationUtils;
-import fr.siroz.cariboustonks.util.render.RenderUtils;
+import fr.siroz.cariboustonks.util.render.AnimationUtil;
+import fr.siroz.cariboustonks.util.render.RenderUtil;
 import java.util.ArrayList;
 import java.util.List;
 import net.fabricmc.fabric.api.client.rendering.v1.FeatureRendererRegistry;
@@ -137,26 +137,26 @@ public final class CaribouWorldRenderer {
 		public void submitVanillaBeaconBeam(@NonNull BlockPos position, @NonNull Color color) {
 			if (frozen) return;
 			if (levelRenderState == null) return;
-			if (!RenderUtils.isVisible(frustum, position.getX(), position.getY(), position.getZ(), position.getX() + 1, RenderUtils.MAX_BUILD_HEIGHT, position.getZ() + 1)) return;
+			if (!RenderUtil.isVisible(frustum, position.getX(), position.getY(), position.getZ(), position.getX() + 1, RenderUtil.MAX_BUILD_HEIGHT, position.getZ() + 1)) return;
 
 			int colorInt;
 			if (color == Colors.RAINBOW) {
-				colorInt = AnimationUtils.getCurrentRainbowColor().withAlpha(1f).asInt();
+				colorInt = AnimationUtil.getCurrentRainbowColor().withAlpha(1f).asInt();
 			} else {
 				colorInt = color.withAlpha(1f).asInt();
 			}
 
-			float length = (float) RenderUtils.getCamera().position().subtract(Vec3.atCenterOf(position)).horizontalDistance();
-			float animationTime = Math.floorMod(WorldContext.getWorldTime(), 40) + RenderUtils.getTickCounter().getGameTimeDeltaPartialTick(true);
+			float length = (float) RenderUtil.getCamera().position().subtract(Vec3.atCenterOf(position)).horizontalDistance();
+			float animationTime = Math.floorMod(WorldContext.getWorldTime(), 40) + RenderUtil.getTickCounter().getGameTimeDeltaPartialTick(true);
 
 			BeaconRenderState state = new BeaconRenderState();
 			state.blockPos = position;
 			((BlockEntityRenderStateAccessor) state).setBlockState(Blocks.BEACON.defaultBlockState());
 			state.blockEntityType = BlockEntityTypes.BEACON;
-			state.lightCoords = RenderUtils.FULL_BRIGHT;
+			state.lightCoords = RenderUtil.FULL_BRIGHT;
 			state.breakProgress = null;
 			state.animationTime = animationTime;
-			state.sections.add(new BeaconRenderState.Section(colorInt, RenderUtils.MAX_BUILD_HEIGHT));
+			state.sections.add(new BeaconRenderState.Section(colorInt, RenderUtil.MAX_BUILD_HEIGHT));
 			state.beamRadiusScale = Math.max(1.0F, length / 96.0F);
 			// Vanilla Block Entity States
 			levelRenderState.blockEntityRenderStates.add(state);
@@ -167,7 +167,7 @@ public final class CaribouWorldRenderer {
 			if (frozen) return;
 
 			if (color == Colors.RAINBOW) {
-				color = AnimationUtils.getCurrentRainbowColor();
+				color = AnimationUtil.getCurrentRainbowColor();
 			}
 
 			BeamRenderState state = new BeamRenderState(pos, color, height, widthScale, throughBlocks);
@@ -221,10 +221,10 @@ public final class CaribouWorldRenderer {
 		@Override
 		public void submitFilled(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, @NonNull Color color, boolean throughBlocks) {
 			if (frozen) return;
-			if (!RenderUtils.isVisible(frustum, minX, minY, minZ, maxX, maxY, maxZ)) return;
+			if (!RenderUtil.isVisible(frustum, minX, minY, minZ, maxX, maxY, maxZ)) return;
 
 			if (color == Colors.RAINBOW) {
-				int colorInt = AnimationUtils.getCurrentRainbowColor().withAlpha(1f).asInt();
+				int colorInt = AnimationUtil.getCurrentRainbowColor().withAlpha(1f).asInt();
 				color = Color.fromInt(colorInt);
 			}
 
@@ -235,7 +235,7 @@ public final class CaribouWorldRenderer {
 		@Override
 		public void submitOutline(@NonNull AABB box, @NonNull Color color, float lineWidth, boolean throughBlocks) {
 			if (frozen) return;
-			if (!RenderUtils.isVisible(frustum, box)) return;
+			if (!RenderUtil.isVisible(frustum, box)) return;
 
 			OutlineBoxRenderState state = new OutlineBoxRenderState(box, color, lineWidth, throughBlocks);
 			outlineBoxStates.add(state, throughBlocks);

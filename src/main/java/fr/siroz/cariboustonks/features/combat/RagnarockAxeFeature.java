@@ -10,8 +10,8 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,7 +63,7 @@ public class RagnarockAxeFeature extends Feature {
 	private void onPlaySound(ClientboundSoundPacket packet) {
 		if (!isEnabled()) return;
 		if (packet.getPitch() != 1.4920635f) return;
-		if (!MinecraftUtils.convertSoundPacketToName(packet).startsWith("entity.wolf.death")) return;
+		if (!MinecraftUtil.convertSoundPacketToName(packet).startsWith("entity.wolf.death")) return;
 
 		ItemStack held = PlayerContext.getHeldItem();
 		if (held == null || held.isEmpty()) return;
@@ -113,7 +113,7 @@ public class RagnarockAxeFeature extends Feature {
 
 	private double getStrength(ItemStack item) {
 		try {
-			for (Component line : ItemUtils.getLore(item)) {
+			for (Component line : ItemUtil.getLore(item)) {
 				Matcher strengthMatcher = STRENGTH_PATTERN.matcher(line.getString());
 				if (strengthMatcher.find()) {
 					return Double.parseDouble(strengthMatcher.group("strength"));

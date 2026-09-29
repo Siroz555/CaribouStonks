@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.gui.ColorHighlight;
 import fr.siroz.cariboustonks.core.module.gui.MatcherTrait;
-import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class CroesusMenuFeature extends Feature {
 	private List<ColorHighlight> contentAnalyzer(@NonNull Int2ObjectMap<ItemStack> slots) {
 		List<ColorHighlight> highlights = new ArrayList<>();
 		for (Int2ObjectMap.Entry<ItemStack> entry : slots.int2ObjectEntrySet()) {
-			List<Component> lore = ItemUtils.getLore(entry.getValue());
+			List<Component> lore = ItemUtil.getLore(entry.getValue());
 			if (lore.isEmpty()) {
 				continue;
 			}

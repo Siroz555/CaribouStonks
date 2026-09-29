@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.bazaar.BazaarProduct;
 import fr.siroz.cariboustonks.core.skyblock.data.hypixel.item.SkyBlockItemData;
 import fr.siroz.cariboustonks.util.ItemLookupKey;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMaps;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
@@ -25,7 +25,7 @@ final class CalculatorHelper {
 	 * SIROZ-NOTE : J'ai volontairement modifié certaine valeur de SkyHelper, pour avoir de meilleurs résultats.
 	 * Avec les mises à jour du SkyBlock, certain item type ont de meilleurs prix (moins volatil) (selon moi).
 	 */
-	public static final Object2DoubleMap<String> WORTH = Object2DoubleMaps.unmodifiable(StonksUtils.make(new Object2DoubleOpenHashMap<>(), map -> {
+	public static final Object2DoubleMap<String> WORTH = Object2DoubleMaps.unmodifiable(StonksUtil.make(new Object2DoubleOpenHashMap<>(), map -> {
 		// Cosmetics
 		map.put("skins", 0.67); // Community (-33% when applied)
 		map.put("dye", 0.9);

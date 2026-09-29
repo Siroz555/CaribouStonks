@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.platform.rendering.gui.element;
 
-import fr.siroz.cariboustonks.util.math.MathUtils;
+import fr.siroz.cariboustonks.util.math.MathUtil;
 import it.unimi.dsi.fastutil.doubles.DoubleConsumer;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.network.chat.Component;
@@ -28,7 +28,7 @@ public final class DoubleSliderWidget extends AbstractSliderButton {
 		super(x, y, width, height, text, value);
 		this.min = min;
 		this.max = max;
-		this.value = (MathUtils.clamp(value, min, max) - min) / (max - min);
+		this.value = (MathUtil.clamp(value, min, max) - min) / (max - min);
 		this.changeCallback = changeCallback;
 		this.updateMessage();
 	}
@@ -50,6 +50,6 @@ public final class DoubleSliderWidget extends AbstractSliderButton {
 	 * @return the current value of the slider, clamped and interpolated within the defined range
 	 */
 	private double getValue() {
-		return MathUtils.lerp(min, max, MathUtils.clamp(this.value, 0.0f, 1.0f));
+		return MathUtil.lerp(min, max, MathUtil.clamp(this.value, 0.0f, 1.0f));
 	}
 }

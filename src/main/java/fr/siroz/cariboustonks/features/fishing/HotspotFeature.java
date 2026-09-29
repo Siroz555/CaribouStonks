@@ -19,8 +19,8 @@ import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.context.WorldContext;
 import fr.siroz.cariboustonks.platform.mixin.accessors.DustParticleOptionsAccessor;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
+import fr.siroz.cariboustonks.util.StringUtil;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -133,7 +133,7 @@ public class HotspotFeature extends Feature {
 		Double radius = hotspot.radius;
 		if (radius == null) return;
 
-		double distanceSqToPlayer = MinecraftUtils.squaredDistanceToIgnoringY(hotspot.centerPos, PlayerContext.position());
+		double distanceSqToPlayer = MinecraftUtil.squaredDistanceToIgnoringY(hotspot.centerPos, PlayerContext.position());
 		if (distanceSqToPlayer >= DISTANCE_TO_HOTSPOT_SQ) return;
 
 		if (radius > 0D && radius <= 16D) {
@@ -311,7 +311,7 @@ public class HotspotFeature extends Feature {
 		FishingHook bobber = MINECRAFT.player.fishing;
 		if (bobber != null && bobber.isAlive() && bobber.getOwner() == MINECRAFT.player) {
 			Vec3 bobberPos = bobber.position();
-			double distanceToIgnoringY = MinecraftUtils.squaredDistanceToIgnoringY(hotspot.centerPos, bobberPos);
+			double distanceToIgnoringY = MinecraftUtil.squaredDistanceToIgnoringY(hotspot.centerPos, bobberPos);
 			bobberInHotspot = distanceToIgnoringY <= radius * radius;
 		} else {
 			bobberInHotspot = false;
@@ -347,7 +347,7 @@ public class HotspotFeature extends Feature {
 		if (!this.config().fishing.hotspotHighlightFoundAnnouncer) return;
 
 		Position position = Position.of(hotspot.hotspotStand.blockPosition());
-		TextColor color = MinecraftUtils.findStyle(hotspot.perk).getColor();
+		TextColor color = MinecraftUtil.findStyle(hotspot.perk).getColor();
 		if (color == null) color = TextColor.WHITE;
 
 		Waypoint.builder(position)
@@ -365,7 +365,9 @@ public class HotspotFeature extends Feature {
 		Component message = Component.literal("HOTSPOT NEARBY! ").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD);
 		PlayerContext.sendMessage(Component.empty().append(message).append(hotspot.perk));
 
-		String shareInfo = position.asChatCoordinates() + " | " + hotspot.perk.getString() + " Hotspot @" + StonksUtils.generateRandomId();
+		String baseShareInfo = position.asChatCoordinates() + " | " + hotspot.perk.getString() + " Hotspot";
+		String shareInfo = this.skyBlock().getPartyManager()
+				.isInParty() ? baseShareInfo : baseShareInfo + " @" + StringUtil.generateRandomId();
 		Component shareMessage = Component.empty()
 				.append(Component.literal("[Share to PARTY chat]").withStyle(ChatFormatting.BLUE, ChatFormatting.BOLD)
 						.withStyle(style -> style

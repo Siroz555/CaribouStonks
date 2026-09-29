@@ -6,7 +6,7 @@ import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
@@ -42,7 +42,7 @@ public final class DungeonManager {
 		if (!skyBlockManager.location().onSkyBlock()) return;
 		if (skyBlockManager.location().island() != IslandType.DUNGEON) return;
 
-		String message = StonksUtils.stripColor(text.getString());
+		String message = MinecraftUtil.stripColor(text.getString());
 		//if (message.equals("[NPC] Mort: You should find it useful if you get lost.")) {
 		if (message.equals("[NPC] Mort: Here, I found this map when I first entered the dungeon.")) {
 			SkyBlockEvents.DUNGEON_START_EVENT.invoker().onDungeonStart();

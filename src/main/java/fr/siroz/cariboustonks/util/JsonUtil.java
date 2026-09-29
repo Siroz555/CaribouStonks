@@ -13,9 +13,9 @@ import org.jspecify.annotations.Nullable;
 /**
  * Safe Json {@code Gson} utility.
  */
-public final class JsonUtils {
+public final class JsonUtil {
 
-	private JsonUtils() {
+	private JsonUtil() {
 	}
 
 	/**

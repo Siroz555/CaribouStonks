@@ -9,8 +9,8 @@ import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.EmptyInput;
 import fr.siroz.cariboustonks.platform.rendering.gui.element.FilteredEditBox;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
-import fr.siroz.cariboustonks.util.render.AnimationUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
+import fr.siroz.cariboustonks.util.render.AnimationUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.Arrays;
 import java.util.List;
@@ -232,7 +232,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 		}
 
 		private void updateName(String name) {
-			waypoint.getTextOption().updateText(MinecraftUtils.formatTextFromLegacy(name));
+			waypoint.getTextOption().updateText(MinecraftUtil.formatTextFromLegacy(name));
 			waypoint.getTextOption().updateRawText(name);
 		}
 
@@ -367,7 +367,7 @@ class WaypointsListWidget extends ContainerObjectSelectionList<WaypointsListWidg
 				Component line = Component.literal(prefix).append(Component.literal(name)
 						.withStyle(style -> style.withColor(c.color.asInt())));
 				if (c.color == Colors.RAINBOW) {
-					line = Component.literal(prefix).append(AnimationUtils.applyRainbow(name));
+					line = Component.literal(prefix).append(AnimationUtil.applyRainbow(name));
 				}
 
 				if (!result.getString().isEmpty()) {

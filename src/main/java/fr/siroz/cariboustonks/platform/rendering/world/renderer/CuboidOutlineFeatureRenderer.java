@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import fr.siroz.cariboustonks.core.annotation.Experimental;
 import fr.siroz.cariboustonks.platform.rendering.CaribouRenderPipelines;
 import fr.siroz.cariboustonks.platform.rendering.world.state.CuboidOutlineRenderState;
-import fr.siroz.cariboustonks.util.render.RenderUtils;
+import fr.siroz.cariboustonks.util.render.RenderUtil;
 import java.util.List;
 import net.minecraft.client.renderer.feature.FeatureFrameContext;
 import net.minecraft.client.renderer.feature.FeatureRendererType;
@@ -31,7 +31,7 @@ public final class CuboidOutlineFeatureRenderer extends AbstractFeatureRenderer<
 				Matrix4f positionMatrix = new Matrix4f()
 						.translate((float) -submit.camera().pos.x, (float) -submit.camera().pos.y, (float) -submit.camera().pos.z);
 
-				PoseStack matrices = RenderUtils.matrixToStack(positionMatrix);
+				PoseStack matrices = RenderUtil.matrixToStack(positionMatrix);
 				PoseStack.Pose entry = matrices.last();
 
 				double chunkX = Math.floor((state.center().x + state.depth()) / state.size());

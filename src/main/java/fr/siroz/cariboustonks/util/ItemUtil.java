@@ -31,9 +31,9 @@ import org.jspecify.annotations.Nullable;
 /**
  * Utility class for handling operations related to {@link ItemStack}.
  */
-public final class ItemUtils {
+public final class ItemUtil {
 
-	private ItemUtils() {
+	private ItemUtil() {
 	}
 
 	/**

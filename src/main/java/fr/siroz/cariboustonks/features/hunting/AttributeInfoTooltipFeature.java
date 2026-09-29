@@ -10,8 +10,9 @@ import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItems;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
-import fr.siroz.cariboustonks.util.RomanNumeralUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
+import fr.siroz.cariboustonks.util.StonksUtil;
+import fr.siroz.cariboustonks.util.StringUtil;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public class AttributeInfoTooltipFeature extends Feature {
 
 					Screen currentScreen = ClientContext.getScreen();
 					if (focusedSlot == null || currentScreen == null || lines.isEmpty()) return;
-					if (StonksUtils.isEdgeSlot(focusedSlot.index, 6)) return;
+					if (MinecraftUtil.isEdgeSlot(focusedSlot.index, 6)) return;
 
 					String title = currentScreen.getTitle().getString();
 					if (title.contains(HUNTING_BOX)) handleHuntingBox(lines);
@@ -98,17 +99,17 @@ public class AttributeInfoTooltipFeature extends Feature {
 			return;
 		}
 
-		int level = RomanNumeralUtils.parse(levelStr);
+		int level = StringUtil.parseRomanNumeral(levelStr);
 		if (level < 0 || level > SkyBlockConstants.ATTRIBUTE_SHARD_MAX_LEVEL) return;
 
-		int owned = StonksUtils.toInt(ownedStr, -1);
+		int owned = StonksUtil.toInt(ownedStr, -1);
 		if (owned < 0) return;
 
 		Rarity itemRarity = Rarity.valueOf(rarityStr.toUpperCase(Locale.ENGLISH));
 		OptionalInt shardsUntilMax = SkyBlockItems.getAttributeShardsUntilMax(itemRarity, level + 1);
 		if (shardsUntilMax.isEmpty() || syphonCountStr == null) return;
 
-		int syphonCount = StonksUtils.toInt(syphonCountStr, -1);
+		int syphonCount = StonksUtil.toInt(syphonCountStr, -1);
 		if (syphonCount < 0) return;
 
 		int required = shardsUntilMax.getAsInt() + syphonCount;
@@ -150,10 +151,10 @@ public class AttributeInfoTooltipFeature extends Feature {
 			return;
 		}
 
-		int level = StonksUtils.toInt(levelStr, -1);
+		int level = StonksUtil.toInt(levelStr, -1);
 		if (level < 0) return;
 
-		int syphonCount = StonksUtils.toInt(syphonCountStr, -1);
+		int syphonCount = StonksUtil.toInt(syphonCountStr, -1);
 		if (syphonCount < 0) return;
 
 		Rarity itemRarity = Rarity.valueOf(rarityStr.toUpperCase(Locale.ENGLISH));
@@ -185,12 +186,12 @@ public class AttributeInfoTooltipFeature extends Feature {
 			}
 
 			double price = product.get().buyPrice() * required;
-			String priceDisplay = StonksUtils.INTEGER_NUMBERS.format(price);
+			String priceDisplay = StonksUtil.INTEGER_NUMBERS.format(price);
 
 			lines.add(Component.literal("Cost To Max: ").withStyle(ChatFormatting.YELLOW)
 					.append(Component.literal(priceDisplay + " Coins").withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-					.append(Component.literal(StonksUtils.SHORT_FLOAT_NUMBERS.format(price)).withStyle(ChatFormatting.GOLD))
+					.append(Component.literal(StonksUtil.SHORT_FLOAT_NUMBERS.format(price)).withStyle(ChatFormatting.GOLD))
 					.append(Component.literal(")").withStyle(ChatFormatting.GRAY))
 			);
 		}

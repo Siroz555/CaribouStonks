@@ -6,7 +6,9 @@ import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import it.unimi.dsi.fastutil.chars.CharList;
 import java.awt.Color;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -29,12 +31,13 @@ import net.minecraft.world.scores.PlayerTeam;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public final class MinecraftUtils {
+public final class MinecraftUtil {
 	private static final Minecraft MINECRAFT = Minecraft.getInstance();
+	public static final Pattern COLOR_CODE_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]"); // §[0-9a-fklmnor]
 	private static final CharList FORMAT_CODES = CharList.of('4', 'c', '6', 'e', '2', 'a', 'b', '3', '1', '9', 'd', '5', 'f', '7', '8', '0', 'r', 'k', 'l', 'm', 'n', 'o');
 	public static final Codec<Color> COLOR_CODEC = Codec.INT.xmap(argb -> new Color(argb, true), Color::getRGB);
 
-	private MinecraftUtils() {
+	private MinecraftUtil() {
 	}
 
 	/**
@@ -44,6 +47,18 @@ public final class MinecraftUtils {
 	 */
 	public static boolean isPlayer(@NonNull Entity entity) {
 		return entity instanceof Player player && player.getUUID().version() == 4;
+	}
+
+	/**
+	 * Strip legacy formatting from the given input
+	 *
+	 * @param input the input String
+	 * @return the input without formatting codes or an empty String if the input is null or empty
+	 */
+	public static @NonNull String stripColor(@Nullable String input) {
+		if (input == null || input.isEmpty()) return "";
+
+		return COLOR_CODE_PATTERN.matcher(input).replaceAll("");
 	}
 
 	/**
@@ -114,21 +129,6 @@ public final class MinecraftUtils {
 				.filter(slot -> slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
 				.map(entity::getItemBySlot)
 				.toList();
-	}
-
-	/**
-	 * Show Special Effet
-	 *
-	 * @param item        item
-	 * @param particle    particle
-	 * @param particleAge particle age between 1-120
-	 */
-	public static void showSpecialEffect(
-			@NonNull ItemStack item,
-			@Nullable ParticleOptions particle,
-			int particleAge
-	) {
-		showSpecialEffect(null, item, particle, particleAge, null, 0f, 0f);
 	}
 
 	/**
@@ -217,6 +217,54 @@ public final class MinecraftUtils {
 		if (legacy.contains("§")) return formatTextFromLegacy(legacy, '§');
 		if (legacy.contains("&")) return formatTextFromLegacy(legacy, '&');
 		return Component.literal(legacy);
+	}
+
+	/**
+	 * Checks if a given slot in an inventory is located at the edge.
+	 *
+	 * @param slotId the slot ID to check, where the slots are numbered sequentially from 0
+	 * @param rows   the total number of rows in the inventory
+	 * @return {@code true} if the slot is on the edge of the inventory (first or last column, or first or last row)
+	 */
+	public static boolean isEdgeSlot(int slotId, int rows) {
+		if (slotId < 0 || slotId >= rows * 9) return false;
+		int row = slotId / 9;
+		int col = slotId % 9;
+		return col == 0 || col == 8 || row == 0 || row == rows - 1;
+	}
+
+	/**
+	 * Converts a hotbar index into the corresponding slot index in the player's inventory.
+	 *
+	 * @param hotbarIndex the index of the hotbar (0-8 inclusive)
+	 * @return the slot index in the player's inventory corresponding to the given hotbar index,
+	 * or {@code -1} if the provided hotbar index is out of the valid range
+	 */
+	@SuppressWarnings("unused")
+	public static int convertHotbarToSlotIndex(int hotbarIndex) {
+		if (hotbarIndex < 0 || hotbarIndex > 8) return -1;
+
+		return 36 + hotbarIndex;
+	}
+
+	/**
+	 * Vérifie si le client est connecté à Hypixel.
+	 *
+	 * @return {@code true}/ {@code false}
+	 */
+	public static boolean isConnectedToHypixel() {
+		String serverAddress = MINECRAFT.getCurrentServer() != null
+				? MINECRAFT.getCurrentServer().ip.toLowerCase(Locale.ENGLISH)
+				: "";
+		String serverBrand = MINECRAFT.player != null && MINECRAFT.player.connection.serverBrand() != null
+				? MINECRAFT.player.connection.serverBrand()
+				: "";
+
+		if (serverBrand == null) {
+			return false;
+		}
+
+		return serverAddress.contains("hypixel.net") || serverBrand.contains("Hypixel BungeeCord");
 	}
 
 	private static @NonNull MutableComponent formatTextFromLegacy(@NonNull String legacy, char legacyPrefix) {

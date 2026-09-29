@@ -7,8 +7,8 @@ import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.infrastructure.http.Http;
 import fr.siroz.cariboustonks.core.infrastructure.http.HttpResponse;
 import fr.siroz.cariboustonks.core.infrastructure.json.GsonProvider;
-import fr.siroz.cariboustonks.util.JsonUtils;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.JsonUtil;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -111,7 +111,7 @@ public final class RemoteRepository {
 		if (Files.notExists(METADATA_PATH)) return "0.0.0";
 		try (BufferedReader reader = Files.newBufferedReader(METADATA_PATH)) {
 			JsonObject json = GsonProvider.prettyPrinting().fromJson(reader, JsonObject.class);
-			return json != null ? JsonUtils.getStringOrDefault(json, "version", "0.0.0") : "0.0.0";
+			return json != null ? JsonUtil.getStringOrDefault(json, "version", "0.0.0") : "0.0.0";
 		} catch (IOException | JsonParseException _) {
 			return "0.0.0";
 		}
@@ -241,8 +241,8 @@ public final class RemoteRepository {
 			return CompletableFuture.failedFuture(new IllegalStateException("Null remote metadata"));
 		}
 
-		String remoteVersion = JsonUtils.getStringOrDefault(remoteMetadata, "version", "?");
-		String localVersion = JsonUtils.getStringOrDefault(pair.local(), "version", "0.0.0");
+		String remoteVersion = JsonUtil.getStringOrDefault(remoteMetadata, "version", "?");
+		String localVersion = JsonUtil.getStringOrDefault(pair.local(), "version", "0.0.0");
 		if (devMode) CaribouStonks.LOGGER.info("[RemoteRepository] Version: local={} remote={}", localVersion, remoteVersion);
 
 		// Toujours vérifier les hash réels, pas de early-return sur la version seule
@@ -303,7 +303,7 @@ public final class RemoteRepository {
 				if (!needsDownload && remoteHash != null) {
 					// Check toujours le hash réel sur disque pour détecter toute corruption
 					try {
-						needsDownload = !remoteHash.equals(StonksUtils.calculateSHA256(localFile));
+						needsDownload = !remoteHash.equals(StonksUtil.calculateSHA256(localFile));
 					} catch (IOException e) {
 						needsDownload = true;
 					}
@@ -322,7 +322,7 @@ public final class RemoteRepository {
 	private @NonNull CompletableFuture<DownloadResult> downloadFilesAsync(@NonNull List<FileToDownload> files) {
 		CaribouStonks.LOGGER.info("[RemoteRepository] Starting parallel downloads ({} files)...", files.size());
 
-		List<List<FileToDownload>> batches = StonksUtils.partitionList(files, MAX_CONCURRENT_DOWNLOADS);
+		List<List<FileToDownload>> batches = StonksUtil.partitionList(files, MAX_CONCURRENT_DOWNLOADS);
 		CompletableFuture<DownloadResult> batchChain = CompletableFuture.completedFuture(new DownloadResult(0, 0));
 
 		for (int i = 0; i < batches.size(); i++) {
@@ -381,7 +381,7 @@ public final class RemoteRepository {
 				}
 
 				if (file.expectedHash() != null) {
-					String actualHash = StonksUtils.calculateSHA256(tempPath);
+					String actualHash = StonksUtil.calculateSHA256(tempPath);
 					if (!file.expectedHash().equals(actualHash)) {
 						Files.deleteIfExists(tempPath);
 						throw new RuntimeException("Hash mismatch for " + file.remotePath());

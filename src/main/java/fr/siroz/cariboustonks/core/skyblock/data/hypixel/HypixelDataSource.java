@@ -14,7 +14,7 @@ import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -189,7 +189,7 @@ public final class HypixelDataSource {
 			// ------------------------------------------------------
 			Optional<String> itemModel = skyBlockItem.itemModel();
 			if (itemModel.isPresent()) {
-				Optional<Item> item = ItemUtils.getItemById(itemModel.get());
+				Optional<Item> item = ItemUtil.getItemById(itemModel.get());
 				if (item.isPresent()) {
 					itemStack = new ItemStack(item.get(), 1);
 					hasItemModelApplied = true;
@@ -205,7 +205,7 @@ public final class HypixelDataSource {
 
 				if (minecraftId == null || minecraftId.equals("NO_MATCH")) return fallback;
 
-				Optional<Item> item = ItemUtils.getItemById(minecraftId);
+				Optional<Item> item = ItemUtil.getItemById(minecraftId);
 				if (item.isPresent()) {
 					itemStack = new ItemStack(item.get(), 1);
 				}
@@ -214,7 +214,7 @@ public final class HypixelDataSource {
 			// Peu importe si item_model ou material est utilisé, tant qu'il y a une texture.
 			// Toujours utilisé dans le cas des SKULL.
 			if (skyBlockItem.skullTexture().isPresent()) {
-				itemStack = ItemUtils.createSkull(skyBlockItem.skullTexture().get());
+				itemStack = ItemUtil.createSkull(skyBlockItem.skullTexture().get());
 			}
 
 			itemStack.set(DataComponents.CUSTOM_NAME, Component.nullToEmpty(skyBlockItemId));

@@ -5,7 +5,7 @@ import fr.siroz.cariboustonks.core.infrastructure.scheduler.TickScheduler;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -46,7 +46,7 @@ public class RareSeaCreatureFeature extends Feature {
 		if (!isEnabled()) return;
 		if (!hasFishingRod()) return;
 
-		String message = StonksUtils.stripColor(text.getString());
+		String message = MinecraftUtil.stripColor(text.getString());
 
 		// Le message du Double Hook est avant le message d'un Rare Sea Creature.
 		// S'il est présent, il faut attendre le prochain message, d'où le return.

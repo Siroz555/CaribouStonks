@@ -1,6 +1,6 @@
 package fr.siroz.cariboustonks.platform.rendering.world;
 
-import fr.siroz.cariboustonks.util.render.RenderUtils;
+import fr.siroz.cariboustonks.util.render.RenderUtil;
 import java.util.List;
 import net.minecraft.client.renderer.feature.submit.SubmitNode;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
@@ -35,6 +35,6 @@ public interface SubmitFactory<S, N extends SubmitNode> {
 	 */
 	@Deprecated
 	static <S, N extends SubmitNode> SubmitFactory<S, N> resolve(SubmitFactory<S, N> vulkanFactory, SubmitFactory<S, N> openGlFactory) {
-		return RenderUtils.isVulkanBackend() ? vulkanFactory : openGlFactory;
+		return RenderUtil.isVulkanBackend() ? vulkanFactory : openGlFactory;
 	}
 }

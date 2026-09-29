@@ -5,9 +5,9 @@ import fr.siroz.cariboustonks.config.ConfigValue;
 import fr.siroz.cariboustonks.core.feature.Feature;
 import fr.siroz.cariboustonks.core.skyblock.IslandType;
 import fr.siroz.cariboustonks.events.EventHandler;
-import fr.siroz.cariboustonks.util.ColorUtils;
+import fr.siroz.cariboustonks.util.ColorUtil;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -54,7 +54,7 @@ public class LowHealthWarningFeature extends Feature {
 	@EventHandler(event = "ClientReceiveMessageEvents.ALLOW_GAME")
 	private boolean allowActionBar(Component text, boolean overlay) {
 		if (overlay && isEnabled()) {
-			Matcher healthActionBarMatcher = HEALTH_ACTION_BAR_PATTERN.matcher(StonksUtils.stripColor(text.getString()));
+			Matcher healthActionBarMatcher = HEALTH_ACTION_BAR_PATTERN.matcher(MinecraftUtil.stripColor(text.getString()));
 			if (healthActionBarMatcher.find()) {
 				updateHealth(healthActionBarMatcher);
 			}
@@ -87,7 +87,7 @@ public class LowHealthWarningFeature extends Feature {
 		for (int i = 0; i < thickness; i++) {
 			float t = 1.0f - ((float) i / (float) thickness); // 1.0 sur les bords → 0.0 vers le centre
 			int a = (int) (alpha * t);
-			int lerpedColor = (a << 24) | ColorUtils.lerpRGB(0x00FF0000, 0x00A40000, lerpedAmount);
+			int lerpedColor = (a << 24) | ColorUtil.lerpRGB(0x00FF0000, 0x00A40000, lerpedAmount);
 
 			guiGraphics.fill(0, i, width, i + 1, lerpedColor); // top
 			guiGraphics.fill(0, height - i - 1, width, height - i, lerpedColor); // bottom

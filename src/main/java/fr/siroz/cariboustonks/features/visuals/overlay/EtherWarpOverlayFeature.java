@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
 import java.util.Collections;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
@@ -108,7 +108,7 @@ public class EtherWarpOverlayFeature extends Feature {
 			return;
 		}
 
-		CompoundTag customData = ItemUtils.getCustomData(heldItem);
+		CompoundTag customData = ItemUtil.getCustomData(heldItem);
 		if (customData.getIntOr("ethermerge", 0) == 0) {
 			resetTarget();
 			return;

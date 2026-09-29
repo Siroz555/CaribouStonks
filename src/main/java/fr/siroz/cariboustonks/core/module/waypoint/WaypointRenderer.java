@@ -4,7 +4,7 @@ import fr.siroz.cariboustonks.core.module.waypoint.options.IconOption;
 import fr.siroz.cariboustonks.core.module.waypoint.options.TextOption;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.render.RenderUtils;
+import fr.siroz.cariboustonks.util.render.RenderUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
  * @see Waypoint
  * @see TextOption
  * @see IconOption
- * @see RenderUtils
+ * @see RenderUtil
  */
 public final class WaypointRenderer {
 	private static final float MIN_BEAM_HEIGHT = 4f;
@@ -79,7 +79,7 @@ public final class WaypointRenderer {
 			}
 
 			renderer.submitTexture(centerPos, width, height,
-					RenderUtils.TEXTURE_HEAD_UV, RenderUtils.TEXTURE_HEAD_UV,
+					RenderUtil.TEXTURE_HEAD_UV, RenderUtil.TEXTURE_HEAD_UV,
 					iconOption.getTextureWidth(), iconOption.getTextureHeight(),
 					iconOption.getRenderOffset(), iconOption.getIcon().get(),
 					iconOption.getColor(), iconOption.getAlpha(), iconOption.isThroughBlocks()
@@ -119,7 +119,7 @@ public final class WaypointRenderer {
 	}
 
 	private double getDistance(Vec3 to) {
-		return RenderUtils.getCamera().position().distanceTo(to);
+		return RenderUtil.getCamera().position().distanceTo(to);
 	}
 
 	private float getBeamHeight(double distance) {

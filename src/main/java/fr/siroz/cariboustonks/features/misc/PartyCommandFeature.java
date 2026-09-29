@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.core.module.position.Position;
 import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -37,7 +37,7 @@ public class PartyCommandFeature extends Feature {
 	private void onChatMessage(@NonNull Component text) {
 		if (!isEnabled()) return;
 
-		String input = StonksUtils.stripColor(text.getString());
+		String input = MinecraftUtil.stripColor(text.getString());
 		if (!input.startsWith("Party >")) return;
 
 		for (PartyCommand command : PartyCommand.values()) {

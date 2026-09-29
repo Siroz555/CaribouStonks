@@ -4,8 +4,8 @@ import fr.siroz.cariboustonks.core.module.color.Color;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
-import fr.siroz.cariboustonks.util.render.RenderUtils;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
+import fr.siroz.cariboustonks.util.render.RenderUtil;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -116,13 +116,13 @@ class DebugWorldRenderer {
 		);
 
 		Vec3 centerPos = new Vec3(70, 128, 214);
-		double distance = RenderUtils.getCamera().position().distanceTo(centerPos);
+		double distance = RenderUtil.getCamera().position().distanceTo(centerPos);
 		float scale = Math.max((float) distance / 10, 1);
 
 		renderer.submitTexture(
 				centerPos,
 				scale, scale,
-				RenderUtils.TEXTURE_FULL_UV, RenderUtils.TEXTURE_FULL_UV,
+				RenderUtil.TEXTURE_FULL_UV, RenderUtil.TEXTURE_FULL_UV,
 				1f, 1f,
 				new Vec3(0, 0, 0),
 				Identifier.withDefaultNamespace("textures/item/netherite_sword.png"),
@@ -132,10 +132,10 @@ class DebugWorldRenderer {
 		renderer.submitTexture(
 				centerPos.add(0, 10, 0),
 				scale, scale,
-				RenderUtils.TEXTURE_HEAD_UV, RenderUtils.TEXTURE_HEAD_UV,
-				RenderUtils.TEXTURE_HEAD_UV, RenderUtils.TEXTURE_HEAD_UV,
+				RenderUtil.TEXTURE_HEAD_UV, RenderUtil.TEXTURE_HEAD_UV,
+				RenderUtil.TEXTURE_HEAD_UV, RenderUtil.TEXTURE_HEAD_UV,
 				new Vec3(0, 0, 0),
-				MinecraftUtils.getPlayerHeadTexture(ClientContext.getPlayerName()),
+				MinecraftUtil.getPlayerHeadTexture(ClientContext.getPlayerName()),
 				new Color(255, 255, 255), 1f,
 				true
 		);

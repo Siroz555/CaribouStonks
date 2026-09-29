@@ -11,7 +11,7 @@ import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.ItemUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.regex.Matcher;
@@ -39,7 +39,7 @@ public final class UbikCubeReminderFeature extends Feature {
 	private final ItemStackTemplate ubikCube;
 
     public UbikCubeReminderFeature() {
-		this.ubikCube = ItemUtils.createVirtualSkull(HeadTextures.UBIK_CUBE);
+		this.ubikCube = ItemUtil.createVirtualSkull(HeadTextures.UBIK_CUBE);
         ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
 
 		this.addComponent(ReminderComponent.class, ReminderComponent.builder(REMINDER_TYPE)

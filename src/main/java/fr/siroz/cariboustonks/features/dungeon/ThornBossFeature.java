@@ -7,7 +7,7 @@ import fr.siroz.cariboustonks.events.EventHandler;
 import fr.siroz.cariboustonks.events.NetworkEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
@@ -52,7 +52,7 @@ public class ThornBossFeature extends Feature {
 			message.append(Component.literal("/").withStyle(ChatFormatting.GRAY));
 			message.append(Component.literal("" + MAX_KILLS).withStyle(ChatFormatting.GREEN));
 		} else if (spawnTicks > 0) {
-			String seconds = StonksUtils.DECIMAL_FORMAT.format(spawnTicks / 20f) + "s";
+			String seconds = StonksUtil.DECIMAL_FORMAT.format(spawnTicks / 20f) + "s";
 			message.append(Component.literal(seconds).withStyle(spawnTicks <= 20 ? ChatFormatting.RED : ChatFormatting.YELLOW));
 		} else {
 			message.append(Component.literal("Alive!").withStyle(ChatFormatting.GREEN));

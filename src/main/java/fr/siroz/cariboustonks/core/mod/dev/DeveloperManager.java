@@ -18,9 +18,9 @@ import fr.siroz.cariboustonks.events.WorldEvents;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
 import fr.siroz.cariboustonks.util.DeveloperTools;
-import fr.siroz.cariboustonks.util.ItemUtils;
-import fr.siroz.cariboustonks.util.MinecraftUtils;
-import fr.siroz.cariboustonks.util.TimeUtils;
+import fr.siroz.cariboustonks.util.ItemUtil;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
+import fr.siroz.cariboustonks.util.TimeUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.math.BigDecimal;
@@ -91,7 +91,7 @@ public final class DeveloperManager {
 	private boolean onSound(@NonNull SoundEvent soundEvent) {
 		if (dumpSound) {
 			String soundId = soundEvent.location().getPath();
-			String time = TimeUtils.formatInstant(Instant.now(), TimeUtils.TIME_HH_MM_SS);
+			String time = TimeUtil.formatInstant(Instant.now(), TimeUtil.TIME_HH_MM_SS);
 			PlayerContext.sendMessage(Component.literal("(Client) " + time + " :: " + soundId));
 		}
 		return true;
@@ -100,8 +100,8 @@ public final class DeveloperManager {
 	@EventHandler(event = "NetworkEvents.PLAY_SOUND_PACKET")
 	private void onSoundPacket(ClientboundSoundPacket packet) {
 		if (dumpSound) {
-			String soundId = MinecraftUtils.convertSoundPacketToName(packet);
-			String time = TimeUtils.formatInstant(Instant.now(), TimeUtils.TIME_HH_MM_SS);
+			String soundId = MinecraftUtil.convertSoundPacketToName(packet);
+			String time = TimeUtil.formatInstant(Instant.now(), TimeUtil.TIME_HH_MM_SS);
 			String pitch = BigDecimal.valueOf(packet.getPitch())
 					.setScale(3, RoundingMode.DOWN)
 					.stripTrailingZeros()
@@ -172,12 +172,12 @@ public final class DeveloperManager {
 			int id = 0;
 			for (ArmorStand armorStand : armorStands) {
 				texturedArmorStands.put(armorStand, id);
-				Iterable<ItemStack> equippedItems = MinecraftUtils.getArmorFromEntity(armorStand);
+				Iterable<ItemStack> equippedItems = MinecraftUtil.getArmorFromEntity(armorStand);
 
 				ctx.getSource().sendFeedback(CaribouStonks.prefix().get().append(Component.literal("Head texture #" + id + ": ")));
 
 				for (ItemStack stack : equippedItems) {
-					ItemUtils.getHeadTextureOptional(stack).ifPresent(texture -> ctx.getSource().sendFeedback(Component.nullToEmpty(texture)));
+					ItemUtil.getHeadTextureOptional(stack).ifPresent(texture -> ctx.getSource().sendFeedback(Component.nullToEmpty(texture)));
 				}
 				id++;
 			}

@@ -9,7 +9,7 @@ import fr.siroz.cariboustonks.core.module.reminder.ReminderDisplay;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.systems.ReminderSystem;
-import fr.siroz.cariboustonks.util.TimeUtils;
+import fr.siroz.cariboustonks.util.TimeUtil;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
@@ -66,7 +66,7 @@ public final class BoosterCookieReminderFeature extends Feature {
 				return;
 			}
 
-			Duration duration = TimeUtils.extractDuration(cookieBuff); // PT0S
+			Duration duration = TimeUtil.extractDuration(cookieBuff); // PT0S
 			if (duration.isZero()) return;
 
 			TimedObjectModel timedObject = new TimedObjectModel(

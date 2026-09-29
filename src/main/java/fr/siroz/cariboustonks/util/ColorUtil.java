@@ -4,9 +4,9 @@ import java.awt.Color;
 import net.minecraft.network.chat.TextColor;
 import org.jspecify.annotations.NonNull;
 
-public final class ColorUtils {
+public final class ColorUtil {
 
-	private ColorUtils() {
+	private ColorUtil() {
 	}
 
 	/**

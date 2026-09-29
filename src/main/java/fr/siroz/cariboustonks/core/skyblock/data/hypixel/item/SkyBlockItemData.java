@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import fr.siroz.cariboustonks.core.skyblock.Rarity;
-import fr.siroz.cariboustonks.util.JsonUtils;
+import fr.siroz.cariboustonks.util.JsonUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -82,14 +82,14 @@ public record SkyBlockItemData(
 	public static @NonNull SkyBlockItemData parse(@NonNull JsonObject jsonItem) throws SkyBlockItemParseException {
 		try {
 			String id = jsonItem.get("id").getAsString();
-			boolean soulbound = JsonUtils.has(jsonItem, "soulbound");
-			String material = JsonUtils.getString(jsonItem, "material");
-			Optional<String> itemModel = Optional.ofNullable(JsonUtils.getString(jsonItem, "item_model"));
+			boolean soulbound = JsonUtil.has(jsonItem, "soulbound");
+			String material = JsonUtil.getString(jsonItem, "material");
+			Optional<String> itemModel = Optional.ofNullable(JsonUtil.getString(jsonItem, "item_model"));
 			String name = jsonItem.get("name").getAsString();
 			Rarity rarity = computeTier(jsonItem);
-			Optional<String> category = Optional.ofNullable(JsonUtils.getString(jsonItem, "category"));
+			Optional<String> category = Optional.ofNullable(JsonUtil.getString(jsonItem, "category"));
 			Optional<String> skullTexture = Optional.ofNullable(computeSkullTexture(jsonItem, material));
-			OptionalDouble npcSellPrice = JsonUtils.getOptionalDouble(jsonItem, "npc_sell_price");
+			OptionalDouble npcSellPrice = JsonUtil.getOptionalDouble(jsonItem, "npc_sell_price");
 			Optional<List<GemstoneSlot>> gemstoneSlots = Optional.ofNullable(computeGemstoneSlots(jsonItem));
 			Optional<List<List<GearUpgrade>>> upgradeCosts = Optional.ofNullable(computeUpgradeCosts(jsonItem));
 			Optional<PrestigeItem> prestige = Optional.ofNullable(computePrestige(jsonItem));
@@ -108,7 +108,7 @@ public record SkyBlockItemData(
 					prestige
 			);
 		} catch (Exception ex) {
-			String id = Optional.ofNullable(JsonUtils.getString(jsonItem, "id")).orElse("UNKNOWN");
+			String id = Optional.ofNullable(JsonUtil.getString(jsonItem, "id")).orElse("UNKNOWN");
 			throw new SkyBlockItemParseException(id, ex);
 		}
 	}
@@ -148,9 +148,9 @@ public record SkyBlockItemData(
 
 		static @NonNull GearUpgrade parse(@NonNull JsonObject json) {
 			return new GearUpgrade(
-					Optional.ofNullable(JsonUtils.getString(json, "item_id")),
-					Optional.ofNullable(JsonUtils.getString(json, "essence_type")),
-					JsonUtils.getOptionalInt(json, "amount")
+					Optional.ofNullable(JsonUtil.getString(json, "item_id")),
+					Optional.ofNullable(JsonUtil.getString(json, "essence_type")),
+					JsonUtil.getOptionalInt(json, "amount")
 			);
 		}
 	}
@@ -169,8 +169,8 @@ public record SkyBlockItemData(
 		public static final GemstoneSlot EMPTY = new GemstoneSlot("", Optional.empty());
 
 		static GemstoneSlot parse(@NonNull JsonObject json) {
-			String slotType = JsonUtils.getStringOrDefault(json, "slot_type", "");
-			JsonArray costsArray = JsonUtils.getArray(json, "costs");
+			String slotType = JsonUtil.getStringOrDefault(json, "slot_type", "");
+			JsonArray costsArray = JsonUtil.getArray(json, "costs");
 			if (costsArray == null) return EMPTY;
 
 			List<GemstoneSlotCost> costs = new ArrayList<>();
@@ -212,10 +212,10 @@ public record SkyBlockItemData(
 
 			static @NonNull GemstoneSlotCost parse(@NonNull JsonObject json) {
 				return new GemstoneSlotCost(
-						JsonUtils.getStringOrDefault(json, "type", ""),
-						Optional.ofNullable(JsonUtils.getString(json, "item_id")),
-						JsonUtils.getOptionalInt(json, "amount"),
-						JsonUtils.getOptionalInt(json, "coins")
+						JsonUtil.getStringOrDefault(json, "type", ""),
+						Optional.ofNullable(JsonUtil.getString(json, "item_id")),
+						JsonUtil.getOptionalInt(json, "amount"),
+						JsonUtil.getOptionalInt(json, "coins")
 				);
 			}
 		}
@@ -235,8 +235,8 @@ public record SkyBlockItemData(
 		public static final PrestigeItem EMPTY = new PrestigeItem("", List.of());
 
 		static PrestigeItem parse(@NonNull JsonObject json) {
-			String itemId = JsonUtils.getStringOrDefault(json, "item_id", "");
-			JsonArray costsArray = JsonUtils.getArray(json, "costs");
+			String itemId = JsonUtil.getStringOrDefault(json, "item_id", "");
+			JsonArray costsArray = JsonUtil.getArray(json, "costs");
 			if (costsArray == null) return EMPTY;
 
 			List<GearUpgrade> upgrades = new ArrayList<>();
@@ -253,18 +253,18 @@ public record SkyBlockItemData(
 	}
 
 	private static @NonNull Rarity computeTier(@NonNull JsonObject jsonItem) {
-		String tier = JsonUtils.getString(jsonItem, "tier");
+		String tier = JsonUtil.getString(jsonItem, "tier");
 		return tier != null ? Rarity.fromName(tier) : Rarity.UNKNOWN;
 	}
 
 	private static @Nullable String computeSkullTexture(@NonNull JsonObject jsonItem, @Nullable String material) {
 		if (!SKULL_ITEM_MATERIAL.equals(material)) return null;
-		JsonObject skin = JsonUtils.getObject(jsonItem, "skin");
-		return skin != null ? JsonUtils.getString(skin, "value") : null;
+		JsonObject skin = JsonUtil.getObject(jsonItem, "skin");
+		return skin != null ? JsonUtil.getString(skin, "value") : null;
 	}
 
 	private static @Nullable List<GemstoneSlot> computeGemstoneSlots(@NonNull JsonObject jsonItem) {
-		JsonArray array = JsonUtils.getArray(jsonItem, "gemstone_slots");
+		JsonArray array = JsonUtil.getArray(jsonItem, "gemstone_slots");
 		if (array == null) return null;
 
 		List<GemstoneSlot> slots = new ArrayList<>();
@@ -278,7 +278,7 @@ public record SkyBlockItemData(
 	}
 
 	private static @Nullable List<List<GearUpgrade>> computeUpgradeCosts(@NonNull JsonObject jsonItem) {
-		JsonArray array = JsonUtils.getArray(jsonItem, "upgrade_costs");
+		JsonArray array = JsonUtil.getArray(jsonItem, "upgrade_costs");
 		if (array == null) return null;
 
 		List<List<GearUpgrade>> costs = new ArrayList<>();
@@ -299,7 +299,7 @@ public record SkyBlockItemData(
 	}
 
 	private static @Nullable PrestigeItem computePrestige(@NonNull JsonObject jsonItem) {
-		JsonObject prestige = JsonUtils.getObject(jsonItem, "prestige");
+		JsonObject prestige = JsonUtil.getObject(jsonItem, "prestige");
 		// if (!parsedX.equals(X.EMPTY))
 		return prestige != null ? PrestigeItem.parse(prestige) : null;
 	}

@@ -1,8 +1,8 @@
 package fr.siroz.cariboustonks.util.math;
 
-public final class MathUtils {
+public final class MathUtil {
 
-	private MathUtils() {
+	private MathUtil() {
 	}
 
 	public static float map(float sourceNumber, float fromA, float fromB, float toA, float toB) {

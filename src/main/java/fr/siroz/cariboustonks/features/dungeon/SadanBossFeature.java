@@ -10,7 +10,7 @@ import fr.siroz.cariboustonks.events.RenderEvents;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.events.WorldEvents;
 import fr.siroz.cariboustonks.platform.rendering.world.WorldRenderer;
-import fr.siroz.cariboustonks.util.StonksUtils;
+import fr.siroz.cariboustonks.util.StonksUtil;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Objects;
@@ -110,7 +110,7 @@ public class SadanBossFeature extends Feature {
 	}
 
 	private Component getTimeFrom(int ticks) {
-		String seconds = StonksUtils.DECIMAL_FORMAT.format(ticks / 20f) + "s";
+		String seconds = StonksUtil.DECIMAL_FORMAT.format(ticks / 20f) + "s";
 		return Component.literal(seconds).withStyle(ticks <= 20 ? ChatFormatting.RED : ChatFormatting.YELLOW);
 	}
 
