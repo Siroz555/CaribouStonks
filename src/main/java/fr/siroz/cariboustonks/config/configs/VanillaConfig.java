@@ -20,6 +20,9 @@ public class VanillaConfig {
 	public boolean uninterruptedMusic = false;
 
 	@SerialEntry
+	public boolean beaconBeamWithNoDepthTest = false;
+
+	@SerialEntry
 	public Overlay overlay = new Overlay();
 
 	@SerialEntry

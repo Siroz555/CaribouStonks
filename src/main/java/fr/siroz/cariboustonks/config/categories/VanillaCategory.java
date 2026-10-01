@@ -69,6 +69,16 @@ public class VanillaCategory extends AbstractCategory {
 								newValue -> current.vanilla.uninterruptedMusic = newValue)
 						.controller(this::createBooleanController)
 						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Beacon Beams through blocks"))
+						.description(OptionDescription.of(
+								Component.literal("If enabled, Beacon Beams will always be visible through blocks."),
+								Component.literal(SPACE + "Requires a game restart to take effect.")))
+						.binding(defaults.vanilla.beaconBeamWithNoDepthTest,
+								() -> current.vanilla.beaconBeamWithNoDepthTest,
+								newValue -> current.vanilla.beaconBeamWithNoDepthTest = newValue)
+						.controller(this::createBooleanController)
+						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Zoom").withStyle(ChatFormatting.BOLD))
 						.description(OptionDescription.of(

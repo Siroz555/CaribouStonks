@@ -33,25 +33,6 @@ public class UIAndVisualsCategory extends AbstractCategory {
 				.name(Component.literal("UI & Visuals"))
 				.tooltip(Component.literal("User Interface and Visual Settings"))
 				.option(Option.<Boolean>createBuilder()
-						.name(Component.literal("Display a Shadow on HUD text"))
-						.description(OptionDescription.of(
-								Component.literal("Display a Shadow on all HUD text of the Mod.")))
-						.binding(defaults.uiAndVisuals.shadowTextHud,
-								() -> current.uiAndVisuals.shadowTextHud,
-								newValue -> current.uiAndVisuals.shadowTextHud = newValue)
-						.controller(this::createBooleanController)
-						.build())
-				.option(Option.<Boolean>createBuilder()
-						.name(Component.literal("Beacon Beams through blocks"))
-						.description(OptionDescription.of(
-								Component.literal("If enabled, Beacon Beams will always be visible through blocks."),
-								Component.literal(SPACE + "Requires a game restart to take effect.")))
-						.binding(defaults.uiAndVisuals.beaconBeamWithNoDepthTest,
-								() -> current.uiAndVisuals.beaconBeamWithNoDepthTest,
-								newValue -> current.uiAndVisuals.beaconBeamWithNoDepthTest = newValue)
-						.controller(this::createBooleanController)
-						.build())
-				.option(Option.<Boolean>createBuilder()
 						.name(Component.literal("NPC dialogue/Prompt - Click anywhere to accept NPCs dialogue/prompt"))
 						.description(OptionDescription.of(
 								Component.literal("If enabled, you have a window of 10 seconds to Click anywhere on Screen to accept NPCs dialogue/prompt"),
