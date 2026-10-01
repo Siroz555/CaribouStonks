@@ -1,6 +1,5 @@
 package fr.siroz.cariboustonks.core.module.hud;
 
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import java.util.function.Supplier;
 import net.minecraft.client.DeltaTracker;
@@ -56,11 +55,7 @@ public final class TextHud extends Hud {
 	private void render(Component text, @NonNull GuiGraphicsExtractor guiGraphics, int x, int y, float scale) {
 		guiGraphics.pose().pushMatrix();
 		guiGraphics.pose().scale(scale, scale);
-		guiGraphics.text(CLIENT.font, text, (int) (x / scale), (int) (y / scale), Colors.WHITE.asInt(), useShadow());
+		guiGraphics.text(CLIENT.font, text, (int) (x / scale), (int) (y / scale), Colors.WHITE.asInt(), SHADOW_ON_TEXT);
 		guiGraphics.pose().popMatrix();
-	}
-
-	private boolean useShadow() {
-		return ConfigManager.getConfig().uiAndVisuals.shadowTextHud;
 	}
 }

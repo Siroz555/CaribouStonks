@@ -22,6 +22,7 @@ import org.jspecify.annotations.NonNull;
  * @see MultiElementHud
  */
 public abstract class Hud {
+	public static final boolean SHADOW_ON_TEXT = true;
 	public static final float SCALE_MIN = 0.25f;
 	public static final float SCALE_MAX = 5.0f;
 	public static final float SCALE_STEP = 0.1f;

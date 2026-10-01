@@ -1,7 +1,6 @@
 package fr.siroz.cariboustonks.core.module.hud;
 
 import fr.siroz.cariboustonks.CaribouStonks;
-import fr.siroz.cariboustonks.config.ConfigManager;
 import fr.siroz.cariboustonks.core.mod.crash.CrashType;
 import fr.siroz.cariboustonks.core.module.color.Colors;
 import fr.siroz.cariboustonks.core.module.hud.builder.HudElementBuilder;
@@ -176,7 +175,6 @@ public final class MultiElementHud extends Hud {
 		int scaledX = (int) (x / scale);
 		int scaledY = (int) (y / scale);
 		int lineHeight = CLIENT.font.lineHeight;
-		boolean shadow = ConfigManager.getConfig().uiAndVisuals.shadowTextHud;
 		int white = Colors.WHITE.asInt();
 
 		int offset = 0;
@@ -188,14 +186,14 @@ public final class MultiElementHud extends Hud {
 				int cellX = scaledX;
 				Component[] cells = row.getCells();
 				for (int c = 0; c < cells.length; c++) {
-					guiGraphics.text(CLIENT.font, cells[c], cellX, elementY, white, shadow);
+					guiGraphics.text(CLIENT.font, cells[c], cellX, elementY, white, SHADOW_ON_TEXT);
 					cellX += colWidths[c] + SPACING;
 				}
 			} else if (element instanceof HudTextLine line) {
-				guiGraphics.text(CLIENT.font, line.text(), scaledX, elementY, white, shadow);
+				guiGraphics.text(CLIENT.font, line.text(), scaledX, elementY, white, SHADOW_ON_TEXT);
 			} else if (element instanceof HudIconLine icon) {
 				guiGraphics.item(icon.stack(), scaledX, elementY);
-				guiGraphics.text(CLIENT.font, icon.text(), scaledX + 18, elementY + 4, white, shadow);
+				guiGraphics.text(CLIENT.font, icon.text(), scaledX + 18, elementY + 4, white, SHADOW_ON_TEXT);
 			}
 
 			offset += (element instanceof HudIconLine) ? 16 : lineHeight;
