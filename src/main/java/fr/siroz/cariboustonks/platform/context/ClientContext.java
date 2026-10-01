@@ -253,7 +253,7 @@ public final class ClientContext {
 	 * @return {@code true} if the Shift key is pressed
 	 */
 	public static boolean hasShiftDown() {
-		return InputConstants.isKeyDown(340) || InputConstants.isKeyDown(344);
+		return InputConstants.isKeyDown(InputConstants.KEY_LSHIFT) || InputConstants.isKeyDown(InputConstants.KEY_RSHIFT);
 	}
 
 	private static void contextUpdate() {
