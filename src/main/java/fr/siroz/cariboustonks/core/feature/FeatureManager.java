@@ -61,6 +61,7 @@ import fr.siroz.cariboustonks.features.stonks.tooltips.NpcSellPriceTooltipFeatur
 import fr.siroz.cariboustonks.features.stonks.tooltips.auction.AuctionLowestBinTooltipFeature;
 import fr.siroz.cariboustonks.features.stonks.tooltips.bazaar.BazaarPriceTooltipFeature;
 import fr.siroz.cariboustonks.features.ui.AbiphoneFavoriteContactFeature;
+import fr.siroz.cariboustonks.features.ui.ChatPromptFeature;
 import fr.siroz.cariboustonks.features.ui.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.features.ui.SacksOverlayFeature;
 import fr.siroz.cariboustonks.features.ui.SelectedPetHighlightFeature;
@@ -166,6 +167,7 @@ public final class FeatureManager {
 		registerFeature(new SacksOverlayFeature());
 		registerFeature(new SelectedPetHighlightFeature());
 		registerFeature(new TabListWidgetExtractorFeature());
+		registerFeature(new ChatPromptFeature());
 		// UI - HUDs
 		registerFeature(new FpsHud());
 		registerFeature(new PingHud());

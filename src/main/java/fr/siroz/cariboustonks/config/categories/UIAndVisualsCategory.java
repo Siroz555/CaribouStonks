@@ -52,6 +52,16 @@ public class UIAndVisualsCategory extends AbstractCategory {
 						.controller(this::createBooleanController)
 						.build())
 				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("NPC dialogue/Prompt - Click anywhere to accept NPCs dialogue/prompt"))
+						.description(OptionDescription.of(
+								Component.literal("If enabled, you have a window of 10 seconds to Click anywhere on Screen to accept NPCs dialogue/prompt"),
+								Component.literal(SPACE + "Does not work when there are multiple possible choices").withStyle(ChatFormatting.YELLOW)))
+						.binding(defaults.uiAndVisuals.chatPrompt.clickAnywhereOnScreenToAcceptPrompt,
+								() -> current.uiAndVisuals.chatPrompt.clickAnywhereOnScreenToAcceptPrompt,
+								newValue -> current.uiAndVisuals.chatPrompt.clickAnywhereOnScreenToAcceptPrompt = newValue)
+						.controller(this::createBooleanController)
+						.build())
+				.option(Option.<Boolean>createBuilder()
 						.name(Component.literal("Highlight Selected Pet in the Pet Menu"))
 						.description(OptionDescription.of(
 								Component.literal("Highlight the current equipped pet in the Pet's Menu.")))

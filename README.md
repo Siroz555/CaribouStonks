@@ -72,6 +72,7 @@ Lightweight and efficient.
 
 **UI & Visuals**
 
+- NPC dialogue/Prompt - Click anywhere on screen to accept NPCs dialogue/prompt.
 - Rare Drops Visual Effect: Visual effect triggered upon obtaining Rare Drops.
 - Deployable:
     - Display all active Deployable in a HUD with their respective timer.

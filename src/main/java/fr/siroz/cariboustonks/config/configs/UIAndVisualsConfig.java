@@ -26,6 +26,9 @@ public class UIAndVisualsConfig {
 	public boolean rareDropVisualEffect = true;
 
 	@SerialEntry
+	public ChatPrompt chatPrompt = new ChatPrompt();
+
+	@SerialEntry
 	public Deployables deployables = new Deployables();
 
 	@SerialEntry
@@ -60,6 +63,12 @@ public class UIAndVisualsConfig {
 
 	@SerialEntry
 	public DayHud dayHud = new DayHud();
+
+	public static class ChatPrompt {
+
+		@SerialEntry
+		public boolean clickAnywhereOnScreenToAcceptPrompt = false;
+	}
 
 	public static class Deployables {
 
