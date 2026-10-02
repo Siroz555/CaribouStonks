@@ -122,7 +122,7 @@ public class SecondLifeFeature extends Feature {
 		activeCooldowns.put(secondLife, secondLife.getCooldown() * 20);
 
 		if (this.skyBlock().getPartyManager().isInParty() && this.config().combat.secondLife.sendPartyInfo) {
-			String display = secondLife.getName() + " Used! (" + activeCooldowns.size() + TOTAL_SECOND_LIFE_ABILITY + ")";
+			String display = secondLife.getName() + " Used! (" + activeCooldowns.size() + "/" + TOTAL_SECOND_LIFE_ABILITY + ")";
 			PlayerContext.sendCommandToServer("/pc " + display, true);
 		}
 	}
