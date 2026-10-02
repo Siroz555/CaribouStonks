@@ -54,41 +54,26 @@ public class DungeonsCategory extends AbstractCategory {
 						.description(OptionDescription.of(
 								Component.literal("Settings for the Wither King phase (P5) in the Master Mode Catacombs Floor 7. (M7)")))
 						.collapsed(false)
-						.option(LabelOption.create(Component.literal("| Dragon Priority & Spawn").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Enable Dragon Priority & Spawn alerts"))
+								.name(Component.literal("Wither King Dragons - Spawn Title"))
 								.description(OptionDescription.of(
-										Component.literal("Tells you which dragon will spawn and you must kill."),
-										Component.literal(SPACE + "During the Split phase, this alerts you to which Dragon you must kill based on your Dungeon Class."),
-										Component.literal("Split Priority: §6B§7/§bM §7-> §6O§aG§cR§bB§5P §7<- §cA§7/§5H§7/§aT"),
-										Component.literal("(Version 1.8 from DragPrio)").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC),
-										Component.literal(SPACE + "After the Split phase, an alert will be sent for each dragon that spawns.")))
-								.binding(defaults.instance.theCatacombs.witherKing.dragPrio,
-										() -> current.instance.theCatacombs.witherKing.dragPrio,
-										newValue -> current.instance.theCatacombs.witherKing.dragPrio = newValue)
+										Component.literal("Displays a Title and plays a sound when a Dragon spawns.")))
+								.binding(defaults.instance.theCatacombs.witherKing.showSpawnTitle,
+										() -> current.instance.theCatacombs.witherKing.showSpawnTitle,
+										newValue -> current.instance.theCatacombs.witherKing.showSpawnTitle = newValue)
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Dragon Priority & Spawn - Title"))
-								.description(OptionDescription.of(
-										Component.literal("Displays a Title and plays a sound when a Dragon spawns.")))
-								.binding(defaults.instance.theCatacombs.witherKing.dragPrioTitle,
-										() -> current.instance.theCatacombs.witherKing.dragPrioTitle,
-										newValue -> current.instance.theCatacombs.witherKing.dragPrioTitle = newValue)
-								.controller(this::createYesNoController)
-								.build())
-						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Dragon Priority & Spawn - Message"))
+								.name(Component.literal("Wither King Dragons - Spawn Message"))
 								.description(OptionDescription.of(
 										Component.literal("Displays a message in the chat when a Dragon spawns.")))
-								.binding(defaults.instance.theCatacombs.witherKing.dragPrioMessage,
-										() -> current.instance.theCatacombs.witherKing.dragPrioMessage,
-										newValue -> current.instance.theCatacombs.witherKing.dragPrioMessage = newValue)
-								.controller(this::createYesNoController)
+								.binding(defaults.instance.theCatacombs.witherKing.showSpawnMessage,
+										() -> current.instance.theCatacombs.witherKing.showSpawnMessage,
+										newValue -> current.instance.theCatacombs.witherKing.showSpawnMessage = newValue)
+								.controller(this::createBooleanController)
 								.build())
-						.option(LabelOption.create(Component.literal("| Dragon Helpers").withStyle(ChatFormatting.BOLD)))
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Dragon Spawn Time"))
+								.name(Component.literal("Wither King Dragons - Spawn Time"))
 								.description(OptionDescription.of(
 										Component.literal("Displays timers to warn of a Dragon spawn."),
 										Component.literal(SPACE + "Adapted according to the server's TPS.").withStyle(ChatFormatting.AQUA)))
@@ -98,7 +83,7 @@ public class DungeonsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Dragon Area Bounding Boxes"))
+								.name(Component.literal("Wither King Dragons - Bounding Boxes"))
 								.description(OptionDescription.of(
 										Component.literal("Displays the Dragons' colored boxes")))
 								.binding(defaults.instance.theCatacombs.witherKing.showDragBoundingBox,
@@ -107,7 +92,7 @@ public class DungeonsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Dragon Target Line"))
+								.name(Component.literal("Wither King Dragons - Target Line"))
 								.description(OptionDescription.of(
 										Component.literal("Displays a line from your cursor to the dragon that will spawn.")))
 								.binding(defaults.instance.theCatacombs.witherKing.showDragTargetLine,
@@ -116,7 +101,7 @@ public class DungeonsCategory extends AbstractCategory {
 								.controller(this::createBooleanController)
 								.build())
 						.option(Option.<Boolean>createBuilder()
-								.name(Component.literal("Dragon Last Breath Target"))
+								.name(Component.literal("Wither King Dragons - Last Breath Target"))
 								.description(OptionDescription.of(
 										Component.literal("Displays a circle that allows you to aim at the dragon that will spawn, having a Last Breath."),
 										Component.literal(SPACE + "Considering that you are focused on the Obsidian block.").withStyle(ChatFormatting.ITALIC)))

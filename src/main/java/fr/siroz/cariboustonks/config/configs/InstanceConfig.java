@@ -47,13 +47,10 @@ public class InstanceConfig {
 		public static class WitherKing {
 
 			@SerialEntry
-			public boolean dragPrio = false;
+			public boolean showSpawnMessage = false;
 
 			@SerialEntry
-			public boolean dragPrioMessage = true;
-
-			@SerialEntry
-			public boolean dragPrioTitle = true;
+			public boolean showSpawnTitle = false;
 
 			@SerialEntry
 			public boolean showSpawnTime = false;
