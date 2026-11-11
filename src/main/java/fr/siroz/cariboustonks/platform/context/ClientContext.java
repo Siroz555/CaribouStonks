@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -63,6 +64,15 @@ public final class ClientContext {
 	 */
 	public static @NonNull String getPlayerName() {
 		return CLIENT.getUser().getName();
+	}
+
+	/**
+	 * Retrieves the profile id of the player.
+	 *
+	 * @return the player's profile id
+	 */
+	public static @NonNull UUID getProfileId() {
+		return CLIENT.getUser().getProfileId();
 	}
 
 	/**

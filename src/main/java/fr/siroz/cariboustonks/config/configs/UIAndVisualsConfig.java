@@ -20,6 +20,9 @@ public class UIAndVisualsConfig {
 	public boolean rareDropVisualEffect = true;
 
 	@SerialEntry
+	public boolean storagePreview = false;
+
+	@SerialEntry
 	public ChatPrompt chatPrompt = new ChatPrompt();
 
 	@SerialEntry

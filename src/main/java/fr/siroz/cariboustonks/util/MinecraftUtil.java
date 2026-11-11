@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.util;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import fr.siroz.cariboustonks.core.infrastructure.json.GsonProvider;
 import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import it.unimi.dsi.fastutil.chars.CharList;
@@ -13,8 +14,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Position;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -26,6 +30,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jspecify.annotations.NonNull;
@@ -36,6 +41,12 @@ public final class MinecraftUtil {
 	public static final Pattern COLOR_CODE_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]"); // §[0-9a-fklmnor]
 	private static final CharList FORMAT_CODES = CharList.of('4', 'c', '6', 'e', '2', 'a', 'b', '3', '1', '9', 'd', '5', 'f', '7', '8', '0', 'r', 'k', 'l', 'm', 'n', 'o');
 	public static final Codec<Color> COLOR_CODEC = Codec.INT.xmap(argb -> new Color(argb, true), Color::getRGB);
+	private static final Codec<Holder<Item>> EMPTY_HOLDER_ITEM_CODEC = BuiltInRegistries.ITEM.holderByNameCodec();
+	public static final Codec<ItemStack> EMPTY_ITEMSTACK_CODEC = Codec.lazyInitialized(() -> RecordCodecBuilder.create(instance -> instance.group(
+			EMPTY_HOLDER_ITEM_CODEC.fieldOf("id").forGetter(ItemStack::typeHolder),
+			Codec.INT.orElse(1).fieldOf("count").forGetter(ItemStack::getCount),
+			DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY).forGetter(ItemStack::getComponentsPatch)
+	).apply(instance, ItemStack::new)));
 
 	private MinecraftUtil() {
 	}

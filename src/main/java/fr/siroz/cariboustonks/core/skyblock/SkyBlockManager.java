@@ -12,19 +12,24 @@ import fr.siroz.cariboustonks.core.skyblock.data.repository.RepositoryDataSource
 import fr.siroz.cariboustonks.core.skyblock.dungeon.DungeonManager;
 import fr.siroz.cariboustonks.core.skyblock.slayer.SlayerManager;
 import fr.siroz.cariboustonks.core.skyblock.tablist.TabListManager;
+import fr.siroz.cariboustonks.events.ChatEvents;
 import fr.siroz.cariboustonks.events.SkyBlockEvents;
 import fr.siroz.cariboustonks.platform.context.ClientContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
+import fr.siroz.cariboustonks.util.MinecraftUtil;
 import fr.siroz.cariboustonks.util.StonksUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import net.azureaaron.hmapi.data.server.Environment;
 import net.azureaaron.hmapi.events.HypixelPacketEvents;
 import net.azureaaron.hmapi.network.HypixelNetworking;
 import net.azureaaron.hmapi.network.packet.s2c.ErrorS2CPacket;
+import net.azureaaron.hmapi.network.packet.s2c.HelloS2CPacket;
 import net.azureaaron.hmapi.network.packet.s2c.HypixelS2CPacket;
 import net.azureaaron.hmapi.network.packet.v1.s2c.LocationUpdateS2CPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -32,6 +37,7 @@ import org.jspecify.annotations.Nullable;
  * The {@code SkyBlockManager} class serves as the core manager for all SkyBlock related-content.
  */
 public final class SkyBlockManager {
+	private static final String PROFILE_ID_PREFIX = "Profile ID: ";
 
 	private final RepositoryDataSource repositoryDataSource;
 	private final HypixelDataSource hypixelDataSource;
@@ -42,8 +48,10 @@ public final class SkyBlockManager {
 	private final TabListManager tabListManager;
 	private final HypixelPartyManager partyManager;
 
+	private volatile Environment environment = Environment.PRODUCTION;
 	private volatile SkyBlockLocation currentLocation = SkyBlockLocation.NONE;
 	private volatile SkyBlockTime currentTime = SkyBlockTime.DEFAULT;
+	private String skyBlockProfileId = "";
 
 	public SkyBlockManager() {
 		// Data Sources
@@ -58,6 +66,7 @@ public final class SkyBlockManager {
 
 		TickScheduler.getInstance().runRepeating(this::onSecond, 1, TimeUnit.SECONDS);
 		ClientPlayConnectionEvents.DISCONNECT.register((_, _) -> this.onDisconnect());
+		ChatEvents.MESSAGE_RECEIVE_EVENT.register(this::onChatMessage);
 
 		try {
 			HypixelNetworking.registerToEvents(StonksUtil.make(new Object2IntOpenHashMap<>(),
@@ -94,6 +103,15 @@ public final class SkyBlockManager {
 	 */
 	public SkyBlockSeason season() {
 		return seasonOf(currentTime);
+	}
+
+	/**
+	 * Returns the current SkyBlock Profile ID used in this session
+	 *
+	 * @return the SkyBlock Profile ID
+	 */
+	public String getSkyBlockProfileId() {
+		return skyBlockProfileId;
 	}
 
 	/**
@@ -197,8 +215,21 @@ public final class SkyBlockManager {
 		if (DeveloperTools.isInDevelopment() && ClientContext.isLocalServer()) forceOnSkyBlock();
 	}
 
+	private void onChatMessage(Component text) {
+		if (!currentLocation.onSkyBlock()) return;
+
+		String message = MinecraftUtil.stripColor(text.getString());
+		if (message.startsWith(PROFILE_ID_PREFIX)) {
+			skyBlockProfileId = message.substring(PROFILE_ID_PREFIX.length());
+			if (environment != Environment.PRODUCTION) {
+				skyBlockProfileId += "-alpha";
+			}
+		}
+	}
+
 	private void handlePacket(@NonNull HypixelS2CPacket packet) {
 		switch (packet) {
+			case HelloS2CPacket(Environment helloEnv) -> environment = helloEnv;
 			case LocationUpdateS2CPacket(var serverName, var serverType, var ignored, var mode, var ignored1) -> {
 				SkyBlockLocation location = SkyBlockLocation.of(serverType.orElse(""), IslandType.getById(mode.orElse("")));
 				updateLocation(serverName, location);

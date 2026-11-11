@@ -74,6 +74,15 @@ public class UIAndVisualsCategory extends AbstractCategory {
 								newValue -> current.uiAndVisuals.rareDropVisualEffect = newValue)
 						.controller(this::createBooleanController)
 						.build())
+				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Storage Preview - Ender Chests & Backpacks"))
+						.description(OptionDescription.of(
+								Component.literal("When you hover your mouse over Ender Chests or Backpacks in the Storage, you'll see a preview of their contents.")))
+						.binding(defaults.uiAndVisuals.storagePreview,
+								() -> current.uiAndVisuals.storagePreview,
+								newValue -> current.uiAndVisuals.storagePreview = newValue)
+						.controller(this::createBooleanController)
+						.build())
 				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Deployable").withStyle(ChatFormatting.BOLD))
 						.description(OptionDescription.of(

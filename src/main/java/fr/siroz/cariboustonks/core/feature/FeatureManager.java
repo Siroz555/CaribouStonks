@@ -65,6 +65,7 @@ import fr.siroz.cariboustonks.features.ui.ChatPromptFeature;
 import fr.siroz.cariboustonks.features.ui.ColoredEnchantmentFeature;
 import fr.siroz.cariboustonks.features.ui.SacksOverlayFeature;
 import fr.siroz.cariboustonks.features.ui.SelectedPetHighlightFeature;
+import fr.siroz.cariboustonks.features.ui.StoragePreviewFeature;
 import fr.siroz.cariboustonks.features.ui.TabListWidgetExtractorFeature;
 import fr.siroz.cariboustonks.features.ui.deployable.DeployableFeature;
 import fr.siroz.cariboustonks.features.ui.hud.DayHud;
@@ -161,6 +162,7 @@ public final class FeatureManager {
 		registerFeature(new ItemValueTooltipFeature(4));
 		registerFeature(new CopyLowestBinFeature());
 		// UI
+		registerFeature(new StoragePreviewFeature());
 		registerFeature(new DeployableFeature());
 		registerFeature(new MobTrackingFeature());
 		registerFeature(new AbiphoneFavoriteContactFeature(0));

@@ -74,6 +74,15 @@ public final class GuiEvents {
 		}
 	});
 
+	public static final Event<MouseOverTooltip> MOUSE_OVER_TOOLTIP_EVENT = EventFactory.createArrayBacked(MouseOverTooltip.class, listeners -> (graphics, screen, index, mouseX, mouseY) -> {
+		for (MouseOverTooltip listener : listeners) {
+			if (!listener.onMouseOverTooltip(graphics, screen, index, mouseX, mouseY)) {
+				return false;
+			}
+		}
+		return true;
+	});
+
 	@FunctionalInterface
 	public interface ScreenClose {
 		void onScreenClose(@NonNull Screen screen);
@@ -97,5 +106,10 @@ public final class GuiEvents {
 	@FunctionalInterface
 	public interface TooltipTracker {
 		void onTooltipTracker(List<ClientTooltipComponent> components);
+	}
+
+	@FunctionalInterface
+	public interface MouseOverTooltip {
+		boolean onMouseOverTooltip(GuiGraphicsExtractor graphics, Screen screen, int index, int mouseX, int mouseY);
 	}
 }
