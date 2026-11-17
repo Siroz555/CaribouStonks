@@ -16,6 +16,7 @@ import fr.siroz.cariboustonks.platform.context.PlayerContext;
 import fr.siroz.cariboustonks.util.DeveloperTools;
 import fr.siroz.cariboustonks.util.ItemUtil;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -143,6 +144,15 @@ public final class HypixelDataSource {
 			return Optional.empty();
 		}
 		return Optional.ofNullable(bazaarFetcher.getBazaarSnapshot().get(skyBlockItemId));
+	}
+
+	/**
+	 * Returns a Collection of all Bazaar Items IDs
+	 *
+	 * @return Collection of Bazaar Items Ids
+	 */
+	public Collection<String> getBazaarItems() {
+		return bazaarFetcher.getBazaarSnapshot().keySet();
 	}
 
 	/**
