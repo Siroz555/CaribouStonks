@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import fr.siroz.cariboustonks.CaribouStonks;
 import fr.siroz.cariboustonks.core.infrastructure.json.JsonFileService;
 import fr.siroz.cariboustonks.core.infrastructure.scheduler.AsyncScheduler;
+import fr.siroz.cariboustonks.core.skyblock.SkyBlockRegistry;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockAttribute;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockEnchantment;
 import fr.siroz.cariboustonks.core.skyblock.item.SkyBlockItemRegistry;
@@ -15,9 +16,11 @@ import fr.siroz.cariboustonks.util.DeveloperTools;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
@@ -31,6 +34,7 @@ public final class RepositoryDataSource {
 	private static final String ATTRIBUTES_FILE = "attributes.json";
 	private static final String REFORGES_FILE = "reforges.json";
 	private static final String MATERIALS_FILE = "legacy_hypixel_material.json";
+	private static final String WARPS_FILE = "warps.json";
 
 	private final ExecutorService executor;
 	private final boolean devMode;
@@ -70,11 +74,13 @@ public final class RepositoryDataSource {
 		loadRepositoryFile(ATTRIBUTES_FILE, "attributes", JsonArray.class, this::applyAttributes);
 		loadRepositoryFile(REFORGES_FILE, "attributes", JsonArray.class, this::applyReforges);
 		loadRepositoryFile(MATERIALS_FILE, "hypixelMaterial", JsonObject.class, this::applyLegacyHypixelMaterial);
+		loadRepositoryFile(WARPS_FILE, "warps", JsonArray.class, this::applyWarps);
 
 		CaribouStonks.LOGGER.info("[RepositoryDataSource] Loaded {} enchantments", SkyBlockItemRegistry.sizeOfEnchantments());
 		CaribouStonks.LOGGER.info("[RepositoryDataSource] Loaded {} attributes", SkyBlockItemRegistry.sizeOfAttributes());
 		CaribouStonks.LOGGER.info("[RepositoryDataSource] Loaded {} reforges", SkyBlockItemRegistry.sizeOfReforges());
 		CaribouStonks.LOGGER.info("[RepositoryDataSource] Loaded {} legacy Hypixel material", SkyBlockItemRegistry.sizeOfLegacyHypixelMaterial());
+		CaribouStonks.LOGGER.info("[RepositoryDataSource] Loaded {} warps", SkyBlockRegistry.sizeOfWarps());
 	}
 
 	private <R> void loadRepositoryFile(String fileName, String label, Class<R> rawType, Consumer<R> handler) {
@@ -147,6 +153,17 @@ public final class RepositoryDataSource {
 			minecraftIdsMapping.put(entry.getKey(), entry.getValue().getAsString());
 		}
 		SkyBlockItemRegistry.loadLegacyHypixelMaterial(minecraftIdsMapping);
+	}
+
+	private void applyWarps(@NonNull JsonArray jsonArray) {
+		if (jsonArray.isEmpty()) return;
+
+		Set<String> warps = new HashSet<>(jsonArray.size());
+		for (JsonElement element : jsonArray) {
+			String warp = element.getAsString();
+			warps.add(warp);
+		}
+		SkyBlockRegistry.loadWarps(warps);
 	}
 
 	public void reload() {
