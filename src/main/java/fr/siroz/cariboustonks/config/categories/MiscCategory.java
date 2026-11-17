@@ -88,6 +88,15 @@ public class MiscCategory extends AbstractCategory {
 						.controller(this::createBooleanController)
 						.build())
 				.option(Option.<Boolean>createBuilder()
+						.name(Component.literal("Tooltip - Show Obtained Date"))
+						.description(OptionDescription.of(
+								Component.literal("Add the Obtained date in the Item Tooltip")))
+						.binding(defaults.misc.showObtainedDateTooltip,
+								() -> current.misc.showObtainedDateTooltip,
+								newValue -> current.misc.showObtainedDateTooltip = newValue)
+						.controller(this::createBooleanController)
+						.build())
+				.option(Option.<Boolean>createBuilder()
 						.name(Component.literal("Server Visit History"))
 						.description(OptionDescription.of(
 								Component.literal("Allows you to display a message in the chat indicating when you were last on the server or that you've just arrived.")))

@@ -26,6 +26,9 @@ public class MiscConfig {
 	public boolean showHexOnDyedItemEverywhere = false;
 
 	@SerialEntry
+	public boolean showObtainedDateTooltip = false;
+
+	@SerialEntry
 	public boolean serverTracker = false;
 
 	@Deprecated

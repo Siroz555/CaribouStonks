@@ -39,6 +39,7 @@ import fr.siroz.cariboustonks.features.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.features.mining.CorpseFinderFeature;
 import fr.siroz.cariboustonks.features.misc.HexTooltipFeature;
 import fr.siroz.cariboustonks.features.misc.HighlighterFeature;
+import fr.siroz.cariboustonks.features.misc.ObtainedDateTooltipFeature;
 import fr.siroz.cariboustonks.features.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.features.misc.SearchBarCalculatorFeature;
 import fr.siroz.cariboustonks.features.misc.ServerTrackerFeature;
@@ -178,6 +179,7 @@ public final class FeatureManager {
 		// Misc
 		registerFeature(new BestiaryTrackerFeature());
 		registerFeature(new HexTooltipFeature(5));
+		registerFeature(new ObtainedDateTooltipFeature(55));
 		registerFeature(new ServerTrackerFeature());
 		registerFeature(new HighlighterFeature());
 		registerFeature(new PartyCommandFeature());
