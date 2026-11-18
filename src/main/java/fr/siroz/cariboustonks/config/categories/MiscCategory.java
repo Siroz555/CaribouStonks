@@ -106,6 +106,56 @@ public class MiscCategory extends AbstractCategory {
 						.controller(this::createBooleanController)
 						.build())
 				.group(OptionGroup.createBuilder()
+						.name(Component.literal("Auto Complete Commands").withStyle(ChatFormatting.BOLD))
+						.collapsed(false)
+						.description(OptionDescription.of(
+								Component.literal("Auto Complete Commands settings")))
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Command /warp <destination>"))
+								.description(OptionDescription.of(
+										Component.literal("Complete the /warp with all destinations"),
+										Component.literal(SPACE),
+										Component.literal("Note: You need to rejoin SkyBlock to apply!").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.misc.autoCompleteCommands.warp,
+										() -> current.misc.autoCompleteCommands.warp,
+										newValue -> current.misc.autoCompleteCommands.warp = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Command /gfs <item> <amount>"))
+								.description(OptionDescription.of(
+										Component.literal("Complete the /gfs with all Bazaar Items"),
+										Component.literal(SPACE),
+										Component.literal("Note: You need to rejoin SkyBlock to apply!").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.misc.autoCompleteCommands.gfs,
+										() -> current.misc.autoCompleteCommands.gfs,
+										newValue -> current.misc.autoCompleteCommands.gfs = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Command /bz <item>"))
+								.description(OptionDescription.of(
+										Component.literal("Complete the /bz with all Bazaar Items"),
+										Component.literal(SPACE),
+										Component.literal("Note: You need to rejoin SkyBlock to apply!").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.misc.autoCompleteCommands.bz,
+										() -> current.misc.autoCompleteCommands.bz,
+										newValue -> current.misc.autoCompleteCommands.bz = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Command /call <contact>"))
+								.description(OptionDescription.of(
+										Component.literal("Complete the /call with all Contacts and alias"),
+										Component.literal(SPACE),
+										Component.literal("Note: You need to rejoin SkyBlock to apply!").withStyle(ChatFormatting.GOLD)))
+								.binding(defaults.misc.autoCompleteCommands.call,
+										() -> current.misc.autoCompleteCommands.call,
+										newValue -> current.misc.autoCompleteCommands.call = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
 						.name(Component.literal("Events - Hoppity").withStyle(ChatFormatting.BOLD))
 						.collapsed(false)
 						.description(OptionDescription.of(

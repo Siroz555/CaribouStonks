@@ -34,7 +34,7 @@ public final class RepositoryDataSource {
 	private static final String ATTRIBUTES_FILE = "attributes.json";
 	private static final String REFORGES_FILE = "reforges.json";
 	private static final String MATERIALS_FILE = "legacy_hypixel_material.json";
-	private static final String WARPS_FILE = "warps.json";
+	private static final String MISC_FILE = "misc.json";
 
 	private final ExecutorService executor;
 	private final boolean devMode;
@@ -74,13 +74,13 @@ public final class RepositoryDataSource {
 		loadRepositoryFile(ATTRIBUTES_FILE, "attributes", JsonArray.class, this::applyAttributes);
 		loadRepositoryFile(REFORGES_FILE, "attributes", JsonArray.class, this::applyReforges);
 		loadRepositoryFile(MATERIALS_FILE, "hypixelMaterial", JsonObject.class, this::applyLegacyHypixelMaterial);
-		loadRepositoryFile(WARPS_FILE, "warps", JsonArray.class, this::applyWarps);
+		loadRepositoryFile(MISC_FILE, "misc", JsonObject.class, this::applyMisc);
 
 		CaribouStonks.LOGGER.info("[RepositoryDataSource] Loaded {} enchantments", SkyBlockItemRegistry.sizeOfEnchantments());
 		CaribouStonks.LOGGER.info("[RepositoryDataSource] Loaded {} attributes", SkyBlockItemRegistry.sizeOfAttributes());
 		CaribouStonks.LOGGER.info("[RepositoryDataSource] Loaded {} reforges", SkyBlockItemRegistry.sizeOfReforges());
 		CaribouStonks.LOGGER.info("[RepositoryDataSource] Loaded {} legacy Hypixel material", SkyBlockItemRegistry.sizeOfLegacyHypixelMaterial());
-		CaribouStonks.LOGGER.info("[RepositoryDataSource] Loaded {} warps", SkyBlockRegistry.sizeOfWarps());
+		CaribouStonks.LOGGER.info("[RepositoryDataSource] Loaded {} warps, {} abiphone (misc)", SkyBlockRegistry.sizeOfWarps(), SkyBlockRegistry.sizeOfAbiphoneContacts());
 	}
 
 	private <R> void loadRepositoryFile(String fileName, String label, Class<R> rawType, Consumer<R> handler) {
@@ -155,7 +155,13 @@ public final class RepositoryDataSource {
 		SkyBlockItemRegistry.loadLegacyHypixelMaterial(minecraftIdsMapping);
 	}
 
-	private void applyWarps(@NonNull JsonArray jsonArray) {
+	private void applyMisc(@NonNull JsonObject jsonObject) {
+		if (jsonObject.isEmpty()) return;
+		if (jsonObject.get("warps") instanceof JsonArray warps) applyMiscWarps(warps);
+		if (jsonObject.get("abiphone_contacts") instanceof JsonArray contacts) applyMiscAbiphoneContacts(contacts);
+	}
+
+	private void applyMiscWarps(@NonNull JsonArray jsonArray) {
 		if (jsonArray.isEmpty()) return;
 
 		Set<String> warps = new HashSet<>(jsonArray.size());
@@ -164,6 +170,25 @@ public final class RepositoryDataSource {
 			warps.add(warp);
 		}
 		SkyBlockRegistry.loadWarps(warps);
+	}
+
+	private void applyMiscAbiphoneContacts(@NonNull JsonArray jsonArray) {
+		if (jsonArray.isEmpty()) return;
+
+		List<SkyBlockRegistry.AbiphoneContact> contacts = new ArrayList<>(jsonArray.size());
+		for (JsonElement element : jsonArray) {
+			JsonObject json = element.getAsJsonObject();
+			String name = json.get("name").getAsString();
+
+			List<String> callNames = new ArrayList<>();
+			if (json.get("callNames") instanceof JsonArray array) {
+				for (JsonElement callName : array) {
+					callNames.add(callName.getAsString());
+				}
+			}
+			contacts.add(new SkyBlockRegistry.AbiphoneContact(name, callNames));
+		}
+		SkyBlockRegistry.loadAbiphoneContacts(contacts);
 	}
 
 	public void reload() {

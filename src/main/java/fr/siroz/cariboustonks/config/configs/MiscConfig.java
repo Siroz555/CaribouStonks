@@ -36,10 +36,28 @@ public class MiscConfig {
 	public boolean disableAbiphonePlacement = false;
 
 	@SerialEntry
+	public AutoCompleteCommands autoCompleteCommands = new AutoCompleteCommands();
+
+	@SerialEntry
 	public Compatibility compatibility = new Compatibility();
 
 	@SerialEntry
 	public PartyCommands partyCommands = new PartyCommands();
+
+	public static class AutoCompleteCommands {
+
+		@SerialEntry
+		public boolean warp = false;
+
+		@SerialEntry
+		public boolean gfs = false;
+
+		@SerialEntry
+		public boolean bz = false;
+
+		@SerialEntry
+		public boolean call = false;
+	}
 
 	public static class Compatibility {
 

@@ -43,6 +43,7 @@ import fr.siroz.cariboustonks.features.misc.ObtainedDateTooltipFeature;
 import fr.siroz.cariboustonks.features.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.features.misc.SearchBarCalculatorFeature;
 import fr.siroz.cariboustonks.features.misc.ServerTrackerFeature;
+import fr.siroz.cariboustonks.features.misc.AutoCompleteCommandsFeature;
 import fr.siroz.cariboustonks.features.misc.bestiary.BestiaryTrackerFeature;
 import fr.siroz.cariboustonks.features.reminders.BoosterCookieReminderFeature;
 import fr.siroz.cariboustonks.features.reminders.EnchantedCloakReminderFeature;
@@ -180,6 +181,7 @@ public final class FeatureManager {
 		registerFeature(new BestiaryTrackerFeature());
 		registerFeature(new HexTooltipFeature(5));
 		registerFeature(new ObtainedDateTooltipFeature(55));
+		registerFeature(new AutoCompleteCommandsFeature());
 		registerFeature(new ServerTrackerFeature());
 		registerFeature(new HighlighterFeature());
 		registerFeature(new PartyCommandFeature());

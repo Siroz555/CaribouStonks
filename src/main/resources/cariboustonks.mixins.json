@@ -11,6 +11,7 @@
     "CameraMixin",
     "ChatComponentMixin",
     "ChatListenerMixin",
+    "ClientboundCommandsPacketMixin",
     "ClientCommonPacketListenerImplMixin",
     "ClientLevelMixin",
     "ClientPacketListenerMixin",
