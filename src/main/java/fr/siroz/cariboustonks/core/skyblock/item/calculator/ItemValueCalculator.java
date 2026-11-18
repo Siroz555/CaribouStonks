@@ -584,17 +584,10 @@ public final class ItemValueCalculator {
 			}
 			// Enrichment
 			if (modifiers.enrichment().isPresent()) {
-				String enrichment = modifiers.enrichment().get();
-				// Même prix en bits, je respecte comme les autres calculator de récupérer le cheapest.
-				double price = SkyBlockConstants.ENRICHMENTS.stream()
-						.mapToDouble(value -> ctx.prices().applyAsDouble(value))
-						.filter(d -> d > 0)
-						.min()
-						.orElse(0.0);
 				Calculation calc = Calculation.of(
 						Calculation.Type.TALISMAN_ENRICHMENT,
-						enrichment,
-						price * worth("enrichment", ctx.networth())
+						"ACCESSORY_ENRICHMENT",
+						ctx.prices().applyAsDouble("ACCESSORY_ENRICHMENT") * worth("enrichment", ctx.networth())
 				);
 				acc.add(calc.price());
 				acc.push(calc);
