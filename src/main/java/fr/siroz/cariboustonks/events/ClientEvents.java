@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Events related to client
@@ -58,6 +59,24 @@ public final class ClientEvents {
 		return true;
 	});
 
+	public static final Event<AllowDropItem> ALLOW_DROP_ITEM_EVENT = EventFactory.createArrayBacked(AllowDropItem.class, listeners -> (slotId, item) -> {
+		for (AllowDropItem listener : listeners) {
+			if (!listener.allowDropItem(slotId, item)) {
+				return false;
+			}
+		}
+		return true;
+	});
+
+	public static final Event<AllowDropItemInScreen> ALLOW_DROP_ITEM_IN_SCREEN_EVENT = EventFactory.createArrayBacked(AllowDropItemInScreen.class, listeners -> (slotId, item) -> {
+		for (AllowDropItemInScreen listener : listeners) {
+			if (!listener.allowDropItemInScreen(slotId, item)) {
+				return false;
+			}
+		}
+		return true;
+	});
+
 	/**
 	 * Called when the Middle Click is handled out of a Screen.
 	 */
@@ -91,5 +110,17 @@ public final class ClientEvents {
 	@FunctionalInterface
 	public interface MiddleClickAir {
 		void onMiddleClickAir();
+	}
+
+	@FunctionalInterface
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	public interface AllowDropItem {
+		boolean allowDropItem(int slotId, @Nullable ItemStack item);
+	}
+
+	@FunctionalInterface
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
+	public interface AllowDropItemInScreen {
+		boolean allowDropItemInScreen(int slotId, @Nullable ItemStack item);
 	}
 }

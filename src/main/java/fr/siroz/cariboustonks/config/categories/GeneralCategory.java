@@ -6,9 +6,11 @@ import dev.isxander.yacl3.api.LabelOption;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
+import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.FloatSliderControllerBuilder;
 import fr.siroz.cariboustonks.config.Config;
 import fr.siroz.cariboustonks.core.module.color.Colors;
+import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.features.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.features.stonks.tooltips.auction.AuctionTooltipPriceType;
 import fr.siroz.cariboustonks.features.stonks.tooltips.bazaar.BazaarTooltipPriceType;
@@ -291,6 +293,68 @@ public class GeneralCategory extends AbstractCategory {
 										() -> current.general.stonks.showAllDataInInfoScreen,
 										newValue -> current.general.stonks.showAllDataInInfoScreen = newValue)
 								.controller(this::createBooleanController)
+								.build())
+						.build())
+				.group(OptionGroup.createBuilder()
+						.name(Component.literal("Item Protection").withStyle(ChatFormatting.BOLD))
+						.description(OptionDescription.of(
+								Component.literal("Item Protection Settings")))
+						.collapsed(false)
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Drop Protection"))
+								.description(OptionDescription.of(
+										Component.literal("Enables item protection when items are dropped. Depends on the configured Rarity OR whether “Only Hotbar Mode” is enabled."),
+										Component.empty()
+												.append(Component.literal("This "))
+												.append(Component.literal("completely").withStyle(ChatFormatting.RED, ChatFormatting.UNDERLINE))
+												.append(Component.literal(" cancels the drop. Items without an UUID are ignored.")),
+										Component.literal(SPACE + "Trying to drop an item or interact with it in your inventory will trigger the protection.").withStyle(ChatFormatting.ITALIC)))
+								.binding(defaults.general.itemProtection.enabled,
+										() -> current.general.itemProtection.enabled,
+										newValue -> current.general.itemProtection.enabled = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Rarity>createBuilder()
+								.name(Component.literal("Drop Protection - Minimum Rarity"))
+								.description(OptionDescription.of(
+										Component.literal("Allows you to configure the minimum Rarity (inclusive) required to trigger the protection.")))
+								.binding(defaults.general.itemProtection.minIncluisveRarity,
+										() -> current.general.itemProtection.minIncluisveRarity,
+										newValue -> current.general.itemProtection.minIncluisveRarity = newValue)
+								.controller(opt -> EnumControllerBuilder.create(opt)
+										.enumClass(Rarity.class)
+										.formatValue(value -> Component.literal(value.name()).withColor(value.getColor())))
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Drop Protection - Only Hotbar Mode"))
+								.description(OptionDescription.of(
+										Component.empty()
+												.append(Component.literal("If this option is enabled,"))
+												.append(Component.literal(" ONLY ").withStyle(ChatFormatting.BOLD))
+												.append(Component.literal("the items in the Hotbar will trigger the protection.")),
+										Component.literal(SPACE + "This option protects the “standard” drop, not the drop when you're in an inventory").withStyle(ChatFormatting.ITALIC)))
+								.binding(defaults.general.itemProtection.onlyHotbarMode,
+										() -> current.general.itemProtection.onlyHotbarMode,
+										newValue -> current.general.itemProtection.onlyHotbarMode = newValue)
+								.controller(this::createBooleanController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Drop Protection - Ignore when in Dungeons"))
+								.description(OptionDescription.of(
+										Component.literal("This allows you to bypass the protection if you're in a dungeon, particularly to use your class abilities.")))
+								.binding(defaults.general.itemProtection.shouldDropInDungeon,
+										() -> current.general.itemProtection.shouldDropInDungeon,
+										newValue -> current.general.itemProtection.shouldDropInDungeon = newValue)
+								.controller(this::createYesNoController)
+								.build())
+						.option(Option.<Boolean>createBuilder()
+								.name(Component.literal("Drop Protection - Ignore Special Cases"))
+								.description(OptionDescription.of(
+										Component.literal("This allows you to bypass the protection if you're handling certain items, such as Shinny Coins, or if you're in a Safari.")))
+								.binding(defaults.general.itemProtection.shouldDropForSpecialCases,
+										() -> current.general.itemProtection.shouldDropForSpecialCases,
+										newValue -> current.general.itemProtection.shouldDropForSpecialCases = newValue)
+								.controller(this::createYesNoController)
 								.build())
 						.build())
 				.group(OptionGroup.createBuilder()

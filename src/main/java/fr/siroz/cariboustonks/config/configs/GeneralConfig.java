@@ -1,6 +1,7 @@
 package fr.siroz.cariboustonks.config.configs;
 
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
+import fr.siroz.cariboustonks.core.skyblock.Rarity;
 import fr.siroz.cariboustonks.features.stonks.tooltips.TooltipPriceDisplayType;
 import fr.siroz.cariboustonks.features.stonks.tooltips.auction.AuctionTooltipPriceType;
 import fr.siroz.cariboustonks.features.stonks.tooltips.bazaar.BazaarTooltipPriceType;
@@ -14,6 +15,9 @@ public class GeneralConfig {
 	public int keyShortcutCooldown = 500;
 
 	@SerialEntry
+	public ItemProtection itemProtection = new ItemProtection();
+
+	@SerialEntry
 	public Stonks stonks = new Stonks();
 
 	@SerialEntry
@@ -21,6 +25,24 @@ public class GeneralConfig {
 
 	@SerialEntry
 	public Internal internal = new Internal();
+
+	public static class ItemProtection {
+
+		@SerialEntry
+		public boolean enabled = false;
+
+		@SerialEntry
+		public Rarity minIncluisveRarity = Rarity.EPIC;
+
+		@SerialEntry
+		public boolean onlyHotbarMode = false;
+
+		@SerialEntry
+		public boolean shouldDropInDungeon = true;
+
+		@SerialEntry
+		public boolean shouldDropForSpecialCases = true;
+	}
 
 	public static class Stonks {
 

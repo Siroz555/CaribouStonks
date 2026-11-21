@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import fr.siroz.cariboustonks.CaribouStonks;
+import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.events.GuiEvents;
 import fr.siroz.cariboustonks.systems.ContainerOverlaySystem;
 import java.util.List;
@@ -17,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.jspecify.annotations.Nullable;
@@ -70,5 +72,21 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 			}
 		}
 		original.call(instance, font, texts, optionalImage, xo, yo, style, extraSpaceAfterFirstLine);
+	}
+
+	@Inject(method = "slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;handleContainerInput(IIILnet/minecraft/world/inventory/ContainerInput;Lnet/minecraft/world/entity/player/Player;)V"), cancellable = true)
+	private void cariboustonks$onClickSlotEvent(@Nullable Slot slot, int slotId, int buttonNum, ContainerInput containerInput, CallbackInfo ci) {
+		// Récupérer un item et essayer de drop en dehors de l'inventaire
+		if (!ClientEvents.ALLOW_DROP_ITEM_IN_SCREEN_EVENT.invoker().allowDropItemInScreen(slotId, this.menu.getCarried())) {
+			ci.cancel();
+			return;
+		}
+
+		// SUr l'item sélectionné en utilisant la touche
+		if (slot != null && containerInput == ContainerInput.THROW) {
+			if (!ClientEvents.ALLOW_DROP_ITEM_IN_SCREEN_EVENT.invoker().allowDropItemInScreen(-555, slot.getItem())) {
+				ci.cancel();
+			}
+		}
 	}
 }

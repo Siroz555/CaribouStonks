@@ -1,5 +1,6 @@
 package fr.siroz.cariboustonks.platform.mixin;
 
+import fr.siroz.cariboustonks.events.ClientEvents;
 import fr.siroz.cariboustonks.events.InteractionEvents;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
@@ -10,6 +11,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MultiPlayerGameMode.class)
@@ -24,6 +26,13 @@ public abstract class MultiPlayerGameModeMixin {
 
 		if (!InteractionEvents.ALLOW_INTERACT_BLOCK_EVENT.invoker().allowInteract(heldItem)) {
 			info.setReturnValue(InteractionResult.FAIL);
+		}
+	}
+
+	@Inject(method = "dropItem", at = @At("HEAD"), cancellable = true)
+	public void cariboustonks$onDropItemEvent(LocalPlayer player, boolean all, CallbackInfo ci) {
+		if (!ClientEvents.ALLOW_DROP_ITEM_EVENT.invoker().allowDropItem(player.getInventory().getSelectedSlot(), player.getInventory().getSelectedItem())) {
+			ci.cancel();
 		}
 	}
 }

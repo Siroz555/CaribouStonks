@@ -39,6 +39,7 @@ import fr.siroz.cariboustonks.features.keyshortcut.KeyShortcutFeature;
 import fr.siroz.cariboustonks.features.mining.CorpseFinderFeature;
 import fr.siroz.cariboustonks.features.misc.HexTooltipFeature;
 import fr.siroz.cariboustonks.features.misc.HighlighterFeature;
+import fr.siroz.cariboustonks.features.misc.ItemProtectionFeature;
 import fr.siroz.cariboustonks.features.misc.ObtainedDateTooltipFeature;
 import fr.siroz.cariboustonks.features.misc.PartyCommandFeature;
 import fr.siroz.cariboustonks.features.misc.SearchBarCalculatorFeature;
@@ -139,6 +140,7 @@ public final class FeatureManager {
 		// Mining
 		registerFeature(new CorpseFinderFeature());
 		// Item
+		registerFeature(new ItemProtectionFeature());
 		registerFeature(new ColoredEnchantmentFeature());
 		// KeyShortcut
 		registerFeature(new KeyShortcutFeature());
